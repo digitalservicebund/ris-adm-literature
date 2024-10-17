@@ -1,3 +1,7 @@
+🚧 Note: This repository has just been created. There's no relevant content whatsoever.
+
+---
+
 # RIS VwV
 
 This repository contains software tools supporting the documentation of administrative directives (DE: “Verwaltungsvorschriften”).
@@ -9,7 +13,3 @@ The name "RIS VwV" refers to
 ## Developing
 
 Details on how to work with the code can be found in [./DEVELOPING.md](./DEVELOPING.md)
-
----
-
-🚧 Note: This repository has just been created. There's no relevant content whatsoever.
