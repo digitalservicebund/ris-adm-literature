@@ -18,7 +18,7 @@ C4Container
     Rel("engineer", "fileStorage", "uploads", "HTTPS / LDML")
     
     Container_Ext("localDisk", "Local Disk", "Harddrive containing BSG dump")
-    Rel("engineer", "localDisk", "loads LDML", "file system / LDML")
+    Rel("engineer", "localDisk", "writes dump, loads LDML", "file system")
 
     System_Boundary("ris-vwv", "RIS-VwV"){
         Container("frontend", "Single Page Web App", "Vue, TypeScript", "Provides all RIS-VwV functionality to <br>users via their web browser")
@@ -43,7 +43,7 @@ C4Container
      System_Boundary("ris-vwv-migration", "RIS-VwV-Migration"){
         Container("migrationCLI", "Migration CLI BSG/BAG", "Java", "Transforms old VwV")
         Rel("engineer", "migrationCLI", "Runs locally", "file system")
-        BiRel("migrationCLI", "localDisk", "reads dump, writes LDML", "file system / dump / LDML")
+        Rel("migrationCLI", "localDisk", "reads dump, writes LDML", "file system")
     }
 
 
