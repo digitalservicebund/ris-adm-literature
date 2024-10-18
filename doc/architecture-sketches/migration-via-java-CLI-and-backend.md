@@ -10,13 +10,15 @@
 
 ```mermaid
 C4Container
-    title RIS-VwV, Container Diagram with Migration via CLI and Backend 🚧 Work in Progress! 🚧
+    title RIS-VwV, Container Diagram with Migration done locally (CLI) 🚧 Work in Progress! 🚧
 
     Person_Ext("documentalist", "BSG Documentalist", "BSG staff member, various roles")
 
-    Person_Ext("neurisPerson", "NeuRIS staff", "Member of the VwV team")
+    Person_Ext("engineer", "NeuRIS VwV Engineer", "On day of big bang")
+    Rel("engineer", "fileStorage", "uploads once")
+    
     Container_Ext("localDisk", "Local Disk", "Harddrive containing BSG dump")
-    Rel("neurisPerson", "localDisk", "Reads from disk")
+    Rel("engineer", "localDisk", "loads LDML", "local")
 
     System_Boundary("ris-vwv", "RIS-VwV"){
         Container("frontend", "Single Page Web App", "Vue, TypeScript", "Provides all RIS-VwV functionality to <br>users via their web browser")
@@ -33,15 +35,18 @@ C4Container
 
         Container("fileStorage", "File Storage", "??? but already exists<br> in the NeuRIS space" "Stores published VwV")
         Rel("backend", "fileStorage", "Stores published VwV", "HTTPS")
-
-        Container("migrationCLI", "Migration CLI", "Java", "Transforms old VwV")
-        Rel("neurisPerson", "migrationCLI", "Runs locally")
-        Rel("migrationCLI", "backend", "sends", "HTTPS/JSON")
-
     }
 
     Container_Ext("portal", "Portal", "Gives the public access to norms")
     Rel("portal", "fileStorage", "Reads VwV")
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+     System_Boundary("ris-vwv-migration", "RIS-VwV-Migration"){
+        Container("migrationCLI", "Migration CLI BSG/BAG", "Java", "Transforms old VwV")
+        Rel("engineer", "migrationCLI", "Runs locally")
+        BiRel("migrationCLI", "localDisk", "reads dump, writes LDML", "local")
+    }
+
+
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 ```
