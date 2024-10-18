@@ -27,7 +27,7 @@ C4Container
         ContainerDb("sessionStorage", "Session Storage", "Redis", "Stores user session information")
         Rel("backend", "sessionStorage", "reads from and writes to", "HTTPS")
 
-        Container("fileStorage", "File Storage", "??? but already exists<br> in the NeuRIS space" "Stores published VwV")
+        Container("fileStorage", "NeuRIS File Storage", "???, but already exists<br> in the NeuRIS space" "Stores published VwV")
         Rel("backend", "fileStorage", "Stores published VwV", "HTTPS")
     }
 
