@@ -14,7 +14,7 @@ C4Container
 
     Person_Ext("documentalist", "BSG Documentalist", "BSG staff member, various roles")
 
-    Person_Ext("engineer", "NeuRIS VwV Engineer", "On day of big bang")
+    Person("engineer", "NeuRIS VwV Engineer", "On day of big bang")
     Rel("engineer", "fileStorage", "uploads once")
     
     Container_Ext("localDisk", "Local Disk", "Harddrive containing BSG dump")
