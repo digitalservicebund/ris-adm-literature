@@ -30,10 +30,10 @@ C4Container
         ContainerDb("relationalDB", "NeuRIS Relational DB", "PostgreSQL", "Store process data")
         Rel("backend", "relationalDB", "Reads from and writes to", "SQL / TCP")
 
-        ContainerDb("sessionStorage", "Session Storage", "Redis", "Stores user session information")
+        ContainerDb("sessionStorage", "Caselaw Session Storage", "Redis", "Stores user session information")
         Rel("backend", "sessionStorage", "reads from and writes to", "HTTPS")
 
-        Container("fileStorage", "File Storage", "??? but already exists<br> in the NeuRIS space" "Stores published VwV")
+        Container("fileStorage", "NeuRIS File Storage", "??? but already exists<br> in the NeuRIS space" "Stores published VwV")
         Rel("backend", "fileStorage", "Stores published VwV", "HTTPS / LDML")
     }
 
