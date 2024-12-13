@@ -1,11 +1,12 @@
-🚧 Note: This repository has just been created. There's no relevant code whatsoever.
+🚧 Note: This repository has just been created. 
 
 ---
 
 # Development / Tech Notes
 Here's what to know from a tech perspective.
 
-**⚠️ Security note: Do not forget to run the `lefthook` setup below, including the setup of `talisman`. This ensures that secrets are cought before reaching the remote repository**
+**⚠️ Security note: Do run the `lefthook` setup below, including the setup of `talisman`.<br> 
+⚠️ This ensures that secrets are caught before reaching the remote repository**
 
 ## Git Hooks Setup
 This repository uses Git hooks for

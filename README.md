@@ -1,8 +1,8 @@
-🚧 Note: This repository has just been created. There's no relevant code whatsoever.
+🚧 Note: This repository has just been created. 
 
 ---
 
-# RIS VwV
+# RIS ADM VwV
 
 This repository contains software tools supporting the documentation of administrative directives (DE: “Verwaltungsvorschriften”).
 
