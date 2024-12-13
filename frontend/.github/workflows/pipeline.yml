@@ -11,9 +11,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  
   frontend-checks:
-    uses: ./.github/workflows/frontend-jobss.yml
+    uses: ./.github/workflows/frontend-jobs.yml
     secrets: inherit
-
-
