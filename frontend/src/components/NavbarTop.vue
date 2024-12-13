@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue"
-import { useRoute } from "vue-router"
 
-const route = useRoute()
 const fontColor = ref<string>()
 
 </script>
@@ -14,11 +12,9 @@ const fontColor = ref<string>()
     <div class="flex items-center gap-44">
       <div class="flex items-center">
         <span class="px-[1rem] text-14 font-bold uppercase leading-16">
-          <span aria-hidden="true" :style="{ color: fontColor }">
-            Rechtsinformationen</span
-          >
+          Rechtsinformationen
           <br />
-          <span aria-hidden="true">des Bundes</span>
+          des Bundes
         </span>
       </div>
     </div>
