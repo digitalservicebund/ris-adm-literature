@@ -5,7 +5,7 @@ import NavbarTop from '../NavbarTop.vue'
 
 describe('HelloWorld', () => {
   it('renders properly', () => {
-    const wrapper = mount(NavbarTop, { props: { msg: 'Hello Vitest' } })
-    expect(wrapper.text()).toContain('Hello Vitest')
+    const wrapper = mount(NavbarTop, { props: {} })
+    expect(wrapper.text()).toContain('Rechtsinformationen')
   })
 })
