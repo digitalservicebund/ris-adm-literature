@@ -2,21 +2,8 @@ on:
   workflow_call:
 
 jobs:
-  confirm-frontend-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            frontend:
-              - 'frontend/**'
 
   linting-formatting-frontend:
-    needs: confirm-frontend-changes
     if: ${{ needs.scan-frontend-changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +41,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   unit-tests-frontend:
-    needs: confirm-frontend-changes
     if: ${{ needs.scan-frontend-changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -92,7 +78,6 @@ jobs:
       #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   e2e-tests-frontend:
-    needs: confirm-frontend-changes
     if: ${{ needs.scan-frontend-changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
