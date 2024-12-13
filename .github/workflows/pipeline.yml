@@ -11,11 +11,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  
   ##############################################
   # jobs dispatched to separate workflow files #
   ##############################################
 
-  frontend-checks:
+  frontend-jobs:
     uses: ./.github/workflows/frontend-jobs.yml
     secrets: inherit

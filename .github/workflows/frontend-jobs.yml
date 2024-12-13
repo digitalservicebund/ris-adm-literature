@@ -2,7 +2,6 @@ on:
   workflow_call:
 
 jobs:
-
   linting-formatting-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +25,7 @@ jobs:
           npm ci
         working-directory: ./frontend
       - name: Linting
-        run: npm run style:check
+        run: npm run lint:check
         working-directory: ./frontend
       - name: Formatting
         run: npm run format:check
