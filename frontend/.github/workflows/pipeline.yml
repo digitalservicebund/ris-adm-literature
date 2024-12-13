@@ -9,3 +9,11 @@ on:
     branches: [main]
   # Allow to run this workflow manually
   workflow_dispatch:
+
+jobs:
+  
+  frontend-checks:
+    uses: ./.github/workflows/frontend-jobss.yml
+    secrets: inherit
+
+
