@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: true,
+  fullyParallel: true, // ignored in CI, as workers are 1, there
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
