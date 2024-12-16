@@ -6,7 +6,8 @@ on:
     paths-ignore:
       - "**/*.md"
   pull_request:
-    branches: [main]
+    # TODO: restrict later
+    # branches: [main]
   # Allow to run this workflow manually
   workflow_dispatch:
 
