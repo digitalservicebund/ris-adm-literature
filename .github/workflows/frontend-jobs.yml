@@ -104,49 +104,47 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #
-      #
-  # Disabled as these got stuck somehow
-  #
-  # e2e-tests-frontend:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version-file: ./frontend/package.json
-  #         cache: npm
-  #         cache-dependency-path: ./frontend/package-lock.json
-  #     - name: Cache node_modules
-  #       uses: actions/cache@v4
-  #       id: node-modules-cache
-  #       with:
-  #         path: |
-  #           ./frontend/node_modules
-  #         key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-  #     - name: Install dependencies
-  #       if: steps.node-modules-cache.outputs.cache-hit != 'true'
-  #       run: |
-  #         npm ci
-  #       working-directory: ./frontend
-  #     - name: Get Playwright version
-  #       working-directory: ./frontend
-  #       run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
-  #     - name: Cache browser binaries
-  #       id: cache-browser-binaries
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ~/.cache/ms-playwright
-  #         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-  #     - name: Install playwright browsers
-  #       if: steps.cache-browser-binaries.outputs.cache-hit != 'true'
-  #       run: |
-  #         npx --yes playwright install --with-deps
-  #     - name: e2e tests
-  #       run: |
-  #         npm run test:e2e
-  #       working-directory: ./frontend
+
+
+  e2e-tests-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./frontend/package.json
+          cache: npm
+          cache-dependency-path: ./frontend/package-lock.json
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: node-modules-cache
+        with:
+          path: |
+            ./frontend/node_modules
+          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+        working-directory: ./frontend
+      - name: Get Playwright version
+        working-directory: ./frontend
+        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      - name: Cache browser binaries
+        id: cache-browser-binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install playwright browsers
+        if: steps.cache-browser-binaries.outputs.cache-hit != 'true'
+        run: |
+          npx --yes playwright install --with-deps
+      - name: e2e tests
+        run: |
+          npm run test:e2e
+        working-directory: ./frontend
   #     # TODO: enable later
   #     #
   #     # - name: Send status to Slack
