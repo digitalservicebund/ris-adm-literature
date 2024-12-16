@@ -105,7 +105,6 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-
   e2e-tests-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -124,7 +123,7 @@ jobs:
             ./frontend/node_modules
           key: modules-${{ hashFiles('./frontend/package-lock.json') }}
       - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        # if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
           npm ci
         working-directory: ./frontend
