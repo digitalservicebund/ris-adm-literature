@@ -1,4 +1,4 @@
-🚧 Note: This repository has just been created. 
+[![CI Pipeline](https://github.com/digitalservicebund/ris-adm-vwv/actions/workflows/pipeline.yml/badge.svg)](https://github.com/digitalservicebund/ris-adm-vwv/actions/workflows/pipeline.yml)
 
 ---
 
@@ -10,7 +10,7 @@ The name "RIS ADM VwV" refers to
 * "RIS", which is the German acronym for "information system on the law" (DE: "Rechtsinformationssystem") and
 * "ADM" (or German: "VwV"), which makes explicit that within RIS, we're explicitly dealing with administrative directives (German: "Verwaltungsvorschriften") and not, for example, with federal laws or court verdicts.
 
-## Documentation
+## Tech Documentation
 
 More information can be found in [`./doc/README.md`](./doc/README.md)
 
