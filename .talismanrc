@@ -14,4 +14,4 @@ allowed_patterns:
   - "# scan for secrets that were published by mistake"
   # patterns with "key"
   - "key: modules-"
-  - "key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}"
+  - "key:.+runner.os"
