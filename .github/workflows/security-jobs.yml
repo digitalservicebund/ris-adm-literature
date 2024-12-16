@@ -39,7 +39,6 @@ jobs:
       # nor an Enterprise level user who has access to GitHub "Advanced Security",
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
 
-
   secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
     runs-on: ubuntu-latest
     # Running on main only https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409
@@ -52,7 +51,8 @@ jobs:
         uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        # if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }} # alert on purpose, testing slack notification
         uses: digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
