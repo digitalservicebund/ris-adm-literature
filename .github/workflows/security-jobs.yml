@@ -34,9 +34,8 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      # TODO upload trivy to GitHub Security Tab
-      # we cannot upload the trivy results to the GitHub Security tab as we're neither a public repository
-      # nor an Enterprise level user who has access to GitHub "Advanced Security",
+      # we should be able to upload the trivy results to the GitHub Security tab as we're a public repositor
+      # but right now it's not worth it
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
 
   secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
