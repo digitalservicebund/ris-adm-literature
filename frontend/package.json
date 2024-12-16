@@ -14,7 +14,8 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "format": "prettier --write src/",
-    "format:check": "prettier --check src/"
+    "format:check": "prettier --check src/",
+    "coverage": "TZ=UTC vitest run --coverage"
   },
   "dependencies": {
     "pinia": "^2.2.6",
@@ -28,6 +29,7 @@
     "@types/node": "^22.9.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vitest/coverage-v8": "^2.1.8",
     "@vitest/eslint-plugin": "1.1.16",
     "@vue/eslint-config-prettier": "^10.1.0",
     "@vue/eslint-config-typescript": "^14.1.3",
