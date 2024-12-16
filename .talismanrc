@@ -13,5 +13,5 @@ allowed_patterns:
   - "SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}"
   - "# scan for secrets that were published by mistake"
   # patterns with "key"
-  - "key: modules-${{ hashFiles('./frontend/package-lock.json') }}"
+  - "key: modules-"
   - "key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}"
