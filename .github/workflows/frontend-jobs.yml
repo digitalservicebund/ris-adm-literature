@@ -130,9 +130,9 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
-      - name: Get Playwright version
-        working-directory: ./frontend
-        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      # - name: Get Playwright version
+      #   working-directory: ./frontend
+      #   run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
       # - name: Cache browser binaries
       #   id: cache-browser-binaries
       #   uses: actions/cache@v4
@@ -142,7 +142,7 @@ jobs:
       - name: Install playwright browsers
         if: steps.cache-browser-binaries.outputs.cache-hit != 'true'
         run: |
-          npx playwright install --with-deps
+          npx playwright install --with-deps chromium firefox webkit
       - name: e2e tests
         run: |
           npm run test:e2e
