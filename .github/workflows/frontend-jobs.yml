@@ -3,7 +3,7 @@ on:
 
 jobs:
   linting-formatting-frontend:
-    if: never
+    if: true = false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build-frontend:
-    if: never
+    if: true = false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   unit-tests-frontend:
-    if: never
+    if: true = false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -160,7 +160,7 @@ jobs:
   #
 
   check-code-quality-with-sonarqube:
-    if: never
+    if: true = false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
