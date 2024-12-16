@@ -4,9 +4,10 @@ fileignoreconfig:
 
 allowed_patterns:
   # SHA-pinned versions of GitHub actions
-  - aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
-  - digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba
+  - "uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3"
+  - "uses: digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba"
+  - "uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb"
   # patterns with "secret"
   - secrets-scan-with-talisman
   - "secrets: inherit"
-  - secrets.SLACK_WEBHOOK_URL
+  - "SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}"
