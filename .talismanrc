@@ -21,3 +21,4 @@ allowed_patterns:
   - "key: modules-"
   - "key:.+runner.os"
   - "key: npm-cache"
+  - "sonar.projectKey=digitalservicebund_ris-adm-vwv"
