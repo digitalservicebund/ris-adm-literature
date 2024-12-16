@@ -160,7 +160,6 @@ jobs:
   #
 
   check-code-quality-with-sonarqube:
-    needs: scan-frontend-changes
     # TODO: enable the below
     # if: ${{  github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
