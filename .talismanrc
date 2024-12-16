@@ -14,3 +14,4 @@ allowed_patterns:
   - "# scan for secrets that were published by mistake"
   # patterns with "key"
   - "key: modules-${{ hashFiles('./frontend/package-lock.json') }}"
+  - "key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}"
