@@ -183,6 +183,7 @@ jobs:
         working-directory: ./frontend
       - name: Run coverage
         run: npm run coverage
+        working-directory: ./frontend
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
