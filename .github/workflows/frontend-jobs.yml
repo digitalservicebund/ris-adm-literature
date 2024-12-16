@@ -160,8 +160,6 @@ jobs:
   #
 
   check-code-quality-with-sonarqube:
-    # TODO: enable the below
-    # if: ${{  github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -173,6 +171,16 @@ jobs:
           node-version-file: ./frontend/package.json
           cache: npm
           cache-dependency-path: ./frontend/package-lock.json
+      - name: Cache npm cache
+        uses: actions/cache@v4
+        id: cache-npm-cache
+        with:
+          # The docs discourage caching `node-modules`, cf. https://github.com/actions/cache/blob/main/examples.md#node---npm
+          path: /home/runner/.npm
+          key: npm-cache-${{ hashFiles('./frontend/package-lock.json') }}
+      - name: Install node modules
+        run: npm ci
+        working-directory: ./frontend
       - name: Install SonarScanner
         uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e # v1.0.0
       - name: Scan with SonarQube
@@ -180,7 +188,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          npm install
           npm run coverage
           sonar-scanner
         working-directory: ./frontend
