@@ -20,3 +20,4 @@ allowed_patterns:
   # patterns with "key"
   - "key: modules-"
   - "key:.+runner.os"
+  - "key: npm-cache"
