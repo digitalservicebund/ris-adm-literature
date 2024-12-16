@@ -11,3 +11,4 @@ allowed_patterns:
   - secrets-scan-with-talisman
   - "secrets: inherit"
   - "SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}"
+  - "# scan for secrets that were published by mistake"
