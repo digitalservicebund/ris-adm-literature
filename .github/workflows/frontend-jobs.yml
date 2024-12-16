@@ -186,7 +186,7 @@ jobs:
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
-          SONAR_TOKEN: ${{ secrets. SONARCLOUD_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
 
       # - name: Install SonarScanner
       #   uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e # v1.0.0
