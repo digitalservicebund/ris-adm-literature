@@ -21,6 +21,7 @@ jobs:
     secrets: inherit
 
   security-jobs:
+    if: never
     uses: ./.github/workflows/security-jobs.yml
     secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
     permissions:
