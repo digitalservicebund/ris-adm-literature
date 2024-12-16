@@ -18,3 +18,10 @@ jobs:
   frontend-jobs:
     uses: ./.github/workflows/frontend-jobs.yml
     secrets: inherit
+
+  security-jobs:
+    uses: ./.github/workflows/security-jobs.yml
+    secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
+    permissions:
+      contents: read
+      security-events: write # trivy scan needs this
