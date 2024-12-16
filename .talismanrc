@@ -1,3 +1,12 @@
 fileignoreconfig:
-- filename: lefthook.yml
-  checksum: 921432fe344ffab3de5f502c7144f9d67b07ed2e34ed6b53cdca521cba30813c
+  - filename: lefthook.yml
+    checksum: 921432fe344ffab3de5f502c7144f9d67b07ed2e34ed6b53cdca521cba30813c
+
+allowed_patterns:
+  # SHA-pinned versions of GitHub actions
+  - aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
+  - digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba
+  # patterns with "secret"
+  - secrets-scan-with-talisman
+  - "secrets: inherit"
+  - secrets.SLACK_WEBHOOK_URL
