@@ -1,4 +1,4 @@
-FROM node:23.1.0
+FROM node:23.1.0 AS builder
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend
@@ -17,5 +17,5 @@ RUN npm run build
 
 FROM cgr.dev/chainguard/nginx@sha256:9cbce3d5ee2bf696232931119919c2db19e7272cddb0fae0dc0602e78281b688
 EXPOSE 8081
-COPY /frontend/dist /var/lib/nginx/html
+COPY --from=builder /frontend/dist /var/lib/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/ris-adm-vwv.conf
