@@ -6,18 +6,19 @@ fileignoreconfig:
     checksum: 921432fe344ffab3de5f502c7144f9d67b07ed2e34ed6b53cdca521cba30813c
 
 allowed_patterns:
-  # SHA-pinned versions of GitHub actions
+  # allow these specific patterns that include hex encoded text
   - "uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3"
   - "uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf"
   - "uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e"
   - "uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb"
   - "uses: sonarsource/sonarqube-quality-gate-action@424137db1fae80e9eb279829995166f2f44bc8df"
-  # patterns with "secret"
+  - "dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160'"
+  # allow these specific patterns with the term "secret"
   - secrets-scan-with-talisman
   - "secrets: inherit"
   - "SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}"
   - "# scan for secrets that were published by mistake"
-  # patterns with "key"
+  # allow these specific patterns with the term "key"
   - "key: modules-"
   - "key:.+runner.os"
   - "key: npm-cache"
