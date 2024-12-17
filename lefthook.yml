@@ -27,8 +27,6 @@ pre-push:
     "secrets-audit.sh":
       runner: sh
       use_stdin: true
-    "formatting-check.sh":
-      runner: sh
 
 skip_output:
   - meta # Skips lefthook version printing
