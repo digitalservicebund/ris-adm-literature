@@ -129,3 +129,50 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+push-frontend-image-to-registry:
+  runs-on: ubuntu-latest
+  if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+  needs:
+    - frontend-jobs
+    - frontend-build-image-and-scan
+  permissions:
+    contents: read
+    id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+    packages: write
+  outputs:
+    version: ${{ steps.set-version.outputs.version }}
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: /tmp/images
+        key: docker-frontend-images-cache-${{ env.RUN_ID }}
+        restore-keys: docker-frontend-images-cache-${{ env.RUN_ID }}
+    - name: load image
+      shell: bash
+      run: docker load -i /tmp/images/frontend-image.tar
+    - name: Log into container registry
+      # Third-party action, pin to commit SHA!
+      # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+      uses: docker/login-action@7ca345011ac4304463197fac0e56eab1bc7e6af0
+      with:
+        registry: ${{ env.CONTAINER_REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish backend container image
+      run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}/frontend:${{ env.CONTAINER_IMAGE_VERSION }}
+    - name: Install cosign
+      # Third-party action, pin to commit SHA!
+      # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+      uses: sigstore/cosign-installer@e11c0892438d2c0a48e49dee376e4883f10f2e59
+    - name: Sign the published Docker image
+      run: cosign sign --yes ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}/frontend:${{ env.CONTAINER_IMAGE_VERSION }}
+    - id: set-version
+      run: echo "version=$CONTAINER_IMAGE_VERSION" >> "$GITHUB_OUTPUT"
+    - name: Send status to Slack
+      # Third-party action, pin to commit SHA!
+      # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+      uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+      if: ${{ failure() }}
+      with:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
