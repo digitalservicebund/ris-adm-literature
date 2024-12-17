@@ -173,23 +173,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ./frontend
-      # - name: Install SonarScanner
-      #   uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e # v1.0.0
-      # - name: Scan with SonarQube
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   run: |
-      #     npm run coverage
-      #     sonar-scanner
-      #   working-directory: ./frontend
-      # - name: Check SonarQube Quality Gate
-      #   uses: sonarsource/sonarqube-quality-gate-action@424137db1fae80e9eb279829995166f2f44bc8df
-      #   with:
-      #     scanMetadataReportFile: frontend/.scannerwork/report-task.txt
-      #   timeout-minutes: 3
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
