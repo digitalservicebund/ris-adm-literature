@@ -5,9 +5,13 @@ fileignoreconfig:
   - filename: lefthook.yml
     checksum: 8168972ed7d27ebebc6e2c33243fad92abe4f859f3bd2edb0c3b171940cac0ec
   - filename: prod.Dockerfile
-    checksum: 67b03670b7d83e3d7439ed38beaa7bf44e645bdabd69526a820f21d5dbb945f3
+    checksum: e5d917f821d4d467ad4bcc77e165fb986971daeac4355adc0b60a758c69bf396
   - filename: nginx.conf
     checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
+  - filename: frontend/env.d.ts
+    checksum: fa217d4a34afcd967e6c35b10e139cd5c52711e41c190f477576441081b5cf99
+  - filename: LICENSE
+    checksum: 00de5fa1aad2fcb968beb5d1bbf09931fc9d3f160f11b945b24f3203ea025917
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
@@ -16,6 +20,7 @@ allowed_patterns:
   - "uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e"
   - "uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb"
   - "uses: sonarsource/sonarqube-quality-gate-action@424137db1fae80e9eb279829995166f2f44bc8df"
+  - "uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0"
   - "dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160'"
   # allow these specific patterns with the term "secret"
   - secrets-scan-with-talisman
@@ -25,5 +30,6 @@ allowed_patterns:
   # allow these specific patterns with the term "key"
   - "key: modules-"
   - "key:.+runner.os"
+  - "key[s]?: docker-frontend-images-cache"
   - "key: npm-cache"
   - "sonar.projectKey=digitalservicebund_ris-adm-vwv"
