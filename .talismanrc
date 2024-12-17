@@ -6,6 +6,8 @@ fileignoreconfig:
     checksum: 8168972ed7d27ebebc6e2c33243fad92abe4f859f3bd2edb0c3b171940cac0ec
   - filename: prod.Dockerfile
     checksum: 67b03670b7d83e3d7439ed38beaa7bf44e645bdabd69526a820f21d5dbb945f3
+  - filename: nginx.conf
+    checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
