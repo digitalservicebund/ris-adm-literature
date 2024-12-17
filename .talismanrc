@@ -3,7 +3,7 @@ scopeconfig:
 
 fileignoreconfig:
   - filename: lefthook.yml
-    checksum: 921432fe344ffab3de5f502c7144f9d67b07ed2e34ed6b53cdca521cba30813c
+    checksum: 8168972ed7d27ebebc6e2c33243fad92abe4f859f3bd2edb0c3b171940cac0ec
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
