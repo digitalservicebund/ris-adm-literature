@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 jobs:
-  linting-formatting-frontend:
+  lint-and-format-check-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,10 +24,10 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
-      - name: Linting
+      - name: Lint check
         run: npm run lint:check
         working-directory: ./frontend
-      - name: Formatting
+      - name: Format check
         run: npm run format:check
         working-directory: ./frontend
       - name: Send status to Slack
@@ -38,7 +38,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  audit-licenses-frontend:
+  license-audit-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +107,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  unit-tests-frontend:
+  unit-test-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -141,7 +141,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  e2e-tests-frontend:
+  e2e-test-frontend:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.49.1-noble
@@ -178,7 +178,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  check-code-quality-with-sonarqube:
+  code-quality-check-with-sonarqube:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
