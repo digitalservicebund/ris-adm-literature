@@ -34,6 +34,7 @@ jobs:
       security-events: write # trivy scan needs this
 
   frontend-build-image-and-scan:
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
