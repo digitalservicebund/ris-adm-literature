@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@sentry/vite-plugin": "^2.22.7",
-    "@sentry/vue": "^8.45.1",
+    "@sentry/vue": "^8.46.0",
     "license-checker": "^25.0.1",
     "pinia": "^2.2.6",
     "vue": "^3.5.13",
