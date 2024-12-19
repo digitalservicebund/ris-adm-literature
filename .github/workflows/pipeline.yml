@@ -195,8 +195,7 @@ jobs:
         uses: digitalservicebund/argocd-deploy@4fac1bb67c92ed168f6d9b22f8779ce241a9e412 # v1.0.0
         with:
           environment: staging
-          #version: ${{ needs.push-backend-image-to-registry.outputs.version }}
-          version: ${{ env.CONTAINER_IMAGE_VERSION }}
+          version: ${{ needs.push-frontend-image-to-registry.outputs.version }}
           deploying_repo: ris-adm-vwv/frontend
           infra_repo: ris-adm-vwv-infra
           deploy_key: ${{ secrets.DEPLOY_KEY }}
