@@ -202,7 +202,7 @@ jobs:
         with:
           environment: staging
           version: ${{ needs.push-frontend-image-to-registry.outputs.version }}
-          deploying_repo: ris-adm-vwv/frontend
+          deploying_repo: ris-adm-vwv-frontend
           infra_repo: ris-adm-vwv-infra
           deploy_key: ${{ secrets.DEPLOY_KEY }}
           app: ris-adm-vwv-staging
