@@ -17,6 +17,8 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+frontend-licence-report.csv
+
 # Editor directories and files
 .vscode
 .idea
