@@ -137,6 +137,7 @@ jobs:
     needs:
       - frontend-jobs
       - frontend-build-image-and-scan
+      - security-jobs
     permissions:
       contents: read
       id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
@@ -183,7 +184,6 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
 #  deploy-staging:
 #    runs-on: ubuntu-latest
 #    if: ${{ github.ref == 'refs/heads/main' }}
