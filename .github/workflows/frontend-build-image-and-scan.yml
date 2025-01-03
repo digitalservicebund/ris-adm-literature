@@ -1,5 +1,18 @@
 on:
   workflow_call:
+    inputs:
+      container-registry:
+        required: true
+        type: string
+      container-image-name:
+        required: true
+        type: string
+      container-image-version:
+        required: true
+        type: string
+      run-id:
+        required: true
+        type: string
 
 jobs:
   frontend-build-image-and-scan:
@@ -7,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build frontend image
-        run: docker build --file prod.Dockerfile --tag ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}-frontend:${{ env.CONTAINER_IMAGE_VERSION }} .
+        run: docker build --file prod.Dockerfile --tag ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }} .
       - name: Run Trivy vulnerability image scanner
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
@@ -16,7 +29,7 @@ jobs:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}-frontend:${{ env.CONTAINER_IMAGE_VERSION }}
+          image-ref: ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
           format: "sarif"
           output: "trivy-results.sarif"
       - name: Check trivy results
@@ -70,7 +83,7 @@ jobs:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}-frontend:${{ env.CONTAINER_IMAGE_VERSION }}
+          image-ref: ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
           format: "cosign-vuln"
           output: "vuln-frontend.json"
       - name: Upload cosign vulnerability scan record
@@ -82,12 +95,12 @@ jobs:
       - name: Save image
         run: |
           mkdir /tmp/images
-          docker save -o /tmp/images/frontend-image.tar ${{ env.CONTAINER_REGISTRY }}/${{ env.CONTAINER_IMAGE_NAME }}-frontend:${{ env.CONTAINER_IMAGE_VERSION }}
+          docker save -o /tmp/images/frontend-image.tar ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
       - uses: actions/cache@v4
         with:
           path: /tmp/images
-          key: docker-frontend-images-cache-${{ env.RUN_ID }}
-          restore-keys: docker-frontend-images-cache-${{ env.RUN_ID }}
+          key: docker-frontend-images-cache-${{ inputs.run-id }}
+          restore-keys: docker-frontend-images-cache-${{ inputs.run-id }}
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
