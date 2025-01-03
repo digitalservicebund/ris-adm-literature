@@ -11,16 +11,7 @@ on:
   # Allow to run this workflow manually
   workflow_dispatch:
 
-env:
-  RUN_ID: ${{ github.run_id }}
-  CONTAINER_REGISTRY: ghcr.io
-  CONTAINER_IMAGE_NAME: ${{ github.repository }}
-  CONTAINER_IMAGE_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
-
 jobs:
-  ##############################################
-  # jobs dispatched to separate workflow files #
-  ##############################################
 
   security-jobs:
     uses: ./.github/workflows/security-jobs.yml
@@ -63,10 +54,6 @@ jobs:
       container-registry: ghcr.io
       container-image-name: ${{ github.repository }}
       container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
-    
-  # ######################
-  # # Deploy new versions to staging
-  # ######################
 
   frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
