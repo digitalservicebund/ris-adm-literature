@@ -17,8 +17,6 @@ on:
 jobs:
   frontend-push-image-to-registry:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.set-version.outputs.version }}
     steps:
       - uses: actions/cache@v4
         with:
@@ -50,8 +48,6 @@ jobs:
           name: "vuln-frontend.json"
       - name: Attest vulnerability scan
         run: cosign attest --yes --replace --predicate vuln-frontend.json --type vuln ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
-      - id: set-version
-        run: echo "version=$CONTAINER_IMAGE_VERSION" >> "$GITHUB_OUTPUT"
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions

@@ -80,4 +80,4 @@ jobs:
       id-token: write
     secrets: inherit
     with:
-      version: ${{ needs.frontend-push-image-to-registry.outputs.version }}
+      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
