@@ -22,8 +22,8 @@ jobs:
   # jobs dispatched to separate workflow files #
   ##############################################
 
-  frontend-jobs:
-    uses: ./.github/workflows/frontend-jobs.yml
+  frontend-checks:
+    uses: ./.github/workflows/frontend-checks.yml
     secrets: inherit
 
   security-jobs:
@@ -135,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     needs:
-      - frontend-jobs
+      - frontend-checks
       - frontend-build-image-and-scan
       - security-jobs
     permissions:
@@ -189,16 +189,16 @@ jobs:
   # # Deploy new versions to staging
   # ######################
 
-  deploy-staging-job:
+  frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
     needs:
-      - frontend-jobs
+      - frontend-checks
       - frontend-build-image-and-scan
       - security-jobs
       - push-frontend-image-to-registry
     permissions:
       id-token: write
-    uses: ./.github/workflows/deploy-staging-job.yml
+    uses: ./.github/workflows/frontend-deploy-staging.yml
     secrets: inherit
     with:
       version: ${{ needs.push-frontend-image-to-registry.outputs.version }}
