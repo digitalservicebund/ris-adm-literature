@@ -20,3 +20,13 @@ then install the hooks via
 ```bash
 lefthook install
 ```
+
+## Run Frontend with Docker
+
+```bash
+docker build --tag ris-adm-vwv-frontend-local:dev .
+docker run -p 5173:5173 ris-adm-vwv-frontend-local:dev
+```
+
+Visit [http://localhost:5173/](http://localhost:5173/)
+
