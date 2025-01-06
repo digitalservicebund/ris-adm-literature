@@ -30,7 +30,7 @@ jobs:
       GITHUB_RUN_ID: ${{ steps.set-env-vars.outputs.GITHUB_RUN_ID}}
       CONTAINER_REGISTRY: ${{ steps.set-env-vars.outputs.CONTAINER_REGISTRY}}
       CONTAINER_IMAGE_NAME: ${{ steps.set-env-vars.outputs.CONTAINER_IMAGE_NAME}}
-      GCONTAINER_IMAGE_VERSION: ${{ steps.set-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
+      CONTAINER_IMAGE_VERSION: ${{ steps.set-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
     steps:
       - name: Set docker image related environment variables
         id: set-env-vars
