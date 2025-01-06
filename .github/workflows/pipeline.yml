@@ -9,6 +9,12 @@ on:
   # Allow to run this workflow manually
   workflow_dispatch:
 
+env:
+  GITHUB_RUN_ID: ${{ github.run_id }}
+  CONTAINER_REGISTRY: ghr.io
+  CONTAINER_IMAGE_NAME: ${{ github.repository }}
+  CONTAINER_IMAGE_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   ########################################
   # Jobs operating on the whole repository
@@ -36,10 +42,10 @@ jobs:
       contents: read
       security-events: write
     with:
-      run-id: ${{ github.run_id }}
-      container-registry: ghcr.io
-      container-image-name: ${{ github.repository }}
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      run-id: ${{ env.GITHUB_RUN_ID }}
+      container-registry: ${{ env.CONTAINER_REGISTRY }}
+      container-image-name: ${{ env.CONTAINER_IMAGE_NAME }}
+      container-image-version: ${{ env.CONTAINER_IMAGE_VERSION }}
 
   frontend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}
