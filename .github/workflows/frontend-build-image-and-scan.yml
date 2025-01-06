@@ -1,21 +1,12 @@
 on:
   workflow_call:
     inputs:
-      container-registry:
-        required: true
-        type: string
-      container-image-name:
-        required: true
-        type: string
-      container-image-version:
-        required: true
-        type: string
       run-id:
         required: true
         type: string
-
-env:
-  IMAGE_REF: ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
+      image-ref:
+        required:true
+        type: string
 
 jobs:
   frontend-build-image-and-scan:
@@ -23,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build frontend image
-        run: docker build --file prod.Dockerfile --tag ${{ env.IMAGE_REF }} .
+        run: docker build --file prod.Dockerfile --tag ${{ inputs.IMAGE_REF }} .
       - name: Run Trivy vulnerability image scanner
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
@@ -32,7 +23,7 @@ jobs:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: ${{ env.IMAGE_REF }}
+          image-ref: ${{ inputs.IMAGE_REF }}
           format: "sarif"
           output: "trivy-results.sarif"
       - name: Check trivy results
@@ -86,7 +77,7 @@ jobs:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: ${{ env.IMAGE_REF }}
+          image-ref: ${{ inputs.IMAGE_REF }}
           format: "cosign-vuln"
           output: "vuln-frontend.json"
       - name: Upload cosign vulnerability scan record
@@ -98,7 +89,7 @@ jobs:
       - name: Save image
         run: |
           mkdir /tmp/images
-          docker save -o /tmp/images/frontend-image.tar ${{ env.IMAGE_REF }}
+          docker save -o /tmp/images/frontend-image.tar ${{ inputs.IMAGE_REF }}
       - uses: actions/cache@v4
         with:
           path: /tmp/images
