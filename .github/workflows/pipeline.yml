@@ -45,16 +45,16 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     # For PR releases, labels could be used like this: 
     # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+    needs:
+      - security-jobs
+      - frontend-checks
+      - frontend-build-image-and-scan
     uses: ./.github/workflows/frontend-push-image-to-registry.yml
     secrets: inherit
     permissions:
       contents: read
       id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
       packages: write
-    needs:
-      - security-jobs
-      - frontend-checks
-      - frontend-build-image-and-scan
     with:
       run-id: ${{ github.run_id }}
       container-registry: ghcr.io
@@ -63,12 +63,12 @@ jobs:
 
   frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
-    uses: ./.github/workflows/frontend-deploy-staging.yml
     needs:
       - security-jobs
       - frontend-checks
       - frontend-build-image-and-scan
       - frontend-push-image-to-registry
+    uses: ./.github/workflows/frontend-deploy-staging.yml
     permissions:
       id-token: write
     secrets: inherit
