@@ -42,7 +42,9 @@ jobs:
       container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-push-image-to-registry:
-    if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    # For PR releases, labels could be used like this: 
+    # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     uses: ./.github/workflows/frontend-push-image-to-registry.yml
     secrets: inherit
     permissions:
