@@ -1,10 +1,16 @@
 on:
   workflow_call:
     inputs:
-      run-id:
+      container-registry:
         required: true
         type: string
-      image-ref:
+      container-image-name:
+        required: true
+        type: string
+      container-image-version:
+        required: true
+        type: string
+      run-id:
         required: true
         type: string
 
@@ -29,19 +35,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish backend container image
-        run: docker push ${{ inputs.image-ref }}
+        run: docker push ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
       - name: Install cosign
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: sigstore/cosign-installer@e11c0892438d2c0a48e49dee376e4883f10f2e59
       - name: Sign the published Docker image
-        run: cosign sign --yes ${{ inputs.image-ref }}
+        run: cosign sign --yes ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
       - name: Download cosign vulnerability scan record
         uses: actions/download-artifact@v4
         with:
           name: "vuln-frontend.json"
       - name: Attest vulnerability scan
-        run: cosign attest --yes --replace --predicate vuln-frontend.json --type vuln ${{ inputs.image-ref }}
+        run: cosign attest --yes --replace --predicate vuln-frontend.json --type vuln ${{ inputs.container-registry }}/${{ inputs.container-image-name }}-frontend:${{ inputs.container-image-version }}
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions

@@ -37,7 +37,9 @@ jobs:
       security-events: write
     with:
       run-id: ${{ github.run_id }}
-      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
+      container-registry: ghcr.io
+      container-image-name: ${{ github.repository }}
+      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -55,7 +57,9 @@ jobs:
       - frontend-build-image-and-scan
     with:
       run-id: ${{ github.run_id }}
-      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
+      container-registry: ghcr.io
+      container-image-name: ${{ github.repository }}
+      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
