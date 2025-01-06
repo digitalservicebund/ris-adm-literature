@@ -15,16 +15,9 @@ on:
 
 jobs:
 
-  ########################################
-  # Jobs operating on the whole repository
-  ########################################
-
-  security-jobs:
-    uses: ./.github/workflows/security-jobs.yml
-    secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
-    permissions:
-      contents: read
-      security-events: write # trivy scan needs this
+  ###############
+  # Workflow jobs
+  ###############
 
   # Due to a GitHub bug (https://github.com/actions/runner/issues/480),
   # we need to set the env vars manually for our use case
@@ -45,6 +38,18 @@ jobs:
           echo "CONTAINER_IMAGE_VERSION=${{ github.event.pull_request.head.sha || github.sha }}" >> $GITHUB_OUTPUT
       - name: Show env vars
         run: echo $GITHUB_OUTPUT
+
+  #################
+  # Repository jobs
+  #################
+
+  security-jobs:
+    uses: ./.github/workflows/security-jobs.yml
+    secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
+    permissions:
+      contents: read
+      security-events: write # trivy scan needs this
+
 
   ###############
   # Frontend jobs
