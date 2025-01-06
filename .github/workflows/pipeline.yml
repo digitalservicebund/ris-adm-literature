@@ -10,7 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   ########################################
   # Jobs operating on the whole repository
   ########################################
@@ -31,7 +30,6 @@ jobs:
     secrets: inherit
 
   frontend-build-image-and-scan:
-    if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
     secrets: inherit
     permissions:
