@@ -9,12 +9,6 @@ on:
   # Allow to run this workflow manually
   workflow_dispatch:
 
-env:
-  GITHUB_RUN_ID: ${{ github.run_id }}
-  CONTAINER_REGISTRY: "ghr.io"
-  CONTAINER_IMAGE_NAME: ${{ github.repository }}
-  CONTAINER_IMAGE_VERSION: ${{ github.event.pull_request.head.sha || github.sha }}
-
 jobs:
   ########################################
   # Jobs operating on the whole repository
@@ -27,14 +21,19 @@ jobs:
       contents: read
       security-events: write # trivy scan needs this
 
-  # Due to a GitHub bug (https://github.com/actions/runner/issues/480), 
+  # Due to a GitHub bug (https://github.com/actions/runner/issues/480),
   # we need to set the env vars manually for our use case
   setup-env-vars:
     runs-on: ubuntu-latest
     steps:
       - name: Set docker image related environment variables
-        run: echo "CONTAINER_REGISTRY=ghr.io" >> $GITHUB_ENV
-    
+        run: |
+          echo "GITHUB_RUN_ID=${{ github.run_id }}" >> $GITHUB_ENV
+          echo "CONTAINER_REGISTRY=ghr.io" >> $GITHUB_ENV
+          echo "CONTAINER_IMAGE_NAME={{ github.repository }}" >> $GITHUB_ENV
+          echo "CONTAINER_IMAGE_VERSION=${{ github.event.pull_request.head.sha || github.sha }} >> $GITHUB_ENV
+      - name: Show env vars
+        run: echo $GITHUB_ENV
 
   ###############
   # Frontend jobs
@@ -47,6 +46,8 @@ jobs:
   frontend-build-image-and-scan:
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
     secrets: inherit
+    needs:
+      - setup-env-vars
     permissions:
       contents: read
       security-events: write
@@ -58,7 +59,7 @@ jobs:
 
   frontend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}
-    # For PR releases, labels could be used like this: 
+    # For PR releases, labels could be used like this:
     # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     uses: ./.github/workflows/frontend-push-image-to-registry.yml
     secrets: inherit
@@ -67,6 +68,7 @@ jobs:
       id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
       packages: write
     needs:
+      - setup-env-vars
       - security-jobs
       - frontend-checks
       - frontend-build-image-and-scan
@@ -80,6 +82,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/frontend-deploy-staging.yml
     needs:
+      - setup-env-vars
       - security-jobs
       - frontend-checks
       - frontend-build-image-and-scan
