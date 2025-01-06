@@ -59,10 +59,10 @@ jobs:
       contents: read
       security-events: write
     with:
-      run-id: ${{ steps.set-env-vars.outputs.GITHUB_RUN_ID}}
-      container-registry: ${{ steps.set-env-vars.outputs.CONTAINER_REGISTRY}}
-      container-image-name: ${{ steps.set-env-vars.outputs.CONTAINER_IMAGE_NAME}}
-      container-image-version: ${{ steps.set-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
+      run-id: ${{ needs.setup-env-vars.outputs.GITHUB_RUN_ID}}
+      container-registry: ${{ needs.setup-env-vars.outputs.CONTAINER_REGISTRY}}
+      container-image-name: ${{ needs.setup-env-vars.outputs.CONTAINER_IMAGE_NAME}}
+      container-image-version: ${{ needs.setup-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
 
   frontend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}
