@@ -27,6 +27,15 @@ jobs:
       contents: read
       security-events: write # trivy scan needs this
 
+  # Due to a GitHub bug (https://github.com/actions/runner/issues/480), 
+  # we need to set the env vars manually for our use case
+  setup-env-vars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set docker image related environment variables
+        run: echo "CONTAINER_REGISTRY=ghr.io" >> $GITHUB_ENV
+    
+
   ###############
   # Frontend jobs
   ###############
