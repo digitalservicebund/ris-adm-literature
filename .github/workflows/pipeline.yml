@@ -8,6 +8,10 @@ on:
   pull_request:
   # Allow to run this workflow manually
   workflow_dispatch:
+    
+# env:
+# Setting the container information via the env key does not work we use outputs instead
+# cf. the "setup-env-vars" job below for details
 
 jobs:
 
@@ -80,10 +84,10 @@ jobs:
       - frontend-checks
       - frontend-build-image-and-scan
     with:
-      run-id: ${{ github.run_id }}
-      container-registry: ghcr.io
-      container-image-name: ${{ github.repository }}
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      run-id: ${{ needs.setup-env-vars.outputs.GITHUB_RUN_ID}}
+      container-registry: ${{ needs.setup-env-vars.outputs.CONTAINER_REGISTRY}}
+      container-image-name: ${{ needs.setup-env-vars.outputs.CONTAINER_IMAGE_NAME}}
+      container-image-version: ${{ needs.setup-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
 
   frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -98,4 +102,4 @@ jobs:
       id-token: write
     secrets: inherit
     with:
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      container-image-version: ${{ needs.setup-env-vars.outputs.CONTAINER_IMAGE_VERSION}}
