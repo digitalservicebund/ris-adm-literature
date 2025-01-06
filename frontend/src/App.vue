@@ -5,7 +5,7 @@ import NavbarTop from './components/NavbarTop.vue'
 <template>
   <div class="flex min-h-screen flex-col">
     <NavbarTop />
-    👉 Falls es um ADM Verwaltungsvorschriften (VwV) geht, sind Sie am richtigen Ort, aber es gibt
+    👉 Falls es um Verwaltungsvorschriften (ADM/VwV) geht, sind Sie am richtigen Ort, aber es gibt
     noch nichts weiter zu sehen.
   </div>
 </template>
