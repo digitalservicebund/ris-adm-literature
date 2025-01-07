@@ -7,7 +7,7 @@
 This repository contains software tools supporting the documentation of administrative directives (DE: “Verwaltungsvorschriften”).
 
 The name "RIS ADM VwV" refers to
-* "RIS", which is the German acronym for "information system on the law" (DE: "Rechtsinformationssystem") and
+* "RIS" which is the German acronym for "information system on the law" (DE: "Rechtsinformationssystem") and
 * "ADM" (or German: "VwV"), which makes explicit that within RIS, we're explicitly dealing with administrative directives (German: "Verwaltungsvorschriften") and not, for example, with federal laws or court verdicts.
 
 ## Tech Documentation
