@@ -18,6 +18,7 @@ coverage
 /cypress/screenshots/
 
 frontend-licence-report.csv
+unit-test-report.json
 
 # Editor directories and files
 .vscode
