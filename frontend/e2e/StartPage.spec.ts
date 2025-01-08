@@ -16,7 +16,7 @@ test('Visiting the app root url, it shows "Rechtsinformationen" and user data', 
   const innerDocumentationOfficeText = await targetDocumentationOfficeElement.innerText()
   expect(innerDocumentationOfficeText).toContain('BSG')
   // TODO RISDEV-6041
-  // Expect user icon ?
+  // Expect user icon
   // const targetContent = page.getByText('Übersicht')
   // const innerContentText = await targetContent.innerText()
   // expect(innerContentText).toContain('Übersicht Verwaltungsvorschriften')
