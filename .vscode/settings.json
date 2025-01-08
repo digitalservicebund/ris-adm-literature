@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "digitalservicebund",
+        "projectKey": "digitalservicebund_ris-adm-vwv"
+    }
+}
