@@ -2,11 +2,13 @@ import { test, expect } from '@playwright/test'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
-test('Visiting the app root url, it shows "Rechtsinformationen" and user data', async ({ page }) => {
+test('Visiting the app root url, it shows "Rechtsinformationen" and user data', async ({
+  page,
+}) => {
   await page.goto('/')
   const targetHeaderElement = page.getByText('Rechtsinformationen')
   const innerText = await targetHeaderElement.innerText()
-  expect(innerText).toContain('Rechtsinformationen')
+  expect(innerText).toContain('RECHTSINFORMATIONEN')
   const targetNameElement = page.getByText('Vorname Nachname')
   const innerNameText = await targetNameElement.innerText()
   expect(innerNameText).toContain('Vorname Nachname')
