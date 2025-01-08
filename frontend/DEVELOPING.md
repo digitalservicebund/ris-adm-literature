@@ -40,7 +40,7 @@ npm run test:unit
 # Install browsers for the first run
 npx playwright install
 
-# When testing on CI, must build the project first
+# Not required locally, but when testing on CI we must build the project first
 npm run build
 
 # Runs the end-to-end tests
