@@ -1,4 +1,4 @@
-@import "@digitalservice4germany/angie/fonts.css";
+@import '@digitalservice4germany/angie/fonts.css';
 
 @tailwind base;
 
@@ -23,7 +23,7 @@
   .ds-input input,
   .ds-select select {
     &::placeholder {
-      color: theme("colors.gray.800");
+      color: theme('colors.gray.800');
       font-family: BundesSansWeb, sans-serif;
       font-style: normal;
     }

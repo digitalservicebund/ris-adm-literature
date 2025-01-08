@@ -2,7 +2,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import * as Sentry from '@sentry/vue'
-import "@/styles/global.scss"
+import '@/styles/global.scss'
 
 const app = createApp(App)
 
