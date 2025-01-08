@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import FlexContainer from "@/components/FlexContainer.vue"
+import FlexItem from "@/components/FlexItem.vue"
+import IconBadge from "@/components/IconBadge.vue"
+// import IconPermIdentity from "~icons/ic/baseline-perm-identity"
+</script>
 
 <template>
   <nav class="flex items-center justify-between border-y border-gray-400 py-16 pe-16 print:hidden">
@@ -9,6 +14,25 @@
           <br />
           des Bundes
         </span>
+      </div>
+    </div>
+    <div class="grid grid-cols-[auto,1fr] gap-10">
+<!--      <IconPermIdentity />-->
+      <div>
+        <div class="ds-label-01-reg">
+          <router-link :to="{ name: 'settings' }">
+            <FlexContainer>
+              <FlexItem class="pe-8">Vorname Nachname</FlexItem>
+              <FlexItem>
+                <IconBadge
+                  :background-color="'bg-red-300'"
+                  color="text-black"
+                  :label="'BSG | Staging'"
+                />
+              </FlexItem>
+            </FlexContainer>
+          </router-link>
+        </div>
       </div>
     </div>
   </nav>

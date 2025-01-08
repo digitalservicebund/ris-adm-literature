@@ -7,9 +7,13 @@ test('Visiting the app root url, it shows "Rechtsinformationen" and user data', 
   const targetHeaderElement = page.getByText('Rechtsinformationen')
   const innerText = await targetHeaderElement.innerText()
   expect(innerText).toContain('Rechtsinformationen')
+  const targetNameElement = page.getByText('Vorname Nachname')
+  const innerNameText = await targetNameElement.innerText()
+  expect(innerNameText).toContain('Vorname Nachname')
+  const targetDocumentationOfficeElement = page.getByText('BSG')
+  const innerDocumentationOfficeText = await targetDocumentationOfficeElement.innerText()
+  expect(innerDocumentationOfficeText).toContain('BSG')
   // TODO RISDEV-6041
-  // expect(innerText).toContain('Vorname Nachname')
-  // expect(innerText).toContain('BSG')
   // Expect user icon
   // const targetContent = page.getByText('Übersicht')
   // const innerContentText = await targetContent.innerText()
