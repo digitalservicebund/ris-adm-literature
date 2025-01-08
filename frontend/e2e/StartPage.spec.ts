@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { stdout } from 'process'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
@@ -15,8 +16,9 @@ test('Visiting the app root url, it shows "Rechtsinformationen" and user data', 
   const targetDocumentationOfficeElement = page.getByText('BSG')
   const innerDocumentationOfficeText = await targetDocumentationOfficeElement.innerText()
   expect(innerDocumentationOfficeText).toContain('BSG')
+  // user icon
+  await expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
   // TODO RISDEV-6041
-  // Expect user icon
   // const targetContent = page.getByText('Übersicht')
   // const innerContentText = await targetContent.innerText()
   // expect(innerContentText).toContain('Übersicht Verwaltungsvorschriften')
