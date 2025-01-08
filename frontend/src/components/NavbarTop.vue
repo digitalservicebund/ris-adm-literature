@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import FlexContainer from "@/components/FlexContainer.vue"
-import FlexItem from "@/components/FlexItem.vue"
-import IconBadge from "@/components/IconBadge.vue"
+import FlexContainer from '@/components/FlexContainer.vue'
+import FlexItem from '@/components/FlexItem.vue'
+import IconBadge from '@/components/IconBadge.vue'
 // import IconPermIdentity from "~icons/ic/baseline-perm-identity"
 </script>
 
@@ -17,7 +17,7 @@ import IconBadge from "@/components/IconBadge.vue"
       </div>
     </div>
     <div class="grid grid-cols-[auto,1fr] gap-10">
-<!--      <IconPermIdentity />-->
+      <!--      <IconPermIdentity />-->
       <div>
         <div class="ds-label-01-reg">
           <router-link :to="{ name: 'settings' }">

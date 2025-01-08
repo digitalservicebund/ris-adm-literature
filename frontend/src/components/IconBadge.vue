@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Component } from "vue"
+import { type Component } from 'vue'
 
 defineProps<{
   label: string
@@ -19,10 +19,7 @@ export interface IconBadgeProps {
 </script>
 
 <template>
-  <div
-    class="ds-label-02-reg w-[fit-content] rounded-full px-4 py-2"
-    :class="backgroundColor"
-  >
+  <div class="ds-label-02-reg w-[fit-content] rounded-full px-4 py-2" :class="backgroundColor">
     <component :is="icon" class="inline-block" :class="color" />
     <span class="mx-2 align-middle"> {{ label }}</span>
   </div>
