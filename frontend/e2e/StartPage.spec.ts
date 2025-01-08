@@ -8,9 +8,9 @@ test('Visiting the app root url, it shows the title "Rechtsinformationen [...]",
   await page.goto('/')
   expect(await page.getByText('Rechtsinformationen').innerText()).toContain('DES BUNDES')
   // user icon
-  expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
+  await expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
   expect(await page.getByText('Vorname').innerText()).toContain('Nachname')
-  expect(await page.getByText('BSG')).toHaveCount(1)
+  await expect(page.getByText('BSG')).toHaveCount(1)
   // TODO RISDEV-6041
   // const targetContent = page.getByText('Übersicht')
   // const innerContentText = await targetContent.innerText()
