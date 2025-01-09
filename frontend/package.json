@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest --reporter=verbose --reporter=json --outputFile=./frontend-unit-test-report.json",
-    "test:e2e": "PLAYWRIGHT_JSON_OUTPUT_NAME=frontend-e2e-test-report.json playwright test --reporter=json",
+    "test:e2e": "cross-env PLAYWRIGHT_JSON_OUTPUT_NAME=frontend-e2e-test-report.json playwright test --reporter=json",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
@@ -19,6 +19,7 @@
     "audit:licences": "license-checker --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^7.1.1",
     "@sentry/vite-plugin": "^2.22.7",
     "@sentry/vue": "^8.47.0",
     "license-checker": "^25.0.1",
@@ -44,6 +45,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.17.0",
     "eslint-plugin-playwright": "^2.1.0",
     "eslint-plugin-vue": "^9.30.0",
