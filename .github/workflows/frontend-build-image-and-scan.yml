@@ -16,7 +16,7 @@ on:
 
 jobs:
   frontend-build-image-and-scan:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build frontend image
