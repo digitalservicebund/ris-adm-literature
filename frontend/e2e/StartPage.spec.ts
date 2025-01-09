@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
-test('Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data', async ({
+test('Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data',
+  { tag: ['@RISDEV-6041']}, async ({
   page,
 }) => {
   await page.goto('/')
