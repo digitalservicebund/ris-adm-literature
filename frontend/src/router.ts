@@ -1,5 +1,5 @@
-import {createRouter, createWebHistory} from "vue-router";
-import StartPage from "@/routes/StartPage.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import StartPage from '@/routes/StartPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -7,8 +7,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'StartPage',
-      component: StartPage
-    }]
+      component: StartPage,
+    },
+  ],
 })
 
 export default router

@@ -20,16 +20,16 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
       <IconPermIdentity data-testid="iconPermIdentity" />
       <div>
         <div class="ds-label-01-reg">
-            <FlexContainer>
-              <FlexItem class="pe-8">Vorname Nachname</FlexItem>
-              <FlexItem>
-                <IconBadge
-                  :background-color="'bg-red-300'"
-                  color="text-black"
-                  :label="'BSG | Staging'"
-                />
-              </FlexItem>
-            </FlexContainer>
+          <FlexContainer>
+            <FlexItem class="pe-8">Vorname Nachname</FlexItem>
+            <FlexItem>
+              <IconBadge
+                :background-color="'bg-red-300'"
+                color="text-black"
+                :label="'BSG | Staging'"
+              />
+            </FlexItem>
+          </FlexContainer>
         </div>
       </div>
     </div>
