@@ -6,9 +6,11 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      environment: 'jsdom',
+      environment: 'node',
+      environmentMatchGlobs: [['src/components/**', 'jsdom']],
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
+      pool: 'threads',
       coverage: {
         provider: 'v8',
         reporter: ['lcov', 'text', 'html'],
