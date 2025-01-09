@@ -12,6 +12,14 @@ fileignoreconfig:
     checksum: fa217d4a34afcd967e6c35b10e139cd5c52711e41c190f477576441081b5cf99
   - filename: LICENSE
     checksum: 00de5fa1aad2fcb968beb5d1bbf09931fc9d3f160f11b945b24f3203ea025917
+  - filename: frontend/src/components/ComboboxInput.vue
+    checksum: db4a95de849d70aeac7adf407d4aa728a40f97bea6fa873725b4985039093731
+  - filename: frontend/src/components/input/TextInput.vue
+    checksum: 9b2cf5af0630bc3b1023a5554859639d873d095fc0117f91357c43c90a9c0282
+  - filename: frontend/src/components/EditableList.vue
+    checksum: bd360623c5b9d999799b47ad8018b86cfc6b795e6eeed97889ce80012406a95d
+  - filename: frontend/src/components/Tooltip.vue
+    checksum: f6255808b70650ad3d7d7445bf2e3165058accd88d942462e1a59353c22daa9e
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text

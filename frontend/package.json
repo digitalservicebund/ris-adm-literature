@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",
+    "@vueuse/core": "^12.3.0",
     "@sentry/vite-plugin": "^2.22.7",
     "@sentry/vue": "^8.47.0",
     "license-checker": "^25.0.1",
