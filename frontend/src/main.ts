@@ -5,7 +5,7 @@ import '@/styles/global.scss'
 
 const app = createApp(App)
 
-// env.PROD does not mean the "prod" environment, but should be true for all hosted 
+// env.PROD does not mean the "prod" environment, but should be true for all hosted
 // environments (as opposed to local development), cf: https://vite.dev/guide/env-and-mode
 // if required locally, we can build and run the app from "/dist" - that one is PROD, too.
 if (import.meta.env.PROD) {
