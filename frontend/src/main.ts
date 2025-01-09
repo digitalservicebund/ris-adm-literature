@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import * as Sentry from '@sentry/vue'
 import '@/styles/global.scss'
+import router from "@/router.ts";
 
 const app = createApp(App)
 
@@ -17,4 +18,4 @@ if (import.meta.env.PROD) {
   })
 }
 
-app.mount('#app')
+app.use(router).mount('#app')

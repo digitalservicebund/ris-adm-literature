@@ -20,7 +20,6 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
       <IconPermIdentity data-testid="iconPermIdentity" />
       <div>
         <div class="ds-label-01-reg">
-          <router-link :to="{ name: 'settings' }">
             <FlexContainer>
               <FlexItem class="pe-8">Vorname Nachname</FlexItem>
               <FlexItem>
@@ -31,7 +30,6 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
                 />
               </FlexItem>
             </FlexContainer>
-          </router-link>
         </div>
       </div>
     </div>
