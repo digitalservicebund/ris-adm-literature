@@ -3,7 +3,7 @@ on:
 
 jobs:
   security-scan-with-trivy: # open source security scanner, cf. https://trivy.dev/
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
 
   secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Running on main only https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409
     #  if: ${{ github.ref == 'refs/heads/main' }}
     steps:
