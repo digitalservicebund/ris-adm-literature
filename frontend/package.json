@@ -21,7 +21,7 @@
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",
     "@sentry/vite-plugin": "^2.22.7",
-    "@sentry/vue": "^8.47.0",
+    "@sentry/vue": "^8.48.0",
     "license-checker": "^25.0.1",
     "pinia": "^2.2.6",
     "vue": "^3.5.13",
