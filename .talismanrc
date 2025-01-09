@@ -39,5 +39,6 @@ allowed_patterns:
   - "key:.+runner.os"
   - "key[s]?: docker-frontend-images-cache"
   - "key: npm-cache"
+  - "restore-keys:"
   - "sonar.projectKey=digitalservicebund_ris-adm-vwv"
   - "deploy_key: \\$\\{\\{ secrets.DEPLOY_KEY \\}\\}"
