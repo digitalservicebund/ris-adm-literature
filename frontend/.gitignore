@@ -35,7 +35,6 @@ frontend-e2e-test-report.json
 test-results/
 playwright-report/
 
-frontend-license-report.csv
 
 # Sentry Config File
 .env.sentry-build-plugin
