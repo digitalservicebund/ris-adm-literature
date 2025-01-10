@@ -7,7 +7,10 @@ import TextButton from '@/components/input/TextButton.vue'
     <div class="flex justify-between">
       <h1 class="ds-heading-02-reg">Übersicht Verwaltungsvorschriften</h1>
 
-      <TextButton label="Neue Dokumentationseinheit" href="/fundstellen" />
+      <TextButton
+        label="Neue Dokumentationseinheit"
+        href="/fundstellen"
+      />
     </div>
   </div>
 </template>
