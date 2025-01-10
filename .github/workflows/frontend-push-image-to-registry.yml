@@ -4,6 +4,9 @@ on:
       run-id:
         required: true
         type: string
+      container-registry:
+        required: true
+        type: string
       image-ref:
         required: true
         type: string
