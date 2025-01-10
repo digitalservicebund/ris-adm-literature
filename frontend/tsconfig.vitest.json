@@ -9,6 +9,11 @@
       "node",
       "jsdom",
       "unplugin-icons/types/vue"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "~/*": ["test/*"]
+    }
   }
 }
