@@ -10,7 +10,7 @@
     "test:unit": "vitest --reporter=verbose --reporter=json --outputFile=./frontend-unit-test-report.json",
     "test:e2e": "cross-env PLAYWRIGHT_JSON_OUTPUT_NAME=frontend-e2e-test-report.json playwright test --reporter=json",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build",
+    "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "format": "prettier --write src/",
