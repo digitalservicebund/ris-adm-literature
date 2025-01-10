@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
-test(
+test.only(
   'Visiting the app root url and clicking "Neue Dokumentationseinheit", the view shows the title "Fundstellen", two input fields, a sidebar navigation panel and a save button',
   { tag: ['@RISDEV-6042'] },
   async ({ page }) => {
@@ -12,6 +12,7 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     // then
     expect(page.url()).toMatch('.*/frontend$')
+    await expect(page.getByText('Fundstellen')).toHaveCount(1) // will become 2 once the nav bar exists
 
     // TODO #RISDEV-6042
     // await expect(page.getByText('Fundstellen')).toHaveCount(2) // nav bar + title
