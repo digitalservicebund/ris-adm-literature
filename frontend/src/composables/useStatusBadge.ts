@@ -1,6 +1,6 @@
-import { computed, type FunctionalComponent, type SVGAttributes } from "vue"
+import { computed, type FunctionalComponent, type SVGAttributes } from 'vue'
 // import DocumentUnit from "@/domain/documentUnit"
-import { Label, PublicationState, type PublicationStatus } from "@/domain/publicationStatus"
+import { Label, PublicationState, type PublicationStatus } from '@/domain/publicationStatus'
 
 export interface Badge {
   label: string
@@ -12,10 +12,10 @@ export interface Badge {
 // export function useStatusBadge(status: DocumentUnit["status"]) {
 export function useStatusBadge(status: PublicationStatus) {
   const badge: Badge = {
-    label: "",
+    label: '',
     icon: undefined,
-    color: "black",
-    backgroundColor: "white",
+    color: 'black',
+    backgroundColor: 'white',
   }
 
   return computed(() => {
@@ -24,31 +24,31 @@ export function useStatusBadge(status: PublicationStatus) {
     switch (status.publicationStatus) {
       case PublicationState.PUBLISHED:
         badge.label = Label.PUBLISHED
-        badge.backgroundColor = "bg-green-300"
+        badge.backgroundColor = 'bg-green-300'
         break
       case PublicationState.UNPUBLISHED:
         badge.label = Label.UNPUBLISHED
-        badge.backgroundColor = "bg-blue-300"
+        badge.backgroundColor = 'bg-blue-300'
         break
       case PublicationState.PUBLISHING:
         badge.label = Label.PUBLISHING
-        badge.backgroundColor = "bg-orange-300"
+        badge.backgroundColor = 'bg-orange-300'
         break
       case PublicationState.DUPLICATED:
         badge.label = Label.DUPLICATED
-        badge.backgroundColor = "bg-red-300"
+        badge.backgroundColor = 'bg-red-300'
         break
       case PublicationState.LOCKED:
         badge.label = Label.LOCKED
-        badge.backgroundColor = "bg-red-300"
+        badge.backgroundColor = 'bg-red-300'
         break
       case PublicationState.DELETING:
         badge.label = Label.DELETING
-        badge.backgroundColor = "bg-red-300"
+        badge.backgroundColor = 'bg-red-300'
         break
       case PublicationState.EXTERNAL_HANDOVER_PENDING:
         badge.label = Label.EXTERNAL_HANDOVER_PENDING
-        badge.backgroundColor = "bg-orange-300"
+        badge.backgroundColor = 'bg-orange-300'
         break
     }
     return badge

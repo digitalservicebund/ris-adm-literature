@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 // import dayjs from "dayjs"
 // import { computed, ref, toRaw, watchEffect } from "vue"
-import { computed, ref, toRaw } from "vue"
+import { computed, ref, toRaw } from 'vue'
 // import { useRoute } from "vue-router"
-import IconBadge from "@/components/IconBadge.vue"
+import IconBadge from '@/components/IconBadge.vue'
 // import SaveButton from "@/components/SaveDocumentUnitButton.vue"
-import TextButton from "@/components/input/TextButton.vue"
-import { useStatusBadge } from "@/composables/useStatusBadge"
-import { PublicationState } from "@/domain/publicationStatus"
+import TextButton from '@/components/input/TextButton.vue'
+import { useStatusBadge } from '@/composables/useStatusBadge'
+import { PublicationState } from '@/domain/publicationStatus'
 // import { useDocumentUnitStore } from "@/stores/documentUnitStore"
 // import IconError from "~icons/ic/baseline-error"
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  heading: "",
+  heading: '',
 })
 
 // const route = useRoute()
@@ -25,11 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const fileNumberInfo = computed(
   // () => documentUnitStore.documentUnit?.coreData.fileNumbers?.[0] || "",
-  () => ""
+  () => '',
 )
 
 const decisionDateInfo = computed(
-  () => ""
+  () => '',
   // documentUnitStore.documentUnit?.coreData.decisionDate
   //   ? dayjs(documentUnitStore.documentUnit.coreData.decisionDate).format(
   //       "DD.MM.YYYY",
@@ -39,23 +39,21 @@ const decisionDateInfo = computed(
 
 const courtInfo = computed(
   // () => documentUnitStore.documentUnit?.coreData.court?.label || "",
-  () => "",
+  () => '',
 )
 
 const formattedInfo = computed(() => {
-  const parts = [
-    courtInfo.value,
-    fileNumberInfo.value,
-    decisionDateInfo.value,
-  ].filter((part) => part.trim() !== "")
-  return parts.join(", ")
+  const parts = [courtInfo.value, fileNumberInfo.value, decisionDateInfo.value].filter(
+    (part) => part.trim() !== '',
+  )
+  return parts.join(', ')
 })
 
 const statusBadge = ref(
   // useStatusBadge(documentUnitStore.documentUnit?.status).value,
   useStatusBadge({
-    publicationStatus: PublicationState.UNPUBLISHED
-  }).value
+    publicationStatus: PublicationState.UNPUBLISHED,
+  }).value,
 )
 
 // watchEffect(() => {
@@ -103,10 +101,6 @@ const statusBadge = ref(
       aria-label="Speichern Button"
       data-testid="document-unit-save-button"
     /> -->
-    <TextButton
-      data-testid="save-button"
-      label="Speichern"
-      size="small"
-    />
+    <TextButton data-testid="save-button" label="Speichern" size="small" />
   </div>
 </template>

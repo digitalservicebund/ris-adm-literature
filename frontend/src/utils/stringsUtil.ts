@@ -5,7 +5,7 @@ export default class StringsUtil {
 
   public static mergeNonBlankStrings(
     words: (string | undefined)[],
-    separator: string = ", ",
+    separator: string = ', ',
   ): string {
     return words.filter((item) => !this.isEmpty(item)).join(separator)
   }

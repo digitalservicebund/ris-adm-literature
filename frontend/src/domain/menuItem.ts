@@ -1,4 +1,4 @@
-import type Route from "@/domain/route"
+import type Route from '@/domain/route'
 
 export default interface MenuItem {
   label: string

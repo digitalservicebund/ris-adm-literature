@@ -2,16 +2,16 @@
 // import { useHead } from "@unhead/vue"
 // import { storeToRefs } from "pinia"
 // import { onBeforeUnmount, onMounted, ref, Ref } from "vue"
-import { ref, type Ref } from "vue"
-import { useRoute } from "vue-router"
-import DocumentUnitInfoPanel from "@/components/DocumentUnitInfoPanel.vue"
+import { ref, type Ref } from 'vue'
+import { useRoute } from 'vue-router'
+import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 // import ExtraContentSidePanel from "@/components/ExtraContentSidePanel.vue"
 // import FlexContainer from "@/components/FlexContainer.vue"
 // import { ValidationError } from "@/components/input/types"
-import NavbarSide from "@/components/NavbarSide.vue"
+import NavbarSide from '@/components/NavbarSide.vue'
 // import ErrorPage from "@/components/PageError.vue"
-import SideToggle from "@/components/SideToggle.vue"
-import { useCaseLawMenuItems } from "@/composables/useCaseLawMenuItems"
+import SideToggle from '@/components/SideToggle.vue'
+import { useCaseLawMenuItems } from '@/composables/useCaseLawMenuItems'
 // import useQuery from "@/composables/useQueryFromRoute"
 // import DocumentUnit from "@/domain/documentUnit"
 // import { ResponseError } from "@/services/httpClient"
@@ -34,23 +34,20 @@ import { useCaseLawMenuItems } from "@/composables/useCaseLawMenuItems"
 // }
 const route = useRoute()
 // const menuItems = useCaseLawMenuItems(props.documentNumber, route.query)
-const menuItems = useCaseLawMenuItems("KSNR707", route.query)
+const menuItems = useCaseLawMenuItems('KSNR707', route.query)
 // const { pushQueryToRoute } = useQuery()
 
 // const validationErrors = ref<ValidationError[]>([])
-const showNavigationPanelRef: Ref<boolean> = ref(
-  route.query.showNavigationPanel !== "false",
-)
+const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
 
 // const responseError = ref<ResponseError>()
 
 function toggleNavigationPanel(expand?: boolean) {
-  showNavigationPanelRef.value =
-    expand === undefined ? !showNavigationPanelRef.value : expand
-//   pushQueryToRoute({
-//     ...route.query,
-//     showNavigationPanel: showNavigationPanelRef.value.toString(),
-//   })
+  showNavigationPanelRef.value = expand === undefined ? !showNavigationPanelRef.value : expand
+  //   pushQueryToRoute({
+  //     ...route.query,
+  //     showNavigationPanel: showNavigationPanelRef.value.toString(),
+  //   })
 }
 
 // async function requestDocumentUnitFromServer() {
@@ -139,9 +136,7 @@ function toggleNavigationPanel(expand?: boolean) {
 <template>
   <div class="flex w-screen grow">
     <!-- v-if="!route.path.includes('preview') && documentUnit" -->
-    <div
-      class="sticky top-0 z-50 flex flex-col border-r-1 border-solid border-gray-400 bg-white"
-    >
+    <div class="sticky top-0 z-50 flex flex-col border-r-1 border-solid border-gray-400 bg-white">
       <SideToggle
         class="sticky top-0 z-20"
         data-testid="side-toggle-navigation"
@@ -161,20 +156,13 @@ function toggleNavigationPanel(expand?: boolean) {
         data-testid="document-unit-info-panel"
         :heading="documentUnit?.documentNumber ?? ''"
       /> -->
-      <DocumentUnitInfoPanel
-        data-testid="document-unit-info-panel"
-        :heading="'Das ist ein test'"
-      />
+      <DocumentUnitInfoPanel data-testid="document-unit-info-panel" :heading="'Das ist ein test'" />
       <div class="flex grow flex-col items-start">
         <!-- v-if="documentUnit" -->
         <FlexContainer
           class="h-full w-full flex-grow"
-          :class="
-            route.path.includes('preview')
-              ? 'flex-row bg-white'
-              : 'flex-row-reverse'
-          "
-        >Hallo Welt
+          :class="route.path.includes('preview') ? 'flex-row bg-white' : 'flex-row-reverse'"
+          >Hallo Welt
           <!-- <ExtraContentSidePanel
             v-if="
               documentUnit &&

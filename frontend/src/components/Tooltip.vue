@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   text: string
@@ -11,7 +11,7 @@ withDefaults(defineProps<Props>(), {
 })
 
 const handleKeyDown = (e: KeyboardEvent) => {
-  if (e.key === "Escape") {
+  if (e.key === 'Escape') {
     closeTooltip()
   }
 }
@@ -20,12 +20,12 @@ const tooltipVisible = ref(false)
 
 // Add the keydown event listener when the component is mounted
 onMounted(() => {
-  window.addEventListener("keydown", handleKeyDown)
+  window.addEventListener('keydown', handleKeyDown)
 })
 
 // Cleanup the event listener when the component is unmounted
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeyDown)
+  window.removeEventListener('keydown', handleKeyDown)
 })
 
 const openTooltip = () => {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router"
-import FlexContainer from "@/components/FlexContainer.vue"
-import FlexItem from "@/components/FlexItem.vue"
-import type MenuItem from "@/domain/menuItem"
-import StringsUtil from "@/utils/stringsUtil"
+import { useRoute } from 'vue-router'
+import FlexContainer from '@/components/FlexContainer.vue'
+import FlexItem from '@/components/FlexItem.vue'
+import type MenuItem from '@/domain/menuItem'
+import StringsUtil from '@/utils/stringsUtil'
 
 interface Props {
   menuItems: MenuItem[]
@@ -21,34 +21,21 @@ const isChildActive = (currentNavItem: MenuItem) => {
 }
 
 const isParentActive = (currentNavItem: MenuItem) => {
-  if (currentNavItem.route.name == undefined || currentRoute.name == undefined)
-    return false
+  if (currentNavItem.route.name == undefined || currentRoute.name == undefined) return false
 
   return currentNavItem.route.name == currentRoute.name
 }
 
 const isOnlyParentActive = (currentNavItem: MenuItem) => {
-  if (
-    !(
-      StringsUtil.isEmpty(currentNavItem.route.hash) &&
-      StringsUtil.isEmpty(currentRoute.hash)
-    )
-  ) {
-    return (
-      isParentActive(currentNavItem) &&
-      currentNavItem.route.hash == currentRoute.hash
-    )
+  if (!(StringsUtil.isEmpty(currentNavItem.route.hash) && StringsUtil.isEmpty(currentRoute.hash))) {
+    return isParentActive(currentNavItem) && currentNavItem.route.hash == currentRoute.hash
   }
   return isParentActive(currentNavItem)
 }
 </script>
 
 <template>
-  <FlexContainer
-    aria-labelledby="sidebar navigation"
-    class="w-[16rem]"
-    flex-direction="flex-col"
-  >
+  <FlexContainer aria-labelledby="sidebar navigation" class="w-[16rem]" flex-direction="flex-col">
     <div
       v-for="navItem in props.menuItems"
       :key="navItem.label"
@@ -91,11 +78,7 @@ const isOnlyParentActive = (currentNavItem: MenuItem) => {
           </FlexItem>
         </div>
       </RouterLink>
-      <NavbarSide
-        v-if="navItem.children"
-        is-child
-        :menu-items="navItem.children"
-      />
+      <NavbarSide v-if="navItem.children" is-child :menu-items="navItem.children" />
     </div>
   </FlexContainer>
 </template>

@@ -15,11 +15,11 @@ fileignoreconfig:
   - filename: .github/workflows/security-jobs.yml
     checksum: 6bad26404f5327349658f52897d21982129df33d553ab12b9bb69caf6c9d168f
   - filename: frontend/src/components/Tooltip.vue
-    checksum: f283305acae037d666b6df6e363264f7e047e618bdb9936975a9120485710ce6
+    checksum: f6255808b70650ad3d7d7445bf2e3165058accd88d942462e1a59353c22daa9e
   - filename: frontend/src/components/NavbarSide.vue
-    checksum: 1251a945ecd195c40d44d7d7327ae35fc1aaa3a1b7b91054f5a5c0b6c43e8004
+    checksum: 7d056209beebeed85032ab6dd4699103cd351cdb05f0d68418923779833f3324
   - filename: frontend/src/routes/DocumentUnit.vue
-    checksum: a65bbb684b10fc325793ebb7cbe49f2ebe2798f565ea241b5a4e55e0f4db3c07
+    checksum: d4ed727abc9b4d2ad540874ac3c421dd1daba391eaade5257bed99ad35bd7720
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text

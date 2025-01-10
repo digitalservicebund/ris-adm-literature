@@ -1,6 +1,6 @@
-import type { LocationQuery } from "vue-router"
+import type { LocationQuery } from 'vue-router'
 // import { useInternalUser } from "@/composables/useInternalUser"
-import type MenuItem from "@/domain/menuItem"
+import type MenuItem from '@/domain/menuItem'
 
 export function useCaseLawMenuItems(
   documentNumber: string | undefined,
@@ -15,24 +15,24 @@ export function useCaseLawMenuItems(
 
   return [
     {
-      label: "Fundstellen",
+      label: 'Fundstellen',
       route: {
         ...baseRoute,
-        name: "DocumentUnit",
+        name: 'DocumentUnit',
       },
     },
     {
-      label: "Rubriken",
+      label: 'Rubriken',
       route: {
-        name: "DocumentUnit",
+        name: 'DocumentUnit',
         ...baseRoute,
       },
     },
     {
-      label: "Abgabe",
+      label: 'Abgabe',
       route: {
         ...baseRoute,
-        name: "DocumentUnit",
+        name: 'DocumentUnit',
       },
     },
   ]
