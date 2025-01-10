@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
@@ -11,6 +11,7 @@ test(
     // when
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     // then
+    expect(page.url()).toMatch('.*/frontend$')
 
     // TODO #RISDEV-6042
     // await expect(page.getByText('Fundstellen')).toHaveCount(2) // nav bar + title
