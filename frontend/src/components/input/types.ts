@@ -37,7 +37,6 @@ export interface BaseInputField {
 }
 
 //TEXT
-export type TextInputModelType = string
 
 export interface TextInputAttributes extends BaseInputAttributes {
   placeholder?: string
@@ -101,11 +100,10 @@ export interface DateInputField extends BaseInputField {
 export type DateInputModelType = string | undefined
 
 //DROPDOWN
-export type DropdownInputModelType = string
 
 export type DropdownItem = {
   label: string
-  value: DropdownInputModelType
+  value: string
 }
 
 export interface DropdownAttributes extends BaseInputAttributes {
@@ -142,18 +140,12 @@ export interface ComboboxInputField extends BaseInputField {
 }
 
 //CHECKBOX
-export type BooleanModelType = boolean
-
-export type CheckboxInputModelType = boolean
-
 export interface CheckboxInputField extends BaseInputField {
   type: InputType.CHECKBOX
   inputAttributes: BaseInputAttributes
 }
 
 //TEXTAREA
-export type TextaraInputModelType = string
-
 export interface TextAreaInputAttributes extends BaseInputAttributes {
   placeholder?: string
   readOnly?: boolean
@@ -188,15 +180,11 @@ export type InputAttributes =
   | TextAreaInputAttributes
 
 export type ModelType =
-  | TextInputModelType
+  | string
   | DateInputModelType
-  | DropdownInputModelType
-  | BooleanModelType
-  | CheckboxInputModelType
   | ChipsInputModelType
   | NestedInputModelType
   | ComboboxInputModelType
-  | TextaraInputModelType
 
 export type ValidationError = {
   code?: string

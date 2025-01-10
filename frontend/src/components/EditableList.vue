@@ -1,12 +1,12 @@
-<script lang="ts" setup generic="T extends ListItem">
+<script lang="ts" setup generic="T extends EditableListItem">
 import type { Component, ComponentPublicInstance, Ref } from 'vue'
 import { computed, nextTick, ref, watch } from 'vue'
 import Tooltip from './Tooltip.vue'
 import DefaultSummary from '@/components/DefaultSummary.vue'
 import TextButton from '@/components/input/TextButton.vue'
-import type ListItem from '@/domain/editableListItem'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconAdd from '~icons/material-symbols/add'
+import type EditableListItem from "@/domain/editableListItem";
 
 interface Props {
   editComponent: Component

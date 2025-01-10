@@ -17,7 +17,7 @@ fileignoreconfig:
   - filename: frontend/src/components/input/TextInput.vue
     checksum: 9b2cf5af0630bc3b1023a5554859639d873d095fc0117f91357c43c90a9c0282
   - filename: frontend/src/components/EditableList.vue
-    checksum: bd360623c5b9d999799b47ad8018b86cfc6b795e6eeed97889ce80012406a95d
+    checksum: e8828bb68c257a725ad98aedb4dbd229a1f1bd421f5f11faf87ee3b200ab9384
   - filename: frontend/src/components/Tooltip.vue
     checksum: f6255808b70650ad3d7d7445bf2e3165058accd88d942462e1a59353c22daa9e
 
