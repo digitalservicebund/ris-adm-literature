@@ -17,21 +17,19 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
       </div>
     </div>
     <div class="grid grid-cols-[auto,1fr] gap-10">
-      <IconPermIdentity />
+      <IconPermIdentity data-testid="iconPermIdentity" />
       <div>
         <div class="ds-label-01-reg">
-          <router-link :to="{ name: 'settings' }">
-            <FlexContainer>
-              <FlexItem class="pe-8">Vorname Nachname</FlexItem>
-              <FlexItem>
-                <IconBadge
-                  :background-color="'bg-red-300'"
-                  color="text-black"
-                  :label="'BSG | Staging'"
-                />
-              </FlexItem>
-            </FlexContainer>
-          </router-link>
+          <FlexContainer>
+            <FlexItem class="pe-8">Vorname Nachname</FlexItem>
+            <FlexItem>
+              <IconBadge
+                :background-color="'bg-red-300'"
+                color="text-black"
+                :label="'BSG | Staging'"
+              />
+            </FlexItem>
+          </FlexContainer>
         </div>
       </div>
     </div>
