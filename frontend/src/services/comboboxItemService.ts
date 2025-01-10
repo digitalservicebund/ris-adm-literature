@@ -4,26 +4,29 @@ import LegalPeriodical from "@/domain/legalPeriodical.ts";
 import type {ComboboxResult} from "@/domain/comboboxResult.ts";
 import {computed, ref} from "vue";
 
-enum Endpoint {
-  legalPeriodicals = `legalperiodicals`,
-}
-
 type ComboboxItemService = {
-  [key in keyof typeof Endpoint as `get${Capitalize<key>}`]: (
-    filter: Ref<string | undefined>,
-  ) => ComboboxResult<ComboboxItem[]>
+  getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
   // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
   getLegalPeriodicals: (filter: Ref<string | undefined>) =>
   {
-    const legalPeriodical = new LegalPeriodical({title: 'Bundesanzeiger', abbreviation: 'BAnz'})
-    const item1: ComboboxItem = { label: 'BAnz | Bundesanzeiger', value: legalPeriodical, sideInformation: 'amtlich' }
-    const item2: ComboboxItem = { label: 'DOK | Dokument', value: legalPeriodical, sideInformation: 'amtlich' }
-
+    const banzLegalPeriodical = new LegalPeriodical({title: 'Bundesanzeiger', abbreviation: 'BAnz'})
+    const banzItem: ComboboxItem = { label: 'BAnz | Bundesanzeiger', value: banzLegalPeriodical, sideInformation: 'amtlich' }
+    const aaLegalPeriodical = new LegalPeriodical({title: 'Arbeitsrecht aktiv', abbreviation: 'AA'})
+    const aaItem: ComboboxItem = { label: 'AA | Arbeitsrecht aktiv', value: aaLegalPeriodical, sideInformation: 'amtlich' }
+    let items = ref([banzItem, aaItem])
+    if (filter.value && (filter.value as string).startsWith('a')) {
+      items = ref([aaItem])
+    }  else if (filter.value && (filter.value as string).startsWith('b')) {
+      items = ref([banzItem])
+    }
+    const execute = async () => {
+      return service.getLegalPeriodicals(filter)
+    }
     const result: ComboboxResult<ComboboxItem[]> = {
-      data: ref([item1, item2]), execute: () => Promise.resolve(), canAbort: computed(() => false), abort: () => {
+      data: items, execute: execute, canAbort: computed(() => false), abort: () => {
       }}
     return result
   }
