@@ -18,21 +18,55 @@ export function useCaseLawMenuItems(
       label: 'Fundstellen',
       route: {
         ...baseRoute,
-        name: 'DocumentUnit',
+        name: 'FundstellenPage',
       },
     },
     {
       label: 'Rubriken',
       route: {
-        name: 'DocumentUnit',
+        name: 'RubrikenPage',
         ...baseRoute,
       },
+      children: [
+        {
+          label: "Formaldaten",
+          route: {
+            ...baseRoute,
+            name: "RubrikenPage",
+            hash: "#formaldaten",
+          },
+        },
+        {
+          label: "Gliederung",
+          route: {
+            ...baseRoute,
+            name: "RubrikenPage",
+            hash: "#gliederung",
+          },
+        },
+        {
+          label: "Inhaltliche Erschließung",
+          route: {
+            ...baseRoute,
+            name: "RubrikenPage",
+            hash: "#contentRelatedIndexing",
+          },
+        },
+        {
+          label: "Kurzreferat",
+          route: {
+            ...baseRoute,
+            name: "RubrikenPage",
+            hash: "#kurzreferat",
+          },
+        },
+      ],
     },
     {
       label: 'Abgabe',
       route: {
         ...baseRoute,
-        name: 'DocumentUnit',
+        name: 'AbgabePage',
       },
     },
   ]

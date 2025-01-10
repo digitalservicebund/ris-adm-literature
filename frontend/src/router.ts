@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from './routes/StartPage.vue'
-import DocumentUnit from './routes/DocumentUnit.vue'
 import FundstellenPage from './routes/FundstellenPage.vue'
+import RubrikenPage from './routes/RubrikenPage.vue'
+import AbgabePage from './routes/AbgabePage.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
 
 const router = createRouter({
@@ -13,14 +14,19 @@ const router = createRouter({
       component: StartPage,
     },
     {
-      path: '/documentunit',
-      name: 'DocumentUnit',
-      component: DocumentUnit,
-    },
-    {
       path: '/fundstellen',
       name: 'FundstellenPage',
       component: FundstellenPage,
+    },
+    {
+      path: '/rubriken',
+      name: 'RubrikenPage',
+      component: RubrikenPage,
+    },
+    {
+      path: '/abgabe',
+      name: 'AbgabePage',
+      component: AbgabePage,
     },
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
