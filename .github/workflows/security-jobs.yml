@@ -41,7 +41,7 @@ jobs:
   secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
     runs-on: ubuntu-latest
     # Running on main only https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409
-    #  if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
         with:
