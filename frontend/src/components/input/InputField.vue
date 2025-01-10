@@ -5,7 +5,7 @@ import { isErrorCode } from '@/i18n/utils'
 import IconErrorOutline from '~icons/ic/baseline-error-outline'
 import type { ValidationError } from '@/components/input/types.ts'
 
-interface Props {
+export interface Props {
   id: string
   label: string | string[]
   required?: boolean

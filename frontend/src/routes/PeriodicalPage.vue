@@ -6,7 +6,7 @@ import ReferenceSummary from '@/components/ReferenceSummary.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import EditableList from '@/components/EditableList.vue'
 
-const caselawReferences = computed({
+const admReferences = computed({
   get: () => [],
   set: (newValues) => {
     console.log(newValues)
@@ -22,7 +22,7 @@ const defaultValue = new Reference() as Reference
       <TitleElement>Fundstellen</TitleElement>
       <div class="flex flex-row">
         <EditableList
-          v-model="caselawReferences"
+          v-model="admReferences"
           :default-value="defaultValue"
           :edit-component="DocumentUnitReferenceInput"
           :summary-component="ReferenceSummary"

@@ -118,7 +118,7 @@ watch(
             <TextInput
               id="citation"
               v-model="reference.citation"
-              aria-label="Zitatstelle"
+              ariaLabel="Zitatstelle"
               :has-error="slotProps.hasError"
               size="medium"
               @focus="validationStore.remove('citation')"

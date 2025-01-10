@@ -193,7 +193,7 @@ watch(existingItems, () => {
   if (!exactMatchFound && hasManualEntry) {
     createNewItem.value = {
       label: `${inputText.value} neu erstellen`,
-      value: { label: inputText.value! },
+      value: { title: inputText.value! },
       labelCssClasses: 'ds-label-01-bold text-blue-800 underline',
     }
   } else {

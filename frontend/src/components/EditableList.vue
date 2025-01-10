@@ -8,17 +8,18 @@ import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconAdd from '~icons/material-symbols/add'
 import type EditableListItem from '@/domain/editableListItem'
 
-interface Props {
-  editComponent: Component
-  summaryComponent?: Component
-  modelValue?: T[]
-  defaultValue: T
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  summaryComponent: DefaultSummary,
-  modelValue: () => [],
-})
+const props = withDefaults(
+  defineProps<{
+    editComponent: Component
+    summaryComponent?: Component
+    modelValue?: T[]
+    defaultValue: T
+  }>(),
+  {
+    summaryComponent: DefaultSummary,
+    modelValue: () => [],
+  },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: T[]]
