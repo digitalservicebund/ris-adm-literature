@@ -1,90 +1,90 @@
 import { describe, it, expect } from 'vitest'
 
-import { mount } from "@vue/test-utils"
-import TextButton from "@/components/input/TextButton.vue"
+import { mount } from '@vue/test-utils'
+import TextButton from '@/components/input/TextButton.vue'
 
-describe("TextButton", () => {
-  it("renders with label prop", () => {
+describe('TextButton', () => {
+  it('renders with label prop', () => {
     const wrapper = mount(TextButton, {
       props: {
-        label: "foo",
+        label: 'foo',
       },
     })
-    expect(wrapper.props().label).toBe("foo")
+    expect(wrapper.props().label).toBe('foo')
   })
 
-  it("renders a button element per default", () => {
+  it('renders a button element per default', () => {
     const wrapper = mount(TextButton)
 
-    expect(wrapper.find("button").exists()).toBeTruthy()
+    expect(wrapper.find('button').exists()).toBeTruthy()
   })
 
-  it("renders an anchor element if the hypertext reference property is set", () => {
+  it('renders an anchor element if the hypertext reference property is set', () => {
     const wrapper = mount(TextButton, {
-      props: { href: "https://test.org" },
+      props: { href: 'https://test.org' },
     })
 
-    expect(wrapper.find("a").exists()).toBeTruthy()
-    expect(wrapper.find("button").exists()).toBeFalsy()
+    expect(wrapper.find('a').exists()).toBeTruthy()
+    expect(wrapper.find('button').exists()).toBeFalsy()
   })
 
-  it("cleans url if it contains javascript", () => {
+  it('cleans url if it contains javascript', () => {
     const wrapper = mount(TextButton, {
-      props: { href: "javascript:alert(document.domain)" },
+      props: { href: 'javascript:alert(document.domain)' },
     })
 
-    const anchor = wrapper.get("a")
-    expect(anchor.attributes("href")).toBe("about:blank")
+    const anchor = wrapper.get('a')
+    expect(anchor.attributes('href')).toBe('about:blank')
   })
 
-  it("it sets per default no download attribute on anchors", () => {
+  it('it sets per default no download attribute on anchors', () => {
     const wrapper = mount(TextButton, {
-      props: { download: undefined, href: "https://test.org" },
+      props: { download: undefined, href: 'https://test.org' },
     })
-    const anchor = wrapper.get("a")
+    const anchor = wrapper.get('a')
 
-    expect(anchor.attributes("download")).toBeUndefined()
+    expect(anchor.attributes('download')).toBeUndefined()
   })
 
-  it("it can set the download attribute flag if property is flagged", () => {
+  it('it can set the download attribute flag if property is flagged', () => {
     const wrapper = mount(TextButton, {
-      props: { download: true, href: "https://test.org" },
+      props: { download: true, href: 'https://test.org' },
     })
-    const anchor = wrapper.get("a")
+    const anchor = wrapper.get('a')
 
-    expect(anchor.attributes("download")).toBeDefined()
+    expect(anchor.attributes('download')).toBeDefined()
   })
 
-  it("it can set the download attribute value if property is defined", () => {
+  it('it can set the download attribute value if property is defined', () => {
     const wrapper = mount(TextButton, {
-      props: { download: "file-name.ext", href: "https://test.org" },
+      props: { download: 'file-name.ext', href: 'https://test.org' },
     })
-    const anchor = wrapper.get("a")
+    const anchor = wrapper.get('a')
 
-    expect(anchor.attributes("download")).toBe("file-name.ext")
+    expect(anchor.attributes('download')).toBe('file-name.ext')
   })
 
-  it("it sets per default no anchor target attribute to use the browser default", () => {
+  it('it sets per default no anchor target attribute to use the browser default', () => {
     const wrapper = mount(TextButton, {
-      props: { target: undefined, href: "https://test.org" },
+      props: { target: undefined, href: 'https://test.org' },
     })
-    const anchor = wrapper.get("a")
+    const anchor = wrapper.get('a')
 
-    expect(anchor.attributes("target")).toBeUndefined()
+    expect(anchor.attributes('target')).toBeUndefined()
   })
 
-  it.each(["_self", "_blank", "_parent", "_top"])(
-    "it can set the anchor target to %i",
+  it.each(['_self', '_blank', '_parent', '_top'])(
+    'it can set the anchor target to %i',
     (target) => {
       const wrapper = mount(TextButton, {
         props: {
-          target: target as "_self" | "_blank" | "_parent" | "_top",
-          href: "https://test.org",
+          target: target as '_self' | '_blank' | '_parent' | '_top',
+          href: 'https://test.org',
         },
       })
-      const anchor = wrapper.get("a")
+      const anchor = wrapper.get('a')
 
-      expect(anchor.attributes("target")).toBe(target)
+      expect(anchor.attributes('target')).toBe(target)
     },
   )
 })

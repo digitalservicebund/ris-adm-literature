@@ -29,35 +29,35 @@ export function useCaseLawMenuItems(
       },
       children: [
         {
-          label: "Formaldaten",
+          label: 'Formaldaten',
           route: {
             ...baseRoute,
-            name: "RubrikenPage",
-            hash: "#formaldaten",
+            name: 'RubrikenPage',
+            hash: '#formaldaten',
           },
         },
         {
-          label: "Gliederung",
+          label: 'Gliederung',
           route: {
             ...baseRoute,
-            name: "RubrikenPage",
-            hash: "#gliederung",
+            name: 'RubrikenPage',
+            hash: '#gliederung',
           },
         },
         {
-          label: "Inhaltliche Erschließung",
+          label: 'Inhaltliche Erschließung',
           route: {
             ...baseRoute,
-            name: "RubrikenPage",
-            hash: "#contentRelatedIndexing",
+            name: 'RubrikenPage',
+            hash: '#contentRelatedIndexing',
           },
         },
         {
-          label: "Kurzreferat",
+          label: 'Kurzreferat',
           route: {
             ...baseRoute,
-            name: "RubrikenPage",
-            hash: "#kurzreferat",
+            name: 'RubrikenPage',
+            hash: '#kurzreferat',
           },
         },
       ],
