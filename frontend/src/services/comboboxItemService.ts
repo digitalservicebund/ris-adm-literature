@@ -30,9 +30,9 @@ const service: ComboboxItemService = {
       sideInformation: 'amtlich',
     }
     let items = ref([banzItem, aaItem])
-    if (filter.value && (filter.value as string).startsWith('a')) {
+    if (filter.value && (filter.value).startsWith('a')) {
       items = ref([aaItem])
-    } else if (filter.value && (filter.value as string).startsWith('b')) {
+    } else if (filter.value && (filter.value).startsWith('b')) {
       items = ref([banzItem])
     }
     const execute = async () => {
