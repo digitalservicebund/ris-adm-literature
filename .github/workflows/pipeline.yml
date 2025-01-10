@@ -37,13 +37,11 @@ jobs:
       security-events: write
     with:
       run-id: ${{ github.run_id }}
-      container-registry: ghcr.io
-      container-image-name: ${{ github.repository }}
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}
-    # For PR releases, labels could be used like this: 
+    # For PR releases, labels could be used like this:
     # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     needs:
       - security-jobs
@@ -58,8 +56,7 @@ jobs:
     with:
       run-id: ${{ github.run_id }}
       container-registry: ghcr.io
-      container-image-name: ${{ github.repository }}
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-deploy-staging:
     if: ${{ github.ref == 'refs/heads/main' }}
