@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from '@/routes/StartPage.vue'
+import FundstellenPage from './routes/FundstellenPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -8,6 +9,11 @@ const router = createRouter({
       path: '/',
       name: 'StartPage',
       component: StartPage,
+    },
+    {
+      path: '/fundstellen',
+      name: 'FundstellenPage',
+      component: FundstellenPage,
     },
   ],
 })
