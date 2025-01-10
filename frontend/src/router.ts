@@ -10,11 +10,13 @@ const router = createRouter({
       path: '/',
       name: 'StartPage',
       component: StartPage,
-    },{
+    },
+    {
       path: '/fundstellen',
       name: 'FundstellenPage',
       component: FundstellenPage,
-    },{
+    },
+    {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
       path: '/:pathMatch(.*)*',
       name: 'Error 404 not found',
