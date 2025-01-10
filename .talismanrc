@@ -20,6 +20,8 @@ fileignoreconfig:
     checksum: 75df16e0f12f9a5cab1fda1a48528c921be85df1e15f6c8a33d5babe5be7e213
   - filename: frontend/src/components/Tooltip.vue
     checksum: f6255808b70650ad3d7d7445bf2e3165058accd88d942462e1a59353c22daa9e
+  - filename: .github/workflows/security-jobs.yml
+    checksum: 6bad26404f5327349658f52897d21982129df33d553ab12b9bb69caf6c9d168f
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
