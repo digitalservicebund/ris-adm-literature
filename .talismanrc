@@ -12,6 +12,8 @@ fileignoreconfig:
     checksum: fa217d4a34afcd967e6c35b10e139cd5c52711e41c190f477576441081b5cf99
   - filename: LICENSE
     checksum: 00de5fa1aad2fcb968beb5d1bbf09931fc9d3f160f11b945b24f3203ea025917
+  - filename: .github/workflows/security-jobs.yml
+    checksum: 6bad26404f5327349658f52897d21982129df33d553ab12b9bb69caf6c9d168f
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
