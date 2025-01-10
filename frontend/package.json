@@ -15,7 +15,7 @@
     "lint:check": "eslint .",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "coverage": "TZ=UTC vitest run --coverage",
+    "coverage": "cross-env TZ=UTC vitest run --coverage",
     "audit:licences": "license-checker --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
   },
   "dependencies": {
