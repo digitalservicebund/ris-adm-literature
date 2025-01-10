@@ -6,7 +6,7 @@ export interface ComboboxResult<T> {
    * The fetch response body on success, may either be JSON or text
    */
   data: Ref<T | null>
-  execute: (throwOnFailed?: boolean) => Promise<never>
+  execute: (throwOnFailed?: boolean) => Promise<ComboboxResult<T>>
   /**
    * Indicates if the fetch request is able to be aborted
    */
