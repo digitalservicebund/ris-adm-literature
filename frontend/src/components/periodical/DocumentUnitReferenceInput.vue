@@ -7,7 +7,7 @@ import ComboboxInput from '@/components/ComboboxInput.vue'
 import { useValidationStore } from '@/composables/useValidationStore'
 import LegalPeriodical from '@/domain/legalPeriodical'
 import Reference from '@/domain/reference'
-import ComboboxItemService from "@/services/comboboxItemService.ts";
+import ComboboxItemService from '@/services/comboboxItemService.ts'
 
 const props = defineProps<{
   modelValue?: Reference
@@ -95,15 +95,15 @@ watch(
       label="Periodikum *"
       :validation-error="validationStore.getByField('legalPeriodical')"
     >
-            <ComboboxInput
-              id="legalPeriodical"
-              v-model="legalPeriodical"
-              aria-label="Periodikum"
-              clear-on-choosing-item
-              :has-error="slotProps.hasError"
-              :item-service="ComboboxItemService.getLegalPeriodicals"
-              @focus="validationStore.remove('legalPeriodical')"
-            ></ComboboxInput>
+      <ComboboxInput
+        id="legalPeriodical"
+        v-model="legalPeriodical"
+        aria-label="Periodikum"
+        clear-on-choosing-item
+        :has-error="slotProps.hasError"
+        :item-service="ComboboxItemService.getLegalPeriodicals"
+        @focus="validationStore.remove('legalPeriodical')"
+      ></ComboboxInput>
     </InputField>
 
     <div class="flex flex-col gap-24">

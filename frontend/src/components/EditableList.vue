@@ -6,7 +6,7 @@ import DefaultSummary from '@/components/DefaultSummary.vue'
 import TextButton from '@/components/input/TextButton.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconAdd from '~icons/material-symbols/add'
-import type EditableListItem from "@/domain/editableListItem";
+import type EditableListItem from '@/domain/editableListItem'
 
 interface Props {
   editComponent: Component

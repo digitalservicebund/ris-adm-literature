@@ -1,7 +1,7 @@
 import { LabelPosition } from '@/components/input/InputField.vue'
 import LegalPeriodical from '@/domain/legalPeriodical'
 import type { Ref } from 'vue'
-import type {ComboboxResult} from "@/domain/comboboxResult.ts";
+import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 
 export enum InputType {
   TEXT = 'text',
