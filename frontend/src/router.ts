@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from './routes/StartPage.vue'
-import FundstellenPage from './routes/FundstellenPage.vue'
+import PeriodicalPage from '@/routes/PeriodicalPage.vue'
 import RubrikenPage from './routes/RubrikenPage.vue'
 import AbgabePage from './routes/AbgabePage.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
@@ -15,8 +15,8 @@ const router = createRouter({
     },
     {
       path: '/fundstellen',
-      name: 'FundstellenPage',
-      component: FundstellenPage,
+      name: 'PeriodicalPage',
+      component: PeriodicalPage,
     },
     {
       path: '/rubriken',

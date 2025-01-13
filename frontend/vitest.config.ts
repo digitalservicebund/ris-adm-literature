@@ -6,10 +6,11 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      setupFiles: ["src/vitest-setup.ts"],
       environment: 'node',
       environmentMatchGlobs: [['src/components/**', 'jsdom']],
       exclude: [...configDefaults.exclude, 'e2e/**'],
+      globals: true,
+      setupFiles: ['./vitest-setup.ts'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       pool: 'threads',
       coverage: {
@@ -28,7 +29,7 @@ export default mergeConfig(
           '**/*.d.ts',
 
           // Tests
-          'test/**/*',
+          '**/*.spec.ts',
           'e2e/**/*',
 
           // App content we're not interested in covering with unit tests. If you

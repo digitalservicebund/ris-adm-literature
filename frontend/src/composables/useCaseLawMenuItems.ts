@@ -18,7 +18,7 @@ export function useCaseLawMenuItems(
       label: 'Fundstellen',
       route: {
         ...baseRoute,
-        name: 'FundstellenPage',
+        name: 'PeriodicalPage',
       },
     },
     {
