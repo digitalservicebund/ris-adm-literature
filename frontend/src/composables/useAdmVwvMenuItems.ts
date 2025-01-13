@@ -2,7 +2,7 @@ import type { LocationQuery } from 'vue-router'
 // import { useInternalUser } from "@/composables/useInternalUser"
 import type MenuItem from '@/domain/menuItem'
 
-export function useCaseLawMenuItems(
+export function useAdmVwvMenuItems(
   documentNumber: string | undefined,
   routeQuery: LocationQuery, // Replace with the appropriate type for route query
 ): MenuItem[] {

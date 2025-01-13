@@ -11,7 +11,7 @@ import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 // import ErrorPage from "@/components/PageError.vue"
 import SideToggle from '@/components/SideToggle.vue'
-import { useCaseLawMenuItems } from '@/composables/useCaseLawMenuItems'
+import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
 // import useQuery from "@/composables/useQueryFromRoute"
 // import DocumentUnit from "@/domain/documentUnit"
 // import { ResponseError } from "@/services/httpClient"
@@ -33,8 +33,8 @@ import { useCaseLawMenuItems } from '@/composables/useCaseLawMenuItems'
 //   documentUnit: Ref<DocumentUnit | undefined>
 // }
 const route = useRoute()
-// const menuItems = useCaseLawMenuItems(props.documentNumber, route.query)
-const menuItems = useCaseLawMenuItems('KSNR707', route.query)
+// const menuItems = useAdmVwvMenuItems(props.documentNumber, route.query)
+const menuItems = useAdmVwvMenuItems('KSNR707', route.query)
 // const { pushQueryToRoute } = useQuery()
 
 // const validationErrors = ref<ValidationError[]>([])
