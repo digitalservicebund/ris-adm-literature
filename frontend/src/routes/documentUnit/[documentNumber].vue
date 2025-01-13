@@ -6,8 +6,12 @@ import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
 import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
 
+const props = defineProps<{
+  documentNumber: string
+}>()
+
 const route = useRoute()
-const menuItems = useAdmVwvMenuItems('KSNR707', route.query)
+const menuItems = useAdmVwvMenuItems(props.documentNumber, route.query)
 
 const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
 
@@ -37,8 +41,9 @@ function toggleNavigationPanel(expand?: boolean) {
         <FlexContainer
           class="h-full w-full flex-grow"
           :class="route.path.includes('preview') ? 'flex-row bg-white' : 'flex-row-reverse'"
-          >Hallo Welt</FlexContainer
         >
+          <router-view />
+        </FlexContainer>
       </div>
     </div>
   </div>

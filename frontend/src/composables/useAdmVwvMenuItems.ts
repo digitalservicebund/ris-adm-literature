@@ -18,13 +18,13 @@ export function useAdmVwvMenuItems(
       label: 'Fundstellen',
       route: {
         ...baseRoute,
-        name: 'PeriodicalPage',
+        name: 'documentUnit-documentNumber-fundstellen',
       },
     },
     {
       label: 'Rubriken',
       route: {
-        name: 'RubrikenPage',
+        name: 'documentUnit-documentNumber-rubriken',
         ...baseRoute,
       },
       children: [
@@ -32,7 +32,7 @@ export function useAdmVwvMenuItems(
           label: 'Formaldaten',
           route: {
             ...baseRoute,
-            name: 'RubrikenPage',
+            name: 'documentUnit-documentNumber-rubriken',
             hash: '#formaldaten',
           },
         },
@@ -40,7 +40,7 @@ export function useAdmVwvMenuItems(
           label: 'Gliederung',
           route: {
             ...baseRoute,
-            name: 'RubrikenPage',
+            name: 'documentUnit-documentNumber-rubriken',
             hash: '#gliederung',
           },
         },
@@ -48,7 +48,7 @@ export function useAdmVwvMenuItems(
           label: 'Inhaltliche Erschließung',
           route: {
             ...baseRoute,
-            name: 'RubrikenPage',
+            name: 'documentUnit-documentNumber-rubriken',
             hash: '#contentRelatedIndexing',
           },
         },
@@ -56,7 +56,7 @@ export function useAdmVwvMenuItems(
           label: 'Kurzreferat',
           route: {
             ...baseRoute,
-            name: 'RubrikenPage',
+            name: 'documentUnit-documentNumber-rubriken',
             hash: '#kurzreferat',
           },
         },
@@ -66,7 +66,7 @@ export function useAdmVwvMenuItems(
       label: 'Abgabe',
       route: {
         ...baseRoute,
-        name: 'AbgabePage',
+        name: 'documentUnit-documentNumber-abgabe',
       },
     },
   ]

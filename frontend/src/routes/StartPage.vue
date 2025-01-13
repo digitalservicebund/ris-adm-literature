@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router'
 import TextButton from '@/components/input/TextButton.vue'
+
+const router = useRouter()
 </script>
 
 <template>
@@ -7,7 +10,10 @@ import TextButton from '@/components/input/TextButton.vue'
     <div class="flex justify-between">
       <h1 class="ds-heading-02-reg">Übersicht Verwaltungsvorschriften</h1>
 
-      <TextButton label="Neue Dokumentationseinheit" href="/fundstellen" />
+      <TextButton
+        label="Neue Dokumentationseinheit"
+        @click="router.push({ path: '/documentUnit/new' })"
+      />
     </div>
   </div>
 </template>

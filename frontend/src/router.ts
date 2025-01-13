@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from './routes/StartPage.vue'
-import PeriodicalPage from '@/routes/PeriodicalPage.vue'
-import RubrikenPage from './routes/RubrikenPage.vue'
-import AbgabePage from './routes/AbgabePage.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
+import DocumentUnitNew from './routes/documentUnit/new.vue'
+import DocumentUnitWrapper from './routes/documentUnit/[documentNumber].vue'
+import AbgabePage from './routes/documentUnit/[documentNumber]/AbgabePage.vue'
+import PeriodicalPage from './routes/documentUnit/[documentNumber]/PeriodicalPage.vue'
+import RubrikenPage from './routes/documentUnit/[documentNumber]/RubrikenPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,19 +16,31 @@ const router = createRouter({
       component: StartPage,
     },
     {
-      path: '/fundstellen',
-      name: 'PeriodicalPage',
-      component: PeriodicalPage,
+      path: '/documentUnit/new',
+      name: 'documentUnit-new',
+      component: DocumentUnitNew,
     },
     {
-      path: '/rubriken',
-      name: 'RubrikenPage',
-      component: RubrikenPage,
-    },
-    {
-      path: '/abgabe',
-      name: 'AbgabePage',
-      component: AbgabePage,
+      path: '/documentUnit/:documentNumber',
+      name: 'documentUnit-documentNumber',
+      component: DocumentUnitWrapper,
+      children: [
+        {
+          path: '/documentUnit/:documentNumber/fundstellen',
+          name: 'documentUnit-documentNumber-fundstellen',
+          component: PeriodicalPage,
+        },
+        {
+          path: '/documentUnit/:documentNumber/rubriken',
+          name: 'documentUnit-documentNumber-rubriken',
+          component: RubrikenPage,
+        },
+        {
+          path: '/documentUnit/:documentNumber/abgabe',
+          name: 'documentUnit-documentNumber-abgabe',
+          component: AbgabePage,
+        },
+      ],
     },
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html

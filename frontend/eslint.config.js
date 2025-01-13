@@ -36,6 +36,13 @@ export default [
   },
 
   {
+    files: ["src/routes/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off",
+    },
+  },
+
+  {
     files: ["src/**/*.spec.ts"],
     ...jestDomPlugin.configs["flat/recommended"],
   },
