@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from '@/routes/StartPage.vue'
-import FundstellenPage from './routes/FundstellenPage.vue'
+import PeriodicalPage from '@/routes/PeriodicalPage.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
 
 const router = createRouter({
@@ -13,8 +13,8 @@ const router = createRouter({
     },
     {
       path: '/fundstellen',
-      name: 'FundstellenPage',
-      component: FundstellenPage,
+      name: 'PeriodicalPage',
+      component: PeriodicalPage,
     },
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html

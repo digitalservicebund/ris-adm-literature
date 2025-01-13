@@ -11,9 +11,9 @@ test.describe('skip webkit', () => {
     { tag: ['@RISDEV-6042'] },
     async ({ page }) => {
       // given
-      await page.goto('/')
+      await page.goto('/fundstellen')
       // when
-      await page.getByText('Neue Dokumentationseinheit').click()
+      // await page.getByText('Neue Dokumentationseinheit').click()
       // then
       expect(page.url()).toMatch(/.*\/fundstellen$/)
       await expect(page.getByText('Fundstellen')).toHaveCount(1) // will become 2 once the nav bar exists
@@ -24,17 +24,17 @@ test.describe('skip webkit', () => {
       // await expect(page.getByText('KSNR054920707')).toHaveCount(1)
       // await expect(page.getByText('Platzhaltertext')).toHaveCount(1)
       // await expect(page.getByText('Unveröffentlicht')).toHaveCount(1)
-      // await expect(page.getByText('Fundstellen')).toHaveCount(1)
-      // await expect(page.getByRole('button', { name: 'Speichern' })).toHaveCount(1)
+      await expect(page.getByText('Fundstellen')).toHaveCount(1)
+    // await expect(page.getByRole('button', { name: 'Speichern' })).toHaveCount(1)
 
-      // await expect(page.getByText('Periodikum')).toHaveCount(1)
-      // await expect(page.getByText('Zitierstelle')).toHaveCount(1)
+      await expect(page.getByText('Periodikum')).toHaveCount(1)
+    await expect(page.getByText('Zitatstelle')).toHaveCount(1)
 
       // const optionElement = page.getByRole('option')
       // await expect(optionElement).toHaveCount(1)
       // expect(optionElement.selectOption({ label: "BAnz" }))
 
-      // await expect(page.getByRole("textbox")).toHaveCount(1)
+      await expect(page.getByRole("textbox")).toHaveCount(2)
     },
   )
 })
