@@ -48,8 +48,10 @@ jobs:
           curl https://thoughtworks.github.io/talisman/install.sh > ~/install-talisman.sh
           chmod +x ~/install-talisman.sh
           ~/install-talisman.sh
-      - name: Print file tree
-        run: tree -a ~/
+      - name: Find talisman
+        run: |
+          sudo updatedb
+          locate talisman
       - name: Detect secrets in Git history with Talisman
         run: talisman_linux_amd64 --scan
       - name: Upload talisman results
