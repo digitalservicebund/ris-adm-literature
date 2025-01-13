@@ -11,12 +11,12 @@ test.describe('skip webkit', () => {
     { tag: ['@RISDEV-6042'] },
     async ({ page }) => {
       // given
-      await page.goto('/fundstellen')
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
       // when
       // await page.getByText('Neue Dokumentationseinheit').click()
       // then
       expect(page.url()).toMatch(/.*\/fundstellen$/)
-      await expect(page.getByText('Fundstellen')).toHaveCount(1) // will become 2 once the nav bar exists
+      await expect(page.getByText('Fundstellen')).toHaveCount(2)
 
       // TODO #RISDEV-6042
       // await expect(page.getByText('Fundstellen')).toHaveCount(2) // nav bar + title
@@ -24,7 +24,7 @@ test.describe('skip webkit', () => {
       // await expect(page.getByText('KSNR054920707')).toHaveCount(1)
       // await expect(page.getByText('Platzhaltertext')).toHaveCount(1)
       // await expect(page.getByText('Unveröffentlicht')).toHaveCount(1)
-      await expect(page.getByText('Fundstellen')).toHaveCount(1)
+      await expect(page.getByText('Fundstellen')).toHaveCount(2)
     // await expect(page.getByRole('button', { name: 'Speichern' })).toHaveCount(1)
 
       await expect(page.getByText('Periodikum')).toHaveCount(1)
