@@ -37,6 +37,8 @@ allowed_patterns:
   - "uses: digitalservicebund/argocd-deploy@4fac1bb67c92ed168f6d9b22f8779ce241a9e412"
   - "uses: digitalservicebund/track-deployment@5a2815e150e1268983aac5ca04c8c046ed1b614a"
   - "dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160'"
+  - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409"
+  - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706525248390559"
   # allow these specific patterns with the term "secret"
   - secrets-scan-with-talisman
   - "secrets: inherit"
