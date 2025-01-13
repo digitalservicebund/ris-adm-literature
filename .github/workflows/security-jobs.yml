@@ -41,7 +41,12 @@ jobs:
   secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install talisman
+        run: |
+          curl https://thoughtworks.github.io/talisman/install.sh > ~/install-talisman.sh
+          chmod +x ~/install-talisman.sh
       - name: Detect secrets in Git history with Talisman
         run: talisman --scan
       - name: Upload talisman results
