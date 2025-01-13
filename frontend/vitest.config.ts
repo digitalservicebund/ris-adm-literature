@@ -29,7 +29,7 @@ export default mergeConfig(
           '**/*.d.ts',
 
           // Tests
-          'test/**/*',
+          '**/*.spec.ts',
           'e2e/**/*',
 
           // App content we're not interested in covering with unit tests. If you

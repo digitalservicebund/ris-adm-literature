@@ -2,7 +2,7 @@
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
 import { computed } from 'vue'
 import Reference from '@/domain/reference.ts'
-import ReferenceSummary from '@/components/ReferenceSummary.vue'
+import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import EditableList from '@/components/EditableList.vue'
 

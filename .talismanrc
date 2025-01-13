@@ -22,6 +22,8 @@ fileignoreconfig:
     checksum: 8e3a8ec14d35dd35fc4f12da4a4c9327be2f76c9512669540de395118fac602d
   - filename: frontend/src/components/ComboboxInput.vue
     checksum: d8805af87c95764b578fb54f8d343620ea90674977449f62652f77753f93494a
+  - filename: frontend/src/components/ComboboxInput.spec.ts
+    checksum: 96f7bb558ec0b3bf49ca1dff60e2f8231d830813f0fccbe62d485f74a0f687ef
   - filename: frontend/src/components/Tooltip.spec.ts
     checksum: b97ac5af98399fe336c48252c68ba51e0c94faeb9f37581c3e6355c443d71d86
 
