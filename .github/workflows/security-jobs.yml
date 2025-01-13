@@ -49,7 +49,7 @@ jobs:
           chmod +x ~/install-talisman.sh
           ~/install-talisman.sh
       - name: Scan Git history with talisman
-        run: /home/runner/work/ris-adm-vwv/ris-adm-vwv/.git/hooks/bin/talisman --ignoreHistory
+        run: /home/runner/work/ris-adm-vwv/ris-adm-vwv/.git/hooks/bin/talisman --ignoreHistory --debug
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
