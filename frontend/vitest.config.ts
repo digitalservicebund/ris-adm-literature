@@ -27,6 +27,7 @@ export default mergeConfig(
 
           // Types
           '**/*.d.ts',
+          'src/components/input/types.ts',
 
           // Tests
           '**/*.spec.ts',
