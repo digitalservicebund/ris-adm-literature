@@ -26,6 +26,8 @@ fileignoreconfig:
     checksum: d8805af87c95764b578fb54f8d343620ea90674977449f62652f77753f93494a
   - filename: frontend/src/components/ComboboxInput.spec.ts
     checksum: 96f7bb558ec0b3bf49ca1dff60e2f8231d830813f0fccbe62d485f74a0f687ef
+  - filename: frontend/src/components/NavbarSide.spec.ts
+    checksum: ae66ad2961f6ff4a7af55720e22966ee7dfda23f6a68a5a69ee66470283cb1ce
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
