@@ -1,49 +1,49 @@
-import { describe, it, expect, vi } from "vitest"
-import { ref } from "vue"
-import { useAdmVwvMenuItems } from "@/composables/useAdmVwvMenuItems"
+import { describe, it, expect, vi } from 'vitest'
+import { ref } from 'vue'
+import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
 
 const isInternalUser = ref(false)
-vi.mock("@/composables/useInternalUser", () => {
+vi.mock('@/composables/useInternalUser', () => {
   return {
     useInternalUser: () => isInternalUser,
   }
 })
 
-describe("useAdmVwvMenuItems", () => {
-  it("adds document identifier as route parameter to each menu item", () => {
+describe('useAdmVwvMenuItems', () => {
+  it('adds document identifier as route parameter to each menu item', () => {
     isInternalUser.value = true
-    const documentNumber = "fake-number"
+    const documentNumber = 'fake-number'
 
     const menuItems = useAdmVwvMenuItems(documentNumber, {})
 
     for (const menuItem of menuItems) {
       expect(menuItem.route.params).toMatchObject({
-        documentNumber: "fake-number",
+        documentNumber: 'fake-number',
       })
     }
   })
 
-  it("clones current route query to menu item", () => {
+  it('clones current route query to menu item', () => {
     isInternalUser.value = true
     const route = {
-      query: { foo: "bar" },
+      query: { foo: 'bar' },
     }
 
-    const menuItems = useAdmVwvMenuItems("", route.query)
+    const menuItems = useAdmVwvMenuItems('', route.query)
 
     for (const menuItem of menuItems) {
-      expect(menuItem.route.query).toEqual({ foo: "bar" })
+      expect(menuItem.route.query).toEqual({ foo: 'bar' })
     }
   })
 
-  it("lists all expected menu items", () => {
+  it('lists all expected menu items', () => {
     isInternalUser.value = true
-    const menuItems = useAdmVwvMenuItems("", {})
+    const menuItems = useAdmVwvMenuItems('', {})
 
     const topLabelNames = menuItems.map((item) => item.label)
-    expect(topLabelNames).toContain("Rubriken")
-    expect(topLabelNames).toContain("Fundstellen")
-    expect(topLabelNames).toContain("Abgabe")
+    expect(topLabelNames).toContain('Rubriken')
+    expect(topLabelNames).toContain('Fundstellen')
+    expect(topLabelNames).toContain('Abgabe')
   })
 
   // it("lists all expected menu items for external user", () => {
