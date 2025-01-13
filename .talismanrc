@@ -16,6 +16,8 @@ fileignoreconfig:
     checksum: 6bad26404f5327349658f52897d21982129df33d553ab12b9bb69caf6c9d168f
   - filename: frontend/src/components/NavbarSide.vue
     checksum: 7d056209beebeed85032ab6dd4699103cd351cdb05f0d68418923779833f3324
+  - filename: frontend/src/components/NavbarSide.spec.ts
+    checksum: 43ab6c514a4174add09477b2764a3108f319c9698ed5c26eb6ef6b1d686d10fb
   - filename: frontend/src/routes/DocumentUnit.vue
     checksum: d4ed727abc9b4d2ad540874ac3c421dd1daba391eaade5257bed99ad35bd7720
   - filename: frontend/src/components/input/TextInput.vue
@@ -26,8 +28,6 @@ fileignoreconfig:
     checksum: d8805af87c95764b578fb54f8d343620ea90674977449f62652f77753f93494a
   - filename: frontend/src/components/ComboboxInput.spec.ts
     checksum: 96f7bb558ec0b3bf49ca1dff60e2f8231d830813f0fccbe62d485f74a0f687ef
-  - filename: frontend/src/components/NavbarSide.spec.ts
-    checksum: ae66ad2961f6ff4a7af55720e22966ee7dfda23f6a68a5a69ee66470283cb1ce
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text
