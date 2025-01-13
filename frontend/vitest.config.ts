@@ -42,6 +42,9 @@ export default mergeConfig(
           'src/views/**/*',
           'src/App.vue',
 
+          // App content we're not interested in covering with unit tests
+          'src/routes/**/*',
+
           // If necessary to use e.g. guards, we'll have a router-guards file that
           // then should be tested
           'src/router.ts',
