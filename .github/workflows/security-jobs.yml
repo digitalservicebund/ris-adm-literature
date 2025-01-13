@@ -51,7 +51,7 @@ jobs:
       - name: Print file tree
         run: tree -a ~/
       - name: Detect secrets in Git history with Talisman
-        run: talisman --scan
+        run: talisman_linux_amd64 --scan
       - name: Upload talisman results
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
