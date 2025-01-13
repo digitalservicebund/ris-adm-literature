@@ -1,4 +1,4 @@
-import type EditableListItem from "@/domain/editableListItem"
+import type EditableListItem from '@/domain/editableListItem'
 
 export default class DummyListItem implements EditableListItem {
   public text?: string
@@ -16,12 +16,11 @@ export default class DummyListItem implements EditableListItem {
   }
 
   get renderSummary(): string {
-    return this.text ? this.text : "default text"
+    return this.text ? this.text : 'default text'
   }
 
   get isEmpty(): boolean {
-    return !this.text;
-
+    return !this.text
   }
 
   equals(entry: DummyListItem): boolean {

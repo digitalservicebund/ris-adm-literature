@@ -23,7 +23,7 @@ fileignoreconfig:
   - filename: frontend/src/components/ComboboxInput.vue
     checksum: d8805af87c95764b578fb54f8d343620ea90674977449f62652f77753f93494a
   - filename: frontend/src/components/Tooltip.spec.ts
-    checksum: 250ba77f17468e9282eed948d54bf4e303953f2773e89c4ed2b4c8b1f40dd5ee
+    checksum: b97ac5af98399fe336c48252c68ba51e0c94faeb9f37581c3e6355c443d71d86
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text

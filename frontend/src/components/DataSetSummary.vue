@@ -1,43 +1,41 @@
 <script lang="ts" setup generic="T">
-import { computed, h, defineComponent } from "vue"
-import type { VNode } from "vue"
-import Ourselves from "@/components/DataSetSummary.vue"
+import { computed, h, defineComponent } from 'vue'
+import type { VNode } from 'vue'
+import Ourselves from '@/components/DataSetSummary.vue'
 
 const props = defineProps<{
   data: T | T[]
   summarizer?: (dataEntry: T) => string | VNode
 }>()
 
-const dataAsList = computed(() =>
-  Array.isArray(props.data) ? props.data : [props.data],
-)
+const dataAsList = computed(() => (Array.isArray(props.data) ? props.data : [props.data]))
 
 const summarizer = computed(() => props.summarizer ?? defaultSummarizer)
 const summaries = computed(() => dataAsList.value.map(wrappedSummarizer))
 
 function wrappedSummarizer(dataEntry: T): VNode {
   const summary = summarizer.value(dataEntry)
-  return typeof summary == "string" ? h("span", summary) : summary
+  return typeof summary == 'string' ? h('span', summary) : summary
 }
 </script>
 
 <script lang="ts">
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function defaultSummarizer(dataEntry: any): string {
-  if (["string", "boolean", "number"].includes(typeof dataEntry)) {
+  if (['string', 'boolean', 'number'].includes(typeof dataEntry)) {
     return `${dataEntry}`
   } else if (Array.isArray(dataEntry)) {
     return dataEntry
       .map(defaultSummarizer)
-      .filter((value) => value != "")
-      .join(", ")
-  } else if (typeof dataEntry == "object" && dataEntry !== null) {
+      .filter((value) => value != '')
+      .join(', ')
+  } else if (typeof dataEntry == 'object' && dataEntry !== null) {
     return Object.values(dataEntry)
       .map(defaultSummarizer)
-      .filter((value) => value != "")
-      .join(" | ")
+      .filter((value) => value != '')
+      .join(' | ')
   } else {
-    return ""
+    return ''
   }
 }
 
