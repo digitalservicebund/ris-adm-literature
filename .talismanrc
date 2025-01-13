@@ -59,4 +59,8 @@ allowed_patterns:
   - "deploy_key: \\$\\{\\{ secrets.DEPLOY_KEY \\}\\}"
   - "Escape key"
   - "keyDown"
+  - "keydown"
   - "key: 'Escape'"
+  - "handleKeyDown"
+  - "KeyboardEvent"
+  - "event.key"
