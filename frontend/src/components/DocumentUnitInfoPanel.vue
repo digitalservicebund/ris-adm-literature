@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const fileNumberInfo = computed(
   // () => documentUnitStore.documentUnit?.coreData.fileNumbers?.[0] || "",
-  () => '',
+  () => 'Platzhaltertext',
 )
 
 const decisionDateInfo = computed(

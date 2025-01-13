@@ -20,6 +20,8 @@ fileignoreconfig:
     checksum: 7d056209beebeed85032ab6dd4699103cd351cdb05f0d68418923779833f3324
   - filename: frontend/src/routes/DocumentUnit.vue
     checksum: d4ed727abc9b4d2ad540874ac3c421dd1daba391eaade5257bed99ad35bd7720
+  - filename: frontend/src/routes/RubrikenPage.vue
+    checksum: 33bcaa1e3ed398c93630b173f2709d9fe14add51a3d0fb72b58f281ca803bb21
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text

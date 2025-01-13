@@ -156,7 +156,7 @@ function toggleNavigationPanel(expand?: boolean) {
         data-testid="document-unit-info-panel"
         :heading="documentUnit?.documentNumber ?? ''"
       /> -->
-      <DocumentUnitInfoPanel data-testid="document-unit-info-panel" :heading="'Das ist ein test'" />
+      <DocumentUnitInfoPanel data-testid="document-unit-info-panel" :heading="'KSNR054920707'" />
       <div class="flex grow flex-col items-start">
         <!-- v-if="documentUnit" -->
         <FlexContainer
