@@ -48,13 +48,8 @@ jobs:
           curl https://thoughtworks.github.io/talisman/install.sh > ~/install-talisman.sh
           chmod +x ~/install-talisman.sh
           ~/install-talisman.sh
-      - name: Find talisman
-        run: |
-          sudo apt install locate
-          sudo updatedb
-          locate talisman
-      - name: Detect secrets in Git history with Talisman
-        run: talisman_linux_amd64 --scan
+      - name: Scan Git history with talisman
+        run: /home/runner/work/ris-adm-vwv/ris-adm-vwv/.git/hooks/bin/talisman --scan
       - name: Upload talisman results
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
