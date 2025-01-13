@@ -50,13 +50,6 @@ jobs:
           ~/install-talisman.sh
       - name: Scan Git history with talisman
         run: /home/runner/work/ris-adm-vwv/ris-adm-vwv/.git/hooks/bin/talisman --ignoreHistory
-      - name: Upload talisman results
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "frontend-talisman-report.json"
-          path: "talisman_report/talisman_reports/data/report.json"
-          if-no-files-found: error
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
