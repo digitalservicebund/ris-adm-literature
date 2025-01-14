@@ -4,8 +4,8 @@ import ErrorNotFound from './routes/ErrorNotFound.vue'
 import DocumentUnitNew from './routes/documentUnit/new.vue'
 import DocumentUnitWrapper from './routes/documentUnit/[documentNumber].vue'
 import AbgabePage from './routes/documentUnit/[documentNumber]/AbgabePage.vue'
-import PeriodicalPage from './routes/documentUnit/[documentNumber]/PeriodicalPage.vue'
 import RubrikenPage from './routes/documentUnit/[documentNumber]/RubrikenPage.vue'
+import FundstellenPage from '@/routes/documentUnit/[documentNumber]/FundstellenPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -28,7 +28,7 @@ const router = createRouter({
         {
           path: '/documentUnit/:documentNumber/fundstellen',
           name: 'documentUnit-documentNumber-fundstellen',
-          component: PeriodicalPage,
+          component: FundstellenPage,
         },
         {
           path: '/documentUnit/:documentNumber/rubriken',
