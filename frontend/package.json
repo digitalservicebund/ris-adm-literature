@@ -62,7 +62,7 @@
     "eslint-plugin-vue": "^9.30.0",
     "jsdom": "^26.0.0",
     "npm-run-all2": "^7.0.2",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.0",
     "postcss-import": "^16.1.0",
     "postcss-scrollbar": "^0.5.1",
     "prettier": "^3.3.3",
