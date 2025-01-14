@@ -9,7 +9,7 @@ describe('ToolTip', () => {
     })
 
     // ToolTip should not be visible initially
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('opens and closes toolTip on hover and mouseleave', async () => {
@@ -21,19 +21,19 @@ describe('ToolTip', () => {
     const target = screen.getByText('Hover over me')
 
     // Initially the toolTip should not be visible
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
 
     // Fire mouseenter event to show the toolTip
     await fireEvent.mouseEnter(target)
 
     // ToolTip should now be visible
-    expect(screen.getByRole('toolTip')).toBeInTheDocument()
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
 
     // Fire mouseleave event to hide the toolTip
     await fireEvent.mouseLeave(target)
 
     // ToolTip should now be hidden
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('opens and closes toolTip on focus and blur', async () => {
@@ -45,19 +45,19 @@ describe('ToolTip', () => {
     const target = screen.getByText('Hover over me')
 
     // Initially the toolTip should not be visible
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
 
     // Fire focus event to show the toolTip
     await fireEvent.focus(target)
 
     // ToolTip should now be visible
-    expect(screen.getByRole('toolTip')).toBeInTheDocument()
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
 
     // Fire blur event to hide the toolTip
     await fireEvent.blur(target)
 
     // ToolTip should now be hidden
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('closes the toolTip when the Escape key is pressed', async () => {
@@ -69,19 +69,19 @@ describe('ToolTip', () => {
     const target = screen.getByText('Hover over me')
 
     // Initially the toolTip should not be visible
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
 
     // Fire focus event to show the toolTip
     await fireEvent.focus(target)
 
     // ToolTip should now be visible
-    expect(screen.getByRole('toolTip')).toBeInTheDocument()
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
 
     // Fire Escape key event to hide the toolTip
     await fireEvent.keyDown(window, { key: 'Escape' })
 
     // ToolTip should now be hidden
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('renders the shortcut text when provided', async () => {
@@ -96,16 +96,16 @@ describe('ToolTip', () => {
     const target = screen.getByText('Hover over me')
 
     // Initially the toolTip should not be visible
-    expect(screen.queryByRole('toolTip')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
 
     // Fire focus event to show the toolTip
     await fireEvent.focus(target)
 
     // ToolTip should now be visible
-    expect(screen.getByRole('toolTip')).toBeInTheDocument()
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
 
     // Check both the toolTip text and shortcut
-    expect(screen.getByRole('toolTip')).toHaveTextContent('ToolTip with shortcut')
-    expect(screen.getByRole('toolTip')).toHaveTextContent('Ctrl+C')
+    expect(screen.getByRole('tooltip')).toHaveTextContent('ToolTip with shortcut')
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Ctrl+C')
   })
 })
