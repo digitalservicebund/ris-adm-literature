@@ -44,7 +44,7 @@ describe('documentUnit InfoPanel', () => {
     renderComponent({ heading: 'test heading' })
 
     // TODO: is this a proper test? Fix it when the below gets un-commented
-    expect(await screen.findByText('test heading'))
+    expect(await screen.findByText('test heading')).toBeVisible()
 
     // it("renders all given property infos in correct order", async () => {
     //   const coreData = {
