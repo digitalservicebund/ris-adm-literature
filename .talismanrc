@@ -2,32 +2,7 @@ scopeconfig:
   - scope: node # ignore e.g. package-lock.json
 
 fileignoreconfig:
-  - filename: lefthook.yml
-    checksum: 8168972ed7d27ebebc6e2c33243fad92abe4f859f3bd2edb0c3b171940cac0ec
-  - filename: prod.Dockerfile
-    checksum: e5d917f821d4d467ad4bcc77e165fb986971daeac4355adc0b60a758c69bf396
-  - filename: nginx.conf
-    checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
-  - filename: frontend/env.d.ts
-    checksum: fa217d4a34afcd967e6c35b10e139cd5c52711e41c190f477576441081b5cf99
-  - filename: LICENSE
-    checksum: 00de5fa1aad2fcb968beb5d1bbf09931fc9d3f160f11b945b24f3203ea025917
-  # - filename: .github/workflows/security-jobs.yml
-  #   checksum: 6bad26404f5327349658f52897d21982129df33d553ab12b9bb69caf6c9d168f
-  # - filename: frontend/src/components/NavbarSide.vue
-  #   checksum: 7d056209beebeed85032ab6dd4699103cd351cdb05f0d68418923779833f3324
-  # - filename: frontend/src/components/NavbarSide.spec.ts
-  #   checksum: 43ab6c514a4174add09477b2764a3108f319c9698ed5c26eb6ef6b1d686d10fb
-  # - filename: frontend/src/routes/DocumentUnit.vue
-  #   checksum: d4ed727abc9b4d2ad540874ac3c421dd1daba391eaade5257bed99ad35bd7720
-  # - filename: frontend/src/components/input/TextInput.vue
-  #   checksum: 9b2cf5af0630bc3b1023a5554859639d873d095fc0117f91357c43c90a9c0282
-  # - filename: frontend/src/components/EditableList.vue
-  #   checksum: 8e3a8ec14d35dd35fc4f12da4a4c9327be2f76c9512669540de395118fac602d
-  # - filename: frontend/src/components/ComboboxInput.vue
-  #   checksum: d8805af87c95764b578fb54f8d343620ea90674977449f62652f77753f93494a
-  # - filename: frontend/src/components/ComboboxInput.spec.ts
-  #   checksum: 96f7bb558ec0b3bf49ca1dff60e2f8231d830813f0fccbe62d485f74a0f687ef
+# We try to not ignore files as any edit to these files would require updating the .talismanrc
 
 allowed_patterns:
   # allow these specific patterns that include hex encoded text

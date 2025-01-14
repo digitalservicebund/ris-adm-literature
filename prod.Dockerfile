@@ -9,7 +9,7 @@ COPY /frontend/package*.json ./
 # install project dependencies
 RUN npm install
 
-# copy project files and folders to the current working directory (i.e. 'app' folder)
+# copy project files and folders to the current working directory (i.e. 'app ' folder)
 COPY /frontend/. .
 
 # build app for production with minification
@@ -19,3 +19,5 @@ FROM cgr.dev/chainguard/nginx@sha256:9cbce3d5ee2bf696232931119919c2db19e7272cddb
 EXPOSE 8081
 COPY --from=builder /frontend/dist /var/lib/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/ris-adm-vwv.conf
+
+# TODO: remove this line
