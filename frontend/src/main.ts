@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
+import PrimeVue from 'primevue/config'
+import { RisUiTheme, RisUiLocale } from '@digitalservicebund/ris-ui/primevue'
+import '@digitalservicebund/ris-ui/primevue/style.css'
+import '@digitalservicebund/ris-ui/fonts.css'
 import App from './App.vue'
 import * as Sentry from '@sentry/vue'
 import '@/styles/global.scss'
@@ -18,4 +22,11 @@ if (import.meta.env.PROD) {
   })
 }
 
-app.use(router).mount('#app')
+app
+  .use(PrimeVue, {
+    unstyled: true,
+    pt: RisUiTheme,
+    locale: RisUiLocale.deDE,
+  })
+  .use(router)
+  .mount('#app')

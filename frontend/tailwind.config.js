@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
+import { RisUiPreset, RisUiPlugin } from "@digitalservicebund/ris-ui/tailwind";
 import styleDictionary from "@digitalservice4germany/style-dictionary/tailwind"
 import plugins from "@digitalservice4germany/angie"
 
 export default {
   content: ["./src/**/*.{html,vue,js,ts}"],
-  presets: [styleDictionary],
-  plugins: [plugins],
+  presets: [RisUiPreset, styleDictionary],
+  plugins: [RisUiPlugin, plugins],
 
   theme: {
     fontWeight: {
