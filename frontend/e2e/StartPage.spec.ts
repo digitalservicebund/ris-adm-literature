@@ -14,5 +14,9 @@ test(
     await expect(page.getByText('BSG')).toHaveCount(1)
     await expect(page.getByText('Übersicht Verwaltungsvorschriften')).toHaveCount(1)
     await expect(page.getByText('Neue Dokumentationseinheit')).toHaveCount(1)
+    await page.getByText('Neue Dokumentationseinheit').click()
+
+    // this needs to change when KSNR are generated dynamically
+    await expect(page).toHaveURL('/documentUnit/KSNR054920707/fundstellen')
   },
 )
