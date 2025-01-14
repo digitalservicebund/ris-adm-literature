@@ -9,7 +9,7 @@ test(
     await page.goto('/documentUnit/KSNR054920707/abgabe')
     await expect(page.getByText('Abgabe')).toHaveCount(2)
     await expect(page.getByText('Zur Veröffentlichung freigeben')).toHaveCount(1)
-    await page.click('text=Zur Veröffentlichung freigeben')
+    await page.getByText('Zur Veröffentlichung freigeben').click()
     await expect(page).toHaveURL('') // Check if the user is redirected to the StartPage
   },
 )
