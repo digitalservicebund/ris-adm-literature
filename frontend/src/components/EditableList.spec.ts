@@ -9,6 +9,10 @@ import type EditableListItem from '@/domain/editableListItem'
 import DummyInputGroupVue from '@/kitchensink/components/DummyInputGroup.vue'
 import DummyListItem from '@/kitchensink/domain/dummyListItem'
 import { describe, it, expect, vi } from 'vitest'
+import Reference from '@/domain/reference.ts'
+import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
+import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
+import LegalPeriodical from '@/domain/legalPeriodical.ts'
 
 const listWithEntries = ref<DummyListItem[]>([
   new DummyListItem({ text: 'foo', uuid: '123' }),
@@ -209,6 +213,60 @@ describe('EditableList', () => {
 
       // Assert
       expect(scrollIntoViewMock).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('EditableList with DocumentUnitInputReference', () => {
+    it('add reference', async () => {
+      // Arrange
+      await renderComponent({
+        editComponent: DocumentUnitReferenceInput,
+        summaryComponent: ReferenceSummary,
+        modelValue: [],
+        defaultValue: new Reference(),
+      })
+      const user = userEvent.setup()
+
+      // Act
+      const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
+      await user.click(openDropdownContainer)
+      const dropdownItems = screen.getAllByLabelText('dropdown-option')
+      await user.click(dropdownItems[0])
+      const citationInput = screen.getByLabelText('Zitatstelle')
+      await user.type(citationInput, 'abcde')
+      await user.click(screen.getByLabelText('Fundstelle speichern'))
+
+      // Assert
+      expect(screen.getByText('BAnz abcde')).toBeInTheDocument()
+    })
+
+    it('edit reference', async () => {
+      // Arrange
+      await renderComponent<Reference>({
+        editComponent: DocumentUnitReferenceInput,
+        summaryComponent: ReferenceSummary,
+        modelValue: [
+          new Reference({
+            legalPeriodical: new LegalPeriodical({
+              title: 'Arbeitsrecht aktiv',
+              abbreviation: 'AA',
+            }),
+            citation: '12345',
+          }),
+        ],
+        defaultValue: new Reference(),
+      })
+      const user = userEvent.setup()
+
+      // Act
+      await user.click(screen.getByTestId('list-entry-0'))
+      const citationInput = screen.getByLabelText('Zitatstelle')
+      await user.clear(citationInput)
+      await user.type(citationInput, 'abcde')
+      await user.click(screen.getByLabelText('Fundstelle speichern'))
+
+      // Assert
+      expect(screen.getByText('AA abcde')).toBeInTheDocument()
     })
   })
 })
