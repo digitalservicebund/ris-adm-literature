@@ -27,6 +27,7 @@ allowed_patterns:
   - "# scan for secrets that were published by mistake"
   - "password: \\$\\{\\{ secrets.GITHUB_TOKEN \\}\\}"
   - "argocd_pipeline_password: \\$\\{\\{ secrets.ARGOCD_PIPELINE_PASSWORD \\}\\}"
+  - "introduced new secrets, but"
   # allow these specific patterns with the term "key"
   - "key: modules-"
   - "key:.+runner.os"
