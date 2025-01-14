@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import TextButton from '@/components/input/TextButton.vue'
+import Button from 'primevue/button'
+import IconAdd from '~icons/material-symbols/add'
 
 const router = useRouter()
 </script>
@@ -10,10 +11,17 @@ const router = useRouter()
     <div class="flex justify-between">
       <h1 class="ds-heading-02-reg">Übersicht Verwaltungsvorschriften</h1>
 
-      <TextButton
+      <Button
+        :disabled="false"
         label="Neue Dokumentationseinheit"
+        :loading="false"
+        :text="false"
         @click="router.push({ path: '/documentUnit/new' })"
-      />
+      >
+        <template #icon>
+          <IconAdd />
+        </template>
+      </Button>
     </div>
   </div>
 </template>
