@@ -10,7 +10,7 @@ const router = useRouter()
     <div aria-label="Abgabe" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Abgabe</TitleElement>
       <div class="flex flex-row">
-        <TextButton label="Abgeben" @click="router.push({ path: '/' })" />
+        <TextButton label="Zur Veröffentlichung freigeben" @click="router.push({ path: '/' })" />
       </div>
     </div>
   </div>
