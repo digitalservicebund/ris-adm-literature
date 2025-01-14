@@ -95,7 +95,7 @@ jobs:
         working-directory: ./frontend
       - name: Unit tests
         run: |
-          npm run test:unit
+          npm exec vitest --reporter=verbose --reporter=json --outputFile=./frontend-unit-test-report.json
         working-directory: ./frontend
       - name: Upload unit test report
         if: always()
@@ -139,7 +139,7 @@ jobs:
         working-directory: ./frontend
       - name: e2e tests
         run: |
-          npm run test:e2e
+          PLAYWRIGHT_JSON_OUTPUT_NAME=frontend-e2e-test-report.json npm exec playwright test --reporter=json
         working-directory: ./frontend
       - name: Upload e2e test report
         if: always()
@@ -179,7 +179,7 @@ jobs:
         run: npm ci
         working-directory: ./frontend
       - name: Run coverage
-        run: npm run coverage
+        run: npm run test:coverage
         working-directory: ./frontend
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4

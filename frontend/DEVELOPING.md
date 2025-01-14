@@ -34,6 +34,18 @@ npm run build
 npm run test:unit
 ```
 
+### Run Unit Tests with [Vitest](https://vitest.dev/) and watch it
+
+```sh
+npm run test:watch
+```
+
+### Run Unit Test and check coverage with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:coverage
+```
+
 ### Run End-to-End Tests with [Playwright](https://playwright.dev)
 
 ```sh
@@ -48,7 +60,7 @@ npm run test:e2e
 # Runs the tests only on Chromium
 npm run test:e2e -- --project=chromium
 # Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
+npm run test:e2e -- e2e/AbgabePage.spec.ts
 # Runs the tests in debug mode
 npm run test:e2e -- --debug
 ```
@@ -60,6 +72,7 @@ npm run lint
 ```
 
 ### Format with [Prettier](https://prettier.io)
+
 ```sh
 npm run format
 ```
