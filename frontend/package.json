@@ -27,7 +27,7 @@
     "@iconify-json/material-symbols": "^1.2.12",
     "@sentry/vite-plugin": "^2.23.0",
     "@sentry/vue": "^8.48.0",
-    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/node23": "^23.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
