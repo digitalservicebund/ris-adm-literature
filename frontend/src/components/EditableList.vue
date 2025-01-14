@@ -226,12 +226,6 @@ watch(
                 setEditEntry(entry as T)
               }
             "
-            @keypress.enter="
-              () => {
-                toggleDisplayDefaultValue(false)
-                setEditEntry(entry as T)
-              }
-            "
           >
             <IconArrowDown />
           </button>
