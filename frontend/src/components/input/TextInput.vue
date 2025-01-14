@@ -71,5 +71,3 @@ defineExpose({ focusInput, inputRef })
     @keyup.enter="$emit('enter-released')"
   />
 </template>
-
-<!-- TODO: Remove this line -->

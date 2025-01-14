@@ -82,5 +82,3 @@ const isOnlyParentActive = (currentNavItem: MenuItem) => {
     </div>
   </FlexContainer>
 </template>
-
-<!-- TODO: remove this line -->

@@ -269,5 +269,3 @@ function generateRouterRoute(route?: Route): RouteRecordRaw {
   const path = '/' + route?.name
   return { ...route, path, component: {} }
 }
-
-// TODO: remove this line

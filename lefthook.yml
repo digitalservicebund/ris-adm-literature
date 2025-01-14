@@ -31,5 +31,3 @@ pre-push:
 skip_output:
   - meta # Skips lefthook version printing
   - execution # Skips printing any execution logs (but prints if the execution failed)
-
-# TODO: remove this line
