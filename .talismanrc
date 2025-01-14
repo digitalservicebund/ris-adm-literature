@@ -67,4 +67,4 @@ allowed_patterns:
   - "KeyboardEvent"
   - "event.key"
   - ':key=".+"'
-  - 'key: "Arrow+'
+  - 'key: "Arrow'
