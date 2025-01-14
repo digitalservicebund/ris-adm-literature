@@ -6,6 +6,7 @@ fileignoreconfig:
 
 allowed_patterns:
   # allow patterns with hex encoded text
+  - "cgr.dev/chainguard/nginx@sha256:9cbce3d5ee2bf696232931119919c2db19e7272cddb0fae0dc0602e78281b688"
   - "uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3"
   - "uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf"
   - "uses: digitalservicebund/setup-sonarscanner@3ade23691f865c02dce6b46452947a0e7944196e"
