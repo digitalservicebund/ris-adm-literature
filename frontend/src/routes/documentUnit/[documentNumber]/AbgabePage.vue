@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import TextButton from '@/components/input/TextButton.vue'
+import Button from 'primevue/button'
+import IconCheck from '~icons/material-symbols/check'
 
 const router = useRouter()
 </script>
@@ -10,7 +11,17 @@ const router = useRouter()
     <div aria-label="Abgabe" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Abgabe</TitleElement>
       <div class="flex flex-row">
-        <TextButton label="Zur Veröffentlichung freigeben" @click="router.push({ path: '/' })" />
+        <Button
+          :disabled="false"
+          label="Zur Veröffentlichung freigeben"
+          :loading="false"
+          :text="false"
+          @click="router.push({ path: '/' })"
+        >
+          <template #icon>
+            <IconCheck />
+          </template>
+        </Button>
       </div>
     </div>
   </div>
