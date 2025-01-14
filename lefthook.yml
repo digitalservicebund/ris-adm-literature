@@ -1,4 +1,4 @@
- pre-commit:
+pre-commit:
   parallel: true
   commands:
     secrets-audit:
