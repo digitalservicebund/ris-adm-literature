@@ -66,3 +66,4 @@ allowed_patterns:
   - "handleKeyDown"
   - "KeyboardEvent"
   - "event.key"
+  - ":key=\".+\""
