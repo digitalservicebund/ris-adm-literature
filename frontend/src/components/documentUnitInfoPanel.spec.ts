@@ -1,6 +1,6 @@
 import { describe, it /*expect*/ } from 'vitest'
 // import { createTestingPinia } from "@pinia/testing"
-import { render, screen } from '@testing-library/vue'
+import { render, screen, expect } from '@testing-library/vue'
 // import { createRouter, createWebHistory } from "vue-router"
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 // import DocumentUnit, { type CoreData } from "@/domain/documentUnit"
@@ -43,7 +43,7 @@ describe('documentUnit InfoPanel', () => {
   it('renders heading if given', async () => {
     renderComponent({ heading: 'test heading' })
 
-    screen.getAllByText('test heading')
+    expect(await screen.findByText('test heading')).toBeInTheDocument()
   })
 
   // it("renders all given property infos in correct order", async () => {
