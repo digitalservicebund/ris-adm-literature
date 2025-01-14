@@ -7,15 +7,15 @@ import { userEvent } from '@testing-library/user-event'
 
 function renderComponent(
   options: {
-    modelValue?: Reference,
-    modelValueList?: Reference[],
+    modelValue?: Reference
+    modelValueList?: Reference[]
   } = {},
 ) {
   return {
     ...render(DocumentUnitReferenceInput, {
       props: {
         modelValue: options.modelValue,
-        modelValueList: options.modelValueList
+        modelValueList: options.modelValueList,
       },
     }),
   }
@@ -58,10 +58,8 @@ describe('DocumentUnitReferenceInput', () => {
   it('selection is cleared', async () => {
     renderComponent({
       modelValue: new Reference({
-          legalPeriodical:
-            new LegalPeriodical({title: 'Bundesanzeiger', abbreviation: 'BAnz'})
-        }
-      ),
+        legalPeriodical: new LegalPeriodical({ title: 'Bundesanzeiger', abbreviation: 'BAnz' }),
+      }),
     })
     const resetButton = screen.getByLabelText('Auswahl zurücksetzen')
     await user.click(resetButton)
@@ -70,7 +68,7 @@ describe('DocumentUnitReferenceInput', () => {
   })
 
   it('add reference', async () => {
-    const {emitted} = renderComponent()
+    const { emitted } = renderComponent()
 
     const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
     await user.click(openDropdownContainer)
@@ -92,9 +90,10 @@ describe('DocumentUnitReferenceInput', () => {
   })
 
   it('delete reference', async () => {
-    const {emitted, rerender} = renderComponent({
+    const { emitted, rerender } = renderComponent({
       modelValue: new Reference({
-        legalPeriodical: new LegalPeriodical({title: 'Bundesanzeiger', abbreviation: 'BAnz'}), citation: 'abcde',
+        legalPeriodical: new LegalPeriodical({ title: 'Bundesanzeiger', abbreviation: 'BAnz' }),
+        citation: 'abcde',
       }),
     })
     const deleteButton = screen.getByLabelText('Eintrag löschen')
@@ -104,7 +103,7 @@ describe('DocumentUnitReferenceInput', () => {
     expect(emitted()['removeEntry']).toHaveLength(1)
 
     // Simulate the removing of the value (triggered by EditableList)
-    await rerender( {modelValue: undefined})
+    await rerender({ modelValue: undefined })
     expect(screen.queryByLabelText('Eintrag löschen')).not.toBeInTheDocument()
     expect(screen.queryByDisplayValue('BAnz')).not.toBeInTheDocument()
   })
@@ -112,14 +111,14 @@ describe('DocumentUnitReferenceInput', () => {
   it('cancel editing reference', async () => {
     renderComponent({
       modelValue: new Reference({
-        legalPeriodical: new LegalPeriodical({title: 'Bundesanzeiger', abbreviation: 'BAnz'}), citation: 'abcde',
+        legalPeriodical: new LegalPeriodical({ title: 'Bundesanzeiger', abbreviation: 'BAnz' }),
+        citation: 'abcde',
       }),
-    });
+    })
     const cancelButton = screen.getByLabelText('Abbrechen')
 
     expect(cancelButton).toBeEnabled()
     await user.click(cancelButton)
     expect(screen.getByDisplayValue('BAnz')).toBeInTheDocument()
   })
-
 })
