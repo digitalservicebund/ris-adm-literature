@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { type Component, computed } from 'vue'
-import Tooltip from './Tooltip.vue'
 import IconChevronLeft from '~icons/ic/baseline-chevron-left'
 import IconChevronRight from '~icons/ic/baseline-chevron-right'
+import ToolTip from '@/components/ToolTip.vue'
 
 interface Props {
   isExpanded?: boolean
@@ -53,7 +53,7 @@ export enum OpeningDirection {
 
 <template>
   <div class="relative bg-white" :class="classes">
-    <Tooltip
+    <ToolTip
       class="!absolute top-16 z-20"
       :class="buttonClasses"
       :shortcut="shortcut"
@@ -70,7 +70,7 @@ export enum OpeningDirection {
         />
         <IconChevronRight v-else />
       </button>
-    </Tooltip>
+    </ToolTip>
     <div v-show="isExpanded">
       <slot />
     </div>

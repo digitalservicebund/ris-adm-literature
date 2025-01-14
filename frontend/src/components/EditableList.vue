@@ -1,12 +1,12 @@
 <script lang="ts" setup generic="T extends EditableListItem">
 import type { Component, ComponentPublicInstance, Ref } from 'vue'
 import { computed, nextTick, ref, watch } from 'vue'
-import Tooltip from './Tooltip.vue'
 import DefaultSummary from '@/components/DefaultSummary.vue'
 import TextButton from '@/components/input/TextButton.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconAdd from '~icons/material-symbols/add'
 import type EditableListItem from '@/domain/editableListItem'
+import ToolTip from '@/components/ToolTip.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -215,7 +215,7 @@ watch(
           :data="entry"
         />
 
-        <Tooltip text="Aufklappen">
+        <ToolTip text="Aufklappen">
           <button
             id="editable-list-select-button"
             class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none"
@@ -229,7 +229,7 @@ watch(
           >
             <IconArrowDown />
           </button>
-        </Tooltip>
+        </ToolTip>
       </div>
 
       <component
