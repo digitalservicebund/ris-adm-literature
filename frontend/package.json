@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "test:unit": "vitest --reporter=verbose --reporter=json --outputFile=./frontend-unit-test-report.json",
     "test:e2e": "cross-env PLAYWRIGHT_JSON_OUTPUT_NAME=frontend-e2e-test-report.json playwright test --reporter=json",
@@ -61,7 +61,6 @@
     "eslint-plugin-testing-library": "^7.1.1",
     "eslint-plugin-vue": "^9.30.0",
     "jsdom": "^26.0.0",
-    "npm-run-all2": "^7.0.2",
     "postcss": "^8.5.0",
     "postcss-import": "^16.1.0",
     "postcss-scrollbar": "^0.5.1",
