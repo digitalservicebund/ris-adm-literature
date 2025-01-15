@@ -2,6 +2,7 @@
 import { ref, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
+import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
 import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
