@@ -11,7 +11,6 @@ import ComboboxItemService from '@/services/comboboxItemService.ts'
 
 const props = defineProps<{
   modelValue?: Reference
-  modelValueList?: Reference[]
 }>()
 
 const emit = defineEmits<{
