@@ -1,18 +1,11 @@
 <script lang="ts" setup>
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
-import { computed } from 'vue'
 import Reference from '@/domain/reference.ts'
 import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import EditableList from '@/components/EditableList.vue'
 
-const admReferences = computed({
-  get: () => [],
-  set: (newValues) => {
-    console.log(newValues)
-  },
-})
-
+const model = defineModel({ default: [] })
 const defaultValue = new Reference() as Reference
 </script>
 
@@ -22,7 +15,7 @@ const defaultValue = new Reference() as Reference
       <TitleElement>Fundstellen</TitleElement>
       <div class="flex flex-row">
         <EditableList
-          v-model="admReferences"
+          v-model="model"
           :default-value="defaultValue"
           :edit-component="DocumentUnitReferenceInput"
           :summary-component="ReferenceSummary"
