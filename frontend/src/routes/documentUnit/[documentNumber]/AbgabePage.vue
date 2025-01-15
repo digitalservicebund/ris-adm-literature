@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import IconCheck from '~icons/material-symbols/check'
-
+import TitleElement from '@/components/TitleElement.vue'
 const router = useRouter()
 </script>
 
