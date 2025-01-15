@@ -15,15 +15,24 @@ test(
     // Read the below as pseudo code that will be implemented properly while extending the application
     // Remove these comments once we're done with the page
 
-    // const zitierdatumElement = page.getByText('Zitierdatum')
-    // await expect(zitierdatumElement).toHaveCount(1)
-    // zitierdatumElement.fill('01.01.1970')
-    // await expect(zitierdatumElement).toHaveValue('01.01.1970')
+    const zitierdatumElement = page.getByText('Zitierdatum')
+    await expect(zitierdatumElement).toHaveCount(1)
+    zitierdatumElement.fill('thatshouldnotwork')
+    await expect(zitierdatumElement).toHaveValue('')
+    zitierdatumElement.fill('15.01.2025')
+    await expect(zitierdatumElement).toHaveValue('15.01.2025')
 
-    // const amtlicheLangüberschriftElement = page.getByText('Amtl. Langüberschrift')
-    // await expect(amtlicheLangüberschriftElement).toHaveCount(1)
-    // zitierdatumElement.fill('my long title')
-    // await expect(zitierdatumElement).toHaveValue('my long title')
+    const normgeberElement = page.getByText('Normgeber')
+    await expect(normgeberElement).toHaveCount(1)
+    normgeberElement.fill('AG')
+    await expect(page.getByText('AG Aachen')).toHaveCount(1)
+    await page.getByText('AG Aachen').click()
+    await expect(normgeberElement).toHaveValue('AG Aachen')
+
+    const amtlicheLangüberschriftElement = page.getByText('Amtl. Langüberschrift')
+    await expect(amtlicheLangüberschriftElement).toHaveCount(1)
+    amtlicheLangüberschriftElement.fill('my long title')
+    await expect(amtlicheLangüberschriftElement).toHaveValue('my long title')
 
     // const dokumentTyp = page.getByText('Dokumenttyp')
     // await expect(dokumentTyp).toHaveCount(1)

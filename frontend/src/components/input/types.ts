@@ -1,5 +1,6 @@
 import { LabelPosition } from '@/components/input/InputField.vue'
 import LegalPeriodical from '@/domain/legalPeriodical'
+import type { Court } from '@/domain/documentUnit'
 import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 
@@ -117,7 +118,7 @@ export interface DropdownInputField extends BaseInputField {
 }
 
 //COMBOBOX
-export type ComboboxInputModelType = LegalPeriodical
+export type ComboboxInputModelType = LegalPeriodical | Court
 
 export type ComboboxItem = {
   label: string
