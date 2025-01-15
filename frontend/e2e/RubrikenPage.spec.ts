@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.only(
+test(
   'Visiting the Rubriken step of creating a documentUnit',
   { tag: ['@RISDEV-6043'] },
   async ({ page }) => {
@@ -11,7 +11,6 @@ test.only(
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     await expect(page.getByText('Formaldaten')).toHaveCount(2)
-
 
     // Read the below as pseudo code that will be implemented properly while extending the application
     // Remove these comments once we're done with the page
