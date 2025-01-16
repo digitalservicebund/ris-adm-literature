@@ -16,7 +16,7 @@ const service: ComboboxItemService = {
     const banzLegalPeriodical = new LegalPeriodical({
       title: 'Bundesanzeiger',
       abbreviation: 'BAnz',
-      citationStyle: '2009, Seite 21'
+      citationStyle: '2009, Seite 21',
     })
     const banzItem: ComboboxItem = {
       label: 'BAnz | Bundesanzeiger',
@@ -26,7 +26,7 @@ const service: ComboboxItemService = {
     const aaLegalPeriodical = new LegalPeriodical({
       title: 'Arbeitsrecht aktiv',
       abbreviation: 'AA',
-      citationStyle: '2011'
+      citationStyle: '2011',
     })
     const aaItem: ComboboxItem = {
       label: 'AA | Arbeitsrecht aktiv',

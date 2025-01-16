@@ -87,12 +87,14 @@ describe('Combobox Element', () => {
         new LegalPeriodical({
           title: 'Bundesanzeiger',
           abbreviation: 'BAnz',
+          citationStyle: '2009, Seite 21',
         }),
       ],
       [
         new LegalPeriodical({
           title: 'Bundesanzeiger',
           abbreviation: 'BAnz',
+          citationStyle: '2009, Seite 21',
         }),
       ],
     ])
@@ -118,6 +120,7 @@ describe('Combobox Element', () => {
         {
           title: 'Arbeitsrecht aktiv',
           abbreviation: 'AA',
+          citationStyle: '2011',
         },
       ],
       [undefined],
