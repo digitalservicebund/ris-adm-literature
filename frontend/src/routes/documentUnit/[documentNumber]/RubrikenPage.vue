@@ -109,30 +109,28 @@ const fileNumbers = ref()
       </div>
 
       <div class="mb-24 flex flex-col gap-24 pb-24">
-        <div class="flex flex-row justify-between gap-24">
-          <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
-            <InputField id="fileNumbers" label="Aktenzeichen *">
-              <ChipsInput
-                id="fileNumbers"
-                v-model="fileNumbers"
-                aria-label="Aktenzeichen"
-              ></ChipsInput>
-            </InputField>
-            <InputField
+        <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+          <InputField id="fileNumbers" label="Aktenzeichen *">
+            <ChipsInput
+              id="fileNumbers"
+              v-model="fileNumbers"
+              aria-label="Aktenzeichen"
+            ></ChipsInput>
+          </InputField>
+          <InputField
+            :id="noAktenzeichenId"
+            v-slot="{ id }"
+            label="kein Aktenzeichen"
+            label-class="ds-label-01-reg"
+            :label-position="LabelPosition.RIGHT"
+          >
+            <CheckboxInput
               :id="noAktenzeichenId"
-              v-slot="{ id }"
-              label="kein Aktenzeichen"
-              label-class="ds-label-01-reg"
-              :label-position="LabelPosition.RIGHT"
-            >
-              <CheckboxInput
-                :id="noAktenzeichenId"
-                v-model="noAktenzeichen"
-                aria-label="Kein Aktenzeichen"
-                size="small"
-              />
-            </InputField>
-          </div>
+              v-model="noAktenzeichen"
+              aria-label="Kein Aktenzeichen"
+              size="small"
+            />
+          </InputField>
         </div>
       </div>
 
