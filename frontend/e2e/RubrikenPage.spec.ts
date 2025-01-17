@@ -66,9 +66,9 @@ test(
     // aktenzeichenElement.fill('Az2')
     // await expect(aktenzeichenElement).toHaveValues(['Az1', 'Az2'])
 
-    // const keinAktenzeichenElement = page.getByText('Kein Aktenzeichen')
-    // await expect(keinAktenzeichenElement).toHaveCount(1)
-    // aktenzeichenElement.check()
-    // expect(aktenzeichenElement).toBeChecked()
+    const keinAktenzeichenElement = page.getByText('Kein Aktenzeichen')
+    await expect(keinAktenzeichenElement).toHaveCount(1)
+    keinAktenzeichenElement.check()
+    expect(keinAktenzeichenElement).toBeChecked()
   },
 )
