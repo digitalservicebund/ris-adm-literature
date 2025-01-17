@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
-import InputField from '@/components/input/InputField.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
@@ -14,6 +14,8 @@ const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
+const noAktenzeichen = ref()
+const noAktenzeichenId = 1
 </script>
 
 <template>
@@ -73,6 +75,7 @@ const documentTypeLongText = ref()
           />
         </InputField>
       </div>
+
       <div class="flex flex-col">
         <div class="flex flex-row gap-24">
           <InputField
@@ -101,6 +104,26 @@ const documentTypeLongText = ref()
           </InputField>
         </div>
       </div>
+
+      <div class="mb-24 flex flex-col gap-24 pb-24">
+        <div class="flex flex-row justify-between gap-24">
+          <InputField
+            :id="myId"
+            v-slot="{ id }"
+            label="kein Aktenzeichen"
+            label-class="ds-label-01-reg"
+            :label-position="LabelPosition.RIGHT"
+          >
+            <CheckboxInput
+              :id="id"
+              v-model="noAktenzeichen"
+              aria-label="Kein Aktenzeichen"
+              size="small"
+            />
+          </InputField>
+        </div>
+      </div>
+
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
   </div>
