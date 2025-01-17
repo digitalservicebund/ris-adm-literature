@@ -21,7 +21,7 @@ const zitierdatum = ref()
             <DateInput
               id="zitierdatum"
               v-model="zitierdatum"
-              aria-label="fasdf"
+              aria-label="Zitierdatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
