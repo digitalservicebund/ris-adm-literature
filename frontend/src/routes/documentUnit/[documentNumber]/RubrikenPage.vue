@@ -7,6 +7,7 @@ import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
+import ChipsInput from '@/components/input/ChipsInput.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -16,6 +17,7 @@ const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 1
+const fileNumbers = ref()
 </script>
 
 <template>
@@ -107,15 +109,20 @@ const noAktenzeichenId = 1
 
       <div class="mb-24 flex flex-col gap-24 pb-24">
         <div class="flex flex-row justify-between gap-24">
+          <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+            <InputField id="fileNumbers" label="Aktenzeichen *">
+              <ChipsInput id="fileNumbers" v-model="fileNumbers" aria-label="Aktenzeichen"></ChipsInput>
+            </InputField>
+          </div>
           <InputField
-            :id="myId"
+            :id="noAktenzeichenId"
             v-slot="{ id }"
             label="kein Aktenzeichen"
             label-class="ds-label-01-reg"
             :label-position="LabelPosition.RIGHT"
           >
             <CheckboxInput
-              :id="id"
+              :id="noAktenzeichenId"
               v-model="noAktenzeichen"
               aria-label="Kein Aktenzeichen"
               size="small"
