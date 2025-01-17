@@ -39,7 +39,7 @@ test.only(
     // dokumentTyp.selectOption({ label: 'VR' }) // select by visible text option
     // await expect(dokumentTyp).toHaveValue('vr') // confirm selection by value
 
-    const inkrafttretedatumElement = page.getByText('Inkrafttretedatum')
+    const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
     await expect(inkrafttretedatumElement).toHaveCount(1)
     zitierdatumElement.fill('thatshouldnotwork')
     await expect(zitierdatumElement).toHaveValue('')

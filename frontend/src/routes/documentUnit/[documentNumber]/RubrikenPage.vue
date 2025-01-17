@@ -50,15 +50,14 @@ const inkrafttretedatum = ref()
         </InputField>
       </div>
 
-      <InputField id="inkrafttretedatum" label="Inkrafttretedatum *" class="w-full min-w-0">
-            <DateInput
-              id="inkrafttretedatum"
-              v-model="inkrafttretedatum"
-              aria-label="Inkrafttretedatum"
-              class="ds-input-medium"
-            ></DateInput>
-          </InputField>
-
+      <InputField id="inkrafttretedatum" label="Datum des Inkrafttretens *" class="w-full min-w-0">
+        <DateInput
+          id="inkrafttretedatum"
+          v-model="inkrafttretedatum"
+          aria-label="Inkrafttretedatum"
+          class="ds-input-medium"
+        ></DateInput>
+      </InputField>
     </div>
   </div>
 </template>
