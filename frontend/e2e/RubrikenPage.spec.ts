@@ -34,10 +34,12 @@ test(
     amtlicheLangüberschriftElement.fill('my long title')
     await expect(amtlicheLangüberschriftElement).toHaveValue('my long title')
 
-    // const dokumentTyp = page.getByText('Dokumenttyp')
-    // await expect(dokumentTyp).toHaveCount(1)
-    // dokumentTyp.selectOption({ label: 'VR' }) // select by visible text option
-    // await expect(dokumentTyp).toHaveValue('vr') // confirm selection by value
+    const dokumentTyp = page.getByText('Dokumenttyp')
+    await expect(dokumentTyp).toHaveCount(1)
+    await dokumentTyp.fill('V')
+    await expect(page.getByText('VR')).toHaveCount(1)
+    await page.getByText('VR').click()
+    await expect(dokumentTyp).toHaveValue('VR') // confirm selection by value
 
     // const inkrafttretedatumElement = page.getByText('Inkrafttretedatum')
     // await expect(inkrafttretedatumElement).toHaveCount(1)
