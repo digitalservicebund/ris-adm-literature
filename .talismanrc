@@ -56,3 +56,5 @@ allowed_patterns:
   - "key: 'other-value'"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
+  - "cross-origin-isolated=(),"
+  - "encrypted-media=(),"
