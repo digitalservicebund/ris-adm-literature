@@ -7,6 +7,7 @@ import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
+import ChipsInput from '@/components/input/ChipsInput.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -14,6 +15,7 @@ const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
+const fileNumbers = ref()
 </script>
 
 <template>
@@ -100,6 +102,11 @@ const documentTypeLongText = ref()
             ></DateInput>
           </InputField>
         </div>
+      </div>
+      <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+        <InputField id="fileNumbers" label="Aktenzeichen *">
+          <ChipsInput id="fileNumbers" v-model="fileNumbers" aria-label="Aktenzeichen"></ChipsInput>
+        </InputField>
       </div>
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
