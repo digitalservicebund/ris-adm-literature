@@ -119,7 +119,6 @@ const fileNumbers = ref()
           </InputField>
           <InputField
             :id="noAktenzeichenId"
-            v-slot="{ id }"
             label="kein Aktenzeichen"
             label-class="ds-label-01-reg"
             :label-position="LabelPosition.RIGHT"
