@@ -73,6 +73,6 @@ test(
     const keinAktenzeichenElement = page.getByText('Kein Aktenzeichen')
     await expect(keinAktenzeichenElement).toHaveCount(1)
     keinAktenzeichenElement.check()
-    expect(keinAktenzeichenElement).toBeChecked()
+    await expect(keinAktenzeichenElement).toBeChecked()
   },
 )
