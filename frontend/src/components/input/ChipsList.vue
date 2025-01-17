@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import * as Sentry from '@sentry/vue'
-import {ref, watch} from 'vue'
+import { ref, watch } from 'vue'
 import IconClear from '~icons/ic/baseline-clear'
 
 interface Props {
