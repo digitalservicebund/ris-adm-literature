@@ -60,12 +60,12 @@ test(
     ausserkrafttretedatumElement.fill('03.03.1970')
     await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
 
-    const aktenzeichenElement = page.getByText('Aktenzeichen')
+    const aktenzeichenElement = page.getByText('Aktenzeichen *')
     await expect(aktenzeichenElement).toHaveCount(1)
     await aktenzeichenElement.fill('Az1')
-    await aktenzeichenElement.press("Enter")
+    await aktenzeichenElement.press('Enter')
     await aktenzeichenElement.fill('Az2')
-    await aktenzeichenElement.press("Enter")
+    await aktenzeichenElement.press('Enter')
     // Created elements are list elements (<li>) so we need to select them explicitly
     await expect(page.getByText('Az1')).toHaveCount(1)
     await expect(page.getByText('Az2')).toHaveCount(1)
