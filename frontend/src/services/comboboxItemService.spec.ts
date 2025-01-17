@@ -15,7 +15,7 @@ describe('comboboxItemService', () => {
   it('getDocumentTypes.execute', async () => {
     const documentTypes = ComboboxItemService.getDocumentTypes(ref(''))
 
-    const executionResult = await documentTypes.execute();
+    const executionResult = await documentTypes.execute()
 
     expect(executionResult.data.value).toEqual(documentTypes.data.value)
   })
