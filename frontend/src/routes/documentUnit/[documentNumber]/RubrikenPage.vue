@@ -6,12 +6,14 @@ import InputField from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
+import TextInput from '@/components/input/TextInput.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
 const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
+const documentTypeLongText = ref()
 </script>
 
 <template>
@@ -52,7 +54,7 @@ const selectedDocumentType = ref()
         </InputField>
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
-      <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+      <div class="flex flex-row gap-24">
         <InputField id="documentType" label="Dokumenttyp *">
           <ComboboxInput
             id="documentType"
@@ -60,6 +62,15 @@ const selectedDocumentType = ref()
             aria-label="Dokumenttyp"
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
+        </InputField>
+        <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
+          <TextInput
+            id="documentTypeLongText"
+            v-model="documentTypeLongText"
+            ariaLabel="Dokumenttyp Zusatz"
+            :has-error="false"
+            size="medium"
+          />
         </InputField>
       </div>
       <div class="flex flex-col">
