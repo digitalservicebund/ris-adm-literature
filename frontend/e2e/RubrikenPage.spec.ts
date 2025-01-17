@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.only(
+test(
   'Visiting the Rubriken step of creating a documentUnit',
   { tag: ['@RISDEV-6043'] },
   async ({ page }) => {
