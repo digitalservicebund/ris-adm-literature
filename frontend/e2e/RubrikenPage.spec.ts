@@ -46,12 +46,12 @@ test(
     inkrafttretedatumElement.fill('02.02.1970')
     await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
 
-    // const ausserkrafttretedatumElement = page.getByText('Ausserkrafttretedatum')
-    // await expect(ausserkrafttretedatumElement).toHaveCount(1)
-    // ausserkrafttretedatumElement.fill('thatshouldnotwork')
-    // await expect(ausserkrafttretedatumElement).toHaveValue('')
-    // ausserkrafttretedatumElement.fill('03.03.1970')
-    // await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
+    const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
+    await expect(ausserkrafttretedatumElement).toHaveCount(1)
+    ausserkrafttretedatumElement.fill('thatshouldnotwork')
+    await expect(ausserkrafttretedatumElement).toHaveValue('')
+    ausserkrafttretedatumElement.fill('03.03.1970')
+    await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
 
     // const aktenzeichenElement = page.getByText('Aktenzeichen')
     // await expect(aktenzeichenElement).toHaveCount(1)

@@ -10,6 +10,7 @@ import Textarea from 'primevue/textarea'
 const selectedCourt = ref()
 const zitierdatum = ref()
 const inkrafttretedatum = ref()
+const ausserkrafttretedatum = ref()
 </script>
 
 <template>
@@ -50,14 +51,34 @@ const inkrafttretedatum = ref()
         </InputField>
       </div>
 
-      <InputField id="inkrafttretedatum" label="Datum des Inkrafttretens *" class="w-full min-w-0">
-        <DateInput
-          id="inkrafttretedatum"
-          v-model="inkrafttretedatum"
-          aria-label="Inkrafttretedatum"
-          class="ds-input-medium"
-        ></DateInput>
-      </InputField>
+      <div class="flex flex-col">
+        <div class="flex flex-row gap-24">
+          <InputField
+            id="inkrafttretedatum"
+            label="Datum des Inkrafttretens *"
+            class="w-full min-w-0"
+          >
+            <DateInput
+              id="inkrafttretedatum"
+              v-model="inkrafttretedatum"
+              aria-label="Inkrafttretedatum"
+              class="ds-input-medium"
+            ></DateInput>
+          </InputField>
+          <InputField
+            id="ausserkrafttretedatum"
+            label="Datum des Ausserkrafttretens"
+            class="w-full min-w-0"
+          >
+            <DateInput
+              id="ausserkrafttretedatum"
+              v-model="ausserkrafttretedatum"
+              aria-label="Ausserkrafttretedatum"
+              class="ds-input-medium"
+            ></DateInput>
+          </InputField>
+        </div>
+      </div>
     </div>
   </div>
 </template>
