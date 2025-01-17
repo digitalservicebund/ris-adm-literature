@@ -2,12 +2,13 @@
 import { ref } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
-import InputField from '@/components/input/InputField.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
 import ChipsInput from '@/components/input/ChipsInput.vue'
+import CheckboxInput from '@/components/input/CheckboxInput.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -15,6 +16,8 @@ const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
+const noAktenzeichen = ref()
+const noAktenzeichenId = 1
 const fileNumbers = ref()
 </script>
 
@@ -75,6 +78,7 @@ const fileNumbers = ref()
           />
         </InputField>
       </div>
+
       <div class="flex flex-col">
         <div class="flex flex-row gap-24">
           <InputField
@@ -103,11 +107,32 @@ const fileNumbers = ref()
           </InputField>
         </div>
       </div>
-      <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
-        <InputField id="fileNumbers" label="Aktenzeichen *">
-          <ChipsInput id="fileNumbers" v-model="fileNumbers" aria-label="Aktenzeichen"></ChipsInput>
-        </InputField>
+
+      <div class="mb-24 flex flex-col gap-24 pb-24">
+        <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+          <InputField id="fileNumbers" label="Aktenzeichen *">
+            <ChipsInput
+              id="fileNumbers"
+              v-model="fileNumbers"
+              aria-label="Aktenzeichen"
+            ></ChipsInput>
+          </InputField>
+          <InputField
+            :id="noAktenzeichenId"
+            label="kein Aktenzeichen"
+            label-class="ds-label-01-reg"
+            :label-position="LabelPosition.RIGHT"
+          >
+            <CheckboxInput
+              :id="noAktenzeichenId"
+              v-model="noAktenzeichen"
+              aria-label="Kein Aktenzeichen"
+              size="small"
+            />
+          </InputField>
+        </div>
       </div>
+
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
   </div>
