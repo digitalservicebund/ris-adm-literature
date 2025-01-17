@@ -1,13 +1,14 @@
 import type { Ref } from 'vue'
 import type { ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
-import type { Court } from '@/domain/documentUnit'
+import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import { computed, ref } from 'vue'
 
-type ComboboxItemService = {
+export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
@@ -73,6 +74,21 @@ const service: ComboboxItemService = {
     }
     const execute = async () => {
       return service.getCourts(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getDocumentTypes: (filter: Ref<string | undefined>) => {
+    const documentTypeValues = ['VR', 'VE', 'VV', 'ST']
+    const documentTypes = documentTypeValues.map((v) => <DocumentType>{ label: v })
+    const items = ref(documentTypes.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }))
+    const execute = async () => {
+      return service.getDocumentTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,

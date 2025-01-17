@@ -11,6 +11,7 @@ const selectedCourt = ref()
 const zitierdatum = ref()
 const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
+const selectedDocumentType = ref()
 </script>
 
 <template>
@@ -23,7 +24,7 @@ const ausserkrafttretedatum = ref()
             <DateInput
               id="zitierdatum"
               v-model="zitierdatum"
-              aria-label="Zitierdatum"
+              ariaLabel="Zitierdatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
@@ -39,7 +40,7 @@ const ausserkrafttretedatum = ref()
           </InputField>
         </div>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-row gap-24">
         <InputField id="langue" label="Amtl. Langüberschrift *">
           <Textarea
             id="langue"
@@ -50,7 +51,17 @@ const ausserkrafttretedatum = ref()
           />
         </InputField>
       </div>
-
+      <div class="border-b-1 border-b-gray-400"></div>
+      <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+        <InputField id="documentType" label="Dokumenttyp *">
+          <ComboboxInput
+            id="documentType"
+            v-model="selectedDocumentType"
+            aria-label="Dokumenttyp"
+            :item-service="ComboboxItemService.getDocumentTypes"
+          ></ComboboxInput>
+        </InputField>
+      </div>
       <div class="flex flex-col">
         <div class="flex flex-row gap-24">
           <InputField
@@ -61,7 +72,7 @@ const ausserkrafttretedatum = ref()
             <DateInput
               id="inkrafttretedatum"
               v-model="inkrafttretedatum"
-              aria-label="Inkrafttretedatum"
+              ariaLabel="Inkrafttretedatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
@@ -73,12 +84,13 @@ const ausserkrafttretedatum = ref()
             <DateInput
               id="ausserkrafttretedatum"
               v-model="ausserkrafttretedatum"
-              aria-label="Ausserkrafttretedatum"
+              ariaLabel="Ausserkrafttretedatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
         </div>
       </div>
+      <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
   </div>
 </template>
