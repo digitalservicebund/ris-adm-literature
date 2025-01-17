@@ -6,12 +6,14 @@ import InputField from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
+import TextInput from '@/components/input/TextInput.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
 const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
+const documentTypeLongText = ref()
 </script>
 
 <template>
@@ -53,7 +55,7 @@ const selectedDocumentType = ref()
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24">
-        <InputField id="documentType" class="w-[calc(50%-10px)]" label="Dokumenttyp *">
+        <InputField id="documentType" label="Dokumenttyp *">
           <ComboboxInput
             id="documentType"
             v-model="selectedDocumentType"
@@ -61,9 +63,16 @@ const selectedDocumentType = ref()
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
         </InputField>
+        <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
+          <TextInput
+            id="documentTypeLongText"
+            v-model="documentTypeLongText"
+            ariaLabel="Dokumenttyp Zusatz"
+            :has-error="false"
+            size="medium"
+          />
+        </InputField>
       </div>
-      <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
-
       <div class="flex flex-col">
         <div class="flex flex-row gap-24">
           <InputField
@@ -74,7 +83,7 @@ const selectedDocumentType = ref()
             <DateInput
               id="inkrafttretedatum"
               v-model="inkrafttretedatum"
-              aria-label="Inkrafttretedatum"
+              ariaLabel="Inkrafttretedatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
@@ -86,12 +95,13 @@ const selectedDocumentType = ref()
             <DateInput
               id="ausserkrafttretedatum"
               v-model="ausserkrafttretedatum"
-              aria-label="Ausserkrafttretedatum"
+              ariaLabel="Ausserkrafttretedatum"
               class="ds-input-medium"
             ></DateInput>
           </InputField>
         </div>
       </div>
+      <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
   </div>
 </template>
