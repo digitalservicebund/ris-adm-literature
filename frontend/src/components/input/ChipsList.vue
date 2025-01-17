@@ -87,7 +87,6 @@ watch(
 )
 
 watch(localFocusedItem, (is) => {
-  // TODO: Remove focus when changing to undefined
   if (is === undefined) return
   const item = containerRef.value?.children?.[is] as HTMLElement
   item?.focus()
