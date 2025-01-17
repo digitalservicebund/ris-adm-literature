@@ -10,6 +10,7 @@ import Textarea from 'primevue/textarea'
 const selectedCourt = ref()
 const zitierdatum = ref()
 const inkrafttretedatum = ref()
+const ausserkrafttretedatum = ref()
 </script>
 
 <template>
