@@ -25,27 +25,25 @@ const fileNumbers = ref()
   <div class="flex w-full flex-1 grow flex-col p-24">
     <div aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
-      <div class="flex flex-col">
-        <div class="flex flex-row gap-24">
-          <InputField id="zitierdatum" label="Zitierdatum *" class="w-full min-w-0">
-            <DateInput
-              id="zitierdatum"
-              v-model="zitierdatum"
-              ariaLabel="Zitierdatum"
-              class="ds-input-medium"
-            ></DateInput>
-          </InputField>
-          <InputField id="courtInput" label="Normgeber *" class="w-full">
-            <ComboboxInput
-              id="courtInput"
-              v-model="selectedCourt"
-              aria-label="Normgeber"
-              clear-on-choosing-item
-              :has-error="false"
-              :item-service="ComboboxItemService.getCourts"
-            ></ComboboxInput>
-          </InputField>
-        </div>
+      <div class="flex flex-row gap-24">
+        <InputField id="zitierdatum" label="Zitierdatum *" class="w-full min-w-0">
+          <DateInput
+            id="zitierdatum"
+            v-model="zitierdatum"
+            ariaLabel="Zitierdatum"
+            class="ds-input-medium"
+          ></DateInput>
+        </InputField>
+        <InputField id="courtInput" label="Normgeber *" class="w-full">
+          <ComboboxInput
+            id="courtInput"
+            v-model="selectedCourt"
+            aria-label="Normgeber"
+            clear-on-choosing-item
+            :has-error="false"
+            :item-service="ComboboxItemService.getCourts"
+          ></ComboboxInput>
+        </InputField>
       </div>
       <div class="flex flex-row gap-24">
         <InputField id="langue" label="Amtl. Langüberschrift *">
@@ -79,37 +77,35 @@ const fileNumbers = ref()
         </InputField>
       </div>
 
-      <div class="flex flex-col">
-        <div class="flex flex-row gap-24">
-          <InputField
+      <div class="flex flex-row gap-24">
+        <InputField
+          id="inkrafttretedatum"
+          label="Datum des Inkrafttretens *"
+          class="w-full min-w-0"
+        >
+          <DateInput
             id="inkrafttretedatum"
-            label="Datum des Inkrafttretens *"
-            class="w-full min-w-0"
-          >
-            <DateInput
-              id="inkrafttretedatum"
-              v-model="inkrafttretedatum"
-              ariaLabel="Inkrafttretedatum"
-              class="ds-input-medium"
-            ></DateInput>
-          </InputField>
-          <InputField
+            v-model="inkrafttretedatum"
+            ariaLabel="Inkrafttretedatum"
+            class="ds-input-medium"
+          ></DateInput>
+        </InputField>
+        <InputField
+          id="ausserkrafttretedatum"
+          label="Datum des Ausserkrafttretens"
+          class="w-full min-w-0"
+        >
+          <DateInput
             id="ausserkrafttretedatum"
-            label="Datum des Ausserkrafttretens"
-            class="w-full min-w-0"
-          >
-            <DateInput
-              id="ausserkrafttretedatum"
-              v-model="ausserkrafttretedatum"
-              ariaLabel="Ausserkrafttretedatum"
-              class="ds-input-medium"
-            ></DateInput>
-          </InputField>
-        </div>
+            v-model="ausserkrafttretedatum"
+            ariaLabel="Ausserkrafttretedatum"
+            class="ds-input-medium"
+          ></DateInput>
+        </InputField>
       </div>
 
-      <div class="mb-24 flex flex-col gap-24 pb-24">
-        <div class="flex flex-row gap-24 w-[calc(50%-10px)]">
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
           <InputField id="fileNumbers" label="Aktenzeichen *">
             <ChipsInput
               id="fileNumbers"
@@ -117,6 +113,8 @@ const fileNumbers = ref()
               aria-label="Aktenzeichen"
             ></ChipsInput>
           </InputField>
+        </div>
+        <div class="flex flex-col pt-[30px] w-full">
           <InputField
             :id="noAktenzeichenId"
             label="kein Aktenzeichen"
