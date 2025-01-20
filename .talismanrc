@@ -5,6 +5,8 @@ fileignoreconfig:
   # We try to not ignore files as any edit to these files would require updating the .talismanrc
   - filename: frontend/env.d.ts
     ignore_detectors: [filename]
+  - filename: nginx.conf
+    checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
 
 allowed_patterns:
   # allow patterns with hex encoded text
@@ -60,8 +62,3 @@ allowed_patterns:
   - "authorization keys, or other"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
-  - "cross-origin-isolated=(),"
-  - "encrypted-media=(),"
-  - "trust-token-redemption=()"
-  - "Permissions-Policy"
-  - "cross-origin-isolated=()"
