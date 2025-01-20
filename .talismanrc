@@ -2,7 +2,9 @@ scopeconfig:
   - scope: node # ignore e.g. package-lock.json
 
 fileignoreconfig:
-# We try to not ignore files as any edit to these files would require updating the .talismanrc
+  # We try to not ignore files as any edit to these files would require updating the .talismanrc
+  - filename: frontend/env.d.ts
+    ignore_detectors: [filename]
 
 allowed_patterns:
   # allow patterns with hex encoded text
