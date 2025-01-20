@@ -63,3 +63,4 @@ allowed_patterns:
   - "cross-origin-isolated=(),"
   - "encrypted-media=(),"
   - "add_header Permissions-Policy"
+  - "accelerometer=()"
