@@ -63,3 +63,4 @@ allowed_patterns:
   - "cross-origin-isolated=(),"
   - "encrypted-media=(),"
   - "trust-token-redemption=()"
+  - "Permissions-Policy"
