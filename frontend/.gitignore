@@ -34,6 +34,7 @@ frontend-e2e-test-report.json
 
 test-results/
 playwright-report/
+frontend-e2e-test-report-html/
 
 
 # Sentry Config File
