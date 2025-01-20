@@ -57,6 +57,7 @@ allowed_patterns:
   - "key: 'value'"
   - "key: 'other-value'"
   - "with arrow keys"
+  - "authorization keys, or other"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
   - "cross-origin-isolated=(),"
