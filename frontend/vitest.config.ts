@@ -13,7 +13,7 @@ export default mergeConfig(
       setupFiles: ['./vitest-setup.ts'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       pool: 'threads',
-      reporters: ['json', 'verbose'],
+      reporters: ['json', 'verbose', 'html'],
       outputFile: {
         json: './frontend-unit-test-report.json',
       },
