@@ -72,7 +72,7 @@ jobs:
     with:
       container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
 
-  push-test-reports-to-ris-reports:
+  frontend-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs: 
       - frontend-checks
