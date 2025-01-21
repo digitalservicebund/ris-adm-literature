@@ -48,6 +48,19 @@ jobs:
           destinationDir: test-reports/ris-adm-vwv/frontend/e2e-tests
           reportIsDirectory: true
 
+      ## Frontend licence report
+      - name: Download artifact frontend license report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-license-report
+          path: tmp/frontend-license-report/
+      - name: Add frontend e2e test report
+        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+        with:
+          filePath: tmp/frontend-license-report
+          destinationDir: test-reports/ris-adm-vwv/frontend/license-report
+          reportIsDirectory: true
+
       ##############################################
       # Finally: pushing the reports to ris-reports
       ##############################################

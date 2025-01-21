@@ -239,7 +239,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: licence-reports-frontend
+          name: frontend-license-report
           retention-days: 3
           path: frontend/frontend-licence-report.csv
       - name: Send status to Slack
