@@ -27,9 +27,10 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/frontend-unit-test-report-html
-          destinationDir: test-reports/ris-adm-vwv/frontend
+          destinationDir: test-reports/ris-adm-vwv/frontend/unit-tests
           reportIsDirectory: true
-      - name: Push reports
+      - name:
+          Push reports
           # we use `toJSON(...)` below to escape double quotation marks
         run: |
           git diff-index --cached --quiet HEAD ||
@@ -38,3 +39,10 @@ jobs:
               -m "From commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" &&
             git push origin main &&
             echo "Pushed reports to ${{ github.server_url }}/${{ env.REPORTS_REPOSITORY }}" >> $GITHUB_STEP_SUMMARY
+      - name: Send status to Slack
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
