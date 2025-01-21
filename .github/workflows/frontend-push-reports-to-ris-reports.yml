@@ -17,7 +17,12 @@ jobs:
           git config user.name "${{ github.repository }}"
           # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      # Note that we need to download + add all reports and eventually (last step) push them
+      ########################################################################
+      # Downloading and adding test reports
+      # Note: actually pushing the reports is a separate step after all these
+      ########################################################################
+
+      ## Frontend unit test report
       - name: Download artifact frontend unit test report
         uses: actions/download-artifact@v4
         with:
@@ -29,6 +34,23 @@ jobs:
           filePath: tmp/frontend-unit-test-report-html
           destinationDir: test-reports/ris-adm-vwv/frontend/unit-tests
           reportIsDirectory: true
+
+      ## Frontend e2e test report
+      - name: Download artifact frontend e2e test report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-e2e-test-report-html
+          path: tmp/frontend-e2e-test-report-html/
+      - name: Add frontend e2e test report
+        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+        with:
+          filePath: tmp/frontend-e2e-test-report-html
+          destinationDir: test-reports/ris-adm-vwv/frontend/e2e-tests
+          reportIsDirectory: true
+
+      ##############################################
+      # Finally: pushing the reports to ris-reports
+      ##############################################
       - name:
           Push reports
           # we use `toJSON(...)` below to escape double quotation marks
