@@ -74,7 +74,6 @@ jobs:
 
   push-test-reports-to-ris-reports:
     # if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
-    if: ${{ !cancelled() }}
     needs: 
       - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
