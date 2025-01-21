@@ -97,13 +97,21 @@ jobs:
         run: |
           npm run test:unit
         working-directory: ./frontend
-      - name: Upload unit test report
+      - name: Upload unit test JSON report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-unit-test-report.json
           retention-days: 3
           path: frontend/frontend-unit-test-report.json
+      - name: Upload unit test HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-unit-test-report-html
+          retention-days: 3
+          path: frontend/html
+          if-no-files-found: warn
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
