@@ -1,0 +1,30 @@
+on:
+  workflow_call:
+
+jobs:
+  push-test-reports-to-ris-reports:
+    runs-on: ubuntu-latest
+    env:
+      reports-repo: digitalservicebund/ris-reports
+    steps:
+      - name: Checkout ris-reports
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.reports-repo }}
+          ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
+      - name: Setup git config
+        run: |
+          git config user.name "${{ github.repository }}"
+          # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Download artifact frontend unit test report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-unit-test-report-html
+          path: tmp/frontend-unit-test-report-html/
+      - name: Push frontend unit test report
+        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+        with:
+          filePath: tmp/frontend-unit-test-report-html
+          destinationDir: test-reports/ris-adm-vwv/frontend
+          reportIsDirectory: true
