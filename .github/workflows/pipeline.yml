@@ -73,7 +73,7 @@ jobs:
       container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
 
   push-test-reports-to-ris-reports:
-    # if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs: 
       - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
