@@ -62,6 +62,6 @@ allowed_patterns:
   - "key: 'other-value'"
   - "with arrow keys"
   - "authorization keys, or other"
-  - "ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}"
+  - "ssh-key: \\${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
