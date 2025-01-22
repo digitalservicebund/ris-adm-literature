@@ -15,7 +15,6 @@ function renderComponent(
     ...render(DocumentUnitReferenceInput, {
       props: {
         modelValue: options.modelValue,
-        modelValueList: options.modelValueList,
       },
     }),
   }

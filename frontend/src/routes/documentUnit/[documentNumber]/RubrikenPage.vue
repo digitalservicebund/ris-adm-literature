@@ -9,6 +9,7 @@ import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
 import ChipsInput from '@/components/input/ChipsInput.vue'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import TextEditorCategory from '@/components/texts/TextEditorCategory.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -19,10 +20,11 @@ const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 1
 const fileNumbers = ref()
+const outline = ref()
 </script>
 
 <template>
-  <div class="flex w-full flex-1 grow flex-col p-24">
+  <div class="flex w-full flex-1 grow flex-col gap-24 p-24">
     <div aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
@@ -132,6 +134,22 @@ const fileNumbers = ref()
       </div>
 
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
+    </div>
+
+    <div aria-label="Gliederung" class="flex flex-col gap-24 bg-white p-24">
+      <TitleElement>Gliederung</TitleElement>
+      <div class="flex flex-row gap-24">
+        <div class="gap-0 w-full">
+          <TextEditorCategory
+            id="outline"
+            v-model="outline"
+            :editable="true"
+            label="Gliederung"
+            :should-show-button="false"
+            :show-formatting-buttons="false"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
