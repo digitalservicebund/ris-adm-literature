@@ -1,10 +1,10 @@
-# 0. Template
+# 3. "localhost" setup for E2E testing
 
 Date: 2025-01-22
 
 ## Status
 
-Suggested
+Accepted
 
 ## Context
 
