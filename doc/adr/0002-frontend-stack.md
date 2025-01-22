@@ -8,9 +8,9 @@ Accepted
 
 ## Context
 
-> **Note**
+> **Note** 
 >
-> For a more detailed discussion of the decision made in this ADR, check out the [RFC in our (internal) Confluence](https://digitalservicebund.atlassian.net/wiki/spaces/VER/pages/866615297/RFC+0001+-+Frontend+stack).
+> This proposal follows a non-public [RFC in our internal Confluence](https://digitalservicebund.atlassian.net/wiki/spaces/VER/pages/866615297/RFC+0001+-+Frontend+stack).
 
 We need to decide on the set of frameworks, libraries, and tools for the initial setup of our frontend. Our goal is a stack that fulfills the following criteria:
 
