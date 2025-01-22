@@ -1,4 +1,4 @@
-# 3. Frontend stack
+# 2. Frontend stack
 
 Date: 2025-01-22
 
