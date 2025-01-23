@@ -80,17 +80,29 @@ test(
     /////////////////
     const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
     await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
-    const schlagwoerterListInputElement = page.getByTestId('Schlagwörter_ListInputEdit')
-    await schlagwoerterListInputElement.click()
-    await schlagwoerterListInputElement.fill('Schlagwort 1')
-    await schlagwoerterListInputElement.press('Enter')
+
+    const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.fill('Schlagwort 1')
+    // await schlagwoerterListInputElement.press('Enter')
     // await schlagwoerterListInputElement.fill('Schlagwort 2')
     // await schlagwoerterListInputElement.press('Enter')
 
     const schlagwoerterUebernehmenElement = page.getByText('Übernehmen')
     await schlagwoerterUebernehmenElement.click()
-    // Created elements are list elements (<li>) so we need to select them explicitly
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
-    // await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+
+    const schlagwoerterBearbeitenElement = page.getByText("Schlagwörter bearbeiten")
+    await schlagwoerterBearbeitenElement.click()
+    
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('Schlagwort 2')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterUebernehmenElement.click()
+
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
   },
 )
