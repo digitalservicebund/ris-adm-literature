@@ -198,7 +198,7 @@ describe('TextEditor', async () => {
     const identButton = screen.getByLabelText('Einzug vergrößern')
     expect(identButton).toHaveFocus()
     await userEvent.keyboard('{Enter}')
-    await userEvent.keyboard('Eingabe')
+    await userEvent.keyboard('Eingabe', {delay: 50})
 
     const paragraph = screen.getByText('Eingabe', { exact: false })
     expect(paragraph.tagName).toEqual('P')
@@ -227,7 +227,7 @@ describe('TextEditor', async () => {
     const identButton = screen.getByLabelText('Einzug vergrößern')
     expect(identButton).toHaveFocus()
     await userEvent.keyboard('{Enter}')
-    await userEvent.keyboard('Eingabe')
+    await userEvent.keyboard('Eingabe', {delay: 50})
     await userEvent.keyboard('{Pos1}')
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ArrowLeft}')
