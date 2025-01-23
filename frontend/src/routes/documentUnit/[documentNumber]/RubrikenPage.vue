@@ -131,6 +131,15 @@ const fileNumbers = ref()
         </div>
       </div>
 
+      <CategoryWrapper
+        :id="DocumentUnitCategoriesEnum.KEYWORDS"
+        v-slot="slotProps"
+        label="Schlagwörter"
+        :should-show-button="!hasKeywords"
+      >
+        <KeyWords data-testid="keywords" @reset="slotProps.reset" />
+      </CategoryWrapper>
+
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
   </div>
