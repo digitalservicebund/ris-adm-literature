@@ -63,5 +63,9 @@ allowed_patterns:
   - "with arrow keys"
   - "authorization keys, or other"
   - "ssh-key: \\${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}"
+  - "KEYWORDS = 'keywords'"
+  - "KeyWords data-testid="
+  - "const keywords = computed"
+  - "contentRelatedIndexing.keywords = newValues"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
