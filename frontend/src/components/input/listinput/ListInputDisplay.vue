@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import TextButton from "@/components/input/TextButton.vue"
+import TextButton from '@/components/input/TextButton.vue'
 
 defineProps<{
   label: string

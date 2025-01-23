@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue"
-import Checkbox from "@/components/input/CheckboxInput.vue"
-import InputField, { LabelPosition } from "@/components/input/InputField.vue"
-import TextButton from "@/components/input/TextButton.vue"
+import { computed, nextTick, ref, watch } from 'vue'
+import Checkbox from '@/components/input/CheckboxInput.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
+import TextButton from '@/components/input/TextButton.vue'
 
 const props = defineProps<{
   label: string
@@ -12,7 +12,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  "update:modelValue": [value: string]
+  'update:modelValue': [value: string]
   toggle: []
   toggleSorting: [value: boolean]
 }>()
@@ -28,7 +28,7 @@ const localModelValue = ref(props.modelValue)
 const sortAlphabetically = computed({
   get: () => props.sortAlphabetically,
   set: (value) => {
-    emit("toggleSorting", value)
+    emit('toggleSorting', value)
   },
 })
 
@@ -37,7 +37,7 @@ const sortAlphabetically = computed({
  * When no content, this resets the list input to show the category wrapper.
  */
 const cancelEdit = () => {
-  emit("toggle")
+  emit('toggle')
 }
 
 /**
@@ -47,7 +47,7 @@ const cancelEdit = () => {
  */
 const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
   if (textarea) {
-    textarea.style.height = "auto"
+    textarea.style.height = 'auto'
     textarea.style.height = `${textarea.scrollHeight}px `
   }
 }
@@ -60,7 +60,7 @@ watch(
   localModelValue,
   async () => {
     await nextTick() // Wait for DOM render
-    const textarea = document.querySelector("textarea")
+    const textarea = document.querySelector('textarea')
     adjustTextareaHeight(textarea as HTMLTextAreaElement)
   },
   { immediate: true },
