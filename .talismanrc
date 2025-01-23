@@ -79,5 +79,6 @@ allowed_patterns:
   - "if keywords render"
   - "existing keywords correctly"
   - "renderComponent\\(keywords"
+  - "const keywords ="
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
