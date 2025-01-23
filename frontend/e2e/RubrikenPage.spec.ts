@@ -81,20 +81,18 @@ test(
     const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
     await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
 
+    // enter single schlagwort
     const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.fill('Schlagwort 1')
-    // await schlagwoerterListInputElement.press('Enter')
-    // await schlagwoerterListInputElement.fill('Schlagwort 2')
-    // await schlagwoerterListInputElement.press('Enter')
-
     const schlagwoerterUebernehmenElement = page.getByText('Übernehmen')
     await schlagwoerterUebernehmenElement.click()
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
 
-    const schlagwoerterBearbeitenElement = page.getByText("Schlagwörter bearbeiten")
+    // add another schlagwort
+    const schlagwoerterBearbeitenElement = page.getByText('Schlagwörter bearbeiten')
     await schlagwoerterBearbeitenElement.click()
-    
+
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.press('End')
     await schlagwoerterListEditElement.press('Enter')
