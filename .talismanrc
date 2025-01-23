@@ -27,6 +27,7 @@ allowed_patterns:
   - "dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160'"
   - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409"
   - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706525248390559"
+  - "abcdefghijklmnopqrstuvwxyz"
   # allow these specific patterns with the term "secret"
   - secrets-scan-with-talisman
   - "secrets: inherit"
