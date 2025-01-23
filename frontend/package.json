@@ -32,7 +32,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
-    "@vueuse/core": "^12.4.0",
+    "@vueuse/core": "^12.5.0",
     "autoprefixer": "^10.4.20",
     "dayjs": "^1.11.13",
     "immer": "^10.1.1",
