@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed, ref } from 'vue'
 import ListInput from './input/listinput/ListInput.vue'
 // import { useDocumentUnitStore } from "@/stores/documentUnitStore"
 
@@ -6,7 +7,11 @@ const emit = defineEmits<{
   reset: []
 }>()
 
-const props = defineProps(['keywords'])
+const props = defineProps({
+  keywords: [],
+})
+
+const keywords = ref(props.keywords)
 
 // const store = useDocumentUnitStore()
 
@@ -21,6 +26,6 @@ const props = defineProps(['keywords'])
 <template>
   <div>
     <h2 class="ds-label-01-bold mb-16">Schlagwörter</h2>
-    <ListInput v-model="props.keywords" label="Schlagwörter" @reset="emit('reset')" />
+    <ListInput v-model="keywords" label="Schlagwörter" @reset="emit('reset')" />
   </div>
 </template>
