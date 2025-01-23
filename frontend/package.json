@@ -25,7 +25,7 @@
     "@digitalservice4germany/style-dictionary": "^2.0.0",
     "@digitalservicebund/ris-ui": "^1.7.1",
     "@iconify-json/ic": "^1.2.2",
-    "@iconify-json/material-symbols": "^1.2.12",
+    "@iconify-json/material-symbols": "^1.2.13",
     "@sentry/vite-plugin": "^3.0.0",
     "@sentry/vue": "^8.50.0",
     "@tsconfig/node23": "^23.0.0",
