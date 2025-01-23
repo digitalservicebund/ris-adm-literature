@@ -68,6 +68,9 @@
         },
         {
             "moduleLicense": "CC0-1.0"
+        },
+        {
+            "moduleLicense": "Python-2.0"
         }
     ]
 }
