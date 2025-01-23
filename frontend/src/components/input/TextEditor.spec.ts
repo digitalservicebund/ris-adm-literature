@@ -176,6 +176,70 @@ describe('text editor', async () => {
     expect(screen.getByTestId('Gründe')).toHaveClass('h-640')
   })
 
+  test('indent text', async () => {
+    userEvent.setup()
+    render(TextEditor, {
+      props: {
+        ariaLabel: 'Gründe',
+        editable: true,
+      },
+      global: { plugins: [router] },
+    })
+
+    await flushPromises()
+
+    const editorField = screen.getByTestId('Gründe')
+
+    await userEvent.click(editorField.firstElementChild!)
+    await userEvent.tab({ shift: true })
+    for (let i = 0; i < 14; i++) {
+      await userEvent.keyboard('{ArrowRight}')
+    }
+    const identButton = screen.getByLabelText('Einzug vergrößern')
+    expect(identButton).toHaveFocus()
+    await userEvent.keyboard('{Enter}')
+    await userEvent.keyboard('Eingabe')
+
+    const paragraph = screen.getByText('Eingabe', { exact: false })
+    expect(paragraph.tagName).toEqual('P')
+    expect(paragraph).toHaveStyle({ marginLeft: '40px' })
+  })
+
+  test('indent and outdent text', async () => {
+    userEvent.setup()
+    render(TextEditor, {
+      props: {
+        ariaLabel: 'Gründe',
+        editable: true,
+      },
+      global: { plugins: [router] },
+    })
+
+    await flushPromises()
+
+    const editorField = screen.getByTestId('Gründe')
+
+    await userEvent.click(editorField.firstElementChild!)
+    await userEvent.tab({ shift: true })
+    for (let i = 0; i < 14; i++) {
+      await userEvent.keyboard('{ArrowRight}')
+    }
+    const identButton = screen.getByLabelText('Einzug vergrößern')
+    expect(identButton).toHaveFocus()
+    await userEvent.keyboard('{Enter}')
+    await userEvent.keyboard('Eingabe')
+    await userEvent.keyboard('{Pos1}')
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ArrowLeft}')
+    const outdentButton = screen.getByLabelText('Einzug verringern')
+    expect(outdentButton).toHaveFocus()
+    await userEvent.keyboard('{Enter}')
+
+    const paragraph = screen.getByText('Eingabe', { exact: false })
+    expect(paragraph.tagName).toEqual('P')
+    expect(paragraph).not.toHaveStyle({ marginLeft: '40px' })
+  })
+
   /*
    * The purpose of this test is to ensure that all expected buttons are
    * rendered. Having this test helps us to ensure that we do not accidentally

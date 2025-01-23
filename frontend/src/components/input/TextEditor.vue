@@ -25,7 +25,6 @@ import { CustomListItem } from '@/editor/listItem'
 import { CustomOrderedList } from '@/editor/orderedList'
 import { CustomParagraph } from '@/editor/paragraph'
 import { CustomSubscript, CustomSuperscript } from '@/editor/scriptText'
-import { TableStyle } from '@/editor/tableStyle'
 
 interface Props {
   value?: string
@@ -78,7 +77,6 @@ const editor = new Editor({
     Strike,
     CustomSubscript,
     CustomSuperscript,
-    TableStyle,
     TextStyle,
     HardBreak,
     InvisibleCharacters,
