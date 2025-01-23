@@ -134,12 +134,6 @@ const outline = ref()
         </div>
       </div>
 
-      <div class="flex flex-row gap-24 w-full">
-        <div class="flex flex-col w-full">
-          <KeyWords data-testid="keywords" />
-        </div>
-      </div>
-
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
 
@@ -155,6 +149,14 @@ const outline = ref()
             :should-show-button="false"
             :show-formatting-buttons="false"
           />
+        </div>
+      </div>
+    </div>
+    <div aria-label="Gliederung" class="flex flex-col gap-24 bg-white p-24">
+      <TitleElement>Inhaltliche Erschließung</TitleElement>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <KeyWords data-testid="keywords" />
         </div>
       </div>
     </div>
