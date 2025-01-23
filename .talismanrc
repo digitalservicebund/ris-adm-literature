@@ -69,5 +69,7 @@ allowed_patterns:
   - "contentRelatedIndexing.keywords = newValues"
   - "keywords.value = newValues"
   - 'data-testid="keywords"'
+  - 'v-model="keywords"'
+  - 'data-testid="keywords" @reset='
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
