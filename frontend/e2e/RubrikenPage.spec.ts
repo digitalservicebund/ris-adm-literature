@@ -81,7 +81,7 @@ test(
     const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
     await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
 
-    // enter single schlagwort
+    // enter single schlagwort, assert that it's visible after confirming
     const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.fill('Schlagwort 1')
@@ -89,7 +89,7 @@ test(
     await schlagwoerterUebernehmenElement.click()
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
 
-    // add another schlagwort
+    // add another schlagwort, assert both are visible
     const schlagwoerterBearbeitenElement = page.getByText('Schlagwörter bearbeiten')
     await schlagwoerterBearbeitenElement.click()
 
@@ -99,13 +99,24 @@ test(
     await schlagwoerterListEditElement.pressSequentially('Schlagwort 2')
     await schlagwoerterListEditElement.press('Enter')
     await schlagwoerterUebernehmenElement.click()
-
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
     await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
 
+    // add one more, but click "abbrechen" instead of confirming, assert that the new element doe not get added
+    await schlagwoerterBearbeitenElement.click()
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('This should not be added')
+    await schlagwoerterListEditElement.press('Enter')
+    const abbrechenElement = page.getByText('Abbrechen')
+    await abbrechenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('This should not be added')).toHaveCount(0)
+
     // add another one, have the list sorted
     await schlagwoerterBearbeitenElement.click()
-
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.press('End')
     await schlagwoerterListEditElement.press('Enter')
@@ -114,11 +125,11 @@ test(
     const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
     await sortAlphabeticallyCheckboxElement.check()
     await schlagwoerterUebernehmenElement.click()
-
+    // new element is available
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
     await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
     await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
-
+    // new element is sorted first in list
     await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
   },
 )
