@@ -9,6 +9,7 @@ import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
 import ChipsInput from '@/components/input/ChipsInput.vue'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import KeyWords from '@/components/KeyWords.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -17,7 +18,7 @@ const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichen = ref()
-const noAktenzeichenId = 1
+const noAktenzeichenId = 'noAktenzeichenID'
 const fileNumbers = ref()
 </script>
 
@@ -128,6 +129,12 @@ const fileNumbers = ref()
               size="small"
             />
           </InputField>
+        </div>
+      </div>
+
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <KeyWords data-testid="keywords" />
         </div>
       </div>
 

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test(
   'Visiting the Rubriken step of creating a documentUnit',
-  { tag: ['@RISDEV-6043'] },
+  { tag: ['@RISDEV-6043', '@RISDEV-6047'] },
   async ({ page }) => {
     // In the future the new documentUnit needs to be mocked
     // As this functionality is not there yet we can simply enter the desired page and finish the process
@@ -10,11 +10,11 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
+
+    //////////////
+    // Formaldaten
+    //////////////
     await expect(page.getByText('Formaldaten')).toHaveCount(2)
-
-    // Read the below as pseudo code that will be implemented properly while extending the application
-    // Remove these comments once we're done with the page
-
     const zitierdatumElement = page.getByText('Zitierdatum')
     await expect(zitierdatumElement).toHaveCount(1)
     zitierdatumElement.fill('thatshouldnotwork')
@@ -74,5 +74,62 @@ test(
     await expect(keinAktenzeichenElement).toHaveCount(1)
     keinAktenzeichenElement.check()
     await expect(keinAktenzeichenElement).toBeChecked()
+
+    /////////////////
+    // Schlagwörter
+    /////////////////
+    const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
+    await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
+
+    // enter single schlagwort, assert that it's visible after confirming
+    const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.fill('Schlagwort 1')
+    const schlagwoerterUebernehmenElement = page.getByText('Übernehmen')
+    await schlagwoerterUebernehmenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+
+    // add another schlagwort, assert both are visible
+    const schlagwoerterBearbeitenElement = page.getByText('Schlagwörter bearbeiten')
+    await schlagwoerterBearbeitenElement.click()
+
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('Schlagwort 2')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterUebernehmenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+
+    // add one more, but click "abbrechen" instead of confirming, assert that the new element doe not get added
+    await schlagwoerterBearbeitenElement.click()
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('This should not be added')
+    await schlagwoerterListEditElement.press('Enter')
+    const abbrechenElement = page.getByText('Abbrechen')
+    await abbrechenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('This should not be added')).toHaveCount(0)
+
+    // add another one, have the list sorted
+    await schlagwoerterBearbeitenElement.click()
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
+    await schlagwoerterListEditElement.press('Enter')
+    const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
+    await sortAlphabeticallyCheckboxElement.check()
+    await schlagwoerterUebernehmenElement.click()
+    // new element is available
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
+    // new element is sorted first in list
+    await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
   },
 )

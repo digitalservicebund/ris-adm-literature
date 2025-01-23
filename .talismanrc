@@ -63,5 +63,22 @@ allowed_patterns:
   - "with arrow keys"
   - "authorization keys, or other"
   - "ssh-key: \\${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}"
+  - "KEYWORDS = 'keywords'"
+  - "KeyWords data-testid="
+  - "const keywords = computed"
+  - "contentRelatedIndexing.keywords = newValues"
+  - "keywords.value = newValues"
+  - 'data-testid="keywords"'
+  - 'v-model="keywords"'
+  - '<!--<KeyWords data-testid="keywords" @reset="slotProps.reset" /> -->'
+  - "const keywords: string[] = []"
+  - '"props.keywords"'
+  - "'Keywords'"
+  - "keywords: keywords ??"
+  - "if no keywords render"
+  - "if keywords render"
+  - "existing keywords correctly"
+  - "renderComponent\\(keywords"
+  - "const keywords ="
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
