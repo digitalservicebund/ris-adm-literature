@@ -72,5 +72,12 @@ allowed_patterns:
   - 'v-model="keywords"'
   - '<!--<KeyWords data-testid="keywords" @reset="slotProps.reset" /> -->'
   - "const keywords: string[] = []"
+  - '"props.keywords"'
+  - "'Keywords'"
+  - "keywords: keywords ??"
+  - "if no keywords render"
+  - "if keywords render"
+  - "existing keywords correctly"
+  - "renderComponent\\(keywords"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
