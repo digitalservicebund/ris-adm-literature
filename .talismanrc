@@ -67,5 +67,7 @@ allowed_patterns:
   - "KeyWords data-testid="
   - "const keywords = computed"
   - "contentRelatedIndexing.keywords = newValues"
+  - "keywords.value = newValues"
+  - 'data-testid="keywords"'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
