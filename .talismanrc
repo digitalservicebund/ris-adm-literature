@@ -70,6 +70,6 @@ allowed_patterns:
   - "keywords.value = newValues"
   - 'data-testid="keywords"'
   - 'v-model="keywords"'
-  - '<KeyWords data-testid="keywords" @reset="slotProps.reset"'
+  - '<!--<KeyWords data-testid="keywords" @reset="slotProps.reset" /> -->'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
