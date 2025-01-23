@@ -10,11 +10,11 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
+
+    //////////////
+    // Formaldaten
+    //////////////
     await expect(page.getByText('Formaldaten')).toHaveCount(2)
-
-    // Read the below as pseudo code that will be implemented properly while extending the application
-    // Remove these comments once we're done with the page
-
     const zitierdatumElement = page.getByText('Zitierdatum')
     await expect(zitierdatumElement).toHaveCount(1)
     zitierdatumElement.fill('thatshouldnotwork')
@@ -74,5 +74,18 @@ test(
     await expect(keinAktenzeichenElement).toHaveCount(1)
     keinAktenzeichenElement.check()
     await expect(keinAktenzeichenElement).toBeChecked()
+
+    /////////////////
+    // Schlagwörter
+    /////////////////
+    const schlagwörterElement = page.getByText('Schlagwörter')
+    await expect(schlagwörterElement).toHaveCount(1)
+    await schlagwörterElement.fill('Schlagwort 1')
+    await schlagwörterElement.press('Enter')
+    await schlagwörterElement.fill('Schlagwort 2')
+    await schlagwörterElement.press('Enter')
+    // Created elements are list elements (<li>) so we need to select them explicitly
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
   },
 )
