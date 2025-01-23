@@ -76,3 +76,21 @@ test(
     await expect(keinAktenzeichenElement).toBeChecked()
   },
 )
+
+test(
+  'Visiting the Gliederung step of creating a documentUnit',
+  { tag: ['@RISDEV-6047'] },
+  async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+
+    const gliederungEditor = page.getByTestId('Gliederung Editor')
+    await expect(gliederungEditor).toHaveCount(1)
+    await gliederungEditor.click()
+    await page.keyboard.insertText('Test 123')
+    await expect(page.getByText('Test 123')).toHaveCount(1)
+  },
+)

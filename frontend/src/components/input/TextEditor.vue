@@ -193,7 +193,11 @@ const resizeObserver = new ResizeObserver((entries) => {
     />
     <hr v-if="editable" class="ml-8 mr-8 border-blue-300" />
     <div>
-      <EditorContent :class="editorStyleClasses" :data-testid="ariaLabel" :editor="editor" />
+      <EditorContent
+        :class="editorStyleClasses"
+        :data-testid="`${ariaLabel} Editor`"
+        :editor="editor"
+      />
     </div>
   </div>
 </template>

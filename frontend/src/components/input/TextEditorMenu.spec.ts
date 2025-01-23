@@ -73,7 +73,7 @@ describe('text editor toolbar', async () => {
   describe('keyboard navigation', () => {
     test('shift tab in text editor should focus first button in menu', async () => {
       await renderComponent()
-      const editorField = screen.getByTestId('Gründe')
+      const editorField = screen.getByTestId('Gründe Editor')
 
       await userEvent.click(editorField.firstElementChild!)
       expect(editorField.firstElementChild).toHaveFocus()
@@ -84,7 +84,7 @@ describe('text editor toolbar', async () => {
 
     test('arrow right should move focus to next button until last button', async () => {
       await renderComponent()
-      const editorField = screen.getByTestId('Gründe')
+      const editorField = screen.getByTestId('Gründe Editor')
 
       await userEvent.click(editorField.firstElementChild!)
       expect(editorField.firstElementChild).toHaveFocus()
@@ -113,7 +113,7 @@ describe('text editor toolbar', async () => {
 
     test('arrow left should leave focus on first button', async () => {
       await renderComponent()
-      const editorField = screen.getByTestId('Gründe')
+      const editorField = screen.getByTestId('Gründe Editor')
 
       await userEvent.click(editorField.firstElementChild!)
       expect(editorField.firstElementChild).toHaveFocus()
@@ -136,7 +136,7 @@ describe('text editor toolbar', async () => {
 
     test('enter should jump back to the editor input', async () => {
       await renderComponent()
-      const editorField = screen.getByTestId('Gründe')
+      const editorField = screen.getByTestId('Gründe Editor')
 
       await userEvent.click(editorField.firstElementChild!)
       await userEvent.tab({ shift: true })
@@ -154,7 +154,7 @@ describe('text editor toolbar', async () => {
 
     test('tab into the editor should skip the menu tool bar', async () => {
       await renderComponent()
-      const editorField = screen.getByTestId('Gründe')
+      const editorField = screen.getByTestId('Gründe Editor')
 
       // Add external input field to be focused first
       const inputField = editorField.ownerDocument.createElement('input')

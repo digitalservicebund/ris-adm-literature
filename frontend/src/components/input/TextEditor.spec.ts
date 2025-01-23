@@ -37,7 +37,7 @@ export const mockDocumentForProsemirror = () => {
 
 mockDocumentForProsemirror()
 
-describe('text editor', async () => {
+describe('TextEditor', async () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   global.ResizeObserver = require('resize-observer-polyfill')
   const router = createRouter({
@@ -62,7 +62,7 @@ describe('text editor', async () => {
       global: { plugins: [router] },
     })
 
-    expect(screen.getAllByTestId('Editor Feld').length).toBe(1)
+    expect(screen.getAllByTestId('Editor Feld Editor').length).toBe(1)
   })
 
   test('renders text editor with preview flag', async () => {
@@ -71,7 +71,7 @@ describe('text editor', async () => {
       global: { plugins: [router] },
     })
 
-    expect(screen.getAllByTestId('Editor Feld').length).toBe(1)
+    expect(screen.getAllByTestId('Editor Feld Editor').length).toBe(1)
   })
 
   test('renders text editor with props', async () => {
@@ -86,7 +86,7 @@ describe('text editor', async () => {
     await flushPromises()
 
     expect(screen.getByText('Test Value')).toBeInTheDocument()
-    expect(screen.getByTestId('Gründe')).toBeInTheDocument()
+    expect(screen.getByTestId('Gründe Editor')).toBeInTheDocument()
   })
 
   test.each([
@@ -101,7 +101,7 @@ describe('text editor', async () => {
       global: { plugins: [router] },
     })
 
-    expect(await screen.findByTestId('Editor Feld')).toHaveClass(expected)
+    expect(await screen.findByTestId('Editor Feld Editor')).toHaveClass(expected)
   })
 
   test('enable buttons on focus', async () => {
@@ -116,7 +116,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     if (editorField.firstElementChild !== null) {
       await fireEvent.focus(editorField.firstElementChild)
@@ -140,7 +140,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     if (editorField.firstElementChild !== null) {
       await fireEvent.blur(editorField.firstElementChild)
@@ -165,7 +165,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     await userEvent.click(editorField.firstElementChild!)
     await userEvent.tab({ shift: true })
@@ -173,7 +173,7 @@ describe('text editor', async () => {
     expect(expandButton).toHaveFocus()
     await userEvent.keyboard('{Enter}')
 
-    expect(screen.getByTestId('Gründe')).toHaveClass('h-640')
+    expect(screen.getByTestId('Gründe Editor')).toHaveClass('h-640')
   })
 
   test('indent text', async () => {
@@ -188,7 +188,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     await userEvent.click(editorField.firstElementChild!)
     await userEvent.tab({ shift: true })
@@ -217,7 +217,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     await userEvent.click(editorField.firstElementChild!)
     await userEvent.tab({ shift: true })
@@ -265,7 +265,7 @@ describe('text editor', async () => {
 
     await flushPromises()
 
-    const editorField = screen.getByTestId('Gründe')
+    const editorField = screen.getByTestId('Gründe Editor')
 
     if (editorField.firstElementChild !== null) {
       await fireEvent.focus(editorField.firstElementChild)
