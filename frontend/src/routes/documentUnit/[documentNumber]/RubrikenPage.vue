@@ -9,6 +9,7 @@ import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
 import ChipsInput from '@/components/input/ChipsInput.vue'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import KeyWords from '@/components/KeyWords.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -131,13 +132,11 @@ const fileNumbers = ref()
         </div>
       </div>
 
-      Schlagwörter hier 👇
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-            <KeyWords data-testid="keywords" />
+          <KeyWords data-testid="keywords" />
         </div>
       </div>
-      Schlagwörter hier 👆
 
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>

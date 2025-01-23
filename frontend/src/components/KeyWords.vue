@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
 import ListInput from './input/listinput/ListInput.vue'
 // import { useDocumentUnitStore } from "@/stores/documentUnitStore"
 
@@ -16,12 +15,7 @@ const emit = defineEmits<{
 //   },
 // })
 
-const keywords = computed({
-  get: () => [],
-  set: (newValues: string[]) => {
-    keywords.value = newValues
-  },
-})
+const keywords: string[] = []
 </script>
 
 <template>
