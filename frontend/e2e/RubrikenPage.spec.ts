@@ -102,5 +102,23 @@ test(
 
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
     await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+
+    // add another one, have the list sorted
+    await schlagwoerterBearbeitenElement.click()
+
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
+    await schlagwoerterListEditElement.press('Enter')
+    const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
+    await sortAlphabeticallyCheckboxElement.check()
+    await schlagwoerterUebernehmenElement.click()
+
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
+
+    await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
   },
 )
