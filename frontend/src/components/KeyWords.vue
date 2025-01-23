@@ -6,6 +6,8 @@ const emit = defineEmits<{
   reset: []
 }>()
 
+const props = defineProps(['keywords'])
+
 // const store = useDocumentUnitStore()
 
 // const keywords = computed({
@@ -14,13 +16,11 @@ const emit = defineEmits<{
 //     store.documentUnit!.contentRelatedIndexing.keywords = newValues
 //   },
 // })
-
-const keywords: string[] = []
 </script>
 
 <template>
   <div>
     <h2 class="ds-label-01-bold mb-16">Schlagwörter</h2>
-    <ListInput v-model="keywords" label="Schlagwörter" @reset="emit('reset')" />
+    <ListInput v-model="props.keywords" label="Schlagwörter" @reset="emit('reset')" />
   </div>
 </template>
