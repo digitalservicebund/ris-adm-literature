@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, nextTick } from "vue"
-import ListInputDisplay from "@/components/input/listInput/ListInputDisplay.vue"
-import ListInputEdit from "@/components/input/listInput/ListInputEdit.vue"
+import { ref, computed, onMounted, nextTick } from 'vue'
+import ListInputDisplay from './ListInputDisplay.vue'
+import ListInputEdit from './ListInputEdit.vue'
 
 const props = defineProps<{
   label: string
@@ -9,7 +9,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  "update:modelValue": [value: string[]]
+  'update:modelValue': [value: string[]]
   reset: []
 }>()
 
@@ -25,12 +25,12 @@ const sortAlphabetically = ref(false)
  * @returns {string} The joined string of list items separated by newlines.
  */
 const listInputValue = computed<string>({
-  get: () => list.value.join("\n"),
+  get: () => list.value.join('\n'),
   set: async (newValues: string) => {
     list.value = newValues
-      .split("\n")
+      .split('\n')
       .map((listItem) => listItem.trim())
-      .filter((listItem) => listItem !== "")
+      .filter((listItem) => listItem !== '')
 
     // Sort alphabetically if the option is set
     if (sortAlphabetically.value && list.value) {
@@ -41,7 +41,7 @@ const listInputValue = computed<string>({
     list.value = [...new Set(list.value)] as string[]
 
     // Emit the updated value
-    emit("update:modelValue", list.value)
+    emit('update:modelValue', list.value)
 
     await toggleEditMode()
 
@@ -50,9 +50,7 @@ const listInputValue = computed<string>({
   },
 })
 
-const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(
-  null,
-)
+const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(null)
 
 /**
  * Emit reset if the list is empty, to show the category wrapper again.
@@ -63,13 +61,13 @@ async function toggleEditMode() {
   sortAlphabetically.value = false
   if (list.value?.length) {
     editMode.value = !editMode.value
-  } else emit("reset")
+  } else emit('reset')
 
   if (!editMode.value) {
     // Toggle from edit to display: As height of display mode can be less than edit mode -> scroll into view.
     await nextTick()
     listInputDisplayRef.value?.$el?.scrollIntoView({
-      block: "nearest",
+      block: 'nearest',
     })
   }
 }
