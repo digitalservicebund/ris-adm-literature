@@ -9,7 +9,6 @@ import Textarea from 'primevue/textarea'
 import TextInput from '@/components/input/TextInput.vue'
 import ChipsInput from '@/components/input/ChipsInput.vue'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
-import { DocumentUnitCategoriesEnum } from '@/components/enumDocumentUnitCategories'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -20,7 +19,6 @@ const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 'noAktenzeichenID'
 const fileNumbers = ref()
-const hasKeywords = ref()
 </script>
 
 <template>
@@ -136,15 +134,7 @@ const hasKeywords = ref()
       Schlagwörter hier 👇
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <CategoryWrapper
-            :id="DocumentUnitCategoriesEnum.KEYWORDS"
-            v-slot="slotProps"
-            label="Schlagwörter"
-            :should-show-button="!hasKeywords"
-          >
-            <!--<KeyWords data-testid="keywords" @reset="slotProps.reset" /> -->
             <KeyWords data-testid="keywords" />
-          </CategoryWrapper>
         </div>
       </div>
       Schlagwörter hier 👆
