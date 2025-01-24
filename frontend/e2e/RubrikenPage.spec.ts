@@ -162,6 +162,9 @@ test(
 
     await expect(page.getByText('Rubriken')).toHaveCount(1)
 
+    const kurzReferatTitleElement = page.getByText('Kurzreferat')
+    await expect(kurzReferatTitleElement).toHaveCount(3)
+
     const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
     await expect(kurzreferatEditorElement).toHaveCount(1)
     await kurzreferatEditorElement.click()
