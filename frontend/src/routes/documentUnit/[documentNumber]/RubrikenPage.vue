@@ -180,6 +180,5 @@ const kurzreferat = ref()
         </div>
       </div>
     </div>
-
   </div>
 </template>
