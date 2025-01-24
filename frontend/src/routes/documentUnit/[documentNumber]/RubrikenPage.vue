@@ -155,7 +155,11 @@ const kurzreferat = ref()
       </div>
     </div>
 
-    <div id="inhaltlicheErschliessung" aria-label="Inhaltliche Erschließung" class="flex flex-col gap-24 bg-white p-24">
+    <div
+      id="inhaltlicheErschliessung"
+      aria-label="Inhaltliche Erschließung"
+      class="flex flex-col gap-24 bg-white p-24"
+    >
       <TitleElement>Inhaltliche Erschließung</TitleElement>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
