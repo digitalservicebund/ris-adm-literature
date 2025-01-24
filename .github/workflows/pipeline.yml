@@ -38,7 +38,7 @@ jobs:
     uses: ./.github/workflows/backend-checks.yml
     secrets: inherit
 
-  frontend-push-reports-to-ris-reports:
+  backend-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - backend-checks
