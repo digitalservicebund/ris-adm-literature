@@ -151,3 +151,24 @@ test(
     await expect(page.getByText('Test 123')).toHaveCount(1)
   },
 )
+
+test(
+  'Visiting the Kurzreferat step of creating a documentUnit',
+  { tag: ['@RISDEV-6047'] },
+  async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+
+    const kurzReferatTitleElement = page.getByText('Kurzreferat')
+    await expect(kurzReferatTitleElement).toHaveCount(3)
+
+    const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
+    await expect(kurzreferatEditorElement).toHaveCount(1)
+    await kurzreferatEditorElement.click()
+    await page.keyboard.insertText('Kurzreferat Eintrag 123')
+    await expect(page.getByText('Kurzreferat Eintrag 123')).toHaveCount(1)
+  },
+)
