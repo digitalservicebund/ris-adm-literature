@@ -1,7 +1,3 @@
-🚧 Note: This repository has just been created.
-
----
-
 # Development / Tech Notes
 
 Here's what to know from a tech perspective.
