@@ -22,6 +22,7 @@ const noAktenzeichen = ref()
 const noAktenzeichenId = 'noAktenzeichenID'
 const fileNumbers = ref()
 const outline = ref()
+const kurzreferat = ref()
 </script>
 
 <template>
@@ -148,11 +149,13 @@ const outline = ref()
             label="Gliederung"
             :should-show-button="false"
             :show-formatting-buttons="false"
+            field-size="small"
           />
         </div>
       </div>
     </div>
-    <div aria-label="Gliederung" class="flex flex-col gap-24 bg-white p-24">
+
+    <div aria-label="Inhaltliche Erschließung" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Inhaltliche Erschließung</TitleElement>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
@@ -160,5 +163,23 @@ const outline = ref()
         </div>
       </div>
     </div>
+
+    <div aria-label="Kurzreferat" class="flex flex-col gap-24 bg-white p-24">
+      <TitleElement>Kurzreferat</TitleElement>
+      <div class="flex flex-row gap-24">
+        <div class="gap-0 w-full">
+          <TextEditorCategory
+            id="kurzreferat"
+            v-model="kurzreferat"
+            :editable="true"
+            label="Kurzreferat"
+            :should-show-button="false"
+            :show-formatting-buttons="false"
+            field-size="small"
+          />
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
