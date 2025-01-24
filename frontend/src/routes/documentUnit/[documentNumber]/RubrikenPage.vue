@@ -27,7 +27,7 @@ const kurzreferat = ref()
 
 <template>
   <div class="flex w-full flex-1 grow flex-col gap-24 p-24">
-    <div aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
+    <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
         <InputField id="zitierdatum" label="Zitierdatum *" class="w-full min-w-0">
@@ -138,7 +138,7 @@ const kurzreferat = ref()
       <div class="mt-4">* Pflichtfelder für die Veröffentlichung</div>
     </div>
 
-    <div aria-label="Gliederung" class="flex flex-col gap-24 bg-white p-24">
+    <div id="gliederung" aria-label="Gliederung" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Gliederung</TitleElement>
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">
@@ -155,7 +155,7 @@ const kurzreferat = ref()
       </div>
     </div>
 
-    <div aria-label="Inhaltliche Erschließung" class="flex flex-col gap-24 bg-white p-24">
+    <div id="inhaltlicheErschliessung" aria-label="Inhaltliche Erschließung" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Inhaltliche Erschließung</TitleElement>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
@@ -164,7 +164,7 @@ const kurzreferat = ref()
       </div>
     </div>
 
-    <div aria-label="Kurzreferat" class="flex flex-col gap-24 bg-white p-24">
+    <div id="kurzreferat" aria-label="Kurzreferat" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Kurzreferat</TitleElement>
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">

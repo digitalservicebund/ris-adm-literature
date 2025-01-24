@@ -49,7 +49,7 @@ export function useAdmVwvMenuItems(
           route: {
             ...baseRoute,
             name: 'documentUnit-documentNumber-rubriken',
-            hash: '#contentRelatedIndexing',
+            hash: '#inhaltlicheErschliessung',
           },
         },
         {
