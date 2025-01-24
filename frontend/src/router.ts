@@ -9,6 +9,16 @@ import FundstellenPage from '@/routes/documentUnit/[documentNumber]/FundstellenP
 
 const router = createRouter({
   history: createWebHistory(),
+  scrollBehavior(to) {
+    if (to.hash) {
+      const top = to.hash === '#formaldaten' ? 170 : 80
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+        top: top,
+      }
+    }
+  },
   routes: [
     {
       path: '/',
