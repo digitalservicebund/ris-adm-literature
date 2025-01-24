@@ -1,6 +1,6 @@
 # frontend
 
-This is the frontend for adding/editing administrative directions (ADM, DE: "Verwaltungsvorschriften")
+This is the frontend for managing administrative directives (ADM, DE: "Verwaltungsvorschriften")
 
 
 ## Developing
