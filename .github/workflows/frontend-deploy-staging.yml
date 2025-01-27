@@ -6,7 +6,7 @@ on:
         type: string
 
 jobs:
-  deploy-staging:
+  frontend-deploy-staging:
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-staging
