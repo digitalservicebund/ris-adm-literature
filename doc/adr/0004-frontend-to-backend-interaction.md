@@ -31,7 +31,7 @@ We have decided to go with the following setup:
 1. There will be only one endpoint where the whole Pinia state for all form elements combined is being pushed to in JSON format.
 1. We will keep the data in JSON format as long as the editing process is still ongoing without transforming it. The transformation to XML/LDML will be done when the DU is finally submitted (DE: "Abgabe").
    1. Once we successfully transform the JSON to XML/LDML, we will delete the JSON data from the database.
-   1. The FE will not deal with XML/LDML.
+   1. The FE will deal with JSON only. The BE is responsible for transforming JSON into XML/LDML and vice-versa.
 1. When a finally submitted DU is re-opened, the XML/LDML will be re-transformed to JSON on the BE, in a way that the Pinia store can read it in the FE.
 1. We keep the XML/LDML for all DUs in the database as it remains the single source of truth.
 
