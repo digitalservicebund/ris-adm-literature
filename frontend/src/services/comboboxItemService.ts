@@ -3,6 +3,7 @@ import type { ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
+import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 
@@ -11,6 +12,7 @@ export type ComboboxItemService = {
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
@@ -126,6 +128,28 @@ const service: ComboboxItemService = {
     )
     const execute = async () => {
       return service.getRisAbbreviations(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getCitationTypes: (filter: Ref<string | undefined>) => {
+    const citationTypeValues = [{ label: 'label 1' }, { label: 'label 2' }]
+    const citationTypes = citationTypeValues.map((v) => <CitationType>{ label: v.label })
+    const items = ref(
+      citationTypes.map(
+        (na) =>
+          <ComboboxItem>{
+            label: na.label,
+          },
+      ),
+    )
+    const execute = async () => {
+      return service.getCitationTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,
