@@ -81,5 +81,7 @@ allowed_patterns:
   - "existing keywords correctly"
   - "renderComponent\\(keywords"
   - "const keywords ="
+  - "function generateUniqueSingleNormKey"
+  - "const uniqueKey"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"

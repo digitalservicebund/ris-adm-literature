@@ -180,3 +180,66 @@ test(
     await expect(page.getByText('Kurzreferat Eintrag 123')).toHaveCount(1)
   },
 )
+
+test(
+  'Add a norm, edit and save',
+  {tag: ['@RISDEV-6075']},
+  async ({page}) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(normElement).toHaveCount(1)
+
+    // when
+    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const kvlgButton = page.getByText('KVLG')
+    await expect(kvlgButton).toBeVisible()
+    await kvlgButton.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByTestId('list-entry-0').click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+
+    // then
+    await expect(page.getByText('KVLG, § 2, 27.01.2025')).toHaveCount(1)
+  },
+)
+
+test(
+  'Add two norms, delete the first item',
+  { tag: ['@RISDEV-6075'] },
+  async ({ page }) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(normElement).toHaveCount(1)
+
+    // when
+    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const sgb5Button = page.getByText('SGB 5')
+    await expect(sgb5Button).toBeVisible()
+    await sgb5Button.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const kvlgButton = page.getByText('KVLG')
+    await expect(kvlgButton).toBeVisible()
+    await kvlgButton.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByTestId('list-entry-0').click()
+    await page.getByText('Eintrag löschen').click()
+
+
+    // then
+    await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
+    await expect(page.getByText('KVLG, § 2')).toHaveCount(1)
+  },
+)
