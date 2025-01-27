@@ -4,11 +4,13 @@ import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import { computed, ref } from 'vue'
+import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
@@ -89,6 +91,41 @@ const service: ComboboxItemService = {
     const items = ref(documentTypes.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }))
     const execute = async () => {
       return service.getDocumentTypes(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getRisAbbreviations: (filter: Ref<string | undefined>) => {
+    const risAbbreviationValues = [
+      { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
+      {
+        abbreviation: 'KVLG',
+        officialLongTitle:
+          'Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung',
+      },
+    ]
+
+    const risAbbreviations = risAbbreviationValues.map(
+      (v) =>
+        <NormAbbreviation>{ abbreviation: v.abbreviation, officialLongTitle: v.officialLongTitle },
+    )
+    const items = ref(
+      risAbbreviations.map(
+        (na) =>
+          <ComboboxItem>{
+            label: na.abbreviation,
+            value: na,
+            additionalInformation: na.officialLongTitle,
+          },
+      ),
+    )
+    const execute = async () => {
+      return service.getRisAbbreviations(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,

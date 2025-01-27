@@ -11,6 +11,7 @@ import ChipsInput from '@/components/input/ChipsInput.vue'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
 import KeyWords from '@/components/KeyWords.vue'
 import TextEditorCategory from '@/components/texts/TextEditorCategory.vue'
+import NormReferences from '@/components/NormReferences.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -166,6 +167,11 @@ const kurzreferat = ref()
           <KeyWords data-testid="keywords" />
         </div>
       </div>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <NormReferences data-testid="normReferences" />
+        </div>
+      </div>
     </div>
 
     <div id="kurzreferat" aria-label="Kurzreferat" class="flex flex-col gap-24 bg-white p-24">
@@ -184,5 +190,6 @@ const kurzreferat = ref()
         </div>
       </div>
     </div>
+
   </div>
 </template>
