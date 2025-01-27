@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 jobs:
-  push-reports-to-ris-reports:
+  frontend-push-reports-to-ris-reports:
     runs-on: ubuntu-latest
     env:
       reports-repo: digitalservicebund/ris-reports
