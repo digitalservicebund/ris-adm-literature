@@ -14,10 +14,11 @@ Possibilities/Challenges are:
 
 1. Generate DU number (example KSNR054920707) in the FE or BE?
 1. Generate DU number when a new, empty DU is being created or when the process is finalized (Abgabe)?
-1. Have BE API endpoints for every form element or one endpoint for the whole DU form state, where the Pinia state is being synced with?
-1. Transform the form state to XML/LDML right away when data arrives at an endpoint or keep state somehow in an in-between/in-process format where it can be altered and send back to the FE very easily?
-1. Transform form inputs into XML/LDML right after input?
+1. Have BE API endpoints for every form element or one endpoint for the whole DU form state, where the Pinia store is being synced with?
+1. Transform the form state to XML/LDML right away when data arrives at a BE API endpoint or keep state somehow in an in-between/in-process format (like JSON)?
+1. Transform form inputs into XML/LDML already in the FE before sending?
 1. Work with the database schema from migration or generate a new schema?
+1. Do we keep the XML/LDML in the database when we push to the portal s3 bucket?
 
 ## Decision
 
@@ -25,12 +26,13 @@ We have decided to go with the following setup:
 
 1. The DU number will be generated on the BE side.
 1. The DU number is being generated when the DU is created and will be written to the database right away. Even if no save-action is permitted, there is a DU in draft state for later.
-1. We'll have one endpoint where the whole Pinia state of all form elements combined is being pushed to in JSON format.
-1. We'll keep the data in JSON format as long as the process is still ongoing without transforming it. The transformation to XML/LDML is done when the DU is finally submitted (Abgabe).
-   1. Transforming the form state from JSON to XML/LDML means, that the requirements for are finally examined. As there is an actual XSD schema already existing from the migration project, the transformed information only needs to get schema validated.
-   1. When the JSON gets transformed successfully, the JSON data is being eliminated.
+1. We'll have one endpoint where the whole Pinia state for all form elements combined is being pushed to in JSON format.
+1. We'll keep the data in JSON format as long as the process is still ongoing without transforming it. The transformation to XML/LDML will be done when the DU is finally submitted (Abgabe).
+   1. Transforming the form state from JSON to XML/LDML means, that the requirements to all input form-fields are finally examined. As there is an actual XSD schema already existing (from the migration project), the transformed document only needs to get schema validated. Which will result in errors, when required fields are empty or filled with date in the wrong format.
+   1. When the JSON gets transformed successfully, the JSON data is being eliminated from the database schema.
 1. The FE will not deal with XML/LDML.
-1. We'll setup a new database schema in our to be defined BE.
+1. We'll setup a new database schema in our to be defined BE. The migrated cases from the migration project will be migrated to this schema when final.
+1. Yes, the database remains the single source of truth.
 
 ## Consequences
 
@@ -44,4 +46,5 @@ The reasoning behind those decisions:
    1. The TBD BE API is only being accessed from this very FE. It's not public and no other application is supposed to access it. Therefore the API has only one purpose to make our own FE work. In other words: It's meaningless to server a fine grained API.
 1. This approach allows us to only hold valid, schema validated XML/LDML in our database. When old DU are re-opened, the XML/LDML needs to be re-transformed to JSON, in a way that the Pinia store can read it.
 1. The FE is kept clear of any XML domain knowledge.
-1. The migration project had already defined a database schema and owns it. As this is a finite process and sharing schemas across multiple projects is difficult, we are opting to generate a new schema with all desires we have. Otherwise we would need to alter the migration schema to allow inserting new rows that have not been migrated. That leaves us with the todo to move the migrated data into our to be defined BE schema, when the migration is done. As this is planed as a big bang, we do not see any problem: At a certain date the BSG employees will stop creating DUs in der old environment. The data from the legacy system will be migrated just once. When this runs through, the user will continue in NeuRIS.
+1. The migration project had already defined a database schema and owns it. As this is a finite process and sharing schemas across multiple projects is difficult, we are opting to generate a new schema that satisfies the FE requirements (like user workflow management). Otherwise we would need to alter the migration schema to allow inserting new rows that have not been migrated. That leaves us with the todo to move the migrated data into our to be defined BE schema, when the migration is done. As this is planed as a big bang, we do not see any problem: At a certain date the BSG employees will stop creating DUs in der old environment. The data from the legacy system will be migrated just once. When this runs through, the users will continue in NeuRIS.
+1. We need to be able to replicate the portal from the database as only the database is being planned to have regular backups (NeuRIS wide strategy). The S3 buckets can not be trusted in that sense.
