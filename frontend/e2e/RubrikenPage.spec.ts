@@ -182,33 +182,10 @@ test(
 )
 
 test(
-  'Add a norm',
-  { tag: ['@RISDEV-6075'] },
-  async ({ page }) => {
-    // Arrange
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-    await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
-    await expect(normElement).toHaveCount(1)
-
-    // Action
-    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    await page.getByText('SGB 5').click()
-    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
-
-    // Assert
-    await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(1)
-  },
-)
-
-test(
   'Add a norm, edit and save',
   {tag: ['@RISDEV-6075']},
   async ({page}) => {
-    // Arrange
+    // given
     await page.goto('/')
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
@@ -216,7 +193,7 @@ test(
     const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(normElement).toHaveCount(1)
 
-    // Action
+    // when
     await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
     const kvlgButton = page.getByText('KVLG')
     await expect(kvlgButton).toBeVisible()
@@ -227,7 +204,7 @@ test(
     await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
     await page.getByRole('button', { name: 'Norm speichern' }).click()
 
-    // Assert
+    // then
     await expect(page.getByText('KVLG, § 2, 27.01.2025')).toHaveCount(1)
   },
 )
@@ -236,7 +213,7 @@ test(
   'Add two norms, delete the first item',
   { tag: ['@RISDEV-6075'] },
   async ({ page }) => {
-    // Arrange
+    // given
     await page.goto('/')
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
@@ -244,7 +221,7 @@ test(
     const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(normElement).toHaveCount(1)
 
-    // Action
+    // when
     await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
     const sgb5Button = page.getByText('SGB 5')
     await expect(sgb5Button).toBeVisible()
@@ -261,7 +238,7 @@ test(
     await page.getByText('Eintrag löschen').click()
 
 
-    // Assert
+    // then
     await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
     await expect(page.getByText('KVLG, § 2')).toHaveCount(1)
   },
