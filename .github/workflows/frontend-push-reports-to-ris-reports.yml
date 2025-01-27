@@ -7,16 +7,6 @@ jobs:
     env:
       reports-repo: digitalservicebund/ris-reports
     steps:
-      - name: Checkout ris-reports
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.reports-repo }}
-          ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
-      - name: Setup git config
-        run: |
-          git config user.name "${{ github.repository }}"
-          # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       ########################################################################
       # Downloading and adding test reports
       # Note: actually pushing the reports is a separate step after all these
@@ -64,6 +54,16 @@ jobs:
       ##############################################
       # Finally: pushing the reports to ris-reports
       ##############################################
+      - name: Setup git config
+        run: |
+          git config user.name "${{ github.repository }}"
+          # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Checkout ris-reports
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.reports-repo }}
+          ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
       - name:
           Push reports
           # we use `toJSON(...)` below to escape double quotation marks
