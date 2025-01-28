@@ -39,6 +39,13 @@ jobs:
             echo "No significant vulnerabilities found"
             exit 0
           fi
+      - name: Upload trivy results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-trivy-image-results.sarif
+          retention-days: 3
+          path: trivy-image-results.sarif
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
