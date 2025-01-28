@@ -16,8 +16,10 @@ jobs:
         with:
           scan-type: "fs"
           format: "table"
-          #output: "trivy-results.sarif"
+          output: "trivy-results.table"
           # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
+      - name: Print trivy result table
+        run: cat trivy-results.table
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
         env:
