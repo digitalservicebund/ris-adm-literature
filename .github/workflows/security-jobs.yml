@@ -18,13 +18,15 @@ jobs:
           format: "sarif"
           output: "trivy-results.sarif"
           severity: "CRITICAL,HIGH" #ignored by sarif report
+      - name: Print trivy report in case we need to investigate
+        run: cat trivy-results.sarif
       - name: Check trivy results
         run: |
           if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
-            echo "Vulnerabilities found"
+            echo "Vulnerabilities of severity CRITICAL or HIGH found"
             exit 1
           else
-            echo "No significant vulnerabilities found"
+            echo "No vulnerabilities of severity CRITICAL or HIGH found"
             exit 0
           fi
       - name: On failure send status to Slack
