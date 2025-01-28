@@ -17,7 +17,7 @@ jobs:
           scan-type: "fs"
           format: "json"
           output: "trivy-results.json"
-          # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
+          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
       - name: Print trivy result json
         run: cat trivy-results.json
       - name: Run Trivy vulnerability scanner in repo mode
