@@ -9,11 +9,16 @@ import { useValidationStore } from '@/composables/useValidationStore'
 import SingleNorm, { type SingleNormValidationInfo } from '@/domain/singleNorm'
 import IconClear from '~icons/material-symbols/close-small'
 
-const props = defineProps<{
-  modelValue: SingleNorm
-  normAbbreviation: string
-  index: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    modelValue: SingleNorm
+    normAbbreviation: string
+    showSingleNormInput?: boolean
+    showDateOfRelevanceButton?: boolean
+    index: number
+  }>(),
+  { showSingleNormInput: true, showDateOfRelevanceButton: true },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: SingleNorm]
@@ -109,6 +114,7 @@ onMounted(async () => {
     <div class="gap-24 flex flex-row justify-between">
       <InputField
         id="singleNorm"
+        v-if="showSingleNormInput"
         v-slot="slotProps"
         label="Einzelnorm"
         :validation-error="validationStore.getByField('singleNorm')"
@@ -145,6 +151,7 @@ onMounted(async () => {
       </InputField>
       <InputField
         id="dateOfRelevance"
+        v-if="showDateOfRelevanceButton"
         v-slot="slotProps"
         label="Jahr"
         :validation-error="validationStore.getByField('dateOfRelevance')"

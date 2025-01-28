@@ -12,6 +12,7 @@ import CheckboxInput from '@/components/input/CheckboxInput.vue'
 import KeyWords from '@/components/KeyWords.vue'
 import TextEditorCategory from '@/components/texts/TextEditorCategory.vue'
 import NormReferences from '@/components/NormReferences.vue'
+import ActiveReferences from '@/components/ActiveReferences.vue'
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -171,6 +172,12 @@ const kurzreferat = ref()
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <NormReferences data-testid="normReferences" />
+        </div>
+      </div>
+      <div class="border-b-1 border-b-gray-400"></div>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <ActiveReferences data-testid="activeReferences" />
         </div>
       </div>
     </div>

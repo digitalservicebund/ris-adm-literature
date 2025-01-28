@@ -1,0 +1,10 @@
+{
+  "norm": {
+    "risAbbreviation": "RIS-Abkürzung",
+    "risAbbreviationPlaceholder": "Abkürzung, Kurz-oder Langtitel oder Region eingeben..."
+  },
+  "administrative_regulation": {
+    "risAbbreviation": "Suche nach Verwaltungsschrift",
+    "risAbbreviationPlaceholder": "Abkürzung, Dokumentennummer oder Titel eingeben..."
+  }
+}
