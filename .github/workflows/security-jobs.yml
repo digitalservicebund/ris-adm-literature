@@ -7,19 +7,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in repo mode, output table in case we need to investigate
-        uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
-        env:
-          ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
-        with:
-          scan-type: "fs"
-          format: "json"
-          output: "trivy-results.json"
-          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
-      - name: Print trivy result json
-        run: cat trivy-results.json
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
         env:
