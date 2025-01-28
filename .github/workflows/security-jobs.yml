@@ -17,7 +17,7 @@ jobs:
           scan-type: "fs"
           format: "sarif"
           output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH" #ignored by sarif report
+          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
       - name: Print trivy report in case we need to investigate
         run: cat trivy-results.sarif
       - name: Check trivy results
