@@ -70,6 +70,12 @@ export default defineConfig({
         ...devices['Desktop Safari'],
       },
     },
+    {
+      name: 'msedge', // is also using the Chromium engine, but may behave differently still
+      use: {
+        ...devices['Desktop Edge'],
+      },
+    },
 
     /* Test against mobile viewports. */
     // {
