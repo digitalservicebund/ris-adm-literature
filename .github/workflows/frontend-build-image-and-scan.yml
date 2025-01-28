@@ -29,10 +29,10 @@ jobs:
           format: "sarif"
           output: "trivy-image-results.sarif"
       - name: Print trivy results (sarif format)
-        run: cat trivy-results.sarif
+        run: cat trivy-image-results.sarif
       - name: Check trivy results
         run: |
-          if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
+          if grep -qE 'HIGH|CRITICAL' trivy-image-results.sarif; then
             echo "Vulnerabilities found"
             exit 1
           else
