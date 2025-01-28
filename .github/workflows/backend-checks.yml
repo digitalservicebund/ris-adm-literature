@@ -58,7 +58,7 @@ jobs:
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  
+
   backend-check-code-quality-with-sonarqube:
     needs: [setup-gradle]
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar --info
       - name: Check SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@dc2f7b0dd95544cd550de3028f89193576e958b9
+        uses: sonarsource/sonarqube-quality-gate-action@424137db1fae80e9eb279829995166f2f44bc8df
         with:
           scanMetadataReportFile: build/sonar/report-task.txt
         timeout-minutes: 3 # Force to fail step after specific time
@@ -95,6 +95,6 @@ jobs:
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
