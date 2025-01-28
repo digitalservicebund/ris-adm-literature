@@ -13,6 +13,7 @@ import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
+import documentUnitService from '@/services/documentUnitService'
 
 const props = defineProps<{
   modelValue?: ActiveCitation
@@ -32,7 +33,7 @@ const activeCitation = ref(new ActiveCitation({ ...props.modelValue }))
 
 const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>()
 const pageNumber = ref<number>(0)
-// const itemsPerPage = ref<number>(15)
+const itemsPerPage = ref<number>(15)
 const isLoading = ref(false)
 
 const activeCitationType = computed({
@@ -76,31 +77,31 @@ async function search() {
     delete activeCitationRef['citationType']
   }
 
-  // TODO mock the service
-  // const urlParams = window.location.pathname.split('/')
-  // const documentNumberToExclude = urlParams[urlParams.indexOf('documentunit') + 1]
+  const urlParams = window.location.pathname.split('/')
+  const documentNumberToExclude = urlParams[urlParams.indexOf('documentUnit') + 1]
 
-  // const response = await documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
-  //   ...(pageNumber.value != undefined ? { pg: pageNumber.value.toString() } : {}),
-  //   ...(itemsPerPage.value != undefined ? { sz: itemsPerPage.value.toString() } : {}),
-  //   ...(documentNumberToExclude != undefined
-  //     ? { documentNumber: documentNumberToExclude.toString() }
-  //     : {}),
-  // })
-  // if (response.data) {
-  //   searchResultsCurrentPage.value = {
-  //     ...response.data,
-  //     content: response.data.content.map(
-  //       (decision: Partial<RelatedDocumentation>) => new RelatedDocumentation({ ...decision }),
-  //     ),
-  //   }
-  //   searchResults.value = response.data.content.map((searchResult) => {
-  //     return {
-  //       decision: new RelatedDocumentation({ ...searchResult }),
-  //       isLinked: searchResult.isLinkedWith(props.modelValueList),
-  //     }
-  //   })
-  // }
+  const response = documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
+    ...(pageNumber.value != undefined ? { pg: pageNumber.value.toString() } : {}),
+    ...(itemsPerPage.value != undefined ? { sz: itemsPerPage.value.toString() } : {}),
+    ...(documentNumberToExclude != undefined
+      ? { documentNumber: documentNumberToExclude.toString() }
+      : {}),
+  })
+  if (response.data) {
+    searchResultsCurrentPage.value = {
+      ...response.data,
+      content: response.data.content.map(
+        (decision: Partial<RelatedDocumentation>) => new RelatedDocumentation({ ...decision }),
+      ),
+    }
+    searchResults.value = response.data.content.map((searchResult) => {
+      return {
+        decision: new RelatedDocumentation({ ...searchResult }),
+        isLinked: true,
+      }
+    })
+    console.log(searchResults.value)
+  }
   lastSearchInput.value = activeCitationRef
   isLoading.value = false
 }

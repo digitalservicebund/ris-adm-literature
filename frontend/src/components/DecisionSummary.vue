@@ -3,7 +3,6 @@ import { computed, toRaw, ref } from 'vue'
 import type { Component } from 'vue'
 import { DisplayMode } from '@/components/enumDisplayMode'
 import IconBadge from '@/components/IconBadge.vue'
-// import { useScroll } from "@/composables/useScroll"
 import { useStatusBadge } from '@/composables/useStatusBadge'
 import { PublicationState } from '@/domain/publicationStatus'
 import { type PublicationStatus } from '@/domain/publicationStatus'
@@ -25,8 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   linkClickable: true,
 })
-// const { openSidePanelAndScrollToSection } = useScroll()
-// const statusBadge = computed(() => useStatusBadge(props.status).value)
 const statusBadge = ref(
   useStatusBadge({
     publicationStatus: PublicationState.UNPUBLISHED,
@@ -36,6 +33,12 @@ const statusBadge = ref(
 const summary = computed(() => (props.status ? `${props.summary},  ` : props.summary))
 
 const divider = computed(() => (props.documentNumber ? ` | ` : undefined))
+
+const href = computed(() =>
+  props.documentNumber
+    ? `https://ris-search.dev.ds4g.net/case-law/${props.documentNumber}`
+    : undefined,
+)
 </script>
 
 <template>
@@ -57,20 +60,17 @@ const divider = computed(() => (props.documentNumber ? ` | ` : undefined))
 
           <span v-if="!linkClickable"> {{ documentNumber }}</span>
           <!-- open preview in new tab -->
-          <RouterLink
+          <a
             v-else-if="documentNumber && props.displayMode === DisplayMode.TAB"
+            :href="href"
             class="ds-link-01-bold whitespace-nowrap no-underline focus:outline-none focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-blue-800"
             :data-testid="'document-number-link-' + documentNumber"
             tabindex="-1"
             target="_blank"
-            :to="{
-              name: 'caselaw-documentUnit-documentNumber-preview',
-              params: { documentNumber: documentNumber },
-            }"
           >
             {{ documentNumber }}
             <BaselineArrowOutward class="mb-4 inline w-24" />
-          </RouterLink>
+          </a>
           <!-- or open preview in sidepanel -->
           <span v-else-if="documentNumber && props.displayMode === DisplayMode.SIDEPANEL">
             <button

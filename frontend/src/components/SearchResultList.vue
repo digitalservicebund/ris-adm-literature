@@ -6,7 +6,6 @@ import FlexContainer from '@/components/FlexContainer.vue'
 import IconBadge from '@/components/IconBadge.vue'
 import TextButton from '@/components/input/TextButton.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-// import { useScroll } from "@/composables/useScroll"
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
 import IconAdd from '~icons/ic/baseline-add'
@@ -18,12 +17,9 @@ const props = defineProps<{
   displayMode?: DisplayMode
 }>()
 const emits = defineEmits<(event: 'linkDecision', decision: RelatedDocumentation) => void>()
-// const { scrollIntoViewportById } = useScroll()
 watch(
   () => props.searchResults,
-  async () => {
-    // if (props.searchResults) await scrollIntoViewportById("search-results")
-  },
+  async () => {},
   { immediate: true },
 )
 </script>

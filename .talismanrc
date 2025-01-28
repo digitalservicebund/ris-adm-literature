@@ -7,6 +7,8 @@ fileignoreconfig:
     ignore_detectors: [filename]
   - filename: nginx.conf
     checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
+  - filename: frontend/src/services/documentUnitService.ts
+    checksum: 54747571e548897200a2eb566efa0f6032d0ece92487ee31e34c50c2e0ae9a07
 
 allowed_patterns:
   # allow patterns with hex encoded text
