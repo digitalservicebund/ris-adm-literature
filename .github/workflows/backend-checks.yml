@@ -60,7 +60,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   backend-check-code-quality-with-sonarqube:
-    needs: [setup-gradle]
     runs-on: ubuntu-latest
     steps:
       - name: sanity Check
