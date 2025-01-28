@@ -167,6 +167,7 @@ const kurzreferat = ref()
           <KeyWords data-testid="keywords" />
         </div>
       </div>
+      <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <NormReferences data-testid="normReferences" />
