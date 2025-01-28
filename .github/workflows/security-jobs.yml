@@ -18,11 +18,13 @@ jobs:
         with:
           scan-type: "fs"
           format: "sarif"
-          output: "trivy-results.sarif"
+          output: "trivy-fs-results.sarif"
           # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
+      - name: Print trivy fs results
+        run: cat trivy-fs-results.sarif
       - name: Check trivy results
         run: |
-          if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
+          if grep -qE 'HIGH|CRITICAL' trivy-fs-results.sarif; then
             echo "Vulnerabilities found"
             exit 1
           else
