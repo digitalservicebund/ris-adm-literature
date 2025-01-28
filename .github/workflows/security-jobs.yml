@@ -18,6 +18,15 @@ jobs:
           format: "sarif"
           output: "trivy-results.sarif"
           # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
+      - name: Check trivy results
+        run: |
+          if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
+            echo "Vulnerabilities found"
+            exit 1
+          else
+            echo "No significant vulnerabilities found"
+            exit 0
+          fi
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
