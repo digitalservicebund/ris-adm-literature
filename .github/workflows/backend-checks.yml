@@ -58,3 +58,43 @@ jobs:
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  
+  backend-check-code-quality-with-sonarqube:
+    needs: [setup-gradle]
+    runs-on: ubuntu-latest
+    steps:
+      - name: sanity Check
+        run: echo $PROJECT_SPECIFIC_SONAR_TOKEN | cut -c1-3
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+      - name: Scan with SonarQube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar --info
+      - name: Check SonarQube Quality Gate
+        uses: sonarsource/sonarqube-quality-gate-action@dc2f7b0dd95544cd550de3028f89193576e958b9
+        with:
+          scanMetadataReportFile: build/sonar/report-task.txt
+        timeout-minutes: 3 # Force to fail step after specific time
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: On failure send status to Slack
+        # only on failure and if on "main" branch
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        uses: digitalservicebund/notify-on-failure-gha@66c485757701f8d5dbee32f24df38d904ca693ba
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
