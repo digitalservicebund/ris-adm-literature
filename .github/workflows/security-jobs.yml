@@ -2,12 +2,14 @@ on:
   workflow_call:
 
 jobs:
-  security-scan-with-trivy: # open source security scanner, cf. https://trivy.dev/
+  security-scan-with-trivy:
+    # Note: This scan is NOT what is shown in the GitHub Security tab
+    #       Please refer to frontend-build-image-and-scan.yml instead
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in repo mode # open source security scanner, cf. https://trivy.dev/
         uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}

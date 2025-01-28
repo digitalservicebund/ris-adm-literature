@@ -16,6 +16,8 @@ jobs:
       - name: Build frontend image
         run: docker build --file prod.Dockerfile --tag ${{ inputs.image-ref }} .
       - name: Run Trivy vulnerability image scanner
+        # Note: This scan is what is shown in the GitHub Security tab
+        #       cf. step "Upload Trivy scan results to GitHub Security tab"
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
