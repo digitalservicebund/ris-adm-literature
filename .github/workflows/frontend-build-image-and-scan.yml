@@ -36,6 +36,8 @@ jobs:
           image-ref: ${{ inputs.image-ref }}
           format: "sarif"
           output: "trivy-results.sarif"
+      - name: Print trivy results (sarif format)
+        run: cat trivy-results.sarif
       - name: Check trivy results
         run: |
           if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
