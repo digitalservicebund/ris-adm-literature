@@ -62,8 +62,6 @@ jobs:
   check-code-quality-with-sonarqube-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: sanity Check
-        run: echo $PROJECT_SPECIFIC_SONAR_TOKEN | cut -c1-3
       - uses: actions/checkout@v4
         with:
           submodules: true
@@ -82,7 +80,7 @@ jobs:
       - name: Scan with SonarQube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         working-directory: ./backend
         run: ./gradlew sonar --info
       - name: Check SonarQube Quality Gate
@@ -91,7 +89,7 @@ jobs:
           scanMetadataReportFile: build/sonar/report-task.txt
         timeout-minutes: 3 # Force to fail step after specific time
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
