@@ -299,7 +299,6 @@ describe('NormReferenceEntry', () => {
           },
           singleNorms: [],
           normAbbreviationRawValue: undefined,
-          hasForeignSource: false,
         },
       ],
     ])
