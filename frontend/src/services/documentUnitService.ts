@@ -8,7 +8,7 @@ interface DocumentUnitService {
 }
 
 const service: DocumentUnitService = {
-  searchByRelatedDocumentation(
+  async searchByRelatedDocumentation(
     query: RelatedDocumentation = new RelatedDocumentation(),
     requestParams: { string?: string } = {},
   ) {

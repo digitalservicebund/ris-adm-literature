@@ -80,7 +80,7 @@ async function search() {
   const urlParams = window.location.pathname.split('/')
   const documentNumberToExclude = urlParams[urlParams.indexOf('documentUnit') + 1]
 
-  const response = documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
+  const response = await documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
     ...(pageNumber.value != undefined ? { pg: pageNumber.value.toString() } : {}),
     ...(itemsPerPage.value != undefined ? { sz: itemsPerPage.value.toString() } : {}),
     ...(documentNumberToExclude != undefined

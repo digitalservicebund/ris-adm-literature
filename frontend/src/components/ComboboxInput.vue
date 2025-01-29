@@ -35,9 +35,10 @@ const NO_MATCHING_ENTRY = 'Kein passender Eintrag'
 
 const candidateForSelection = ref<ComboboxItem>() // <-- the top search result
 const inputText = ref<string>()
-const currentlyDisplayedItems = computed<ComboboxItem[]>(() =>
-  [...(existingItems.value ?? []), createNewItem.value].filter(isDefined),
-)
+const currentlyDisplayedItems = computed<ComboboxItem[]>(() => {
+  console.log('test 1')
+  return [...(existingItems.value ?? []), createNewItem.value].filter(isDefined)
+})
 const createNewItem = ref<ComboboxItem>()
 const showDropdown = ref(false)
 const filter = ref<string>()
@@ -178,6 +179,7 @@ const noMatchingItems = [{ label: NO_MATCHING_ENTRY }]
  * (Special cases: no results, createNewItem "neu erstellen")
  */
 watch(existingItems, () => {
+  console.log('test 2')
   if (existingItems.value === null) return
   if (existingItems.value === noMatchingItems) return
 
@@ -193,7 +195,7 @@ watch(existingItems, () => {
   if (!exactMatchFound && hasManualEntry) {
     createNewItem.value = {
       label: `${inputText.value} neu erstellen`,
-      value: { title: inputText.value! },
+      value: { label: inputText.value! },
       labelCssClasses: 'ds-label-01-bold text-blue-800 underline',
     }
   } else {
