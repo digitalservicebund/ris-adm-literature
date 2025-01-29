@@ -82,12 +82,11 @@ sonar {
     // NOTE: sonarqube picks up combined coverage correctly without further configuration from:
     // build/reports/jacoco/test/jacocoTestReport.xml
     properties {
-		// properties are set in "sonar-project.properties"
-		// the below are just for reference
-		//
-        // property("sonar.projectKey", "ris-adm-vwv-backend")
-        // property("sonar.organization", "digitalservicebund")
-        // property("sonar.host.url", "https://sonarcloud.io")
-        // property("sonar.token", System.getenv("SONAR_TOKEN"))
+		// we don't use "sonar-project.properties", but define the properties here
+        property("sonar.projectKey", "ris-adm-vwv-backend")
+        property("sonar.organization", "digitalservicebund")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.token", System.getenv("SONAR_TOKEN"))
+		property("sonar.coverage.exclusions", "**/Application.java")
     }
 }
