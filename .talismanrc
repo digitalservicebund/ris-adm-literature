@@ -82,5 +82,6 @@ allowed_patterns:
   - "const keywords ="
   - "function generateUniqueSingleNormKey"
   - "const uniqueKey"
+  - 'property\("sonar.projectKey"'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
