@@ -85,4 +85,3 @@ allowed_patterns:
   - 'property\("sonar.projectKey"'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
-  - trigger pipeline
