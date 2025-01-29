@@ -190,7 +190,7 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+    const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(normElement).toHaveCount(1)
 
     // when
@@ -218,7 +218,7 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+    const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(normElement).toHaveCount(1)
 
     // when
