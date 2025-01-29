@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application {
 
+	// random comment triggering the pipeline
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
