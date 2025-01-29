@@ -19,12 +19,11 @@ export default class ActiveReference extends NormReference {
   public referenceDocumentType: ActiveReferenceDocumentType = ActiveReferenceDocumentType.NORM
   public referenceType?: ActiveReferenceType
 
-  // static readonly fields = ['referenceDocumentType', 'referenceType', 'normAbbreviation', 'normAbbreviationRawValue'] as const
-  static readonly activeReferenceTypeSummary: Record<ActiveReferenceType, string> = {
-    [ActiveReferenceType.ANWENDUNG]: 'Anwendung',
-    [ActiveReferenceType.NEUREGELUNG]: 'Neuregelung',
-    [ActiveReferenceType.RECHTSGRUNDLAGE]: 'Rechtsgrundlage',
-  } as const
+  static readonly referenceTypeLabels = new Map<ActiveReferenceType, string>([
+    [ActiveReferenceType.ANWENDUNG, 'Anwendung'],
+    [ActiveReferenceType.NEUREGELUNG, 'Neuregelung'],
+    [ActiveReferenceType.RECHTSGRUNDLAGE, 'Rechtsgrundlage'],
+  ])
 
   constructor(data: Partial<ActiveReference> = {}) {
     super(data)
@@ -44,7 +43,7 @@ export default class ActiveReference extends NormReference {
   get renderSummary(): string {
     let result: string[]
     if (this.referenceType) {
-      result = [`${ActiveReference.activeReferenceTypeSummary[this.referenceType]}`]
+      result = [`${ActiveReference.referenceTypeLabels.get(this.referenceType)}`]
     } else {
       result = []
     }

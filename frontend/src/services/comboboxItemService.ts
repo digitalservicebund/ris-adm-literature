@@ -5,12 +5,14 @@ import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
+import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
@@ -126,6 +128,27 @@ const service: ComboboxItemService = {
     )
     const execute = async () => {
       return service.getRisAbbreviations(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getActiveReferenceTypes: (filter: Ref<string | undefined>) => {
+    const items = ref(
+      Object.values(ActiveReferenceType).map(
+        (referenceType) =>
+          <ComboboxItem>{
+            label: ActiveReference.referenceTypeLabels.get(referenceType),
+            value: referenceType,
+          },
+      ),
+    )
+    const execute = async () => {
+      return service.getActiveReferenceTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,

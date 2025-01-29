@@ -113,7 +113,7 @@ export enum LabelPosition {
       >
         <span v-for="(line, index) in labelConverted" :key="line">
           {{ line }}
-          <span v-if="index === labelConverted.length - 1 && !!required" class="ml-4">*</span>
+          <span v-if="index === labelConverted.length - 1 && required" class="ml-4">*</span>
         </span>
       </label>
     </div>

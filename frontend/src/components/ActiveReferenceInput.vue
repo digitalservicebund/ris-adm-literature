@@ -17,7 +17,6 @@ import ActiveReference, {
 } from '@/domain/activeReference.ts'
 import RadioInput from '@/components/input/RadioInput.vue'
 import labels from '@/components/activeReferenceInputLabels.json'
-import DropdownInput from '@/components/input/DropdownInput.vue'
 
 const props = defineProps<{
   modelValue?: ActiveReference
@@ -35,14 +34,7 @@ const validationStore =
     ['referenceType', 'normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
   >()
 
-const referenceTypeItems = [
-  { label: 'Anwendung', value: `${ActiveReferenceType.ANWENDUNG}` },
-  { label: 'Neuregelung', value: `${ActiveReferenceType.NEUREGELUNG}` },
-  { label: 'Rechtsgrundlage', value: `${ActiveReferenceType.RECHTSGRUNDLAGE}` },
-]
-
-// TODO: Rename norm to activeReference
-const norm = ref(new ActiveReference({ ...props.modelValue }))
+const activeReference = ref(new ActiveReference({ ...props.modelValue }))
 const lastSavedModelValue = ref(new ActiveReference({ ...props.modelValue }))
 
 const singleNorms = ref(
@@ -57,11 +49,11 @@ const singleNorms = ref(
  */
 const normAbbreviation = computed({
   get: () =>
-    norm.value.normAbbreviation
+    activeReference.value.normAbbreviation
       ? {
-          label: norm.value.normAbbreviation.abbreviation,
-          value: norm.value.normAbbreviation,
-          additionalInformation: norm.value.normAbbreviation.officialLongTitle,
+          label: activeReference.value.normAbbreviation.abbreviation,
+          value: activeReference.value.normAbbreviation,
+          additionalInformation: activeReference.value.normAbbreviation.officialLongTitle,
         }
       : undefined,
   set: (newValue) => {
@@ -75,9 +67,25 @@ const normAbbreviation = computed({
       if (isAbbreviationPresent) {
         validationStore.add('RIS-Abkürzung bereits eingegeben', 'normAbbreviation')
       } else {
-        norm.value.normAbbreviation = newNormAbbreviation
+        activeReference.value.normAbbreviation = newNormAbbreviation
       }
     }
+  },
+})
+
+const referenceType = computed<
+  { label: string; value: ActiveReferenceType } | undefined,
+  ActiveReferenceType | undefined
+>({
+  get: () =>
+    activeReference.value.referenceType
+      ? {
+          label: ActiveReference.referenceTypeLabels.get(activeReference.value.referenceType) ?? '',
+          value: activeReference.value.referenceType,
+        }
+      : undefined,
+  set: (newValue) => {
+    activeReference.value.referenceType = newValue
   },
 })
 
@@ -86,8 +94,7 @@ const normAbbreviation = computed({
  * sa new emtpy entry is added to the list
  */
 async function addNormReference() {
-  if (!norm.value.referenceType) {
-    console.log('nu')
+  if (!activeReference.value.referenceType) {
     validationStore.add('Art der Verweisung fehlt', 'referenceType')
   }
   if (
@@ -98,7 +105,7 @@ async function addNormReference() {
     !validationStore.getByMessage('RIS-Abkürzung bereits eingegeben').length
   ) {
     const normRef = new ActiveReference({
-      ...norm.value,
+      ...activeReference.value,
       singleNorms: singleNorms.value
         .map((singleNorm) =>
           !singleNorm.isEmpty
@@ -123,7 +130,7 @@ async function addNormReference() {
  */
 function removeNormReference() {
   singleNorms.value = []
-  norm.value.normAbbreviation = undefined
+  activeReference.value.normAbbreviation = undefined
   emit('removeEntry')
 }
 
@@ -183,7 +190,7 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
 watch(
   () => props.modelValue,
   () => {
-    norm.value = new ActiveReference({ ...props.modelValue })
+    activeReference.value = new ActiveReference({ ...props.modelValue })
     lastSavedModelValue.value = new ActiveReference({ ...props.modelValue })
     if (lastSavedModelValue.value.isEmpty) {
       validationStore.reset()
@@ -200,16 +207,15 @@ watch(
   <div class="flex flex-col gap-24">
     <div class="flex w-full flex-row justify-between">
       <div class="flex flex-row gap-24">
-        <!-- TODO: Adjust ids, no overlap with norms -->
         <InputField
-          id="direct"
+          id="normReferenceDocumentType"
           label="Norm"
           label-class="ds-label-01-reg"
           :label-position="LabelPosition.RIGHT"
         >
           <RadioInput
-            id="direct"
-            v-model="norm.referenceDocumentType"
+            id="normReferenceDocumentType"
+            v-model="activeReference.referenceDocumentType"
             aria-label="Norm auswählen"
             size="small"
             :value="`${ActiveReferenceDocumentType.NORM}`"
@@ -217,14 +223,14 @@ watch(
         </InputField>
 
         <InputField
-          id="search"
+          id="administrativeRegulationReferenceDocumentType"
           label="Verwaltungsvorschrift"
           label-class="ds-label-01-reg"
           :label-position="LabelPosition.RIGHT"
         >
           <RadioInput
-            id="search"
-            v-model="norm.referenceDocumentType"
+            id="administrativeRegulationReferenceDocumentType"
+            v-model="activeReference.referenceDocumentType"
             aria-label="Verwaltungsvorschrift auswählen"
             size="small"
             :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
@@ -238,34 +244,35 @@ watch(
       label="Art der Verweisung *"
       :validation-error="validationStore.getByField('referenceType')"
     >
-      <DropdownInput
-        id="id"
-        v-model="norm.referenceType"
+      <ComboboxInput
+        id="active-reference-type-field"
+        v-model="referenceType"
         aria-label="Art der Verweisung"
-        :items="referenceTypeItems"
-        placeholder="Bitte auswählen"
         :has-error="slotProps.hasError"
+        :item-service="ComboboxItemService.getActiveReferenceTypes"
+        no-clear
+        placeholder="Bitte auswählen"
         @focus="validationStore.remove('referenceType')"
-      />
+      ></ComboboxInput>
     </InputField>
     <InputField
-      id="norm-reference-abbreviation-field"
+      id="active-reference-abbreviation"
       v-slot="slotProps"
-      :label="labels[`${norm.referenceDocumentType}`].risAbbreviation + ` *`"
+      :label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation + ` *`"
       :validation-error="validationStore.getByField('normAbbreviation')"
     >
       <ComboboxInput
-        id="norm-reference-abbreviation"
+        id="active-reference-abbreviation"
         v-model="normAbbreviation"
-        :aria-label="labels[`${norm.referenceDocumentType}`].risAbbreviation"
+        :aria-label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation"
         :has-error="slotProps.hasError"
         :item-service="ComboboxItemService.getRisAbbreviations"
         no-clear
-        :placeholder="labels[`${norm.referenceDocumentType}`].risAbbreviationPlaceholder"
+        :placeholder="labels[`${activeReference.referenceDocumentType}`].risAbbreviationPlaceholder"
         @focus="validationStore.remove('normAbbreviation')"
       ></ComboboxInput>
     </InputField>
-    <div v-if="normAbbreviation || norm.normAbbreviationRawValue">
+    <div v-if="normAbbreviation || activeReference.normAbbreviationRawValue">
       <SingleNormInput
         v-for="(singleNorm, index) in singleNorms"
         :key="index"
@@ -273,9 +280,11 @@ watch(
         aria-label="Einzelnorm"
         :index="index"
         norm-abbreviation="normAbbreviation.abbreviation"
-        :show-single-norm-input="norm.referenceDocumentType == ActiveReferenceDocumentType.NORM"
+        :show-single-norm-input="
+          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
+        "
         :show-date-of-relevance-button="
-          norm.referenceDocumentType == ActiveReferenceDocumentType.NORM
+          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
         "
         @remove-entry="removeSingleNormEntry(index)"
         @update:validation-error="

@@ -18,16 +18,14 @@ const activeReferences = computed({
   },
 })
 
-// TODO: Rename norm to activeReference
-
-function removeDuplicateSingleNorms(norm: ActiveReference): void {
-  if (!norm.singleNorms || !Array.isArray(norm.singleNorms)) {
+function removeDuplicateSingleNorms(activeReference: ActiveReference): void {
+  if (!activeReference.singleNorms || !Array.isArray(activeReference.singleNorms)) {
     return // Exit if singleNorms is not an array
   }
 
   const uniqueSingleNorms = new Set<string>()
 
-  norm.singleNorms = norm.singleNorms.filter((singleNorm) => {
+  activeReference.singleNorms = activeReference.singleNorms.filter((singleNorm) => {
     const uniqueKey = generateUniqueSingleNormKey(singleNorm)
 
     // Check uniqueness and add to the set if it's new
