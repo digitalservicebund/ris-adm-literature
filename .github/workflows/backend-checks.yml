@@ -59,7 +59,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  backend-check-code-quality-with-sonarqube:
+  check-code-quality-with-sonarqube-backend:
     runs-on: ubuntu-latest
     steps:
       - name: sanity Check
