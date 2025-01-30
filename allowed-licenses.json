@@ -71,6 +71,9 @@
         },
         {
             "moduleLicense": "Python-2.0"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0"
         }
     ]
 }
