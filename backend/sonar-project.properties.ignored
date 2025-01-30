@@ -1,0 +1,3 @@
+# This file is to let you know that the Sonar properties
+# of this project are set in the Gradle sonar task as
+# defined in "build.gradle.kts"
