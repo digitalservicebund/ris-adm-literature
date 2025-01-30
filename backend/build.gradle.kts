@@ -2,57 +2,57 @@ import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 
 plugins {
-	java
-	id("org.springframework.boot") version "3.4.2"
-	id("io.spring.dependency-management") version "1.1.7"
-	id("jacoco")
-	id("org.sonarqube") version "6.0.1.5171"
-	id("com.github.jk1.dependency-license-report") version "2.9"
-	id("com.diffplug.spotless") version "7.0.2"
+    java
+    id("org.springframework.boot") version "3.4.2"
+    id("io.spring.dependency-management") version "1.1.7"
+    id("jacoco")
+    id("org.sonarqube") version "6.0.1.5171"
+    id("com.github.jk1.dependency-license-report") version "2.9"
+    id("com.diffplug.spotless") version "7.0.2"
 }
 
 group = "de.bund.digitalservice"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(23)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom(configurations.annotationProcessor.get())
-	}
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.flywaydb:flyway-core")
-	implementation("org.flywaydb:flyway-database-postgresql")
-	implementation("org.springframework.session:spring-session-core")
-	compileOnly("org.projectlombok:lombok")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-	runtimeOnly("org.postgresql:postgresql")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("org.springframework.security:spring-security-test")
-	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:postgresql")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
+    implementation("org.springframework.session:spring-session-core")
+    compileOnly("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    runtimeOnly("org.postgresql:postgresql")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 jacoco {
@@ -87,12 +87,12 @@ sonar {
     // NOTE: sonarqube picks up combined coverage correctly without further configuration from:
     // build/reports/jacoco/test/jacocoTestReport.xml
     properties {
-		// we don't use "sonar-project.properties", but define the properties here
+        // we don't use "sonar-project.properties", but define the properties here
         property("sonar.projectKey", "ris-adm-vwv-backend")
         property("sonar.organization", "digitalservicebund")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.token", System.getenv("SONAR_TOKEN"))
-		property("sonar.coverage.exclusions", "**/Application.java")
+        property("sonar.coverage.exclusions", "**/Application.java")
     }
 }
 
