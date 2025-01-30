@@ -1,9 +1,12 @@
+import com.github.jk1.license.filter.LicenseBundleNormalizer
+
 plugins {
 	java
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("jacoco")
 	id("org.sonarqube") version "6.0.1.5171"
+	id("com.github.jk1.dependency-license-report") version "2.9"
 }
 
 group = "de.bund.digitalservice"
@@ -89,4 +92,16 @@ sonar {
         property("sonar.token", System.getenv("SONAR_TOKEN"))
 		property("sonar.coverage.exclusions", "**/Application.java")
     }
+}
+
+licenseReport {
+// If there's a new dependency with a yet unknown license causing this task to fail
+// the license(s) will be listed in build/reports/dependency-license/dependencies-without-allowed-license.json
+    allowedLicensesFile = File("$projectDir/../allowed-licenses.json")
+    filters =
+        arrayOf(
+            // With second arg true we get the default transformations:
+            // https://github.com/jk1/Gradle-License-Report/blob/7cf695c38126b63ef9e907345adab84dfa92ea0e/src/main/resources/default-license-normalizer-bundle.json
+            LicenseBundleNormalizer(null as String?, true),
+        )
 }
