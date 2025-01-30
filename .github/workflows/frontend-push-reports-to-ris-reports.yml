@@ -3,6 +3,7 @@ on:
 
 jobs:
   frontend-push-reports-to-ris-reports:
+    continue-on-error: true
     runs-on: ubuntu-latest
     env:
       reports-repo: digitalservicebund/ris-reports
