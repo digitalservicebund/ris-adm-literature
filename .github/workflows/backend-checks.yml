@@ -23,6 +23,7 @@ jobs:
           distribution: "temurin"
           cache: gradle
       - name: Run spotlessCheck
+        working-directory: ./backend
         run: ./gradlew spotlessCheck
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
