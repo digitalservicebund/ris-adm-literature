@@ -1,8 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
-import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
@@ -11,32 +9,6 @@ import documentUnitService from '@/services/documentUnitService'
 // import featureToggleService from '@/services/featureToggleService'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 // import routes from '~/test-helper/routes'
-
-const server = setupServer(
-  http.get('/api/v1/caselaw/courts', () => {
-    const court: Court = {
-      type: 'AG',
-      location: 'Test',
-      label: 'AG Test',
-    }
-    return HttpResponse.json([court])
-  }),
-  http.get('/api/v1/caselaw/documenttypes', () => {
-    const documentType: DocumentType = {
-      jurisShortcut: 'Ant',
-      label: 'EuGH-Vorlage',
-    }
-    return HttpResponse.json([documentType])
-  }),
-  http.get('/api/v1/caselaw/citationtypes', () => {
-    const citationStyle: CitationType = {
-      uuid: '123',
-      jurisShortcut: 'Änderungen',
-      label: 'Änderungen',
-    }
-    return HttpResponse.json([citationStyle])
-  }),
-)
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
@@ -106,16 +78,14 @@ function generateActiveCitation(options?: {
     },
     citationType: options?.citationStyle ?? {
       uuid: '123',
-      jurisShortcut: 'Änderungen',
-      label: 'Änderungen',
+      jurisShortcut: 'Änderung',
+      label: 'Änderung',
     },
   })
   return activeCitation
 }
 
 describe('active citations', () => {
-  beforeAll(() => server.listen())
-  afterAll(() => server.close())
   beforeEach(() => {
     // vi.spyOn(featureToggleService, 'isEnabled').mockResolvedValue({
     //   status: 200,
@@ -150,7 +120,6 @@ describe('active citations', () => {
         },
       }),
     )
-    vi.spyOn(window, 'scrollTo').mockImplementation(() => vi.fn())
   })
   afterEach(() => {
     vi.resetAllMocks()
@@ -209,8 +178,7 @@ describe('active citations', () => {
     expect(screen.getByTestId('list-entry-0')).toBeInTheDocument()
   })
 
-  // TODO fix drop down filter first
-  it.skip('correctly updates value citation style input', async () => {
+  it('correctly updates value citation style input', async () => {
     const { user } = renderComponent([
       generateActiveCitation({
         citationStyle: {
@@ -221,19 +189,26 @@ describe('active citations', () => {
       }),
     ])
 
-    expect(screen.queryByText(/Änderungen/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Änderung/)).not.toBeInTheDocument()
 
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 
-    await user.type(await screen.findByLabelText('Art der Zitierung'), 'Änderungen')
+    const activeCitationInput = await screen.findByLabelText('Art der Zitierung')
+    await user.click(activeCitationInput)
+    await user.type(activeCitationInput, 'Änderung')
+    await waitFor(
+      () => {
+        expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Änderung')
+      },
+      { timeout: 1000 },
+    )
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    expect(dropdownItems[0]).toHaveTextContent('Änderungen')
     await user.click(dropdownItems[0])
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
-    expect(screen.getByText(/Änderungen/)).toBeVisible()
+    expect(screen.getByText(/Änderung/)).toBeVisible()
   })
 
   // TODO first implement API call and mock it on top
@@ -330,7 +305,7 @@ describe('active citations', () => {
     const { user } = renderComponent([generateActiveCitation()])
 
     expect(
-      screen.getByText('Änderungen, label1, 01.02.2022, test fileNumber, documentType1'),
+      screen.getByText('Änderung, label1, 01.02.2022, test fileNumber, documentType1'),
     ).toBeInTheDocument()
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
@@ -343,7 +318,7 @@ describe('active citations', () => {
 
     await user.click(screen.getByLabelText('Aktivzitierung speichern'))
 
-    expect(screen.getByText(/Änderungen, 01.02.2022, documentType1/)).toBeInTheDocument()
+    expect(screen.getByText(/Änderung, 01.02.2022, documentType1/)).toBeInTheDocument()
   })
 
   it('lists search results', async () => {
@@ -470,7 +445,7 @@ describe('active citations', () => {
     // Read from the stub clipboard
     const clipboardText = await navigator.clipboard.readText()
 
-    expect(clipboardText).toBe('Änderungen, label1, 01.02.2022, test fileNumber, documentType1')
+    expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
   })
 
   it("should render parallel decision icons for 'Teilweise Parallelentscheidung'", async () => {
@@ -515,7 +490,7 @@ describe('active citations', () => {
       // Read from the stub clipboard
       const clipboardText = await navigator.clipboard.readText()
 
-      expect(clipboardText).toBe('Änderungen, label1, 01.02.2022, test fileNumber, documentType1')
+      expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
     })
   })
 })

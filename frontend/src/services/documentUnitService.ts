@@ -12,8 +12,6 @@ const service: DocumentUnitService = {
     query: RelatedDocumentation = new RelatedDocumentation(),
     requestParams: { string?: string } = {},
   ) {
-    console.log(query)
-    console.log(requestParams)
     return {
       status: 200,
       data: {

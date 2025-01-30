@@ -100,7 +100,6 @@ async function search() {
         isLinked: true,
       }
     })
-    console.log(searchResults.value)
   }
   lastSearchInput.value = activeCitationRef
   isLoading.value = false

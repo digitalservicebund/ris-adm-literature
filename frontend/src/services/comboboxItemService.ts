@@ -285,16 +285,18 @@ const service: ComboboxItemService = {
         label: 'Übernahme',
       },
     ] as CitationType[]
-    let filteredItems = citationTypeValues
-    if (filter && filter.value && filter.value.length > 0) {
-      filteredItems = citationTypeValues.filter((item) =>
-        item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
-      )
-    }
     const citationTypes = ref(
-      filteredItems.map((item) => <ComboboxItem>{ label: item.label, value: item }),
+      citationTypeValues.map((item) => <ComboboxItem>{ label: item.label, value: item }),
     )
     const execute = async () => {
+      let filteredItems = citationTypeValues
+      if (filter && filter.value && filter.value.length > 0) {
+        filteredItems = citationTypeValues.filter((item) =>
+          item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
+        )
+      }
+      filteredItems = filteredItems.map((item) => <ComboboxItem>{ label: item.label, value: item })
+      citationTypes.value = [...filteredItems]
       return service.getCitationTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {

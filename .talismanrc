@@ -8,7 +8,7 @@ fileignoreconfig:
   - filename: nginx.conf
     checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
   - filename: frontend/src/services/documentUnitService.ts
-    checksum: 91ec88232cb50d8393d94289656e02aaa9990795e6fad59ddb344da26cf3ca29
+    checksum: 8701c69e0db4fdd6454b6a70d068ef54cb10887b508653ebf7fb157c86c9e890
   - filename: frontend/src/utils/onSearchShortcutDirective.ts
     checksum: 154a94c57a38aff6c8b790edbafca9a51f105be5ee780682a49bf16e29849997
 

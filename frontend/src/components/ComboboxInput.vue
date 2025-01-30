@@ -36,7 +36,6 @@ const NO_MATCHING_ENTRY = 'Kein passender Eintrag'
 const candidateForSelection = ref<ComboboxItem>() // <-- the top search result
 const inputText = ref<string>()
 const currentlyDisplayedItems = computed<ComboboxItem[]>(() => {
-  console.log('test 1')
   return [...(existingItems.value ?? []), createNewItem.value].filter(isDefined)
 })
 const createNewItem = ref<ComboboxItem>()
@@ -179,7 +178,6 @@ const noMatchingItems = [{ label: NO_MATCHING_ENTRY }]
  * (Special cases: no results, createNewItem "neu erstellen")
  */
 watch(existingItems, () => {
-  console.log('test 2')
   if (existingItems.value === null) return
   if (existingItems.value === noMatchingItems) return
 
