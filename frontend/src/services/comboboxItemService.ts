@@ -88,14 +88,29 @@ const service: ComboboxItemService = {
     return result
   },
   getDocumentTypes: (filter: Ref<string | undefined>) => {
-    const documentTypeValues = ['VR', 'VE', 'VV', 'ST']
-    const documentTypes = documentTypeValues.map((v) => <DocumentType>{ label: v })
-    const items = ref(documentTypes.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }))
+    const documentTypeValues = [
+      { label: 'VR' },
+      { label: 'VE' },
+      { label: 'VV' },
+      { label: 'ST' },
+    ] as DocumentType[]
+    const documentTypes = ref(
+      documentTypeValues.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }),
+    )
     const execute = async () => {
+      if (filter?.value.length > 0) {
+        const filteredItems = documentTypeValues.filter((item) =>
+          item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
+        )
+        const filteredComboBoxItems = filteredItems.map(
+          (item) => <ComboboxItem>{ label: item.label, value: item },
+        )
+        documentTypes.value = [...filteredComboBoxItems]
+      }
       return service.getDocumentTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
+      data: documentTypes,
       execute: execute,
       canAbort: computed(() => false),
       abort: () => {},
@@ -164,14 +179,15 @@ const service: ComboboxItemService = {
       citationTypeValues.map((item) => <ComboboxItem>{ label: item.label, value: item }),
     )
     const execute = async () => {
-      let filteredItems = citationTypeValues
       if (filter?.value.length > 0) {
-        filteredItems = citationTypeValues.filter((item) =>
+        const filteredItems = citationTypeValues.filter((item) =>
           item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
         )
+        const filteredComboBoxItems = filteredItems.map(
+          (item) => <ComboboxItem>{ label: item.label, value: item },
+        )
+        citationTypes.value = [...filteredComboBoxItems]
       }
-      filteredItems = filteredItems.map((item) => <ComboboxItem>{ label: item.label, value: item })
-      citationTypes.value = [...filteredItems]
       return service.getCitationTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {

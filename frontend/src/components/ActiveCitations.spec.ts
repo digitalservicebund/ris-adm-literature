@@ -155,12 +155,9 @@ describe('active citations', () => {
     const activeCitationInput = await screen.findByLabelText('Art der Zitierung')
     await user.click(activeCitationInput)
     await user.type(activeCitationInput, 'Änderung')
-    await waitFor(
-      () => {
-        expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Änderung')
-      },
-      { timeout: 1000 },
-    )
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Änderung')
+    })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[0])
     const button = screen.getByLabelText('Aktivzitierung speichern')
@@ -169,8 +166,7 @@ describe('active citations', () => {
     expect(screen.getByText(/Änderung/)).toBeVisible()
   })
 
-  // TODO first implement API call and mock it on top
-  it.skip('correctly updates value document type input', async () => {
+  it('correctly updates value document type input', async () => {
     const { user } = renderComponent([generateActiveCitation()])
 
     expect(screen.queryByText(/EuGH-Vorlage/)).not.toBeInTheDocument()
@@ -178,33 +174,36 @@ describe('active citations', () => {
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 
-    await user.type(await screen.findByLabelText('Dokumenttyp Aktivzitierung'), 'Ant')
+    await user.type(await screen.findByLabelText('Dokumenttyp Aktivzitierung'), 'VR')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('VR')
+    })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    expect(dropdownItems[0]).toHaveTextContent('EuGH-Vorlage')
     await user.click(dropdownItems[0])
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
-    expect(screen.getByText(/EuGH-Vorlage/)).toBeVisible()
+    expect(screen.getByText(/VR/)).toBeVisible()
   })
 
-  // TODO first implement API call and mock it on top
-  it.skip('correctly updates value court input', async () => {
+  it('correctly updates value court input', async () => {
     const { user } = renderComponent([generateActiveCitation()])
 
-    expect(screen.queryByText(/AG Test/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/AG Aachen/)).not.toBeInTheDocument()
 
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 
     await user.type(await screen.findByLabelText('Gericht Aktivzitierung'), 'AG')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('AG Aachen')
+    })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    expect(dropdownItems[0]).toHaveTextContent('AG Test')
     await user.click(dropdownItems[0])
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
-    expect(screen.getByText(/AG Test/)).toBeVisible()
+    expect(screen.getByText(/AG Aachen/)).toBeVisible()
   })
 
   it('correctly updates value of fileNumber input', async () => {
