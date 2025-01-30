@@ -290,7 +290,7 @@ const service: ComboboxItemService = {
     )
     const execute = async () => {
       let filteredItems = citationTypeValues
-      if (filter && filter.value && filter.value.length > 0) {
+      if (filter?.value.length > 0) {
         filteredItems = citationTypeValues.filter((item) =>
           item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
         )
