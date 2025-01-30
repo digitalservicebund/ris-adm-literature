@@ -1,3 +1,4 @@
+import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
 	id("jacoco")
 	id("org.sonarqube") version "6.0.1.5171"
 	id("com.github.jk1.dependency-license-report") version "2.9"
+	id("com.diffplug.spotless") version "7.0.2"
 }
 
 group = "de.bund.digitalservice"
@@ -104,4 +106,52 @@ licenseReport {
             // https://github.com/jk1/Gradle-License-Report/blob/7cf695c38126b63ef9e907345adab84dfa92ea0e/src/main/resources/default-license-normalizer-bundle.json
             LicenseBundleNormalizer(null as String?, true),
         )
+}
+
+spotless {
+    kotlin {
+        // Note that changes to the ktlint() default settings are done in .editorconfig
+        ktlint("1.4.1")
+    }
+
+    kotlinGradle {
+        ktlint("1.4.1")
+    }
+
+    java {
+        removeUnusedImports()
+        prettier(
+            mapOf(
+                "prettier" to "3.0.3",
+                "prettier-plugin-java" to "2.3.0",
+            ),
+        ).config(
+            mapOf(
+                "parser" to "java",
+                "printWidth" to 100,
+                "plugins" to listOf("prettier-plugin-java"),
+            ),
+        )
+    }
+
+    format("misc") {
+        target(
+            "**/*.js",
+            "**/*.json",
+            "**/*.md",
+            "**/*.properties",
+            "**/*.sh",
+            "**/*.yml",
+        )
+        prettier(
+            mapOf(
+                "prettier" to "2.6.1",
+                "prettier-plugin-sh" to "0.7.1",
+                "prettier-plugin-properties" to "0.1.0",
+            ),
+        ).config(mapOf("keySeparator" to "="))
+    }
+    if (System.getProperty("os.name", "undefined").contains("Windows")) {
+        lineEndings = LineEnding.UNIX
+    }
 }
