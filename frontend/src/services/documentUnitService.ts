@@ -1,3 +1,4 @@
+import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 
 interface DocumentUnitService {
@@ -16,64 +17,26 @@ const service: DocumentUnitService = {
       status: 200,
       data: {
         content: [
-          {
-            uuid: null,
-            newEntry: false,
-            documentNumber: 'YYTestDoc0014',
-            status: {
-              publicationStatus: 'PUBLISHED',
-              withError: true,
-              createdAt: null,
-            },
+          new ActiveCitation({
+            uuid: '123',
             court: {
-              id: '95bc0906-3dc9-4785-98c9-bd4f137327ac',
-              type: 'AG',
-              location: 'Aachen',
-              label: 'AG Aachen',
-              revoked: null,
-              responsibleDocOffice: {
-                abbreviation: 'BGH',
-                uuid: '7d5bb15b-7190-45fa-9416-62fb3624f161',
-              },
+              type: 'type1',
+              location: 'location1',
+              label: 'label1',
             },
-            decisionDate: '1989-01-01',
-            fileNumber: null,
+            decisionDate: '2022-02-01',
             documentType: {
-              uuid: '98fda464-2513-4de0-a86e-f2e789a2fc95',
-              jurisShortcut: 'BE',
-              label: 'Beschluss',
+              jurisShortcut: 'documentTypeShortcut1',
+              label: 'documentType1',
             },
-            createdByReference: null,
-            documentationOffice: {
-              abbreviation: 'DS',
-              uuid: '58bfa31a-4cba-4fcd-88a0-4bf02810cde9',
-            },
-            creatingDocOffice: null,
-            hasPreviewAccess: false,
-          },
+            fileNumber: 'test fileNumber1',
+          }),
         ],
-        pageable: {
-          pageNumber: 0,
-          pageSize: 15,
-          sort: {
-            sorted: false,
-            unsorted: true,
-            empty: true,
-          },
-          offset: 0,
-          paged: true,
-          unpaged: false,
-        },
-        first: true,
-        last: true,
-        size: 15,
+        size: 0,
         number: 0,
-        sort: {
-          sorted: false,
-          unsorted: true,
-          empty: true,
-        },
-        numberOfElements: 1,
+        numberOfElements: 20,
+        first: true,
+        last: false,
         empty: false,
       },
     }

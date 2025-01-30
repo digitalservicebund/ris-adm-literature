@@ -1,14 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
 import { type Court, type DocumentType } from '@/domain/documentUnit'
-import documentUnitService from '@/services/documentUnitService'
-// import featureToggleService from '@/services/featureToggleService'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
-// import routes from '~/test-helper/routes'
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
@@ -86,45 +83,6 @@ function generateActiveCitation(options?: {
 }
 
 describe('active citations', () => {
-  beforeEach(() => {
-    // vi.spyOn(featureToggleService, 'isEnabled').mockResolvedValue({
-    //   status: 200,
-    //   data: true,
-    // })
-    vi.spyOn(documentUnitService, 'searchByRelatedDocumentation').mockImplementation(() =>
-      Promise.resolve({
-        status: 200,
-        data: {
-          content: [
-            new ActiveCitation({
-              uuid: '123',
-              court: {
-                type: 'type1',
-                location: 'location1',
-                label: 'label1',
-              },
-              decisionDate: '2022-02-01',
-              documentType: {
-                jurisShortcut: 'documentTypeShortcut1',
-                label: 'documentType1',
-              },
-              fileNumber: 'test fileNumber1',
-            }),
-          ],
-          size: 0,
-          number: 0,
-          numberOfElements: 20,
-          first: true,
-          last: false,
-          empty: false,
-        },
-      }),
-    )
-  })
-  afterEach(() => {
-    vi.resetAllMocks()
-  })
-
   it('renders empty active citation in edit mode, when no activeCitations in list', async () => {
     renderComponent()
     expect((await screen.findAllByLabelText('Listen Eintrag')).length).toBe(1)
