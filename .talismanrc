@@ -9,7 +9,7 @@ fileignoreconfig:
     checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
 
 allowed_patterns:
-  # allow patterns with hex encoded text
+  # allow patterns with hex encoded text or other character sequences that irritate talisman
   - "cgr.dev/chainguard/nginx@sha256:9cbce3d5ee2bf696232931119919c2db19e7272cddb0fae0dc0602e78281b688"
   - "uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3"
   - "uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e"
@@ -27,6 +27,7 @@ allowed_patterns:
   - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409"
   - "https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706525248390559"
   - "abcdefghijklmnopqrstuvwxyz"
+  - https://github.com/jk1/Gradle-License-Report/blob/7cf695c38126b63ef9e907345adab84dfa92ea0e/src/main/resources/default-license-normalizer-bundle.json
   # allow these specific patterns with the term "secret"
   - secrets-scan-with-talisman
   - "secrets: inherit"
@@ -83,5 +84,7 @@ allowed_patterns:
   - "function generateUniqueSingleNormKey"
   - "const uniqueKey"
   - 'key="item.value"'
+  - 'property\("sonar.projectKey"'
+  - "sonar.projectKey="
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"

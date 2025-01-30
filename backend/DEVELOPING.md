@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-* Java 23
-* Docker
+- Java 23
+- Docker
 
 ## Run / Start
 
