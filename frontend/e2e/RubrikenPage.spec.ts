@@ -26,10 +26,10 @@ test(
     await page.getByText('AG Aachen').click()
     await expect(normgeberElement).toHaveValue('AG Aachen')
 
-    const amtlicheLangüberschriftElement = page.getByText('Amtl. Langüberschrift')
-    await expect(amtlicheLangüberschriftElement).toHaveCount(1)
-    amtlicheLangüberschriftElement.fill('my long title')
-    await expect(amtlicheLangüberschriftElement).toHaveValue('my long title')
+    const amtlicheLangueberschriftElement = page.getByText('Amtl. Langüberschrift')
+    await expect(amtlicheLangueberschriftElement).toHaveCount(1)
+    amtlicheLangueberschriftElement.fill('my long title')
+    await expect(amtlicheLangueberschriftElement).toHaveValue('my long title')
 
     const dokumentTyp = page.getByText('Dokumenttyp *')
     await expect(dokumentTyp).toHaveCount(1)
