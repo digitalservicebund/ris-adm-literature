@@ -186,7 +186,7 @@ watch(
         :has-error="slotProps.hasError"
         :item-service="ComboboxItemService.getRisAbbreviations"
         no-clear
-        placeholder="Abkürzung, Kurz-oder Langtitel oder Region eingeben..."
+        placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
         @focus="validationStore.remove('normAbbreviation')"
       ></ComboboxInput>
     </InputField>
