@@ -1,3 +1,5 @@
+import type { ServiceResponse } from './httpClient'
+import type { Page } from '@/components/Pagination.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 
@@ -5,7 +7,7 @@ interface DocumentUnitService {
   searchByRelatedDocumentation(
     query: RelatedDocumentation,
     requestParams?: { [key: string]: string } | undefined,
-  ): unknown
+  ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
 const service: DocumentUnitService = {

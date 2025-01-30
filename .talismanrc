@@ -91,5 +91,6 @@ allowed_patterns:
   - ':key="searchResult.decision.uuid"'
   - 'property\("sonar.projectKey"'
   - "sonar.projectKey="
+  - '[key: string]: string'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"

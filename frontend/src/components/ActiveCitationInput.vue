@@ -97,7 +97,7 @@ async function search() {
     searchResults.value = response.data.content.map((searchResult) => {
       return {
         decision: new RelatedDocumentation({ ...searchResult }),
-        isLinked: true,
+        isLinked: searchResult.isLinkedWith(props.modelValueList),
       }
     })
   }
