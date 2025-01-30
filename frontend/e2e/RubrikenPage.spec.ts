@@ -273,7 +273,7 @@ test(
     await page.getByRole('button', { name: 'Norm speichern' }).click()
 
     // then
-    await expect(page.getByText('Neureglung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
+    await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
   },
 )
 
@@ -313,7 +313,6 @@ test(
     await page.getByRole('button', { name: 'Norm speichern' }).click()
     await page.getByTestId('list-entry-0').click()
     await page.getByText('Eintrag löschen').click()
-
 
     // then
     await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
