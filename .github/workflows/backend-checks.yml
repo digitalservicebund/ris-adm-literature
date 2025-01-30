@@ -96,3 +96,28 @@ jobs:
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  check-licenses:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+      - name: Check licenses
+        working-directory: ./backend
+        run: ./gradlew checkLicense
+      - name: Upload licence report
+        uses: actions/upload-artifact@v4
+        with:
+          name: licence-reports-backend
+          retention-days: 3
+          path: ./backend/build/reports/dependency-license/index.html
+      - name: Send status to Slack
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+        if: ${{ failure() && github.ref == 'refs/heads/main'}}
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
