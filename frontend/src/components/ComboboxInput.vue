@@ -35,9 +35,9 @@ const NO_MATCHING_ENTRY = 'Kein passender Eintrag'
 
 const candidateForSelection = ref<ComboboxItem>() // <-- the top search result
 const inputText = ref<string>()
-const currentlyDisplayedItems = computed<ComboboxItem[]>(() => {
-  return [...(existingItems.value ?? []), createNewItem.value].filter(isDefined)
-})
+const currentlyDisplayedItems = computed<ComboboxItem[]>(() =>
+  [...(existingItems.value ?? []), createNewItem.value].filter(isDefined),
+)
 const createNewItem = ref<ComboboxItem>()
 const showDropdown = ref(false)
 const filter = ref<string>()
