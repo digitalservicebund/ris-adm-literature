@@ -2,12 +2,14 @@ on:
   workflow_call:
 
 jobs:
-  security-scan-with-trivy: # open source security scanner, cf. https://trivy.dev/
+  security-scan-with-trivy:
+    # Note: This scan is NOT what is shown in the GitHub Security tab
+    #       Please refer to frontend-build-image-and-scan.yml instead
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in repo mode # open source security scanner, cf. https://trivy.dev/
         uses: aquasecurity/trivy-action@cf990b19d84bbbe1eb8833659989a7c1029132e3
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -16,17 +18,26 @@ jobs:
         with:
           scan-type: "fs"
           format: "sarif"
-          output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH" #ignored by sarif report
+          output: "trivy-fs-results.sarif"
+          # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
+      - name: Print trivy fs results
+        run: cat trivy-fs-results.sarif
       - name: Check trivy results
         run: |
-          if grep -qE 'HIGH|CRITICAL' trivy-results.sarif; then
+          if grep -qE 'HIGH|CRITICAL' trivy-fs-results.sarif; then
             echo "Vulnerabilities found"
             exit 1
           else
             echo "No significant vulnerabilities found"
             exit 0
           fi
+      - name: Upload trivy fs scan sarif report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-trivy-fs-results.sarif
+          retention-days: 3
+          path: trivy-fs-results.sarif
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
