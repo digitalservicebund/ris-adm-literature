@@ -25,7 +25,18 @@ const props = defineProps<{
           class="mr-8"
         />
         <div class="ds-label-01-reg mr-8">
-          {{ data.renderSummary + ', ' + data.singleNorms[0].renderSummary }}
+          {{ data.renderReferenceType }} |
+          <button
+            :aria-label="
+              data.normAbbreviation?.abbreviation +
+              ' ' +
+              data.normAbbreviation?.officialLongTitle +
+              ' anzeigen'
+            "
+            class="ds-link-01-bold mr-8"
+          >
+            {{ data.renderSummary + ', ' + data.singleNorms[0].renderSummary }}
+          </button>
         </div>
         <div v-if="data.singleNorms[0].legalForce" class="flex flex-row items-center">
           {{ ' | ' }}
@@ -59,7 +70,18 @@ const props = defineProps<{
             class="mr-8"
           />
           <div class="ds-label-01-reg mr-8">
-            {{ data.renderSummary }}
+            {{ data.renderReferenceType }} |
+            <button
+              :aria-label="
+                data.normAbbreviation?.abbreviation +
+                ' ' +
+                data.normAbbreviation?.officialLongTitle +
+                ' anzeigen'
+              "
+              class="ds-link-01-bold mr-8"
+            >
+              {{ data.renderSummary }}
+            </button>
           </div>
           <IconBadge
             v-if="data.hasAmbiguousNormReference"

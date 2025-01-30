@@ -40,13 +40,10 @@ export default class ActiveReference extends NormReference {
     )
   }
 
-  get renderSummary(): string {
-    let result: string[]
+  get renderReferenceType(): string {
     if (this.referenceType) {
-      result = [`${ActiveReference.referenceTypeLabels.get(this.referenceType)}`]
-    } else {
-      result = []
+      return ActiveReference.referenceTypeLabels.get(this.referenceType) ?? ''
     }
-    return [super.renderSummary].concat([...result]).join(', ')
+    return ''
   }
 }
