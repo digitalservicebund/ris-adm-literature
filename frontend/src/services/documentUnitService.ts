@@ -12,7 +12,9 @@ interface DocumentUnitService {
 
 const service: DocumentUnitService = {
   async searchByRelatedDocumentation(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     query: RelatedDocumentation = new RelatedDocumentation(),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     requestParams: { string?: string } = {},
   ) {
     return {
