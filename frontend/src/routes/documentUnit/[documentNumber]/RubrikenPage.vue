@@ -174,6 +174,7 @@ const kurzreferat = ref()
           <NormReferences data-testid="normReferences" />
         </div>
       </div>
+      <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <ActiveCitations data-testid="activeCitations" />
