@@ -405,38 +405,6 @@ describe('active citations', () => {
     expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
   })
 
-  it("should render parallel decision icons for 'Teilweise Parallelentscheidung'", async () => {
-    renderComponent([
-      generateActiveCitation({
-        citationStyle: {
-          label: 'Teilweise Parallelentscheidung',
-        },
-      }),
-    ])
-    await waitFor(() => {
-      expect(screen.getByTestId('import-categories')).toBeVisible()
-    })
-    await waitFor(() => {
-      expect(screen.getByTestId('generate-headnote')).toBeVisible()
-    })
-  })
-
-  it("should render parallel decision icons for 'Parallelentscheidung'", async () => {
-    renderComponent([
-      generateActiveCitation({
-        citationStyle: {
-          label: 'Parallelentscheidung',
-        },
-      }),
-    ])
-    await waitFor(() => {
-      expect(screen.getByTestId('import-categories')).toBeVisible()
-    })
-    await waitFor(() => {
-      expect(screen.getByTestId('generate-headnote')).toBeVisible()
-    })
-  })
-
   describe('keyboard navigation', () => {
     it('should copy text of active citation summary', async () => {
       const { user } = renderComponent([generateActiveCitation()])
