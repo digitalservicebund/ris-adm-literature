@@ -26,10 +26,10 @@ test(
     await page.getByText('AG Aachen').click()
     await expect(normgeberElement).toHaveValue('AG Aachen')
 
-    const amtlicheLangüberschriftElement = page.getByText('Amtl. Langüberschrift')
-    await expect(amtlicheLangüberschriftElement).toHaveCount(1)
-    amtlicheLangüberschriftElement.fill('my long title')
-    await expect(amtlicheLangüberschriftElement).toHaveValue('my long title')
+    const amtlicheLangueberschriftElement = page.getByText('Amtl. Langüberschrift')
+    await expect(amtlicheLangueberschriftElement).toHaveCount(1)
+    amtlicheLangueberschriftElement.fill('my long title')
+    await expect(amtlicheLangueberschriftElement).toHaveValue('my long title')
 
     const dokumentTyp = page.getByText('Dokumenttyp *')
     await expect(dokumentTyp).toHaveCount(1)
@@ -188,7 +188,7 @@ test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) =>
   await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
-  const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+  const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
   await expect(normElement).toHaveCount(1)
 
   // when
@@ -212,7 +212,7 @@ test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({
   await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
-  const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
+  const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
   await expect(normElement).toHaveCount(1)
 
   // when
@@ -343,5 +343,81 @@ test(
 
     await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
     await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
+  },
+)
+
+test(
+  'Add an active reference, edit and save',
+  {tag: ['@RISDEV-6074']},
+  async ({page}) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    const activeReferenceElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(activeReferenceElement).toHaveCount(1)
+    const referenceTypeElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'Art der Verweisung' })
+
+    // when
+    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const neuregelungButton = page.getByText('Neuregelung')
+    await expect(neuregelungButton).toBeVisible()
+    await neuregelungButton.click()
+    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const kvlgButton = page.getByText('KVLG')
+    await expect(kvlgButton).toBeVisible()
+    await kvlgButton.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByTestId('list-entry-0').click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+
+    // then
+    await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
+  },
+)
+
+test(
+  'Add two active references, delete the first item',
+  { tag: ['@RISDEV-6074'] },
+  async ({ page }) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    const activeReferenceElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(activeReferenceElement).toHaveCount(1)
+    const referenceTypeElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'Art der Verweisung' })
+
+    // when
+    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const anwendungButton = page.getByText('Anwendung')
+    await expect(anwendungButton).toBeVisible()
+    await anwendungButton.click()
+    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const sgb5Button = page.getByText('SGB 5')
+    await expect(sgb5Button).toBeVisible()
+    await sgb5Button.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const rechtsgrundlageButton = page.getByText('Rechtsgrundlage')
+    await expect(rechtsgrundlageButton).toBeVisible()
+    await rechtsgrundlageButton.click()
+    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
+    const kvlgButton = page.getByText('KVLG')
+    await expect(kvlgButton).toBeVisible()
+    await kvlgButton.click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByTestId('list-entry-0').click()
+    await page.getByText('Eintrag löschen').click()
+
+    // then
+    await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
+    await expect(page.getByText('Rechtsgrundlage | KVLG, § 2')).toHaveCount(1)
   },
 )

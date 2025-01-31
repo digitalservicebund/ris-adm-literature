@@ -2,23 +2,28 @@
 import { computed, ref, watch } from 'vue'
 import { type ValidationError } from './input/types'
 import ComboboxInput from '@/components/ComboboxInput.vue'
-import InputField from '@/components/input/InputField.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import TextButton from '@/components/input/TextButton.vue'
 import SingleNormInput from '@/components/SingleNormInput.vue'
 import { useValidationStore } from '@/composables/useValidationStore'
 import LegalForce from '@/domain/legalForce'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
-import NormReference from '@/domain/normReference'
 import SingleNorm from '@/domain/singleNorm'
 import ComboboxItemService from '@/services/comboboxItemService'
 import IconAdd from '~icons/ic/baseline-add'
+import ActiveReference, {
+  ActiveReferenceDocumentType,
+  ActiveReferenceType,
+} from '@/domain/activeReference.ts'
+import RadioInput from '@/components/input/RadioInput.vue'
+import labels from '@/components/activeReferenceInputLabels.json'
 
 const props = defineProps<{
-  modelValue?: NormReference
-  modelValueList?: NormReference[]
+  modelValue?: ActiveReference
+  modelValueList?: ActiveReference[]
 }>()
 const emit = defineEmits<{
-  'update:modelValue': [value: NormReference]
+  'update:modelValue': [value: ActiveReference]
   addEntry: [void]
   cancelEdit: [void]
   removeEntry: [void]
@@ -26,11 +31,11 @@ const emit = defineEmits<{
 
 const validationStore =
   useValidationStore<
-    ['normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
+    ['referenceType', 'normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
   >()
 
-const norm = ref(new NormReference({ ...props.modelValue }))
-const lastSavedModelValue = ref(new NormReference({ ...props.modelValue }))
+const activeReference = ref(new ActiveReference({ ...props.modelValue }))
+const lastSavedModelValue = ref(new ActiveReference({ ...props.modelValue }))
 
 const singleNorms = ref(
   props.modelValue?.singleNorms
@@ -44,11 +49,11 @@ const singleNorms = ref(
  */
 const normAbbreviation = computed({
   get: () =>
-    norm.value.normAbbreviation
+    activeReference.value.normAbbreviation
       ? {
-          label: norm.value.normAbbreviation.abbreviation,
-          value: norm.value.normAbbreviation,
-          additionalInformation: norm.value.normAbbreviation.officialLongTitle,
+          label: activeReference.value.normAbbreviation.abbreviation,
+          value: activeReference.value.normAbbreviation,
+          additionalInformation: activeReference.value.normAbbreviation.officialLongTitle,
         }
       : undefined,
   set: (newValue) => {
@@ -62,9 +67,25 @@ const normAbbreviation = computed({
       if (isAbbreviationPresent) {
         validationStore.add('RIS-Abkürzung bereits eingegeben', 'normAbbreviation')
       } else {
-        norm.value.normAbbreviation = newNormAbbreviation
+        activeReference.value.normAbbreviation = newNormAbbreviation
       }
     }
+  },
+})
+
+const referenceType = computed<
+  { label: string; value: ActiveReferenceType } | undefined,
+  ActiveReferenceType | undefined
+>({
+  get: () =>
+    activeReference.value.referenceType
+      ? {
+          label: ActiveReference.referenceTypeLabels.get(activeReference.value.referenceType) ?? '',
+          value: activeReference.value.referenceType,
+        }
+      : undefined,
+  set: (newValue) => {
+    activeReference.value.referenceType = newValue
   },
 })
 
@@ -73,14 +94,18 @@ const normAbbreviation = computed({
  * sa new emtpy entry is added to the list
  */
 async function addNormReference() {
+  if (!activeReference.value.referenceType) {
+    validationStore.add('Art der Verweisung fehlt', 'referenceType')
+  }
   if (
+    !validationStore.getByField('referenceType') &&
     !validationStore.getByField('singleNorm') &&
     !validationStore.getByField('dateOfVersion') &&
     !validationStore.getByField('dateOfRelevance') &&
     !validationStore.getByMessage('RIS-Abkürzung bereits eingegeben').length
   ) {
-    const normRef = new NormReference({
-      ...norm.value,
+    const normRef = new ActiveReference({
+      ...activeReference.value,
       singleNorms: singleNorms.value
         .map((singleNorm) =>
           !singleNorm.isEmpty
@@ -105,7 +130,7 @@ async function addNormReference() {
  */
 function removeNormReference() {
   singleNorms.value = []
-  norm.value.normAbbreviation = undefined
+  activeReference.value.normAbbreviation = undefined
   emit('removeEntry')
 }
 
@@ -125,7 +150,7 @@ function removeSingleNormEntry(index: number) {
 }
 
 function cancelEdit() {
-  if (new NormReference({ ...props.modelValue }).isEmpty) {
+  if (new ActiveReference({ ...props.modelValue }).isEmpty) {
     removeNormReference()
     addSingleNormEntry()
   }
@@ -142,10 +167,17 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
   if (validationError) {
     validationStore.add(
       validationError.message,
-      validationError.instance as ['singleNorm', 'dateOfVersion', 'dateOfRelevance'][number],
+      validationError.instance as [
+        'referenceType',
+        'singleNorm',
+        'dateOfVersion',
+        'dateOfRelevance',
+      ][number],
     )
   } else {
-    validationStore.remove(field as ['singleNorm', 'dateOfVersion', 'dateOfRelevance'][number])
+    validationStore.remove(
+      field as ['referenceType', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number],
+    )
   }
 }
 
@@ -158,8 +190,8 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
 watch(
   () => props.modelValue,
   () => {
-    norm.value = new NormReference({ ...props.modelValue })
-    lastSavedModelValue.value = new NormReference({ ...props.modelValue })
+    activeReference.value = new ActiveReference({ ...props.modelValue })
+    lastSavedModelValue.value = new ActiveReference({ ...props.modelValue })
     if (lastSavedModelValue.value.isEmpty) {
       validationStore.reset()
     } else if (lastSavedModelValue.value.hasAmbiguousNormReference) {
@@ -173,24 +205,74 @@ watch(
 
 <template>
   <div class="flex flex-col gap-24">
+    <div class="flex w-full flex-row justify-between">
+      <div class="flex flex-row gap-24">
+        <InputField
+          id="normReferenceDocumentType"
+          label="Norm"
+          label-class="ds-label-01-reg"
+          :label-position="LabelPosition.RIGHT"
+        >
+          <RadioInput
+            id="normReferenceDocumentType"
+            v-model="activeReference.referenceDocumentType"
+            aria-label="Norm auswählen"
+            size="small"
+            :value="`${ActiveReferenceDocumentType.NORM}`"
+          />
+        </InputField>
+
+        <InputField
+          id="administrativeRegulationReferenceDocumentType"
+          label="Verwaltungsvorschrift"
+          label-class="ds-label-01-reg"
+          :label-position="LabelPosition.RIGHT"
+        >
+          <RadioInput
+            id="administrativeRegulationReferenceDocumentType"
+            v-model="activeReference.referenceDocumentType"
+            aria-label="Verwaltungsvorschrift auswählen"
+            size="small"
+            :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
+          />
+        </InputField>
+      </div>
+    </div>
     <InputField
-      id="norm-reference-abbreviation-field"
+      id="active-reference-type-field"
       v-slot="slotProps"
-      label="RIS-Abkürzung *"
+      label="Art der Verweisung *"
+      :validation-error="validationStore.getByField('referenceType')"
+    >
+      <ComboboxInput
+        id="active-reference-type-field"
+        v-model="referenceType"
+        aria-label="Art der Verweisung"
+        :has-error="slotProps.hasError"
+        :item-service="ComboboxItemService.getActiveReferenceTypes"
+        no-clear
+        placeholder="Bitte auswählen"
+        @focus="validationStore.remove('referenceType')"
+      ></ComboboxInput>
+    </InputField>
+    <InputField
+      id="active-reference-abbreviation"
+      v-slot="slotProps"
+      :label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation + ` *`"
       :validation-error="validationStore.getByField('normAbbreviation')"
     >
       <ComboboxInput
-        id="norm-reference-abbreviation"
+        id="active-reference-abbreviation"
         v-model="normAbbreviation"
-        aria-label="RIS-Abkürzung"
+        :aria-label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation"
         :has-error="slotProps.hasError"
         :item-service="ComboboxItemService.getRisAbbreviations"
         no-clear
-        placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
+        :placeholder="labels[`${activeReference.referenceDocumentType}`].risAbbreviationPlaceholder"
         @focus="validationStore.remove('normAbbreviation')"
       ></ComboboxInput>
     </InputField>
-    <div v-if="normAbbreviation || norm.normAbbreviationRawValue">
+    <div v-if="normAbbreviation || activeReference.normAbbreviationRawValue">
       <SingleNormInput
         v-for="(singleNorm, index) in singleNorms"
         :key="index"
@@ -198,6 +280,12 @@ watch(
         aria-label="Einzelnorm"
         :index="index"
         norm-abbreviation="normAbbreviation.abbreviation"
+        :show-single-norm-input="
+          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
+        "
+        :show-date-of-relevance-button="
+          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
+        "
         @remove-entry="removeSingleNormEntry(index)"
         @update:validation-error="
           (validationError: ValidationError | undefined, field?: string) =>

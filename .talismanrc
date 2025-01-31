@@ -87,6 +87,7 @@ allowed_patterns:
   - "const keywords ="
   - "function generateUniqueSingleNormKey"
   - "const uniqueKey"
+  - 'key="item.value"'
   - '@keypress.enter="copySummary"'
   - ':key="searchResult.decision.uuid"'
   - 'property\("sonar.projectKey"'

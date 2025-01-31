@@ -1,22 +1,25 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import NormReferenceInput from '@/components/NormReferenceInput.vue'
-import NormReference from '@/domain/normReference'
+import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
+import ActiveReferenceInput from '@/components/ActiveReferenceInput.vue'
 
-function renderComponent(options?: { modelValue?: NormReference }) {
+function renderComponent(options?: { modelValue?: ActiveReference }) {
   const user = userEvent.setup()
   const props = {
-    modelValue: new NormReference({ ...options?.modelValue }),
+    modelValue: new ActiveReference({ ...options?.modelValue }),
   }
-  const utils = render(NormReferenceInput, { props })
+  const utils = render(ActiveReferenceInput, { props })
   return { user, props, ...utils }
 }
 
-describe('NormReferenceEntry', () => {
+describe('ActiveReferenceInput', () => {
   it('render empty norm input group on initial load', async () => {
     renderComponent()
+    expect(screen.getByLabelText('Norm')).toBeInTheDocument()
+    expect(screen.getByLabelText('Verwaltungsvorschrift')).toBeInTheDocument()
     expect(screen.getByLabelText('RIS-Abkürzung')).toBeInTheDocument()
+    expect(screen.getByLabelText('Art der Verweisung')).toBeInTheDocument()
 
     expect(screen.queryByLabelText('Einzelnorm der Norm')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Fassungsdatum der Norm')).not.toBeInTheDocument()
@@ -27,6 +30,7 @@ describe('NormReferenceEntry', () => {
   it('render values if given', async () => {
     renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -35,7 +39,7 @@ describe('NormReferenceEntry', () => {
             dateOfRelevance: '2023',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
@@ -56,6 +60,7 @@ describe('NormReferenceEntry', () => {
   it('renders multiple single norm input groups', async () => {
     renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -74,7 +79,7 @@ describe('NormReferenceEntry', () => {
             dateOfRelevance: '2023',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(3)
   })
@@ -82,13 +87,14 @@ describe('NormReferenceEntry', () => {
   it('adds new single norm', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             singleNorm: '12',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(1)
@@ -100,6 +106,7 @@ describe('NormReferenceEntry', () => {
   it('removes single norm', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -109,7 +116,7 @@ describe('NormReferenceEntry', () => {
             singleNorm: '34',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(2)
@@ -121,13 +128,14 @@ describe('NormReferenceEntry', () => {
   it('removes last single norm in list', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             singleNorm: '§ 34',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(1)
@@ -139,8 +147,9 @@ describe('NormReferenceEntry', () => {
   it('validates invalid norm input on blur', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const singleNormInput = await screen.findByLabelText('Einzelnorm der Norm')
@@ -154,13 +163,14 @@ describe('NormReferenceEntry', () => {
   it('validates invalid norm input on mount', async () => {
     renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             singleNorm: '2021, Seite 21',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const singleNormInput = await screen.findByLabelText('Einzelnorm der Norm')
@@ -172,13 +182,14 @@ describe('NormReferenceEntry', () => {
   it('does not add norm with invalid single norm input', async () => {
     renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             singleNorm: '2021, Seite 21',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const singleNormInput = await screen.findByLabelText('Einzelnorm der Norm')
@@ -192,8 +203,9 @@ describe('NormReferenceEntry', () => {
   it('does not add norm with invalid version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const dateInput = await screen.findByLabelText('Fassungsdatum der Norm')
@@ -209,8 +221,9 @@ describe('NormReferenceEntry', () => {
   it('does not add norm with incomplete version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const dateInput = await screen.findByLabelText('Fassungsdatum der Norm')
@@ -227,13 +240,14 @@ describe('NormReferenceEntry', () => {
   it('does not add norm with invalid year input', async () => {
     renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             dateOfRelevance: '0000',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const yearInput = await screen.findByLabelText('Jahr der Norm')
@@ -244,11 +258,26 @@ describe('NormReferenceEntry', () => {
     expect(yearInput).toBeVisible()
   })
 
+  it('validates empty reference type', async () => {
+    const { user } = renderComponent()
+
+    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+    await user.type(abbreviationField, 'SGB')
+    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
+    await user.click(dropdownItems[0])
+
+    const addButton = screen.getByLabelText('Norm speichern')
+    await user.click(addButton)
+
+    expect(screen.getByText('Art der Verweisung fehlt')).toBeInTheDocument()
+  })
+
   it('validates ambiguous norm reference input', async () => {
     renderComponent({
       modelValue: {
         normAbbreviationRawValue: 'EWGAssRBes 1/80',
-      } as NormReference,
+      } as ActiveReference,
     })
 
     expect(screen.getByText('Mehrdeutiger Verweis')).toBeInTheDocument()
@@ -257,13 +286,14 @@ describe('NormReferenceEntry', () => {
   it('new input removes error message', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
             singleNorm: '2021, Seite 21',
           },
         ],
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const risAbbreviation = screen.getByLabelText('RIS-Abkürzung')
@@ -281,8 +311,14 @@ describe('NormReferenceEntry', () => {
 
   it('correctly updates the value of ris abbreviation input', async () => {
     const { user, emitted } = renderComponent()
-    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
 
+    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
+    await user.type(referenceTypeField, 'A')
+    const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
+    await user.click(referenceTypeDropdownItems[0])
+
+    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
     const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
     expect(dropdownItems[0]).toHaveTextContent('SGB 5')
@@ -293,6 +329,8 @@ describe('NormReferenceEntry', () => {
     expect(emitted('update:modelValue')).toEqual([
       [
         {
+          referenceDocumentType: 'norm',
+          referenceType: ActiveReferenceType.ANWENDUNG,
           normAbbreviation: {
             abbreviation: 'SGB 5',
             officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
@@ -307,8 +345,9 @@ describe('NormReferenceEntry', () => {
   it('correctly updates the value of the single norm input', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
     const singleNormInput = await screen.findByLabelText('Einzelnorm der Norm')
 
@@ -319,8 +358,9 @@ describe('NormReferenceEntry', () => {
   it('correctly updates the value of the version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const versionField = screen.getByLabelText('Fassungsdatum der Norm')
@@ -332,8 +372,9 @@ describe('NormReferenceEntry', () => {
   it('correctly updates the value of the version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const relevanceField = screen.getByLabelText('Jahr der Norm')
@@ -345,8 +386,9 @@ describe('NormReferenceEntry', () => {
   it('emits add event', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const addButton = screen.getByLabelText('Norm speichern')
@@ -358,8 +400,9 @@ describe('NormReferenceEntry', () => {
   it('emits delete event', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const deleteButton = screen.getByLabelText('Eintrag löschen')
@@ -371,8 +414,9 @@ describe('NormReferenceEntry', () => {
   it('emits cancel edit', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
+        referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-      } as NormReference,
+      } as ActiveReference,
     })
 
     const cancelEdit = screen.getByLabelText('Abbrechen')
