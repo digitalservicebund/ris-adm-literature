@@ -1,5 +1,6 @@
 import { type Directive } from 'vue'
 
+// can be used with <div v-ctrl-enter="func">
 export const onSearchShortcutDirective: Directive = {
   mounted(el, binding) {
     const handleKeydown = (event: KeyboardEvent) => {
