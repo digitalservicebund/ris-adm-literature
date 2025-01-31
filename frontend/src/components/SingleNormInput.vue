@@ -110,7 +110,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="mb-24 flex flex-col gap-24 pb-24">
+  <div class="mb-24 flex flex-col gap-24">
     <div class="gap-24 flex flex-row justify-between">
       <InputField
         id="singleNorm"

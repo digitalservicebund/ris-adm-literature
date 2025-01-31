@@ -7,6 +7,10 @@ fileignoreconfig:
     ignore_detectors: [filename]
   - filename: nginx.conf
     checksum: 2f9c9124d8dfb11c9d7b4ce360b266d6fc26a47fbc99782bb82cf1b57ef292c4
+  - filename: frontend/src/services/documentUnitService.ts
+    checksum: 4e52b6cf2a42875f13fbfce80ea89671aa005928164444bfa63422ff7b948bdd
+  - filename: frontend/src/utils/onSearchShortcutDirective.ts
+    checksum: 5d2de807faa9c7871d9e3020c8003575490ef1d0daefdcff14eb6184c1006779
 
 allowed_patterns:
   # allow patterns with hex encoded text or other character sequences that irritate talisman
@@ -84,7 +88,10 @@ allowed_patterns:
   - "function generateUniqueSingleNormKey"
   - "const uniqueKey"
   - 'key="item.value"'
+  - '@keypress.enter="copySummary"'
+  - ':key="searchResult.decision.uuid"'
   - 'property\("sonar.projectKey"'
   - "sonar.projectKey="
+  - '[key: string]: string'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
