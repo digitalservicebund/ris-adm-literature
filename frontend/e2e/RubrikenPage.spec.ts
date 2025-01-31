@@ -12,65 +12,56 @@ test(
     await expect(page.getByText('Rubriken')).toHaveCount(1)
 
     await expect(page.getByText('Formaldaten')).toHaveCount(2)
-    const zitierdatumElement = page.getByText('Zitierdatum')
-    await expect(zitierdatumElement).toHaveCount(1)
-    zitierdatumElement.fill('thatshouldnotwork')
-    await expect(zitierdatumElement).toHaveValue('')
-    zitierdatumElement.fill('15.01.2025')
-    await expect(zitierdatumElement).toHaveValue('15.01.2025')
+    await expect(page.getByText('Zitierdatum')).toHaveCount(1)
+    await page.getByText('Zitierdatum').fill('thatshouldnotwork')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('')
+    await page.getByText('Zitierdatum').fill('15.01.2025')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('15.01.2025')
 
-    const normgeberElement = page.getByText('Normgeber')
-    await expect(normgeberElement).toHaveCount(1)
-    normgeberElement.fill('AG')
+    await expect(page.getByText('Normgeber')).toHaveCount(1)
+    await page.getByText('Normgeber').fill('AG')
     await expect(page.getByText('AG Aachen')).toHaveCount(1)
     await page.getByText('AG Aachen').click()
-    await expect(normgeberElement).toHaveValue('AG Aachen')
+    await expect(page.getByText('Normgeber')).toHaveValue('AG Aachen')
 
-    const amtlicheLangueberschriftElement = page.getByText('Amtl. Langüberschrift')
-    await expect(amtlicheLangueberschriftElement).toHaveCount(1)
-    amtlicheLangueberschriftElement.fill('my long title')
-    await expect(amtlicheLangueberschriftElement).toHaveValue('my long title')
+    await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
+    await page.getByText('Amtl. Langüberschrift').fill('my long title')
+    await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
 
-    const dokumentTyp = page.getByText('Dokumenttyp *')
-    await expect(dokumentTyp).toHaveCount(1)
-    await dokumentTyp.fill('V')
+    await expect(page.getByText('Dokumenttyp *')).toHaveCount(1)
+    await page.getByText('Dokumenttyp *').fill('V')
     await expect(page.getByText('VR')).toHaveCount(1)
     await page.getByText('VR').click()
-    await expect(dokumentTyp).toHaveValue('VR') // confirm selection by value
+    await expect(page.getByText('Dokumenttyp *')).toHaveValue('VR') // confirm selection by value
 
-    const dokumentTypZusatz = page.getByText('Dokumenttyp Zusatz')
-    await expect(dokumentTypZusatz).toHaveCount(1)
-    await dokumentTypZusatz.fill('Bekanntmachung')
-    await expect(dokumentTypZusatz).toHaveValue('Bekanntmachung')
+    await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
+    await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
+    await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
 
-    const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
-    await expect(inkrafttretedatumElement).toHaveCount(1)
-    zitierdatumElement.fill('thatshouldnotwork')
-    await expect(zitierdatumElement).toHaveValue('')
-    inkrafttretedatumElement.fill('02.02.1970')
-    await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+    await expect(page.getByText('Datum des Inkrafttretens *')).toHaveCount(1)
+    await page.getByText('Zitierdatum').fill('thatshouldnotwork')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('')
+    await page.getByText('Datum des Inkrafttretens *').fill('02.02.1970')
+    await expect(page.getByText('Datum des Inkrafttretens *')).toHaveValue('02.02.1970')
 
-    const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
-    await expect(ausserkrafttretedatumElement).toHaveCount(1)
-    ausserkrafttretedatumElement.fill('thatshouldnotwork')
-    await expect(ausserkrafttretedatumElement).toHaveValue('')
-    ausserkrafttretedatumElement.fill('03.03.1970')
-    await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveCount(1)
+    await page.getByText('Datum des Ausserkrafttretens').fill('thatshouldnotwork')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
+    await page.getByText('Datum des Ausserkrafttretens').fill('03.03.1970')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('03.03.1970')
 
-    const aktenzeichenElement = page.getByText('Aktenzeichen *')
-    await expect(aktenzeichenElement).toHaveCount(2)
-    await aktenzeichenElement.first().fill('Az1')
-    await aktenzeichenElement.first().press('Enter')
-    await aktenzeichenElement.first().fill('Az2')
-    await aktenzeichenElement.first().press('Enter')
+    await expect(page.getByText('Aktenzeichen *')).toHaveCount(2)
+    await page.getByText('Aktenzeichen *').first().fill('Az1')
+    await page.getByText('Aktenzeichen *').first().press('Enter')
+    await page.getByText('Aktenzeichen *').first().fill('Az2')
+    await page.getByText('Aktenzeichen *').first().press('Enter')
     // Created elements are list elements (<li>) so we need to select them explicitly
     await expect(page.getByText('Az1')).toHaveCount(1)
     await expect(page.getByText('Az2')).toHaveCount(1)
 
-    const keinAktenzeichenElement = page.getByText('Kein Aktenzeichen')
-    await expect(keinAktenzeichenElement).toHaveCount(1)
-    keinAktenzeichenElement.check()
-    await expect(keinAktenzeichenElement).toBeChecked()
+    await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
+    await page.getByText('Kein Aktenzeichen').check()
+    await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
   },
 )
 
@@ -188,14 +179,14 @@ test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) =>
   await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
-  const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
-  await expect(normElement).toHaveCount(1)
+  await expect(
+    page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+  ).toHaveCount(1)
 
   // when
-  await normElement.locator('xpath=..').getByRole('button', { name: 'Dropdown öffnen' }).click()
-  const kvlgButton = page.getByText('KVLG')
-  await expect(kvlgButton).toBeVisible()
-  await kvlgButton.click()
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
   await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
   await page.getByRole('button', { name: 'Norm speichern' }).click()
   await page.getByTestId('list-entry-0').click()
@@ -212,20 +203,19 @@ test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({
   await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
-  const normElement = page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
-  await expect(normElement).toHaveCount(1)
+  await expect(
+    page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+  ).toHaveCount(1)
 
   // when
-  await normElement.locator('xpath=..').getByRole('button', { name: 'Dropdown öffnen' }).click()
-  const sgb5Button = page.getByText('SGB 5')
-  await expect(sgb5Button).toBeVisible()
-  await sgb5Button.click()
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('SGB 5')).toBeVisible()
+  await page.getByText('SGB 5').click()
   await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
   await page.getByRole('button', { name: 'Norm speichern' }).click()
-  await normElement.locator('xpath=..').getByRole('button', { name: 'Dropdown öffnen' }).click()
-  const kvlgButton = page.getByText('KVLG')
-  await expect(kvlgButton).toBeVisible()
-  await kvlgButton.click()
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
   await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
   await page.getByRole('button', { name: 'Norm speichern' }).click()
   await page.getByTestId('list-entry-0').click()
@@ -346,38 +336,37 @@ test(
   },
 )
 
-test(
-  'Add an active reference, edit and save',
-  {tag: ['@RISDEV-6074']},
-  async ({page}) => {
-    // given
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-    await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const activeReferenceElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
-    await expect(activeReferenceElement).toHaveCount(1)
-    const referenceTypeElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'Art der Verweisung' })
+test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
+  // given
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.getByText('Rubriken').click()
+  await expect(page.getByText('Rubriken')).toHaveCount(1)
+  const referenceTypeElement = page
+    .getByTestId('activeReferences')
+    .getByRole('textbox', { name: 'Art der Verweisung' })
+  await expect(referenceTypeElement).toHaveCount(1)
+  const activeReferenceElement = page
+    .getByTestId('activeReferences')
+    .getByRole('textbox', { name: 'RIS-Abkürzung' })
+  await expect(activeReferenceElement).toHaveCount(1)
 
-    // when
-    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const neuregelungButton = page.getByText('Neuregelung')
-    await expect(neuregelungButton).toBeVisible()
-    await neuregelungButton.click()
-    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const kvlgButton = page.getByText('KVLG')
-    await expect(kvlgButton).toBeVisible()
-    await kvlgButton.click()
-    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
-    await page.getByTestId('list-entry-0').click()
-    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
+  // when
+  await referenceTypeElement.click()
+  await expect(page.getByText('Neuregelung')).toBeVisible()
+  await page.getByText('Neuregelung').click()
+  await activeReferenceElement.click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
+  await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByTestId('list-entry-0').click()
+  await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
 
-    // then
-    await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
-  },
-)
+  // then
+  await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
+})
 
 test(
   'Add two active references, delete the first item',
@@ -388,29 +377,33 @@ test(
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const activeReferenceElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
+    const referenceTypeElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'Art der Verweisung' })
+    await expect(referenceTypeElement).toHaveCount(1)
+    const activeReferenceElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(activeReferenceElement).toHaveCount(1)
-    const referenceTypeElement = page.getByTestId('activeReferences').getByRole('textbox', { name: 'Art der Verweisung' })
 
     // when
-    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const anwendungButton = page.getByText('Anwendung')
-    await expect(anwendungButton).toBeVisible()
-    await anwendungButton.click()
-    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const sgb5Button = page.getByText('SGB 5')
-    await expect(sgb5Button).toBeVisible()
-    await sgb5Button.click()
+    await referenceTypeElement.click()
+    await expect(page.getByText('Anwendung')).toBeVisible()
+    await page.getByText('Anwendung').click()
+
+    await activeReferenceElement.click()
+    await expect(page.getByText('SGB 5')).toBeVisible()
+    await page.getByText('SGB 5').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
     await page.getByRole('button', { name: 'Norm speichern' }).click()
-    await referenceTypeElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const rechtsgrundlageButton = page.getByText('Rechtsgrundlage')
-    await expect(rechtsgrundlageButton).toBeVisible()
-    await rechtsgrundlageButton.click()
-    await activeReferenceElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const kvlgButton = page.getByText('KVLG')
-    await expect(kvlgButton).toBeVisible()
-    await kvlgButton.click()
+
+    await referenceTypeElement.click()
+    await expect(page.getByText('Rechtsgrundlage')).toBeVisible()
+    await page.getByText('Rechtsgrundlage').click()
+
+    await activeReferenceElement.click()
+    await expect(page.getByText('KVLG')).toBeVisible()
+    await page.getByText('KVLG').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
     await page.getByRole('button', { name: 'Norm speichern' }).click()
     await page.getByTestId('list-entry-0').click()
