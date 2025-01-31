@@ -17,26 +17,6 @@ type RequestOptions = {
 
 interface HttpClient {
   get<TResponse>(url: string, config?: RequestOptions): Promise<ServiceResponse<TResponse>>
-
-  post<TRequest, TResponse>(
-    url: string,
-    config?: RequestOptions,
-    data?: TRequest,
-  ): Promise<ServiceResponse<TResponse>>
-
-  put<TRequest, TResponse>(
-    url: string,
-    config?: RequestOptions,
-    data?: TRequest,
-  ): Promise<ServiceResponse<TResponse>>
-
-  patch<TRequest, TResponse>(
-    url: string,
-    config?: RequestOptions,
-    data?: TRequest,
-  ): Promise<ServiceResponse<TResponse>>
-
-  delete<TResponse>(url: string, config?: RequestOptions): Promise<ServiceResponse<TResponse>>
 }
 
 async function baseHttp<T>(url: string, method: string, options?: RequestOptions, data?: T) {
@@ -71,18 +51,6 @@ async function baseHttp<T>(url: string, method: string, options?: RequestOptions
 const httpClient: HttpClient = {
   async get(url: string, options?: RequestOptions) {
     return baseHttp(url, 'get', { ...options })
-  },
-  async post<T>(url: string, options: RequestOptions, data: T) {
-    return baseHttp<T>(url, 'post', { ...options }, data)
-  },
-  async put<T>(url: string, options: RequestOptions, data: T) {
-    return baseHttp(url, 'put', { ...options }, data)
-  },
-  async patch<T>(url: string, options: RequestOptions, data: T) {
-    return baseHttp(url, 'patch', { ...options }, data)
-  },
-  async delete(url: string, options: RequestOptions) {
-    return baseHttp(url, 'delete', { ...options })
   },
 }
 
