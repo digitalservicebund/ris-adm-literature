@@ -1,10 +1,10 @@
 # 5. Dealing With Historic Administrative Directives
 
-Date: 2025-01-31
+Date: 2025-02-03
 
 ## Status
 
-Work In Progress
+Accepted
 
 ## Context
 
