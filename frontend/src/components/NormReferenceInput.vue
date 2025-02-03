@@ -174,7 +174,7 @@ watch(
 <template>
   <div class="flex flex-col gap-24">
     <InputField
-      id="norm-reference-abbreviation-field"
+      id="norm-reference-abbreviation"
       v-slot="slotProps"
       label="RIS-Abkürzung *"
       :validation-error="validationStore.getByField('normAbbreviation')"
@@ -192,9 +192,9 @@ watch(
     </InputField>
     <div v-if="normAbbreviation || norm.normAbbreviationRawValue">
       <SingleNormInput
-        v-for="(_, index) in singleNorms"
+        v-for="(singleNorm, index) in singleNorms"
         :key="index"
-        v-model="singleNorms[index] as SingleNorm"
+        v-model="singleNorm as SingleNorm"
         aria-label="Einzelnorm"
         :index="index"
         norm-abbreviation="normAbbreviation.abbreviation"

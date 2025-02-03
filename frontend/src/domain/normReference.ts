@@ -6,10 +6,7 @@ export default class NormReference implements EditableListItem {
   public normAbbreviation?: NormAbbreviation
   public singleNorms?: SingleNorm[]
   public normAbbreviationRawValue?: string
-  public hasForeignSource: boolean = false
-  // public uuid?: string
 
-  static readonly requiredFields = ['normAbbreviation'] as const
   static readonly fields = ['normAbbreviation', 'normAbbreviationRawValue'] as const
 
   constructor(data: Partial<NormReference> = {}) {
@@ -58,32 +55,6 @@ export default class NormReference implements EditableListItem {
       }
     })
     return isEmpty
-  }
-
-  /**
-   * Checks if there are any single norms with missing required fields in their legal force.
-   *
-   * @returns `true` if any single norm has missing required fields in its legal force; otherwise, `false`.
-   */
-  get hasMissingFieldsInLegalForce() {
-    if (this.singleNorms) {
-      return (
-        this.singleNorms.filter((singleNorm) => {
-          return singleNorm.legalForce?.hasMissingRequiredFields
-        }).length > 0
-      )
-    }
-    return false
-  }
-
-  /**
-   * Returns a boolean value, if a given normEntry has single norms and respectively renders the norms' summary in one
-   * compact line or in a sublist, below the norm abbreviation.
-   */
-  get hasSingleNorms() {
-    if (this.singleNorms) {
-      return this.singleNorms?.length > 0 && !this.singleNorms[0].isEmpty
-    } else return false
   }
 
   private fieldIsEmpty(value: NormReference[(typeof NormReference.fields)[number]]) {

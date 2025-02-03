@@ -3,14 +3,18 @@ import type { ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
+import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
+import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
@@ -86,14 +90,29 @@ const service: ComboboxItemService = {
     return result
   },
   getDocumentTypes: (filter: Ref<string | undefined>) => {
-    const documentTypeValues = ['VR', 'VE', 'VV', 'ST']
-    const documentTypes = documentTypeValues.map((v) => <DocumentType>{ label: v })
-    const items = ref(documentTypes.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }))
+    const documentTypeValues = [
+      { label: 'VR' },
+      { label: 'VE' },
+      { label: 'VV' },
+      { label: 'ST' },
+    ] as DocumentType[]
+    const documentTypes = ref(
+      documentTypeValues.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }),
+    )
     const execute = async () => {
+      if (filter?.value && filter.value.length > 0) {
+        const filteredItems = documentTypeValues.filter((item) =>
+          item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
+        )
+        const filteredComboBoxItems = filteredItems.map(
+          (item) => <ComboboxItem>{ label: item.label, value: item },
+        )
+        documentTypes.value = [...filteredComboBoxItems]
+      }
       return service.getDocumentTypes(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
+      data: documentTypes,
       execute: execute,
       canAbort: computed(() => false),
       abort: () => {},
@@ -129,6 +148,73 @@ const service: ComboboxItemService = {
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getActiveReferenceTypes: (filter: Ref<string | undefined>) => {
+    const items = ref(
+      Object.values(ActiveReferenceType).map(
+        (referenceType) =>
+          <ComboboxItem>{
+            label: ActiveReference.referenceTypeLabels.get(referenceType),
+            value: referenceType,
+          },
+      ),
+    )
+    const execute = async () => {
+      return service.getActiveReferenceTypes(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getCitationTypes: (filter: Ref<string | undefined>) => {
+    const citationTypeValues = [
+      {
+        uuid: 'e52c14ac-1a5b-4ed2-9228-516489dd9f2a',
+        jurisShortcut: 'Abgrenzung',
+        label: 'Abgrenzung',
+      },
+      {
+        uuid: '844b01a1-0c57-4889-98a2-281f613a77bb',
+        jurisShortcut: 'Ablehnung',
+        label: 'Ablehnung',
+      },
+      {
+        uuid: 'c030c7d0-69da-4303-b3cb-c59056239435',
+        jurisShortcut: 'Änderung',
+        label: 'Änderung',
+      },
+      {
+        uuid: 'cb8a0a8d-93d1-41ca-8279-f1c35083da8d',
+        jurisShortcut: 'Übernahme',
+        label: 'Übernahme',
+      },
+    ] as CitationType[]
+    const citationTypes = ref(
+      citationTypeValues.map((item) => <ComboboxItem>{ label: item.label, value: item }),
+    )
+    const execute = async () => {
+      if (filter?.value && filter.value.length > 0) {
+        const filteredItems = citationTypeValues.filter((item) =>
+          item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
+        )
+        const filteredComboBoxItems = filteredItems.map(
+          (item) => <ComboboxItem>{ label: item.label, value: item },
+        )
+        citationTypes.value = [...filteredComboBoxItems]
+      }
+      return service.getCitationTypes(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: citationTypes,
       execute: execute,
       canAbort: computed(() => false),
       abort: () => {},

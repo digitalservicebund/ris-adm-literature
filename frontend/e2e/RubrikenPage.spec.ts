@@ -12,135 +12,127 @@ test(
     await expect(page.getByText('Rubriken')).toHaveCount(1)
 
     await expect(page.getByText('Formaldaten')).toHaveCount(2)
-    const zitierdatumElement = page.getByText('Zitierdatum')
-    await expect(zitierdatumElement).toHaveCount(1)
-    zitierdatumElement.fill('thatshouldnotwork')
-    await expect(zitierdatumElement).toHaveValue('')
-    zitierdatumElement.fill('15.01.2025')
-    await expect(zitierdatumElement).toHaveValue('15.01.2025')
+    await expect(page.getByText('Zitierdatum')).toHaveCount(1)
+    await page.getByText('Zitierdatum').fill('thatshouldnotwork')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('')
+    await page.getByText('Zitierdatum').fill('15.01.2025')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('15.01.2025')
 
-    const normgeberElement = page.getByText('Normgeber')
-    await expect(normgeberElement).toHaveCount(1)
-    normgeberElement.fill('AG')
+    await expect(page.getByText('Normgeber')).toHaveCount(1)
+    await page.getByText('Normgeber').fill('AG')
     await expect(page.getByText('AG Aachen')).toHaveCount(1)
     await page.getByText('AG Aachen').click()
-    await expect(normgeberElement).toHaveValue('AG Aachen')
+    await expect(page.getByText('Normgeber')).toHaveValue('AG Aachen')
 
-    const amtlicheLangüberschriftElement = page.getByText('Amtl. Langüberschrift')
-    await expect(amtlicheLangüberschriftElement).toHaveCount(1)
-    amtlicheLangüberschriftElement.fill('my long title')
-    await expect(amtlicheLangüberschriftElement).toHaveValue('my long title')
+    await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
+    await page.getByText('Amtl. Langüberschrift').fill('my long title')
+    await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
 
-    const dokumentTyp = page.getByText('Dokumenttyp *')
-    await expect(dokumentTyp).toHaveCount(1)
-    await dokumentTyp.fill('V')
+    await expect(page.getByText('Dokumenttyp *')).toHaveCount(1)
+    await page.getByText('Dokumenttyp *').fill('V')
     await expect(page.getByText('VR')).toHaveCount(1)
     await page.getByText('VR').click()
-    await expect(dokumentTyp).toHaveValue('VR') // confirm selection by value
+    await expect(page.getByText('Dokumenttyp *')).toHaveValue('VR') // confirm selection by value
 
-    const dokumentTypZusatz = page.getByText('Dokumenttyp Zusatz')
-    await expect(dokumentTypZusatz).toHaveCount(1)
-    await dokumentTypZusatz.fill('Bekanntmachung')
-    await expect(dokumentTypZusatz).toHaveValue('Bekanntmachung')
+    await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
+    await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
+    await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
 
-    const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
-    await expect(inkrafttretedatumElement).toHaveCount(1)
-    zitierdatumElement.fill('thatshouldnotwork')
-    await expect(zitierdatumElement).toHaveValue('')
-    inkrafttretedatumElement.fill('02.02.1970')
-    await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+    await expect(page.getByText('Datum des Inkrafttretens *')).toHaveCount(1)
+    await page.getByText('Zitierdatum').fill('thatshouldnotwork')
+    await expect(page.getByText('Zitierdatum')).toHaveValue('')
+    await page.getByText('Datum des Inkrafttretens *').fill('02.02.1970')
+    await expect(page.getByText('Datum des Inkrafttretens *')).toHaveValue('02.02.1970')
 
-    const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
-    await expect(ausserkrafttretedatumElement).toHaveCount(1)
-    ausserkrafttretedatumElement.fill('thatshouldnotwork')
-    await expect(ausserkrafttretedatumElement).toHaveValue('')
-    ausserkrafttretedatumElement.fill('03.03.1970')
-    await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveCount(1)
+    await page.getByText('Datum des Ausserkrafttretens').fill('thatshouldnotwork')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
+    await page.getByText('Datum des Ausserkrafttretens').fill('03.03.1970')
+    await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('03.03.1970')
 
-    const aktenzeichenElement = page.getByText('Aktenzeichen *')
-    await expect(aktenzeichenElement).toHaveCount(1)
-    await aktenzeichenElement.fill('Az1')
-    await aktenzeichenElement.press('Enter')
-    await aktenzeichenElement.fill('Az2')
-    await aktenzeichenElement.press('Enter')
+    await expect(page.getByText('Aktenzeichen *')).toHaveCount(2)
+    await page.getByText('Aktenzeichen *').first().fill('Az1')
+    await page.getByText('Aktenzeichen *').first().press('Enter')
+    await page.getByText('Aktenzeichen *').first().fill('Az2')
+    await page.getByText('Aktenzeichen *').first().press('Enter')
     // Created elements are list elements (<li>) so we need to select them explicitly
     await expect(page.getByText('Az1')).toHaveCount(1)
     await expect(page.getByText('Az2')).toHaveCount(1)
 
-    const keinAktenzeichenElement = page.getByText('Kein Aktenzeichen')
-    await expect(keinAktenzeichenElement).toHaveCount(1)
-    keinAktenzeichenElement.check()
-    await expect(keinAktenzeichenElement).toBeChecked()
-  })
+    await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
+    await page.getByText('Kein Aktenzeichen').check()
+    await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
+  },
+)
 
-  test(
-    'Visiting the Schlagwörter step of creating a documentUnit',
-    { tag: ['@RISDEV-6047'] },
-    async ({ page }) => {
-      // In the future the new documentUnit needs to be mocked
-      // As this functionality is not there yet we can simply enter the desired page and finish the process
-      await page.goto('/')
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-      await page.getByText('Rubriken').click()
-      await expect(page.getByText('Rubriken')).toHaveCount(1)
-      /////////////////
-      // Schlagwörter
-      /////////////////
-      const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
-      await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
+test(
+  'Visiting the Schlagwörter step of creating a documentUnit',
+  { tag: ['@RISDEV-6047'] },
+  async ({ page }) => {
+    // In the future the new documentUnit needs to be mocked
+    // As this functionality is not there yet we can simply enter the desired page and finish the process
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    /////////////////
+    // Schlagwörter
+    /////////////////
+    const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
+    await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
 
-      // enter single schlagwort, assert that it's visible after confirming
-      const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
-      await schlagwoerterListEditElement.click()
-      await schlagwoerterListEditElement.fill('Schlagwort 1')
-      const schlagwoerterUebernehmenElement = page.getByText('Übernehmen')
-      await schlagwoerterUebernehmenElement.click()
-      await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    // enter single schlagwort, assert that it's visible after confirming
+    const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.fill('Schlagwort 1')
+    const schlagwoerterUebernehmenElement = page.getByText('Übernehmen').first()
+    await schlagwoerterUebernehmenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
 
-      // add another schlagwort, assert both are visible
-      const schlagwoerterBearbeitenElement = page.getByText('Schlagwörter bearbeiten')
-      await schlagwoerterBearbeitenElement.click()
+    // add another schlagwort, assert both are visible
+    const schlagwoerterBearbeitenElement = page.getByText('Schlagwörter bearbeiten')
+    await schlagwoerterBearbeitenElement.click()
 
-      await schlagwoerterListEditElement.click()
-      await schlagwoerterListEditElement.press('End')
-      await schlagwoerterListEditElement.press('Enter')
-      await schlagwoerterListEditElement.pressSequentially('Schlagwort 2')
-      await schlagwoerterListEditElement.press('Enter')
-      await schlagwoerterUebernehmenElement.click()
-      await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
-      await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('Schlagwort 2')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterUebernehmenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
 
-      // add one more, but click "abbrechen" instead of confirming, assert that the new element doe not get added
-      await schlagwoerterBearbeitenElement.click()
-      await schlagwoerterListEditElement.click()
-      await schlagwoerterListEditElement.press('End')
-      await schlagwoerterListEditElement.press('Enter')
-      await schlagwoerterListEditElement.pressSequentially('This should not be added')
-      await schlagwoerterListEditElement.press('Enter')
-      const abbrechenElement = page.getByText('Abbrechen')
-      await abbrechenElement.click()
-      await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
-      await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
-      await expect(page.getByText('This should not be added')).toHaveCount(0)
+    // add one more, but click "abbrechen" instead of confirming, assert that the new element doe not get added
+    await schlagwoerterBearbeitenElement.click()
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('This should not be added')
+    await schlagwoerterListEditElement.press('Enter')
+    const abbrechenElement = page.getByTestId('keywords').getByRole('button', { name: 'Abbrechen' })
+    await abbrechenElement.click()
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('This should not be added')).toHaveCount(0)
 
-      // add another one, have the list sorted
-      await schlagwoerterBearbeitenElement.click()
-      await schlagwoerterListEditElement.click()
-      await schlagwoerterListEditElement.press('End')
-      await schlagwoerterListEditElement.press('Enter')
-      await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
-      await schlagwoerterListEditElement.press('Enter')
-      const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
-      await sortAlphabeticallyCheckboxElement.check()
-      await schlagwoerterUebernehmenElement.click()
-      // new element is available
-      await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
-      await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
-      await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
-      // new element is sorted first in list
-      await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
-    },
-  )
+    // add another one, have the list sorted
+    await schlagwoerterBearbeitenElement.click()
+    await schlagwoerterListEditElement.click()
+    await schlagwoerterListEditElement.press('End')
+    await schlagwoerterListEditElement.press('Enter')
+    await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
+    await schlagwoerterListEditElement.press('Enter')
+    const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
+    await sortAlphabeticallyCheckboxElement.check()
+    await schlagwoerterUebernehmenElement.click()
+    // new element is available
+    await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
+    await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
+    await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
+    // new element is sorted first in list
+    await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
+  },
+)
 
 test(
   'Visiting the Gliederung step of creating a documentUnit',
@@ -181,65 +173,267 @@ test(
   },
 )
 
+test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
+  // given
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.getByText('Rubriken').click()
+  await expect(page.getByText('Rubriken')).toHaveCount(1)
+  await expect(
+    page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+  ).toHaveCount(1)
+
+  // when
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
+  await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByTestId('list-entry-0').click()
+  await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
+
+  // then
+  await expect(page.getByText('KVLG, § 2, 27.01.2025')).toHaveCount(1)
+})
+
+test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
+  // given
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.getByText('Rubriken').click()
+  await expect(page.getByText('Rubriken')).toHaveCount(1)
+  await expect(
+    page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+  ).toHaveCount(1)
+
+  // when
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('SGB 5')).toBeVisible()
+  await page.getByText('SGB 5').click()
+  await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
+  await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByTestId('list-entry-0').click()
+  await page.getByText('Eintrag löschen').click()
+
+  // then
+  await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
+  await expect(page.getByText('KVLG, § 2')).toHaveCount(1)
+})
+
+test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.getByText('Rubriken').click()
+  const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
+  await expect(artDerZitierungInput).toHaveCount(1)
+
+  await artDerZitierungInput.click()
+  await page.locator('button').filter({ hasText: 'Ablehnung' }).click()
+  await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+  await expect(page.getByText('Fehlende Daten')).toBeVisible()
+
+  await page.getByTestId('list-entry-0').click()
+  await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(3)
+  await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
+  await page.locator('button').filter({ hasText: 'AG Aachen' }).click()
+  await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+  await expect(page.getByText('Ablehnung, AG Aachen')).toBeVisible()
+  await expect(page.getByText('Fehlende Daten')).toBeVisible()
+
+  await page.getByTestId('list-entry-0').click()
+  await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(2)
+  await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
+  await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+  await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025')).toBeVisible()
+  await expect(page.getByText('Fehlende Daten')).toBeVisible()
+
+  await page.getByTestId('list-entry-0').click()
+  await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(1)
+  await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
+  await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+  await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+  await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
+})
+
 test(
-  'Add a norm, edit and save',
-  {tag: ['@RISDEV-6075']},
-  async ({page}) => {
-    // given
+  'Add two active citations, delete the first item',
+  { tag: ['@RISDEV-6077'] },
+  async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
-    await expect(normElement).toHaveCount(1)
 
-    // when
-    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const kvlgButton = page.getByText('KVLG')
-    await expect(kvlgButton).toBeVisible()
-    await kvlgButton.click()
-    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
-    await page.getByTestId('list-entry-0').click()
-    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
+    await page.locator('button').filter({ hasText: 'Ablehnung' }).click()
+    await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
+    await page.locator('button').filter({ hasText: 'AG Aachen' }).click()
+    await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
+    await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
+    await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+    await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+    await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
 
-    // then
-    await expect(page.getByText('KVLG, § 2, 27.01.2025')).toHaveCount(1)
+    await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
+    await page.locator('button').filter({ hasText: 'Übernahme' }).click()
+    await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
+    await page.locator('button').filter({ hasText: 'Berufsgericht für Architekten Bremen' }).click()
+    await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('31.12.2024')
+    await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az2')
+    await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+    await expect(
+      page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2'),
+    ).toBeVisible()
+    await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
+
+    await page.getByTestId('list-entry-1').click()
+    await page.getByRole('button', { name: 'Eintrag löschen' }).click()
+    await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+    await expect(
+      page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2'),
+    ).toHaveCount(0)
   },
 )
 
 test(
-  'Add two norms, delete the first item',
-  { tag: ['@RISDEV-6075'] },
+  'Search active citation, take it, change type, save, search again and cancel because already added',
+  { tag: ['@RISDEV-6077'] },
+  async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.getByText('Rubriken').click()
+
+    await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
+    await page.locator('button').filter({ hasText: 'Übernahme' }).click()
+    await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
+    await expect(
+      page.getByText('label1, 01.02.2022, test fileNumber1, documentType1'),
+    ).toBeVisible()
+    await page.getByRole('button', { name: 'Treffer übernehmen' }).click()
+    await expect(
+      page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, documentType1'),
+    ).toBeVisible()
+
+    await page.getByTestId('list-entry-0').click()
+    await page.getByRole('textbox', { name: 'Dokumenttyp Aktivzitierung' }).click()
+    await page.locator('button').filter({ hasText: 'VR' }).click()
+    await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+    await expect(
+      page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, VR'),
+    ).toBeVisible()
+
+    await page.getByTestId('list-entry-0').click()
+    await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
+    await expect(page.getByText('Bereits hinzugefügt')).toBeVisible()
+
+    await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
+    await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
+  },
+)
+
+test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
+  // given
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.getByText('Rubriken').click()
+  await expect(page.getByText('Rubriken')).toHaveCount(1)
+  const referenceTypeElement = page
+    .getByTestId('activeReferences')
+    .getByRole('textbox', { name: 'Art der Verweisung' })
+  await expect(referenceTypeElement).toHaveCount(1)
+  const activeReferenceElement = page
+    .getByTestId('activeReferences')
+    .getByRole('textbox', { name: 'RIS-Abkürzung' })
+  await expect(activeReferenceElement).toHaveCount(1)
+
+  // when
+  await referenceTypeElement.click()
+  await expect(page.getByText('Neuregelung')).toBeVisible()
+  await page.getByText('Neuregelung').click()
+  await activeReferenceElement.click()
+  await expect(page.getByText('KVLG')).toBeVisible()
+  await page.getByText('KVLG').click()
+  await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+  await page.getByRole('button', { name: 'Verweis speichern' }).click()
+  await page.getByTestId('list-entry-0').click()
+  await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+  await page.getByRole('button', { name: 'Verweis speichern' }).click()
+
+  // then
+  await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
+})
+
+test(
+  'Add two active references, delete the first item',
+  { tag: ['@RISDEV-6074'] },
   async ({ page }) => {
     // given
     await page.goto('/')
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
-    const normElement = page.getByRole('textbox', { name: 'RIS-Abkürzung' })
-    await expect(normElement).toHaveCount(1)
+    const referenceTypeElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'Art der Verweisung' })
+    await expect(referenceTypeElement).toHaveCount(1)
+    const activeReferenceElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(activeReferenceElement).toHaveCount(1)
 
     // when
-    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const sgb5Button = page.getByText('SGB 5')
-    await expect(sgb5Button).toBeVisible()
-    await sgb5Button.click()
+    await referenceTypeElement.click()
+    await expect(page.getByText('Anwendung')).toBeVisible()
+    await page.getByText('Anwendung').click()
+
+    await activeReferenceElement.click()
+    await expect(page.getByText('SGB 5')).toBeVisible()
+    await page.getByText('SGB 5').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
-    await normElement.locator('xpath=..').getByRole('button', {name: 'Dropdown öffnen'}).click()
-    const kvlgButton = page.getByText('KVLG')
-    await expect(kvlgButton).toBeVisible()
-    await kvlgButton.click()
+    await page.getByRole('button', { name: 'Verweis speichern' }).click()
+
+    await referenceTypeElement.click()
+    await expect(page.getByText('Rechtsgrundlage')).toBeVisible()
+    await page.getByText('Rechtsgrundlage').click()
+
+    await activeReferenceElement.click()
+    await expect(page.getByText('KVLG')).toBeVisible()
+    await page.getByText('KVLG').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByRole('button', { name: 'Verweis speichern' }).click()
     await page.getByTestId('list-entry-0').click()
     await page.getByText('Eintrag löschen').click()
 
-
     // then
     await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
-    await expect(page.getByText('KVLG, § 2')).toHaveCount(1)
+    await expect(page.getByText('Rechtsgrundlage | KVLG, § 2')).toHaveCount(1)
+  },
+)
+
+test('type of active reference is not editable after save', { tag: ['@RISDEV-6074'] },
+  async ({ page }) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click();
+    await page.getByRole('link', { name: 'Rubriken' }).click();
+    await page.getByText('Verwaltungsvorschrift').click();
+    await page.getByRole('textbox', { name: 'Art der Verweisung' }).click();
+    await page.locator('button').filter({ hasText: 'Anwendung' }).click();
+    await page.getByRole('textbox', { name: 'Suche nach Verwaltungsschrift' }).click();
+    await page.locator('button').filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' }).click();
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click();
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024');
+    await page.getByRole('button', { name: 'Verweis speichern' }).click();
+
+    // when
+    await page.getByTestId('list-entry-0').click();
+
+    // then
+    await expect(page.getByText('Verwaltungsvorschrift')).toHaveCount(0)
   },
 )
