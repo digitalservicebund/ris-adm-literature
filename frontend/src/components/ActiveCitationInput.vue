@@ -178,7 +178,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-on:keypress.ctrl.enter="search" class="flex flex-col gap-24">
+  <div @keyup.ctrl.enter="search" class="flex flex-col gap-24">
     <InputField
       id="activeCitationPredicate"
       v-slot="slotProps"
