@@ -319,10 +319,22 @@ test(
       page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, documentType1'),
     ).toBeVisible()
 
+    // re-open the same record
     await page.getByTestId('list-entry-0').click()
+
+    // by clicking into the input, there shall be no drop down suggestions
     await page.getByRole('textbox', { name: 'Dokumenttyp Aktivzitierung' }).click()
+    await expect(page.locator('button').filter({ hasText: 'VR' })).toHaveCount(0)
+
+    // but when deleting input content then option VR shall appear
+    await page.keyboard.press('Backspace')
+    await expect(page.locator('button').filter({ hasText: 'VR' })).toBeVisible()
+
+    // click this option and save it
     await page.locator('button').filter({ hasText: 'VR' }).click()
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+
+    // then
     await expect(
       page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, VR'),
     ).toBeVisible()
