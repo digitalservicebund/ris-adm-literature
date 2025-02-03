@@ -56,7 +56,7 @@ test.describe('FundstellenPage', () => {
       // Action
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
       await page.getByText('AA | Arbeitsrecht aktiv').click()
-      await page.getByLabel('Zitatstelle').fill('1991, Seite 92')
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
       await page.getByTestId('list-entry-0').click()
       await page.getByText('Abbrechen').click()
@@ -76,12 +76,12 @@ test.describe('FundstellenPage', () => {
       // Action
       await page.getByRole('textbox', { name: 'Periodikum' }).click()
       await page.getByText('AA | Arbeitsrecht aktiv').click()
-      await page.getByLabel('Zitatstelle').fill('1991, Seite 92')
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
 
       await page.getByRole('textbox', { name: 'Periodikum' }).click()
       await page.getByText('BAnz | Bundesanzeiger').click()
-      await page.getByLabel('Zitatstelle').fill('2001, Seite 21')
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
       await page.getByText('Übernehmen').click()
 
       await page.getByTestId('list-entry-0').click()
