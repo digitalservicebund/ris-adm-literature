@@ -94,5 +94,6 @@ allowed_patterns:
   - "sonar.projectKey="
   - '[key: string]: string'
   - "getByTestId\\('keywords'\\)"
+  - 'v-on:keypress'
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
