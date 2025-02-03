@@ -300,42 +300,43 @@ watch(
               updateFormatValidation(validationError, field)
           "
         />
-      </div>
-      <div class="flex w-full flex-row justify-between">
-        <div>
-          <div class="flex gap-24">
-            <TextButton
-              aria-label="Weitere Einzelnorm"
-              button-type="tertiary"
-              :icon="IconAdd"
-              label="Weitere Einzelnorm"
-              size="small"
-              @click.stop="addSingleNormEntry"
-            />
-            <TextButton
-              aria-label="Verweis speichern"
-              button-type="primary"
-              label="Übernehmen"
-              size="small"
-              @click.stop="addNormReference"
-            />
-            <TextButton
-              aria-label="Abbrechen"
-              button-type="ghost"
-              label="Abbrechen"
-              size="small"
-              @click.stop="cancelEdit"
-            />
+
+        <div class="flex w-full flex-row justify-between">
+          <div>
+            <div class="flex gap-24">
+              <TextButton
+                aria-label="Weitere Einzelnorm"
+                button-type="tertiary"
+                :icon="IconAdd"
+                label="Weitere Einzelnorm"
+                size="small"
+                @click.stop="addSingleNormEntry"
+              />
+              <TextButton
+                aria-label="Verweis speichern"
+                button-type="primary"
+                label="Übernehmen"
+                size="small"
+                @click.stop="addNormReference"
+              />
+              <TextButton
+                aria-label="Abbrechen"
+                button-type="ghost"
+                label="Abbrechen"
+                size="small"
+                @click.stop="cancelEdit"
+              />
+            </div>
           </div>
+          <TextButton
+            v-if="!lastSavedModelValue.isEmpty"
+            aria-label="Eintrag löschen"
+            button-type="destructive"
+            label="Eintrag löschen"
+            size="small"
+            @click.stop="removeNormReference"
+          />
         </div>
-        <TextButton
-          v-if="!lastSavedModelValue.isEmpty"
-          aria-label="Eintrag löschen"
-          button-type="destructive"
-          label="Eintrag löschen"
-          size="small"
-          @click.stop="removeNormReference"
-        />
       </div>
     </div>
   </div>

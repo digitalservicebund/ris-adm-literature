@@ -24,7 +24,7 @@ describe('ActiveReferenceInput', () => {
     expect(screen.queryByLabelText('Einzelnorm der Norm')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Fassungsdatum der Norm')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Jahr der Norm')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Norm speichern')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Verweis speichern')).not.toBeInTheDocument()
   })
 
   it('render values if given', async () => {
@@ -54,7 +54,7 @@ describe('ActiveReferenceInput', () => {
     expect(singleNormField).toHaveValue('12')
     expect(versionField).toHaveValue('31.01.2022')
     expect(relevanceField).toHaveValue('2023')
-    expect(screen.getByLabelText('Norm speichern')).toBeEnabled()
+    expect(screen.getByLabelText('Verweis speichern')).toBeEnabled()
   })
 
   it('renders multiple single norm input groups', async () => {
@@ -196,7 +196,7 @@ describe('ActiveReferenceInput', () => {
     expect(singleNormInput).toHaveValue('2021, Seite 21')
 
     await screen.findByText(/Inhalt nicht valide/)
-    screen.getByLabelText('Norm speichern').click()
+    screen.getByLabelText('Verweis speichern').click()
     expect(singleNormInput).toBeVisible()
   })
 
@@ -214,7 +214,7 @@ describe('ActiveReferenceInput', () => {
     await user.type(dateInput, '00.00.0231')
 
     await screen.findByText(/Kein valides Datum/)
-    screen.getByLabelText('Norm speichern').click()
+    screen.getByLabelText('Verweis speichern').click()
     expect(dateInput).toBeVisible()
   })
 
@@ -233,7 +233,7 @@ describe('ActiveReferenceInput', () => {
     await user.tab()
 
     await screen.findByText(/Unvollständiges Datum/)
-    screen.getByLabelText('Norm speichern').click()
+    screen.getByLabelText('Verweis speichern').click()
     expect(dateInput).toBeVisible()
   })
 
@@ -254,7 +254,7 @@ describe('ActiveReferenceInput', () => {
     expect(yearInput).toHaveValue('0000')
 
     await screen.findByText(/Kein valides Jahr/)
-    screen.getByLabelText('Norm speichern').click()
+    screen.getByLabelText('Verweis speichern').click()
     expect(yearInput).toBeVisible()
   })
 
@@ -267,7 +267,7 @@ describe('ActiveReferenceInput', () => {
     expect(dropdownItems[0]).toHaveTextContent('SGB 5')
     await user.click(dropdownItems[0])
 
-    const addButton = screen.getByLabelText('Norm speichern')
+    const addButton = screen.getByLabelText('Verweis speichern')
     await user.click(addButton)
 
     expect(screen.getByText('Art der Verweisung fehlt')).toBeInTheDocument()
@@ -324,7 +324,7 @@ describe('ActiveReferenceInput', () => {
     expect(dropdownItems[0]).toHaveTextContent('SGB 5')
     await user.click(dropdownItems[0])
 
-    const button = screen.getByLabelText('Norm speichern')
+    const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
     expect(emitted('update:modelValue')).toEqual([
       [
@@ -391,7 +391,7 @@ describe('ActiveReferenceInput', () => {
       } as ActiveReference,
     })
 
-    const addButton = screen.getByLabelText('Norm speichern')
+    const addButton = screen.getByLabelText('Verweis speichern')
     await user.click(addButton)
 
     expect(emitted('addEntry')).toBeTruthy()

@@ -107,7 +107,7 @@ describe('ActiveReferences', () => {
     expect(dropdownItems[0]).toHaveTextContent('SGB 5')
     await user.click(dropdownItems[0])
     await screen.findByText(/RIS-Abkürzung bereits eingegeben/)
-    const button = screen.getByLabelText('Norm speichern')
+    const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
     await screen.findByText(/RIS-Abkürzung bereits eingegeben/)
   })
@@ -144,7 +144,7 @@ describe('ActiveReferences', () => {
     const years = await screen.findAllByLabelText('Jahr der Norm')
     await user.type(years[1], '2022')
 
-    const button = screen.getByLabelText('Norm speichern')
+    const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
 
     const listItems = screen.getAllByLabelText('Listen Eintrag')
