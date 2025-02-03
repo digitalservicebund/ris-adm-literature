@@ -38,7 +38,7 @@ test.describe('FundstellenPage', () => {
       // Action
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
       await page.getByText('BAnz | Bundesanzeiger').click()
-      await page.getByLabel('Zitatstelle').fill('2024, Seite 24')
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
       await page.getByText('Übernehmen').click()
 
       // Assert
