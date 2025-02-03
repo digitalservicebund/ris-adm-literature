@@ -12,7 +12,7 @@ Work In Progress
 
 1. All the _currently existing_ ADMs are stored in management systems and data formats we strive to replace with our webapp, so we need to decide in which way we want to make these existing documents available in our app.
 
-1. There exists is a CLI tool called [`ris-vwv-migration`](https://github.com/digitalservicebund/ris-vwv-migration) that
+1. There exists a CLI tool called [`ris-vwv-migration`](https://github.com/digitalservicebund/ris-vwv-migration) that
 
    - reads documents in the legacy format and
    - writes its results to a database, most importantly:
