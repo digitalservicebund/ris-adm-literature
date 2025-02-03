@@ -108,6 +108,10 @@ const service: ComboboxItemService = {
           (item) => <ComboboxItem>{ label: item.label, value: item },
         )
         documentTypes.value = [...filteredComboBoxItems]
+      } else {
+        documentTypes.value = documentTypeValues.map(
+          (dt) => <ComboboxItem>{ label: dt.label, value: dt },
+        )
       }
       return service.getDocumentTypes(filter)
     }
@@ -210,6 +214,10 @@ const service: ComboboxItemService = {
           (item) => <ComboboxItem>{ label: item.label, value: item },
         )
         citationTypes.value = [...filteredComboBoxItems]
+      } else {
+        citationTypes.value = citationTypeValues.map(
+          (item) => <ComboboxItem>{ label: item.label, value: item },
+        )
       }
       return service.getCitationTypes(filter)
     }
