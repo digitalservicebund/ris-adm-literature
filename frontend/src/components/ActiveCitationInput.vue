@@ -228,7 +228,7 @@ onMounted(() => {
           <DateInput
             id="activeCitationDecisionDate"
             v-model="activeCitation.decisionDate"
-            aria-label="Entscheidungsdatum Aktivzitierung"
+            ariaLabel="Entscheidungsdatum Aktivzitierung"
             class="ds-input-medium"
             :has-error="slotProps.hasError"
             :readonly="activeCitation.hasForeignSource"
@@ -245,9 +245,9 @@ onMounted(() => {
           :validation-error="validationStore.getByField('fileNumber')"
         >
           <TextInput
-            id="activeCitationDocumentType"
+            id="activeCitationFileNumber"
             v-model="activeCitation.fileNumber"
-            aria-label="Aktenzeichen Aktivzitierung"
+            ariaLabel="Aktenzeichen Aktivzitierung"
             :has-error="slotProps.hasError"
             :readonly="activeCitation.hasForeignSource"
             size="medium"

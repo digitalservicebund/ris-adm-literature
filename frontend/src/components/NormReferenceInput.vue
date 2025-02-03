@@ -174,7 +174,7 @@ watch(
 <template>
   <div class="flex flex-col gap-24">
     <InputField
-      id="norm-reference-abbreviation-field"
+      id="norm-reference-abbreviation"
       v-slot="slotProps"
       label="RIS-Abkürzung *"
       :validation-error="validationStore.getByField('normAbbreviation')"
