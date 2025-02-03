@@ -48,6 +48,8 @@ export default defineConfig({
 
     /* Only on CI systems run the tests headless */
     headless: !!process.env.CI,
+
+    screenshot: process.env.CI ? 'off' : 'only-on-failure',
   },
 
   /* Configure projects for major browsers */
