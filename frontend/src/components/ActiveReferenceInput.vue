@@ -205,93 +205,102 @@ watch(
 
 <template>
   <div class="flex flex-col gap-24">
-    <div class="flex w-full flex-row justify-between">
-      <div class="flex flex-row gap-24">
-        <InputField
-          id="normReferenceDocumentType"
-          label="Norm"
-          label-class="ds-label-01-reg"
-          :label-position="LabelPosition.RIGHT"
-        >
-          <RadioInput
+    <div class="flex flex-col gap-24" v-if="lastSavedModelValue.isEmpty">
+      <div class="flex w-full flex-row justify-between">
+        <div class="flex flex-row gap-24">
+          <InputField
             id="normReferenceDocumentType"
-            v-model="activeReference.referenceDocumentType"
-            aria-label="Norm auswählen"
-            size="small"
-            :value="`${ActiveReferenceDocumentType.NORM}`"
-          />
-        </InputField>
-
-        <InputField
-          id="administrativeRegulationReferenceDocumentType"
-          label="Verwaltungsvorschrift"
-          label-class="ds-label-01-reg"
-          :label-position="LabelPosition.RIGHT"
-        >
-          <RadioInput
+            label="Norm"
+            label-class="ds-label-01-reg"
+            :label-position="LabelPosition.RIGHT"
+          >
+            <RadioInput
+              id="normReferenceDocumentType"
+              v-model="activeReference.referenceDocumentType"
+              aria-label="Norm auswählen"
+              size="small"
+              :value="`${ActiveReferenceDocumentType.NORM}`"
+            />
+          </InputField>
+          <InputField
             id="administrativeRegulationReferenceDocumentType"
-            v-model="activeReference.referenceDocumentType"
-            aria-label="Verwaltungsvorschrift auswählen"
-            size="small"
-            :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
-          />
-        </InputField>
+            label="Verwaltungsvorschrift"
+            label-class="ds-label-01-reg"
+            :label-position="LabelPosition.RIGHT"
+          >
+            <RadioInput
+              id="administrativeRegulationReferenceDocumentType"
+              v-model="activeReference.referenceDocumentType"
+              aria-label="Verwaltungsvorschrift auswählen"
+              size="small"
+              :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
+            />
+          </InputField>
+        </div>
       </div>
     </div>
-    <InputField
-      id="active-reference-type-field"
-      v-slot="slotProps"
-      label="Art der Verweisung *"
-      :validation-error="validationStore.getByField('referenceType')"
-    >
-      <ComboboxInput
+    <div class="flex flex-col gap-24">
+      <InputField
         id="active-reference-type-field"
-        v-model="referenceType"
-        aria-label="Art der Verweisung"
-        :has-error="slotProps.hasError"
-        :item-service="ComboboxItemService.getActiveReferenceTypes"
-        no-clear
-        placeholder="Bitte auswählen"
-        @focus="validationStore.remove('referenceType')"
-      ></ComboboxInput>
-    </InputField>
-    <InputField
-      id="active-reference-abbreviation"
-      v-slot="slotProps"
-      :label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation + ` *`"
-      :validation-error="validationStore.getByField('normAbbreviation')"
-    >
-      <ComboboxInput
+        v-slot="slotProps"
+        label="Art der Verweisung *"
+        :validation-error="validationStore.getByField('referenceType')"
+      >
+        <ComboboxInput
+          id="active-reference-type-field"
+          v-model="referenceType"
+          aria-label="Art der Verweisung"
+          :has-error="slotProps.hasError"
+          :item-service="ComboboxItemService.getActiveReferenceTypes"
+          no-clear
+          placeholder="Bitte auswählen"
+          @focus="validationStore.remove('referenceType')"
+        ></ComboboxInput>
+      </InputField>
+    </div>
+    <div class="flex flex-col gap-24">
+      <InputField
         id="active-reference-abbreviation"
-        v-model="normAbbreviation"
-        :aria-label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation"
-        :has-error="slotProps.hasError"
-        :item-service="ComboboxItemService.getRisAbbreviations"
-        no-clear
-        :placeholder="labels[`${activeReference.referenceDocumentType}`].risAbbreviationPlaceholder"
-        @focus="validationStore.remove('normAbbreviation')"
-      ></ComboboxInput>
-    </InputField>
-    <div v-if="normAbbreviation || activeReference.normAbbreviationRawValue">
-      <SingleNormInput
-        v-for="(singleNorm, index) in singleNorms"
-        :key="index"
-        v-model="singleNorm as SingleNorm"
-        aria-label="Einzelnorm"
-        :index="index"
-        norm-abbreviation="normAbbreviation.abbreviation"
-        :show-single-norm-input="
-          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
-        "
-        :show-date-of-relevance-button="
-          activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
-        "
-        @remove-entry="removeSingleNormEntry(index)"
-        @update:validation-error="
-          (validationError: ValidationError | undefined, field?: string) =>
-            updateFormatValidation(validationError, field)
-        "
-      />
+        v-slot="slotProps"
+        :label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation + ` *`"
+        :validation-error="validationStore.getByField('normAbbreviation')"
+      >
+        <ComboboxInput
+          id="active-reference-abbreviation"
+          v-model="normAbbreviation"
+          :aria-label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation"
+          :has-error="slotProps.hasError"
+          :item-service="ComboboxItemService.getRisAbbreviations"
+          no-clear
+          :placeholder="
+            labels[`${activeReference.referenceDocumentType}`].risAbbreviationPlaceholder
+          "
+          @focus="validationStore.remove('normAbbreviation')"
+        ></ComboboxInput>
+      </InputField>
+    </div>
+    <div class="flex flex-col gap-24">
+      <div v-if="normAbbreviation || activeReference.normAbbreviationRawValue">
+        <SingleNormInput
+          v-for="(singleNorm, index) in singleNorms"
+          :key="index"
+          v-model="singleNorm as SingleNorm"
+          aria-label="Einzelnorm"
+          :index="index"
+          norm-abbreviation="normAbbreviation.abbreviation"
+          :show-single-norm-input="
+            activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
+          "
+          :show-date-of-relevance-button="
+            activeReference.referenceDocumentType == ActiveReferenceDocumentType.NORM
+          "
+          @remove-entry="removeSingleNormEntry(index)"
+          @update:validation-error="
+            (validationError: ValidationError | undefined, field?: string) =>
+              updateFormatValidation(validationError, field)
+          "
+        />
+      </div>
       <div class="flex w-full flex-row justify-between">
         <div>
           <div class="flex gap-24">
@@ -304,7 +313,7 @@ watch(
               @click.stop="addSingleNormEntry"
             />
             <TextButton
-              aria-label="Norm speichern"
+              aria-label="Verweis speichern"
               button-type="primary"
               label="Übernehmen"
               size="small"

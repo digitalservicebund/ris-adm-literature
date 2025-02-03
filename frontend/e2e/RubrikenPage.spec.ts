@@ -109,7 +109,7 @@ test(
     await schlagwoerterListEditElement.press('Enter')
     await schlagwoerterListEditElement.pressSequentially('This should not be added')
     await schlagwoerterListEditElement.press('Enter')
-    const abbrechenElement = page.getByText('Abbrechen')
+    const abbrechenElement = page.getByTestId('keywords').getByRole('button', { name: 'Abbrechen' })
     await abbrechenElement.click()
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
     await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
@@ -359,10 +359,10 @@ test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async 
   await expect(page.getByText('KVLG')).toBeVisible()
   await page.getByText('KVLG').click()
   await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
-  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByRole('button', { name: 'Verweis speichern' }).click()
   await page.getByTestId('list-entry-0').click()
   await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
-  await page.getByRole('button', { name: 'Norm speichern' }).click()
+  await page.getByRole('button', { name: 'Verweis speichern' }).click()
 
   // then
   await expect(page.getByText('Neuregelung | KVLG, § 2, 27.01.2025')).toHaveCount(1)
@@ -395,7 +395,7 @@ test(
     await expect(page.getByText('SGB 5')).toBeVisible()
     await page.getByText('SGB 5').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByRole('button', { name: 'Verweis speichern' }).click()
 
     await referenceTypeElement.click()
     await expect(page.getByText('Rechtsgrundlage')).toBeVisible()
@@ -405,12 +405,35 @@ test(
     await expect(page.getByText('KVLG')).toBeVisible()
     await page.getByText('KVLG').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
-    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByRole('button', { name: 'Verweis speichern' }).click()
     await page.getByTestId('list-entry-0').click()
     await page.getByText('Eintrag löschen').click()
 
     // then
     await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
     await expect(page.getByText('Rechtsgrundlage | KVLG, § 2')).toHaveCount(1)
+  },
+)
+
+test('type of active reference is not editable after save', { tag: ['@RISDEV-6074'] },
+  async ({ page }) => {
+    // given
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click();
+    await page.getByRole('link', { name: 'Rubriken' }).click();
+    await page.getByText('Verwaltungsvorschrift').click();
+    await page.getByRole('textbox', { name: 'Art der Verweisung' }).click();
+    await page.locator('button').filter({ hasText: 'Anwendung' }).click();
+    await page.getByRole('textbox', { name: 'Suche nach Verwaltungsschrift' }).click();
+    await page.locator('button').filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' }).click();
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click();
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024');
+    await page.getByRole('button', { name: 'Verweis speichern' }).click();
+
+    // when
+    await page.getByTestId('list-entry-0').click();
+
+    // then
+    await expect(page.getByText('Verwaltungsvorschrift')).toHaveCount(0)
   },
 )
