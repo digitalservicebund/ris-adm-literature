@@ -8,7 +8,7 @@ Work In Progress
 
 ## Context
 
-1. The purpose of our web app is to support the handling of administrative directives (ADMs) which means creating new ADMs and: editing/updating existing ADMs
+1. The purpose of our web app is to support the handling of administrative directives (ADMs) which means creating new ADMs and editing/updating existing ADMs
 
 1. All the _currently existing_ ADMs are stored in management systems and data formats we strive to replace with our webapp, so we need to decide in which way we want to make these existing documents available in our app.
 
