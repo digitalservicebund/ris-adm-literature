@@ -100,7 +100,7 @@ const service: ComboboxItemService = {
       documentTypeValues.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }),
     )
     const execute = async () => {
-      if (filter?.value.length > 0) {
+      if (filter?.value && filter.value.length > 0) {
         const filteredItems = documentTypeValues.filter((item) =>
           item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
         )
@@ -202,7 +202,7 @@ const service: ComboboxItemService = {
       citationTypeValues.map((item) => <ComboboxItem>{ label: item.label, value: item }),
     )
     const execute = async () => {
-      if (filter?.value.length > 0) {
+      if (filter?.value && filter.value.length > 0) {
         const filteredItems = citationTypeValues.filter((item) =>
           item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
         )
