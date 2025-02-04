@@ -447,7 +447,7 @@ test(
     await page.goto('/')
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
     await page.getByRole('link', { name: 'Rubriken' }).click()
-    await page.getByText('Verwaltungsvorschrift').click()
+    await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
     await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()
     await page.locator('button').filter({ hasText: 'Anwendung' }).click()
     await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
@@ -460,6 +460,6 @@ test(
     await page.getByTestId('list-entry-0').click()
 
     // then
-    await expect(page.getByText('Verwaltungsvorschrift')).toHaveCount(0)
+    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' })).toHaveCount(0)
   },
 )
