@@ -122,7 +122,9 @@ test(
     await schlagwoerterListEditElement.press('Enter')
     await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
     await schlagwoerterListEditElement.press('Enter')
-    const sortAlphabeticallyCheckboxElement = page.getByLabel('Alphabetisch sortieren')
+    const sortAlphabeticallyCheckboxElement = page.getByRole('checkbox', {
+      name: 'Alphabetisch sortieren',
+    })
     await sortAlphabeticallyCheckboxElement.check()
     await schlagwoerterUebernehmenElement.click()
     // new element is available
