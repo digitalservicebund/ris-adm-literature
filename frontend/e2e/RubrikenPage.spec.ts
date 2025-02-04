@@ -450,7 +450,7 @@ test(
     await page.getByText('Verwaltungsvorschrift').click()
     await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()
     await page.locator('button').filter({ hasText: 'Anwendung' }).click()
-    await page.getByRole('textbox', { name: 'Suche nach Verwaltungsschrift' }).click()
+    await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
     await page.locator('button').filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
