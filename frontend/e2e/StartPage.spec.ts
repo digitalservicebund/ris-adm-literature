@@ -7,10 +7,10 @@ test(
   { tag: ['@RISDEV-6041'] },
   async ({ page }) => {
     await page.goto('/')
-    expect(await page.getByText('Rechtsinformationen').innerText()).toContain('DES BUNDES')
+    await expect(page.getByText('Rechtsinformationen des Bundes')).toBeVisible()
     // user icon
     await expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
-    expect(await page.getByText('Vorname').innerText()).toContain('Nachname')
+    await expect(page.getByText('Vorname Nachname')).toBeVisible()
     await expect(page.getByText('BSG')).toHaveCount(1)
     await expect(page.getByText('Übersicht Verwaltungsvorschriften')).toHaveCount(1)
     await expect(page.getByText('Neue Dokumentationseinheit')).toHaveCount(1)
