@@ -65,6 +65,10 @@ npm run test:e2e -- e2e/AbgabePage.spec.ts
 npm run test:e2e -- --debug
 # Runs the tests only on Chromium and for a specific file and in debug mode
 npm run test:e2e -- e2e/AbgabePage.spec.ts --debug --project=chromium
+# Run tests in interactive UI mode.
+npm run test:e2e -- --ui
+# Run tests in headed browsers
+npm run test:e2e -- --headed
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
