@@ -236,14 +236,20 @@ test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async (
   await expect(artDerZitierungInput).toHaveCount(1)
 
   await artDerZitierungInput.click()
-  await page.locator('button').filter({ hasText: 'Ablehnung' }).click()
+  await page
+    .getByRole('button', { name: 'dropdown-option' })
+    .filter({ hasText: 'Ablehnung' })
+    .click()
   await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
   await expect(page.getByText('Fehlende Daten')).toBeVisible()
 
   await page.getByTestId('list-entry-0').click()
   await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(3)
   await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
-  await page.locator('button').filter({ hasText: 'AG Aachen' }).click()
+  await page
+    .getByRole('button', { name: 'dropdown-option' })
+    .filter({ hasText: 'AG Aachen' })
+    .click()
   await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
   await expect(page.getByText('Ablehnung, AG Aachen')).toBeVisible()
   await expect(page.getByText('Fehlende Daten')).toBeVisible()
@@ -272,9 +278,15 @@ test(
     await page.getByText('Rubriken').click()
 
     await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-    await page.locator('button').filter({ hasText: 'Ablehnung' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Ablehnung' })
+      .click()
     await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
-    await page.locator('button').filter({ hasText: 'AG Aachen' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'AG Aachen' })
+      .click()
     await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
     await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
@@ -282,9 +294,15 @@ test(
     await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
 
     await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-    await page.locator('button').filter({ hasText: 'Übernahme' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Übernahme' })
+      .click()
     await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
-    await page.locator('button').filter({ hasText: 'Berufsgericht für Architekten Bremen' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Berufsgericht für Architekten Bremen' })
+      .click()
     await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('31.12.2024')
     await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az2')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
@@ -311,7 +329,10 @@ test(
     await page.getByText('Rubriken').click()
 
     await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-    await page.locator('button').filter({ hasText: 'Übernahme' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Übernahme' })
+      .click()
     await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
     await expect(
       page.getByText('label1, 01.02.2022, test fileNumber1, documentType1'),
@@ -326,14 +347,18 @@ test(
 
     // by clicking into the input, there shall be no drop down suggestions
     await page.getByRole('textbox', { name: 'Dokumenttyp Aktivzitierung' }).click()
-    await expect(page.locator('button').filter({ hasText: 'VR' })).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' }),
+    ).toHaveCount(0)
 
     // but when deleting input content then option VR shall appear
     await page.keyboard.press('Backspace')
-    await expect(page.locator('button').filter({ hasText: 'VR' })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' }),
+    ).toBeVisible()
 
     // click this option and save it
-    await page.locator('button').filter({ hasText: 'VR' }).click()
+    await page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' }).click()
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
 
     // then
@@ -449,9 +474,15 @@ test(
     await page.getByRole('link', { name: 'Rubriken' }).click()
     await page.getByText('Verwaltungsvorschrift').click()
     await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()
-    await page.locator('button').filter({ hasText: 'Anwendung' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Anwendung' })
+      .click()
     await page.getByRole('textbox', { name: 'Suche nach Verwaltungsschrift' }).click()
-    await page.locator('button').filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+      .click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     await page.getByRole('button', { name: 'Verweis speichern' }).click()
