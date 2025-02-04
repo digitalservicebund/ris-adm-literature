@@ -28,6 +28,11 @@ export default [
   {
     ...pluginPlaywright.configs['flat/recommended'],
     files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+    rules: {
+      ...pluginPlaywright.configs["flat/recommended"].rules,
+      "playwright/no-raw-locators": ["error"],
+      "playwright/prefer-native-locators": ["error"]
+    },
   },
 
   {
