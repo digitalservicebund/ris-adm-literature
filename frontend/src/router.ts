@@ -34,20 +34,24 @@ const router = createRouter({
       path: '/documentUnit/:documentNumber',
       name: 'documentUnit-documentNumber',
       component: DocumentUnitWrapper,
+      props: true,
       children: [
         {
           path: '/documentUnit/:documentNumber/fundstellen',
           name: 'documentUnit-documentNumber-fundstellen',
+          props: true,
           component: FundstellenPage,
         },
         {
           path: '/documentUnit/:documentNumber/rubriken',
           name: 'documentUnit-documentNumber-rubriken',
+          props: true,
           component: RubrikenPage,
         },
         {
           path: '/documentUnit/:documentNumber/abgabe',
           name: 'documentUnit-documentNumber-abgabe',
+          props: true,
           component: AbgabePage,
         },
       ],
