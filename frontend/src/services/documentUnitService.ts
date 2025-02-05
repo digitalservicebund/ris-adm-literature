@@ -1,16 +1,61 @@
 import type { ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
+import DocumentUnit from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
+import errorMessages from '@/i18n/errors.json'
 
 interface DocumentUnitService {
+  getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnit>>
+
+  createNew(): Promise<ServiceResponse<DocumentUnit>>
+
   searchByRelatedDocumentation(
     query: RelatedDocumentation,
     requestParams?: { [key: string]: string } | undefined,
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
+const documents: {
+  [documentNumber: string]: {
+    uuid: string
+    documentNumber: string
+  }
+} = {
+  KSNR054920707: {
+    uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+    documentNumber: 'KSNR054920707',
+  },
+}
+
 const service: DocumentUnitService = {
+  async getByDocumentNumber(documentNumber: string) {
+    if (documents.hasOwnProperty(documentNumber)) {
+      return {
+        status: 200,
+        data: new DocumentUnit(documents[documentNumber].uuid, {
+          documentNumber: documents[documentNumber].documentNumber,
+        }),
+      }
+    }
+    return {
+      status: 400,
+      error: {
+        title: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED.title,
+        description: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED.description,
+      },
+    }
+  },
+
+  async createNew() {
+    return {
+      status: 200,
+      data: new DocumentUnit('8de5e4a0-6b67-4d65-98db-efe877a260c4', {
+        documentNumber: 'KSNR054920707',
+      }),
+    }
+  },
+
   async searchByRelatedDocumentation(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     query: RelatedDocumentation = new RelatedDocumentation(),

@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import { RisUiTheme, RisUiLocale } from '@digitalservicebund/ris-ui/primevue'
 import '@digitalservicebund/ris-ui/primevue/style.css'
@@ -23,6 +24,7 @@ if (import.meta.env.PROD) {
 }
 
 app
+  .use(createPinia())
   .use(PrimeVue, {
     unstyled: true,
     pt: RisUiTheme,
