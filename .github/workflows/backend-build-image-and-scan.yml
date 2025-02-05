@@ -64,7 +64,7 @@ jobs:
           path: trivy-image-results.sarif
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        #if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
+        if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
         with:
           sarif_file: "trivy-image-results.sarif"
       - name: Generate cosign vulnerability scan record
