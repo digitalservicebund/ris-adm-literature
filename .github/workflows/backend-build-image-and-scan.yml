@@ -29,7 +29,7 @@ jobs:
         working-directory: ./backend
         env:
           CONTAINER_REGISTRY: ${{ inputs.container-registry }}
-          IMAGE_REF: ${{ inputs.imageRef }}
+          IMAGE_REF: ${{ inputs.image-ref }}
         run: ./gradlew bootBuildImage
       - name: Run Trivy vulnerability image scanner
         # Note: This scan is what is shown in the GitHub Security tab
