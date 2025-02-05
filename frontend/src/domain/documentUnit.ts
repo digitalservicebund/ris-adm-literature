@@ -13,3 +13,13 @@ export type Court = {
   revoked?: string
   responsibleDocOffice?: DocumentationOffice
 }
+
+export default class DocumentUnit {
+  readonly uuid: string
+  readonly documentNumber: string = ''
+
+  constructor(uuid: string, data: Partial<DocumentUnit> = {}) {
+    this.uuid = String(uuid)
+    Object.assign(this, data)
+  }
+}
