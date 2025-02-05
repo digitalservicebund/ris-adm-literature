@@ -38,6 +38,35 @@ jobs:
     uses: ./.github/workflows/backend-checks.yml
     secrets: inherit
 
+  backend-build-image-and-scan:
+    uses: ./.github/workflows/backend-build-image-and-scan.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      run-id: ${{ github.run_id }}
+      image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+
+  backend-push-image-to-registry:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    # For PR releases, labels could be used like this:
+    # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+    needs:
+      - security-jobs
+      - backend-checks
+      - backend-build-image-and-scan
+    uses: ./.github/workflows/backend-push-image-to-registry.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+      packages: write
+    with:
+      run-id: ${{ github.run_id }}
+      container-registry: ghcr.io
+      image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+
   backend-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
