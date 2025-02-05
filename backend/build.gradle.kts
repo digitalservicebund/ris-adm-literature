@@ -97,11 +97,10 @@ sonar {
 }
 
 tasks.bootBuildImage {
+    val containerImageRef = System.getenv("IMAGE_REF") ?: "ghcr.io/digitalservicebund/${rootProject.name}:latest"
     val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
-    val containerImageName = System.getenv("CONTAINER_IMAGE_NAME") ?: "digitalservicebund/${rootProject.name}"
-    val containerImageVersion = System.getenv("CONTAINER_IMAGE_VERSION") ?: "latest"
 
-    imageName.set("$containerRegistry/$containerImageName:$containerImageVersion")
+    imageName.set(containerImageRef)
     builder.set("paketobuildpacks/builder-jammy-tiny")
     publish.set(false)
 

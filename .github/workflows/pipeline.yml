@@ -47,6 +47,7 @@ jobs:
     with:
       run-id: ${{ github.run_id }}
       image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+      container-registry: ghcr.io
 
   backend-push-image-to-registry:
     if: ${{ github.ref == 'refs/heads/main' }}

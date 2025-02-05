@@ -7,6 +7,9 @@ on:
       image-ref:
         required: true
         type: string
+      container-registry:
+        required: true
+        type: string
 
 jobs:
   backend-build-image-and-scan:
@@ -24,6 +27,9 @@ jobs:
           cache: gradle
       - name: Build backend image
         working-directory: ./backend
+        env:
+          CONTAINER_REGISTRY: ${{ container-registry }}
+          IMAGE_REF: ${{ imageRef }}
         run: ./gradlew bootBuildImage
       - name: Run Trivy vulnerability image scanner
         # Note: This scan is what is shown in the GitHub Security tab
