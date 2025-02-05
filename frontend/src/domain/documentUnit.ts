@@ -20,12 +20,6 @@ export default class DocumentUnit {
 
   constructor(uuid: string, data: Partial<DocumentUnit> = {}) {
     this.uuid = String(uuid)
-
-    let rootField: keyof DocumentUnit
-    for (rootField in data) {
-      if (data[rootField] === null) delete data[rootField]
-    }
-
     Object.assign(this, data)
   }
 }
