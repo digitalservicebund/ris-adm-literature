@@ -44,6 +44,7 @@ jobs:
           image-ref: ${{ inputs.image-ref }}
           format: "sarif"
           output: "trivy-image-results.sarif"
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
       - name: Print trivy results (sarif format)
         run: cat trivy-image-results.sarif
       - name: Check trivy results
@@ -62,11 +63,11 @@ jobs:
           name: backend-trivy-image-results.sarif
           retention-days: 3
           path: trivy-image-results.sarif
-#      - name: Upload Trivy scan results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v3
-#        if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
-#        with:
-#          sarif_file: "trivy-image-results.sarif"
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        #if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
+        with:
+          sarif_file: "trivy-image-results.sarif"
       - name: Generate cosign vulnerability scan record
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
