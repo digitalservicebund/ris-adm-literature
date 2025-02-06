@@ -7,3 +7,9 @@ spring:
     password: ${database.password:}
     #driver-class-name: org.postgresql.Driver
     driver-class-name: org.h2.Driver
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
