@@ -1,4 +1,5 @@
 import type DocumentationOffice from './documentationOffice'
+import Reference from './reference'
 
 export type DocumentType = {
   uuid?: string
@@ -16,10 +17,13 @@ export type Court = {
 
 export default class DocumentUnit {
   readonly uuid: string
-  readonly documentNumber: string = ''
+  readonly documentNumber: string
+  public references?: Reference[]
 
-  constructor(uuid: string, data: Partial<DocumentUnit> = {}) {
-    this.uuid = String(uuid)
-    Object.assign(this, data)
+  constructor(data: DocumentUnit) {
+    this.uuid = data.uuid
+    this.documentNumber = data.documentNumber
+    if (data.references)
+      this.references = data.references.map((reference) => new Reference({ ...reference }))
   }
 }

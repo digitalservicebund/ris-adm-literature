@@ -33,7 +33,8 @@ const service: DocumentUnitService = {
     if (documents.hasOwnProperty(documentNumber)) {
       return {
         status: 200,
-        data: new DocumentUnit(documents[documentNumber].uuid, {
+        data: new DocumentUnit({
+          uuid: documents[documentNumber].uuid,
           documentNumber: documents[documentNumber].documentNumber,
         }),
       }
@@ -47,7 +48,8 @@ const service: DocumentUnitService = {
   async createNew() {
     return {
       status: 200,
-      data: new DocumentUnit('8de5e4a0-6b67-4d65-98db-efe877a260c4', {
+      data: new DocumentUnit({
+        uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
       }),
     }

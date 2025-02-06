@@ -1,7 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import DocumentUnit from '@/domain/documentUnit'
-// import { RisJsonPatch } from '@/domain/risJsonPatch'
 import errorMessages from '@/i18n/errors.json'
 import documentUnitService from '@/services/documentUnitService'
 import { type ServiceResponse } from '@/services/httpClient'
@@ -20,7 +19,7 @@ describe('useDocumentUnitStore', () => {
   describe('loadDocumentUnit', () => {
     it('loads a document unit successfully', async () => {
       // given
-      const mockDocumentUnit = new DocumentUnit('123', {})
+      const mockDocumentUnit = new DocumentUnit({ uuid: '123', documentNumber: 'KSNR054920707' })
       const serviceResponse: ServiceResponse<DocumentUnit> = {
         status: 200,
         data: mockDocumentUnit,
