@@ -49,21 +49,6 @@ jobs:
       # but right now it's not worth it
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
 
-  secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
-    runs-on: ubuntu-latest
-    # Running on main only (branches pose problems, cf. https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409)
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # Mitigation by activating Secret Scanning and Push Protection in GitHub Repo Settings
-    # cf. https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706525248390559
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Detect secrets in incoming commits with Talisman
-        uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb
-      - name: On failure send status to Slack
-        # only on failure and if on "main" branch
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf
-        with:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  # Secret Scanning has moved from talisman to GitHub Secret Scanning with Push Protection
+  # (cf. https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning)
+
