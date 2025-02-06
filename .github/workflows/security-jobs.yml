@@ -11,6 +11,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api --method GET -H "X-GitHub-Api-Version:2022-11-28"  /repos/digitalservicebund/ris-adm-vwv > repo-info.json
+      - name: Upload configuration information
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-info.json
+          retention-days: 1
+          path: repo-info.json
       - name: Confirm that secret scanning is active
         run: |
           if [[ $(cat repo-info.json | jq ' .security_and_analysis.secret_scanning.status') == *enabled* ]]; then 
