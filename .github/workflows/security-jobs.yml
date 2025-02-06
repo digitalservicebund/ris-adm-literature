@@ -9,6 +9,8 @@ jobs:
         run: sudo apt install jq
       - name: Fetch configuration information on repository
         env:
+          # the token needs (max) the following permissions:
+          # read:enterprise, read:org, read:project, read:user, repo
           GH_TOKEN: ${{ secrets.GH_SECRET_SCANNING_TOKEN }}
         run: gh api --method GET -H "X-GitHub-Api-Version:2022-11-28"  /repos/digitalservicebund/ris-adm-vwv > repo-info.json
       - name: Upload configuration information
