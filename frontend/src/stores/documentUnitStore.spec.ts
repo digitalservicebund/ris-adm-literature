@@ -19,6 +19,7 @@ describe('useDocumentUnitStore', () => {
 
   describe('loadDocumentUnit', () => {
     it('loads a document unit successfully', async () => {
+      // given
       const mockDocumentUnit = new DocumentUnit('123', {})
       const serviceResponse: ServiceResponse<DocumentUnit> = {
         status: 200,
@@ -31,17 +32,20 @@ describe('useDocumentUnitStore', () => {
         .mockResolvedValueOnce(serviceResponse)
 
       const store = useDocumentUnitStore()
+
+      // when
       const response = await store.loadDocumentUnit('123')
 
+      // then
       expect(documentUnitServiceMock).toHaveBeenCalledOnce()
       expect(response).toEqual(serviceResponse)
       expect(store.documentUnit).toEqual(mockDocumentUnit)
     })
 
     it('handles failure to load a document unit', async () => {
+      // given
       const serviceResponse: ServiceResponse<DocumentUnit> = {
-        status: 200,
-        data: undefined,
+        status: 400,
         error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
       }
 
@@ -50,8 +54,11 @@ describe('useDocumentUnitStore', () => {
         .mockResolvedValueOnce(serviceResponse)
 
       const store = useDocumentUnitStore()
+
+      // when
       const response = await store.loadDocumentUnit('123')
 
+      // then
       expect(documentUnitServiceMock).toHaveBeenCalledOnce()
       expect(response).toEqual(serviceResponse)
       expect(store.documentUnit).toBeUndefined()
