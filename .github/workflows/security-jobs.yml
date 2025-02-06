@@ -81,5 +81,3 @@ jobs:
       # but right now it's not worth it
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
 
-  # Secret Scanning has moved from talisman to GitHub Secret Scanning with Push Protection
-  # (cf. https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning)
