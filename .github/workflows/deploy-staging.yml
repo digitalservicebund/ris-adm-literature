@@ -21,7 +21,7 @@ jobs:
         with:
           environment: staging
           version: ${{ inputs.container-image-version }}
-          deploying_repo: ris-adm-vwv-frontend
+          deploying_repo: ris-adm-vwv-frontend,ris-adm-vwv-backend
           infra_repo: ris-adm-vwv-infra
           deploy_key: ${{ secrets.DEPLOY_KEY }}
           app: ris-adm-vwv-staging

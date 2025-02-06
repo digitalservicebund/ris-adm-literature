@@ -112,23 +112,30 @@ jobs:
       container-registry: ghcr.io
       image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  frontend-deploy-staging:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs:
-      - security-jobs
-      - frontend-checks
-      - frontend-build-image-and-scan
-      - frontend-push-image-to-registry
-    uses: ./.github/workflows/frontend-deploy-staging.yml
-    permissions:
-      id-token: write
-    secrets: inherit
-    with:
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
-
   frontend-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
     secrets: inherit
+
+  #################
+  # Deployment jobs
+  #################
+
+  deploy-staging:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs:
+      - security-jobs
+      - frontend-checks
+      - frontend-build-image-and-scan
+      - frontend-push-image-to-registry
+      - backend-checks
+      - backend-build-image-and-scan
+      - backend-push-image-to-registry
+    uses: ./.github/workflows/deploy-staging.yml
+    permissions:
+      id-token: write
+    secrets: inherit
+    with:
+      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
