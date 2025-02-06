@@ -40,10 +40,7 @@ const service: DocumentUnitService = {
     }
     return {
       status: 400,
-      error: {
-        title: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED.title,
-        description: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED.description,
-      },
+      error: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED,
     }
   },
 
