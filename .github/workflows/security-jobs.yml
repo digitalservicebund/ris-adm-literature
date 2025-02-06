@@ -2,6 +2,38 @@ on:
   workflow_call:
 
 jobs:
+  confirm-repository-secret-scanning-with-push-protection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jq
+        run: sudo apt install jq
+      - name: Fetch configuration information on repository
+        env:
+          # the token needs (max) the following permissions:
+          # read:enterprise, read:org, read:project, read:user, repo
+          GH_TOKEN: ${{ secrets.GH_SECRET_SCANNING_TOKEN }}
+        run: gh api --method GET -H "X-GitHub-Api-Version:2022-11-28"  /repos/digitalservicebund/ris-adm-vwv > repo-info.json
+      - name: Confirm that secret scanning is active
+        run: |
+          if [[ $(cat repo-info.json | jq ' .security_and_analysis.secret_scanning.status') == *enabled* ]]; then 
+            exit 0; 
+          else 
+            exit 1
+          fi
+      - name: Confirm that push protection is active
+        run: |
+          if [[ $(cat repo-info.json | jq ' .security_and_analysis.secret_scanning_push_protection.status') == *enabled* ]]; then 
+            exit 0; 
+          else 
+            exit 1
+          fi
+      - name: On failure send status to Slack
+        # only on failure and if on "main" branch
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   security-scan-with-trivy:
     # Note: This scan is NOT what is shown in the GitHub Security tab
     #       Please refer to frontend-build-image-and-scan.yml instead
@@ -48,22 +80,3 @@ jobs:
       # we should be able to upload the trivy results to the GitHub Security tab as we're a public repositor
       # but right now it's not worth it
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
-
-  secrets-scan-with-talisman: # scan for secrets that were published by mistake (we have a pre-commit and pre-push hook, but who knows)
-    runs-on: ubuntu-latest
-    # Running on main only (branches pose problems, cf. https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706516240974409)
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # Mitigation by activating Secret Scanning and Push Protection in GitHub Repo Settings
-    # cf. https://digitalservicebund.slack.com/archives/C046VD44ZEH/p1706525248390559
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Detect secrets in incoming commits with Talisman
-        uses: digitalservicebund/talisman-secrets-scan-action@9a4cb85589e29a62b4546eb566119753a5680aeb
-      - name: On failure send status to Slack
-        # only on failure and if on "main" branch
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf
-        with:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
