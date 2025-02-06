@@ -27,6 +27,12 @@ jobs:
           else 
             exit 1
           fi
+      - name: On failure send status to Slack
+        # only on failure and if on "main" branch
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   security-scan-with-trivy:
     # Note: This scan is NOT what is shown in the GitHub Security tab
