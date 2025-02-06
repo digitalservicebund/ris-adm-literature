@@ -96,5 +96,7 @@ allowed_patterns:
   - '[key: string]: string'
   - "getByTestId\\('keywords'\\)"
   - 'v-on:keypress'
+  # allow patterns with the term "password"
+  - "\\${database.password:}"
   # patterns that trigger talisman otherwise
   - "{ label: 'passive item', route: { name: 'not-matching' }"
