@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 jobs:
-  confirm-secret-scanning-with-push-protection:
+  confirm-repository-secret-scanning-with-push-protection:
     runs-on: ubuntu-latest
     steps:
       - name: Install jq
@@ -80,4 +80,3 @@ jobs:
       # we should be able to upload the trivy results to the GitHub Security tab as we're a public repositor
       # but right now it's not worth it
       # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
-
