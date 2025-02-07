@@ -2,6 +2,8 @@ spring:
   application.name: ris-adm-vwv-backend
   datasource:
     url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_vwv}?currentSchema=${database.schema:adm_vwv}
+  config:
+    import: "file:/etc/secrets,file:/etc/configs/database-config[.yaml]"
   cloud:
     kubernetes:
       config:
