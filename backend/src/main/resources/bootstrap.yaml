@@ -1,0 +1,14 @@
+spring:
+  application.name: ris-adm-vwv-backend
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+        fail-fast: true
+        namespace: ris-adm-vwv-staging
+        sources:
+          - name: database-config
+      secrets:
+        enabled: true
+        fail-fast: true
+        paths: /etc/secrets
