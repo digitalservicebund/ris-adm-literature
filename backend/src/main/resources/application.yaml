@@ -1,12 +1,10 @@
 spring:
   application.name: ris-adm-vwv-backend
   datasource:
-    #url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris-adm-vwv}?currentSchema=${database.schema:adm-vwv}
-    url: jdbc:h2:mem:testdb
-    username: ${database.user:sa}
-    password: ${database.password:}
-    #driver-class-name: org.postgresql.Driver
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_vwv}?currentSchema=${database.schema:adm_vwv}
+    username: ${database.user:test}
+    password: ${database.password:test}
+    driver-class-name: org.postgresql.Driver
 
 management:
   endpoint:

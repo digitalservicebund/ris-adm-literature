@@ -1,0 +1,24 @@
+spring:
+  application.name: ris-adm-vwv-backend
+  datasource:
+    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_vwv}?currentSchema=${database.schema:adm_vwv}
+  config:
+    import: "kubernetes:"
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+        fail-fast: true
+        namespace: ris-adm-vwv-staging
+        sources:
+          - name: database-config
+      secrets:
+        enabled: true
+        fail-fast: true
+        paths: /etc/secrets
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
