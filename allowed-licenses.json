@@ -77,6 +77,12 @@
         },
         {
             "moduleLicense": "Eclipse Public License - v 2.0"
+        },
+        {
+            "moduleLicense": "Bouncy Castle Licence"
+        },
+        {
+            "moduleLicense": "CDDL + GPLv2 with classpath exception"
         }
     ]
 }
