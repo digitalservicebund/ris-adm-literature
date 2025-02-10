@@ -60,6 +60,16 @@ describe('Combobox Element', () => {
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
   })
 
+  it("should not show sideInformation 'amtlich'", async () => {
+    renderComponent()
+
+    const openComboboxContainer = screen.getByLabelText('Dropdown öffnen')
+    await user.click(openComboboxContainer)
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
+    expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(2)
+    expect(screen.queryByText('amtlich')).not.toBeInTheDocument()
+  })
+
   it('focus should open dropdown', async () => {
     renderComponent()
     const input = screen.getByLabelText('test label')
