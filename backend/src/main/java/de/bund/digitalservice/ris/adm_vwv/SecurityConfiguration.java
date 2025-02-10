@@ -1,11 +1,14 @@
 package de.bund.digitalservice.ris.adm_vwv;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
@@ -15,13 +18,13 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
                 customizer ->
                         customizer
-                                .requestMatchers(
-                                        "/actuator/**",
-                                        "/api/**")
-                                .permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
-//                                .anyRequest()
-//                                .authenticated());
+                                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/documentation-units").permitAll()
+                                .anyRequest()
+                                .authenticated());
+
+        http.csrf(AbstractHttpConfigurer::disable);
+
 
         return http.build();
     }
