@@ -4,7 +4,9 @@ import styleDictionary from "@digitalservice4germany/style-dictionary/tailwind"
 import plugins from "@digitalservice4germany/angie"
 
 export default {
-  content: ["./src/**/*.{html,vue,js,ts}"],
+  content: [
+    "./src/**/*.{html,vue,js,ts}",
+    "./node_modules/@digitalservicebund/ris-ui/dist/**/*.{js,vue,ts}",],
   presets: [RisUiPreset, styleDictionary],
   plugins: [RisUiPlugin, plugins],
 
