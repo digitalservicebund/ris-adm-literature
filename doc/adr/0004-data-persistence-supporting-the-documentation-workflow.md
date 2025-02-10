@@ -1,10 +1,63 @@
 # 4. Data Persistence Supporting the Documentation Workflow
 
-Date: 2025-01-31
+Date: 2025-02-❓❓
 
 ## Status
 
-Accepted
+❓
+
+## Context
+
+When documenting administrative directives, information about the documents flows
+
+- from the user's browser
+- to our web application's backend (database) and from there
+- to the portal
+
+This, however, does not tell us in what data formats the data will be persisted and exchanged.
+
+## Decision
+
+- Data formats:
+  - In the frontend, the documents are stored as JSON objects.
+      - Data exchange between frontend and backend happens in JSON.
+  - In the backend, the documents are stored
+    - as JSON before they are published and
+    - as XML/LDML after they have been published.
+  - To the portal, the documents are sent as XML/LDML.
+  - In all three places, there will be additional data in order to support various use cases around these documents.
+- We will exchange complete documents between frontend and backend.
+- The backend is understood as the single point of truth.
+
+## Consequences
+
+- All data that's manipulated in the frontend is in JSON format.
+
+  - The frontend does not interpret or transform any XML.
+  - This means we're staying with data types that the frontend stack is familiar with, which simplifies development (no XML libraries, no XML tooling, no XML concepts).
+  - This does not rule out that users may get the ability to upload XML in order to pass it on to the backend for handling.
+
+- The API endpoints will talk JSON exclusively
+
+  - Again, this simplifies matters and matches the modern web stack
+  - It does, however, require extra effort if XML _should_ need to be handled in the frontend
+
+- The API endpoints will exchange complete documents
+
+  - This is to avoid complexity.
+  - We do not expect the size of the data exchanges to have a significant impact on the user.
+
+- Transformations between JSON and XML/LDML will take place in the backend.
+
+  - JSON will be transformed into XML/LDML on publishing a document.
+    - This is where XML/LDML validation will take place.
+    - Only valid XML/LDLM will be stored in the database.
+  - XML/LDML will be transformed into JSON on loading a published document.
+  - Manipulation of XML/LDML will also exclusively take place in the backend.
+
+- While the backend will send XML/LDML documents to the portal, the backend's database stays the single source of truth and is part of the NeuRIS backup plan.
+
+--- old text ---
 
 ## Context
 
