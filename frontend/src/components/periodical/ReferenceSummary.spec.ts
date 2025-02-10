@@ -31,6 +31,6 @@ describe('ReferenceSummary', () => {
       },
     })
 
-    expect(() => screen.queryByText('primär')).not.toBeInTheDocument()
+    expect(screen.queryByText('primär')).not.toBeInTheDocument()
   })
 })
