@@ -1,5 +1,7 @@
-package de.bund.digitalservice.ris.adm_vwv;
+package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

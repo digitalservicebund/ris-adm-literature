@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv;
+package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
