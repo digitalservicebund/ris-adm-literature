@@ -4,20 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
-
 import java.util.UUID;
+import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "documentation_unit")
 public class DocumentationUnitEntity {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id
+  @GeneratedValue
+  private UUID id;
 
-    private String documentNumber;
+  private String documentNumber;
 
-    private String json;
+  private String json;
 }

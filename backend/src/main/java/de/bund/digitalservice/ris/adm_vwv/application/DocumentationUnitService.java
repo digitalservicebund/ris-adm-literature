@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DocumentationUnitService implements CreateDocumentationUnitPort {
 
-    private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
+  private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
 
-    @Override
-    public DocumentationUnit create() {
-        return documentationUnitPersistencePort.create();
-    }
+  @Override
+  public DocumentationUnit create() {
+    return documentationUnitPersistencePort.create();
+  }
 }

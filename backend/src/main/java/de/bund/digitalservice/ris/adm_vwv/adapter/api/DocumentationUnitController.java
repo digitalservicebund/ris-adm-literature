@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DocumentationUnitController {
 
-    private final CreateDocumentationUnitPort createDocumentationUnitPort;
+  private final CreateDocumentationUnitPort createDocumentationUnitPort;
 
-    /**
-     * Creates a new documentation unit with a new document number in database and returns it.
-     *
-     * @return Created documentation unit
-     */
-    @PostMapping("api/documentation-units")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DocumentationUnit create() {
-        return createDocumentationUnitPort.create();
-    }
-
+  /**
+   * Creates a new documentation unit with a new document number in database and returns it.
+   *
+   * @return Created documentation unit
+   */
+  @PostMapping("api/documentation-units")
+  @ResponseStatus(HttpStatus.CREATED)
+  public DocumentationUnit create() {
+    return createDocumentationUnitPort.create();
+  }
 }

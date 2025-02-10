@@ -5,5 +5,4 @@ import java.util.UUID;
 /**
  * Documentation unit.
  */
-public record DocumentationUnit(String documentNumber, UUID id) {
-}
+public record DocumentationUnit(String documentNumber, UUID id) {}
