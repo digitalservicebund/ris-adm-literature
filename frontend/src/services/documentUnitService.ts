@@ -18,12 +18,12 @@ interface DocumentUnitService {
 
 const documents: {
   [documentNumber: string]: {
-    uuid: string
+    id: string
     documentNumber: string
   }
 } = {
   KSNR054920707: {
-    uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+    id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
     documentNumber: 'KSNR054920707',
   },
 }
@@ -34,7 +34,7 @@ const service: DocumentUnitService = {
       return {
         status: 200,
         data: new DocumentUnit({
-          uuid: documents[documentNumber].uuid,
+          id: documents[documentNumber].id,
           documentNumber: documents[documentNumber].documentNumber,
         }),
       }
@@ -49,7 +49,7 @@ const service: DocumentUnitService = {
     return {
       status: 200,
       data: new DocumentUnit({
-        uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
       }),
     }
