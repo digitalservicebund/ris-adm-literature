@@ -83,7 +83,7 @@
     "@vitest/eslint-plugin": "1.1.25",
     "@vitest/ui": "^3.0.5",
     "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/eslint-config-typescript": "^14.3.0",
+    "@vue/eslint-config-typescript": "^14.4.0",
     "@vue/test-utils": "^2.4.6",
     "axios-mock-adapter": "^2.1.0",
     "eslint": "^9.19.0",
