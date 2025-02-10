@@ -33,6 +33,6 @@ describe('ReferenceSummary', () => {
 
     // a plain .not.toBeInTheDocument() should be available at some time
     // cf. https://github.com/vitest-dev/vitest/pull/6634
-    expect(() => screen.getByText('primär')).toThrow()
+    expect(() => screen.getByText('primär')).toThrowError()
   })
 })
