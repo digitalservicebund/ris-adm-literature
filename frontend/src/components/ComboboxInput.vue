@@ -331,14 +331,6 @@ export type InputModelProps =
               {{ item.additionalInformation }}
             </div>
           </span>
-
-          <span
-            v-if="item.sideInformation"
-            id="dropDownSideInformation"
-            class="ds-label-02-reg text-neutral-700"
-          >
-            {{ item.sideInformation }}
-          </span>
         </FlexContainer>
       </button>
     </div>
