@@ -86,7 +86,7 @@
     "@vue/eslint-config-typescript": "^14.3.0",
     "@vue/test-utils": "^2.4.6",
     "axios-mock-adapter": "^2.1.0",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "eslint-plugin-jest-dom": "^5.5.0",
     "eslint-plugin-playwright": "^2.1.0",
     "eslint-plugin-testing-library": "^7.1.1",
