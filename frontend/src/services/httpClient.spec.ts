@@ -19,7 +19,7 @@ describe('httpClient', () => {
     await httpClient.get('test')
 
     expect(server.history.get).toBeDefined()
-    expect(server.history.get[0].url).toBe('/api/v1/test')
+    expect(server.history.get[0].url).toBe('/api/test')
   })
 
   it('returns response status and body when the server has responded', async () => {

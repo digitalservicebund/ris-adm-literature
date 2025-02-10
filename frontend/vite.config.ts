@@ -1,4 +1,4 @@
-import path from "path"
+import path from 'path'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 import { defineConfig } from 'vite'
@@ -22,10 +22,16 @@ export default defineConfig({
     }),
   ],
 
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
+
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "~": path.resolve(__dirname, "test"),
+      '@': path.resolve(__dirname, 'src'),
+      '~': path.resolve(__dirname, 'test'),
     },
   },
 
