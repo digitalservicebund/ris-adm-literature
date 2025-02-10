@@ -25,5 +25,6 @@ const hasAmbiguousLegalPeriodicalAbbreviation = computed(
         label="Mehrdeutiger Verweis"
       />
     </div>
+    primär
   </div>
 </template>
