@@ -67,7 +67,9 @@ describe('Combobox Element', () => {
     await user.click(openComboboxContainer)
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(2)
-    expect(screen.getByText('amtlich')).not.toBeInTheDocument()
+    // a plain .not.toBeInTheDocument() should be available at some time
+    // cf. https://github.com/vitest-dev/vitest/pull/6634
+    expect(() => screen.getByText('amtlich')).toThrowError()
   })
 
   it('focus should open dropdown', async () => {
