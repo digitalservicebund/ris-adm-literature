@@ -17,7 +17,7 @@ describe('ReferenceSummary', () => {
     expect(screen.getByText('Mehrdeutiger Verweis')).toBeInTheDocument()
   })
 
-  it('shows primary badge', async () => {
+  it('does not show primary badge', async () => {
     render(ReferenceSummary, {
       props: {
         data: new Reference({
@@ -31,6 +31,6 @@ describe('ReferenceSummary', () => {
       },
     })
 
-    expect(screen.getByText('primär')).toBeInTheDocument()
+    expect(screen.queryByText('primär')).not.toBeInTheDocument()
   })
 })
