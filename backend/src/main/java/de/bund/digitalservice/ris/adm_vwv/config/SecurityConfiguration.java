@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv;
+package de.bund.digitalservice.ris.adm_vwv.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,6 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http.authorizeHttpRequests(
                 customizer ->
                         customizer
@@ -22,10 +21,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/api/documentation-units").permitAll()
                                 .anyRequest()
                                 .authenticated());
-
         http.csrf(AbstractHttpConfigurer::disable);
-
-
+        http.cors(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
