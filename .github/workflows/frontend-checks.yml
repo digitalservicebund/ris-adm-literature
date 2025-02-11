@@ -171,47 +171,6 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  # code-quality-check-with-sonarqube:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version-file: ./frontend/.node-version
-  #         cache: npm
-  #         cache-dependency-path: ./frontend/package-lock.json
-  #     - name: Cache npm cache
-  #       uses: actions/cache@v4
-  #       id: cache-npm-cache
-  #       with:
-  #         # The docs discourage caching `node-modules`, cf. https://github.com/actions/cache/blob/main/examples.md#node---npm
-  #         path: /home/runner/.npm
-  #         key: npm-cache-${{ hashFiles('./frontend/package-lock.json') }}
-  #     - name: Install node modules
-  #       run: npm ci
-  #       working-directory: ./frontend
-  #     - name: Run coverage
-  #       run: npm run test:coverage
-  #       working-directory: ./frontend
-  #     - name: SonarQube Scan
-  #       uses: SonarSource/sonarqube-scan-action@v4
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #       with:
-  #         projectBaseDir: ./frontend
-  #         args: >
-  #           -Dsonar.qualitygate.wait=true
-  #     - name: Send status to Slack
-  #       # Third-party action, pin to commit SHA!
-  #       # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
-  #       uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
-  #       if: ${{ failure() && github.ref == 'refs/heads/main' }}
-  #       with:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
   code-quality-check-with-sonarqube:
     runs-on: ubuntu-latest
     steps:
