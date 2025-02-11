@@ -1,11 +1,4 @@
-FROM ubuntu:24.04 AS builder
-
-# install node
-RUN apt update
-RUN apt -y upgrade
-RUN apt install -y nodejs npm
-RUN node -v
-RUN npm -v
+FROM node:23.7.0 AS builder
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend
