@@ -51,4 +51,14 @@ describe('httpClient', () => {
     expect(response.status).toBe(500)
     expect(response.data).toBeUndefined()
   })
+
+  it('returns error on ECONNABORTED frontend timeout', async () => {
+    server.onAny().timeout()
+
+    const response = await httpClient.get('')
+
+    expect(response.error).toBeDefined()
+    expect(response.status).toBe(504)
+    expect(response.data).toBeUndefined()
+  })
 })
