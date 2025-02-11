@@ -70,6 +70,11 @@ jobs:
           name: trivy-fs-results.sarif
           retention-days: 3
           path: trivy-fs-results.sarif
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
+        with:
+          sarif_file: "trivy-fs-results.sarif"
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
