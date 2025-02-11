@@ -36,6 +36,20 @@ describe('documentUnitService', () => {
     })
   })
 
+  it('server error on attempting creation of new documentation unit', async () => {
+    // given
+    vi.spyOn(HttpClient, 'post').mockResolvedValue({
+      status: 300,
+      data: '',
+    })
+
+    // when
+    const response = await service.createNew()
+
+    // then
+    expect(response.error?.title).toBe('Neue Dokumentationseinheit konnte nicht erstellt werden.')
+  })
+
   it('searchByRelatedDocumentation', async () => {
     const result = await service.searchByRelatedDocumentation(new RelatedDocumentation())
     expect(result.status).toEqual(200)
