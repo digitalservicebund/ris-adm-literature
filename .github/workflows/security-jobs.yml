@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in repo mode # open source security scanner, cf. https://trivy.dev/
+      - name: Run Trivy vulnerability scanner in fs (file-system) mode # open source security scanner, cf. https://trivy.dev/
         uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,7 +67,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-trivy-fs-results.sarif
+          name: trivy-fs-results.sarif
           retention-days: 3
           path: trivy-fs-results.sarif
       - name: On failure send status to Slack
