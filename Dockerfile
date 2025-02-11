@@ -1,8 +1,19 @@
 FROM ubuntu:24.04
 
 # install node
-RUN apt update
-RUN apt install -y nodejs npm
+RUN apt-get update
+RUN apt-get -y upgrade
+RUN apt-get -y install curl
+
+# Download and install nvm:
+RUN curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+
+RUN bash nodesource_setup.sh
+
+RUN apt-get install -y nodejs
+
+# Verify the Node.js version:
+# Should print "v23.7.0".
 RUN node -v
 RUN npm -v
 
