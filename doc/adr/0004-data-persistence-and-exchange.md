@@ -1,10 +1,10 @@
 # 4. Data Persistence and Data Exchange
 
-Date:❓
+Date: 2025-02-11
 
 ## Status
 
-❓
+Accepted
 
 ## Context
 
