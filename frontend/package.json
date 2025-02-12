@@ -29,7 +29,7 @@
     "@iconify-json/material-symbols": "^1.2.14",
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^3.1.2",
-    "@sentry/vue": "^9.0.0",
+    "@sentry/vue": "^8.55.0",
     "@tiptap/extension-blockquote": "^2.11.5",
     "@tiptap/extension-bold": "^2.11.5",
     "@tiptap/extension-bullet-list": "^2.11.5",
@@ -71,7 +71,7 @@
     "vue-tsc": "^2.2.0"
   },
   "devDependencies": {
-    "@pinia/testing": "^0.1.7",
+    "@pinia/testing": "^1.0.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -93,7 +93,7 @@
     "eslint-plugin-vue": "^9.30.0",
     "jsdom": "^26.0.0",
     "license-checker": "^25.0.1",
-    "pinia": "^2.3.1",
+    "pinia": "^3.0.0",
     "postcss": "^8.5.2",
     "prettier": "^3.5.0",
     "resize-observer-polyfill": "^1.5.1",
