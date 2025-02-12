@@ -17,6 +17,12 @@ type RequestOptions = {
 
 interface HttpClient {
   get<TResponse>(url: string, config?: RequestOptions): Promise<ServiceResponse<TResponse>>
+
+  post<TRequest, TResponse>(
+    url: string,
+    config?: RequestOptions,
+    data?: TRequest,
+  ): Promise<ServiceResponse<TResponse>>
 }
 
 async function baseHttp<T>(url: string, method: string, options?: RequestOptions, data?: T) {
@@ -52,6 +58,9 @@ const httpClient: HttpClient = {
   async get(url: string, options?: RequestOptions) {
     return baseHttp(url, 'get', { ...options })
   },
+  async post<T>(url: string, options: RequestOptions, data: T) {
+    return baseHttp<T>(url, 'post', { ...options }, data)
+  },
 }
 
 export type FailedValidationServerResponse = {
@@ -79,4 +88,4 @@ export type ServiceResponse<T> = {
 
 export const axiosInstance = axios.create()
 export default httpClient
-export const API_PREFIX = `/api/v1/`
+export const API_PREFIX = `/api/`

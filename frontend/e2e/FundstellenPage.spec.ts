@@ -8,15 +8,11 @@ test.describe('FundstellenPage', () => {
     { tag: ['@RISDEV-6042'] },
     async ({ page }) => {
       // Arrange
-      await page.goto('/')
-
       // Action
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
 
       // Assert
-      expect(page.url()).toMatch(/.*\/fundstellen$/)
       await expect(page.getByText('Fundstellen')).toHaveCount(2)
-      await expect(page.getByText('Fundstellen')).toHaveCount(2) // nav bar + title
       await expect(page.getByText('KSNR054920707')).toHaveCount(1)
       await expect(page.getByText('Platzhaltertext')).toHaveCount(1)
       await expect(page.getByText('Unveröffentlicht')).toHaveCount(1)

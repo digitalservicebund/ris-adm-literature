@@ -6,8 +6,7 @@ test(
   async ({ page }) => {
     // In the future the new documentUnit needs to be mocked
     // As this functionality is not there yet we can simply enter the desired page and finish the process
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
 
@@ -71,8 +70,7 @@ test(
   async ({ page }) => {
     // In the future the new documentUnit needs to be mocked
     // As this functionality is not there yet we can simply enter the desired page and finish the process
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     /////////////////
@@ -140,8 +138,7 @@ test(
   'Visiting the Gliederung step of creating a documentUnit',
   { tag: ['@RISDEV-6047'] },
   async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
 
     await expect(page.getByText('Rubriken')).toHaveCount(1)
@@ -158,8 +155,7 @@ test(
   'Visiting the Kurzreferat step of creating a documentUnit',
   { tag: ['@RISDEV-6047'] },
   async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
 
     await expect(page.getByText('Rubriken')).toHaveCount(1)
@@ -177,8 +173,7 @@ test(
 
 test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
   // given
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.goto('/documentUnit/KSNR054920707/fundstellen')
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
   await expect(
@@ -201,8 +196,7 @@ test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) =>
 
 test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
   // given
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.goto('/documentUnit/KSNR054920707/fundstellen')
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
   await expect(
@@ -229,8 +223,7 @@ test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({
 })
 
 test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.goto('/documentUnit/KSNR054920707/fundstellen')
   await page.getByText('Rubriken').click()
   const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
   await expect(artDerZitierungInput).toHaveCount(1)
@@ -273,8 +266,7 @@ test(
   'Add two active citations, delete the first item',
   { tag: ['@RISDEV-6077'] },
   async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
 
     await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
@@ -324,8 +316,7 @@ test(
   'Search active citation, take it, change type, save, search again and cancel because already added',
   { tag: ['@RISDEV-6077'] },
   async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
 
     await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
@@ -377,8 +368,7 @@ test(
 
 test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
   // given
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.goto('/documentUnit/KSNR054920707/fundstellen')
   await page.getByText('Rubriken').click()
   await expect(page.getByText('Rubriken')).toHaveCount(1)
   const referenceTypeElement = page
@@ -422,8 +412,7 @@ test(
   { tag: ['@RISDEV-6074'] },
   async ({ page }) => {
     // given
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     const referenceTypeElement = page
@@ -469,8 +458,7 @@ test(
   { tag: ['@RISDEV-6074'] },
   async ({ page }) => {
     // given
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByRole('link', { name: 'Rubriken' }).click()
     await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
     await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()

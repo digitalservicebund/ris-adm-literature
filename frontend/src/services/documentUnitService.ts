@@ -4,6 +4,7 @@ import DocumentUnit from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
+import httpClient from './httpClient'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnit>>
@@ -18,12 +19,12 @@ interface DocumentUnitService {
 
 const documents: {
   [documentNumber: string]: {
-    uuid: string
+    id: string
     documentNumber: string
   }
 } = {
   KSNR054920707: {
-    uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+    id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
     documentNumber: 'KSNR054920707',
   },
 }
@@ -34,7 +35,7 @@ const service: DocumentUnitService = {
       return {
         status: 200,
         data: new DocumentUnit({
-          uuid: documents[documentNumber].uuid,
+          id: documents[documentNumber].id,
           documentNumber: documents[documentNumber].documentNumber,
         }),
       }
@@ -46,13 +47,21 @@ const service: DocumentUnitService = {
   },
 
   async createNew() {
-    return {
-      status: 200,
-      data: new DocumentUnit({
-        uuid: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KSNR054920707',
-      }),
+    const response = await httpClient.post<unknown, DocumentUnit>('documentation-units', {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    if (response.status >= 300) {
+      response.error = {
+        title: errorMessages.DOCUMENT_UNIT_CREATION_FAILED.title,
+      }
+    } else {
+      response.data = new DocumentUnit({
+        ...(response.data as DocumentUnit),
+      })
     }
+    return response
   },
 
   async searchByRelatedDocumentation(

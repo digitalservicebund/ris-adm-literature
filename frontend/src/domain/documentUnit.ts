@@ -16,12 +16,12 @@ export type Court = {
 }
 
 export default class DocumentUnit {
-  readonly uuid: string
+  readonly id: string
   readonly documentNumber: string
   public references?: Reference[]
 
   constructor(data: DocumentUnit) {
-    this.uuid = data.uuid
+    this.id = data.id
     this.documentNumber = data.documentNumber
     if (data.references)
       this.references = data.references.map((reference) => new Reference({ ...reference }))

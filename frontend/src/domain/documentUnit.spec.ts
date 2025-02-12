@@ -4,19 +4,19 @@ import Reference from './reference'
 import LegalPeriodical from './legalPeriodical'
 
 describe('DocumentUnit', () => {
-  it('instantiates with uuid and documentNumber', () => {
+  it('instantiates with id and documentNumber', () => {
     // given when
-    const documentUnit = new DocumentUnit({ uuid: 'foo', documentNumber: 'KSNR054920707' })
+    const documentUnit = new DocumentUnit({ id: 'foo', documentNumber: 'KSNR054920707' })
 
     // then
-    expect(documentUnit.uuid).toEqual('foo')
+    expect(documentUnit.id).toEqual('foo')
     expect(documentUnit.documentNumber).toEqual('KSNR054920707')
   })
 
   it('sets a reference', () => {
     // given when
     const documentUnit = new DocumentUnit({
-      uuid: 'foo',
+      id: 'foo',
       documentNumber: 'KSNR054920707',
       references: [
         new Reference({
