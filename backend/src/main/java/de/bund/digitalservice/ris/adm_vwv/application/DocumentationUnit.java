@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
-
 import java.util.UUID;
 
 /** Documentation unit. */

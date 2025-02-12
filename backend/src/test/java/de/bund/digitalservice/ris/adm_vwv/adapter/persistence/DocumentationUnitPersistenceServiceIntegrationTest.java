@@ -1,7 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -9,10 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class)
@@ -34,7 +33,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnit documentationUnit = documentationUnitPersistenceService.create();
 
     // then
-    assertThat(entityManager.find(DocumentationUnitEntity.class, documentationUnit.id())).isNotNull();
+    assertThat(entityManager.find(DocumentationUnitEntity.class, documentationUnit.id()))
+      .isNotNull();
   }
 
   @Test
@@ -45,7 +45,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
-    documentationUnitPersistenceService.update(documentationUnitEntity.getDocumentNumber(), "{\"test\":\"content\"");
+    documentationUnitPersistenceService.update(
+      documentationUnitEntity.getDocumentNumber(),
+      "{\"test\":\"content\""
+    );
 
     // then
     assertThat(entityManager.find(DocumentationUnitEntity.class, id))
@@ -61,8 +64,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.update("gibtsnicht", "{\"test\":\"content\"");
 
     // then
-    assertThat(entityManager.getEntityManager().createQuery("from DocumentationUnitEntity").getResultList())
+    assertThat(
+      entityManager.getEntityManager().createQuery("from DocumentationUnitEntity").getResultList()
+    )
       .isEmpty();
   }
-
 }

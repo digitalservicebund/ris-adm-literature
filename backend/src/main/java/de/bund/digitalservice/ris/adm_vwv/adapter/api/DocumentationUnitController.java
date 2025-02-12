@@ -26,8 +26,12 @@ public class DocumentationUnitController {
   }
 
   @PutMapping("api/documentation-units/{documentNumber}")
-  public ResponseEntity<DocumentationUnit> update(@PathVariable String documentNumber, @RequestBody JsonNode documentationUnit) {
-    return createDocumentationUnitPort.update(documentNumber, documentationUnit.toString())
+  public ResponseEntity<DocumentationUnit> update(
+    @PathVariable String documentNumber,
+    @RequestBody JsonNode documentationUnit
+  ) {
+    return createDocumentationUnitPort
+      .update(documentNumber, documentationUnit.toString())
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
   }
