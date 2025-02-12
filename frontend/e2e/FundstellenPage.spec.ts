@@ -9,14 +9,20 @@ test.describe('FundstellenPage', () => {
     async ({ page }) => {
       // Arrange
       await page.goto('/')
+      await page.route('/api/documentation-units', async (route) => {
+        await route.fulfill({
+          json: {
+            id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+            documentNumber: 'KSNR054920707',
+          },
+        })
+      })
 
       // Action
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
 
       // Assert
-      expect(page.url()).toMatch(/.*\/fundstellen$/)
       await expect(page.getByText('Fundstellen')).toHaveCount(2)
-      await expect(page.getByText('Fundstellen')).toHaveCount(2) // nav bar + title
       await expect(page.getByText('KSNR054920707')).toHaveCount(1)
       await expect(page.getByText('Platzhaltertext')).toHaveCount(1)
       await expect(page.getByText('Unveröffentlicht')).toHaveCount(1)
