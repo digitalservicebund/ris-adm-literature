@@ -35,8 +35,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   security-scan-with-trivy:
-    # Note: This scan is NOT what is shown in the GitHub Security tab
-    #       Please refer to frontend-build-image-and-scan.yml instead
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
