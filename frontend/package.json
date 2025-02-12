@@ -100,5 +100,10 @@
     "sass": "^1.84.0",
     "typescript": "~5.7.3",
     "vitest": "^3.0.5"
+  },
+  "overrides": {
+    "vite": {
+      "esbuild": "0.25.0"
+    }
   }
 }
