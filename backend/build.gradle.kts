@@ -32,7 +32,7 @@ repositories {
 
 val kubernetesConfigVersion = "3.2.0"
 val protobufVersion = "3.25.6"
-val joseVersion = "0.9.4"
+val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
