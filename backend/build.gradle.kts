@@ -32,6 +32,8 @@ repositories {
 
 val kubernetesConfigVersion = "3.2.0"
 val protobufVersion = "3.25.6"
+val joseVersion = "0.9.4"
+val okioVersion = "3.4.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -40,8 +42,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion") {
         exclude("com.google.protobuf", "protobuf-java")
+
+        // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/12
+        exclude("org.bitbucket.b_c", "jose4j")
+
+        // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/11
+        exclude("com.squareup.okio", "okio-jvm")
     }
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("org.bitbucket.b_c:jose4j:$joseVersion")
+    implementation("com.squareup.okio:okio-jvm:$okioVersion")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.springframework.session:spring-session-core")
