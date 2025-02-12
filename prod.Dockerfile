@@ -15,7 +15,7 @@ COPY /frontend/. .
 # build app for production with minification
 RUN npm run build
 
-FROM cgr.dev/chainguard/nginx@sha256:cebd3e4630ee2355ee1683d884fe7190c8ba7a1aee85e3c4d1b7a33aa8380ccf
+FROM cgr.dev/chainguard/nginx:latest@sha256:cebd3e4630ee2355ee1683d884fe7190c8ba7a1aee85e3c4d1b7a33aa8380ccf
 EXPOSE 8081
 COPY --from=builder /frontend/dist /var/lib/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/ris-adm-vwv.conf
