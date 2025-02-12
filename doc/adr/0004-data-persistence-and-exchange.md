@@ -32,7 +32,7 @@ Hence the question arises at which point in the flow of data we make the switch 
   - as XML/LDML _after they have been published_.
 - The publication step requires the XML/LDML structures to be valid wrt. their schemas. Otherwise publication is rejected. 
 - To the portal, the documents are sent as XML/LDML.
-- In all these places, there will be additional data in order to support various use cases around these documents.
+- In all these places, besides the plain documents, there will probably be additional data in order to support use cases around these documents (e.g. process information data, HTML renderings of the XML/LDML or similar).
 - The backend database is understood as the single point of truth in our system.
 
 ## Consequences
