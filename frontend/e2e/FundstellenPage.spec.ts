@@ -8,18 +8,8 @@ test.describe('FundstellenPage', () => {
     { tag: ['@RISDEV-6042'] },
     async ({ page }) => {
       // Arrange
-      await page.goto('/')
-      await page.route('/api/documentation-units', async (route) => {
-        await route.fulfill({
-          json: {
-            id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-            documentNumber: 'KSNR054920707',
-          },
-        })
-      })
-
       // Action
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
 
       // Assert
       await expect(page.getByText('Fundstellen')).toHaveCount(2)
