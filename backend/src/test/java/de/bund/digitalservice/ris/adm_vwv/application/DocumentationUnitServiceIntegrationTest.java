@@ -26,6 +26,6 @@ class DocumentationUnitServiceIntegrationTest {
     assertThat(documentationUnit)
       .isNotNull()
       .extracting(DocumentationUnit::documentNumber)
-      .satisfies(dun -> assertThat(dun).startsWith("KSNR"));
+      .satisfies(documentNumber -> assertThat(documentNumber).startsWith("KSNR"));
   }
 }
