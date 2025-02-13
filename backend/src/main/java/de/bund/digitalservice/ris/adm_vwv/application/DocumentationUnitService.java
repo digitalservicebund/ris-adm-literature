@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import jakarta.annotation.Nonnull;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +14,10 @@ public class DocumentationUnitService implements CreateDocumentationUnitPort {
   @Override
   public DocumentationUnit create() {
     return documentationUnitPersistencePort.create();
+  }
+
+  @Override
+  public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {
+    return Optional.ofNullable(documentationUnitPersistencePort.update(documentNumber, json));
   }
 }
