@@ -18,7 +18,7 @@ public class SecurityConfiguration {
       authorize
         .requestMatchers(HttpMethod.GET, "/actuator/**")
         .permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/swagger-ui/**", "/api/v3/*")
+        .requestMatchers(HttpMethod.GET, "/api/swagger-ui/**")
         .permitAll()
         .requestMatchers("/api/documentation-units/**")
         .permitAll()
