@@ -9,6 +9,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
 
   async function loadDocumentUnit(documentNumber: string): Promise<ServiceResponse<DocumentUnit>> {
     const response = await documentUnitService.getByDocumentNumber(documentNumber)
+    console.log(response)
     if (response.data) {
       documentUnit.value = response.data
     } else {

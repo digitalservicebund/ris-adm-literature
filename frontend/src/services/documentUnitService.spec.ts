@@ -5,7 +5,7 @@ import RelatedDocumentation from '@/domain/relatedDocumentation'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
-    const result = await service.getByDocumentNumber('KSNRXXXXXX')
+    const result = await service.getByDocumentNumber('XXXXXX')
     expect(result.error?.title).toEqual('Die Suchergebnisse konnten nicht geladen werden.')
     expect(result.error?.description).toEqual('Bitte versuchen Sie es später erneut.')
     expect(result.data).toBeUndefined()

@@ -17,26 +17,22 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
-const documents: {
-  [documentNumber: string]: {
-    id: string
-    documentNumber: string
-  }
+const document: {
+  id: string
+  documentNumber: string
 } = {
-  KSNR054920707: {
-    id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-    documentNumber: 'KSNR054920707',
-  },
+  id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+  documentNumber: 'KSNR054920707',
 }
 
 const service: DocumentUnitService = {
   async getByDocumentNumber(documentNumber: string) {
-    if (documents.hasOwnProperty(documentNumber)) {
+    if (documentNumber.startsWith('KSNR')) {
       return {
         status: 200,
         data: new DocumentUnit({
-          id: documents[documentNumber].id,
-          documentNumber: documents[documentNumber].documentNumber,
+          id: document.id,
+          documentNumber: documentNumber,
         }),
       }
     }
