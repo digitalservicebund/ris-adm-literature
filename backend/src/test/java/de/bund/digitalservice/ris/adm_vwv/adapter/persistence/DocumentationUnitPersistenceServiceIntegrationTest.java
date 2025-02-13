@@ -4,18 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import jakarta.persistence.TypedQuery;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Import(TestcontainersConfiguration.class)
-@AutoConfigureTestEntityManager
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import({ TestcontainersConfiguration.class, DocumentationUnitPersistenceService.class })
 @Transactional
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
@@ -24,6 +26,26 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired
   private DocumentationUnitPersistenceService documentationUnitPersistenceService;
+
+  @Test
+  void findByDocumentNumber() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR000000001");
+    documentationUnitEntity.setJson("{\"test\":\"content\"");
+    entityManager.persistAndFlush(documentationUnitEntity);
+
+    // when
+    Optional<DocumentationUnit> documentationUnit =
+      documentationUnitPersistenceService.findByDocumentNumber(
+        documentationUnitEntity.getDocumentNumber()
+      );
+
+    // then
+    assertThat(documentationUnit)
+      .isPresent()
+      .hasValueSatisfying(actual -> assertThat(actual.json()).isEqualTo("{\"test\":\"content\""));
+  }
 
   @Test
   void create() {
@@ -64,9 +86,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.update("gibtsnicht", "{\"test\":\"content\"");
 
     // then
-    assertThat(
-      entityManager.getEntityManager().createQuery("from DocumentationUnitEntity").getResultList()
-    )
-      .isEmpty();
+    TypedQuery<DocumentationUnitEntity> query = entityManager
+      .getEntityManager()
+      .createQuery("from DocumentationUnitEntity", DocumentationUnitEntity.class);
+    assertThat(query.getResultList()).isEmpty();
   }
 }

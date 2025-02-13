@@ -12,6 +12,11 @@ public class DocumentationUnitService implements DocumentationUnitPort {
   private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
 
   @Override
+  public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
+    return documentationUnitPersistencePort.findByDocumentNumber(documentNumber);
+  }
+
+  @Override
   public DocumentationUnit create() {
     return documentationUnitPersistencePort.create();
   }

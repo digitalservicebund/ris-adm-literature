@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,6 +30,40 @@ class DocumentationUnitControllerTest {
 
   @MockitoBean
   private DocumentationUnitPort documentationUnitPort;
+
+  @Test
+  @DisplayName("Request GET returns HTTP 200 and data from mocked documentation unit port")
+  void find() throws Exception {
+    // given
+    String documentNumber = "KSNR054920707";
+    String json = "{\"test\":\"content\"}";
+    given(documentationUnitPort.findByDocumentNumber(documentNumber))
+      .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
+
+    // when
+    mockMvc
+      .perform(get("/api/documentation-units/{documentNumber}", documentNumber))
+      // then
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.documentNumber").value(documentNumber))
+      .andExpect(jsonPath("$.json.test").value("content"));
+  }
+
+  @Test
+  @DisplayName(
+    "Request GET returns HTTP 404 because mocked documentation unit port returns empty optional"
+  )
+  void find_notFound() throws Exception {
+    // given
+    String documentNumber = "KSNR000000001";
+    given(documentationUnitPort.findByDocumentNumber(documentNumber)).willReturn(Optional.empty());
+
+    // when
+    mockMvc
+      .perform(get("/api/documentation-units/{documentNumber}", documentNumber))
+      // then
+      .andExpect(status().isNotFound());
+  }
 
   @Test
   @DisplayName("Request POST returns HTTP 201 and data from mocked documentation unit port")
@@ -75,7 +110,7 @@ class DocumentationUnitControllerTest {
   )
   void update_notFound() throws Exception {
     // given
-    String documentNumber = "KSNR054920707";
+    String documentNumber = "KSNR000000001";
     String json = "{\"test\":\"unsuccessful\"}";
     given(documentationUnitPort.update(documentNumber, json)).willReturn(Optional.empty());
 
