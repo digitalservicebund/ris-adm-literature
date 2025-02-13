@@ -14,6 +14,14 @@ public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
 
+  @GetMapping("api/documentation-units/{documentNumber}")
+  public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
+    return documentationUnitPort
+      .findByDocumentNumber(documentNumber)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+
   /**
    * Creates a new documentation unit with a new document number in database and returns it.
    *

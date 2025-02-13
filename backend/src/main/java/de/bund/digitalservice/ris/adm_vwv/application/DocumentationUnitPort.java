@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Optional;
 
 public interface DocumentationUnitPort {
+  Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber);
   DocumentationUnit create();
 
   /**
