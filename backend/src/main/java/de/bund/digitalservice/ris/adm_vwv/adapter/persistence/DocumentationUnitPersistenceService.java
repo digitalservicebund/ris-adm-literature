@@ -22,7 +22,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
-      .map(due -> new DocumentationUnit(documentNumber, due.getId(), due.getJson()));
+      .map(documentationUnitEntity ->
+        new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), documentationUnitEntity.getJson()));
   }
 
   @Override
