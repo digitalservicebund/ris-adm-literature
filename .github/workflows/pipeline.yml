@@ -72,6 +72,7 @@ jobs:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - backend-checks
+      - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
     uses: ./.github/workflows/backend-push-reports-to-ris-reports.yml
     secrets: inherit
 
