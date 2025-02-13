@@ -482,3 +482,14 @@ test(
     await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' })).toHaveCount(0)
   },
 )
+
+// TODO: add tag
+test('Show Sachgebiete heading', async ({ page }) => {
+  // given
+  await page.goto('/documentUnit/KSNR054920707/fundstellen')
+  // when
+  await page.getByRole('link', { name: 'Rubriken' }).click()
+
+  // then
+  await expect(page.getByText('Sachgebiete')).toHaveCount(1)
+})
