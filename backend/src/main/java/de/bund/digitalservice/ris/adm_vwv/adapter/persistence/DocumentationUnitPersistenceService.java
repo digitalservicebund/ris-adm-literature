@@ -23,7 +23,12 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
       .map(documentationUnitEntity ->
-        new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), documentationUnitEntity.getJson()));
+        new DocumentationUnit(
+          documentNumber,
+          documentationUnitEntity.getId(),
+          documentationUnitEntity.getJson()
+        )
+      );
   }
 
   @Override
