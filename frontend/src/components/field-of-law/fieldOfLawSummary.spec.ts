@@ -1,6 +1,6 @@
-import { fireEvent, render, RenderResult, screen } from "@testing-library/vue"
+import { fireEvent, render, type RenderResult, screen } from "@testing-library/vue"
 import FieldOfLawSummary from "@/components/field-of-law/FieldOfLawSummary.vue"
-import { FieldOfLaw } from "@/domain/fieldOfLaw"
+import { type FieldOfLaw } from "@/domain/fieldOfLaw"
 
 function renderComponent(fieldsOfLaw: FieldOfLaw[]): RenderResult {
   return render(FieldOfLawSummary, { props: { fieldsOfLaw } })

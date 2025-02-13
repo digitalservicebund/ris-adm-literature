@@ -1,16 +1,13 @@
-import { FieldOfLaw } from "@/domain/fieldOfLaw"
-import FieldOfLawService from "@/services/fieldOfLawService"
-import StringsUtil from "@/utils/stringsUtil"
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import FieldOfLawService from '@/services/fieldOfLawService'
+import StringsUtil from '@/utils/stringsUtil'
 
 export interface NodeHelperInterface {
   nodes: Map<string, FieldOfLaw>
 
   getChildren(node: FieldOfLaw): Promise<FieldOfLaw[]>
 
-  getFilteredChildren(
-    node: FieldOfLaw,
-    expandedNodes: FieldOfLaw[],
-  ): Promise<FieldOfLaw[]>
+  getFilteredChildren(node: FieldOfLaw, expandedNodes: FieldOfLaw[]): Promise<FieldOfLaw[]>
 
   getAncestors(clickedIdentifier: string): Promise<FieldOfLaw[]>
 
@@ -26,8 +23,7 @@ export class NodeHelper implements NodeHelperInterface {
     if (StringsUtil.isEmpty(clickedIdentifier)) {
       return Array.from(itemsToReturn.values())
     }
-    const response =
-      await FieldOfLawService.getTreeForIdentifier(clickedIdentifier)
+    const response = await FieldOfLawService.getTreeForIdentifier(clickedIdentifier)
     if (response.data) {
       this.extractNodes(itemsToReturn, response.data)
     }
@@ -38,10 +34,7 @@ export class NodeHelper implements NodeHelperInterface {
     this.nodes.set(node.identifier, node)
   }
 
-  extractNodes(
-    itemsToReturn: Map<string, FieldOfLaw>,
-    node: FieldOfLaw,
-  ): Map<string, FieldOfLaw> {
+  extractNodes(itemsToReturn: Map<string, FieldOfLaw>, node: FieldOfLaw): Map<string, FieldOfLaw> {
     itemsToReturn.set(node.identifier, node)
     //this.saveToLocal(node)
     if (node.children.length > 0) {
@@ -79,16 +72,11 @@ export class NodeHelper implements NodeHelperInterface {
     }
   }
 
-  async getFilteredChildren(
-    node: FieldOfLaw,
-    expandedNodes: FieldOfLaw[],
-  ): Promise<FieldOfLaw[]> {
+  async getFilteredChildren(node: FieldOfLaw, expandedNodes: FieldOfLaw[]): Promise<FieldOfLaw[]> {
     let children = await this.getChildren(node)
     const expandedNodesIds = expandedNodes.map((node) => node.identifier)
     if (expandedNodesIds.length > 0) {
-      children = children.filter((child) =>
-        expandedNodesIds.includes(child.identifier),
-      )
+      children = children.filter((child) => expandedNodesIds.includes(child.identifier))
     }
     return children
   }

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
-import { FieldOfLaw } from '@/domain/fieldOfLaw'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import ComboboxItemService from '@/services/comboboxItemService'
 
 const emit = defineEmits<{

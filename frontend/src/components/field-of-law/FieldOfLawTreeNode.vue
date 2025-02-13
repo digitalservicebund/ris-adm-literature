@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { NodeHelperInterface } from '@/components/field-of-law/fieldOfLawNode'
+import { type NodeHelperInterface } from '@/components/field-of-law/fieldOfLawNode'
 import FlexContainer from '@/components/FlexContainer.vue'
 import Checkbox from '@/components/input/CheckboxInput.vue'
 import Tooltip from '@/components/ToolTip.vue'
-import { FieldOfLaw } from '@/domain/fieldOfLaw'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
 

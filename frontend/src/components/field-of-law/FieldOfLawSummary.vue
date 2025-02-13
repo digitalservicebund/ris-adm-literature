@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import TokenizeText from '@/components/TokenizeText.vue'
 import Tooltip from '@/components/ToolTip.vue'
-import { FieldOfLaw } from '@/domain/fieldOfLaw'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import MaterialSymbolsClose from '~icons/material-symbols/close'
 
 defineProps<{

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import FieldOfLawSearchResultsListItem from "@/components/field-of-law/FieldOfLawSearchResultsListItem.vue"
-import Pagination, { Page } from "@/components/Pagination.vue"
-import { FieldOfLaw } from "@/domain/fieldOfLaw"
+import Pagination, { type Page } from "@/components/Pagination.vue"
+import type { FieldOfLaw } from "@/domain/fieldOfLaw"
 import errorMessages from "@/i18n/errors.json"
 
 defineProps<{

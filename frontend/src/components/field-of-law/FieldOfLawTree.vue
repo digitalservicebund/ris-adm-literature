@@ -3,11 +3,11 @@ import { computed, ref, watch } from "vue"
 import FieldOfLawTreeNode from "./FieldOfLawTreeNode.vue"
 import {
   NodeHelper,
-  NodeHelperInterface,
+  type NodeHelperInterface,
 } from "@/components/field-of-law/fieldOfLawNode"
 import CheckboxInput from "@/components/input/CheckboxInput.vue"
 import InputField, { LabelPosition } from "@/components/input/InputField.vue"
-import { buildRoot, FieldOfLaw } from "@/domain/fieldOfLaw"
+import { buildRoot, type FieldOfLaw } from "@/domain/fieldOfLaw"
 
 const props = defineProps<{
   modelValue: FieldOfLaw[]

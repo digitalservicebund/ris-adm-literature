@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue"
-import { DocumentUnitCategoriesEnum } from "@/components/enumDocumentUnitCategories"
-import FieldOfLawSummary from "@/components/field-of-law/FieldOfLawSummary.vue"
-import InputField, { LabelPosition } from "@/components/input/InputField.vue"
-import RadioInput from "@/components/input/RadioInput.vue"
-import TextButton from "@/components/input/TextButton.vue"
-import { FieldOfLaw } from "@/domain/fieldOfLaw"
-import IconAdd from "~icons/ic/baseline-add"
+import { computed, nextTick, ref, watch } from 'vue'
+import { DocumentUnitCategoriesEnum } from '@/components/enumDocumentUnitCategories'
+import FieldOfLawSummary from '@/components/field-of-law/FieldOfLawSummary.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
+import RadioInput from '@/components/input/RadioInput.vue'
+import TextButton from '@/components/input/TextButton.vue'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import IconAdd from '~icons/ic/baseline-add'
 
 const props = defineProps<{
   fieldsOfLaw: FieldOfLaw[]
@@ -14,8 +14,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  "node:remove": [node: FieldOfLaw]
-  "node:clicked": [node: FieldOfLaw]
+  'node:remove': [node: FieldOfLaw]
+  'node:clicked': [node: FieldOfLaw]
   editingDone: [void]
   resetSearch: [void]
   inputMethodSelected: [method: InputMethod]
@@ -26,15 +26,15 @@ const isExpanded = ref(false)
 const inputMethod = ref(InputMethod.DIRECT)
 
 const expandButtonLabel = computed(() => {
-  return props.fieldsOfLaw.length > 0 ? "Weitere Angabe" : "Sachgebiete"
+  return props.fieldsOfLaw.length > 0 ? 'Weitere Angabe' : 'Sachgebiete'
 })
 
 function removeNode(node: FieldOfLaw) {
-  emit("node:remove", node)
+  emit('node:remove', node)
 }
 
 function nodeClicked(node: FieldOfLaw) {
-  emit("node:clicked", node)
+  emit('node:clicked', node)
   enterEditMode()
 }
 
@@ -45,22 +45,22 @@ function enterEditMode() {
 async function exitEditMode() {
   isExpanded.value = false
   await nextTick()
-  titleRef.value?.scrollIntoView({ block: "nearest" })
-  emit("editingDone")
+  titleRef.value?.scrollIntoView({ block: 'nearest' })
+  emit('editingDone')
 }
 
 watch(
   inputMethod,
   () => {
-    emit("inputMethodSelected", inputMethod.value)
+    emit('inputMethodSelected', inputMethod.value)
   },
   { deep: true },
 )
 </script>
 <script lang="ts">
 export enum InputMethod {
-  DIRECT = "direct",
-  SEARCH = "search",
+  DIRECT = 'direct',
+  SEARCH = 'search',
 }
 </script>
 <template>
@@ -129,12 +129,7 @@ export enum InputMethod {
             size="small"
             @click="emit('resetSearch')"
           />
-          <TextButton
-            button-type="primary"
-            label="Fertig"
-            size="small"
-            @click="exitEditMode"
-          />
+          <TextButton button-type="primary" label="Fertig" size="small" @click="exitEditMode" />
         </div>
       </div>
       <slot />

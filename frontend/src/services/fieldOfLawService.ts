@@ -1,6 +1,6 @@
-import httpClient, { ServiceResponse } from "./httpClient"
-import { Page } from "@/components/Pagination.vue"
-import { FieldOfLaw } from "@/domain/fieldOfLaw"
+import httpClient, { type ServiceResponse } from "./httpClient"
+import type { Page } from "@/components/Pagination.vue"
+import type { FieldOfLaw } from "@/domain/fieldOfLaw"
 import errorMessages from "@/i18n/errors.json"
 
 interface FieldOfLawService {

@@ -8,10 +8,9 @@ import FieldOfLawExpandableContainer, {
 import FieldOfLawSearchInput from '@/components/field-of-law/FieldOfLawSearchInput.vue'
 import FieldOfLawSearchResultList from '@/components/field-of-law/FieldOfLawSearchResults.vue'
 import FieldOfLawTree from '@/components/field-of-law/FieldOfLawTree.vue'
-import { Page } from '@/components/Pagination.vue'
+import { type Page } from '@/components/Pagination.vue'
 
-import { FieldOfLaw } from '@/domain/fieldOfLaw'
-// import { FieldOfLaw } from '@/domain/fieldOfLaw'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 
 import service from '@/services/fieldOfLawService'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'

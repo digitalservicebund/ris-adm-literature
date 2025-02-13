@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { createNode, FieldOfLaw } from "@/domain/fieldOfLaw"
+import { createNode, type FieldOfLaw } from "@/domain/fieldOfLaw"
 
 interface Props {
   text: string
