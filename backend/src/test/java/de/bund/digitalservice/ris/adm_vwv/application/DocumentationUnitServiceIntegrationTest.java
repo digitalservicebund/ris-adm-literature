@@ -3,7 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,22 @@ class DocumentationUnitServiceIntegrationTest {
 
   @Autowired
   private DocumentationUnitService documentationUnitService;
+
+  @Test
+  void find() {
+    // given
+    DocumentationUnit documentationUnit = documentationUnitService.create();
+    String documentNumber = documentationUnit.documentNumber();
+
+    // when
+    Optional<DocumentationUnit> actual = documentationUnitService.findByDocumentNumber(documentNumber);
+
+    // then
+    assertThat(actual)
+      .isPresent()
+      .hasValueSatisfying(actualDocumentationUnit ->
+        assertThat(actualDocumentationUnit.id()).isEqualTo(documentationUnit.id()));
+  }
 
   @Test
   void create() {
