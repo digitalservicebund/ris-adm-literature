@@ -17,6 +17,25 @@ class DocumentationUnitServiceIntegrationTest {
   private DocumentationUnitService documentationUnitService;
 
   @Test
+  void find() {
+    // given
+    DocumentationUnit documentationUnit = documentationUnitService.create();
+    String documentNumber = documentationUnit.documentNumber();
+
+    // when
+    Optional<DocumentationUnit> actual = documentationUnitService.findByDocumentNumber(
+      documentNumber
+    );
+
+    // then
+    assertThat(actual)
+      .isPresent()
+      .hasValueSatisfying(actualDocumentationUnit ->
+        assertThat(actualDocumentationUnit.id()).isEqualTo(documentationUnit.id())
+      );
+  }
+
+  @Test
   void create() {
     // given
 

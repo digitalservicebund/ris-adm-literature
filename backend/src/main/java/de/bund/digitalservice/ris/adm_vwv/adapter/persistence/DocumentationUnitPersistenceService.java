@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentationUnitPersistenceService implements DocumentationUnitPersistencePort {
 
   private final DocumentationUnitRepository documentationUnitRepository;
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
+    return documentationUnitRepository
+      .findByDocumentNumber(documentNumber)
+      .map(due -> new DocumentationUnit(documentNumber, due.getId(), due.getJson()));
+  }
 
   @Override
   @Transactional
