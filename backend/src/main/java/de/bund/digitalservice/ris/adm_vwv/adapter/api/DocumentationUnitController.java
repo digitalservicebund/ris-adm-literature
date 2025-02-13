@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.bund.digitalservice.ris.adm_vwv.application.CreateDocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DocumentationUnitController {
 
-  private final CreateDocumentationUnitPort createDocumentationUnitPort;
+  private final DocumentationUnitPort documentationUnitPort;
 
   /**
    * Creates a new documentation unit with a new document number in database and returns it.
@@ -22,7 +22,7 @@ public class DocumentationUnitController {
   @PostMapping("api/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
   public DocumentationUnit create() {
-    return createDocumentationUnitPort.create();
+    return documentationUnitPort.create();
   }
 
   @PutMapping("api/documentation-units/{documentNumber}")
@@ -30,7 +30,7 @@ public class DocumentationUnitController {
     @PathVariable String documentNumber,
     @RequestBody JsonNode documentationUnit
   ) {
-    return createDocumentationUnitPort
+    return documentationUnitPort
       .update(documentNumber, documentationUnit.toString())
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());

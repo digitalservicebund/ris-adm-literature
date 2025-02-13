@@ -3,7 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 
-public interface CreateDocumentationUnitPort {
+public interface DocumentationUnitPort {
   DocumentationUnit create();
 
   /**

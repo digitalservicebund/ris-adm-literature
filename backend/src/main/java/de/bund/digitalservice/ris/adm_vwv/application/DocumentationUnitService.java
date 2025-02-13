@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentationUnitService implements CreateDocumentationUnitPort {
+public class DocumentationUnitService implements DocumentationUnitPort {
 
   private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
 

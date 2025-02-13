@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.bund.digitalservice.ris.adm_vwv.application.CreateDocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,14 +28,14 @@ class DocumentationUnitControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private CreateDocumentationUnitPort createDocumentationUnitPort;
+  private DocumentationUnitPort documentationUnitPort;
 
   @Test
   @DisplayName("Request POST returns HTTP 201 and data from mocked documentation unit port")
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(createDocumentationUnitPort.create())
+    given(documentationUnitPort.create())
       .willReturn(new DocumentationUnit("KSNR054920707", id, null));
 
     // when
@@ -53,7 +53,7 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"content\"}";
-    given(createDocumentationUnitPort.update(documentNumber, json))
+    given(documentationUnitPort.update(documentNumber, json))
       .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
 
     // when
@@ -77,7 +77,7 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"unsuccessful\"}";
-    given(createDocumentationUnitPort.update(documentNumber, json)).willReturn(Optional.empty());
+    given(documentationUnitPort.update(documentNumber, json)).willReturn(Optional.empty());
 
     // when
     mockMvc

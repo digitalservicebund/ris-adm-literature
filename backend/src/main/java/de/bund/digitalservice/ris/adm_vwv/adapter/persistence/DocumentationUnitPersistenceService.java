@@ -34,9 +34,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   public DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
-      .map(due -> {
-        due.setJson(json);
-        return new DocumentationUnit(documentNumber, due.getId(), json);
+      .map(documentationUnitEntity -> {
+        documentationUnitEntity.setJson(json);
+        return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
       })
       .orElse(null);
   }
