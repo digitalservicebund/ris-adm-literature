@@ -34,6 +34,7 @@ val kubernetesConfigVersion = "3.2.0"
 val protobufVersion = "4.29.3"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
+val springdocVersion = "2.8.4"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -55,6 +56,7 @@ dependencies {
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.session:spring-session-core")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
   compileOnly("org.projectlombok:lombok")
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
   runtimeOnly("org.postgresql:postgresql")
