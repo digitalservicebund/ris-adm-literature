@@ -484,11 +484,11 @@ test(
 )
 
 // TODO: add tag
-test('Opening Rubriken shows Sachgebiete heading', async ({ page }) => {
+test('Opening Rubriken shows Sachgebiete heading and button', async ({ page }) => {
   // given, when
   await page.goto('/documentUnit/KSNR054920707/rubriken')
 
   // then
-  await expect(page.getByText('Sachgebiete')).toHaveCount(2)
+  await expect(page.getByRole('heading', { name: 'Sachgebiete' })).toHaveCount(1)
+  await expect(page.getByRole('button', { name: 'Sachgebiete' })).toHaveCount(1)
 })
-
