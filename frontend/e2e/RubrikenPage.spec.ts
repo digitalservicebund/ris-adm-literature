@@ -502,12 +502,12 @@ test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet
   await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 
   // when
-  await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('VR-03-01-04')
+  await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('AR-06-01')
   await page
     .getByRole('button', { name: 'dropdown-option' })
-    .filter({ hasText: 'VR-03-01-04' })
+    .filter({ hasText: 'AR-06-01' })
     .click()
 
   // then
-  await expect(page.getByText('VR-03-01-04'))
+  await expect(page.getByText('AR-06-01Gesetzlicher')).toHaveCount(1)
 })

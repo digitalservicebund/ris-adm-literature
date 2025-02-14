@@ -7,6 +7,7 @@ import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -23,9 +24,16 @@ export type ComboboxItemService = {
 const service: ComboboxItemService = {
   // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
   getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) => {
-    const vrFieldOfLaw = {}
+    const vrFieldOfLaw: FieldOfLaw = {
+      children: [],
+      hasChildren: false,
+      identifier: 'AR-06-01',
+      norms: [],
+      text: 'Gesetzlicher Arbeitschutz (auch Betriebsarzt)',
+      linkedFields: [],
+    }
     const vrItem: ComboboxItem = {
-      label: 'VR-03-01-04',
+      label: 'AR-06-01',
       value: vrFieldOfLaw,
       additionalInformation: 'Anerkennung',
     }
