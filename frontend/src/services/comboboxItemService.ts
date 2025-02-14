@@ -15,10 +15,33 @@ export type ComboboxItemService = {
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getFieldOfLawSearchByIdentifier: (
+    filter: Ref<string | undefined>,
+  ) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
   // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
+  getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) => {
+    const vrFieldOfLaw = {}
+    const vrItem: ComboboxItem = {
+      label: 'VR-03-01-04',
+      value: vrFieldOfLaw,
+      additionalInformation: 'Anerkennung',
+    }
+
+    let items = ref([vrItem])
+    const execute = async () => {
+      return service.getFieldOfLawSearchByIdentifier(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
   getLegalPeriodicals: (filter: Ref<string | undefined>) => {
     const banzLegalPeriodical = new LegalPeriodical({
       title: 'Bundesanzeiger',
