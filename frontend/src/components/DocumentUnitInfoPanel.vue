@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-// import dayjs from "dayjs"
-// import { computed, ref, toRaw, watchEffect } from "vue"
-import { computed, ref, toRaw } from 'vue'
-// import { useRoute } from "vue-router"
+import { ref, toRaw } from 'vue'
 import IconBadge from '@/components/IconBadge.vue'
-// import SaveButton from "@/components/SaveDocumentUnitButton.vue"
+import { useSaveToRemote } from '@/composables/useSaveToRemote'
 import TextButton from '@/components/input/TextButton.vue'
 import { useStatusBadge } from '@/composables/useStatusBadge'
 import { PublicationState } from '@/domain/publicationStatus'
-// import { useDocumentUnitStore } from "@/stores/documentUnitStore"
 // import IconError from "~icons/ic/baseline-error"
 
 interface Props {
@@ -19,42 +15,18 @@ const props = withDefaults(defineProps<Props>(), {
   heading: '',
 })
 
-// const route = useRoute()
-
-// const documentUnitStore = useDocumentUnitStore()
-
-const fileNumberInfo = computed(
-  // () => documentUnitStore.documentUnit?.coreData.fileNumbers?.[0] || "",
-  () => 'Platzhaltertext',
-)
-
-const decisionDateInfo = computed(
-  () => '',
-  // documentUnitStore.documentUnit?.coreData.decisionDate
-  //   ? dayjs(documentUnitStore.documentUnit.coreData.decisionDate).format(
-  //       "DD.MM.YYYY",
-  //     )
-  //   : "",
-)
-
-const courtInfo = computed(
-  // () => documentUnitStore.documentUnit?.coreData.court?.label || "",
-  () => '',
-)
-
-const formattedInfo = computed(() => {
-  const parts = [courtInfo.value, fileNumberInfo.value, decisionDateInfo.value].filter(
-    (part) => part.trim() !== '',
-  )
-  return parts.join(', ')
-})
-
 const statusBadge = ref(
   // useStatusBadge(documentUnitStore.documentUnit?.status).value,
   useStatusBadge({
     publicationStatus: PublicationState.UNPUBLISHED,
   }).value,
 )
+
+const formattedInfo = 'Platzhaltertext'
+
+const { saveIsInProgress, triggerSave, lastSaveError, formattedLastSavedOn } = useSaveToRemote()
+
+const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError.value.title : '')
 
 // watchEffect(() => {
 //   statusBadge.value = useStatusBadge(
@@ -92,15 +64,17 @@ const statusBadge = ref(
     /> -->
 
     <span class="flex-grow"></span>
-    <!-- <SaveButton
-      v-if="
-        route.path.includes('categories') ||
-        route.path.includes('attachments') ||
-        route.path.includes('references')
-      "
-      aria-label="Speichern Button"
-      data-testid="document-unit-save-button"
-    /> -->
-    <TextButton data-testid="save-button" label="Speichern" size="small" />
+    <div class="ml-12 flex items-center space-x-[12px] whitespace-nowrap">
+      <p v-if="lastSaveError !== undefined" class="ds-label-01-reg text-red-800">
+        Fehler beim Speichern{{ getErrorDetails() }}
+      </p>
+      <p v-else-if="saveIsInProgress === true" class="ds-label-01-reg">speichern...</p>
+      <p v-else-if="formattedLastSavedOn != undefined" class="ds-label-01-reg">
+        Zuletzt
+        <span>{{ formattedLastSavedOn }}</span>
+        Uhr
+      </p>
+      <TextButton data-testid="save-button" label="Speichern" size="small" @click="triggerSave" />
+    </div>
   </div>
 </template>

@@ -2,15 +2,19 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import DocumentUnit from '@/domain/documentUnit'
 import documentUnitService from '@/services/documentUnitService'
-import type { ServiceResponse } from '@/services/httpClient'
+import type { FailedValidationServerResponse, ServiceResponse } from '@/services/httpClient'
+import errorMessages from '@/i18n/errors.json'
+import type DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
 
 export const useDocumentUnitStore = defineStore('docunitStore', () => {
   const documentUnit = ref<DocumentUnit | undefined>(undefined)
 
-  async function loadDocumentUnit(documentNumber: string): Promise<ServiceResponse<DocumentUnit>> {
+  async function loadDocumentUnit(
+    documentNumber: string,
+  ): Promise<ServiceResponse<DocumentUnitResponse>> {
     const response = await documentUnitService.getByDocumentNumber(documentNumber)
     if (response.data) {
-      documentUnit.value = response.data
+      documentUnit.value = (response.data as DocumentUnitResponse).json
     } else {
       documentUnit.value = undefined
     }
@@ -21,9 +25,37 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
     documentUnit.value = undefined
   }
 
+  async function updateDocumentUnit(): Promise<
+    ServiceResponse<DocumentUnitResponse | FailedValidationServerResponse>
+  > {
+    if (!documentUnit.value) {
+      return {
+        status: 404,
+        data: undefined,
+        error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
+      }
+    }
+    const response = await documentUnitService.update(documentUnit.value)
+
+    if (response.status === 200) {
+      documentUnit.value = (response.data as DocumentUnitResponse).json
+    } else {
+      return {
+        status: response.status,
+        data: undefined,
+        error:
+          response.status === 403
+            ? errorMessages.NOT_ALLOWED
+            : errorMessages.DOCUMENT_UNIT_UPDATE_FAILED,
+      }
+    }
+    return response
+  }
+
   return {
     documentUnit,
     loadDocumentUnit,
     unloadDocumentUnit,
+    updateDocumentUnit,
   }
 })
