@@ -14,7 +14,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
   ): Promise<ServiceResponse<DocumentUnitResponse>> {
     const response = await documentUnitService.getByDocumentNumber(documentNumber)
     if (response.data) {
-      documentUnit.value = (response.data as DocumentUnitResponse).json
+      documentUnit.value = response.data.json
     } else {
       documentUnit.value = undefined
     }
