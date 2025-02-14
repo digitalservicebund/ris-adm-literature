@@ -491,5 +491,5 @@ test('Show Sachgebiete heading', async ({ page }) => {
   await page.getByRole('link', { name: 'Rubriken' }).click()
 
   // then
-  await expect(page.getByText('Sachgebiete')).toHaveCount(1)
+  await expect(page.getByText('Sachgebiete')).toHaveCount(2)
 })
