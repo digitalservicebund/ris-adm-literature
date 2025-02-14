@@ -23,6 +23,12 @@ interface HttpClient {
     config?: RequestOptions,
     data?: TRequest,
   ): Promise<ServiceResponse<TResponse>>
+
+  put<TRequest, TResponse>(
+    url: string,
+    config?: RequestOptions,
+    data?: TRequest,
+  ): Promise<ServiceResponse<TResponse>>
 }
 
 async function baseHttp<T>(url: string, method: string, options?: RequestOptions, data?: T) {
@@ -60,6 +66,9 @@ const httpClient: HttpClient = {
   },
   async post<T>(url: string, options: RequestOptions, data: T) {
     return baseHttp<T>(url, 'post', { ...options }, data)
+  },
+  async put<T>(url: string, options: RequestOptions, data: T) {
+    return baseHttp<T>(url, 'put', { ...options }, data)
   },
 }
 

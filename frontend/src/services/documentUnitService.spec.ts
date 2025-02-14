@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
+import DocumentUnit from '@/domain/documentUnit.ts'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
@@ -48,6 +49,110 @@ describe('documentUnitService', () => {
 
     // then
     expect(response.error?.title).toBe('Neue Dokumentationseinheit konnte nicht erstellt werden.')
+  })
+
+  it('update given document unit', async () => {
+    // given
+    const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 200,
+      data: 'foo',
+    })
+    const documentUnit = new DocumentUnit({
+      id: 'uuid',
+      documentNumber: 'KSNR000000003',
+      references: [],
+    })
+
+    // when
+    await service.update(documentUnit)
+
+    // then
+    expect(httpMock).toHaveBeenCalledWith(
+      'documentation-units/KSNR000000003',
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+      documentUnit,
+    )
+  })
+
+  it('validation error on updating a documentation unit', async () => {
+    // given
+    vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 400,
+      data: { errors: [{ code: 'test', message: 'Validation failed', instance: 'local' }] },
+    })
+    const documentUnit = new DocumentUnit({
+      id: 'uuid',
+      documentNumber: 'KSNR000000003',
+      references: [],
+    })
+
+    // when
+    const response = await service.update(documentUnit)
+
+    // then
+    expect(response.error?.validationErrors?.[0].code).toBe('test')
+  })
+
+  it('validation error on updating a documentation unit without error response', async () => {
+    // given
+    vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 400,
+      data: 'something really strange happened',
+    })
+    const documentUnit = new DocumentUnit({
+      id: 'uuid',
+      documentNumber: 'KSNR000000003',
+      references: [],
+    })
+
+    // when
+    const response = await service.update(documentUnit)
+
+    // then
+    expect(response.data).toBeUndefined()
+  })
+
+  it('server error on updating a documentation unit', async () => {
+    // given
+    vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 500,
+      data: '',
+    })
+    const documentUnit = new DocumentUnit({
+      id: 'uuid',
+      documentNumber: 'KSNR000000003',
+      references: [],
+    })
+
+    // when
+    const response = await service.update(documentUnit)
+
+    // then
+    expect(response.error?.title).toBe('Dokumentationseinheit konnte nicht aktualisiert werden.')
+  })
+
+  it('server error on updating a documentation unit - access not allowed', async () => {
+    // given
+    vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 403,
+      data: '',
+    })
+    const documentUnit = new DocumentUnit({
+      id: 'uuid',
+      documentNumber: 'KSNR000000003',
+      references: [],
+    })
+
+    // when
+    const response = await service.update(documentUnit)
+
+    // then
+    expect(response.error?.title).toBe('Keine Berechtigung')
   })
 
   it('searchByRelatedDocumentation', async () => {

@@ -1,72 +1,59 @@
-import { describe, it, expect } from 'vitest'
-// import { createTestingPinia } from "@pinia/testing"
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
-// import { createRouter, createWebHistory } from "vue-router"
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
-// import DocumentUnit, { type CoreData } from "@/domain/documentUnit"
-// import routes from "@/test-helper/routes"
+import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
+import { setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
+
+function mockDocumentUnitStore(callback = vi.fn()) {
+  const documentUnitStore = useDocumentUnitStore()
+  documentUnitStore.updateDocumentUnit = callback
+
+  return documentUnitStore
+}
 
 function renderComponent(options?: { heading?: string /*coreData?: CoreData*/ }) {
-  // const router = createRouter({
-  //   history: createWebHistory(),
-  //   routes: routes,
-  // })
   return {
     ...render(DocumentUnitInfoPanel, {
       props: { heading: options?.heading ?? '' },
-      //   global: {
-      //     plugins: [
-      //       router,
-      //       createTestingPinia({
-      //         initialState: {
-      //           docunitStore: {
-      //             documentUnit: new DocumentUnit("foo", {
-      //               documentNumber: "1234567891234",
-      //               coreData: options?.coreData ?? {
-      //                 court: {
-      //                   type: "AG",
-      //                   location: "Test",
-      //                   label: "AG Test",
-      //                 },
-      //               },
-      //             }),
-      //           },
-      //         },
-      //       }),
-      //     ],
-      //   },
     }),
   }
 }
 
 describe('documentUnit InfoPanel', () => {
+  beforeEach(() => {
+    setActivePinia(createTestingPinia())
+  })
+
   it('renders heading if given', async () => {
-    renderComponent({ heading: 'test heading' })
+    renderComponent({ heading: 'Header' })
 
-    // TODO: is this a proper test? Fix it when the below gets un-commented
-    expect(await screen.findByText('test heading')).toBeVisible()
+    expect(await screen.findByText('Header')).toBeVisible()
+  })
 
-    // it("renders all given property infos in correct order", async () => {
-    //   const coreData = {
-    //     decisionDate: "2024-01-01",
-    //     fileNumbers: ["AZ123"],
-    //     court: {
-    //       type: "AG",
-    //       location: "Test",
-    //       label: "AG Test",
-    //     },
-    //   }
-    //   renderComponent({ coreData: coreData })
+  it('click on save renders last saved information', async () => {
+    // given
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200 }))
+    renderComponent()
 
-    //   expect(
-    //     await screen.findByText("AG Test, AZ123, 01.01.2024"),
-    //   ).toBeInTheDocument()
-    // })
+    // when
+    screen.getByRole('button', { name: 'Speichern' }).click()
 
-    // it("omits incomplete coredata fields from rendering", async () => {
-    //   renderComponent()
+    // then
+    expect(await screen.findByText('Zuletzt', { exact: false })).toBeInTheDocument()
+  })
 
-    //   expect(await screen.findByText("AG Test")).toBeInTheDocument()
-    // })
+  it('click on save renders error information', async () => {
+    // given
+    mockDocumentUnitStore()
+    renderComponent()
+
+    // when
+    screen.getByRole('button', { name: 'Speichern' }).click()
+
+    // then
+    expect(
+      await screen.findByText('Fehler beim Speichern: Verbindung fehlgeschlagen'),
+    ).toBeInTheDocument()
   })
 })
