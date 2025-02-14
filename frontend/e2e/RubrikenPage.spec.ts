@@ -493,7 +493,7 @@ test('Opening Rubriken shows Sachgebiete heading and button', async ({ page }) =
   await expect(page.getByRole('button', { name: 'Sachgebiete' })).toHaveCount(1)
 })
 
-test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button and ", async ({
+test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button and entering + selecting an entry", async ({
   page,
 }) => {
   // given
