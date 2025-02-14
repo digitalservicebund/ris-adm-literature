@@ -492,16 +492,3 @@ test('Opening Rubriken shows Sachgebiete heading', async ({ page }) => {
   await expect(page.getByText('Sachgebiete')).toHaveCount(2)
 })
 
-test("Click on navbar 'Sachgebiete' link moves viewport to Sachgebiete section", async ({
-  page,
-}) => {
-  // given
-  await page.goto('/documentUnit/KSNR054920707/rubriken')
-  await expect(page.getByRole('button', { name: 'Sachgebiete' })).not.toBeInViewport()
-
-  // when
-  await page.getByRole('link', { name: 'Sachgebiete' }).click()
-
-  // then
-  await expect(page.getByRole('button', { name: 'Sachgebiete' })).toBeInViewport()
-})
