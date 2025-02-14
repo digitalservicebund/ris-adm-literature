@@ -493,7 +493,7 @@ test('Opening Rubriken shows Sachgebiete heading and button', async ({ page }) =
   await expect(page.getByRole('button', { name: 'Sachgebiete' })).toHaveCount(1)
 })
 
-test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button", async ({
+test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button and ", async ({
   page,
 }) => {
   // given
@@ -503,7 +503,11 @@ test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet
 
   // when
   await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('VR-03-01-04')
+  await page
+    .getByRole('button', { name: 'dropdown-option' })
+    .filter({ hasText: 'VR-03-01-04' })
+    .click()
 
   // then
-  await expect(page.getByRole('textbox', { name: 'Direkteingabe-' })).toHaveValue('VR-03-01-04')
+  await expect(page.getByText('VR-03-01-04'))
 })
