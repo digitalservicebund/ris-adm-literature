@@ -2,6 +2,7 @@ import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import FieldOfLawExpandableContainer from '@/components/field-of-law/FieldOfLawExpandableContainer.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import { describe, expect, it, vi } from 'vitest'
 
 function renderComponent(fieldsOfLaw: FieldOfLaw[], isResetButtonVisible: boolean = false) {
   const user = userEvent.setup()
