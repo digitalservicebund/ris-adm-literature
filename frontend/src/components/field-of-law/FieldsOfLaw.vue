@@ -32,9 +32,9 @@ const itemsPerPage = 10
 
 const store = useDocumentUnitStore()
 const localModelValue = computed({
-  get: () => store.documentUnit!.contentRelatedIndexing.fieldsOfLaw,
+  get: () => store.documentUnit!.fieldsOfLaw,
   set: (newValues) => {
-    store.documentUnit!.contentRelatedIndexing.fieldsOfLaw = newValues?.filter((value) => {
+    store.documentUnit!.fieldsOfLaw = newValues?.filter((value) => {
       if (Object.keys(value).length === 0) {
         Sentry.captureMessage('FieldOfLaw list contains empty objects', 'error')
         return false

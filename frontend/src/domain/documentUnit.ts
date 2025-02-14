@@ -19,6 +19,7 @@ export default class DocumentUnit {
   readonly id: string
   readonly documentNumber: string
   public references?: Reference[]
+  public fieldsOfLaw?: Reference[]
 
   constructor(data: DocumentUnit) {
     this.id = data.id
