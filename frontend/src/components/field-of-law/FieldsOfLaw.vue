@@ -32,7 +32,7 @@ const itemsPerPage = 10
 
 const store = useDocumentUnitStore()
 const localModelValue = computed({
-  get: () => store.documentUnit!.fieldsOfLaw,
+  get: () => store.documentUnit!.fieldsOfLaw as FieldOfLaw[],
   set: (newValues) => {
     store.documentUnit!.fieldsOfLaw = newValues?.filter((value) => {
       if (Object.keys(value).length === 0) {

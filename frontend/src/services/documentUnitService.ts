@@ -33,6 +33,7 @@ const service: DocumentUnitService = {
         data: new DocumentUnit({
           id: document.id,
           documentNumber: documentNumber,
+          fieldsOfLaw: [],
         }),
       }
     }
