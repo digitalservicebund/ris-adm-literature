@@ -500,10 +500,10 @@ test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet
   await page.goto('/documentUnit/KSNR054920707/rubriken')
   await page.getByRole('button', { name: 'Sachgebiete' }).click()
   await page.getByRole('radio', { name: 'Direkteingabe' }).check()
-  await page.getByRole('textbox', { name: 'Direkteingabe Sachgebiet' }).fill('VR-03-01-04')
+  await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('VR-03-01-04')
 
   // then
-  await expect(page.getByRole('textbox', { name: 'Direkteingabe Sachgebiet' })).toHaveValue(
+  await expect(page.getByRole('textbox', { name: 'Direkteingabe-' })).toHaveValue(
     'VR-03-01-04',
   )
 })
