@@ -15,8 +15,8 @@ export type FieldOfLaw = {
 
 export function buildRoot(): FieldOfLaw {
   return {
-    identifier: "root",
-    text: "Alle Sachgebiete",
+    identifier: 'root',
+    text: 'Alle Sachgebiete',
     children: [],
     norms: [],
     hasChildren: true,
@@ -26,7 +26,7 @@ export function buildRoot(): FieldOfLaw {
 export function createNode(identifier: string): FieldOfLaw {
   return {
     identifier: identifier,
-    text: "",
+    text: '',
     children: [],
     norms: [],
     hasChildren: false,

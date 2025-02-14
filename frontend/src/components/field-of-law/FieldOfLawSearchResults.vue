@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import FieldOfLawSearchResultsListItem from "@/components/field-of-law/FieldOfLawSearchResultsListItem.vue"
-import Pagination, { type Page } from "@/components/Pagination.vue"
-import type { FieldOfLaw } from "@/domain/fieldOfLaw"
-import errorMessages from "@/i18n/errors.json"
+import FieldOfLawSearchResultsListItem from '@/components/field-of-law/FieldOfLawSearchResultsListItem.vue'
+import Pagination, { type Page } from '@/components/Pagination.vue'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
+import errorMessages from '@/i18n/errors.json'
 
 defineProps<{
   currentPage?: Page<FieldOfLaw>
@@ -11,8 +11,8 @@ defineProps<{
 
 const emit = defineEmits<{
   search: [page: number]
-  "node:add": [node: FieldOfLaw]
-  "linkedField:clicked": [node: FieldOfLaw]
+  'node:add': [node: FieldOfLaw]
+  'linkedField:clicked': [node: FieldOfLaw]
 }>()
 </script>
 

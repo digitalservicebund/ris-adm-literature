@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputField from "@/components/input/InputField.vue"
-import TextButton from "@/components/input/TextButton.vue"
-import TextInput from "@/components/input/TextInput.vue"
-import IconSearch from "~icons/ic/baseline-search"
+import InputField from '@/components/input/InputField.vue'
+import TextButton from '@/components/input/TextButton.vue'
+import TextInput from '@/components/input/TextInput.vue'
+import IconSearch from '~icons/ic/baseline-search'
 
 defineProps<{
   errorLabel?: string
@@ -12,9 +12,9 @@ const emit = defineEmits<{
   search: [void]
 }>()
 
-const identifier = defineModel<string>("identifier")
-const description = defineModel<string>("description")
-const norm = defineModel<string>("norm")
+const identifier = defineModel<string>('identifier')
+const description = defineModel<string>('description')
+const norm = defineModel<string>('norm')
 </script>
 
 <template>

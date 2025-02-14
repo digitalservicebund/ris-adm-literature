@@ -1,6 +1,6 @@
-import { userEvent } from "@testing-library/user-event"
-import { render, screen } from "@testing-library/vue"
-import FieldOfLawSearchResultsListItem from "@/components/field-of-law/FieldOfLawSearchResultsListItem.vue"
+import { userEvent } from '@testing-library/user-event'
+import { render, screen } from '@testing-library/vue'
+import FieldOfLawSearchResultsListItem from '@/components/field-of-law/FieldOfLawSearchResultsListItem.vue'
 
 function renderComponent(options?: {
   identifier?: string
@@ -8,8 +8,8 @@ function renderComponent(options?: {
   linkedFields?: string[]
 }) {
   const fieldOfLaw = {
-    identifier: options?.identifier ?? "AR",
-    text: options?.text ?? "Arbeitsrecht",
+    identifier: options?.identifier ?? 'AR',
+    text: options?.text ?? 'Arbeitsrecht',
     linkedFields: options?.linkedFields ?? [],
     norms: [],
     children: [],
@@ -25,31 +25,31 @@ function renderComponent(options?: {
   }
 }
 
-describe("FieldOfLawSearchResults", () => {
-  it("render search results", () => {
+describe('FieldOfLawSearchResults', () => {
+  it('render search results', () => {
     renderComponent()
 
-    expect(screen.getByText("AR")).toBeInTheDocument()
-    expect(screen.getByText("Arbeitsrecht")).toBeInTheDocument()
+    expect(screen.getByText('AR')).toBeInTheDocument()
+    expect(screen.getByText('Arbeitsrecht')).toBeInTheDocument()
   })
 
   it("on identifier click emit 'node:add'", async () => {
-    const { emitted, user } = renderComponent({ identifier: "AR-01" })
+    const { emitted, user } = renderComponent({ identifier: 'AR-01' })
 
-    await user.click(screen.getByLabelText("AR-01 hinzufügen"))
+    await user.click(screen.getByLabelText('AR-01 hinzufügen'))
 
-    expect(emitted()["node:add"]).toBeTruthy()
+    expect(emitted()['node:add']).toBeTruthy()
   })
 
   it("on linked field click emit 'linked-field:clicked'", async () => {
     const { emitted, user } = renderComponent({
-      identifier: "BR-01",
-      text: "mit Link zu BR-02",
-      linkedFields: ["BR-02"],
+      identifier: 'BR-01',
+      text: 'mit Link zu BR-02',
+      linkedFields: ['BR-02'],
     })
 
-    await user.click(screen.getByText("BR-02"))
+    await user.click(screen.getByText('BR-02'))
 
-    expect(emitted()["linked-field:clicked"]).toBeTruthy()
+    expect(emitted()['linked-field:clicked']).toBeTruthy()
   })
 })

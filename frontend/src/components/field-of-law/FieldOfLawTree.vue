@@ -1,13 +1,11 @@
-/home/name/theFolder/code/ris-backend-service/frontend/src/components/field-of-law/FieldOfLawTreeNode.vue<script lang="ts" setup>
-import { computed, ref, watch } from "vue"
-import FieldOfLawTreeNode from "./FieldOfLawTreeNode.vue"
-import {
-  NodeHelper,
-  type NodeHelperInterface,
-} from "@/components/field-of-law/fieldOfLawNode"
-import CheckboxInput from "@/components/input/CheckboxInput.vue"
-import InputField, { LabelPosition } from "@/components/input/InputField.vue"
-import { buildRoot, type FieldOfLaw } from "@/domain/fieldOfLaw"
+/home/name/theFolder/code/ris-backend-service/frontend/src/components/field-of-law/FieldOfLawTreeNode.vue
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue'
+import FieldOfLawTreeNode from './FieldOfLawTreeNode.vue'
+import { NodeHelper, type NodeHelperInterface } from '@/components/field-of-law/fieldOfLawNode'
+import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import InputField, { LabelPosition } from '@/components/input/InputField.vue'
+import { buildRoot, type FieldOfLaw } from '@/domain/fieldOfLaw'
 
 const props = defineProps<{
   modelValue: FieldOfLaw[]
@@ -17,11 +15,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  "node:add": [node: FieldOfLaw]
-  "node:remove": [node: FieldOfLaw]
-  "node-of-interest:reset": []
-  "linked-field:select": [node: FieldOfLaw]
-  "toggle-show-norms": []
+  'node:add': [node: FieldOfLaw]
+  'node:remove': [node: FieldOfLaw]
+  'node-of-interest:reset': []
+  'linked-field:select': [node: FieldOfLaw]
+  'toggle-show-norms': []
 }>()
 
 const root = ref(buildRoot())
@@ -29,16 +27,14 @@ const nodeHelper = ref<NodeHelperInterface>(new NodeHelper())
 const expandedNodes = ref<FieldOfLaw[]>([])
 const showNormsModelValue = computed({
   get: () => props.showNorms,
-  set: () => emit("toggle-show-norms"),
+  set: () => emit('toggle-show-norms'),
 })
 
 async function expandNode(node: FieldOfLaw) {
   const itemsToReturn = new Map<string, FieldOfLaw>()
   if (props.nodeOfInterest) {
     itemsToReturn.set(node.identifier, node)
-    const response = await nodeHelper.value.getAncestors(
-      props.nodeOfInterest.identifier,
-    )
+    const response = await nodeHelper.value.getAncestors(props.nodeOfInterest.identifier)
     for (const node of response) {
       itemsToReturn.set(node.identifier, node)
     }
@@ -50,7 +46,7 @@ async function expandNode(node: FieldOfLaw) {
 async function expandNodesUpTo(node: FieldOfLaw) {
   const itemsToReturn = new Map<string, FieldOfLaw>()
 
-  if (node.identifier == "root") {
+  if (node.identifier == 'root') {
     itemsToReturn.set(node.identifier, node)
     for (const selected of props.modelValue) {
       const response = await nodeHelper.value.getAncestors(selected.identifier)
@@ -70,9 +66,7 @@ function collapseNode(collapsedNode: FieldOfLaw) {
   )
 }
 
-function addExpandedNodes(
-  map: Map<string, FieldOfLaw>,
-): Map<string, FieldOfLaw> {
+function addExpandedNodes(map: Map<string, FieldOfLaw>): Map<string, FieldOfLaw> {
   expandedNodes.value.forEach((node) => {
     map.set(node.identifier, node)
   })

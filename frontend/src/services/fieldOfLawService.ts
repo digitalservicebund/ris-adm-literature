@@ -1,20 +1,14 @@
-import httpClient, { type ServiceResponse } from "./httpClient"
-import type { Page } from "@/components/Pagination.vue"
-import type { FieldOfLaw } from "@/domain/fieldOfLaw"
-import errorMessages from "@/i18n/errors.json"
+import httpClient, { type ServiceResponse } from './httpClient'
+import type { Page } from '@/components/Pagination.vue'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
+import errorMessages from '@/i18n/errors.json'
 
 interface FieldOfLawService {
   getSelectedFieldsOfLaw(uuid: string): Promise<ServiceResponse<FieldOfLaw[]>>
 
-  addFieldOfLaw(
-    uuid: string,
-    identifier: string,
-  ): Promise<ServiceResponse<FieldOfLaw[]>>
+  addFieldOfLaw(uuid: string, identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
 
-  removeFieldOfLaw(
-    uuid: string,
-    identifier: string,
-  ): Promise<ServiceResponse<FieldOfLaw[]>>
+  removeFieldOfLaw(uuid: string, identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
 
   getChildrenOf(identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
 
@@ -36,11 +30,10 @@ const service: FieldOfLawService = {
     )
     if (response.status >= 300) {
       response.error = {
-        title:
-          errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
-            "${uuid}",
-            uuid,
-          ),
+        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
+          '${uuid}',
+          uuid,
+        ),
       }
     }
     return response
@@ -51,10 +44,9 @@ const service: FieldOfLawService = {
     )
     if (response.status >= 300) {
       response.error = {
-        title:
-          errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_ADDED.title
-            .replace("${identifier}", identifier)
-            .replace("${uuid}", uuid),
+        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_ADDED.title
+          .replace('${identifier}', identifier)
+          .replace('${uuid}', uuid),
       }
     }
     return response
@@ -65,10 +57,9 @@ const service: FieldOfLawService = {
     )
     if (response.status >= 300) {
       response.error = {
-        title:
-          errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_DELETED.title
-            .replace("${identifier}", identifier)
-            .replace("${uuid}", uuid),
+        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_DELETED.title
+          .replace('${identifier}', identifier)
+          .replace('${uuid}', uuid),
       }
     }
     return response
@@ -80,7 +71,7 @@ const service: FieldOfLawService = {
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
-          "${identifier}",
+          '${identifier}',
           identifier,
         ),
       }
@@ -88,9 +79,7 @@ const service: FieldOfLawService = {
     return response
   },
   async getTreeForIdentifier(identifier: string) {
-    const response = await httpClient.get<FieldOfLaw>(
-      `caselaw/fieldsoflaw/${identifier}/tree`,
-    )
+    const response = await httpClient.get<FieldOfLaw>(`caselaw/fieldsoflaw/${identifier}/tree`)
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.FIELD_OF_LAW_COULD_NOT_BE_LOADED.title,
@@ -109,9 +98,9 @@ const service: FieldOfLawService = {
       `caselaw/fieldsoflaw?pg=${page}&sz=${size}`,
       {
         params: {
-          q: query ?? "",
-          identifier: identifier ?? "",
-          norm: norm ?? "",
+          q: query ?? '',
+          identifier: identifier ?? '',
+          norm: norm ?? '',
         },
       },
     )
