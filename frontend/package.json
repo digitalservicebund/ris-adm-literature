@@ -29,7 +29,7 @@
     "@iconify-json/material-symbols": "^1.2.14",
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^3.1.2",
-    "@sentry/vue": "^8.55.0",
+    "@sentry/vue": "^9.1.0",
     "@tiptap/extension-blockquote": "^2.11.5",
     "@tiptap/extension-bold": "^2.11.5",
     "@tiptap/extension-bullet-list": "^2.11.5",
