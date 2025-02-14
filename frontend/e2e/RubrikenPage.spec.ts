@@ -496,14 +496,14 @@ test('Opening Rubriken shows Sachgebiete heading and button', async ({ page }) =
 test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button", async ({
   page,
 }) => {
-  // given, when
+  // given
   await page.goto('/documentUnit/KSNR054920707/rubriken')
   await page.getByRole('button', { name: 'Sachgebiete' }).click()
   await page.getByRole('radio', { name: 'Direkteingabe' }).check()
+
+  // when
   await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('VR-03-01-04')
 
   // then
-  await expect(page.getByRole('textbox', { name: 'Direkteingabe-' })).toHaveValue(
-    'VR-03-01-04',
-  )
+  await expect(page.getByRole('textbox', { name: 'Direkteingabe-' })).toHaveValue('VR-03-01-04')
 })
