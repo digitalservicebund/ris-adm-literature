@@ -24,9 +24,9 @@ interface DocumentUnitService {
 
 function mapDocumentationUnit(data: DocumentUnitResponse): DocumentUnit {
   return new DocumentUnit({
-    ...data?.json,
+    ...data.json,
     id: data.id,
-    documentNumber: data?.documentNumber,
+    documentNumber: data.documentNumber,
   })
 }
 
@@ -83,7 +83,8 @@ const service: DocumentUnitService = {
     )
 
     if (response.status == 200) {
-      ;(response.data as DocumentUnitResponse).json = mapDocumentationUnit(response.data)
+      const data = response.data as DocumentUnitResponse
+      data.json = mapDocumentationUnit(data)
     } else if (response.status >= 300) {
       response.error = {
         title:
