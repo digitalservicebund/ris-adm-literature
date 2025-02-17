@@ -8,10 +8,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class DocumentationUnitPersistenceService implements DocumentationUnitPersistencePort {
 
@@ -41,6 +43,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       new SecureRandom().nextInt(1000)
     );
     DocumentationUnitEntity saved = documentationUnitRepository.save(documentationUnitEntity);
+    log.info("New documentation unit created with document number: {}", saved.getDocumentNumber());
     return new DocumentationUnit(saved.getDocumentNumber(), saved.getId(), null);
   }
 
