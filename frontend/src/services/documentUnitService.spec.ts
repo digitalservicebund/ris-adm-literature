@@ -26,6 +26,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
+      fieldsOfLaw: [],
     })
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
@@ -82,6 +83,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
+      fieldsOfLaw: [],
       references: [],
     })
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
@@ -118,6 +120,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
+      fieldsOfLaw: [],
       references: [],
     })
 
@@ -137,6 +140,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
+      fieldsOfLaw: [],
       references: [],
     })
 
@@ -156,6 +160,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
+      fieldsOfLaw: [],
       references: [],
     })
 
@@ -175,6 +180,7 @@ describe('documentUnitService', () => {
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
+      fieldsOfLaw: [],
       references: [],
     })
 
