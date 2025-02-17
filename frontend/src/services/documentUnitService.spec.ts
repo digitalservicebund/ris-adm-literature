@@ -3,17 +3,43 @@ import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import DocumentUnit from '@/domain/documentUnit.ts'
+import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 500,
+      data: 'foo',
+    })
+
+    // when
     const result = await service.getByDocumentNumber('XXXXXX')
-    expect(result.error?.title).toEqual('Die Suchergebnisse konnten nicht geladen werden.')
-    expect(result.error?.description).toEqual('Bitte versuchen Sie es später erneut.')
+
+    // then
+    expect(result.error?.title).toEqual('Dokumentationseinheit konnte nicht geladen werden.')
     expect(result.data).toBeUndefined()
   })
 
   it('returns correct documentation unit if exist', async () => {
+    // given
+    const documentUnit = new DocumentUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+    })
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 200,
+      data: new DocumentUnitResponse({
+        id: documentUnit.id,
+        documentNumber: documentUnit.documentNumber,
+        json: documentUnit,
+      }),
+    })
+
+    // when
     const result = await service.getByDocumentNumber('KSNR054920707')
+
+    // then
     expect(result.data?.id).toEqual('8de5e4a0-6b67-4d65-98db-efe877a260c4')
     expect(result.data?.documentNumber).toEqual('KSNR054920707')
     expect(result.error).toBeUndefined()
@@ -53,14 +79,18 @@ describe('documentUnitService', () => {
 
   it('update given document unit', async () => {
     // given
-    const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
-      status: 200,
-      data: 'foo',
-    })
     const documentUnit = new DocumentUnit({
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       references: [],
+    })
+    const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
+      status: 200,
+      data: new DocumentUnitResponse({
+        id: documentUnit.id,
+        documentNumber: documentUnit.documentNumber,
+        json: documentUnit,
+      }),
     })
 
     // when

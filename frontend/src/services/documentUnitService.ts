@@ -22,30 +22,31 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
-const document: {
-  id: string
-  documentNumber: string
-} = {
-  id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-  documentNumber: 'KSNR054920707',
+function mapDocumentationUnit(data: DocumentUnitResponse): DocumentUnit {
+  return new DocumentUnit({
+    ...data?.json,
+    id: data.id,
+    documentNumber: data?.documentNumber,
+  })
 }
 
 const service: DocumentUnitService = {
   async getByDocumentNumber(documentNumber: string) {
-    if (documentNumber.startsWith('KSNR')) {
-      return {
-        status: 200,
-        data: new DocumentUnitResponse({
-          id: document.id,
-          documentNumber: documentNumber,
-          json: new DocumentUnit({ id: document.id, documentNumber: documentNumber }),
-        }),
+    const response = await httpClient.get<DocumentUnitResponse>(
+      `documentation-units/${documentNumber}`,
+    )
+    if (response.status >= 300 || response.error) {
+      response.data = undefined
+      response.error = {
+        title:
+          response.status == 403
+            ? errorMessages.DOCUMENT_UNIT_NOT_ALLOWED.title
+            : errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
       }
+    } else {
+      response.data.json = mapDocumentationUnit(response.data)
     }
-    return {
-      status: 400,
-      error: errorMessages.DOCUMENT_UNIT_SEARCH_FAILED,
-    }
+    return response
   },
 
   async createNew() {
@@ -81,7 +82,9 @@ const service: DocumentUnitService = {
       documentUnit,
     )
 
-    if (response.status >= 300) {
+    if (response.status == 200) {
+      ;(response.data as DocumentUnitResponse).json = mapDocumentationUnit(response.data)
+    } else if (response.status >= 300) {
       response.error = {
         title:
           response.status == 403

@@ -4,8 +4,10 @@ test(
   'Visiting the Abgabe step of creating a documentUnit which displays a Button to end the process and leads to the StartPage',
   { tag: ['@RISDEV-6048'] },
   async ({ page }) => {
-    // In the future the new documentUnit needs to be mocked
-    // As this functionality is not there yet we can simply enter the desired page and finish the process
+    await page.route('/api/documentation-units/KSNR054920707', async route => {
+      const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: null }
+      await route.fulfill({ json })
+    })
     await page.goto('/documentUnit/KSNR054920707/abgabe')
     await expect(page.getByText('Abgabe')).toHaveCount(2)
     await expect(page.getByText('Zur Veröffentlichung freigeben')).toHaveCount(1)
