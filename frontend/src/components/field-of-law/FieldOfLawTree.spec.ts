@@ -21,30 +21,82 @@ function renderComponent(
 describe('FieldOfLawTree', () => {
   const user = userEvent.setup()
 
-  const fetchSpy = vi.spyOn(FieldOfLawService, 'getChildrenOf').mockImplementation(() =>
-    Promise.resolve({
-      status: 200,
-      data: [
-        {
-          identifier: 'AB-01',
-          text: 'Text for AB',
-          children: [],
+  const dataOnRoot = Promise.resolve({
+    status: 200,
+    data: [
+      {
+        hasChildren: true,
+        identifier: 'AR',
+        text: 'Arbeitsrecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+      {
+        hasChildren: true,
+        identifier: 'AV',
+        text: 'Allgemeines Verwaltungsrecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+      {
+        identifier: 'AB-01',
+        text: 'Text for AB',
+        children: [],
+        norms: [],
+        isExpanded: false,
+        hasChildren: false,
+      },
+      {
+        identifier: 'CD-02',
+        text: 'And text for CD with link to AB-01',
+        children: [],
+        norms: [],
+        linkedFields: ['AB-01'],
+        isExpanded: false,
+        hasChildren: false,
+      },
+    ],
+  })
+  const dataOnAR = Promise.resolve({
+    status: 200,
+    data: [
+      {
+        hasChildren: true,
+        identifier: 'AR-01',
+        text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
+        linkedFields: [],
+        norms: [
+          {
+            abbreviation: 'BGB',
+            singleNormDescription: '§ 611a',
+          },
+          {
+            abbreviation: 'GewO',
+            singleNormDescription: '§ 105',
+          },
+        ],
+        children: [],
+        parent: {
+          hasChildren: true,
+          identifier: 'AR',
+          text: 'Arbeitsrecht',
+          linkedFields: [],
           norms: [],
-          isExpanded: false,
-          hasChildren: false,
-        },
-        {
-          identifier: 'CD-02',
-          text: 'And text for CD with link to AB-01',
           children: [],
-          norms: [],
-          linkedFields: ['AB-01'],
-          isExpanded: false,
-          hasChildren: false,
+          parent: undefined,
         },
-      ],
-    }),
-  )
+      },
+    ],
+  })
+
+  const fetchSpy = vi
+    .spyOn(FieldOfLawService, 'getChildrenOf')
+    .mockImplementation((identifier: string) => {
+      if (identifier != 'root') return dataOnAR
+      return dataOnRoot
+    })
 
   it('Tree is fully closed upon at start', async () => {
     renderComponent()
@@ -64,5 +116,19 @@ describe('FieldOfLawTree', () => {
     expect(screen.getByText('Text for AB')).toBeInTheDocument()
     expect(screen.getByText('And text for CD with link to AB-01')).toBeInTheDocument()
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
+  })
+
+  it('Tree opens sub level nodes upon children click', async () => {
+    renderComponent()
+
+    await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
+
+    await user.click(screen.getByLabelText('Arbeitsrecht aufklappen'))
+
+    expect(fetchSpy).toBeCalledWith('AR')
+
+    expect(
+      screen.getByText('Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang'),
+    ).toBeInTheDocument()
   })
 })
