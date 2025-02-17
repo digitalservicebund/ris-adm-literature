@@ -13,4 +13,13 @@ Visit [http://localhost:5173/](http://localhost:5173/)
 
 ## Run Frontend bare metal
 
-See [./frontend/DEVELOPING.md](./frontend/DEVELOPING.md)
+See [frontend/DEVELOPING.md](./frontend/DEVELOPING.md)
+
+## Run backend
+
+A docker container is started automatically with a local build.
+
+```shell
+cd backend
+./gradlew bootRun
+```

@@ -12,17 +12,17 @@ The name "RIS ADM VwV" refers to
 
 ## Tech Documentation
 
-More information can be found in [`./doc/README.md`](./doc/README.md)
+More information can be found in [doc/README.md](./doc/README.md)
 
 ## Contributing
 
-A guideline on how to contribute to this project can be found in [./CONTRIBUTING.md](./CONTRIBUTING.md).
+A guideline on how to contribute to this project can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Developing
 
-Details on how to work with the code can be found in [./DEVELOPING.md](./DEVELOPING.md).
+Details on how to work with the code can be found in [DEVELOPING.md](./DEVELOPING.md).
 
 ## Contributor Covenant
 
-Our code of conduct can be found in [./CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) (DE: [./CODE_OF_CONDUCT_DE.md](./CODE_OF_CONDUCT_DE.md)).
+Our code of conduct can be found in [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) (DE: [CODE_OF_CONDUCT_DE.md](./CODE_OF_CONDUCT_DE.md)).
 
