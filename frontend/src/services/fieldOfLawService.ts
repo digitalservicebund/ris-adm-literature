@@ -10,7 +10,7 @@ const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
     linkedFields: fieldOfLaw.linkedFields,
     norms: [],
     children: [],
-    hasChildren: false,
+    hasChildren: fieldOfLaw.text == 'Arbeitsrecht' ? true : false,
   }
 })
 
@@ -29,6 +29,40 @@ interface FieldOfLawService {
 const service: FieldOfLawService = {
   async getChildrenOf(identifier: string) {
     console.log(identifier)
+
+    if (identifier != 'root')
+      return {
+        status: 200,
+        data: [
+          {
+            hasChildren: false,
+            identifier: 'AR-01',
+            text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
+            linkedFields: [],
+            norms: [
+              {
+                abbreviation: 'BGB',
+                singleNormDescription: '§ 611a',
+              },
+              {
+                abbreviation: 'GewO',
+                singleNormDescription: '§ 105',
+              },
+            ],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'AR',
+              text: 'Arbeitsrecht',
+              linkedFields: [],
+              norms: [],
+              children: [],
+              parent: undefined,
+            },
+          },
+        ],
+      }
+
     return {
       status: 200,
       data: content,
