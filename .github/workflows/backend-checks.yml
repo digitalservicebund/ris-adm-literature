@@ -10,7 +10,7 @@ jobs:
         with:
           submodules: true
       - name: Setup nodenv
-        uses: nodenv/actions/node-version@v3
+        uses: nodenv/actions/node-version@v4
         id: nodenv
       - name: Setup node
         uses: actions/setup-node@v3
