@@ -1,4 +1,3 @@
-/home/name/theFolder/code/ris-backend-service/frontend/src/components/field-of-law/FieldOfLawTreeNode.vue
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import FieldOfLawTreeNode from './FieldOfLawTreeNode.vue'
