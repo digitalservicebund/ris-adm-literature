@@ -523,13 +523,13 @@ test.describe('RubrikenPage', () => {
     await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 
     // when
-    await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('AR-06-01')
+    await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
     await page
       .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'AR-06-01' })
+      .filter({ hasText: 'Arbeitsrecht' })
       .click()
 
     // then
-    await expect(page.getByText('AR-06-01Gesetzlicher')).toHaveCount(1)
+    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
   })
 })
