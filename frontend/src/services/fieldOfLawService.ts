@@ -10,7 +10,7 @@ const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
     linkedFields: fieldOfLaw.linkedFields,
     norms: [],
     children: [],
-    hasChildren: fieldOfLaw.text == 'Arbeitsrecht' ? true : false,
+    hasChildren: fieldOfLaw.text == 'Arbeitsrecht',
   }
 })
 
