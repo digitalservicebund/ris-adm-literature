@@ -5,6 +5,7 @@ import type { CitationType } from '@/domain/citationType'
 import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { ActiveReferenceType } from '@/domain/activeReference.ts'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
 export enum InputType {
   TEXT = 'text',
@@ -121,6 +122,7 @@ export interface DropdownInputField extends BaseInputField {
 
 //COMBOBOX
 export type ComboboxInputModelType =
+  | FieldOfLaw
   | LegalPeriodical
   | Court
   | DocumentType

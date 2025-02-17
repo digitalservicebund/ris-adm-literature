@@ -2,8 +2,12 @@ import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('/api/documentation-units/KSNR054920707', async route => {
-      const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: null }
+    await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+      const json = {
+        documentNumber: 'KSNR054920707',
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        json: null,
+      }
       await route.fulfill({ json })
     })
   })
@@ -66,15 +70,19 @@ test.describe('RubrikenPage', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
       await page.getByText('Kein Aktenzeichen').check()
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
-    }
+    },
   )
 
   test(
     'Visiting the Schlagwörter step of creating a documentUnit',
     { tag: ['@RISDEV-6047'] },
     async ({ page }) => {
-      await page.route('/api/documentation-units/KSNR054920707', async route => {
-        const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: null }
+      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+        const json = {
+          documentNumber: 'KSNR054920707',
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          json: null,
+        }
         await route.fulfill({ json })
       })
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
@@ -114,7 +122,9 @@ test.describe('RubrikenPage', () => {
       await schlagwoerterListEditElement.press('Enter')
       await schlagwoerterListEditElement.pressSequentially('This should not be added')
       await schlagwoerterListEditElement.press('Enter')
-      const abbrechenElement = page.getByTestId('keywords').getByRole('button', { name: 'Abbrechen' })
+      const abbrechenElement = page
+        .getByTestId('keywords')
+        .getByRole('button', { name: 'Abbrechen' })
       await abbrechenElement.click()
       await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
       await expect(page.getByText('Schlagwort 2')).toHaveCount(1)
@@ -128,7 +138,7 @@ test.describe('RubrikenPage', () => {
       await schlagwoerterListEditElement.pressSequentially('A schlagwort starting with an "A"')
       await schlagwoerterListEditElement.press('Enter')
       const sortAlphabeticallyCheckboxElement = page.getByRole('checkbox', {
-        name: 'Alphabetisch sortieren'
+        name: 'Alphabetisch sortieren',
       })
       await sortAlphabeticallyCheckboxElement.check()
       await schlagwoerterUebernehmenElement.click()
@@ -138,7 +148,7 @@ test.describe('RubrikenPage', () => {
       await expect(page.getByText('A schlagwort starting with an "A"')).toHaveCount(1)
       // new element is sorted first in list
       await expect(page.getByText('A schlagwort starting with an "A"Schlagwort 1')).toHaveCount(1)
-    }
+    },
   )
 
   test(
@@ -155,7 +165,7 @@ test.describe('RubrikenPage', () => {
       await gliederungEditor.click()
       await page.keyboard.insertText('Test 123')
       await expect(page.getByText('Test 123')).toHaveCount(1)
-    }
+    },
   )
 
   test(
@@ -175,7 +185,7 @@ test.describe('RubrikenPage', () => {
       await kurzreferatEditorElement.click()
       await page.keyboard.insertText('Kurzreferat Eintrag 123')
       await expect(page.getByText('Kurzreferat Eintrag 123')).toHaveCount(1)
-    }
+    },
   )
 
   test('Add a norm, edit and save', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
@@ -184,7 +194,7 @@ test.describe('RubrikenPage', () => {
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     await expect(
-      page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
+      page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
     ).toHaveCount(1)
 
     // when
@@ -207,7 +217,7 @@ test.describe('RubrikenPage', () => {
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     await expect(
-      page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' })
+      page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
     ).toHaveCount(1)
 
     // when
@@ -306,7 +316,7 @@ test.describe('RubrikenPage', () => {
       await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az2')
       await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
       await expect(
-        page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2')
+        page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2'),
       ).toBeVisible()
       await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
 
@@ -314,9 +324,9 @@ test.describe('RubrikenPage', () => {
       await page.getByRole('button', { name: 'Eintrag löschen' }).click()
       await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
       await expect(
-        page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2')
+        page.getByText('Übernahme, Berufsgericht für Architekten Bremen, 31.12.2024, Az2'),
       ).toHaveCount(0)
-    }
+    },
   )
 
   test(
@@ -333,11 +343,11 @@ test.describe('RubrikenPage', () => {
         .click()
       await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
       await expect(
-        page.getByText('label1, 01.02.2022, test fileNumber1, documentType1')
+        page.getByText('label1, 01.02.2022, test fileNumber1, documentType1'),
       ).toBeVisible()
       await page.getByRole('button', { name: 'Treffer übernehmen' }).click()
       await expect(
-        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, documentType1')
+        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, documentType1'),
       ).toBeVisible()
 
       // re-open the same record
@@ -346,13 +356,13 @@ test.describe('RubrikenPage', () => {
       // by clicking into the input, there shall be no drop down suggestions
       await page.getByRole('textbox', { name: 'Dokumenttyp Aktivzitierung' }).click()
       await expect(
-        page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' })
+        page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' }),
       ).toHaveCount(0)
 
       // but when deleting input content then option VR shall appear
       await page.keyboard.press('Backspace')
       await expect(
-        page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' })
+        page.getByRole('button', { name: 'dropdown-option' }).filter({ hasText: 'VR' }),
       ).toBeVisible()
 
       // click this option and save it
@@ -361,7 +371,7 @@ test.describe('RubrikenPage', () => {
 
       // then
       await expect(
-        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, VR')
+        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, VR'),
       ).toBeVisible()
 
       await page.getByTestId('list-entry-0').click()
@@ -370,7 +380,7 @@ test.describe('RubrikenPage', () => {
 
       await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
       await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
-    }
+    },
   )
 
   test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
@@ -388,7 +398,9 @@ test.describe('RubrikenPage', () => {
     await expect(activeReferenceElement).toHaveCount(1)
 
     await expect(page.getByRole('radio', { name: 'Norm auswählen' })).toHaveCount(1)
-    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(1)
+    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(
+      1,
+    )
 
     // when
     await referenceTypeElement.click()
@@ -405,7 +417,9 @@ test.describe('RubrikenPage', () => {
 
     // the radio buttons shall be gone as one cannot switch after creating
     await expect(page.getByRole('radio', { name: 'Norm auswählen' })).toHaveCount(0)
-    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(0)
+    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(
+      0,
+    )
 
     await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
     await page.getByRole('button', { name: 'Verweis speichern' }).click()
@@ -457,7 +471,7 @@ test.describe('RubrikenPage', () => {
       // then
       await expect(page.getByText('SGB 5, 1991, Seite 92')).toHaveCount(0)
       await expect(page.getByText('Rechtsgrundlage | KVLG, § 2')).toHaveCount(1)
-    }
+    },
   )
 
   test(
@@ -487,6 +501,35 @@ test.describe('RubrikenPage', () => {
 
       // then
       await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' })).toHaveCount(0)
-    }
+    },
   )
+
+  // TODO: add tag
+  test('Opening Rubriken shows Sachgebiete heading and button', async ({ page }) => {
+    // given, when
+    await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+    // then
+    await expect(page.getByRole('heading', { name: 'Sachgebiete' })).toHaveCount(1)
+    await expect(page.getByRole('button', { name: 'Sachgebiete' })).toHaveCount(1)
+  })
+
+  test("We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button and entering + selecting an entry", async ({
+    page,
+  }) => {
+    // given
+    await page.goto('/documentUnit/KSNR054920707/rubriken')
+    await page.getByRole('button', { name: 'Sachgebiete' }).click()
+    await page.getByRole('radio', { name: 'Direkteingabe' }).check()
+
+    // when
+    await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Arbeitsrecht' })
+      .click()
+
+    // then
+    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
+  })
 })

@@ -7,6 +7,7 @@ import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -15,10 +16,12 @@ export type ComboboxItemService = {
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getFieldOfLawSearchByIdentifier: (
+    filter: Ref<string | undefined>,
+  ) => ComboboxResult<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {
-  // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
   getLegalPeriodicals: (filter: Ref<string | undefined>) => {
     const banzLegalPeriodical = new LegalPeriodical({
       title: 'Bundesanzeiger',
@@ -223,6 +226,72 @@ const service: ComboboxItemService = {
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: citationTypes,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
+  getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) => {
+    const fieldOfLawValues: FieldOfLaw[] = [
+      {
+        hasChildren: true,
+        identifier: 'AR',
+        text: 'Arbeitsrecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+        parent: undefined,
+      },
+      {
+        hasChildren: true,
+        identifier: 'AR-01',
+        text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
+        linkedFields: [],
+        norms: [
+          {
+            abbreviation: 'BGB',
+            singleNormDescription: '§ 611a',
+          },
+          {
+            abbreviation: 'GewO',
+            singleNormDescription: '§ 105',
+          },
+        ],
+        children: [],
+        parent: {
+          hasChildren: true,
+          identifier: 'AR',
+          text: 'Arbeitsrecht',
+          linkedFields: [],
+          norms: [],
+          children: [],
+          parent: undefined,
+        },
+      },
+    ]
+    const fieldOfLaw = ref(
+      fieldOfLawValues.map((item) => <ComboboxItem>{ label: item.text, value: item }),
+    )
+    const execute = async () => {
+      if (filter?.value && filter.value.length > 0) {
+        const filteredItems = fieldOfLawValues.filter((item) =>
+          item.text.toLowerCase().startsWith((filter.value as string).toLowerCase()),
+        )
+        const filteredComboBoxItems = filteredItems.map(
+          (item) => <ComboboxItem>{ label: item.text, value: item },
+        )
+        fieldOfLaw.value = [...filteredComboBoxItems]
+      } else {
+        fieldOfLaw.value = fieldOfLawValues.map(
+          (item) => <ComboboxItem>{ label: item.text, value: item },
+        )
+      }
+      return service.getFieldOfLawSearchByIdentifier(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: fieldOfLaw,
       execute: execute,
       canAbort: computed(() => false),
       abort: () => {},

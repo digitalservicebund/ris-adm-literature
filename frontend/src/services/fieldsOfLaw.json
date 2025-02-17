@@ -1,0 +1,177 @@
+[
+  {
+    "id": "a785fb96-a45d-4d4c-8d9c-92d8a6592b22",
+    "hasChildren": true,
+    "identifier": "AR",
+    "text": "Arbeitsrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "8883e39b-8bbb-4df9-b06b-1c3f703fa3dd",
+    "hasChildren": true,
+    "identifier": "AV",
+    "text": "Allgemeines Verwaltungsrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "6389ad4f-ca1a-438a-b630-4a8aeb396338",
+    "hasChildren": true,
+    "identifier": "BR",
+    "text": "Bürgerliches Recht",
+    "linkedFields": [],
+    "norms": [
+      {
+        "abbreviation": "BGB",
+        "singleNormDescription": null
+      }
+    ],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "026af159-2971-4e1e-b907-0eda06e504b9",
+    "hasChildren": true,
+    "identifier": "BV",
+    "text": "Besonderes Verwaltungsrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "7db1ea72-b9a5-4673-b736-2f3bf5e6c872",
+    "hasChildren": true,
+    "identifier": "EU",
+    "text": "Europarecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "74eb75b1-c457-4529-be2c-e14410abb204",
+    "hasChildren": true,
+    "identifier": "GB",
+    "text": "Weitere Gerichtsverfahrensordnungen",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "f94bfafd-a524-4c8b-beaf-b18366f0b798",
+    "hasChildren": true,
+    "identifier": "GV",
+    "text": "Gerichtsverfassung und -zuständigkeit",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "4c0d18e1-21d6-439e-9d7d-a274c50124ea",
+    "hasChildren": true,
+    "identifier": "HW",
+    "text": "Handels- und Wirtschaftsrecht (= Handels-, Gesellschafts-, Immaterialgüter-, Wettbewerbs-, Bank-, Wertpapier und Versicherungsrecht )",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "85460aaa-548f-48c0-ba2b-abc73788e529",
+    "hasChildren": true,
+    "identifier": "ÖD",
+    "text": "Recht des öffentlichen Dienstes (auch: Personalvertretungsrecht)",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "795d991e-7c02-4711-a2ae-e77f44325565",
+    "hasChildren": true,
+    "identifier": "RE",
+    "text": "Regionen, Rechtswissenschaft, Kirchenrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "aae1de7f-d1e9-4c0f-a396-033bbc82597c",
+    "hasChildren": true,
+    "identifier": "SO",
+    "text": "Sozialrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "9c5bb1a5-fa5b-4c7c-a896-2f44ef67fe20",
+    "hasChildren": true,
+    "identifier": "SR",
+    "text": "Strafrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "145cc0b5-373b-4cfe-904f-ee60bd6a3676",
+    "hasChildren": true,
+    "identifier": "ST",
+    "text": "Steuerrecht (einschl. Steuerberatungsrecht)",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "74b4e89c-ecca-4020-a075-9ad525b42808",
+    "hasChildren": true,
+    "identifier": "SV",
+    "text": "Staats- und Verfassungsrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "59d16449-620c-4c06-a4c5-d0ef9e5f51ad",
+    "hasChildren": true,
+    "identifier": "VR",
+    "text": "Völkerrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "cbb30290-633d-4130-85d2-08efff589b19",
+    "hasChildren": false,
+    "identifier": "XX",
+    "text": "xx",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  },
+  {
+    "id": "2978839b-bef1-4f06-9467-cb39c79ed727",
+    "hasChildren": true,
+    "identifier": "ZP",
+    "text": "Zivilprozessrecht",
+    "linkedFields": [],
+    "norms": [],
+    "children": [],
+    "parent": null
+  }
+]
