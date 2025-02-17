@@ -7,7 +7,7 @@ const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
   return {
     identifier: fieldOfLaw.identifier,
     text: fieldOfLaw.text,
-    linkedFields: fieldOfLaw.linkedFields == null ? undefined : fieldOfLaw.linkedFields,
+    linkedFields: fieldOfLaw.linkedFields,
     norms: [],
     children: [],
     hasChildren: false,
