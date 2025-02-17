@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import DocumentUnit from '../src/domain/documentUnit.js'
+import Reference from '../src/domain/reference.js'
+import LegalPeriodical from '../src/domain/legalPeriodical.js'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
@@ -95,4 +98,60 @@ test.describe('FundstellenPage', () => {
       await expect(page.getByText('BAnz 2001, Seite 21')).toHaveCount(1)
     },
   )
+})
+
+test.describe('FundstellenPageSaveAndLoad', () => {
+  test(
+    'Create document, enter data, save, back to start page, reload the URL, expect the data from before',
+    { tag: ['@RISDEV-6493'] },
+    async ({ page }) => {
+      // Arrange
+      // Mock the POST request (create)
+      await page.route('/api/documentation-units', async (route) => {
+        await route.fulfill({
+          json: {
+            id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+            documentNumber: 'KSNR054920707',
+          },
+        })
+      })
+      // Mock the GET request
+      await page.route('/api/documentation-units/KSNR054920707', async route => {
+        const documentUnit = new DocumentUnit({id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KSNR054920707', references: []})
+        const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: documentUnit }
+        await route.fulfill({ json })
+      })
+
+      // Action
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
+      await page.getByText('AA | Arbeitsrecht aktiv').click()
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
+      await page.getByText('Übernehmen').click()
+      // Mock the PUT and GET requests again
+      await page.unrouteAll()
+      await page.route('/api/documentation-units/KSNR054920707', async route => {
+        const legalPeriodical = new LegalPeriodical({
+          title: 'Arbeitsrecht aktiv',
+          abbreviation: 'AA',
+          citationStyle: '2011',
+        })
+        const reference = new Reference({ citation:'1991, Seite 92',
+          legalPeriodicalRawValue: 'AA',
+          legalPeriodical: legalPeriodical})
+        const documentUnit = new DocumentUnit({id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KSNR054920707', references: [reference]})
+        const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: documentUnit }
+        await route.fulfill({ json })
+      })
+      await page.getByRole('button', {name: 'Speichern', exact: true}).click()
+      await page.goto('/')
+      await page.reload()
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
+
+      // Assert
+      await expect(page.getByText('AA 1991, Seite 92')).toHaveCount(1)
+    })
 })
