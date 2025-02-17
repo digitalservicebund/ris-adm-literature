@@ -3,6 +3,13 @@ import { expect, test } from '@playwright/test'
 // See here how to get started:
 // https://playwright.dev/docs/intro
 test.describe('FundstellenPage', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('/api/documentation-units/KSNR054920707', async route => {
+      const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: null }
+      await route.fulfill({ json })
+    })
+  })
+
   test(
     'Visiting the app root url and clicking "Neue Dokumentationseinheit", the view shows the title "Fundstellen", two input fields, a sidebar navigation panel and a save button',
     { tag: ['@RISDEV-6042'] },
