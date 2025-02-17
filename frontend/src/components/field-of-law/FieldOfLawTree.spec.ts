@@ -8,11 +8,13 @@ import FieldOfLawService from '@/services/fieldOfLawService'
 function renderComponent(
   options: {
     modelValue?: FieldOfLaw[]
+    nodeOfInterest?: FieldOfLaw
   } = {},
 ) {
   return render(FieldOfLawTreeVue, {
     props: {
       modelValue: options.modelValue ?? [],
+      nodeOfInterest: options.nodeOfInterest,
       showNorms: false,
     },
   })
@@ -130,5 +132,22 @@ describe('FieldOfLawTree', () => {
     expect(
       screen.getByText('Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang'),
     ).toBeInTheDocument()
+  })
+
+  it('Node of interest is set and the tree is truncated', async () => {
+    renderComponent({
+      nodeOfInterest: {
+        hasChildren: true,
+        identifier: 'AR',
+        text: 'Arbeitsrecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+    })
+
+    await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
+
+    expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
   })
 })
