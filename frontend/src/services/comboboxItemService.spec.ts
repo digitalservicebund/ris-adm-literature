@@ -39,4 +39,12 @@ describe('comboboxItemService', () => {
       ]),
     )
   })
+
+  it('getFieldOfLawSearchByIdentifier.execute', async () => {
+    const fieldsOfLaw = ComboboxItemService.getFieldOfLawSearchByIdentifier(ref(''))
+
+    const executionResult = await fieldsOfLaw.execute()
+
+    expect(executionResult.data.value).toEqual(fieldsOfLaw.data.value)
+  })
 })
