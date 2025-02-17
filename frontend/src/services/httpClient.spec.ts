@@ -43,6 +43,16 @@ describe('httpClient', () => {
     expect(response.data).toBe('test body')
   })
 
+  it('returns response status and body on put when the server has responded', async () => {
+    server.onAny().reply(200, 'test body')
+
+    const response = await httpClient.put('')
+
+    expect(response.error).toBeUndefined()
+    expect(response.status).toBe(200)
+    expect(response.data).toBe('test body')
+  })
+
   it('returns with server response also if status code is above 400', async () => {
     server.onAny().reply(400, 'test body')
 
