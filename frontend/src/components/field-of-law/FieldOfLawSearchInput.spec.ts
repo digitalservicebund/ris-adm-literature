@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import FieldOfLawSearchInput from '@/components/field-of-law/FieldOfLawSearchInput.vue'
-import { describe, expect, it } from 'vitest'
 
 function renderComponent(identifier?: string, description?: string, norm?: string) {
   const props = {

@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'vitest'
 import { fireEvent, render, type RenderResult, screen } from '@testing-library/vue'
 import FieldOfLawSummary from '@/components/field-of-law/FieldOfLawSummary.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-import { describe, expect, it } from 'vitest'
 
 function renderComponent(fieldsOfLaw: FieldOfLaw[]): RenderResult {
   return render(FieldOfLawSummary, { props: { fieldsOfLaw } })

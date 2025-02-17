@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import FieldOfLawSearchResults from '@/components/field-of-law/FieldOfLawSearchResults.vue'
-import { describe, expect, it } from 'vitest'
 
 function renderComponent() {
   const results = [

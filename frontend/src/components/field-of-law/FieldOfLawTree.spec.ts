@@ -1,9 +1,9 @@
+import { describe, vi, it, expect } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import FieldOfLawTreeVue from '@/components/field-of-law/FieldOfLawTree.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import FieldOfLawService from '@/services/fieldOfLawService'
-import { describe, vi } from 'vitest'
 
 function renderComponent(
   options: {
