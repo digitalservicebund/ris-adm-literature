@@ -1,19 +1,22 @@
-import httpClient, { type ServiceResponse } from './httpClient'
+import type { ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
-import errorMessages from '@/i18n/errors.json'
+import fieldsOfLawMocking from './fieldsOfLaw.json'
+
+const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
+  return {
+    identifier: fieldOfLaw.identifier,
+    text: fieldOfLaw.text,
+    linkedFields: fieldOfLaw.linkedFields == null ? undefined : fieldOfLaw.linkedFields,
+    norms: [],
+    children: [],
+    hasChildren: false,
+  }
+})
 
 interface FieldOfLawService {
-  getSelectedFieldsOfLaw(uuid: string): Promise<ServiceResponse<FieldOfLaw[]>>
-
-  addFieldOfLaw(uuid: string, identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
-
-  removeFieldOfLaw(uuid: string, identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
-
   getChildrenOf(identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
-
   getTreeForIdentifier(identifier: string): Promise<ServiceResponse<FieldOfLaw>>
-
   searchForFieldsOfLaw(
     page: number,
     size: number,
@@ -24,68 +27,19 @@ interface FieldOfLawService {
 }
 
 const service: FieldOfLawService = {
-  async getSelectedFieldsOfLaw(uuid: string) {
-    const response = await httpClient.get<FieldOfLaw[]>(
-      `caselaw/documentunits/${uuid}/contentrelatedindexing/fieldsoflaw`,
-    )
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
-          '${uuid}',
-          uuid,
-        ),
-      }
-    }
-    return response
-  },
-  async addFieldOfLaw(uuid: string, identifier: string) {
-    const response = await httpClient.put<undefined, FieldOfLaw[]>(
-      `caselaw/documentunits/${uuid}/contentrelatedindexing/fieldsoflaw/${identifier}`,
-    )
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_ADDED.title
-          .replace('${identifier}', identifier)
-          .replace('${uuid}', uuid),
-      }
-    }
-    return response
-  },
-  async removeFieldOfLaw(uuid: string, identifier: string) {
-    const response = await httpClient.delete<FieldOfLaw[]>(
-      `caselaw/documentunits/${uuid}/contentrelatedindexing/fieldsoflaw/${identifier}`,
-    )
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.DOCUMENT_UNIT_FIELDS_OF_LAW_COULD_NOT_BE_DELETED.title
-          .replace('${identifier}', identifier)
-          .replace('${uuid}', uuid),
-      }
-    }
-    return response
-  },
   async getChildrenOf(identifier: string) {
-    const response = await httpClient.get<FieldOfLaw[]>(
-      `caselaw/fieldsoflaw/${identifier}/children`,
-    )
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
-          '${identifier}',
-          identifier,
-        ),
-      }
+    console.log(identifier)
+    return {
+      status: 200,
+      data: content,
     }
-    return response
   },
   async getTreeForIdentifier(identifier: string) {
-    const response = await httpClient.get<FieldOfLaw>(`caselaw/fieldsoflaw/${identifier}/tree`)
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.FIELD_OF_LAW_COULD_NOT_BE_LOADED.title,
-      }
+    console.log(identifier)
+    return {
+      status: 200,
+      data: content[0],
     }
-    return response
   },
   async searchForFieldsOfLaw(
     page: number,
@@ -94,22 +48,19 @@ const service: FieldOfLawService = {
     identifier?: string,
     norm?: string,
   ) {
-    const response = await httpClient.get<Page<FieldOfLaw>>(
-      `caselaw/fieldsoflaw?pg=${page}&sz=${size}`,
-      {
-        params: {
-          q: query ?? '',
-          identifier: identifier ?? '',
-          norm: norm ?? '',
-        },
+    console.log(page, size, query, identifier, norm)
+    return {
+      status: 200,
+      data: {
+        content,
+        size: 0,
+        number: 0,
+        numberOfElements: 20,
+        first: true,
+        last: false,
+        empty: false,
       },
-    )
-    if (response.status >= 300) {
-      response.error = {
-        title: errorMessages.FIELD_OF_LAW_SEARCH_FAILED.title,
-      }
     }
-    return response
   },
 }
 
