@@ -47,4 +47,12 @@ describe('comboboxItemService', () => {
 
     expect(executionResult.data.value).toEqual(fieldsOfLaw.data.value)
   })
+
+  it('getFieldOfLawSearchByIdentifier.execute with filter', async () => {
+    const fieldsOfLaw = ComboboxItemService.getFieldOfLawSearchByIdentifier(ref('arbeitsr'))
+
+    const executionResult = await fieldsOfLaw.execute()
+
+    expect(executionResult.data.value).not.toEqual(fieldsOfLaw.data.value)
+  })
 })
