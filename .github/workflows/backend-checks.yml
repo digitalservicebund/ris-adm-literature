@@ -114,7 +114,7 @@ jobs:
         working-directory: ./backend
         run: ./gradlew sonar --info
       - name: Check SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@424137db1fae80e9eb279829995166f2f44bc8df
+        uses: sonarsource/sonarqube-quality-gate-action@adc518a017eda8be0bb3f46f87cba5bddaa719f7
         with:
           scanMetadataReportFile: backend/build/sonar/report-task.txt
         timeout-minutes: 3 # Force to fail step after specific time
