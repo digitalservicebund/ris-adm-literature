@@ -19,4 +19,24 @@ describe('comboboxItemService', () => {
 
     expect(executionResult.data.value).toEqual(documentTypes.data.value)
   })
+
+  it('getFieldOfLawSearchByIdentifier.data', () => {
+    const fieldsOfLaw = ComboboxItemService.getFieldOfLawSearchByIdentifier(ref(''))
+    expect(fieldsOfLaw.data.value as ComboboxItem[]).toEqual(
+      expect.arrayContaining([
+        <ComboboxItem>{
+          label: 'Arbeitsrecht',
+          value: {
+            hasChildren: true,
+            identifier: 'AR',
+            text: 'Arbeitsrecht',
+            linkedFields: [],
+            norms: [],
+            children: [],
+            parent: undefined,
+          },
+        },
+      ]),
+    )
+  })
 })
