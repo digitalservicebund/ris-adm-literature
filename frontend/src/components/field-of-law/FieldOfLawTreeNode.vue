@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { type NodeHelperInterface } from '@/components/field-of-law/fieldOfLawNode'
+import { type NodeHelperInterface } from '@/components/field-of-law/FieldOfLawNode'
 import FlexContainer from '@/components/FlexContainer.vue'
 import Checkbox from '@/components/input/CheckboxInput.vue'
 import Tooltip from '@/components/ToolTip.vue'

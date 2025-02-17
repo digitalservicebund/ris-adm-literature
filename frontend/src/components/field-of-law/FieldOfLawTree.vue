@@ -2,7 +2,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import FieldOfLawTreeNode from './FieldOfLawTreeNode.vue'
-import { NodeHelper, type NodeHelperInterface } from '@/components/field-of-law/fieldOfLawNode'
+import { NodeHelper, type NodeHelperInterface } from '@/components/field-of-law/FieldOfLawNode'
 import CheckboxInput from '@/components/input/CheckboxInput.vue'
 import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import { buildRoot, type FieldOfLaw } from '@/domain/fieldOfLaw'
