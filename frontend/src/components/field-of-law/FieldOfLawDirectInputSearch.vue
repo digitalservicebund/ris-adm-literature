@@ -9,7 +9,12 @@ const emit = defineEmits<{
 }>()
 const fieldOfLawNode = ref()
 watch(fieldOfLawNode, () => {
-  emit('add-to-list', fieldOfLawNode.value as FieldOfLaw)
+  // check if fieldOfLawNode value is set
+  // Could be that when clearing the drop down
+  // the ComboboxInput is emitting undefined
+  // via clearDropdown()
+  // so only add to list of fields when not undefined
+  if (fieldOfLawNode.value) emit('add-to-list', fieldOfLawNode.value as FieldOfLaw)
 })
 </script>
 
