@@ -22,7 +22,7 @@ const statusBadge = ref(
   }).value,
 )
 
-const formattedInfo = 'Platzhaltertext'
+const formattedInfo = ''
 
 const { saveIsInProgress, triggerSave, lastSaveError, formattedLastSavedOn } = useSaveToRemote()
 
