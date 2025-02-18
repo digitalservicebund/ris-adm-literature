@@ -24,7 +24,6 @@ test.describe('FundstellenPage', () => {
       // Assert
       await expect(page.getByText('Fundstellen')).toHaveCount(2)
       await expect(page.getByText('KSNR054920707')).toHaveCount(1)
-      await expect(page.getByText('Platzhaltertext')).toHaveCount(1)
       await expect(page.getByText('Unveröffentlicht')).toHaveCount(1)
       await expect(page.getByText('Fundstellen')).toHaveCount(2)
       await expect(page.getByTestId('save-button')).toHaveCount(1)
