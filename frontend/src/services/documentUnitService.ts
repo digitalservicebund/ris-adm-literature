@@ -22,7 +22,7 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
-function mapDocumentationUnit(data: DocumentUnitResponse): DocumentUnit {
+const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
   return new DocumentUnit({
     ...data.json,
     id: data.id,
