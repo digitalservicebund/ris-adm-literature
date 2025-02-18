@@ -7,8 +7,12 @@ import LegalPeriodical from '../src/domain/legalPeriodical.js'
 // https://playwright.dev/docs/intro
 test.describe('FundstellenPage', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('/api/documentation-units/KSNR054920707', async route => {
-      const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: null }
+    await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+      const json = {
+        documentNumber: 'KSNR054920707',
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        json: null,
+      }
       await route.fulfill({ json })
     })
   })
@@ -115,10 +119,17 @@ test.describe('FundstellenPageSaveAndLoad', () => {
         })
       })
       // Mock the GET request
-      await page.route('/api/documentation-units/KSNR054920707', async route => {
-        const documentUnit = new DocumentUnit({id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-          documentNumber: 'KSNR054920707', references: []})
-        const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: documentUnit }
+      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+        const documentUnit = new DocumentUnit({
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KSNR054920707',
+          references: [],
+        })
+        const json = {
+          documentNumber: 'KSNR054920707',
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          json: documentUnit,
+        }
         await route.fulfill({ json })
       })
 
@@ -131,26 +142,36 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       await page.getByText('Übernehmen').click()
       // Mock the PUT and GET requests again
       await page.unrouteAll()
-      await page.route('/api/documentation-units/KSNR054920707', async route => {
+      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
         const legalPeriodical = new LegalPeriodical({
           title: 'Arbeitsrecht aktiv',
           abbreviation: 'AA',
           citationStyle: '2011',
         })
-        const reference = new Reference({ citation:'1991, Seite 92',
+        const reference = new Reference({
+          citation: '1991, Seite 92',
           legalPeriodicalRawValue: 'AA',
-          legalPeriodical: legalPeriodical})
-        const documentUnit = new DocumentUnit({id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-          documentNumber: 'KSNR054920707', references: [reference]})
-        const json = { documentNumber: 'KSNR054920707', id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', json: documentUnit }
+          legalPeriodical: legalPeriodical,
+        })
+        const documentUnit = new DocumentUnit({
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KSNR054920707',
+          references: [reference],
+        })
+        const json = {
+          documentNumber: 'KSNR054920707',
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          json: documentUnit,
+        }
         await route.fulfill({ json })
       })
-      await page.getByRole('button', {name: 'Speichern', exact: true}).click()
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.goto('/')
       await page.reload()
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
 
       // Assert
       await expect(page.getByText('AA 1991, Seite 92')).toHaveCount(1)
-    })
+    },
+  )
 })
