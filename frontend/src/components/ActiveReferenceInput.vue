@@ -313,7 +313,7 @@ watch(
                 @click.stop="addSingleNormEntry"
               />
               <TextButton
-                aria-label="Verweis speichern"
+                aria-label="Übernehmen"
                 button-type="primary"
                 label="Übernehmen"
                 size="small"
