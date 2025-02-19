@@ -172,12 +172,9 @@ spotless {
 
   format("misc") {
     target(
-      "**/*.js",
-      "**/*.json",
-      "**/*.md",
-      "**/*.properties",
-      "**/*.sh",
-      "**/*.yml",
+      ".gitattributes",
+      ".gitignore",
+      "*.md",
     )
     prettier(
       mapOf(
