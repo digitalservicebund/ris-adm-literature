@@ -31,4 +31,6 @@ test.describe('Verweise: Verwaltungsvorschrift', () => {
     // then
     await expect(page.getByRole('button', { name: "Weitere Einzelnorm"})).toHaveCount(0) 
   })
+
+  // TODO: do not show the "x" next to the date
 })
