@@ -9,15 +9,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Find out nodejs version and put to var
-        uses: nodenv/actions/node-version@v4
-        id: nodenv
-      - name: print derived nodejs version to console
-        run: echo ${{ steps.nodenv.outputs.node-version }}
-      - name: Setup nodejs
+      # NodeJS is used by prettier, which formats kotlin in spotless
+      # Using the latest LTS should work
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
-          node-version: "${{ steps.nodenv.outputs.node-version }}"
+          node-version-file: ./backend/.node-version
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
