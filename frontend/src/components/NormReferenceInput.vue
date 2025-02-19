@@ -207,16 +207,16 @@ watch(
       <div class="flex w-full flex-row justify-between">
         <div>
           <div class="flex gap-24">
-            <TextButton
+            <!-- <TextButton
               aria-label="Weitere Einzelnorm"
               button-type="tertiary"
               :icon="IconAdd"
               label="Weitere Einzelnorm"
               size="small"
               @click.stop="addSingleNormEntry"
-            />
+            /> -->
             <TextButton
-              aria-label="Norm speichern"
+              aria-label="Übernehmen"
               button-type="primary"
               label="Übernehmen"
               size="small"
