@@ -9,10 +9,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Setup nodenv
+      - name: Find out nodejs version and put to var
         uses: nodenv/actions/node-version@v4
         id: nodenv
-      - name: Setup node
+      - name: print derived nodejs version to console
+        run: echo ${{ steps.nodenv.outputs.node-version }}
+      - name: Setup nodejs
         uses: actions/setup-node@v4
         with:
           node-version: "${{ steps.nodenv.outputs.node-version }}"
