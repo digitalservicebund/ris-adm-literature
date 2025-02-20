@@ -36,7 +36,7 @@ _[The change that we're proposing or have agreed to implement.]_
   - Our [ADR on E2E in a localhost setup](./0003-localhost-setup-for-e2e-tests.md) stays in effect.
 - We have integration tests on the API that operate on a real backend applicaction and database.
   - These tests assure the correct request/response behavior of our API.
-  - The inner workings of the API are not mocked
+  - The inner workings of the API are not mocked ("inner workings" as opposed to 3rd party services)
 - We have unit tests on any part of the application that we want to assert behavior on
   - The less "happens" in a unit, the less we need a test
 - We prefer to not test implementation but behavior
