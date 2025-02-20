@@ -12,7 +12,7 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
     })
   })
 
-  test('Do not show the button "Weitere Einzelnorm" if "Verwaltungsvorschrift" is selected', async ({
+  test('Do not show the button "Weitere Einzelnorm", do not show the "x" for removal if "Verwaltungsvorschrift" is selected', async ({
     page,
   }) => {
     // given
@@ -32,6 +32,7 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     // then
     await expect(page.getByRole('button', { name: 'Weitere Einzelnorm' })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Einzelnorm löschen' })).toHaveCount(0)
   })
 
   test('Do show the button "Weitere Einzelnorm" if "Norm" is selected', async ({ page }) => {
