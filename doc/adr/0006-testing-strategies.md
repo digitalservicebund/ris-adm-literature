@@ -1,6 +1,6 @@
 # 0. Template
 
-Date: 2025-02-❓
+Date: 2025-02-xx
 
 ## Status
 
@@ -52,4 +52,3 @@ _[What becomes easier or more difficult to do and any risks introduced by the ch
   - if we wanted to make sure a migration worked fine o staging before deploying to production.
   - if we wanted to make sure our production backend can reach the production database.
 - We will need to adjust our CI/CD configuration wrt. E2E tests as they now demand a working backend.
-
