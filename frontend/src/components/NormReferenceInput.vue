@@ -216,7 +216,7 @@ watch(
               @click.stop="addSingleNormEntry"
             />
             <TextButton
-              aria-label="Übernehmen"
+              aria-label="Norm speichern"
               button-type="primary"
               label="Übernehmen"
               size="small"
