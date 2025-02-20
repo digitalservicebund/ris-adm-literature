@@ -1,16 +1,16 @@
-# 0. Template
+# 6. Testing Strategies
 
-Date: 2025-02-xx
+Date: 2025-02-21
 
 ## Status
 
-Proposal
+Accepted
 
 ## Context
 
 _[The issue motivating this decision, and any context that influences or constrains the decision.}_
 
-With the introduction of a backend, our code setup has changed significantly and we need to agree to how we approach testing.
+With the introduction of ahttps://github.com/digitalservicebund/ris-adm-vwv/pull/221 backend, our code setup has changed significantly and we need to agree to how we approach testing.
 
 The needs of our team wrt. testing are as follows:
 
@@ -25,6 +25,7 @@ The needs of our team wrt. testing are as follows:
 - We should not work against our frameworks
   - SpringBoot expects to test application layers in isolation
 - Tests should help us infer the place of origin of a malfunction
+- We should have means to estimate the size of our blind spots that are not tested
 
 ## Decision
 
@@ -41,6 +42,7 @@ _[The change that we're proposing or have agreed to implement.]_
 - We prefer to not test implementation but behavior
   - This may be difficult at times as e.g. SpringBoot aims at testing the application "layers" in isolation.
 - We prefer tests to be isolated / independent from each other
+- We require a test coverage (lines of code) greater than 90%
 
 - We'll apply these rules to new tests/functionality first. Existing tests/functionality will be transitioned over time.
 
