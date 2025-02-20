@@ -305,10 +305,6 @@ watch(
           <div>
             <div class="flex gap-24">
               <TextButton
-                v-if="
-                  activeReference.referenceDocumentType !==
-                  ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION
-                "
                 aria-label="Weitere Einzelnorm"
                 button-type="tertiary"
                 :icon="IconAdd"
@@ -317,7 +313,7 @@ watch(
                 @click.stop="addSingleNormEntry"
               />
               <TextButton
-                aria-label="Übernehmen"
+                aria-label="Verweis speichern"
                 button-type="primary"
                 label="Übernehmen"
                 size="small"

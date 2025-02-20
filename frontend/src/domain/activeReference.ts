@@ -9,7 +9,6 @@ export enum ActiveReferenceType {
 
 export enum ActiveReferenceDocumentType {
   NORM = 'norm',
-  // TODO: rename to "administrative directiv"
   ADMINISTRATIVE_REGULATION = 'administrative_regulation',
 }
 
