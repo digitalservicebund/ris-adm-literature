@@ -1,0 +1,52 @@
+# 0. Template
+
+Date: 2025-02-❓
+
+## Status
+
+Proposal
+
+## Context
+
+_[The issue motivating this decision, and any context that influences or constrains the decision.}_
+
+With the introduction of a backend, our code setup has changed significantly and we need to agree to how we approach testing.
+
+The needs of our team are as follows:
+
+- Tests should only break if the code/application is broken, e.g.
+  - they should rather not rely on external factors like infrastructure deficiencies or someone breaking staging.
+  - they should rather not be brittle
+- Tests should prove that the piece under test behaves as we want it to behave, e.g.
+  - browser behavior
+  - API behavior
+  - unit of code behavior (e.g. function behavior, web controller behavior, persistence behavior)
+- Tests should not slow us down significantly, i.e. [change lead time](https://dora.dev/guides/dora-metrics-four-keys/) must be acceptable
+- We should not work against our frameworks
+    - SpringBoot expects to test application layers in isolation
+- Tests should help us infer the place of origin of a malfunction
+
+## Decision
+
+_[The change that we're proposing or have agreed to implement.]_
+
+* We run E2E tests on our webapp that interacts with a real backend
+    * Backend interactions are not mocked.
+    * Our [ADR on E2E in a localhost setup](./0003-localhost-setup-for-e2e-tests.md) stays in effect.
+* We have integration tests on the API that operate on a real applicaction and database
+    * These cover
+    * Inner workings of the API are not mocked
+* We have unit tests on any part of the application that we want to assert behavior on
+    * The less "happens" in a unit, the less we need a test
+* We prefer to not test implementation (as opposed to behavior)
+    * This may be difficult at times as e.g. SpringBoot aims at testing the application "layers" in isolation
+* We prefer tests to be isolated / independent from each other
+
+
+## Consequences
+
+What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
+
+- Infrastructure problems need to be cared for separately, e.g.
+  - if we wanted to make sure a migration worked fine o staging before deploying to production.
+  - if we wanted to make sure our production backend can reach the production database.
