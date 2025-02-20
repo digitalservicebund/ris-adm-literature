@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Verweise: Verwaltungsvorschrift', () => {
+test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
   test.beforeEach(async ({ page }) => {
     await page.route('/api/documentation-units/KSNR054920707', async (route) => {
       const json = {
@@ -12,7 +12,9 @@ test.describe('Verweise: Verwaltungsvorschrift', () => {
     })
   })
 
-  test('Do not show the button "Weitere Einzelnorm"', async ({ page }) => {
+  test('Do not show the button "Weitere Einzelnorm" if "Verwaltungsvorschrift" is selected', async ({
+    page,
+  }) => {
     // given
     await page.goto('/documentUnit/KSNR054920707/rubriken')
     await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
@@ -29,7 +31,29 @@ test.describe('Verweise: Verwaltungsvorschrift', () => {
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     // then
-    await expect(page.getByRole('button', { name: "Weitere Einzelnorm"})).toHaveCount(0) 
+    await expect(page.getByRole('button', { name: 'Weitere Einzelnorm' })).toHaveCount(0)
+  })
+
+  test('Do show the button "Weitere Einzelnorm" if "Norm" is selected', async ({ page }) => {
+    // given
+    await page.goto('/documentUnit/KSNR054920707/rubriken')
+    await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Anwendung' })
+      .click()
+    await page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'RIS-Abkürzung' })
+      .click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+      .click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
+    // then
+    await expect(page.getByRole('button', { name: 'Weitere Einzelnorm' })).toHaveCount(1)
   })
 
   // TODO: Show the button when a norm is selected
