@@ -51,6 +51,6 @@ _[The change that we're proposing or have agreed to implement.]_
 _[What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.]_
 
 - Infrastructure problems need to be cared for separately, e.g.
-  - if we wanted to make sure a migration worked fine o staging before deploying to production.
+  - if we wanted to make sure a migration worked fine on staging before deploying to production.
   - if we wanted to make sure our production backend can reach the production database.
 - We will need to adjust our CI/CD configuration wrt. E2E tests as they now demand a working backend.
