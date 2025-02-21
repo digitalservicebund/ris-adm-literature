@@ -29,5 +29,6 @@ export default class DocumentUnit {
     if (data.references)
       this.references = data.references.map((reference) => new Reference({ ...reference }))
     if (data.fieldsOfLaw) this.fieldsOfLaw = data.fieldsOfLaw
+    this.langueberschrift = data.langueberschrift
   }
 }
