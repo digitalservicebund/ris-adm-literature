@@ -137,6 +137,7 @@ jobs:
       - name: Setup and validate Gradle
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
       - name: Start backend
+        working-directory: ./backend
         run: ./gradlew bootRun
       # setup frontend
       - name: Setup Node
