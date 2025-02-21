@@ -77,12 +77,12 @@ jobs:
         with:
           image-ref: ${{ inputs.image-ref }}
           format: "cosign-vuln"
-          output: "cosign-vuln-backend.json"
+          output: "backend-cosign-vuln.json"
       - name: Upload cosign vulnerability scan record
         uses: actions/upload-artifact@v4
         with:
-          name: "cosign-vuln-backend.json"
-          path: "cosign-vuln-backend.json"
+          name: "backend-cosign-vuln.json"
+          path: "backend-cosign-vuln.json"
           if-no-files-found: error
       - name: Save image
         run: |
