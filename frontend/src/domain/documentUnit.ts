@@ -21,6 +21,7 @@ export default class DocumentUnit {
   readonly documentNumber: string
   public references?: Reference[]
   public fieldsOfLaw: FieldOfLaw[] = []
+  public langueberschrift?: string
 
   constructor(data: DocumentUnit) {
     this.id = data.id
@@ -28,5 +29,6 @@ export default class DocumentUnit {
     if (data.references)
       this.references = data.references.map((reference) => new Reference({ ...reference }))
     if (data.fieldsOfLaw) this.fieldsOfLaw = data.fieldsOfLaw
+    this.langueberschrift = data.langueberschrift
   }
 }

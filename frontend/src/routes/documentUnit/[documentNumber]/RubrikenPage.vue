@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField, { LabelPosition } from '@/components/input/InputField.vue'
@@ -15,6 +15,16 @@ import NormReferences from '@/components/NormReferences.vue'
 import ActiveReferences from '@/components/ActiveReferences.vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+
+const store = useDocumentUnitStore()
+
+const langueberschrift = computed({
+  get: () => store.documentUnit!.langueberschrift,
+  set: (newValue) => {
+    store.documentUnit!.langueberschrift = newValue
+  },
+})
 
 const selectedCourt = ref()
 const zitierdatum = ref()
@@ -58,6 +68,7 @@ const kurzreferat = ref()
           <Textarea
             id="langue"
             class="w-full"
+            v-model="langueberschrift"
             v-bind="{
               autoResize: true,
             }"
