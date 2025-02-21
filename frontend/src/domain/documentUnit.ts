@@ -21,6 +21,7 @@ export default class DocumentUnit {
   readonly documentNumber: string
   public references?: Reference[]
   public fieldsOfLaw: FieldOfLaw[] = []
+  public langueberschrift?: string
 
   constructor(data: DocumentUnit) {
     this.id = data.id
