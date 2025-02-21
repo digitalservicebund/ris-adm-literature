@@ -45,7 +45,6 @@ jobs:
       - name: Run Trivy vulnerability scanner in fs (file-system) mode
         uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
         env:
-          ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
