@@ -16,7 +16,6 @@ import ActiveReferences from '@/components/ActiveReferences.vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import DocumentUnit from '@/domain/documentUnit'
 
 const store = useDocumentUnitStore()
 
