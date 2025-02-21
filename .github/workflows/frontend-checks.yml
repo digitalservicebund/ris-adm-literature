@@ -122,16 +122,12 @@ jobs:
 
   e2e-test-frontend:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
-      options: --user 1001
+    # container:
+    #   image: mcr.microsoft.com/playwright:v1.50.0-noble
+    #   options: --user 1001
     steps:
       - uses: actions/checkout@v4
       # setup backend
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v4
-        with:
-          rootless: true
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
