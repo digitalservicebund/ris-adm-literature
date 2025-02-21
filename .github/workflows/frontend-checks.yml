@@ -127,6 +127,18 @@ jobs:
       options: --user 1001
     steps:
       - uses: actions/checkout@v4
+      # setup backend
+      - name: Setup and validate Gradle
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+      - name: Start backend
+        run: ./gradlew bootRun
+      # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
