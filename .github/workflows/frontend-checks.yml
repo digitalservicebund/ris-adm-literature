@@ -122,11 +122,21 @@ jobs:
 
   e2e-test-frontend:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
-      options: --user 1001
     steps:
       - uses: actions/checkout@v4
+      # setup backend
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+      - name: Setup and validate Gradle
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
+      - name: Start backend
+        working-directory: ./backend
+        run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
+      # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -145,10 +155,29 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
-      - name: e2e tests
+      - name: Get Playwright version
+        working-directory: ./frontend
+        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      - name: Cache browser binaries
+        id: cache-browser-binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps
+      - name: Wait for backend to serve the health Actuator (max 5min)
+        timeout-minutes: 5
+        run: |
+          until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do  
+            echo "Waiting for backend to be fully up..."  
+            sleep 0.1
+          done
+      - name: Run e2e tests
+        working-directory: ./frontend
         run: |
           npm run test:e2e
-        working-directory: ./frontend
       - name: Upload e2e JSON test report
         if: always()
         uses: actions/upload-artifact@v4
