@@ -16,7 +16,7 @@ public class SecurityConfiguration {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(authorize ->
       authorize
-        .requestMatchers(HttpMethod.GET, "/actuator/**")
+        .requestMatchers("/actuator/health/**")
         .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/swagger-ui/**")
         .permitAll()
