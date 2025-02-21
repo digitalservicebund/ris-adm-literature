@@ -138,9 +138,7 @@ jobs:
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
       - name: Start backend
         working-directory: ./backend
-        run: ./gradlew bootRun &
-      - name: Wait for backend to listen on port 8080
-        run: while ! nc -z localhost 8080; do sleep 0.1 ; done
+        run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
       # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -160,10 +158,15 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
-      - name: e2e tests
+      - name: Install Playwright Browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps
+      - name: Wait for backend to listen on port 8080
+        run: while ! nc -z localhost 8080; do sleep 0.1 ; done
+      - name: Run e2e tests
+        working-directory: ./frontend
         run: |
           npm run test:e2e
-        working-directory: ./frontend
       - name: Upload e2e JSON test report
         if: always()
         uses: actions/upload-artifact@v4
