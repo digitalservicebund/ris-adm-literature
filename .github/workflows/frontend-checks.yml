@@ -128,6 +128,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # setup backend
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
