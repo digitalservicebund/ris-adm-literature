@@ -39,7 +39,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in fs (file-system) mode # open source security scanner, cf. https://trivy.dev/
+
+      # The first call to the action will invoke setup-trivy and install trivy
+      # open source security scanner, cf. https://trivy.dev/
+      - name: Run Trivy vulnerability scanner in fs (file-system) mode
         uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,37 +52,39 @@ jobs:
           scan-type: "fs"
           format: "sarif"
           output: "trivy-fs-results.sarif"
-          # severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" #ignored by sarif report
-      - name: Print trivy fs results
-        run: cat trivy-fs-results.sarif
-      - name: Check trivy results
-        run: |
-          if grep -qE 'HIGH|CRITICAL' trivy-fs-results.sarif; then
-            echo "Vulnerabilities found"
-            exit 1
-          else
-            echo "No significant vulnerabilities found"
-            exit 0
-          fi
+          scan-ref: .
+          exit-code: 0
+
       - name: Upload trivy fs scan sarif report
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trivy-fs-results.sarif
           retention-days: 3
           path: trivy-fs-results.sarif
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           sarif_file: "trivy-fs-results.sarif"
+
+      - name: Print trivy fs results
+        run: cat trivy-fs-results.sarif
+
+      - name: Fail build on High/Criticial Vulnerabilities
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        with:
+          scan-type: "fs"
+          format: table
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          # On a subsequent call to the action we know trivy is already installed so can skip this
+          skip-setup-trivy: true
+
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      # we should be able to upload the trivy results to the GitHub Security tab as we're a public repositor
-      # but right now it's not worth it
-      # cf https://digitalservicebund.atlassian.net/browse/RISDEV-5193
