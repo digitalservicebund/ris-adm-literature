@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Rubriken page: Langüberschrift', () => {
   test(
-    'Data of Langüberschrift persists during reload',
+    'Data of Langüberschrift persists during reload when saved',
     { tag: ['@RISDEV-6213'] },
     async ({ page }) => {
       // given
@@ -14,6 +14,7 @@ test.describe('Rubriken page: Langüberschrift', () => {
       await page.getByText('Amtl. Langüberschrift').fill(myLangueberschrift)
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue(myLangueberschrift)
       // when
+      await page.getByText('Speichern').click()
       await page.reload()
       // then
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue(myLangueberschrift)
