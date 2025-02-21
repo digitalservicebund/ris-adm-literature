@@ -64,7 +64,6 @@ const kurzreferat = ref()
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        +++ {{ JSON.stringify(store.documentUnit) }}
         <InputField id="langue" label="Amtl. Langüberschrift *">
           <Textarea
             id="langue"
