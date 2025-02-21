@@ -57,6 +57,4 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
     await expect(page.getByRole('button', { name: 'Weitere Einzelnorm' })).toHaveCount(1)
     await expect(page.getByRole('button', { name: 'Einzelnorm löschen' })).toHaveCount(1)
   })
-
-  // TODO: remove the "x" when a ADM is selected, show the x when a norm is selected
 })
