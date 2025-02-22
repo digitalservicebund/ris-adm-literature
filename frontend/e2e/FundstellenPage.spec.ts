@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import DocumentUnitDeprecatedClass, { DocumentUnit } from '../src/domain/documentUnit.js'
+import DocumentUnitDeprecatedClass, { type DocumentUnit } from '../src/domain/documentUnit.js'
 import Reference from '../src/domain/reference.js'
 import LegalPeriodical from '../src/domain/legalPeriodical.js'
 
