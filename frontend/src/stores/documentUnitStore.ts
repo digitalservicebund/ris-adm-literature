@@ -16,14 +16,13 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
     if (!response.data) {
       documentUnit.value = undefined
     }
-    if (response.data) {
+    if (response.data?.json) {
+      documentUnit.value = response.data.json
+    } else {
       documentUnit.value = <DocumentUnit>{
         id: response.data?.id,
         documentNumber: response.data?.documentNumber,
       }
-    }
-    if (response.data?.json) {
-      documentUnit.value = response.data.json
     }
     return response
   }
