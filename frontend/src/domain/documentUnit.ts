@@ -23,20 +23,3 @@ export interface DocumentUnit {
   fieldsOfLaw: FieldOfLaw[]
   langueberschrift?: string
 }
-
-// export default class DocumentUnitDeprecatedClass {
-//   readonly id: string
-//   readonly documentNumber: string
-//   public references?: Reference[]
-//   public fieldsOfLaw: FieldOfLaw[] = []
-//   public langueberschrift?: string
-
-//   constructor(data: DocumentUnitDeprecatedClass) {
-//     this.id = data.id
-//     this.documentNumber = data.documentNumber
-//     if (data.references)
-//       this.references = data.references.map((reference) => new Reference({ ...reference }))
-//     if (data.fieldsOfLaw) this.fieldsOfLaw = data.fieldsOfLaw
-//     this.langueberschrift = data.langueberschrift
-//   }
-// }
