@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import jakarta.persistence.TypedQuery;
+import java.time.Year;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void findByDocumentNumber() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber("KSNR000000001");
+    Year thisYear = Year.now();
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
+    documentationUnitEntity.setYear(thisYear);
     documentationUnitEntity.setJson("{\"test\":\"content\"");
     entityManager.persistAndFlush(documentationUnitEntity);
 
@@ -63,7 +66,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void update() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber("KSNR000000001");
+    Year thisYear = Year.now();
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
+    documentationUnitEntity.setYear(thisYear);
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
