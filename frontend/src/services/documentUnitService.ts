@@ -23,8 +23,8 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
-const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
-  const documentUnit = <DocumentUnit>{
+function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
+  const documentUnit: DocumentUnit = {
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
@@ -32,9 +32,8 @@ const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
   documentUnit.references = documentUnit.references?.map(
     (reference) => new Reference({ ...reference }),
   )
-  if (!documentUnit.fieldsOfLaw) {
-    documentUnit.fieldsOfLaw = []
-  }
+  documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
+
   return documentUnit
 }
 
@@ -52,7 +51,7 @@ const service: DocumentUnitService = {
             : errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
       }
     } else {
-      response.data.json = mapDocumentationUnit(response.data)
+      response.data.json = mapResponseDataToDocumentUnit(response.data)
     }
     return response
   },
@@ -92,7 +91,7 @@ const service: DocumentUnitService = {
 
     if (response.status == 200) {
       const data = response.data as DocumentUnitResponse
-      data.json = mapDocumentationUnit(data)
+      data.json = mapResponseDataToDocumentUnit(data)
     } else if (response.status >= 300) {
       response.error = {
         title:
