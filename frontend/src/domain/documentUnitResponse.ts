@@ -1,13 +1,7 @@
-import type DocumentUnit from '@/domain/documentUnit.ts'
+import { type DocumentUnit } from '@/domain/documentUnit'
 
-export default class DocumentUnitResponse {
-  readonly id: string
-  readonly documentNumber: string
-  public json: DocumentUnit
-
-  constructor(data: DocumentUnitResponse) {
-    this.id = data.id
-    this.documentNumber = data.documentNumber
-    this.json = data.json
-  }
+export interface DocumentUnitResponse {
+  id: string
+  documentNumber: string
+  json: DocumentUnit
 }

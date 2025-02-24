@@ -16,19 +16,10 @@ export type Court = {
   responsibleDocOffice?: DocumentationOffice
 }
 
-export default class DocumentUnit {
-  readonly id: string
-  readonly documentNumber: string
-  public references?: Reference[]
-  public fieldsOfLaw: FieldOfLaw[] = []
-  public langueberschrift?: string
-
-  constructor(data: DocumentUnit) {
-    this.id = data.id
-    this.documentNumber = data.documentNumber
-    if (data.references)
-      this.references = data.references.map((reference) => new Reference({ ...reference }))
-    if (data.fieldsOfLaw) this.fieldsOfLaw = data.fieldsOfLaw
-    this.langueberschrift = data.langueberschrift
-  }
+export interface DocumentUnit {
+  id: string
+  documentNumber: string
+  references?: Reference[]
+  fieldsOfLaw?: FieldOfLaw[]
+  langueberschrift?: string
 }

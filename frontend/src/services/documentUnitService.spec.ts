@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
-import DocumentUnit from '@/domain/documentUnit.ts'
-import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import { type DocumentUnit } from '@/domain/documentUnit'
+import { type DocumentUnitResponse } from '@/domain/documentUnitResponse'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
@@ -23,18 +23,19 @@ describe('documentUnitService', () => {
 
   it('returns correct documentation unit if exist', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
-    })
+      references: [],
+    }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
-      data: new DocumentUnitResponse({
+      data: <DocumentUnitResponse>{
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
         json: documentUnit,
-      }),
+      },
     })
 
     // when
@@ -80,19 +81,18 @@ describe('documentUnitService', () => {
 
   it('update given document unit', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
-      fieldsOfLaw: [],
       references: [],
-    })
+    }
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
       status: 200,
-      data: new DocumentUnitResponse({
+      data: <DocumentUnitResponse>{
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
         json: documentUnit,
-      }),
+      },
     })
 
     // when
@@ -117,12 +117,12 @@ describe('documentUnitService', () => {
       status: 400,
       data: { errors: [{ code: 'test', message: 'Validation failed', instance: 'local' }] },
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -137,12 +137,12 @@ describe('documentUnitService', () => {
       status: 400,
       data: 'something really strange happened',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -157,12 +157,12 @@ describe('documentUnitService', () => {
       status: 500,
       data: '',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -177,12 +177,12 @@ describe('documentUnitService', () => {
       status: 403,
       data: '',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
