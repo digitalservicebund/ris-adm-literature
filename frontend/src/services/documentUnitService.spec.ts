@@ -84,7 +84,6 @@ describe('documentUnitService', () => {
     const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
-      fieldsOfLaw: [],
       references: [],
     }
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
