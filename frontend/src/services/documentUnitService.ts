@@ -68,8 +68,7 @@ const service: DocumentUnitService = {
       documentUnit,
     )
 
-    if (response.status == 200) {
-    } else if (response.status >= 300) {
+    if (response.status >= 300) {
       response.error = {
         title:
           response.status == 403
