@@ -3,7 +3,7 @@ import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import { type DocumentUnit } from '@/domain/documentUnit'
-import DocumentUnitResponse from '@/domain/documentUnitResponse'
+import DocumentUnitResponseDeprecated from '@/domain/documentUnitResponse'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
@@ -31,7 +31,7 @@ describe('documentUnitService', () => {
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
-      data: new DocumentUnitResponse({
+      data: new DocumentUnitResponseDeprecated({
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
         json: documentUnit,
@@ -89,7 +89,7 @@ describe('documentUnitService', () => {
     }
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
       status: 200,
-      data: new DocumentUnitResponse({
+      data: new DocumentUnitResponseDeprecated({
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
         json: documentUnit,
