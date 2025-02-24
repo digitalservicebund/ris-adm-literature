@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
-import DocumentUnitDeprecatedClass, { type DocumentUnit } from '@/domain/documentUnit.ts'
-import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import DocumentUnitDeprecatedClass, { type DocumentUnit } from '@/domain/documentUnit'
+import DocumentUnitResponse from '@/domain/documentUnitResponse'
 
 describe('documentUnitService', () => {
   it('appends correct error message if status 500', async () => {
