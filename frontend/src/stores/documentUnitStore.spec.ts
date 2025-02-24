@@ -29,7 +29,7 @@ describe('useDocumentUnitStore', () => {
       const mockDocumentUnitResponseDeprecated = new DocumentUnitResponse({
         id: '123',
         documentNumber: 'KSNR054920707',
-        documentUnit,
+        json: documentUnit,
       })
 
       const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
@@ -87,7 +87,7 @@ describe('useDocumentUnitStore', () => {
     const mockDocumentUnitResponse = new DocumentUnitResponse({
       id: '123',
       documentNumber: 'KSNR054920707',
-      documentUnit: documentUnitForResponse,
+      json: documentUnitForResponse,
     })
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
@@ -121,7 +121,7 @@ describe('useDocumentUnitStore', () => {
     const mockDocumentUnitResponse = new DocumentUnitResponse({
       id: '123',
       documentNumber: 'KSNR054920707',
-      documentUnit,
+      json: documentUnit,
     })
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
@@ -156,7 +156,7 @@ describe('useDocumentUnitStore', () => {
     const mockDocumentUnitResponse = new DocumentUnitResponse({
       id: '123',
       documentNumber: 'KSNR054920707',
-      documentUnit,
+      json: documentUnit,
     })
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,

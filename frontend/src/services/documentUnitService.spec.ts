@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
-import DocumentUnitDeprecatedClass, { type DocumentUnit } from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import DocumentUnitResponse from '@/domain/documentUnitResponse'
 
 describe('documentUnitService', () => {
@@ -34,7 +34,7 @@ describe('documentUnitService', () => {
       data: new DocumentUnitResponse({
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
-        documentUnit: documentUnit,
+        json: documentUnit,
       }),
     })
 
@@ -92,7 +92,7 @@ describe('documentUnitService', () => {
       data: new DocumentUnitResponse({
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
-        documentUnit: documentUnit,
+        json: documentUnit,
       }),
     })
 
@@ -118,12 +118,12 @@ describe('documentUnitService', () => {
       status: 400,
       data: { errors: [{ code: 'test', message: 'Validation failed', instance: 'local' }] },
     })
-    const documentUnit = new DocumentUnitDeprecatedClass({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -138,12 +138,12 @@ describe('documentUnitService', () => {
       status: 400,
       data: 'something really strange happened',
     })
-    const documentUnit = new DocumentUnitDeprecatedClass({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -158,12 +158,12 @@ describe('documentUnitService', () => {
       status: 500,
       data: '',
     })
-    const documentUnit = new DocumentUnitDeprecatedClass({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -178,12 +178,12 @@ describe('documentUnitService', () => {
       status: 403,
       data: '',
     })
-    const documentUnit = new DocumentUnitDeprecatedClass({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
