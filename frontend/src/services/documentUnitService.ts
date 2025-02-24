@@ -1,6 +1,6 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import DocumentUnitDeprecatedClass, { type DocumentUnit } from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
@@ -57,9 +57,9 @@ const service: DocumentUnitService = {
     return response
   },
 
-  async update(documentUnit: DocumentUnitDeprecatedClass) {
+  async update(documentUnit: DocumentUnit) {
     const response = await httpClient.put<
-      DocumentUnitDeprecatedClass,
+      DocumentUnit,
       DocumentUnitResponse | FailedValidationServerResponse
     >(
       `documentation-units/${documentUnit.documentNumber}`,

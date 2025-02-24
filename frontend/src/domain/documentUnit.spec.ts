@@ -1,12 +1,17 @@
 import { describe, it, expect } from 'vitest'
-import DocumentUnit from './documentUnit'
+import { type DocumentUnit } from './documentUnit'
 import Reference from './reference'
 import LegalPeriodical from './legalPeriodical'
 
 describe('DocumentUnit', () => {
   it('instantiates with id and documentNumber', () => {
     // given when
-    const documentUnit = new DocumentUnit({ id: 'foo', documentNumber: 'KSNR054920707' })
+    const documentUnit: DocumentUnit = {
+      id: 'foo',
+      documentNumber: 'KSNR054920707',
+      fieldsOfLaw: [],
+      references: [],
+    }
 
     // then
     expect(documentUnit.id).toEqual('foo')
@@ -15,7 +20,7 @@ describe('DocumentUnit', () => {
 
   it('sets a reference', () => {
     // given when
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'foo',
       documentNumber: 'KSNR054920707',
       references: [
@@ -27,7 +32,8 @@ describe('DocumentUnit', () => {
           citation: '12345',
         }),
       ],
-    })
+      fieldsOfLaw: [],
+    }
 
     // then
     expect(documentUnit.references).toHaveLength(1)
