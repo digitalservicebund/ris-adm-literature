@@ -5,7 +5,7 @@ import errorMessages from '@/i18n/errors.json'
 import documentUnitService from '@/services/documentUnitService'
 import { type ServiceResponse } from '@/services/httpClient'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import DocumentUnitResponseDeprecated from '@/domain/documentUnitResponse.ts'
+import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 
 vi.mock('@/services/documentUnitService')
 
@@ -26,15 +26,15 @@ describe('useDocumentUnitStore', () => {
         references: [],
         fieldsOfLaw: [],
       }
-      const mockDocumentUnitResponseDeprecated = new DocumentUnitResponseDeprecated({
+      const mockDocumentUnitResponse: DocumentUnitResponse = {
         id: '123',
         documentNumber: 'KSNR054920707',
         json: documentUnit,
-      })
+      }
 
-      const serviceResponse: ServiceResponse<DocumentUnitResponseDeprecated> = {
+      const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
         status: 200,
-        data: mockDocumentUnitResponseDeprecated,
+        data: mockDocumentUnitResponse,
         error: undefined,
       }
 
@@ -55,7 +55,7 @@ describe('useDocumentUnitStore', () => {
 
     it('handles failure to load a document unit', async () => {
       // given
-      const serviceResponse: ServiceResponse<DocumentUnitResponseDeprecated> = {
+      const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
         status: 400,
         error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
       }
@@ -84,12 +84,12 @@ describe('useDocumentUnitStore', () => {
       references: [],
       fieldsOfLaw: [],
     }
-    const mockDocumentUnitResponse = new DocumentUnitResponseDeprecated({
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
       json: documentUnitForResponse,
-    })
-    const serviceResponse: ServiceResponse<DocumentUnitResponseDeprecated> = {
+    }
+    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,
       error: undefined,
@@ -118,12 +118,12 @@ describe('useDocumentUnitStore', () => {
       references: [],
       fieldsOfLaw: [],
     }
-    const mockDocumentUnitResponse = new DocumentUnitResponseDeprecated({
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
       json: documentUnit,
-    })
-    const serviceResponse: ServiceResponse<DocumentUnitResponseDeprecated> = {
+    }
+    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,
       error: undefined,
@@ -153,12 +153,12 @@ describe('useDocumentUnitStore', () => {
       references: [],
       fieldsOfLaw: [],
     }
-    const mockDocumentUnitResponse = new DocumentUnitResponseDeprecated({
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
       json: documentUnit,
-    })
-    const serviceResponse: ServiceResponse<DocumentUnitResponseDeprecated> = {
+    }
+    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,
       error: undefined,

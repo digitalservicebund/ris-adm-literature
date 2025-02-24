@@ -5,18 +5,16 @@ import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
 import httpClient from './httpClient'
-import DocumentUnitResponseDeprecated from '@/domain/documentUnitResponse.ts'
+import type { DocumentUnitResponse } from '@/domain/documentUnitResponse'
 
 interface DocumentUnitService {
-  getByDocumentNumber(
-    documentNumber: string,
-  ): Promise<ServiceResponse<DocumentUnitResponseDeprecated>>
+  getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
 
-  createNew(): Promise<ServiceResponse<DocumentUnitResponseDeprecated>>
+  createNew(): Promise<ServiceResponse<DocumentUnitResponse>>
 
   update(
     documentUnit: DocumentUnit,
-  ): Promise<ServiceResponse<DocumentUnitResponseDeprecated | FailedValidationServerResponse>>
+  ): Promise<ServiceResponse<DocumentUnitResponse | FailedValidationServerResponse>>
 
   searchByRelatedDocumentation(
     query: RelatedDocumentation,
@@ -26,7 +24,7 @@ interface DocumentUnitService {
 
 const service: DocumentUnitService = {
   async getByDocumentNumber(documentNumber: string) {
-    const response = await httpClient.get<DocumentUnitResponseDeprecated>(
+    const response = await httpClient.get<DocumentUnitResponse>(
       `documentation-units/${documentNumber}`,
     )
     if (response.status >= 300 || response.error) {
@@ -42,22 +40,20 @@ const service: DocumentUnitService = {
   },
 
   async createNew() {
-    const response = await httpClient.post<unknown, DocumentUnitResponseDeprecated>(
-      'documentation-units',
-      {
-        headers: {
-          Accept: 'application/json',
-        },
+    const response = await httpClient.post<unknown, DocumentUnitResponse>('documentation-units', {
+      headers: {
+        Accept: 'application/json',
       },
-    )
+    })
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.DOCUMENT_UNIT_CREATION_FAILED.title,
       }
     } else {
-      response.data = new DocumentUnitResponseDeprecated({
-        ...(response.data as DocumentUnitResponseDeprecated),
-      })
+      response.data = <DocumentUnitResponse>{
+        // TODO: remove casting
+        ...(response.data as DocumentUnitResponse),
+      }
     }
     return response
   },
@@ -65,7 +61,7 @@ const service: DocumentUnitService = {
   async update(documentUnit: DocumentUnit) {
     const response = await httpClient.put<
       DocumentUnit,
-      DocumentUnitResponseDeprecated | FailedValidationServerResponse
+      DocumentUnitResponse | FailedValidationServerResponse
     >(
       `documentation-units/${documentUnit.documentNumber}`,
       {
