@@ -32,6 +32,9 @@ const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
   documentUnit.references = documentUnit.references?.map(
     (reference) => new Reference({ ...reference }),
   )
+  if (!documentUnit.fieldsOfLaw) {
+    documentUnit.fieldsOfLaw = []
+  }
   return documentUnit
 }
 
