@@ -19,7 +19,9 @@ class DocumentNumber {
     int number = 0;
     if (lastestDocumentNumber != null) {
       if (!lastestDocumentNumber.matches(VALID_DOCUMENT_NUMBER_PATTERN)) {
-        throw new IllegalArgumentException("Invalid last document number: " + lastestDocumentNumber);
+        throw new IllegalArgumentException(
+          "Invalid last document number: " + lastestDocumentNumber
+        );
       }
       number = Integer.parseInt(lastestDocumentNumber.substring(prefix.length()));
     }
