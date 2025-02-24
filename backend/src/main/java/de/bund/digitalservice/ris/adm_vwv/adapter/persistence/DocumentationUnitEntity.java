@@ -1,9 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.Year;
 import java.util.UUID;
 import lombok.Data;
 
@@ -16,7 +14,12 @@ public class DocumentationUnitEntity {
   @GeneratedValue
   private UUID id;
 
+  @Basic(optional = false)
   private String documentNumber;
 
+  @Basic
   private String json;
+
+  @Basic(optional = false)
+  private Year year;
 }

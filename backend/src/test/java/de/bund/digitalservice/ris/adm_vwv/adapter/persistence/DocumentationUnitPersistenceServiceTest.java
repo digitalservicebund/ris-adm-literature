@@ -38,7 +38,7 @@ class DocumentationUnitPersistenceServiceTest {
   }
 
   @Test
-  void findByDocumentNumber_noFound() {
+  void findByDocumentNumber_notFound() {
     // given
     given(documentationUnitRepository.findByDocumentNumber("KSNR000000002"))
       .willReturn(Optional.empty());

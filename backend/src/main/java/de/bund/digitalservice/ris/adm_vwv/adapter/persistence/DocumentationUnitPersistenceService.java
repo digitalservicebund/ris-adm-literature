@@ -3,13 +3,12 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPersistencePort;
 import jakarta.annotation.Nonnull;
-import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.Year;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -34,14 +33,17 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public DocumentationUnit create() {
+    Year thisYear = Year.now();
+    String lastDocumentNumber = documentationUnitRepository
+      .findTopByYearOrderByDocumentNumberDesc(thisYear)
+      .map(DocumentationUnitEntity::getDocumentNumber)
+      .orElse(null);
+    DocumentNumber documentNumber = new DocumentNumber(thisYear, lastDocumentNumber);
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber(
-      "KSNR" +
-      LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) +
-      new SecureRandom().nextInt(1000)
-    );
+    documentationUnitEntity.setDocumentNumber(documentNumber.create());
+    documentationUnitEntity.setYear(thisYear);
     DocumentationUnitEntity saved = documentationUnitRepository.save(documentationUnitEntity);
     log.info("New documentation unit created with document number: {}", saved.getDocumentNumber());
     return new DocumentationUnit(saved.getDocumentNumber(), saved.getId(), null);
