@@ -49,11 +49,6 @@ const service: DocumentUnitService = {
       response.error = {
         title: errorMessages.DOCUMENT_UNIT_CREATION_FAILED.title,
       }
-    } else {
-      response.data = <DocumentUnitResponse>{
-        // TODO: remove casting
-        ...(response.data as DocumentUnitResponse),
-      }
     }
     return response
   },
