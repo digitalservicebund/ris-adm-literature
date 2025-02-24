@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class DocumentNumber {
 
-  private static final String VALID_DOCUMENT_NUMBER_PATTERN = "KSNR[0-9]{10}";
+  private static final String VALID_DOCUMENT_NUMBER_PATTERN = "KSNR\\d{10}";
   private static final String DOCUMENT_NUMBER_PREFIX = "KSNR";
   private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("000000");
 
