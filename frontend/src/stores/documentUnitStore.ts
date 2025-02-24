@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import DocumentUnit from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import documentUnitService from '@/services/documentUnitService'
 import type { FailedValidationServerResponse, ServiceResponse } from '@/services/httpClient'
 import errorMessages from '@/i18n/errors.json'
@@ -14,7 +14,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
   ): Promise<ServiceResponse<DocumentUnitResponse>> {
     const response = await documentUnitService.getByDocumentNumber(documentNumber)
     if (response.data) {
-      documentUnit.value = response.data.json
+      documentUnit.value = response.data.documentUnit
     } else {
       documentUnit.value = undefined
     }
@@ -38,7 +38,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
     const response = await documentUnitService.update(documentUnit.value)
 
     if (response.status === 200) {
-      documentUnit.value = (response.data as DocumentUnitResponse).json
+      documentUnit.value = (response.data as DocumentUnitResponse).documentUnit
     } else {
       return {
         status: response.status,
