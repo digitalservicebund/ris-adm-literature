@@ -10,9 +10,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class DocumentNumberTest {
 
-  private static Stream<Arguments> lastDocumentNumbers() {
+  private static Stream<Arguments> lastestDocumentNumbers() {
     return Stream.of(
-      // year, lastDocumentNumber, expected
+      // year, lastestDocumentNumber, expected
       Arguments.of(Year.of(2025), null, "KSNR2025000001"),
       Arguments.of(Year.of(2026), null, "KSNR2026000001"),
       Arguments.of(Year.of(2025), "KSNR2025000001", "KSNR2025000002")
@@ -20,10 +20,10 @@ class DocumentNumberTest {
   }
 
   @ParameterizedTest
-  @MethodSource("lastDocumentNumbers")
-  void create(Year year, String lastDocumentNumber, String expected) {
+  @MethodSource("lastestDocumentNumbers")
+  void create(Year year, String lastestDocumentNumber, String expected) {
     // given
-    DocumentNumber documentNumber = new DocumentNumber(year, lastDocumentNumber);
+    DocumentNumber documentNumber = new DocumentNumber(year, lastestDocumentNumber);
 
     // when
     String actual = documentNumber.create();
@@ -43,9 +43,9 @@ class DocumentNumberTest {
 
   @ParameterizedTest
   @MethodSource("failingDocumentNumbers")
-  void create_failures(Year year, String lastDocumentNumber) {
+  void create_failures(Year year, String lastestDocumentNumber) {
     // given
-    DocumentNumber documentNumber = new DocumentNumber(year, lastDocumentNumber);
+    DocumentNumber documentNumber = new DocumentNumber(year, lastestDocumentNumber);
 
     // when
     Exception exception = catchException(documentNumber::create);

@@ -12,16 +12,16 @@ class DocumentNumber {
   private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("000000");
 
   private final Year year;
-  private final String lastDocumentNumber;
+  private final String lastestDocumentNumber;
 
   public String create() {
     String prefix = DOCUMENT_NUMBER_PREFIX + year.getValue();
     int number = 0;
-    if (lastDocumentNumber != null) {
-      if (!lastDocumentNumber.matches(VALID_DOCUMENT_NUMBER_PATTERN)) {
-        throw new IllegalArgumentException("Invalid last document number: " + lastDocumentNumber);
+    if (lastestDocumentNumber != null) {
+      if (!lastestDocumentNumber.matches(VALID_DOCUMENT_NUMBER_PATTERN)) {
+        throw new IllegalArgumentException("Invalid last document number: " + lastestDocumentNumber);
       }
-      number = Integer.parseInt(lastDocumentNumber.substring(prefix.length()));
+      number = Integer.parseInt(lastestDocumentNumber.substring(prefix.length()));
     }
     return prefix + DECIMAL_FORMAT.format(++number);
   }

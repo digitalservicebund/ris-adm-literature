@@ -36,11 +36,11 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public DocumentationUnit create() {
     Year thisYear = Year.now();
-    String lastDocumentNumber = documentationUnitRepository
+    String lastestDocumentNumber = documentationUnitRepository
       .findTopByYearOrderByDocumentNumberDesc(thisYear)
       .map(DocumentationUnitEntity::getDocumentNumber)
       .orElse(null);
-    DocumentNumber documentNumber = new DocumentNumber(thisYear, lastDocumentNumber);
+    DocumentNumber documentNumber = new DocumentNumber(thisYear, lastestDocumentNumber);
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber(documentNumber.create());
     documentationUnitEntity.setYear(thisYear);
