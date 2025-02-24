@@ -35,7 +35,14 @@ const service: DocumentUnitService = {
             ? errorMessages.DOCUMENT_UNIT_NOT_ALLOWED.title
             : errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
       }
+    } else {
+      response.data.json = <DocumentUnit>{
+        ...response.data?.json,
+        id: response.data?.id,
+        documentNumber: response.data?.documentNumber,
+      }
     }
+
     return response
   },
 
@@ -81,7 +88,14 @@ const service: DocumentUnitService = {
       } else {
         response.data = undefined
       }
+    } else {
+      (response.data as DocumentUnitResponse).json = <DocumentUnit>{
+        ...(response.data as DocumentUnitResponse).json,
+        id: (response.data as DocumentUnitResponse).id,
+        documentNumber: (response.data as DocumentUnitResponse).documentNumber,
+      }
     }
+
     return response
   },
 

@@ -12,18 +12,25 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
   async function loadDocumentUnit(
     documentNumber: string,
   ): Promise<ServiceResponse<DocumentUnitResponse>> {
+
     const response = await documentUnitService.getByDocumentNumber(documentNumber)
-    if (!response.data) {
-      documentUnit.value = undefined
-    }
-    if (response.data?.json) {
+    if (response.data){
       documentUnit.value = response.data.json
     } else {
-      documentUnit.value = <DocumentUnit>{
-        id: response.data?.id,
-        documentNumber: response.data?.documentNumber,
-      }
+      documentUnit.value = undefined
     }
+
+    // if (!response.data) {
+    //   documentUnit.value = undefined
+    // }
+    // if (response.data?.json) {
+    //   documentUnit.value = response.data.json
+    // } else {
+    //   documentUnit.value = <DocumentUnit>{
+    //     id: response.data?.id,
+    //     documentNumber: response.data?.documentNumber,
+    //   }
+    // }
     return response
   }
 
@@ -41,6 +48,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
         error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
       }
     }
+
     const response = await documentUnitService.update(documentUnit.value)
 
     if (response.status === 200) {
