@@ -1,11 +1,12 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import { type DocumentUnit } from '@/domain/documentUnit'
+import type { DocumentUnit } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
 import httpClient from './httpClient'
-import type { DocumentUnitResponse } from '@/domain/documentUnitResponse'
+import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
+import Reference from '@/domain/reference.ts'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
@@ -22,6 +23,18 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
+const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
+  const documentUnit = <DocumentUnit>{
+    ...data.json,
+    id: data.id,
+    documentNumber: data.documentNumber,
+  }
+  documentUnit.references = documentUnit.references?.map(
+    (reference) => new Reference({ ...reference }),
+  )
+  return documentUnit
+}
+
 const service: DocumentUnitService = {
   async getByDocumentNumber(documentNumber: string) {
     const response = await httpClient.get<DocumentUnitResponse>(
@@ -36,13 +49,8 @@ const service: DocumentUnitService = {
             : errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
       }
     } else {
-      response.data.json = <DocumentUnit>{
-        ...response.data?.json,
-        id: response.data?.id,
-        documentNumber: response.data?.documentNumber,
-      }
+      response.data.json = mapDocumentationUnit(response.data)
     }
-
     return response
   },
 
@@ -55,6 +63,10 @@ const service: DocumentUnitService = {
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.DOCUMENT_UNIT_CREATION_FAILED.title,
+      }
+    } else {
+      response.data = <DocumentUnitResponse>{
+        ...(response.data as DocumentUnitResponse),
       }
     }
     return response
@@ -75,7 +87,10 @@ const service: DocumentUnitService = {
       documentUnit,
     )
 
-    if (response.status >= 300) {
+    if (response.status == 200) {
+      const data = response.data as DocumentUnitResponse
+      data.json = mapDocumentationUnit(data)
+    } else if (response.status >= 300) {
       response.error = {
         title:
           response.status == 403
@@ -88,14 +103,7 @@ const service: DocumentUnitService = {
       } else {
         response.data = undefined
       }
-    } else {
-      (response.data as DocumentUnitResponse).json = <DocumentUnit>{
-        ...(response.data as DocumentUnitResponse).json,
-        id: (response.data as DocumentUnitResponse).id,
-        documentNumber: (response.data as DocumentUnitResponse).documentNumber,
-      }
     }
-
     return response
   },
 

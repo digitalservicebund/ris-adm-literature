@@ -19,7 +19,7 @@ export type Court = {
 export interface DocumentUnit {
   id: string
   documentNumber: string
-  references: Reference[]
-  fieldsOfLaw: FieldOfLaw[]
+  references?: Reference[]
+  fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string
 }
