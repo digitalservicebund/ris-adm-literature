@@ -28,4 +28,5 @@ export interface DocumentUnit {
   gliederung?: string
   kurzreferat?: string
   aktenzeichen?: string[]
+  noAktenzeichen?: boolean
 }

@@ -67,13 +67,18 @@ const aktenzeichen = computed({
     store.documentUnit!.aktenzeichen = newValue
   },
 })
+const noAktenzeichen = computed({
+  get: () => store.documentUnit!.noAktenzeichen,
+  set: (newValue) => {
+    store.documentUnit!.noAktenzeichen = newValue
+  },
+})
 
 
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
-const noAktenzeichen = ref()
-const noAktenzeichenId = 'noAktenzeichenID'
+const noAktenzeichenElementId = 'noAktenzeichenID'
 
 </script>
 
@@ -173,13 +178,13 @@ const noAktenzeichenId = 'noAktenzeichenID'
         </div>
         <div class="flex flex-col pt-[30px] w-full">
           <InputField
-            :id="noAktenzeichenId"
+            :id="noAktenzeichenElementId"
             label="kein Aktenzeichen"
             label-class="ds-label-01-reg"
             :label-position="LabelPosition.RIGHT"
           >
             <CheckboxInput
-              :id="noAktenzeichenId"
+              :id="noAktenzeichenElementId"
               v-model="noAktenzeichen"
               aria-label="Kein Aktenzeichen"
               size="small"
