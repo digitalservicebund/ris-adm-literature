@@ -47,13 +47,20 @@ const ausserkrafttretedatum = computed({
   },
 })
 
+const gliederung = computed({
+  get: () => store.documentUnit!.gliederung,
+  set: (newValue) => {
+    store.documentUnit!.gliederung = newValue
+  },
+})
+
+
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 'noAktenzeichenID'
 const fileNumbers = ref()
-const outline = ref()
 const kurzreferat = ref()
 </script>
 
@@ -176,8 +183,8 @@ const kurzreferat = ref()
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">
           <TextEditorCategory
-            id="outline"
-            v-model="outline"
+            id="gliederung"
+            v-model="gliederung"
             :editable="true"
             label="Gliederung"
             :should-show-button="false"

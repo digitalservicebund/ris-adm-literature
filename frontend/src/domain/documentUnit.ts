@@ -25,4 +25,5 @@ export interface DocumentUnit {
   zitierdatum?: string
   inkrafttretedatum?: string
   ausserkrafttretedatum?: string
+  gliederung?: string
 }
