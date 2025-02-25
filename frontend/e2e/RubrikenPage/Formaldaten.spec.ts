@@ -75,7 +75,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
 
-      // TODO: separate that?
+
       await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
       // when
       await page.getByText('Kein Aktenzeichen').check()

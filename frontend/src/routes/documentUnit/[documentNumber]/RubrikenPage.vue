@@ -74,12 +74,10 @@ const noAktenzeichen = computed({
   },
 })
 
-
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichenElementId = 'noAktenzeichenID'
-
 </script>
 
 <template>
