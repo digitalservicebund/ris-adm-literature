@@ -108,7 +108,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-unit-test-report-html
+          name: frontend-unit-test-report-html-${{ matrix.shardIndex }}-of-${{ matrix.shardTotal }}
           retention-days: 3
           path: frontend/html
           if-no-files-found: warn
@@ -125,6 +125,11 @@ jobs:
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
     #   options: --user 1001
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     steps:
       - uses: actions/checkout@v4
       # setup backend
@@ -180,7 +185,7 @@ jobs:
       - name: Run e2e tests
         working-directory: ./frontend
         run: |
-          npm run test:e2e
+          npm run test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload e2e JSON test report
         if: always()
         uses: actions/upload-artifact@v4
