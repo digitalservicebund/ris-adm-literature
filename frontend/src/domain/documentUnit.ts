@@ -24,4 +24,5 @@ export interface DocumentUnit {
   langueberschrift?: string
   zitierdatum?: string
   inkrafttretedatum?: string
+  ausserkrafttretedatum?: string
 }
