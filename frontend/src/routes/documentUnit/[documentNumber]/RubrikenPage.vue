@@ -26,8 +26,14 @@ const langueberschrift = computed({
   },
 })
 
+const zitierdatum = computed({
+  get: () => store.documentUnit!.zitierdatum,
+  set: (newValue) => {
+    store.documentUnit!.zitierdatum = newValue
+  },
+})
+
 const selectedCourt = ref()
-const zitierdatum = ref()
 const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
