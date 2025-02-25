@@ -88,6 +88,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(zitierdatumElement).toHaveValue('15.01.2025')
 
       // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
       await expect(zitierdatumElement).toHaveValue('15.01.2025')
