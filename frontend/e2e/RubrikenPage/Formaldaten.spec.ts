@@ -18,12 +18,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Rubriken').click()
       await expect(page.getByText('Rubriken')).toHaveCount(1)
 
-      await expect(page.getByText('Normgeber')).toHaveCount(1)
-      await page.getByText('Normgeber').fill('AG')
-      await expect(page.getByText('AG Aachen')).toHaveCount(1)
-      await page.getByText('AG Aachen').click()
-      await expect(page.getByText('Normgeber')).toHaveValue('AG Aachen')
-
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
       await page.getByText('Amtl. Langüberschrift').fill('my long title')
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
@@ -54,6 +48,33 @@ test.describe('RubrikenPage - Formatdaten', () => {
   })
 
   test(
+    'Normgeber: Can be entered and persists through a reload',
+    { tag: ['@RISDEV-6297'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const normgeberElement = page.getByText('Normgeber')
+      await expect(normgeberElement).toHaveCount(1)
+
+      // when
+      await normgeberElement.fill('AG')
+      await expect(page.getByText('AG Aachen')).toHaveCount(1)
+      await page.getByText('AG Aachen').click()
+      // then
+      await expect(normgeberElement).toHaveValue('AG Aachen')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(normgeberElement).toHaveValue('AG Aachen')
+    },
+  )
+
+  test(
     'Aktenzeichen: Can be entered, checkbox checked and both persist through a reload',
     { tag: ['@RISDEV-6303'] },
     async ({ page }) => {
@@ -74,7 +95,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // Created elements are list elements (<li>) so we need to select them explicitly
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
-
 
       await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
       // when
