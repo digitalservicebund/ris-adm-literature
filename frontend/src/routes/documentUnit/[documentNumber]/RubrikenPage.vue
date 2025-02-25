@@ -54,13 +54,19 @@ const gliederung = computed({
   },
 })
 
+const kurzreferat = computed({
+  get: () => store.documentUnit!.kurzreferat,
+  set: (newValue) => {
+    store.documentUnit!.kurzreferat = newValue
+  },
+})
+
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 'noAktenzeichenID'
 const fileNumbers = ref()
-const kurzreferat = ref()
 </script>
 
 <template>

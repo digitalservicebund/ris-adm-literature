@@ -26,4 +26,5 @@ export interface DocumentUnit {
   inkrafttretedatum?: string
   ausserkrafttretedatum?: string
   gliederung?: string
+  kurzreferat?: string
 }
