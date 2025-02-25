@@ -22,12 +22,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Amtl. Langüberschrift').fill('my long title')
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
 
-      await expect(page.getByText('Dokumenttyp *')).toHaveCount(1)
-      await page.getByText('Dokumenttyp *').fill('V')
-      await expect(page.getByText('VR')).toHaveCount(1)
-      await page.getByText('VR').click()
-      await expect(page.getByText('Dokumenttyp *')).toHaveValue('VR') // confirm selection by value
-
       await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
       await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
       await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
@@ -46,6 +40,36 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     })
   })
+
+  test(
+    'Dokumenttyp: Can be filtered, entered and persists through a reload',
+    { tag: ['@RISDEV-6299'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const dokumenttypElement = page.getByText('Dokumenttyp *')
+      await expect(dokumenttypElement).toHaveCount(1)
+
+      // when
+      await dokumenttypElement.fill('V')
+      // then
+      await expect(page.getByText('VR')).toHaveCount(1)
+
+      // when
+      await page.getByText('VR').click()
+      // then
+      await expect(dokumenttypElement).toHaveValue('VR')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(dokumenttypElement).toHaveValue('VR')
+    },
+  )
 
   test(
     'Normgeber: Can be entered and persists through a reload',
