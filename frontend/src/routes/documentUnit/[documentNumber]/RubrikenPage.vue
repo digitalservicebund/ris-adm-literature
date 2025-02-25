@@ -54,7 +54,6 @@ const gliederung = computed({
   },
 })
 
-
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
