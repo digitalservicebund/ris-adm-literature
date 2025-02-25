@@ -1,31 +1,23 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage - Formatdaten', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.route('/api/documentation-units/KSNR054920707', async (route) => {
-      const json = {
-        documentNumber: 'KSNR054920707',
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        json: null,
-      }
-      await route.fulfill({ json })
+  
+  test.describe('With mocked responses', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+        const json = {
+          documentNumber: 'KSNR054920707',
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          json: null,
+        }
+        await route.fulfill({ json })
+      })
     })
-  })
 
-  test(
-    'Filling in Formaldaten',
-    { tag: ['@RISDEV-6043'] },
-    async ({ page }) => {
+    test('Filling in Formaldaten', { tag: ['@RISDEV-6043'] }, async ({ page }) => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
       await page.getByText('Rubriken').click()
       await expect(page.getByText('Rubriken')).toHaveCount(1)
-
-      await expect(page.getByText('Formaldaten')).toHaveCount(2)
-      await expect(page.getByText('Zitierdatum')).toHaveCount(1)
-      await page.getByText('Zitierdatum').fill('thatshouldnotwork')
-      await expect(page.getByText('Zitierdatum')).toHaveValue('')
-      await page.getByText('Zitierdatum').fill('15.01.2025')
-      await expect(page.getByText('Zitierdatum')).toHaveValue('15.01.2025')
 
       await expect(page.getByText('Normgeber')).toHaveCount(1)
       await page.getByText('Normgeber').fill('AG')
@@ -71,6 +63,36 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
       await page.getByText('Kein Aktenzeichen').check()
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
+    })
+  })
+
+  test(
+    'Zitierdatum: invalid date cannot be entered, valid date can be entered and persists through a reload',
+    { tag: ['@RISDEV-6296'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const zitierdatumElement = page.getByText('Zitierdatum')
+      await expect(zitierdatumElement).toHaveCount(1)
+
+      // when
+      await zitierdatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(zitierdatumElement).toHaveValue('')
+
+      // when
+      await zitierdatumElement.fill('15.01.2025')
+      // then
+      await expect(zitierdatumElement).toHaveValue('15.01.2025')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(zitierdatumElement).toHaveValue('15.01.2025')
     },
   )
 })

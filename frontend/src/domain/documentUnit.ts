@@ -22,4 +22,5 @@ export interface DocumentUnit {
   references?: Reference[]
   fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string
+  zitierdatum?: string
 }
