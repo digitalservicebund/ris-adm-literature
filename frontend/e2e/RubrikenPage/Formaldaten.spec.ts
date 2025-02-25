@@ -22,10 +22,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Amtl. Langüberschrift').fill('my long title')
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
 
-      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
-      await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
-      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
-
       await expect(page.getByText('Aktenzeichen *')).toHaveCount(2)
       await page.getByText('Aktenzeichen *').first().fill('Az1')
       await page.getByText('Aktenzeichen *').first().press('Enter')
@@ -40,6 +36,30 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     })
   })
+
+  test(
+    'Dokumenttyp Zusatz: Can be entered and persists through a reload',
+    { tag: ['@RISDEV-6300'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
+
+      // when
+      await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
+      // then
+      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
+    },
+  )
 
   test(
     'Dokumenttyp: Can be filtered, entered and persists through a reload',
