@@ -29,4 +29,5 @@ export interface DocumentUnit {
   kurzreferat?: string
   aktenzeichen?: string[]
   noAktenzeichen?: boolean
+  normgeber?: boolean
 }

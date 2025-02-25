@@ -67,6 +67,7 @@ const aktenzeichen = computed({
     store.documentUnit!.aktenzeichen = newValue
   },
 })
+
 const noAktenzeichen = computed({
   get: () => store.documentUnit!.noAktenzeichen,
   set: (newValue) => {
@@ -74,7 +75,13 @@ const noAktenzeichen = computed({
   },
 })
 
-const selectedCourt = ref()
+const normgeber = computed({
+  get: () => store.documentUnit!.normgeber,
+  set: (newValue) => {
+    store.documentUnit!.normgeber = newValue
+  },
+})
+
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichenElementId = 'noAktenzeichenID'
@@ -96,7 +103,7 @@ const noAktenzeichenElementId = 'noAktenzeichenID'
         <InputField id="courtInput" label="Normgeber *" class="w-full">
           <ComboboxInput
             id="courtInput"
-            v-model="selectedCourt"
+            v-model="normgeber"
             aria-label="Normgeber"
             clear-on-choosing-item
             :has-error="false"
