@@ -158,18 +158,18 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
-      - name: Get Playwright version
-        working-directory: ./frontend
-        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
-      - name: Cache browser binaries
-        id: cache-browser-binaries
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      - name: Install Playwright Browsers
-        working-directory: ./frontend
-        run: npx playwright install --with-deps
+      # - name: Get Playwright version
+      #   working-directory: ./frontend
+      #   run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      # - name: Cache browser binaries
+      #   id: cache-browser-binaries
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.cache/ms-playwright
+      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      # - name: Install Playwright Browsers
+      #   working-directory: ./frontend
+      #   run: npx playwright install --with-deps
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
