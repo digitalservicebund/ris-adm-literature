@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage - Formatdaten', () => {
+  
   test.describe('With mocked responses', () => {
     test.beforeEach(async ({ page }) => {
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
