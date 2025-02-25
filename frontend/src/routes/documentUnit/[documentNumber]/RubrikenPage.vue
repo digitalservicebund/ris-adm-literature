@@ -61,12 +61,20 @@ const kurzreferat = computed({
   },
 })
 
+const aktenzeichen = computed({
+  get: () => store.documentUnit!.aktenzeichen,
+  set: (newValue) => {
+    store.documentUnit!.aktenzeichen = newValue
+  },
+})
+
+
 const selectedCourt = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
 const noAktenzeichen = ref()
 const noAktenzeichenId = 'noAktenzeichenID'
-const fileNumbers = ref()
+
 </script>
 
 <template>
@@ -155,10 +163,10 @@ const fileNumbers = ref()
 
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <InputField id="fileNumbers" label="Aktenzeichen *">
+          <InputField id="aktenzeichen" label="Aktenzeichen *">
             <ChipsInput
-              id="fileNumbers"
-              v-model="fileNumbers"
+              id="aktenzeichen"
+              v-model="aktenzeichen"
               aria-label="Aktenzeichen"
             ></ChipsInput>
           </InputField>
