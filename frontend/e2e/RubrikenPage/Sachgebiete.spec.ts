@@ -25,26 +25,33 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await expect(page.getByRole('button', { name: 'Sachgebiete' })).toHaveCount(1)
       },
     )
+  })
 
-    test(
-      "We can add Sachgebiete via 'Direkteingabe' when clicking on the Sachgebiet button and entering + selecting an entry",
-      { tag: ['@RISDEV-6076'] },
-      async ({ page }) => {
-        // given
-        await page.goto('/documentUnit/KSNR054920707/rubriken')
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
-        await page.getByRole('radio', { name: 'Direkteingabe' }).check()
+  test('Direkteingabe allows for entering data which persists through a reload', async ({
+    page,
+  }) => {
+    // given
+    await page.goto('/')
+    await page.getByText('Neue Dokumentationseinheit').click()
+    await page.getByText('Rubriken').click()
 
-        // when
-        await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
-        await page
-          .getByRole('button', { name: 'dropdown-option' })
-          .filter({ hasText: 'Arbeitsrecht' })
-          .click()
+    await page.getByRole('button', { name: 'Sachgebiete' }).click()
+    await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 
-        // then
-        await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
-      },
-    )
+    // when
+    await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Arbeitsrecht' })
+      .click()
+    // then
+    await page.getByRole('button', { name: 'Fertig' })
+    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
+
+    //when
+    await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+    await page.reload()
+    // then
+    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
   })
 })
