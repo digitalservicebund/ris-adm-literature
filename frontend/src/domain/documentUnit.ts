@@ -23,4 +23,5 @@ export interface DocumentUnit {
   fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string
   zitierdatum?: string
+  inkrafttretedatum?: string
 }

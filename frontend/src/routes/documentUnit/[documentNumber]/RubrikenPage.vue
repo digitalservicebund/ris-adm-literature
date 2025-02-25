@@ -33,8 +33,14 @@ const zitierdatum = computed({
   },
 })
 
+const inkrafttretedatum = computed({
+  get: () => store.documentUnit!.inkrafttretedatum,
+  set: (newValue) => {
+    store.documentUnit!.inkrafttretedatum = newValue
+  },
+})
+
 const selectedCourt = ref()
-const inkrafttretedatum = ref()
 const ausserkrafttretedatum = ref()
 const selectedDocumentType = ref()
 const documentTypeLongText = ref()
