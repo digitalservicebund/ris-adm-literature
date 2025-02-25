@@ -38,12 +38,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
       await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
 
-      await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveCount(1)
-      await page.getByText('Datum des Ausserkrafttretens').fill('thatshouldnotwork')
-      await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
-      await page.getByText('Datum des Ausserkrafttretens').fill('03.03.1970')
-      await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('03.03.1970')
-
       await expect(page.getByText('Aktenzeichen *')).toHaveCount(2)
       await page.getByText('Aktenzeichen *').first().fill('Az1')
       await page.getByText('Aktenzeichen *').first().press('Enter')
@@ -58,6 +52,35 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     })
   })
+
+  test(
+    'Ausserkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload',
+    { tag: ['@RISDEV-6302'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
+      await expect(ausserkrafttretedatumElement).toHaveCount(1)
+
+      // when
+      await ausserkrafttretedatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(ausserkrafttretedatumElement).toHaveValue('')
+
+      // when
+      await ausserkrafttretedatumElement.fill('03.03.1970')
+      await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
+    },
+  )
 
   test(
     'Inkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload',
