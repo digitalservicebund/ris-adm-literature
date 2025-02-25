@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-#### Production Build via Docker
+#### Production Build via a Docker Build
 
 ```bash
 docker build --tag ris-adm-vwv-frontend-local:dev .
