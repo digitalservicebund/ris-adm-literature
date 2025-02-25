@@ -68,6 +68,7 @@ const aktenzeichen = computed({
   },
 })
 
+const noAktenzeichenElementId = 'noAktenzeichenID'
 const noAktenzeichen = computed({
   get: () => store.documentUnit!.noAktenzeichen,
   set: (newValue) => {
@@ -82,9 +83,14 @@ const normgeber = computed({
   },
 })
 
-const selectedDocumentType = ref()
-const documentTypeLongText = ref()
-const noAktenzeichenElementId = 'noAktenzeichenID'
+const dokumenttyp = computed({
+  get: () => store.documentUnit!.dokumenttyp,
+  set: (newValue) => {
+    store.documentUnit!.dokumenttyp = newValue
+  },
+})
+
+const dokumenttypZusatz = ref()
 </script>
 
 <template>
@@ -128,7 +134,7 @@ const noAktenzeichenElementId = 'noAktenzeichenID'
         <InputField id="documentType" label="Dokumenttyp *">
           <ComboboxInput
             id="documentType"
-            v-model="selectedDocumentType"
+            v-model="dokumenttyp"
             aria-label="Dokumenttyp"
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
@@ -136,7 +142,7 @@ const noAktenzeichenElementId = 'noAktenzeichenID'
         <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
           <TextInput
             id="documentTypeLongText"
-            v-model="documentTypeLongText"
+            v-model="dokumenttypZusatz"
             ariaLabel="Dokumenttyp Zusatz"
             :has-error="false"
             size="medium"

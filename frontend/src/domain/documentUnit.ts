@@ -30,4 +30,6 @@ export interface DocumentUnit {
   aktenzeichen?: string[]
   noAktenzeichen?: boolean
   normgeber?: boolean
+  dokumenttyp?: string
+  dokumenttypZusatz?: string
 }
