@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage - Formatdaten', () => {
-  
   test.describe('With mocked responses', () => {
     test.beforeEach(async ({ page }) => {
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
@@ -39,12 +38,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
       await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
 
-      await expect(page.getByText('Datum des Inkrafttretens *')).toHaveCount(1)
-      await page.getByText('Zitierdatum').fill('thatshouldnotwork')
-      await expect(page.getByText('Zitierdatum')).toHaveValue('')
-      await page.getByText('Datum des Inkrafttretens *').fill('02.02.1970')
-      await expect(page.getByText('Datum des Inkrafttretens *')).toHaveValue('02.02.1970')
-
       await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveCount(1)
       await page.getByText('Datum des Ausserkrafttretens').fill('thatshouldnotwork')
       await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
@@ -65,6 +58,35 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     })
   })
+
+  test(
+    'Inkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload',
+    { tag: ['@RISDEV-6301'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens')
+      await expect(inkrafttretedatumElement).toHaveCount(1)
+
+      // when
+      await inkrafttretedatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(inkrafttretedatumElement).toHaveValue('')
+
+      // when
+      await inkrafttretedatumElement.fill('02.02.1970')
+      await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+    },
+  )
 
   test(
     'Zitierdatum: invalid date cannot be entered, valid date can be entered and persists through a reload',
