@@ -54,6 +54,45 @@ test.describe('RubrikenPage - Formatdaten', () => {
   })
 
   test(
+    'Aktenzeichen: Can be entered, checkbox checked and both persist through a reload',
+    { tag: ['@RISDEV-6303'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const aktenzeichenElement = page.getByText('Aktenzeichen *')
+      await expect(aktenzeichenElement).toHaveCount(2)
+
+      // when
+      await aktenzeichenElement.first().fill('Az1')
+      await aktenzeichenElement.first().press('Enter')
+      await aktenzeichenElement.first().fill('Az2')
+      await aktenzeichenElement.first().press('Enter')
+      // then
+      // Created elements are list elements (<li>) so we need to select them explicitly
+      await expect(page.getByText('Az1')).toHaveCount(1)
+      await expect(page.getByText('Az2')).toHaveCount(1)
+
+      // TODO: separate that?
+      await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
+      // when
+      await page.getByText('Kein Aktenzeichen').check()
+      // then
+      await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
+
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(page.getByText('Az1')).toHaveCount(1)
+      await expect(page.getByText('Az2')).toHaveCount(1)
+      await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
+    },
+  )
+
+  test(
     'Ausserkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload',
     { tag: ['@RISDEV-6302'] },
     async ({ page }) => {
