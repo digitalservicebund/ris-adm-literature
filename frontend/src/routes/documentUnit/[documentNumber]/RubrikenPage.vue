@@ -90,7 +90,12 @@ const dokumenttyp = computed({
   },
 })
 
-const dokumenttypZusatz = ref()
+const dokumenttypZusatz = computed({
+  get: () => store.documentUnit!.dokumenttypZusatz,
+  set: (newValue) => {
+    store.documentUnit!.dokumenttypZusatz = newValue
+  },
+})
 </script>
 
 <template>
