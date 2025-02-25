@@ -1,27 +1,29 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage - Gliederung', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.route('/api/documentation-units/KSNR054920707', async (route) => {
-      const json = {
-        documentNumber: 'KSNR054920707',
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        json: null,
-      }
-      await route.fulfill({ json })
-    })
-  })
+  test(
+    'Gliederung can be entered and persists a reload',
+    { tag: ['@RISDEV-6047', '@RISDEV-6304'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
 
-  test('Enter Gliederung', { tag: ['@RISDEV-6047'] }, async ({ page }) => {
-    await page.goto('/documentUnit/KSNR054920707/fundstellen')
-    await page.getByText('Rubriken').click()
+      const gliederungEditor = page.getByTestId('Gliederung Editor')
+      await expect(gliederungEditor).toHaveCount(1)
 
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
+      // when
+      await gliederungEditor.click()
+      await page.keyboard.insertText('Test 123')
+      // then
+      await expect(page.getByText('Test 123')).toHaveCount(1)
 
-    const gliederungEditor = page.getByTestId('Gliederung Editor')
-    await expect(gliederungEditor).toHaveCount(1)
-    await gliederungEditor.click()
-    await page.keyboard.insertText('Test 123')
-    await expect(page.getByText('Test 123')).toHaveCount(1)
-  })
+      // when
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(page.getByText('Test 123')).toHaveCount(1)
+    },
+  )
 })
