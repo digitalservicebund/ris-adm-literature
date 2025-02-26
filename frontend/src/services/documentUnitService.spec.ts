@@ -6,21 +6,6 @@ import { type DocumentUnit } from '@/domain/documentUnit'
 import { type DocumentUnitResponse } from '@/domain/documentUnitResponse'
 
 describe('documentUnitService', () => {
-  it('appends correct error message if status 500', async () => {
-    // given
-    vi.spyOn(HttpClient, 'get').mockResolvedValue({
-      status: 500,
-      data: 'foo',
-    })
-
-    // when
-    const result = await service.getByDocumentNumber('XXXXXX')
-
-    // then
-    expect(result.error?.title).toEqual('Dokumentationseinheit konnte nicht geladen werden.')
-    expect(result.data).toBeUndefined()
-  })
-
   it('returns correct documentation unit if exist', async () => {
     // given
     const documentUnit: DocumentUnit = {
@@ -45,6 +30,36 @@ describe('documentUnitService', () => {
     expect(result.data?.id).toEqual('8de5e4a0-6b67-4d65-98db-efe877a260c4')
     expect(result.data?.documentNumber).toEqual('KSNR054920707')
     expect(result.error).toBeUndefined()
+  })
+
+  it('server error on finding a documentation unit - access not allowed', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 403,
+      data: 'foo',
+    })
+
+    // when
+    const result = await service.getByDocumentNumber('XXXXXX')
+
+    // then
+    expect(result.error?.title).toEqual('Diese Dokumentationseinheit existiert nicht oder Sie haben keine Berechtigung.')
+    expect(result.data).toBeUndefined()
+  })
+
+  it('server error on finding a documentation unit - ', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 500,
+      data: 'foo',
+    })
+
+    // when
+    const result = await service.getByDocumentNumber('XXXXXX')
+
+    // then
+    expect(result.error?.title).toEqual('Dokumentationseinheit konnte nicht geladen werden.')
+    expect(result.data).toBeUndefined()
   })
 
   it('create new returns a new documentation unit', async () => {
@@ -182,6 +197,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
+      activeCitations: []
     }
 
     // when
