@@ -25,23 +25,26 @@ class DocumentationUnitPersistenceServiceTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR000000002");
     documentationUnitEntity.setJson("\"abc\":false");
-    given(documentationUnitRepository.findByDocumentNumber("KSNR000000002"))
-      .willReturn(Optional.of(documentationUnitEntity));
+    given(documentationUnitRepository.findByDocumentNumber("KSNR000000002")).willReturn(
+      Optional.of(documentationUnitEntity)
+    );
 
     // when
     Optional<DocumentationUnit> documentationUnit =
       documentationUnitPersistenceService.findByDocumentNumber("KSNR000000002");
 
     // then
-    assertThat(documentationUnit)
-      .hasValueSatisfying(actual -> assertThat(actual.json()).isEqualTo("\"abc\":false"));
+    assertThat(documentationUnit).hasValueSatisfying(actual ->
+      assertThat(actual.json()).isEqualTo("\"abc\":false")
+    );
   }
 
   @Test
   void findByDocumentNumber_notFound() {
     // given
-    given(documentationUnitRepository.findByDocumentNumber("KSNR000000002"))
-      .willReturn(Optional.empty());
+    given(documentationUnitRepository.findByDocumentNumber("KSNR000000002")).willReturn(
+      Optional.empty()
+    );
 
     // when
     Optional<DocumentationUnit> documentationUnit =

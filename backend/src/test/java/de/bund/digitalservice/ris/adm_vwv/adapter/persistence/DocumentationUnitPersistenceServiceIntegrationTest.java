@@ -14,12 +14,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({ TestcontainersConfiguration.class, DocumentationUnitPersistenceService.class })
-@Transactional
+@Import(
+  {
+    TestcontainersConfiguration.class,
+    DocumentationUnitPersistenceService.class,
+    DocumentationUnitCreationService.class,
+  }
+)
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired
@@ -34,7 +38,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     Year thisYear = Year.now();
     documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
-    documentationUnitEntity.setYear(thisYear);
     documentationUnitEntity.setJson("{\"test\":\"content\"");
     entityManager.persistAndFlush(documentationUnitEntity);
 
@@ -58,8 +61,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnit documentationUnit = documentationUnitPersistenceService.create();
 
     // then
-    assertThat(entityManager.find(DocumentationUnitEntity.class, documentationUnit.id()))
-      .isNotNull();
+    assertThat(
+      entityManager.find(DocumentationUnitEntity.class, documentationUnit.id())
+    ).isNotNull();
   }
 
   @Test
@@ -68,7 +72,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     Year thisYear = Year.now();
     documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
-    documentationUnitEntity.setYear(thisYear);
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when

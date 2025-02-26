@@ -1,9 +1,9 @@
-// import { createTestingPinia } from '@pinia/testing'
+import { createTestingPinia } from '@pinia/testing'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import KeywordsComponent from '@/components/KeyWords.vue'
 import { describe, expect, test, vi } from 'vitest'
-// import DocumentUnit from "@/domain/documentUnit"
+import type { DocumentUnit } from '@/domain/documentUnit'
 
 const scrollIntoViewMock = vi.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
@@ -14,29 +14,23 @@ function renderComponent(keywords?: string[]) {
   return {
     user,
     ...render(KeywordsComponent, {
-      props: {
-        keywords: keywords ?? [],
-      },
       global: {
-        //     plugins: [
-        //       [
-        //         createTestingPinia({
-        //           initialState: {
-        //             docunitStore: {
-        //               documentUnit: new DocumentUnit("foo", {
-        //                 documentNumber: "1234567891234",
-        //                 contentRelatedIndexing: {
-        //                   keywords: keywords ?? [],
-        //                 },
-        //               }),
-        //             },
-        //           },
-        //         }),
-        //       ],
-        //     ],
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    documentNumber: '1234567891234',
+                    keywords: keywords ?? [],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
         stubs: { routerLink: { template: '<a><slot/></a>' } },
       },
-      // }),
     }),
   }
 }

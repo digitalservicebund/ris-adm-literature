@@ -45,7 +45,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       .filter({ hasText: 'Arbeitsrecht' })
       .click()
     // then
-    await page.getByRole('button', { name: 'Fertig' })
+    await expect(page.getByRole('button', { name: 'Fertig' })).toHaveCount(1)
     await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
 
     //when

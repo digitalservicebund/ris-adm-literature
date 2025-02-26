@@ -1,26 +1,20 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import ListInput from './input/listinput/ListInput.vue'
-// import { useDocumentUnitStore } from "@/stores/documentUnitStore"
+import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 
 const emit = defineEmits<{
   reset: []
 }>()
 
-const props = defineProps({
-  keywords: [],
+const store = useDocumentUnitStore()
+
+const keywords = computed({
+  get: () => store.documentUnit!.keywords ?? [],
+  set: (newValues: string[]) => {
+    store.documentUnit!.keywords = newValues
+  },
 })
-
-const keywords = ref(props.keywords)
-
-// const store = useDocumentUnitStore()
-
-// const keywords = computed({
-//   get: () => store.documentUnit!.contentRelatedIndexing.keywords ?? [],
-//   set: (newValues: string[]) => {
-//     store.documentUnit!.contentRelatedIndexing.keywords = newValues
-//   },
-// })
 </script>
 
 <template>

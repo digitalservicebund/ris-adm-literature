@@ -53,6 +53,7 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:$protobufVersion")
   implementation("org.bitbucket.b_c:jose4j:$joseVersion")
   implementation("com.squareup.okio:okio-jvm:$okioVersion")
+  implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.session:spring-session-core")
@@ -158,8 +159,8 @@ spotless {
     removeUnusedImports()
     prettier(
       mapOf(
-        "prettier" to "3.0.3",
-        "prettier-plugin-java" to "2.3.0",
+        "prettier" to "3.5.2",
+        "prettier-plugin-java" to "2.6.7",
       ),
     ).config(
       mapOf(

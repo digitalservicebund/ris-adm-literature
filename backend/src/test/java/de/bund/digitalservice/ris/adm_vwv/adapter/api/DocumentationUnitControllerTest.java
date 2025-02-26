@@ -1,9 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,8 +35,9 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"content\"}";
-    given(documentationUnitPort.findByDocumentNumber(documentNumber))
-      .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
+    given(documentationUnitPort.findByDocumentNumber(documentNumber)).willReturn(
+      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+    );
 
     // when
     mockMvc
@@ -70,8 +69,9 @@ class DocumentationUnitControllerTest {
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitPort.create())
-      .willReturn(new DocumentationUnit("KSNR054920707", id, null));
+    given(documentationUnitPort.create()).willReturn(
+      new DocumentationUnit("KSNR054920707", id, null)
+    );
 
     // when
     mockMvc
@@ -88,8 +88,9 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"content\"}";
-    given(documentationUnitPort.update(documentNumber, json))
-      .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
+    given(documentationUnitPort.update(documentNumber, json)).willReturn(
+      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+    );
 
     // when
     mockMvc

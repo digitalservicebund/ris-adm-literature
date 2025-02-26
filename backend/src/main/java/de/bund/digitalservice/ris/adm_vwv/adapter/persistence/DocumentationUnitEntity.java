@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.*;
-import java.time.Year;
 import java.util.UUID;
 import lombok.Data;
 
@@ -19,7 +18,4 @@ public class DocumentationUnitEntity {
 
   @Basic
   private String json;
-
-  @Basic(optional = false)
-  private Year year;
 }
