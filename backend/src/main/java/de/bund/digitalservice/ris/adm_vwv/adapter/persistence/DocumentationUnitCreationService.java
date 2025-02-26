@@ -1,11 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import java.time.Year;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Year;
 
 @Service
 @RequiredArgsConstructor

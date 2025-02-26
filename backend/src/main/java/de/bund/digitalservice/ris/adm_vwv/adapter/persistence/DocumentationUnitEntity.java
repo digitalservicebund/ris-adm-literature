@@ -1,9 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.UUID;
+import lombok.Data;
 
 @Entity
 @Data

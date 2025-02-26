@@ -1,15 +1,14 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 @SpringJUnitConfig
 class DocumentationUnitPersistenceServiceTest {

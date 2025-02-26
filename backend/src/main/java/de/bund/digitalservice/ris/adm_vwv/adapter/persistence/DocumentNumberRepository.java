@@ -2,12 +2,11 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.LockModeType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-
 import java.time.Year;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 
 interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, UUID> {
   /**

@@ -1,10 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.Year;
 import java.util.UUID;
+import lombok.Data;
 
 /**
  * Document number entity.
