@@ -15,20 +15,20 @@ function renderComponent(keywords?: string[]) {
     user,
     ...render(KeywordsComponent, {
       global: {
-            plugins: [
-              [
-                createTestingPinia({
-                  initialState: {
-                    docunitStore: {
-                      documentUnit: <DocumentUnit>{
-                        documentNumber: "1234567891234",
-                        keywords: keywords ?? [],
-                      },
-                    },
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    documentNumber: '1234567891234',
+                    keywords: keywords ?? [],
                   },
-                }),
-              ],
-            ],
+                },
+              },
+            }),
+          ],
+        ],
         stubs: { routerLink: { template: '<a><slot/></a>' } },
       },
     }),

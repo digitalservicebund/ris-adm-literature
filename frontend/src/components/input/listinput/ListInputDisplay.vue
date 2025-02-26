@@ -11,7 +11,7 @@ const emit = defineEmits<{
 }>()
 
 function normalize(str: string) {
-  return str.replace(/[^A-Z0-9]/ig, "_").toLowerCase()
+  return str.replace(/[^A-Z0-9]/gi, '_').toLowerCase()
 }
 </script>
 
