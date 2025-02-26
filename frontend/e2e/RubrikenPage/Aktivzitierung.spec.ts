@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('RubrikenPage - Aktivzitierung', () => {
+test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
   test.beforeEach(async ({ page }) => {
     await page.route('/api/documentation-units/KSNR054920707', async (route) => {
       const json = {
@@ -153,6 +153,43 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
 
       await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
       await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
+    },
+  )
+})
+
+test.describe('RubrikenPage - Aktivzitierung', () => {
+  test(
+    'Data of Aktivzitierung persists during reload when saved',
+    { tag: ['@RISDEV-6077'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.getByText('Rubriken').click()
+      const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
+      await expect(artDerZitierungInput).toHaveCount(1)
+
+      await artDerZitierungInput.click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'Ablehnung' })
+        .click()
+      await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'AG Aachen' })
+        .click()
+      await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
+      await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
+      await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+
+      // when
+      await page.getByText('Speichern').click()
+      await page.reload()
+
+      // then
+      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
     },
   )
 })
