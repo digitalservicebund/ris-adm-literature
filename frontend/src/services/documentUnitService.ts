@@ -7,6 +7,8 @@ import errorMessages from '@/i18n/errors.json'
 import httpClient from './httpClient'
 import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 import Reference from '@/domain/reference.ts'
+import ActiveReference from '@/domain/activeReference.ts'
+import SingleNorm from '@/domain/singleNorm.ts'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
@@ -35,6 +37,18 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
   documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
   documentUnit.activeCitations = documentUnit.activeCitations?.map(
     (activeCitation) => new ActiveCitation({ ...activeCitation }),
+  )
+  documentUnit.activeReferences = documentUnit.activeReferences?.map(
+    (activeReference) =>
+      new ActiveReference({
+        ...activeReference,
+        singleNorms: activeReference.singleNorms?.map(
+          (norm) =>
+            new SingleNorm({
+              ...norm,
+            }),
+        ),
+      }),
   )
   return documentUnit
 }

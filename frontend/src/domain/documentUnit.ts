@@ -2,6 +2,7 @@ import type DocumentationOffice from './documentationOffice'
 import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
+import type ActiveReference from '@/domain/activeReference.ts'
 
 export type DocumentType = {
   uuid?: string
@@ -35,4 +36,5 @@ export interface DocumentUnit {
   dokumenttyp?: DocumentType
   dokumenttypZusatz?: string
   activeCitations?: ActiveCitation[]
+  activeReferences?: ActiveReference[]
 }

@@ -14,6 +14,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
+      activeReferences: [],
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
@@ -161,6 +162,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
+      activeReferences: [],
     }
 
     // when
@@ -182,6 +184,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
+      activeReferences: [],
     }
 
     // when
@@ -203,6 +206,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
+      activeReferences: [],
     }
 
     // when
