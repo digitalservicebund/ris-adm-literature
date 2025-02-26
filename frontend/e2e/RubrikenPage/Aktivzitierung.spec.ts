@@ -164,7 +164,7 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
     async ({ page }) => {
       // given
       await page.goto('/')
-      await page.getByRole('button', {name: 'Neue Dokumentationseinheit'}).click()
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.getByText('Rubriken').click()
       const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
       await expect(artDerZitierungInput).toHaveCount(1)
