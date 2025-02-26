@@ -47,8 +47,13 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     RetryTemplate retryTemplate = RetryTemplate.builder()
       .retryOn(DataIntegrityViolationException.class)
       .build();
-    DocumentationUnit documentationUnit = retryTemplate.execute(_ -> documentationUnitCreationService.create());
-    log.info("New documentation unit created with document number: {}", documentationUnit.documentNumber());
+    DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
+      documentationUnitCreationService.create()
+    );
+    log.info(
+      "New documentation unit created with document number: {}",
+      documentationUnit.documentNumber()
+    );
     return documentationUnit;
   }
 

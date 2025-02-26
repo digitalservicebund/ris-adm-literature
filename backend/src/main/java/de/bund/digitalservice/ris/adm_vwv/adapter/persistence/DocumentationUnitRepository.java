@@ -8,5 +8,4 @@ import java.util.UUID;
 
 interface DocumentationUnitRepository extends JpaRepository<DocumentationUnitEntity, UUID> {
   Optional<DocumentationUnitEntity> findByDocumentNumber(@Nonnull String documentNumber);
-
 }

@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, UUID> {
-
   /**
    * Finds the current document number by the given year. The operation creates a pessimistic lock for the found
    * entity, so that concurrent threads have to wait until the transaction completes.

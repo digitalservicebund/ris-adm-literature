@@ -19,5 +19,4 @@ public class DocumentationUnitEntity {
 
   @Basic
   private String json;
-
 }

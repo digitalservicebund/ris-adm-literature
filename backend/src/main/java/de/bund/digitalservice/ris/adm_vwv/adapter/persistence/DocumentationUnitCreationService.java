@@ -18,12 +18,13 @@ class DocumentationUnitCreationService {
   public DocumentationUnit create() {
     // 1. Create or update the document number for this year
     Year thisYear = Year.now();
-    DocumentNumberEntity documentNumberEntity = documentNumberRepository.findByYear(thisYear)
-            .orElseGet(() -> {
-              DocumentNumberEntity newDocumentNumberEntity = new DocumentNumberEntity();
-              newDocumentNumberEntity.setYear(thisYear);
-              return newDocumentNumberEntity;
-            });
+    DocumentNumberEntity documentNumberEntity = documentNumberRepository
+      .findByYear(thisYear)
+      .orElseGet(() -> {
+        DocumentNumberEntity newDocumentNumberEntity = new DocumentNumberEntity();
+        newDocumentNumberEntity.setYear(thisYear);
+        return newDocumentNumberEntity;
+      });
     DocumentNumber documentNumber = new DocumentNumber(thisYear, documentNumberEntity.getLatest());
     String newDocumentNumber = documentNumber.create();
     documentNumberEntity.setLatest(newDocumentNumber);
