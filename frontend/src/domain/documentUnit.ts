@@ -21,7 +21,8 @@ export interface DocumentUnit {
   documentNumber: string
   references?: Reference[]
   fieldsOfLaw?: FieldOfLaw[]
-  langueberschrift?: string
+  langueberschrift?: string,
+  keywords?: string[]
   zitierdatum?: string
   inkrafttretedatum?: string
   ausserkrafttretedatum?: string

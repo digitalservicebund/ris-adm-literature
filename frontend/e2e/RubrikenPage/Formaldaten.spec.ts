@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('RubrikenPage - Formatdaten', () => {
   test.describe('With mocked responses', () => {
@@ -44,6 +44,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
@@ -68,6 +69,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const dokumenttypElement = page.getByText('Dokumenttyp *')
@@ -98,6 +100,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const normgeberElement = page.getByText('Normgeber')
@@ -125,6 +128,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const aktenzeichenElement = page.getByText('Aktenzeichen *')
@@ -163,6 +167,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
@@ -192,6 +197,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens')
@@ -221,6 +227,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
       const zitierdatumElement = page.getByText('Zitierdatum')

@@ -9,6 +9,10 @@ defineProps<{
 const emit = defineEmits<{
   toggle: []
 }>()
+
+function normalize(str: string) {
+  return str.replace(/[^A-Z0-9]/ig, "_").toLowerCase()
+}
 </script>
 
 <template>
@@ -24,7 +28,7 @@ const emit = defineEmits<{
         >
           <span
             class="overflow-hidden text-ellipsis whitespace-nowrap px-8 py-6 text-18"
-            :data-testid="`ListInputDisplay_${label}_${chip}`"
+            :data-testid="`ListInputDisplay_${normalize(label)}_${normalize(chip)}`"
             >{{ chip }}
           </span>
         </li>
