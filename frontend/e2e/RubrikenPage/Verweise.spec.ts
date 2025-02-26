@@ -35,7 +35,9 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
     await expect(page.getByRole('button', { name: 'Einzelnorm löschen' })).toHaveCount(0)
   })
 
-  test('Do show the button "Weitere Einzelnorm" and the "x" for deletion if "Norm" is selected', async ({ page }) => {
+  test('Do show the button "Weitere Einzelnorm" and the "x" for deletion if "Norm" is selected', async ({
+    page,
+  }) => {
     // given
     await page.goto('/documentUnit/KSNR054920707/rubriken')
     await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()

@@ -12,7 +12,7 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
     })
   })
 
-    test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
+  test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
     await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
     const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
@@ -154,5 +154,5 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
       await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
       await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
     },
-  )}
-)
+  )
+})
