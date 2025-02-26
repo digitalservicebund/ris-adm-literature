@@ -15,7 +15,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
-      activeReferences: [new ActiveReference({singleNorms: []})],
+      activeReferences: [new ActiveReference({ singleNorms: [] })],
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
