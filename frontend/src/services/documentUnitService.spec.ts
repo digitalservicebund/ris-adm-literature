@@ -13,6 +13,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
       references: [],
+      activeCitations: [],
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
@@ -159,6 +160,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
+      activeCitations: [],
     }
 
     // when
@@ -179,6 +181,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
+      activeCitations: [],
     }
 
     // when
