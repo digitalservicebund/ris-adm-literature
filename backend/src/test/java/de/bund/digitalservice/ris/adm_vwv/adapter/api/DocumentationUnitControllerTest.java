@@ -1,17 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +11,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = DocumentationUnitController.class)
 @Import(SecurityConfiguration.class)
@@ -37,8 +36,9 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"content\"}";
-    given(documentationUnitPort.findByDocumentNumber(documentNumber))
-      .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
+    given(documentationUnitPort.findByDocumentNumber(documentNumber)).willReturn(
+      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+    );
 
     // when
     mockMvc
@@ -70,8 +70,9 @@ class DocumentationUnitControllerTest {
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitPort.create())
-      .willReturn(new DocumentationUnit("KSNR054920707", id, null));
+    given(documentationUnitPort.create()).willReturn(
+      new DocumentationUnit("KSNR054920707", id, null)
+    );
 
     // when
     mockMvc
@@ -88,8 +89,9 @@ class DocumentationUnitControllerTest {
     // given
     String documentNumber = "KSNR054920707";
     String json = "{\"test\":\"content\"}";
-    given(documentationUnitPort.update(documentNumber, json))
-      .willReturn(Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json)));
+    given(documentationUnitPort.update(documentNumber, json)).willReturn(
+      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+    );
 
     // when
     mockMvc
