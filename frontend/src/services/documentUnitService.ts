@@ -33,7 +33,9 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
     (reference) => new Reference({ ...reference }),
   )
   documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
-
+  documentUnit.activeCitations = documentUnit.activeCitations?.map(
+    (activeCitation) => new ActiveCitation({ ...activeCitation }),
+  )
   return documentUnit
 }
 

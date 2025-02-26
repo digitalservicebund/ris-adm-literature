@@ -4,12 +4,14 @@ import ActiveCitationInput from '@/components/ActiveCitationInput.vue'
 import ActiveCitationSummary from '@/components/ActiveCitationSummary.vue'
 import EditableList from '@/components/EditableList.vue'
 import ActiveCitation from '@/domain/activeCitation'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
 
-const actualActiveCitations = defineModel<ActiveCitation[]>({ default: [] })
+const store = useDocumentUnitStore()
+
 const activeCitations = computed({
-  get: () => actualActiveCitations.value,
-  set: async (newValues) => {
-    actualActiveCitations.value = newValues
+  get: () => store.documentUnit!.activeCitations ?? [],
+  set: (newValues: ActiveCitation[]) => {
+    store.documentUnit!.activeCitations = newValues
   },
 })
 

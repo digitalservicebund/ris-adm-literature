@@ -1,6 +1,7 @@
 import type DocumentationOffice from './documentationOffice'
 import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
+import ActiveCitation from './activeCitation'
 
 export type DocumentType = {
   uuid?: string
@@ -17,8 +18,8 @@ export type Court = {
 }
 
 export interface DocumentUnit {
-  id: string
-  documentNumber: string
+  readonly id: string
+  readonly documentNumber: string
   references?: Reference[]
   fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string
@@ -30,7 +31,8 @@ export interface DocumentUnit {
   kurzreferat?: string
   aktenzeichen?: string[]
   noAktenzeichen?: boolean
-  normgeber?: boolean
-  dokumenttyp?: string
+  normgeber?: Court
+  dokumenttyp?: DocumentType
   dokumenttypZusatz?: string
+  activeCitations?: ActiveCitation[]
 }
