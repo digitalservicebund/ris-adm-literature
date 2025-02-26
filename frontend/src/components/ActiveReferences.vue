@@ -6,12 +6,14 @@ import ActiveReferenceInput from '@/components/ActiveReferenceInput.vue'
 import ActiveReferenceSummary from '@/components/ActiveReferenceSummary.vue'
 import SingleNorm from '@/domain/singleNorm.ts'
 import dayjs from 'dayjs'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
 
-const activeReferencesModel = defineModel<ActiveReference[]>({ default: [] })
+const store = useDocumentUnitStore()
+
 const activeReferences = computed({
-  get: () => activeReferencesModel.value,
+  get: () => store.documentUnit!.activeReferences,
   set: async (newValues) => {
-    activeReferencesModel.value = newValues?.filter((value) => {
+    store.documentUnit!.activeReferences = newValues?.filter((value) => {
       removeDuplicateSingleNorms(value as ActiveReference)
       return true // Keep the value in the norms array
     })

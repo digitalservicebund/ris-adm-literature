@@ -8,6 +8,8 @@ import ActiveReference, {
   ActiveReferenceDocumentType,
   ActiveReferenceType,
 } from '@/domain/activeReference.ts'
+import { createTestingPinia } from '@pinia/testing'
+import type { DocumentUnit } from '@/domain/documentUnit.ts'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()
@@ -15,8 +17,22 @@ function renderComponent(activeReferences?: ActiveReference[]) {
   return {
     user,
     ...render(ActiveReferences, {
-      props: {
-        modelValue: activeReferences,
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    documentNumber: '1234567891234',
+                    activeReferences: activeReferences ?? [],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
+        stubs: { routerLink: { template: '<a><slot/></a>' } },
       },
     }),
   }

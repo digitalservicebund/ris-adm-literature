@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('RubrikenPage - Aktivverweise (on Verwaltungsvorschrift)', () => {
+test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked routes', () => {
   test.beforeEach(async ({ page }) => {
     await page.route('/api/documentation-units/KSNR054920707', async (route) => {
       const json = {
@@ -132,4 +132,45 @@ test.describe('RubrikenPage - Aktivverweise (on Verwaltungsvorschrift)', () => {
       await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' })).toHaveCount(0)
     },
   )
+})
+
+test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
+  test('Verweise persist during reload when saved', { tag: ['@RISDEV-6308'] }, async ({ page }) => {
+    // given
+    await page.goto('/')
+    await page.getByText('Neue Dokumentationseinheit').click()
+    await page.getByText('Rubriken').click()
+    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    const referenceTypeElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'Art der Verweisung' })
+    await expect(referenceTypeElement).toHaveCount(1)
+    const activeReferenceElement = page
+      .getByTestId('activeReferences')
+      .getByRole('textbox', { name: 'RIS-Abkürzung' })
+    await expect(activeReferenceElement).toHaveCount(1)
+
+    await expect(page.getByRole('radio', { name: 'Norm auswählen' })).toHaveCount(1)
+    await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(
+      1,
+    )
+
+    // when
+    await referenceTypeElement.click()
+    await expect(page.getByText('Neuregelung')).toBeVisible()
+    await page.getByText('Neuregelung').click()
+    await activeReferenceElement.click()
+    await expect(page.getByText('KVLG')).toBeVisible()
+    await page.getByText('KVLG').click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Verweis speichern' }).click()
+    await expect(page.getByText('Neuregelung | KVLG, § 2')).toHaveCount(1)
+
+    // when
+    await page.getByText('Speichern').click()
+    await page.reload()
+
+    // then
+    await expect(page.getByText('Neuregelung | KVLG, § 2')).toHaveCount(1)
+  })
 })
