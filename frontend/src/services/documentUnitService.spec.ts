@@ -4,6 +4,7 @@ import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import { type DocumentUnit } from '@/domain/documentUnit'
 import { type DocumentUnitResponse } from '@/domain/documentUnitResponse'
+import ActiveReference from '@/domain/activeReference.ts'
 
 describe('documentUnitService', () => {
   it('returns correct documentation unit if exist', async () => {
@@ -14,7 +15,7 @@ describe('documentUnitService', () => {
       fieldsOfLaw: [],
       references: [],
       activeCitations: [],
-      activeReferences: [],
+      activeReferences: [new ActiveReference({singleNorms: []})],
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
