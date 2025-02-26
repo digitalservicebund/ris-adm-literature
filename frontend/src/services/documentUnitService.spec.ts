@@ -43,7 +43,9 @@ describe('documentUnitService', () => {
     const result = await service.getByDocumentNumber('XXXXXX')
 
     // then
-    expect(result.error?.title).toEqual('Diese Dokumentationseinheit existiert nicht oder Sie haben keine Berechtigung.')
+    expect(result.error?.title).toEqual(
+      'Diese Dokumentationseinheit existiert nicht oder Sie haben keine Berechtigung.',
+    )
     expect(result.data).toBeUndefined()
   })
 
@@ -197,7 +199,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-      activeCitations: []
+      activeCitations: [],
     }
 
     // when
