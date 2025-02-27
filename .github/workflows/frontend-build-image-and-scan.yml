@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: sanity check
-        run: echo ${{ secrets.SENTRY_AUTH_TOKEN}} | tail -c 5
       - name: Build frontend image
         run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
         env:
