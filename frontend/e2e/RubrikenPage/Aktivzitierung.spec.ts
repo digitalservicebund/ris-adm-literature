@@ -160,7 +160,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 test.describe('RubrikenPage - Aktivzitierung', () => {
   test(
     'Data of Aktivzitierung persists during reload when saved',
-    { tag: ['@RISDEV-6077'] },
+    { tag: ['@RISDEV-6309'] },
     async ({ page }) => {
       // given
       await page.goto('/')
