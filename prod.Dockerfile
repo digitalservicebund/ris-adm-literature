@@ -17,9 +17,6 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN\
     SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
     npm run build
 
-RUN cat /run/secrets/SENTRY_AUTH_TOKEN | tail -c 3
-# RUN SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} npm run build
-
 FROM cgr.dev/chainguard/nginx:latest@sha256:391d7234a6648dabd2fafa3cfa2326a026e6e85e029a7963199990d4bc437819
 EXPOSE 8081
 COPY --from=builder /frontend/dist /var/lib/nginx/html
