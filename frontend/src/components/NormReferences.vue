@@ -55,7 +55,6 @@ const defaultValue = new NormReference() as NormReference
 <template>
   <div aria-label="Norm">
     <h2 id="norms" class="ds-label-01-bold mb-16">Normenkette</h2>
-    {{ store }}
     <div class="flex flex-row">
       <div class="flex-1">
         <EditableList
