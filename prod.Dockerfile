@@ -17,12 +17,15 @@ RUN npm ci --omit=dev
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
 
+
 # build app for production with minification
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    if [ -f /run/secrets/SENTRY_AUTH_TOKEN ]; then \
-        SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN); \
-    fi; \
-    npm run build
+if [ -f /run/secrets/SENTRY_AUTH_TOKEN ]; then \
+SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN); \
+fi; \
+npm run build
+
+RUN cat /run/secrets/SENTRY_AUTH_TOKEN | tail -c 3
 # RUN SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} npm run build
 
 FROM cgr.dev/chainguard/nginx:latest@sha256:391d7234a6648dabd2fafa3cfa2326a026e6e85e029a7963199990d4bc437819
