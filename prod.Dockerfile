@@ -1,10 +1,5 @@
 FROM node:23.9.0 AS builder
 
-# check parameter
-RUN echo ${SENTRY_AUTH_TOKEN} | tail -c 5
-RUN echo $${SENTRY_AUTH_TOKEN} | tail -c 5
-RUN echo $SENTRY_AUTH_TOKEN | tail -c 5
-
 # make the 'app' folder the current working directory
 WORKDIR /frontend
 
@@ -17,13 +12,16 @@ RUN npm ci --omit=dev
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
 
+# # build app for production with minification
+# RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+# if [ -f /run/secrets/SENTRY_AUTH_TOKEN ]; then \
+# SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN); \
+# fi; \
+# npm run build
 
-# build app for production with minification
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-if [ -f /run/secrets/SENTRY_AUTH_TOKEN ]; then \
-SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN); \
-fi; \
-npm run build
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN\
+    SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
+    npm run build
 
 RUN cat /run/secrets/SENTRY_AUTH_TOKEN | tail -c 3
 # RUN SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} npm run build
