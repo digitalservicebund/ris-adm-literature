@@ -140,6 +140,8 @@ jobs:
         run: |
           curl -fsSL https://get.docker.com -o get-docker.sh
           sh get-docker.sh
+      # - name: Start docker
+      #   run: service docker start
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -150,7 +152,7 @@ jobs:
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
       - name: Start backend
         working-directory: ./backend
-        run: ./gradlew bootRun # we'll wait for the backend to respond right before running the tests
+        run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
       # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
