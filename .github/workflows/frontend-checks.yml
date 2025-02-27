@@ -134,8 +134,12 @@ jobs:
         run: |
           apt update
           apt install -y sudo
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v4
+      # - name: Set up Docker
+      #   uses: docker/setup-docker-action@v4
+      - name: Install docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
