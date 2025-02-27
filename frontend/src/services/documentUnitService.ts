@@ -52,16 +52,16 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
       }),
   )
   documentUnit.normReferences = documentUnit.normReferences?.map(
-    (normReference) => 
+    (normReference) =>
       new NormReference({
-        ... normReference,
+        ...normReference,
         singleNorms: normReference.singleNorms?.map(
-          (norm) => 
+          (norm) =>
             new SingleNorm({
-              ...norm
-            })
-        )
-      })
+              ...norm,
+            }),
+        ),
+      }),
   )
   return documentUnit
 }
