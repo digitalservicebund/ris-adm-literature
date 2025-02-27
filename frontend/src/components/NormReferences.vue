@@ -7,12 +7,14 @@ import NormReferenceSummary from '@/components/NormReferenceSummary.vue'
 import NormReference from '@/domain/normReference'
 
 import SingleNorm from '@/domain/singleNorm'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 
-const actualNorms = defineModel<NormReference[]>({ default: [] })
-const norms = computed({
-  get: () => actualNorms.value,
+const store = useDocumentUnitStore()
+
+const normReferences = computed({
+  get: () => store.documentUnit!.normReferences,
   set: async (newValues) => {
-    actualNorms.value = newValues?.filter((value) => {
+    store.documentUnit!.normReferences = newValues?.filter((value) => {
       removeDuplicateSingleNorms(value as NormReference)
       return true // Keep the value in the norms array
     })
@@ -53,10 +55,11 @@ const defaultValue = new NormReference() as NormReference
 <template>
   <div aria-label="Norm">
     <h2 id="norms" class="ds-label-01-bold mb-16">Normenkette</h2>
+    {{ store }}
     <div class="flex flex-row">
       <div class="flex-1">
         <EditableList
-          v-model="norms"
+          v-model="normReferences"
           :default-value="defaultValue"
           :edit-component="NormReferenceInput"
           :summary-component="NormReferenceSummary"
