@@ -17,9 +17,8 @@ jobs:
       - name: sanity check
         run: echo ${{ secrets.SENTRY_AUTH_TOKEN}} | tail -c 5
       - name: Build frontend image
-        run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_DNS,env=SENTRY_DNS --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
+        run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
         env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Run Trivy vulnerability image scanner
         # Note: This scan is what is shown in the GitHub Security tab
