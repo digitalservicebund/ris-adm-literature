@@ -6,7 +6,6 @@ import DocumentUnitWrapper from './routes/documentUnit/[documentNumber].vue'
 import AbgabePage from './routes/documentUnit/[documentNumber]/AbgabePage.vue'
 import RubrikenPage from './routes/documentUnit/[documentNumber]/RubrikenPage.vue'
 import FundstellenPage from '@/routes/documentUnit/[documentNumber]/FundstellenPage.vue'
-import ThrowUnconditionally from './components/ThrowUnconditionally.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -56,12 +55,6 @@ const router = createRouter({
           component: AbgabePage,
         },
       ],
-    },
-    {
-      path: '/throwUnconditionally',
-      name: 'ThrowUncoditionally',
-      props: true,
-      component: ThrowUnconditionally,
     },
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
