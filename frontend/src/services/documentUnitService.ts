@@ -9,6 +9,7 @@ import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 import Reference from '@/domain/reference.ts'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
+import NormReference from '@/domain/normReference'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
@@ -49,6 +50,18 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
             }),
         ),
       }),
+  )
+  documentUnit.normReferences = documentUnit.normReferences?.map(
+    (normReference) => 
+      new NormReference({
+        ... normReference,
+        singleNorms: normReference.singleNorms?.map(
+          (norm) => 
+            new SingleNorm({
+              ...norm
+            })
+        )
+      })
   )
   return documentUnit
 }
