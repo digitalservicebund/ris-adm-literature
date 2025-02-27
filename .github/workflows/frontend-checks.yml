@@ -126,6 +126,8 @@ jobs:
       image: mcr.microsoft.com/playwright/java:v1.50.0-noble
       # options: --user 1001
     steps:
+      - name: whoami
+        run: whoami
       - uses: actions/checkout@v4
       # setup backend
       - name: Install sudo
