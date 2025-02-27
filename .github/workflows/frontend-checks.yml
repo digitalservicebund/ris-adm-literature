@@ -130,8 +130,8 @@ jobs:
       # setup backend
       - name: Install sudo
         run: |
-          sudo apt update
-          sudo apt install -y sudo
+          apt update
+          apt install -y sudo
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
       - name: Set up JDK
