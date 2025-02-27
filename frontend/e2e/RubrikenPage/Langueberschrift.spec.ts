@@ -9,7 +9,7 @@ test.describe('Rubriken page: Langüberschrift', () => {
       const myLangueberschrift = 'my persisting Langüberschrift'
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForLoadState('load')
+      await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
       await page.getByText('Amtl. Langüberschrift').fill(myLangueberschrift)
