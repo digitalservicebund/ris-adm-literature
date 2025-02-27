@@ -130,10 +130,10 @@ jobs:
         run: whoami
       - uses: actions/checkout@v4
       # setup backend
-      - name: Install sudo
+      - name: Install curl
         run: |
           apt update
-          apt install -y sudo
+          apt install -y curl
       # - name: Set up Docker
       #   uses: docker/setup-docker-action@v4
       - name: Install docker
