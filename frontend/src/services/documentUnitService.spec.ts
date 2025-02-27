@@ -6,6 +6,7 @@ import { type DocumentUnit } from '@/domain/documentUnit'
 import { type DocumentUnitResponse } from '@/domain/documentUnitResponse'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
+import NormReference from '@/domain/normReference'
 
 describe('documentUnitService', () => {
   it('returns correct documentation unit if exist', async () => {
@@ -19,6 +20,9 @@ describe('documentUnitService', () => {
       activeReferences: [
         new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
       ],
+      // this line does not make sense for the test, but otherwise the mapping of the response data does not get test coverage
+      // (it does, actually, in an e2e test, but our tooling does not get it)
+      normReferences: [new NormReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 7' })] })],
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
