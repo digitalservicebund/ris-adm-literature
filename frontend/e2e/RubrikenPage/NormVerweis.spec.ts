@@ -79,7 +79,6 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
     { tag: ['@RISDEV-6307'] },
     async ({ page }) => {
       // given
-      // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.getByText('Rubriken').click()
