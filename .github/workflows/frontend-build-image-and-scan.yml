@@ -17,13 +17,6 @@ jobs:
       - name: sanity check
         run: echo ${{ secrets.SENTRY_AUTH_TOKEN}} | tail -c 5
       - name: Build frontend image
-        # run: docker build --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN --file prod.Dockerfile --tag ${{ inputs.image-ref }} .
-        # env:
-        #   # SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        #   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        #     - name: Build docker image
-
-
         run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_DNS,env=SENTRY_DNS --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
