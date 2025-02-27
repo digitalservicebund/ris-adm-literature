@@ -41,9 +41,9 @@ const inkrafttretedatum = computed({
 })
 
 const ausserkrafttretedatum = computed({
-  get: () => store.documentUnit!.inkrafttretedatum,
+  get: () => store.documentUnit!.ausserkrafttretedatum,
   set: (newValue) => {
-    store.documentUnit!.inkrafttretedatum = newValue
+    store.documentUnit!.ausserkrafttretedatum = newValue
   },
 })
 
