@@ -61,7 +61,7 @@ jobs:
           npm ci
         working-directory: ./frontend
       - name: Build
-        run: npm run build
+        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN}} npm run build
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
