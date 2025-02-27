@@ -191,7 +191,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Inkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload',
+    'Inkrafttretedatum: Invalid date cannot be entered, valid date can be entered and persists through a reload. Also: does not influence the ausserkrafttreten',
     { tag: ['@RISDEV-6301'] },
     async ({ page }) => {
       // given
@@ -211,6 +211,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // when
       await inkrafttretedatumElement.fill('02.02.1970')
       await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+      await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
 
       // when
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
