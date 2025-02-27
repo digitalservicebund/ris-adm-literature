@@ -150,7 +150,7 @@ jobs:
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
       - name: Start backend
         working-directory: ./backend
-        run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
+        run: ./gradlew bootRun # we'll wait for the backend to respond right before running the tests
       # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -165,23 +165,23 @@ jobs:
           path: |
             ./frontend/node_modules
           key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
-      - name: Get Playwright version
-        working-directory: ./frontend
-        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
-      - name: Cache browser binaries
-        id: cache-browser-binaries
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      - name: Install Playwright Browsers
-        working-directory: ./frontend
-        run: npx playwright install --with-deps
+      # - name: Install dependencies
+      #   if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     npm ci
+      #   working-directory: ./frontend
+      # - name: Get Playwright version
+      #   working-directory: ./frontend
+      #   run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      # - name: Cache browser binaries
+      #   id: cache-browser-binaries
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.cache/ms-playwright
+      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      # - name: Install Playwright Browsers
+      #   working-directory: ./frontend
+      #   run: npx playwright install --with-deps
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
