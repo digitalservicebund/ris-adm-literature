@@ -13,10 +13,10 @@ RUN npm ci --omit=dev
 COPY /frontend/. .
 
 # check parameter
-RUN echo $SENTRY_AUTH_TOKEN | tail -c 5
+RUN echo ${SENTRY_AUTH_TOKEN} | tail -c 5
 
 # build app for production with minification
-RUN npm run build
+RUN SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} npm run build
 
 FROM cgr.dev/chainguard/nginx:latest@sha256:391d7234a6648dabd2fafa3cfa2326a026e6e85e029a7963199990d4bc437819
 EXPOSE 8081
