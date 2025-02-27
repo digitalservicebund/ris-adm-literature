@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: sanity check
-        run: echo $${{ secrets.SENTRY_AUTH_TOKEN}} | tail -c 5
+        run: echo ${{ secrets.SENTRY_AUTH_TOKEN}} | tail -c 5
       - name: Build frontend image
         run: docker build --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN}} --file prod.Dockerfile --tag ${{ inputs.image-ref }} .
 
