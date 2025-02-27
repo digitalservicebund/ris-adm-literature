@@ -12,6 +12,9 @@ RUN npm ci --omit=dev
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
 
+# check parameter
+RUN echo $SENTRY_AUTH_TOKEN | tail -c 5
+
 # build app for production with minification
 RUN npm run build
 
