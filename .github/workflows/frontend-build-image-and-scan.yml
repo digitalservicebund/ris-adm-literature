@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Build frontend image
-        run: docker build --file prod.Dockerfile --tag ${{ inputs.image-ref }} .
-
+        run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Run Trivy vulnerability image scanner
         # Note: This scan is what is shown in the GitHub Security tab
         #       cf. step "Upload Trivy scan results to GitHub Security tab"

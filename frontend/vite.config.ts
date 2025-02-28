@@ -19,6 +19,7 @@ export default defineConfig({
     sentryVitePlugin({
       org: 'digitalservice',
       project: 'ris-adm-vwv',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
   ],
 
