@@ -142,12 +142,12 @@ jobs:
           sh get-docker.sh
       # - name: Start docker
       #   run: service docker start
-      # - name: Set up JDK
-      #   uses: actions/setup-java@v4
-      #   with:
-      #     java-version: "23.0"
-      #     distribution: "temurin"
-      #     cache: gradle
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
       - name: Setup and validate Gradle
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
       - name: Start backend
