@@ -3,7 +3,6 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
-import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,15 +42,5 @@ public class DocumentationUnitController {
       .update(documentNumber, documentationUnit.toString())
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
-  }
-
-  @GetMapping("api/documentation-units/sentry")
-  public String sentry() {
-    try {
-      throw new Exception("Test to verify sentry integration into backend.");
-    } catch (Exception e) {
-      Sentry.captureException(e);
-    }
-    return "Test";
   }
 }
