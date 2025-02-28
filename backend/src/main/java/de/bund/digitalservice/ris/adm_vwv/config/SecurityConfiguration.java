@@ -14,19 +14,20 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(authorize ->
-      authorize
-        .requestMatchers("/actuator/health/**")
-        .permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/swagger-ui/**")
-        .permitAll()
-        .requestMatchers("/api/documentation-units/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-    );
-    http.csrf(AbstractHttpConfigurer::disable);
-    http.cors(AbstractHttpConfigurer::disable);
-    return http.build();
+    return http
+      .authorizeHttpRequests(authorize ->
+        authorize
+          // @spotless:off
+          .requestMatchers(HttpMethod.HEAD, "/actuator/**").permitAll()
+          .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+          .requestMatchers("/api/swagger-ui/**").permitAll()
+          .requestMatchers("/api/documentation-units/**").permitAll()
+          // @spotless:on
+          .anyRequest()
+          .authenticated()
+      )
+      .csrf(AbstractHttpConfigurer::disable)
+      .cors(AbstractHttpConfigurer::disable)
+      .build();
   }
 }

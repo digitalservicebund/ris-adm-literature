@@ -157,6 +157,7 @@ spotless {
 
   java {
     removeUnusedImports()
+    toggleOffOn()
     prettier(
       mapOf(
         "prettier" to "3.5.2",
