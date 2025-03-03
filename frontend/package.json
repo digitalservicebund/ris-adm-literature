@@ -101,10 +101,10 @@
     "prettier": "^3.5.3",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.85.0",
-    "typescript": "~5.8.2",
     "vitest": "^3.0.7"
   },
   "overrides": {
+    "typescript": "5.8.2",
     "vite": {
       "esbuild": "0.25.0"
     }
