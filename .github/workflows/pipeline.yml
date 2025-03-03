@@ -124,7 +124,7 @@ jobs:
   # Automerge if dependabot branch and all tests passing
   #######################################
 
-  dependabot:
+  dependabot-auto-merge:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && ${{ !cancelled() && github.ref != 'refs/heads/main' }}
     needs:
