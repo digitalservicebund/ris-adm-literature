@@ -63,6 +63,7 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
         ),
       }),
   )
+  documentUnit.note = documentUnit.note || ''
   return documentUnit
 }
 

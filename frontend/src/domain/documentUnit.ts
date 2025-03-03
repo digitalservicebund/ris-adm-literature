@@ -39,4 +39,5 @@ export interface DocumentUnit {
   activeCitations?: ActiveCitation[]
   activeReferences?: ActiveReference[]
   normReferences?: NormReference[]
+  note: string
 }

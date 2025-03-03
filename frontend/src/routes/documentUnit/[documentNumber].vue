@@ -11,6 +11,7 @@ import { type ResponseError } from '@/services/httpClient'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
 import type { DocumentUnit } from '@/domain/documentUnit'
+import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 
 const props = defineProps<{
   documentNumber: string
@@ -77,6 +78,10 @@ onMounted(async () => {
           class="h-full w-full flex-grow"
           :class="route.path.includes('preview') ? 'flex-row bg-white' : 'flex-row-reverse'"
         >
+          <ExtraContentSidePanel
+            v-if="documentUnit && !route.path.includes('abgabe')"
+            :document-unit="documentUnit"
+          ></ExtraContentSidePanel>
           <router-view />
         </FlexContainer>
       </div>
