@@ -135,25 +135,18 @@ describe('ExtraContentSidePanel', () => {
   })
 
   describe('Select panel content', () => {
-    test('initially open note without note and no attachments', async () => {
+    test('initially open note without note', async () => {
       renderComponent()
       screen.getByLabelText('Seitenpanel öffnen').click()
 
       expect(await screen.findByLabelText('Notiz Eingabefeld')).toBeVisible()
     })
 
-    test('initially open note with note and no attachments', async () => {
+    test('initially open note with note', async () => {
       renderComponent({ note: 'some note' })
 
       expect(await screen.findByDisplayValue('some note')).toBeVisible()
     })
 
-    test('initially open note with note and with attachments', async () => {
-      renderComponent({
-        note: 'some note',
-      })
-
-      expect(await screen.findByDisplayValue('some note')).toBeVisible()
-    })
   })
 })

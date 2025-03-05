@@ -8,6 +8,7 @@ import TextAreaInput from '@/components/input/TextAreaInput.vue'
 import SideToggle, { OpeningDirection } from '@/components/SideToggle.vue'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import { useExtraContentSidePanelStore } from '@/stores/extraContentSidePanelStore'
+import { useRoute } from 'vue-router'
 
 const props = defineProps<{
   documentUnit?: DocumentUnit
@@ -18,6 +19,8 @@ const props = defineProps<{
 }>()
 
 const store = useExtraContentSidePanelStore()
+
+const route = useRoute()
 
 const hasNote = computed(() => {
   return !!props.documentUnit!.note && props.documentUnit!.note.length > 0
@@ -44,7 +47,11 @@ function togglePanel(expand?: boolean): boolean {
  * Otherwise, it is collapsed by default.
  */
 onMounted(() => {
-  store.isExpanded = hasNote.value || false
+  if (route.query.showNotePanel) {
+    store.isExpanded = route.query.showNotePanel === "true"
+  } else {
+    store.isExpanded = hasNote.value || false
+  }
 })
 </script>
 

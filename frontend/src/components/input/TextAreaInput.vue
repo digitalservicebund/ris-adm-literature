@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { type ValidationError } from '@/components/input/types'
+import { useTextareaAutosize } from '@vueuse/core'
 
 type Props = {
   id: string
@@ -45,46 +46,17 @@ const localValue = computed({
  * Autosizing                                         *
  * -------------------------------------------------- */
 
-const textareaRef = ref<HTMLTextAreaElement | null>(null)
-
-const height = ref('auto')
-
-async function determineTextareaHeight() {
-  if (!props.autosize || !textareaRef.value) return
-
-  // We first need to reset the height to auto, so that the scrollHeight
-  // is not limited by the current height. Then wait for the next tick
-  // so that the textarea has time to resize.
-  height.value = 'auto'
-  await nextTick()
-
-  const { borderTopWidth, borderBottomWidth } = getComputedStyle(textareaRef.value as Element)
-
-  const borderTop = parseInt(borderTopWidth)
-  const borderBottom = parseInt(borderBottomWidth)
-
-  const calculatedHeight = textareaRef.value.scrollHeight + borderTop + borderBottom
-  if (calculatedHeight > 0) {
-    height.value = `${calculatedHeight}px`
-  }
-}
-
-watchEffect(() => {
-  determineTextareaHeight().catch(() => {
-    // left blank intentionally
-  })
-})
-
-watch(localValue, async () => {
-  await determineTextareaHeight()
-})
+const { textarea, input } = props.autosize ? useTextareaAutosize({
+  styleProp: 'height',
+  input: localValue,
+}) : { textarea: ref(<HTMLTextAreaElement | null>null), input: localValue }
 
 /* -------------------------------------------------- *
  * Public interface                                   *
  * -------------------------------------------------- */
 
 function focus() {
-  textareaRef.value?.focus()
+  textarea.value?.focus()
 }
 
 defineExpose({ focus })
@@ -93,24 +65,24 @@ defineExpose({ focus })
 <template>
   <textarea
     :id="id"
-    ref="textareaRef"
-    v-model="localValue"
+    ref="textarea"
+    v-model="input"
     :aria-label="ariaLabel"
-    class="ds-input h-unset py-12"
+    class="ds-input h-unset py-12 resize-none"
     :class="{
       'has-error': hasError,
       'px-16': size === 'small',
       'px-20': size === 'medium',
       'px-24': size === 'regular',
       [customClasses]: true,
-      [$style.textarea]: true,
+      [$style.textarea]: true
     }"
     :placeholder="placeholder"
     :readonly="readOnly"
     :rows="rows"
     :tabindex="readOnly ? -1 : ($attrs.tabindex as number)"
     @input="$emit('update:validationError', undefined)"
-    @keypress.enter.stop="() => {}"
+    @keydown.enter.stop="() => {}"
   ></textarea>
   <!-- No-op keypress handler for preventing other enter-based event handlers such as
   submitting data from firing when users are trying to insert newlines  -->
@@ -118,7 +90,6 @@ defineExpose({ focus })
 
 <style module>
 .textarea {
-  height: v-bind(height);
   resize: v-bind(resize);
 }
 </style>

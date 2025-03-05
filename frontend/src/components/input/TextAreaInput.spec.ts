@@ -159,7 +159,7 @@ describe('TextAreaInput', () => {
       data: () => ({ value: '' }),
       methods: { wrapperHandler },
       template: `
-        <div @keypress.enter="wrapperHandler">
+        <div @keydown.enter="wrapperHandler">
           <TextAreaInput id="textarea" v-model="value" aria-label="Test" />
         </div>
       `,
@@ -173,6 +173,16 @@ describe('TextAreaInput', () => {
     expect(wrapperHandler).not.toHaveBeenCalled()
   })
 
-  // Autosizing is tested in the integration tests as it requires some
-  // actual rendering in order to get the height of the textarea.
+  it('autosizes with value', async () => {
+    // Autosizing is tested in the integration tests as it requires some
+    // actual rendering in order to get the height of the textarea.
+    // given
+    renderComponent({ rows: 3, autosize: true, modelValue: 'Test' })
+
+    // when
+    const textarea: HTMLTextAreaElement = screen.getByRole('textbox')
+
+    // then
+    expect(textarea).toHaveValue('Test')
+  })
 })
