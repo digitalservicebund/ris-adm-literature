@@ -440,4 +440,59 @@ describe('ActiveReferenceInput', () => {
     expect(emitted('cancelEdit')).toBeTruthy()
     expect(emitted('removeEntry')).toBeTruthy()
   })
+
+  it('removes multiple single norms on change to Verwaltungsvorschrift', async () => {
+    // given
+    const { user } = renderComponent()
+
+    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
+    await user.type(referenceTypeField, 'A')
+    const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
+    await user.click(referenceTypeDropdownItems[0])
+
+    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+    await user.type(abbreviationField, 'SGB')
+    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
+    await user.click(dropdownItems[0])
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Einzelnorm' }))
+    await user.click(screen.getByRole('button', { name: 'Weitere Einzelnorm' }))
+
+    let index = 0
+    for (const dateOfVersionInput of screen.getAllByLabelText('Fassungsdatum der Norm')) {
+      await user.type(dateOfVersionInput, `0${++index}.01.2025`)
+    }
+
+    // when
+    await user.click(screen.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }))
+
+    // then
+    expect(screen.getByDisplayValue(`01.01.2025`)).toBeInTheDocument()
+    expect(screen.queryByDisplayValue('02.01.2025')).not.toBeInTheDocument()
+    expect(screen.queryByDisplayValue('03.01.2025')).not.toBeInTheDocument()
+  })
+
+  it('Restore single norm on change to Verwaltungsvorschrift after removing all single norms', async () => {
+    // given
+    const { user } = renderComponent()
+    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
+    await user.type(referenceTypeField, 'A')
+    const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
+    await user.click(referenceTypeDropdownItems[0])
+    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+    await user.type(abbreviationField, 'SGB')
+    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
+    await user.click(dropdownItems[0])
+    await user.click(screen.getByRole('button', { name: 'Einzelnorm löschen' }))
+
+    // when
+    await user.click(screen.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }))
+
+    // then
+    expect(screen.getByLabelText('Fassungsdatum der Norm')).toBeInTheDocument()
+  })
 })
