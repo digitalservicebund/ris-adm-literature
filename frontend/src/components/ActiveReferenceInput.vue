@@ -181,6 +181,17 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
   }
 }
 
+function removeMultipleSingleNorms() {
+  if (singleNorms.value.length > 0) {
+    // Remove all single norms expect the first one for administrative regulations
+    singleNorms.value.splice(1, singleNorms.value.length)
+  } else {
+    // As there is no 'Weitere Einzelnorm' button for administrative regulation on switch we have to
+    // add one entry ro restore the UI.
+    addSingleNormEntry()
+  }
+}
+
 /**
  * This updates the local norm with the updated model value from the props. It also stores a copy of the last saved
  * model value, because the local norm might change in between. When the new model value is empty, all validation
@@ -234,6 +245,7 @@ watch(
               aria-label="Verwaltungsvorschrift auswählen"
               size="small"
               :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
+              @click="removeMultipleSingleNorms"
             />
           </InputField>
         </div>

@@ -20,7 +20,7 @@
     "lint:check": "eslint .",
     "format": "prettier --write src/ e2e/",
     "format:check": "prettier --check src/ e2e/",
-    "audit:licences": "license-checker --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
+    "audit:licences": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",
@@ -31,7 +31,7 @@
     "@iconify-json/ic": "^1.2.2",
     "@iconify-json/material-symbols": "^1.2.15",
     "@iconify-json/mdi": "^1.2.2",
-    "@sentry/vite-plugin": "^3.2.1",
+    "@sentry/vite-plugin": "^3.2.2",
     "@sentry/vue": "^9.3.0",
     "@tiptap/extension-blockquote": "^2.11.5",
     "@tiptap/extension-bold": "^2.11.5",
@@ -58,7 +58,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
-    "@vueuse/core": "^12.7.0",
+    "@vueuse/core": "^12.8.1",
     "autoprefixer": "^10.4.20",
     "axios": "^1.8.1",
     "dayjs": "^1.11.13",
@@ -96,7 +96,7 @@
     "eslint-plugin-vue": "^10.0.0",
     "vue-eslint-parser": "^10.1.1",
     "jsdom": "^26.0.0",
-    "license-checker": "^25.0.1",
+    "license-checker-rseidelsohn": "^4.4.2",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
