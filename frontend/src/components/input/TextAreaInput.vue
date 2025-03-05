@@ -46,10 +46,12 @@ const localValue = computed({
  * Autosizing                                         *
  * -------------------------------------------------- */
 
-const { textarea, input } = props.autosize ? useTextareaAutosize({
-  styleProp: 'height',
-  input: localValue,
-}) : { textarea: ref(<HTMLTextAreaElement | null>null), input: localValue }
+const { textarea, input } = props.autosize
+  ? useTextareaAutosize({
+      styleProp: 'height',
+      input: localValue,
+    })
+  : { textarea: ref(<HTMLTextAreaElement | null>null), input: localValue }
 
 /* -------------------------------------------------- *
  * Public interface                                   *
@@ -75,7 +77,7 @@ defineExpose({ focus })
       'px-20': size === 'medium',
       'px-24': size === 'regular',
       [customClasses]: true,
-      [$style.textarea]: true
+      [$style.textarea]: true,
     }"
     :placeholder="placeholder"
     :readonly="readOnly"

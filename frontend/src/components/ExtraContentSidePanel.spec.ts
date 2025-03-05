@@ -147,6 +147,5 @@ describe('ExtraContentSidePanel', () => {
 
       expect(await screen.findByDisplayValue('some note')).toBeVisible()
     })
-
   })
 })

@@ -48,7 +48,7 @@ function togglePanel(expand?: boolean): boolean {
  */
 onMounted(() => {
   if (route.query.showNotePanel) {
-    store.isExpanded = route.query.showNotePanel === "true"
+    store.isExpanded = route.query.showNotePanel === 'true'
   } else {
     store.isExpanded = hasNote.value || false
   }
