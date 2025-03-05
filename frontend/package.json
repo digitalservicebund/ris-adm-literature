@@ -20,7 +20,7 @@
     "lint:check": "eslint .",
     "format": "prettier --write src/ e2e/",
     "format:check": "prettier --check src/ e2e/",
-    "audit:licences": "license-checker --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
+    "audit:licences": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv"
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",
@@ -95,7 +95,7 @@
     "eslint-plugin-testing-library": "^7.1.1",
     "eslint-plugin-vue": "^9.30.0",
     "jsdom": "^26.0.0",
-    "license-checker": "^25.0.1",
+    "license-checker-rseidelsohn": "^4.4.2",
     "pinia": "^3.0.1",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
