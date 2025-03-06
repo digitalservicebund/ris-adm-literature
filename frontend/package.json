@@ -58,7 +58,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
-    "@vueuse/core": "^12.8.1",
+    "@vueuse/core": "^12.8.2",
     "autoprefixer": "^10.4.20",
     "axios": "^1.8.1",
     "dayjs": "^1.11.13",
