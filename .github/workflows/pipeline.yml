@@ -126,7 +126,7 @@ jobs:
 
   dependabot-auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' && ${{ !cancelled() && github.ref != 'refs/heads/main' }}
+    if: ${{ github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
     needs:
       - frontend-checks
       - backend-checks
@@ -138,6 +138,7 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Auto-merge Dependabot PRs except major version updates
+        continue-on-error: true
         if: steps.metadata.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
