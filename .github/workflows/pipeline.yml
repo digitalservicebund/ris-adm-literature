@@ -125,6 +125,7 @@ jobs:
   #######################################
 
   dependabot-auto-merge:
+    continue-on-error: true
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && ${{ !cancelled() && github.ref != 'refs/heads/main' }}
     needs:
