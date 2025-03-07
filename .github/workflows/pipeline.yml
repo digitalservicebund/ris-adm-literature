@@ -125,7 +125,6 @@ jobs:
   #######################################
 
   dependabot-auto-merge:
-    continue-on-error: true
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && ${{ !cancelled() && github.ref != 'refs/heads/main' }}
     needs:
@@ -133,6 +132,7 @@ jobs:
       - backend-checks
     steps:
       - name: Dependabot metadata
+        continue-on-error: true
         id: metadata
         uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
         with:
