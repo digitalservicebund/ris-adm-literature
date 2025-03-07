@@ -60,7 +60,7 @@
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^12.8.2",
     "autoprefixer": "^10.4.20",
-    "axios": "^1.8.1",
+    "axios": "^1.8.2",
     "dayjs": "^1.11.13",
     "immer": "^10.1.1",
     "maska": "^3.1.0",
