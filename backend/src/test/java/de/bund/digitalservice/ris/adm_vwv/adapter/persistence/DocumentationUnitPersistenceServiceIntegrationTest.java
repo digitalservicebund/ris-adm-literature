@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
@@ -14,16 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(
-  {
-    TestcontainersConfiguration.class,
-    DocumentationUnitPersistenceService.class,
-    DocumentationUnitCreationService.class,
-  }
-)
+@Import({ DocumentationUnitPersistenceService.class, DocumentationUnitCreationService.class })
+@ActiveProfiles("test")
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired
