@@ -11,9 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = DokumentTypController.class)
+@WebMvcTest(controllers = DocumentTypeController.class)
 @Import(SecurityConfiguration.class)
-class DokumentTypControllerTest {
+class DocumentTypeControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -28,9 +28,9 @@ class DokumentTypControllerTest {
       .perform(get("/api/wertetabellen/dokument-typ"))
       // then
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.[0].label").value("VW"))
-      .andExpect(jsonPath("$.[0].value").value("Verwaltungsvorschrift"))
-      .andExpect(jsonPath("$.[1].label").value("VR"))
-      .andExpect(jsonPath("$.[1].value").value("Verwaltungsrichtlinie"));
+      .andExpect(jsonPath("$.[0].abbreviation").value("VE"))
+      .andExpect(jsonPath("$.[0].name").value("Verwaltungsvereinbarung"))
+      .andExpect(jsonPath("$.[1].abbreviation").value("VR"))
+      .andExpect(jsonPath("$.[1].name").value("Verwaltungsregelung"));
   }
 }

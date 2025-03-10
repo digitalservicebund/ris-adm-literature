@@ -1,19 +1,19 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DokumentTyp;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DokumentTypController {
+public class DocumentTypeController {
 
   @GetMapping("api/wertetabellen/dokument-typ")
-  public ResponseEntity<List<DokumentTyp>> getDocumentTypes() {
+  public ResponseEntity<List<DocumentType>> getDocumentTypes() {
     var dokumentTypList = List.of(
-      new DokumentTyp("VW", "Verwaltungsvorschrift"),
-      new DokumentTyp("VR", "Verwaltungsrichtlinie")
+      new DocumentType("VE", "Verwaltungsvereinbarung"),
+      new DocumentType("VR", "Verwaltungsregelung")
     );
     return ResponseEntity.ok(dokumentTypList);
   }
