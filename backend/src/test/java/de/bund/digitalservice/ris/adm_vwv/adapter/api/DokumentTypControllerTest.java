@@ -19,7 +19,7 @@ class DokumentTypControllerTest {
   private MockMvc mockMvc;
 
   @Test
-  @DisplayName("Request GET returns HTTP 200 and documentTypes with label and value")
+  @DisplayName("Request GET returns HTTP 200 and two documentTypes with label and value")
   void getDocumentTypes() throws Exception {
     // given
 
@@ -28,8 +28,9 @@ class DokumentTypControllerTest {
       .perform(get("/api/wertetabellen/dokument-typ"))
       // then
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.documentTyp[0].label").value("VW"))
-      .andExpect(jsonPath("$.documentTyp[0].value").value("Verwaltungsvorschrift"));
-      // TODO: test for JSON content
+      .andExpect(jsonPath("$.[0].label").value("VW"))
+      .andExpect(jsonPath("$.[0].value").value("Verwaltungsvorschrift"))
+      .andExpect(jsonPath("$.[1].label").value("VR"))
+      .andExpect(jsonPath("$.[1].value").value("Verwaltungsrichtlinie"));
   }
 }
