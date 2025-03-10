@@ -76,6 +76,3 @@ echo "Create ris_wertetabellen role and schema"
 create_role_if_not_exists "ris_wertetabellen" "test"
 setup_schema_and_permissions "ris_adm_vwv" "ris_wertetabellen" "ris_wertetabellen"
 grant_read_access "ris_adm_vwv" "ris_wertetabellen" "test" "ris_wertetabellen"
-
-# Exit with success
-exit 0

@@ -6,6 +6,3 @@ set -o pipefail  # Catch errors in pipelines
 echo "Remove superuser role from test role and create new postgres superuser"
 psql -U ${POSTGRES_USER} "ris_adm_vwv" -ac "create user postgres login password 'postgres' superuser inherit createdb createrole replication bypassrls";
 psql -U ${POSTGRES_USER} "ris_adm_vwv" -ac "alter user test nosuperuser noinherit nobypassrls";
-
-# Exit with success
-exit 0
