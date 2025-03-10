@@ -7,13 +7,6 @@ set -o pipefail  # Catch errors in pipelines
 ### FUNCTIONS
 #################
 
-# Function to check if a database exists, if not create it
-create_database_if_not_exists() {
-    local db_name="$1"
-    [ "$(psql -U ${POSTGRES_USER} postgres -Atc "SELECT 1 FROM pg_database WHERE datname = '${db_name}';")" = "1" ] || \
-    psql -U ${POSTGRES_USER} postgres -ac "CREATE DATABASE ${db_name};"
-}
-
 # Function to check if a role exists, if not create it
 create_role_if_not_exists() {
     local role_name="$1"
@@ -60,27 +53,6 @@ grant_read_access() {
     psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT SELECT ON TABLES TO ${read_user};"
     psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT SELECT ON SEQUENCES TO ${read_user};"
     psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT EXECUTE ON FUNCTIONS TO ${read_user};"
-}
-
-# Grant full access to a schema for a specific user for objects created by another user
-grant_full_access() {
-    local db_name="$1"
-    local schema="$2"
-    local user="$3"
-    local owner_user="$4"
-
-    # Grant usage on the schema
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT USAGE ON SCHEMA ${schema} TO ${user};"
-
-    # Grant ALL on all existing tables, sequences, and functions
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL TABLES IN SCHEMA ${schema} TO ${user};"
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL SEQUENCES IN SCHEMA ${schema} TO ${user};"
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL FUNCTIONS IN SCHEMA ${schema} TO ${user};"
-
-    # Grant ALL on all future tables, sequences, and functions (default privileges)
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON TABLES TO ${user};"
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON SEQUENCES TO ${user};"
-    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON FUNCTIONS TO ${user};"
 }
 
 # Function to create a schema if it does not exist
