@@ -25,7 +25,7 @@ class DocumentTypeControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/wertetabellen/dokument-typ"))
+      .perform(get("/api/lookup-tables/document-types"))
       // then
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].abbreviation").value("VE"))
