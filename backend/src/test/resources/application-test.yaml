@@ -3,3 +3,6 @@ spring:
     compose:
       skip:
         in-tests: false
+      stop:
+        arguments: -v
+        command: down
