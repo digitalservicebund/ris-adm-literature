@@ -62,7 +62,7 @@ dependencies {
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
   compileOnly("org.projectlombok:lombok")
-  developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+  testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
   runtimeOnly("org.postgresql:postgresql")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
