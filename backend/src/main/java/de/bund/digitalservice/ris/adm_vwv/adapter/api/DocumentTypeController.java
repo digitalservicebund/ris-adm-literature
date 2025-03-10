@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DocumentTypeController {
 
-  @GetMapping("api/wertetabellen/dokument-typ")
+  @GetMapping("api/lookup-tables/document-types")
   public ResponseEntity<List<DocumentType>> getDocumentTypes() {
     var dokumentTypList = List.of(
       new DocumentType("VE", "Verwaltungsvereinbarung"),
