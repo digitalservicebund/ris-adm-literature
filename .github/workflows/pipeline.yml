@@ -11,7 +11,7 @@ on:
 
 jobs:
   ########################################
-  # Jobs operating on the whole repository
+  # Security
   ########################################
 
   security-jobs:
@@ -113,17 +113,27 @@ jobs:
       container-registry: ghcr.io
       image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  combine-e2e-html-report:
-    needs:
-      - frontend-checks
-    uses: ./.github/workflows/combine-e2e-reports.yml
-    secrets: inherit
-
   frontend-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
-      - combine-e2e-html-report
+      - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
+    secrets: inherit
+
+  #######################################
+  # e2e tests (frontend & backend)
+  #######################################
+
+  e2e-tests: # we may need to split off the report handling in order to avoid pushing two reports at once
+    uses: ./.github/workflows/e2e-tests.yml
+    secrets: inherit
+
+  e2e-push-reports-to-ris-reports:
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    needs:
+      - e2e-tests
+      - backend-push-reports-to-ris-reports # don't push at the same time
+    uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
     secrets: inherit
 
   #######################################
@@ -137,6 +147,7 @@ jobs:
     needs:
       - frontend-checks
       - backend-checks
+      - e2e-tests
     steps:
       - name: Dependabot metadata
         continue-on-error: true
@@ -160,6 +171,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     needs:
       - security-jobs
+      - e2e-tests
       - frontend-checks
       - frontend-build-image-and-scan
       - frontend-push-image-to-registry
