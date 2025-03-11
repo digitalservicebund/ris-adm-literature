@@ -1,11 +1,11 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import DocumentUnit from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import errorMessages from '@/i18n/errors.json'
 import documentUnitService from '@/services/documentUnitService'
 import { type ServiceResponse } from '@/services/httpClient'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 
 vi.mock('@/services/documentUnitService')
 
@@ -20,16 +20,18 @@ describe('useDocumentUnitStore', () => {
   describe('loadDocumentUnit', () => {
     it('loads a document unit successfully', async () => {
       // given
-      const documentUnit = new DocumentUnit({
+      const documentUnit: DocumentUnit = {
         id: '123',
         documentNumber: 'KSNR054920707',
         references: [],
-      })
-      const mockDocumentUnitResponse = new DocumentUnitResponse({
+        fieldsOfLaw: [],
+      }
+      const mockDocumentUnitResponse: DocumentUnitResponse = {
         id: '123',
         documentNumber: 'KSNR054920707',
         json: documentUnit,
-      })
+      }
+
       const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
         status: 200,
         data: mockDocumentUnitResponse,
@@ -76,16 +78,17 @@ describe('useDocumentUnitStore', () => {
 
   it('updates a document unit successfully', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnitForResponse: DocumentUnit = {
       id: '123',
       documentNumber: 'KSNR054920707',
       references: [],
-    })
-    const mockDocumentUnitResponse = new DocumentUnitResponse({
+      fieldsOfLaw: [],
+    }
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
-      json: documentUnit,
-    })
+      json: documentUnitForResponse,
+    }
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,
@@ -104,21 +107,22 @@ describe('useDocumentUnitStore', () => {
     // then
     expect(documentUnitServiceMock).toHaveBeenCalledOnce()
     expect(response).toEqual(serviceResponse)
-    expect(store.documentUnit).toEqual(documentUnit)
+    expect(store.documentUnit).toEqual(documentUnitForResponse)
   })
 
   it('updates a document unit fails', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: '123',
       documentNumber: 'KSNR054920707',
       references: [],
-    })
-    const mockDocumentUnitResponse = new DocumentUnitResponse({
+      fieldsOfLaw: [],
+    }
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
       json: documentUnit,
-    })
+    }
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,
@@ -143,16 +147,17 @@ describe('useDocumentUnitStore', () => {
 
   it('updates a document unit fails because access not allowed', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: '123',
       documentNumber: 'KSNR054920707',
       references: [],
-    })
-    const mockDocumentUnitResponse = new DocumentUnitResponse({
+      fieldsOfLaw: [],
+    }
+    const mockDocumentUnitResponse: DocumentUnitResponse = {
       id: '123',
       documentNumber: 'KSNR054920707',
       json: documentUnit,
-    })
+    }
     const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
       status: 200,
       data: mockDocumentUnitResponse,

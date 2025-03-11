@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField, { LabelPosition } from '@/components/input/InputField.vue'
@@ -15,18 +15,87 @@ import NormReferences from '@/components/NormReferences.vue'
 import ActiveReferences from '@/components/ActiveReferences.vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 
-const selectedCourt = ref()
-const zitierdatum = ref()
-const inkrafttretedatum = ref()
-const ausserkrafttretedatum = ref()
-const selectedDocumentType = ref()
-const documentTypeLongText = ref()
-const noAktenzeichen = ref()
-const noAktenzeichenId = 'noAktenzeichenID'
-const fileNumbers = ref()
-const outline = ref()
-const kurzreferat = ref()
+const store = useDocumentUnitStore()
+
+const langueberschrift = computed({
+  get: () => store.documentUnit!.langueberschrift,
+  set: (newValue) => {
+    store.documentUnit!.langueberschrift = newValue
+  },
+})
+
+const zitierdatum = computed({
+  get: () => store.documentUnit!.zitierdatum,
+  set: (newValue) => {
+    store.documentUnit!.zitierdatum = newValue
+  },
+})
+
+const inkrafttretedatum = computed({
+  get: () => store.documentUnit!.inkrafttretedatum,
+  set: (newValue) => {
+    store.documentUnit!.inkrafttretedatum = newValue
+  },
+})
+
+const ausserkrafttretedatum = computed({
+  get: () => store.documentUnit!.ausserkrafttretedatum,
+  set: (newValue) => {
+    store.documentUnit!.ausserkrafttretedatum = newValue
+  },
+})
+
+const gliederung = computed({
+  get: () => store.documentUnit!.gliederung,
+  set: (newValue) => {
+    store.documentUnit!.gliederung = newValue
+  },
+})
+
+const kurzreferat = computed({
+  get: () => store.documentUnit!.kurzreferat,
+  set: (newValue) => {
+    store.documentUnit!.kurzreferat = newValue
+  },
+})
+
+const aktenzeichen = computed({
+  get: () => store.documentUnit!.aktenzeichen,
+  set: (newValue) => {
+    store.documentUnit!.aktenzeichen = newValue
+  },
+})
+
+const noAktenzeichenElementId = 'noAktenzeichenID'
+const noAktenzeichen = computed({
+  get: () => store.documentUnit!.noAktenzeichen,
+  set: (newValue) => {
+    store.documentUnit!.noAktenzeichen = newValue
+  },
+})
+
+const normgeber = computed({
+  get: () => store.documentUnit!.normgeber,
+  set: (newValue) => {
+    store.documentUnit!.normgeber = newValue
+  },
+})
+
+const dokumenttyp = computed({
+  get: () => store.documentUnit!.dokumenttyp,
+  set: (newValue) => {
+    store.documentUnit!.dokumenttyp = newValue
+  },
+})
+
+const dokumenttypZusatz = computed({
+  get: () => store.documentUnit!.dokumenttypZusatz,
+  set: (newValue) => {
+    store.documentUnit!.dokumenttypZusatz = newValue
+  },
+})
 </script>
 
 <template>
@@ -45,7 +114,7 @@ const kurzreferat = ref()
         <InputField id="courtInput" label="Normgeber *" class="w-full">
           <ComboboxInput
             id="courtInput"
-            v-model="selectedCourt"
+            v-model="normgeber"
             aria-label="Normgeber"
             clear-on-choosing-item
             :has-error="false"
@@ -58,6 +127,7 @@ const kurzreferat = ref()
           <Textarea
             id="langue"
             class="w-full"
+            v-model="langueberschrift"
             v-bind="{
               autoResize: true,
             }"
@@ -69,7 +139,7 @@ const kurzreferat = ref()
         <InputField id="documentType" label="Dokumenttyp *">
           <ComboboxInput
             id="documentType"
-            v-model="selectedDocumentType"
+            v-model="dokumenttyp"
             aria-label="Dokumenttyp"
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
@@ -77,7 +147,7 @@ const kurzreferat = ref()
         <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
           <TextInput
             id="documentTypeLongText"
-            v-model="documentTypeLongText"
+            v-model="dokumenttypZusatz"
             ariaLabel="Dokumenttyp Zusatz"
             :has-error="false"
             size="medium"
@@ -114,23 +184,23 @@ const kurzreferat = ref()
 
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <InputField id="fileNumbers" label="Aktenzeichen *">
+          <InputField id="aktenzeichen" label="Aktenzeichen *">
             <ChipsInput
-              id="fileNumbers"
-              v-model="fileNumbers"
+              id="aktenzeichen"
+              v-model="aktenzeichen"
               aria-label="Aktenzeichen"
             ></ChipsInput>
           </InputField>
         </div>
         <div class="flex flex-col pt-[30px] w-full">
           <InputField
-            :id="noAktenzeichenId"
+            :id="noAktenzeichenElementId"
             label="kein Aktenzeichen"
             label-class="ds-label-01-reg"
             :label-position="LabelPosition.RIGHT"
           >
             <CheckboxInput
-              :id="noAktenzeichenId"
+              :id="noAktenzeichenElementId"
               v-model="noAktenzeichen"
               aria-label="Kein Aktenzeichen"
               size="small"
@@ -147,8 +217,8 @@ const kurzreferat = ref()
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">
           <TextEditorCategory
-            id="outline"
-            v-model="outline"
+            id="gliederung"
+            v-model="gliederung"
             :editable="true"
             label="Gliederung"
             :should-show-button="false"

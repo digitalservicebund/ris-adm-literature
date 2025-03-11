@@ -74,7 +74,7 @@ jobs:
           distribution: "temurin"
           cache: gradle
       - name: Build backend
-        run: ./gradlew build --profile -x test
+        run: ./gradlew build --profile -x test -x spotlessCheck
         working-directory: ./backend
       - name: Upload build performance report
         uses: actions/upload-artifact@v4
@@ -113,7 +113,7 @@ jobs:
         working-directory: ./backend
         run: ./gradlew sonar --info
       - name: Check SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@adc518a017eda8be0bb3f46f87cba5bddaa719f7
+        uses: sonarsource/sonarqube-quality-gate-action@df914238f99aa5d81f4490aeea80f205c7ed9600
         with:
           scanMetadataReportFile: backend/build/sonar/report-task.txt
         timeout-minutes: 3 # Force to fail step after specific time

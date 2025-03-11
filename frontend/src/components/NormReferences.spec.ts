@@ -5,6 +5,8 @@ import NormReferences from '@/components/NormReferences.vue'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import NormReference from '@/domain/normReference'
 import SingleNorm from '@/domain/singleNorm'
+import { createTestingPinia } from '@pinia/testing'
+import type { DocumentUnit } from '@/domain/documentUnit'
 
 function renderComponent(normReferences?: NormReference[]) {
   const user = userEvent.setup()
@@ -12,8 +14,22 @@ function renderComponent(normReferences?: NormReference[]) {
   return {
     user,
     ...render(NormReferences, {
-      props: {
-        modelValue: normReferences,
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    documentNumber: '1234567891234',
+                    normReferences: normReferences ?? [],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
+        stubs: { routerLink: { template: '<a><slot/></a>' } },
       },
     }),
   }

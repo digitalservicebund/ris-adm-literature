@@ -1,6 +1,9 @@
 import type DocumentationOffice from './documentationOffice'
 import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
+import ActiveCitation from './activeCitation'
+import type ActiveReference from '@/domain/activeReference.ts'
+import type NormReference from './normReference'
 
 export type DocumentType = {
   uuid?: string
@@ -16,17 +19,25 @@ export type Court = {
   responsibleDocOffice?: DocumentationOffice
 }
 
-export default class DocumentUnit {
+export interface DocumentUnit {
   readonly id: string
   readonly documentNumber: string
-  public references?: Reference[]
-  public fieldsOfLaw: FieldOfLaw[] = []
-
-  constructor(data: DocumentUnit) {
-    this.id = data.id
-    this.documentNumber = data.documentNumber
-    if (data.references)
-      this.references = data.references.map((reference) => new Reference({ ...reference }))
-    if (data.fieldsOfLaw) this.fieldsOfLaw = data.fieldsOfLaw
-  }
+  references?: Reference[]
+  fieldsOfLaw?: FieldOfLaw[]
+  langueberschrift?: string
+  keywords?: string[]
+  zitierdatum?: string
+  inkrafttretedatum?: string
+  ausserkrafttretedatum?: string
+  gliederung?: string
+  kurzreferat?: string
+  aktenzeichen?: string[]
+  noAktenzeichen?: boolean
+  normgeber?: Court
+  dokumenttyp?: DocumentType
+  dokumenttypZusatz?: string
+  activeCitations?: ActiveCitation[]
+  activeReferences?: ActiveReference[]
+  normReferences?: NormReference[]
+  note: string
 }

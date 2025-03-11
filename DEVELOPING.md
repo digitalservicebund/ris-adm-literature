@@ -1,6 +1,6 @@
 # Development / Tech Notes
 
-Here's what to know from a tech perspective.
+The application consists of a Vue/TypeScript frontend and a Java/SpringBoot backend.
 
 ## Git Hooks Setup 👈 (do not skip this!)
 
@@ -23,22 +23,25 @@ The git hook installed always executes lefthook which reads the configuration in
 
 ## Run Frontend with Docker
 
+Details on each can be found in
+
+- [./frontend/DEVELOPING.md](./frontend/DEVELOPING.md) and
+- [./backend/DEVELOPING.md](./backend/DEVELOPING.md)
+
+## Quick Start
+
+Start the backend (this requires a docker demon)
+
 ```bash
-docker build --tag ris-adm-vwv-frontend-local:dev .
-docker run -p 5173:5173 ris-adm-vwv-frontend-local:dev
-```
-
-Visit [http://localhost:5173/](http://localhost:5173/)
-
-## Run Frontend bare metal
-
-See [frontend/DEVELOPING.md](./frontend/DEVELOPING.md)
-
-## Run backend
-
-A docker container is started automatically with a local build.
-
-```shell
-cd backend
+cd ./backend
 ./gradlew bootRun
 ```
+
+Start the frontend in dev mode
+
+```bash
+cd ./frontend
+npm run dev
+```
+
+The last step will tell you where to point your browser in order to access the app.

@@ -112,64 +112,69 @@ onMounted(async () => {
 <template>
   <div class="mb-24 flex flex-col gap-24">
     <div class="gap-24 flex flex-row justify-between">
-      <InputField
-        id="singleNorm"
-        v-if="showSingleNormInput"
-        v-slot="slotProps"
-        label="Einzelnorm"
-        :validation-error="validationStore.getByField('singleNorm')"
-      >
-        <TextInput
+      <div v-if="showSingleNormInput" class="flex flex-col w-full">
+        <InputField
           id="singleNorm"
-          ref="singleNormInput"
-          v-model.trim="singleNorm.singleNorm"
-          ariaLabel="Einzelnorm der Norm"
-          :has-error="slotProps.hasError"
-          size="medium"
-          @blur="validateNorm"
-          @focus="validationStore.remove('singleNorm')"
-        ></TextInput>
-      </InputField>
-      <InputField
-        id="dateOfVersion"
-        v-slot="slotProps"
-        label="Fassungsdatum"
-        :validation-error="validationStore.getByField('dateOfVersion')"
-        @update:validation-error="
-          (validationError) => updateDateFormatValidation(validationError, 'dateOfVersion')
-        "
-      >
-        <DateInput
+          v-slot="slotProps"
+          label="Einzelnorm"
+          :validation-error="validationStore.getByField('singleNorm')"
+        >
+          <TextInput
+            id="singleNorm"
+            ref="singleNormInput"
+            v-model.trim="singleNorm.singleNorm"
+            ariaLabel="Einzelnorm der Norm"
+            :has-error="slotProps.hasError"
+            size="medium"
+            @blur="validateNorm"
+            @focus="validationStore.remove('singleNorm')"
+          ></TextInput>
+        </InputField>
+      </div>
+      <div class="flex flex-col" :class="!showSingleNormInput ? 'w-[calc(50%-10px)]' : 'w-full'">
+        <InputField
           id="dateOfVersion"
-          v-model="singleNorm.dateOfVersion"
-          ariaLabel="Fassungsdatum der Norm"
-          class="ds-input-medium"
-          :has-error="slotProps.hasError"
-          @focus="validationStore.remove('dateOfVersion')"
-          @update:validation-error="slotProps.updateValidationError"
-        />
-      </InputField>
-      <InputField
-        id="dateOfRelevance"
-        v-if="showDateOfRelevanceButton"
-        v-slot="slotProps"
-        label="Jahr"
-        :validation-error="validationStore.getByField('dateOfRelevance')"
-        @update:validation-error="
-          (validationError) => updateDateFormatValidation(validationError, 'dateOfRelevance')
-        "
-      >
-        <YearInput
+          v-slot="slotProps"
+          label="Fassungsdatum"
+          :validation-error="validationStore.getByField('dateOfVersion')"
+          @update:validation-error="
+            (validationError) => updateDateFormatValidation(validationError, 'dateOfVersion')
+          "
+        >
+          <DateInput
+            id="dateOfVersion"
+            v-model="singleNorm.dateOfVersion"
+            ariaLabel="Fassungsdatum der Norm"
+            class="ds-input-medium"
+            :has-error="slotProps.hasError"
+            @focus="validationStore.remove('dateOfVersion')"
+            @update:validation-error="slotProps.updateValidationError"
+          />
+        </InputField>
+      </div>
+      <div v-if="showDateOfRelevanceButton" class="flex flex-col w-full" :class="'test'">
+        <InputField
           id="dateOfRelevance"
-          v-model="singleNorm.dateOfRelevance"
-          aria-label="Jahr der Norm"
-          :has-error="slotProps.hasError"
-          size="medium"
-          @focus="validationStore.remove('dateOfRelevance')"
-          @update:validation-error="slotProps.updateValidationError"
-        />
-      </InputField>
+          v-slot="slotProps"
+          label="Jahr"
+          :validation-error="validationStore.getByField('dateOfRelevance')"
+          @update:validation-error="
+            (validationError) => updateDateFormatValidation(validationError, 'dateOfRelevance')
+          "
+        >
+          <YearInput
+            id="dateOfRelevance"
+            v-model="singleNorm.dateOfRelevance"
+            aria-label="Jahr der Norm"
+            :has-error="slotProps.hasError"
+            size="medium"
+            @focus="validationStore.remove('dateOfRelevance')"
+            @update:validation-error="slotProps.updateValidationError"
+          />
+        </InputField>
+      </div>
       <button
+        v-if="showSingleNormInput"
         aria-label="Einzelnorm löschen"
         class="mt-[25px] h-[50px] text-blue-800 focus:shadow-[inset_0_0_0_0.25rem] focus:shadow-blue-800 focus:outline-none"
         tabindex="0"

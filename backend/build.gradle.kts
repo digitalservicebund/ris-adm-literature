@@ -3,7 +3,7 @@ import com.github.jk1.license.filter.LicenseBundleNormalizer
 
 plugins {
   java
-  id("org.springframework.boot") version "3.4.2"
+  id("org.springframework.boot") version "3.4.3"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "6.0.1.5171"
@@ -31,10 +31,11 @@ repositories {
 }
 
 val kubernetesConfigVersion = "3.2.0"
-val protobufVersion = "4.29.3"
+val protobufVersion = "4.30.0"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
 val springdocVersion = "2.8.5"
+val sentryVersion = "8.3.0"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -53,12 +54,15 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:$protobufVersion")
   implementation("org.bitbucket.b_c:jose4j:$joseVersion")
   implementation("com.squareup.okio:okio-jvm:$okioVersion")
+  implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.session:spring-session-core")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
+  implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
+  implementation("io.sentry:sentry-logback:$sentryVersion")
   compileOnly("org.projectlombok:lombok")
-  developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+  testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
   runtimeOnly("org.postgresql:postgresql")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -156,10 +160,11 @@ spotless {
 
   java {
     removeUnusedImports()
+    toggleOffOn()
     prettier(
       mapOf(
-        "prettier" to "3.0.3",
-        "prettier-plugin-java" to "2.3.0",
+        "prettier" to "3.5.2",
+        "prettier-plugin-java" to "2.6.7",
       ),
     ).config(
       mapOf(

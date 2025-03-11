@@ -2,9 +2,9 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.bund.digitalservice.ris.adm_vwv.TestcontainersConfiguration;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import jakarta.persistence.TypedQuery;
+import java.time.Year;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({ TestcontainersConfiguration.class, DocumentationUnitPersistenceService.class })
-@Transactional
+@Import({ DocumentationUnitPersistenceService.class, DocumentationUnitCreationService.class })
+@ActiveProfiles("test")
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired
@@ -31,7 +31,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void findByDocumentNumber() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber("KSNR000000001");
+    Year thisYear = Year.now();
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
     documentationUnitEntity.setJson("{\"test\":\"content\"");
     entityManager.persistAndFlush(documentationUnitEntity);
 
@@ -55,15 +56,17 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnit documentationUnit = documentationUnitPersistenceService.create();
 
     // then
-    assertThat(entityManager.find(DocumentationUnitEntity.class, documentationUnit.id()))
-      .isNotNull();
+    assertThat(
+      entityManager.find(DocumentationUnitEntity.class, documentationUnit.id())
+    ).isNotNull();
   }
 
   @Test
   void update() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber("KSNR000000001");
+    Year thisYear = Year.now();
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when

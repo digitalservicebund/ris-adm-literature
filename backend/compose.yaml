@@ -9,3 +9,5 @@ services:
       - 'POSTGRES_USER=test'
     ports:
       - '5432:5432'
+    volumes:
+      - ./docker-initialization:/docker-entrypoint-initdb.d/

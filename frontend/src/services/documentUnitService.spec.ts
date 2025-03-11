@@ -2,11 +2,64 @@ import { describe, it, expect, vi } from 'vitest'
 import service from '@/services/documentUnitService'
 import HttpClient from '@/services/httpClient'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
-import DocumentUnit from '@/domain/documentUnit.ts'
-import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import { type DocumentUnit } from '@/domain/documentUnit'
+import { type DocumentUnitResponse } from '@/domain/documentUnitResponse'
+import ActiveReference from '@/domain/activeReference.ts'
+import SingleNorm from '@/domain/singleNorm.ts'
+import NormReference from '@/domain/normReference'
 
 describe('documentUnitService', () => {
-  it('appends correct error message if status 500', async () => {
+  it('returns correct documentation unit if exist', async () => {
+    // given
+    const documentUnit: DocumentUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      fieldsOfLaw: [],
+      references: [],
+      activeCitations: [],
+      activeReferences: [
+        new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
+      ],
+      // this line does not make sense for the test, but otherwise the mapping of the response data does not get test coverage
+      // (it does, actually, in an e2e test, but our tooling does not get it)
+      normReferences: [new NormReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 7' })] })],
+    }
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 200,
+      data: <DocumentUnitResponse>{
+        id: documentUnit.id,
+        documentNumber: documentUnit.documentNumber,
+        json: documentUnit,
+      },
+    })
+
+    // when
+    const result = await service.getByDocumentNumber('KSNR054920707')
+
+    // then
+    expect(result.data?.id).toEqual('8de5e4a0-6b67-4d65-98db-efe877a260c4')
+    expect(result.data?.documentNumber).toEqual('KSNR054920707')
+    expect(result.error).toBeUndefined()
+  })
+
+  it('server error on finding a documentation unit - access not allowed', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 403,
+      data: 'foo',
+    })
+
+    // when
+    const result = await service.getByDocumentNumber('XXXXXX')
+
+    // then
+    expect(result.error?.title).toEqual(
+      'Diese Dokumentationseinheit existiert nicht oder Sie haben keine Berechtigung.',
+    )
+    expect(result.data).toBeUndefined()
+  })
+
+  it('server error on finding a documentation unit - ', async () => {
     // given
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 500,
@@ -19,31 +72,6 @@ describe('documentUnitService', () => {
     // then
     expect(result.error?.title).toEqual('Dokumentationseinheit konnte nicht geladen werden.')
     expect(result.data).toBeUndefined()
-  })
-
-  it('returns correct documentation unit if exist', async () => {
-    // given
-    const documentUnit = new DocumentUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSNR054920707',
-      fieldsOfLaw: [],
-    })
-    vi.spyOn(HttpClient, 'get').mockResolvedValue({
-      status: 200,
-      data: new DocumentUnitResponse({
-        id: documentUnit.id,
-        documentNumber: documentUnit.documentNumber,
-        json: documentUnit,
-      }),
-    })
-
-    // when
-    const result = await service.getByDocumentNumber('KSNR054920707')
-
-    // then
-    expect(result.data?.id).toEqual('8de5e4a0-6b67-4d65-98db-efe877a260c4')
-    expect(result.data?.documentNumber).toEqual('KSNR054920707')
-    expect(result.error).toBeUndefined()
   })
 
   it('create new returns a new documentation unit', async () => {
@@ -80,19 +108,18 @@ describe('documentUnitService', () => {
 
   it('update given document unit', async () => {
     // given
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
-      fieldsOfLaw: [],
       references: [],
-    })
+    }
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
       status: 200,
-      data: new DocumentUnitResponse({
+      data: <DocumentUnitResponse>{
         id: documentUnit.id,
         documentNumber: documentUnit.documentNumber,
         json: documentUnit,
-      }),
+      },
     })
 
     // when
@@ -117,12 +144,12 @@ describe('documentUnitService', () => {
       status: 400,
       data: { errors: [{ code: 'test', message: 'Validation failed', instance: 'local' }] },
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -137,12 +164,14 @@ describe('documentUnitService', () => {
       status: 400,
       data: 'something really strange happened',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+      activeCitations: [],
+      activeReferences: [],
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -157,12 +186,14 @@ describe('documentUnitService', () => {
       status: 500,
       data: '',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+      activeCitations: [],
+      activeReferences: [],
+    }
 
     // when
     const response = await service.update(documentUnit)
@@ -177,12 +208,14 @@ describe('documentUnitService', () => {
       status: 403,
       data: '',
     })
-    const documentUnit = new DocumentUnit({
+    const documentUnit: DocumentUnit = {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
-    })
+      activeCitations: [],
+      activeReferences: [],
+    }
 
     // when
     const response = await service.update(documentUnit)

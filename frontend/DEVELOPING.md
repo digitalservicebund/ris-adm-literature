@@ -2,24 +2,35 @@
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
+### Type Support for `.vue` Imports in TS
 
 TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
 
-## Customize configuration
+## Customizing Configuration
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
+## Development Tooling
+
+### Installing Dependencies
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Compilation and Startup Variants
+
+#### Development Mode (Hot Reload)
 
 ```sh
 npm run dev
+```
+
+#### Production Build via a Docker Build
+
+```bash
+docker build --tag ris-adm-vwv-frontend-local:dev .
+docker run -p 5173:5173 ris-adm-vwv-frontend-local:dev
 ```
 
 ### Type-Check, Compile and Minify for Production
@@ -28,25 +39,25 @@ npm run dev
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Run Unit Tests With [Vitest](https://vitest.dev/)
 
 ```sh
 npm run test:unit
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/) and watch it
+### Continuously Run Unit Tests With [Vitest](https://vitest.dev/) in Watcher Mode
 
 ```sh
 npm run test:watch
 ```
 
-### Run Unit Test and check coverage with [Vitest](https://vitest.dev/)
+### Run Unit Test and Check Coverage with [Vitest](https://vitest.dev/)
 
 ```sh
 npm run test:coverage
 ```
 
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
+### Run End-to-End Tests With [Playwright](https://playwright.dev)
 
 ```sh
 # Install browsers for the first run
@@ -71,13 +82,13 @@ npm run test:e2e -- --ui
 npm run test:e2e -- --headed
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint With [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
 ```
 
-### Format with [Prettier](https://prettier.io)
+### Format With [Prettier](https://prettier.io)
 
 ```sh
 npm run format

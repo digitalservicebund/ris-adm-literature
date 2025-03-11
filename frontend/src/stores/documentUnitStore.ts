@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import DocumentUnit from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import documentUnitService from '@/services/documentUnitService'
 import type { FailedValidationServerResponse, ServiceResponse } from '@/services/httpClient'
 import errorMessages from '@/i18n/errors.json'
-import type DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 
 export const useDocumentUnitStore = defineStore('docunitStore', () => {
   const documentUnit = ref<DocumentUnit | undefined>(undefined)
@@ -35,6 +35,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
         error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
       }
     }
+
     const response = await documentUnitService.update(documentUnit.value)
 
     if (response.status === 200) {

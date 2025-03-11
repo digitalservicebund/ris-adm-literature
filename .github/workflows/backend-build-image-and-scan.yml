@@ -19,18 +19,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+
       - name: Build backend image
         working-directory: ./backend
         env:
           CONTAINER_REGISTRY: ${{ inputs.container-registry }}
           IMAGE_REF: ${{ inputs.image-ref }}
         run: ./gradlew bootBuildImage
+
       - name: Run Trivy vulnerability image scanner
         # Note: This scan is what is shown in the GitHub Security tab
         #       cf. step "Upload Trivy scan results to GitHub Security tab"
@@ -44,29 +47,38 @@ jobs:
           image-ref: ${{ inputs.image-ref }}
           format: "sarif"
           output: "trivy-image-results.sarif"
-      - name: Print trivy results (sarif format)
-        run: cat trivy-image-results.sarif
-      - name: Check trivy results
-        run: |
-          if grep -qE 'HIGH|CRITICAL' trivy-image-results.sarif; then
-            echo "Vulnerabilities found"
-            exit 1
-          else
-            echo "No significant vulnerabilities found"
-            exit 0
-          fi
+          exit-code: 0
+
       - name: Upload trivy results as artifact
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-trivy-image-results.sarif
           retention-days: 3
           path: trivy-image-results.sarif
+          if-no-files-found: error
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: ${{ always() && github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
+        if: ${{ github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
         with:
           sarif_file: "trivy-image-results.sarif"
+
+      - name: Print trivy results (sarif format)
+        run: cat trivy-image-results.sarif
+
+      - name: Fail build on High/Criticial Vulnerabilities
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        env:
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          image-ref: ${{ inputs.image-ref }}
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          # On a subsequent call to the action we know trivy is already installed so can skip this
+          skip-setup-trivy: true
+
       - name: Generate cosign vulnerability scan record
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
@@ -77,22 +89,29 @@ jobs:
         with:
           image-ref: ${{ inputs.image-ref }}
           format: "cosign-vuln"
-          output: "cosign-vuln-backend.json"
+          output: "backend-cosign-vuln.json"
+          exit-code: 0
+          # On a subsequent call to the action we know trivy is already installed so can skip this
+          skip-setup-trivy: true
+
       - name: Upload cosign vulnerability scan record
         uses: actions/upload-artifact@v4
         with:
-          name: "cosign-vuln-backend.json"
-          path: "cosign-vuln-backend.json"
+          name: "backend-cosign-vuln.json"
+          path: "backend-cosign-vuln.json"
           if-no-files-found: error
+
       - name: Save image
         run: |
           mkdir /tmp/images
           docker save -o /tmp/images/backend-image.tar ${{ inputs.image-ref }}
+
       - uses: actions/cache@v4
         with:
           path: /tmp/images
           key: docker-backend-images-cache-${{ inputs.run-id }}
           restore-keys: docker-backend-images-cache-${{ inputs.run-id }}
+
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions

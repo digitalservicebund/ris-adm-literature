@@ -1,11 +1,15 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import DocumentUnit from '@/domain/documentUnit'
+import type { DocumentUnit } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
 import httpClient from './httpClient'
-import DocumentUnitResponse from '@/domain/documentUnitResponse.ts'
+import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
+import Reference from '@/domain/reference.ts'
+import ActiveReference from '@/domain/activeReference.ts'
+import SingleNorm from '@/domain/singleNorm.ts'
+import NormReference from '@/domain/normReference'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
@@ -22,12 +26,45 @@ interface DocumentUnitService {
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 }
 
-const mapDocumentationUnit = (data: DocumentUnitResponse): DocumentUnit => {
-  return new DocumentUnit({
+function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
+  const documentUnit: DocumentUnit = {
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
-  })
+  }
+  documentUnit.references = documentUnit.references?.map(
+    (reference) => new Reference({ ...reference }),
+  )
+  documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
+  documentUnit.activeCitations = documentUnit.activeCitations?.map(
+    (activeCitation) => new ActiveCitation({ ...activeCitation }),
+  )
+  documentUnit.activeReferences = documentUnit.activeReferences?.map(
+    (activeReference) =>
+      new ActiveReference({
+        ...activeReference,
+        singleNorms: activeReference.singleNorms?.map(
+          (norm) =>
+            new SingleNorm({
+              ...norm,
+            }),
+        ),
+      }),
+  )
+  documentUnit.normReferences = documentUnit.normReferences?.map(
+    (normReference) =>
+      new NormReference({
+        ...normReference,
+        singleNorms: normReference.singleNorms?.map(
+          (norm) =>
+            new SingleNorm({
+              ...norm,
+            }),
+        ),
+      }),
+  )
+  documentUnit.note = documentUnit.note || ''
+  return documentUnit
 }
 
 const service: DocumentUnitService = {
@@ -44,7 +81,7 @@ const service: DocumentUnitService = {
             : errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
       }
     } else {
-      response.data.json = mapDocumentationUnit(response.data)
+      response.data.json = mapResponseDataToDocumentUnit(response.data)
     }
     return response
   },
@@ -60,9 +97,9 @@ const service: DocumentUnitService = {
         title: errorMessages.DOCUMENT_UNIT_CREATION_FAILED.title,
       }
     } else {
-      response.data = new DocumentUnitResponse({
+      response.data = <DocumentUnitResponse>{
         ...(response.data as DocumentUnitResponse),
-      })
+      }
     }
     return response
   },
@@ -84,7 +121,7 @@ const service: DocumentUnitService = {
 
     if (response.status == 200) {
       const data = response.data as DocumentUnitResponse
-      data.json = mapDocumentationUnit(data)
+      data.json = mapResponseDataToDocumentUnit(data)
     } else if (response.status >= 300) {
       response.error = {
         title:
