@@ -14,7 +14,11 @@ public class DocumentTypeController {
   private final LookupTablesPort lookupTablesPort;
 
   @GetMapping("api/lookup-tables/document-types")
-  public ResponseEntity<DocumentTypeResponse> getDocumentTypes(@RequestParam(required = false) String searchQuery) {
-    return ResponseEntity.ok(new DocumentTypeResponse(lookupTablesPort.findBySearchQuery(searchQuery)));
+  public ResponseEntity<DocumentTypeResponse> getDocumentTypes(
+    @RequestParam(required = false) String searchQuery
+  ) {
+    return ResponseEntity.ok(
+      new DocumentTypeResponse(lookupTablesPort.findBySearchQuery(searchQuery))
+    );
   }
 }

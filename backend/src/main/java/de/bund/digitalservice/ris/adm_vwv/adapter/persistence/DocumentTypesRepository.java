@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 interface DocumentTypesRepository extends JpaRepository<DocumentTypeEntity, UUID> {
   List<DocumentTypeEntity> findByAbbreviationLikeIgnoreCaseOrNameLikeIgnoreCase(
-    String abbreviation, String name
+    String abbreviation,
+    String name
   );
 }

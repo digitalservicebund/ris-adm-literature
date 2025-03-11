@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
