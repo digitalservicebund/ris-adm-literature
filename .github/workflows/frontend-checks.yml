@@ -191,7 +191,10 @@ jobs:
       #     name: frontend-e2e-test-report.json
       #     retention-days: 3
       #     path: frontend/frontend-e2e-test-report.json
-      - name: Upload e2e HTML test report
+      - name: Rename ${{ matrix.playwright-projects }} test report blob
+        working-directory: ./frontend
+        run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-projects }}
+      - name: Upload e2e ${{ matrix.playwright-projects }} test report blob
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -212,33 +215,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./frontend/.node-version
+          cache: npm
+          cache-dependency-path: ./frontend/package-lock.json
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: node-modules-cache
+        with:
+          path: |
+            ./frontend/node_modules
+          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+        working-directory: ./frontend
       - name: Download e2e chromium test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.chromium
-          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.chromium
+          path: tmp/e2e-test-report
       - name: Download e2e firefox test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.firefox
-          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.firefox
+          path: tmp/e2e-test-report
       - name: Download e2e webkit test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.webkit
-          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.webkit
+          path: tmp/e2e-test-report
       - name: Download e2e msedge test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.msedge
-          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.msedge
+          path: tmp/e2e-test-report
       - name: Filetree
         run: tree ./
       - name: Generate HTML report out of all the blobs
         working-directory: ./frontend
         run: |
-          npm ci
-          npx playwright merge-reports --reporter html ../tmp/e2e-test-report/
+          npx playwright merge-reports --reporter html tmp/e2e-test-report
       - name: Upload e2e HTML test report
         if: always()
         uses: actions/upload-artifact@v4
