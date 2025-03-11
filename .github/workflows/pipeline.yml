@@ -137,6 +137,7 @@ jobs:
   e2e-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
+      - e2e-compile-html-report
       - backend-push-reports-to-ris-reports # don't push at the same time
     uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
     secrets: inherit
