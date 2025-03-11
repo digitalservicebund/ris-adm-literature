@@ -184,13 +184,6 @@ jobs:
         working-directory: ./frontend
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-projects }}
-      # - name: Upload e2e JSON test report
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: frontend-e2e-test-report.json
-      #     retention-days: 3
-      #     path: frontend/frontend-e2e-test-report.json
       - name: Rename ${{ matrix.playwright-projects }} test report blob
         working-directory: ./frontend
         run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-projects }}.zip
@@ -209,7 +202,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  compile-e2e-HTML-report:
+  compile-e2e-HTML-report-frontend:
     needs:
       - e2e-test-frontend
     runs-on: ubuntu-latest
@@ -233,6 +226,7 @@ jobs:
         run: |
           npm ci
         working-directory: ./frontend
+      # download reports from project/browser matrix
       - name: Download e2e chromium test report blob
         uses: actions/download-artifact@v4
         with:
@@ -253,8 +247,7 @@ jobs:
         with:
           name: frontend-e2e-test-report.blob.msedge
           path: tmp/e2e-test-report
-      - name: Filetree
-        run: tree ./tmp
+      # end of downloads
       - name: Generate HTML report out of all the blobs
         working-directory: ./frontend
         run: |
@@ -267,7 +260,7 @@ jobs:
           retention-days: 3
           path: frontend/playwright-report
 
-  code-quality-check-with-sonarqube:
+  code-quality-check-with-sonarqube-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
