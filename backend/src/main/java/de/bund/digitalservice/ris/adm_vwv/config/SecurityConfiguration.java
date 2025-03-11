@@ -22,6 +22,7 @@ public class SecurityConfiguration {
           .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
           .requestMatchers("/api/swagger-ui/**").permitAll()
           .requestMatchers("/api/documentation-units/**").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/lookup-tables/**").permitAll()
           // @spotless:on
           .anyRequest()
           .authenticated()

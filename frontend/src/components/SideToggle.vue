@@ -56,7 +56,6 @@ export enum OpeningDirection {
     <ToolTip
       class="!absolute top-16 z-20"
       :class="buttonClasses"
-      :shortcut="shortcut"
       :text="props.label + ' ' + postFix"
     >
       <button

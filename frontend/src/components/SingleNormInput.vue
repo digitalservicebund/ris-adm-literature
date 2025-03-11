@@ -131,7 +131,7 @@ onMounted(async () => {
           ></TextInput>
         </InputField>
       </div>
-      <div class="flex flex-col w-full" :class="!showSingleNormInput ? 'w-[calc(50%-10px)]' : ''">
+      <div class="flex flex-col" :class="!showSingleNormInput ? 'w-[calc(50%-10px)]' : 'w-full'">
         <InputField
           id="dateOfVersion"
           v-slot="slotProps"
