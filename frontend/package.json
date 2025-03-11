@@ -103,7 +103,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.85.0",
     "typescript": "~5.8.2",
-    "typescript-eslint": "^8.26.0",
+    "typescript-eslint": "^8.26.1",
     "vitest": "^3.0.8"
   },
   "overrides": {
