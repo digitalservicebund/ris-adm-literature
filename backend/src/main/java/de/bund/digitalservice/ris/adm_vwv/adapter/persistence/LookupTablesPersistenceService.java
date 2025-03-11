@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePor
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +16,15 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final DocumentTypesRepository documentTypesRepository;
 
   @Override
-  public List<DocumentType> findBySearchQuery(@NotNull String searchQuery) {
-    return documentTypesRepository
-      .findByAbbreviationLikeIgnoreCaseOrNameLikeIgnoreCase(searchQuery, searchQuery)
+  public List<DocumentType> findBySearchQuery(String searchQuery) {
+    List<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchQuery)
+      ? documentTypesRepository.findAll()
+      : documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+        searchQuery,
+        searchQuery
+      );
+
+    return documentTypes
       .stream()
       .map(x -> new DocumentType(x.getAbbreviation(), x.getName()))
       .toList();
