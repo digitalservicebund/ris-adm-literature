@@ -20,6 +20,7 @@ coverage
 frontend-licence-report.csv
 frontend-unit-test-report.json
 frontend-e2e-test-report.json
+frontend-e2e-test-report.blob
 
 # Editor directories and files
 .vscode
