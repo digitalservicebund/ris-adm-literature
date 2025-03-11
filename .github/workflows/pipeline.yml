@@ -127,8 +127,7 @@ jobs:
   dependabot-auto-merge:
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && github.ref != 'refs/heads/main' }}
-    permissions:
-      pull-requests: write
+    permissions: write-all
     needs:
       - frontend-checks
       - backend-checks
