@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = DocumentTypeController.class)
@@ -19,7 +20,7 @@ class DocumentTypeControllerTest {
   private MockMvc mockMvc;
 
   @Test
-  @DisplayName("Request GET returns HTTP 200 and two documentTypes with label and value")
+  @DisplayName("GET returns HTTP 200 and a JSON with two documentTypes with abbreviation and name")
   void getDocumentTypes() throws Exception {
     // given
 
@@ -27,6 +28,7 @@ class DocumentTypeControllerTest {
     mockMvc
       .perform(get("/api/lookup-tables/document-types"))
       // then
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.[0].abbreviation").value("VE"))
       .andExpect(jsonPath("$.[0].name").value("Verwaltungsvereinbarung"))
