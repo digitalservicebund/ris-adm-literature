@@ -202,64 +202,6 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  compile-e2e-HTML-report-frontend:
-    needs:
-      - e2e-test-frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
-      # download reports from project/browser matrix
-      - name: Download e2e chromium test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.chromium
-          path: tmp/e2e-test-report
-      - name: Download e2e firefox test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.firefox
-          path: tmp/e2e-test-report
-      - name: Download e2e webkit test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.webkit
-          path: tmp/e2e-test-report
-      - name: Download e2e msedge test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.msedge
-          path: tmp/e2e-test-report
-      # end of downloads
-      - name: Generate HTML report out of all the blobs
-        working-directory: ./frontend
-        run: |
-          npx playwright merge-reports --reporter html ../tmp/e2e-test-report
-      - name: Upload e2e HTML test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-e2e-test-report-html
-          retention-days: 3
-          path: frontend/playwright-report
-
   code-quality-check-with-sonarqube-frontend:
     runs-on: ubuntu-latest
     steps:
