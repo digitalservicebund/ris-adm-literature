@@ -59,7 +59,7 @@
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.0.0",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "axios": "^1.8.2",
     "dayjs": "^1.11.13",
     "immer": "^10.1.1",
