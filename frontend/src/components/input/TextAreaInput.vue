@@ -11,7 +11,6 @@ type Props = {
   readOnly?: boolean
   autosize?: boolean
   resize?: 'none' | 'both' | 'horizontal' | 'vertical'
-  rows?: number
   size?: 'regular' | 'medium' | 'small'
   hasError?: boolean
   customClasses?: string
@@ -23,7 +22,6 @@ const props = withDefaults(defineProps<Props>(), {
   readOnly: false,
   autosize: false,
   resize: 'none',
-  rows: 2,
   size: 'regular',
   customClasses: '',
 })
@@ -70,7 +68,7 @@ defineExpose({ focus })
     ref="textarea"
     v-model="input"
     :aria-label="ariaLabel"
-    class="ds-input h-unset py-12 resize-none"
+    class="ds-input py-12 resize-none h-unset min-h-[83px]"
     :class="{
       'has-error': hasError,
       'px-16': size === 'small',
@@ -81,7 +79,6 @@ defineExpose({ focus })
     }"
     :placeholder="placeholder"
     :readonly="readOnly"
-    :rows="rows"
     :tabindex="readOnly ? -1 : ($attrs.tabindex as number)"
     @input="$emit('update:validationError', undefined)"
     @keydown.enter.stop="() => {}"
