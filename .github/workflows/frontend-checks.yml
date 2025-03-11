@@ -216,33 +216,34 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.chromium
-          path: tmp/e2e-test-report/
+          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.chromium
       - name: Download e2e firefox test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.firefox
-          path: tmp/e2e-test-report/
+          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.firefox
       - name: Download e2e webkit test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.webkit
-          path: tmp/e2e-test-report/
+          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.webkit
       - name: Download e2e msedge test report blob
         uses: actions/download-artifact@v4
         with:
           name: frontend-e2e-test-report.blob.msedge
-          path: tmp/e2e-test-report/
+          path: tmp/e2e-test-report/frontend-e2e-test-report.blob.msedge
       - name: Filetree
         run: tree ./
       - name: Generate HTML report out of all the blobs
+        working-directory: ./frontend
         run: |
           npm ci
-          npx playwright merge-reports --reporter html tmp/e2e-test-report/
+          npx playwright merge-reports --reporter html ../tmp/e2e-test-report/
       - name: Upload e2e HTML test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tmp/e2e-test-report/test-report.html
+          name: tmp/e2e-test-report/frontend-e2e-test-report.blob
           retention-days: 3
           path: frontend/tmp/e2e-test-report
 
