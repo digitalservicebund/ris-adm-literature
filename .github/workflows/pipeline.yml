@@ -133,7 +133,6 @@ jobs:
     needs:
       - e2e-tests
       - backend-push-reports-to-ris-reports # don't push at the same time
-      - frontend-push-reports-to-ris-reports # don't push at the same time
     uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
     secrets: inherit
 
