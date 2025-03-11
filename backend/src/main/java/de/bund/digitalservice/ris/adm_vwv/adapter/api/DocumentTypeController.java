@@ -1,10 +1,11 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 
 @RestController
 public class DocumentTypeController {
