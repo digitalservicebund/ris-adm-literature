@@ -121,6 +121,9 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   e2e-test-frontend:
+    strategy:
+      matrix:
+        playwright-projects: ["chromium", "firefox", "webkit", "msedge"]
     runs-on: ubuntu-latest
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
@@ -169,7 +172,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright Browsers
         working-directory: ./frontend
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps ${{ matrix.playwright-projects }}
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
@@ -180,7 +183,7 @@ jobs:
       - name: Run e2e tests
         working-directory: ./frontend
         run: |
-          npm run test:e2e
+          npm run test:e2e -- --project ${{ matrix.playwright-projects }}
       - name: Upload e2e JSON test report
         if: always()
         uses: actions/upload-artifact@v4
