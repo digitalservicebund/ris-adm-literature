@@ -72,7 +72,7 @@ setup_schema_and_permissions() {
     set_schema_privileges "${db_name}" "${schema}" "${user}" "ALL"
 }
 
-echo "Create ris_wertetabellen role and schema"
-create_role_if_not_exists "ris_wertetabellen" "test"
-setup_schema_and_permissions "ris_adm_vwv" "ris_wertetabellen" "ris_wertetabellen"
-grant_read_access "ris_adm_vwv" "ris_wertetabellen" "test" "ris_wertetabellen"
+echo "Create lookup_tables role and schema"
+create_role_if_not_exists "lookup_tables" "test"
+setup_schema_and_permissions "ris_adm_vwv" "lookup_tables" "lookup_tables"
+grant_read_access "ris_adm_vwv" "lookup_tables" "test" "lookup_tables"
