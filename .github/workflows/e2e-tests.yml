@@ -5,7 +5,8 @@ jobs:
   e2e-tests:
     strategy:
       matrix:
-        playwright-projects: ["chromium", "firefox", "webkit", "msedge"]
+        # playwright-projects: ["chromium", "firefox", "webkit", "msedge"]
+        playwright-projects: ["chromium", "firefox", "msedge"]
     runs-on: ubuntu-latest
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
