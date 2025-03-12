@@ -2,11 +2,16 @@ on:
   workflow_call:
 
 jobs:
-
   e2e-tests:
     strategy:
       matrix:
-        playwright-projects: ["chromium", "firefox", "webkit", "msedge"]
+        playwright-project:
+          [
+            { name: "chromium" },
+            { name: "firefox" },
+            { name: "webkit", requiresInstallWithDeps: true },
+            { name: "msedge" },
+          ]
     runs-on: ubuntu-latest
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
@@ -53,9 +58,17 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      - name: Install Playwright Browsers
+      # browsers that don't need system packages (cf. matrix)
+      # note that msedge still installs some
+      - name: Install Playwright Browser
+        if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
-        run: npx playwright install --with-deps ${{ matrix.playwright-projects }}
+        run: npx playwright install ${{ matrix.playwright-project.name }}
+      # browser (webkit) that need system packages (cf. matrix)
+      - name: Install Playwright Browser --with-deps
+        if: matrix.playwright-project.requiresInstallWithDeps
+        working-directory: ./frontend
+        run: npx playwright install --with-deps ${{ matrix.playwright-project.name }}
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
@@ -63,20 +76,20 @@ jobs:
             echo "Waiting for backend to be fully up..."  
             sleep 0.1
           done
-      - name: Run e2e tests (project ${{ matrix.playwright-projects }})
+      - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
-          npm run test:e2e -- --project ${{ matrix.playwright-projects }}
-      - name: Rename ${{ matrix.playwright-projects }} test report blob
+          npm run test:e2e -- --project ${{ matrix.playwright-project.name }}
+      - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend
-        run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-projects }}.zip
-      - name: Upload e2e ${{ matrix.playwright-projects }} test report blob
+        run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
+      - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-e2e-test-report.blob.${{ matrix.playwright-projects }}
+          name: frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}
           retention-days: 3
-          path: frontend/frontend-e2e-test-report.blob.${{ matrix.playwright-projects }}.zip
+          path: frontend/frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
@@ -84,5 +97,3 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  
