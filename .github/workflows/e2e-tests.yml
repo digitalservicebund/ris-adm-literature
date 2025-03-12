@@ -2,7 +2,6 @@ on:
   workflow_call:
 
 jobs:
-
   e2e-tests:
     strategy:
       matrix:
@@ -55,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright Browsers
         working-directory: ./frontend
-        run: npx playwright install --with-deps ${{ matrix.playwright-projects }}
+        run: npx playwright install ${{ matrix.playwright-projects }}
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
@@ -84,5 +83,3 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  
