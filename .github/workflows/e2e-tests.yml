@@ -64,12 +64,12 @@ jobs:
           echo cache hit without curly braces? steps.cache-browser-binaries.outputs.cache-hit
           echo cache hit with curly braces? ${{ steps.cache-browser-binaries.outputs.cache-hit }}
       - name: Install Playwright Browser ${{ matrix.playwright-project.name }} without '--with-deps'
-        if: ${{ ! matrix.playwright-project }}
+        if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
         run: npx playwright install ${{ matrix.playwright-project.name }}
       # browser (webkit) that needs "--with-deps"
       - name: Install Playwright Browser ${{ matrix.playwright-project.name }} with '--with-deps'
-        if: matrix.playwright-project
+        if: matrix.playwright-project.requiresInstallWithDeps
         working-directory: ./frontend
         run: npx playwright install --with-deps ${{ matrix.playwright-project.name }}
       - name: Wait for backend to serve the health Actuator (max 5min)
