@@ -57,13 +57,13 @@ jobs:
         run: |
           echo cache hit without curly braces? steps.cache-browser-binaries.outputs.cache-hit
           echo cache hit with curly braces? ${{ steps.cache-browser-binaries.outputs.cache-hit }}
-      - name: Install Playwright Browser ${{ matrix.playwright-project }} (if not cached)
-        if: steps.cache-browser-binaries.outputs.cache-hit != 'true' && ${{ matrix.playwright-project }} != 'webkit'
+      - name: Install Playwright Browser ${{ matrix.playwright-project }}
+        if: matrix.playwright-project != 'webkit'
         working-directory: ./frontend
         run: npx playwright install ${{ matrix.playwright-project }}
       # browser (webkit) that needs "--with-deps"
-      - name: Install Playwright Browser webkit
-        if: ${{ matrix.playwright-project }} == 'webkit'
+      - name: Install Playwright Browser webkit (if webkit)
+        if: matrix.playwright-project == 'webkit'
         working-directory: ./frontend
         run: npx playwright install --with-deps ${{ matrix.playwright-project }}
       - name: Wait for backend to serve the health Actuator (max 5min)
