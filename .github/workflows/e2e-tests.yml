@@ -55,8 +55,8 @@ jobs:
       # browsers that don't need "--with-deps"
       - name: Sanity Check
         run: |
-          echo project from matrix: ${{ matrix.playwright-project }}
-          echo does that equal 'webkit'?
+          echo cache hit (without curly braces)? steps.cache-browser-binaries.outputs.cache-hit
+          echo cache hit (with curly braces)? ${{ steps.cache-browser-binaries.outputs.cache-hit }}
       - name: Install Playwright Browser ${{ matrix.playwright-project }} (if not cached)
         if: ${{ matrix.playwright-project }} != 'webkit'
         working-directory: ./frontend
