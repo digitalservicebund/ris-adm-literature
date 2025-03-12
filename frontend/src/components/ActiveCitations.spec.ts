@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeAll, afterAll } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
@@ -7,6 +7,21 @@ import { type CitationType } from '@/domain/citationType'
 import { type Court, type DocumentType, type DocumentUnit } from '@/domain/documentUnit'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 import { createTestingPinia } from '@pinia/testing'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
+
+const server = setupServer(
+  http.get('/api/lookup-tables/document-types', () =>
+    HttpResponse.json({
+      documentTypes: [
+        {
+          abbreviation: 'VE',
+          name: 'Verwaltungsvereinbarung',
+        },
+      ],
+    }),
+  ),
+)
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
@@ -62,7 +77,7 @@ function generateActiveCitation(options?: {
     decisionDate: options?.decisionDate ?? '2022-02-01',
     fileNumber: options?.fileNumber ?? 'test fileNumber',
     documentType: options?.documentType ?? {
-      jurisShortcut: 'documentTypeShortcut1',
+      abbreviation: 'documentTypeShortcut1',
       label: 'documentType1',
     },
     citationType: options?.citationStyle ?? {
@@ -74,6 +89,9 @@ function generateActiveCitation(options?: {
 }
 
 describe('active citations', () => {
+  beforeAll(() => server.listen())
+  afterAll(() => server.close())
+
   it('renders empty active citation in edit mode, when no activeCitations in list', async () => {
     renderComponent()
     expect((await screen.findAllByLabelText('Listen Eintrag')).length).toBe(1)
@@ -165,16 +183,16 @@ describe('active citations', () => {
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 
-    await user.type(await screen.findByLabelText('Dokumenttyp Aktivzitierung'), 'VR')
+    await user.type(await screen.findByLabelText('Dokumenttyp Aktivzitierung'), 'VE')
     await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('VR')
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('VE')
     })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[0])
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
-    expect(screen.getByText(/VR/)).toBeVisible()
+    expect(screen.getByText(/Verwaltungsvereinbarung/)).toBeVisible()
   })
 
   it('correctly updates value court input', async () => {

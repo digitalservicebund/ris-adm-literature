@@ -1,18 +1,73 @@
+import { useFetch, type UseFetchReturn } from '@vueuse/core'
 import type { Ref } from 'vue'
-import type { ComboboxItem } from '@/components/input/types'
+import { API_PREFIX } from './httpClient'
+import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
-import type { Court, DocumentType } from '@/domain/documentUnit'
+import type { Court } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
+import errorMessages from '@/i18n/errors.json'
+
+// TODO caselaw defines it /documenttypes
+enum Endpoint {
+  documentTypes = 'lookup-tables/document-types',
+}
+
+function formatDropdownItems(
+  responseData: ComboboxInputModelType[],
+  endpoint: Endpoint,
+): ComboboxItem[] {
+  switch (endpoint) {
+    case Endpoint.documentTypes: {
+      // TODO I needed to translate here because BE calls it name. FE calls it label.
+      // TODO backend shall return the UUID
+      return (responseData as { abbreviation: string; name: string }[]).map((item) => ({
+        label: item.name,
+        value: {
+          label: item.name,
+          abbreviation: item.abbreviation,
+        },
+        additionalInformation: item.abbreviation,
+      }))
+    }
+  }
+}
+
+// TODO caselaw queryParam is only q
+// TODO bring pagination to backend
+function fetchFromEndpoint(endpoint: Endpoint, filter: Ref<string | undefined>, size?: number) {
+  const requestParams = computed<{ searchQuery?: string; sz?: string }>(() => ({
+    ...(filter.value ? { searchQuery: filter.value } : {}),
+    ...(size != undefined ? { sz: size.toString(), pg: '0' } : {}),
+  }))
+  const url = computed(() => {
+    const queryParams = new URLSearchParams(requestParams.value).toString()
+    return `${API_PREFIX}${endpoint}?${queryParams}`
+  })
+
+  return useFetch<ComboboxItem[]>(url, {
+    afterFetch: (ctx) => {
+      ctx.data = formatDropdownItems(ctx.data.documentTypes, endpoint)
+      return ctx
+    },
+    onFetchError: ({ response }) => ({
+      status: response?.status,
+      error: {
+        title: errorMessages.SERVER_ERROR_DROPDOWN.title,
+        description: errorMessages.SERVER_ERROR_DROPDOWN.description,
+      },
+    }),
+  }).json()
+}
 
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
-  getDocumentTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -92,40 +147,8 @@ const service: ComboboxItemService = {
     }
     return result
   },
-  getDocumentTypes: (filter: Ref<string | undefined>) => {
-    const documentTypeValues = [
-      { label: 'VR' },
-      { label: 'VE' },
-      { label: 'VV' },
-      { label: 'ST' },
-    ] as DocumentType[]
-    const documentTypes = ref(
-      documentTypeValues.map((dt) => <ComboboxItem>{ label: dt.label, value: dt }),
-    )
-    const execute = async () => {
-      if (filter?.value && filter.value.length > 0) {
-        const filteredItems = documentTypeValues.filter((item) =>
-          item.label.toLowerCase().startsWith((filter.value as string).toLowerCase()),
-        )
-        const filteredComboBoxItems = filteredItems.map(
-          (item) => <ComboboxItem>{ label: item.label, value: item },
-        )
-        documentTypes.value = [...filteredComboBoxItems]
-      } else {
-        documentTypes.value = documentTypeValues.map(
-          (dt) => <ComboboxItem>{ label: dt.label, value: dt },
-        )
-      }
-      return service.getDocumentTypes(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: documentTypes,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
+  getDocumentTypes: (filter: Ref<string | undefined>) =>
+    fetchFromEndpoint(Endpoint.documentTypes, filter),
   getRisAbbreviations: (filter: Ref<string | undefined>) => {
     const risAbbreviationValues = [
       { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },

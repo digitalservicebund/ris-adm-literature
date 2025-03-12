@@ -7,7 +7,7 @@ import type NormReference from './normReference'
 
 export type DocumentType = {
   uuid?: string
-  jurisShortcut: string
+  abbreviation: string
   label: string
 }
 

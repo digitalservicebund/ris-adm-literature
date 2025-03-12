@@ -1,3 +1,4 @@
+import type { UseFetchReturn } from '@vueuse/core'
 import { LabelPosition } from '@/components/input/InputField.vue'
 import LegalPeriodical from '@/domain/legalPeriodical'
 import type { Court, DocumentType } from '@/domain/documentUnit'
@@ -138,7 +139,9 @@ export type ComboboxItem = {
 }
 
 export interface ComboboxAttributes extends BaseInputAttributes {
-  itemService: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  itemService: (
+    filter: Ref<string | undefined>,
+  ) => ComboboxResult<ComboboxItem[]> | UseFetchReturn<ComboboxItem[]>
   placeholder?: string
   manualEntry?: boolean
   noClear?: boolean

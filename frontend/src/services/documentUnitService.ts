@@ -158,8 +158,8 @@ const service: DocumentUnitService = {
             },
             decisionDate: '2022-02-01',
             documentType: {
-              jurisShortcut: 'documentTypeShortcut1',
-              label: 'documentType1',
+              abbreviation: 'VV',
+              label: 'Verwaltungsvorschrift',
             },
             fileNumber: 'test fileNumber1',
           }),
