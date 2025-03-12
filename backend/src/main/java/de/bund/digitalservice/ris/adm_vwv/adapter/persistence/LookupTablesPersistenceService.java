@@ -26,7 +26,9 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
     return documentTypes
       .stream()
-      .map(x -> new DocumentType(x.getAbbreviation(), x.getName()))
+      .map(documentTypeEntity ->
+        new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName())
+      )
       .toList();
   }
 }
