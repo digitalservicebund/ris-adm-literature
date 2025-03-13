@@ -83,13 +83,13 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // when
       await page.getByText('VR').click()
       // then
-      await expect(dokumenttypElement).toHaveValue('VR')
+      await expect(dokumenttypElement).toHaveValue('Verwaltungsregelung')
 
       // when
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
-      await expect(dokumenttypElement).toHaveValue('VR')
+      await expect(dokumenttypElement).toHaveValue('Verwaltungsregelung')
     },
   )
 

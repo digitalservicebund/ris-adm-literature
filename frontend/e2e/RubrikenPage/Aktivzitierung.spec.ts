@@ -116,11 +116,11 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
         .click()
       await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
       await expect(
-        page.getByText('label1, 01.02.2022, test fileNumber1, documentType1'),
+        page.getByText('label1, 01.02.2022, test fileNumber1, Verwaltungsvorschrift'),
       ).toBeVisible()
       await page.getByRole('button', { name: 'Treffer übernehmen' }).click()
       await expect(
-        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, documentType1'),
+        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, Verwaltungsvorschrift'),
       ).toBeVisible()
 
       // re-open the same record
@@ -144,7 +144,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 
       // then
       await expect(
-        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, VR'),
+        page.getByText('Übernahme, label1, 01.02.2022, test fileNumber1, Verwaltungsregelung'),
       ).toBeVisible()
 
       await page.getByTestId('list-entry-0').click()
