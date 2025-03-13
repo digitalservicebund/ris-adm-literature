@@ -21,20 +21,19 @@ function formatDropdownItems(
   responseData: ComboboxInputModelType[],
   endpoint: Endpoint,
 ): ComboboxItem[] {
-  switch (endpoint) {
-    case Endpoint.documentTypes: {
-      // TODO I needed to translate here because BE calls it name. FE calls it label.
-      // TODO backend shall return the UUID
-      return (responseData as { abbreviation: string; name: string }[]).map((item) => ({
+  if (endpoint == Endpoint.documentTypes) {
+    // TODO I needed to translate here because BE calls it name. FE calls it label.
+    // TODO backend shall return the UUID
+    return (responseData as { abbreviation: string; name: string }[]).map((item) => ({
+      label: item.name,
+      value: {
         label: item.name,
-        value: {
-          label: item.name,
-          abbreviation: item.abbreviation,
-        },
-        additionalInformation: item.abbreviation,
-      }))
-    }
+        abbreviation: item.abbreviation,
+      },
+      additionalInformation: item.abbreviation,
+    }))
   }
+  return []
 }
 
 // TODO caselaw queryParam is only q
