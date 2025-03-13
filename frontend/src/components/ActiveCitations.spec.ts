@@ -23,6 +23,10 @@ const server = setupServer(
   ),
 )
 
+const serverError = setupServer(
+  http.get('/api/lookup-tables/document-types', () => HttpResponse.error()),
+)
+
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
 
@@ -425,6 +429,23 @@ describe('active citations', () => {
       const clipboardText = await navigator.clipboard.readText()
 
       expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
+    })
+  })
+})
+
+describe('active citations errors', () => {
+  beforeAll(() => serverError.listen())
+  afterAll(() => serverError.close())
+
+  it('do not show error messages when endpoint for document-type has http error', async () => {
+    const { user } = renderComponent([generateActiveCitation()])
+
+    const itemHeader = screen.getByTestId('list-entry-0')
+    await user.click(itemHeader)
+
+    await user.type(await screen.findByLabelText('Dokumenttyp Aktivzitierung'), 'VE')
+    await waitFor(() => {
+      expect(screen.queryByText(/Verwaltungsvereinbarung/)).not.toBeInTheDocument()
     })
   })
 })
