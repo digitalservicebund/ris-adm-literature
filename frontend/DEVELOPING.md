@@ -59,6 +59,8 @@ npm run test:coverage
 
 ### Run End-to-End Tests With [Playwright](https://playwright.dev)
 
+When running e2e tests locally you need to have the backend running already.
+
 ```sh
 # Install browsers for the first run
 npx playwright install
