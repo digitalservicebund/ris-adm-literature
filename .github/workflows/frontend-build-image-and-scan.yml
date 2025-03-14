@@ -54,8 +54,13 @@ jobs:
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+          TRIVY_FORMAT: table
+          TRIVY_SEVERITY: HIGH,CRITICAL
+          TRIVY_EXIT_CODE: 1
         with:
           image-ref: ${{ inputs.image-ref }}
+          # following three are ignored unfortunately -> therefore using ENV vars directly
+          # https://github.com/aquasecurity/trivy-action/issues/435
           format: table
           severity: HIGH,CRITICAL
           exit-code: 1
