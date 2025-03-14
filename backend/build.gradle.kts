@@ -123,7 +123,7 @@ tasks.bootBuildImage {
   val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
 
   imageName.set(containerImageRef)
-  builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
+  builder.set("paketobuildpacks/builder-jammy-java-tiny:latest")
   publish.set(false)
   runImage.set("cgr.dev/chainguard/jre@sha256:6207f817070fae80779cdcf5ab3d24880e8c4fe19a31af24b3b5e850eda3d80e")
 
