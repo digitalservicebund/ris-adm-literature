@@ -74,7 +74,7 @@ jobs:
         with:
           image-ref: ${{ inputs.image-ref }}
           format: table
-          severity: HIGH,CRITICAL
+          severity: "HIGH,CRITICAL"
           exit-code: 1
           # On a subsequent call to the action we know trivy is already installed so can skip this
           #skip-setup-trivy: true
