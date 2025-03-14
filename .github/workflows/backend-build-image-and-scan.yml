@@ -71,6 +71,8 @@ jobs:
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+          TRIVY_FORMAT: table
+          TRIVE_SEVERITY: "HIGH,CRITICAL"
         with:
           image-ref: ${{ inputs.image-ref }}
           format: table
