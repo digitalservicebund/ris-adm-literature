@@ -12,7 +12,6 @@ import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.t
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
 
-// TODO caselaw defines it /documenttypes
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
 }
@@ -22,8 +21,6 @@ function formatDropdownItems(
   endpoint: Endpoint,
 ): ComboboxItem[] {
   if (endpoint == Endpoint.documentTypes) {
-    // TODO I needed to translate here because BE calls it name. FE calls it label.
-    // TODO backend shall return the UUID
     return (responseData as { abbreviation: string; name: string }[]).map((item) => ({
       label: item.name,
       value: {
@@ -36,8 +33,6 @@ function formatDropdownItems(
   return []
 }
 
-// TODO caselaw queryParam is only q
-// TODO bring pagination to backend
 function fetchFromEndpoint(endpoint: Endpoint, filter: Ref<string | undefined>, size?: number) {
   const requestParams = computed<{ searchQuery?: string; sz?: string }>(() => ({
     ...(filter.value ? { searchQuery: filter.value } : {}),
