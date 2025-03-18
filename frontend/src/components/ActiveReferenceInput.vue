@@ -185,6 +185,8 @@ function removeMultipleSingleNorms() {
   if (singleNorms.value.length > 0) {
     // Remove all single norms expect the first one for administrative regulations
     singleNorms.value.splice(1, singleNorms.value.length)
+    singleNorms.value[0].singleNorm = undefined
+    singleNorms.value[0].dateOfRelevance = undefined
   } else {
     // As there is no 'Weitere Einzelnorm' button for administrative regulation on switch we have to
     // add one entry ro restore the UI.
