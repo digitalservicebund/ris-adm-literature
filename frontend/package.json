@@ -55,7 +55,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/vue-3": "^2.11.5",
     "@tsconfig/node23": "^23.0.0",
-    "@vitejs/plugin-vue": "^5.2.2",
+    "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.0.0",
@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.0",
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.51.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
@@ -101,10 +101,10 @@
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "resize-observer-polyfill": "^1.5.1",
-    "sass": "^1.85.0",
+    "sass": "^1.86.0",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.26.1",
-    "vitest": "^3.0.8",
+    "vitest": "^3.0.9",
     "vue-eslint-parser": "^10.1.1"
   },
   "overrides": {
