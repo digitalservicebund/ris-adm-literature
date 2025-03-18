@@ -495,4 +495,39 @@ describe('ActiveReferenceInput', () => {
     // then
     expect(screen.getByLabelText('Fassungsdatum der Norm')).toBeInTheDocument()
   })
+
+  it('removes singleNorm and dateOfRelevance on change to Verwaltungsvorschrift', async () => {
+    // given
+    const { user } = renderComponent()
+
+    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
+    await user.type(referenceTypeField, 'A')
+    const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
+    await user.click(referenceTypeDropdownItems[0])
+
+    const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+    await user.type(abbreviationField, 'SGB')
+    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
+    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
+    await user.click(dropdownItems[0])
+
+    const singleNormInput = screen.getByLabelText('Einzelnorm der Norm')
+    await user.type(singleNormInput, 'ABC12345')
+
+    const dateInput = await screen.findByLabelText('Fassungsdatum der Norm')
+    await user.type(dateInput, '01.01.2020')
+
+    const relevanceField = screen.getByLabelText('Jahr der Norm')
+    await user.type(relevanceField, '2023')
+
+    // when
+    await user.click(screen.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }))
+    await user.click(screen.getByRole('radio', { name: 'Norm auswählen' }))
+
+    // then
+    expect(screen.queryByDisplayValue('ABC12345')).not.toBeInTheDocument()
+    expect(screen.getByDisplayValue(`01.01.2020`)).toBeInTheDocument()
+    expect(screen.queryByDisplayValue('2023')).not.toBeInTheDocument()
+  })
 })
