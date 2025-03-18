@@ -4,7 +4,7 @@
 
 Make sure, that:
 
-- The `lookup_tables` schema is already set up in your desired cluster database
+- The `lookup_tables` schema is already set up on your desired cluster database.
 - The database schema of your project and the `lookup_tables` schema reside inside the same database.
 - The database schema of your project is setup on the cluster as well.
 
