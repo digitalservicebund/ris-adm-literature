@@ -22,11 +22,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   public Page<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query) {
     PageQuery pageQuery = query.pageQuery();
     String searchQuery = query.searchQuery();
-    Pageable pageable = PageRequest.of(
-      pageQuery.page(),
-      pageQuery.size(),
-      Sort.by(pageQuery.sortDirection(), pageQuery.sortBy())
-    );
+    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortBy());
+    Pageable pageable = pageQuery.paged()
+      ? PageRequest.of(pageQuery.page(), pageQuery.size(), sort)
+      : Pageable.unpaged(sort);
     Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchQuery)
       ? documentTypesRepository.findAll(pageable)
       : documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(

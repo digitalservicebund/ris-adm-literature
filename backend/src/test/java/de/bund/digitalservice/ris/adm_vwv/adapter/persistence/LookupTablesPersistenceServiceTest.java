@@ -39,7 +39,7 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
-      new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC))
+      new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
@@ -62,7 +62,7 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
-      new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC))
+      new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then

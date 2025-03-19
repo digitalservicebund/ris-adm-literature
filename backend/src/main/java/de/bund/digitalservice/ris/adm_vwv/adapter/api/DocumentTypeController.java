@@ -24,9 +24,10 @@ public class DocumentTypeController {
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "4") int size,
     @RequestParam(defaultValue = "name") String sortBy,
-    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection
+    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "true") boolean paged
   ) {
-    PageQuery pageQuery = new PageQuery(page, size, sortBy, sortDirection);
+    PageQuery pageQuery = new PageQuery(page, size, sortBy, sortDirection, paged);
     Page<DocumentType> resultPage = lookupTablesPort.findBySearchQuery(
       new DocumentTypeQuery(searchQuery, pageQuery)
     );

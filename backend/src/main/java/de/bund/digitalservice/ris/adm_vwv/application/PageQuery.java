@@ -7,5 +7,6 @@ public record PageQuery(
   int page,
   int size,
   @Nonnull String sortBy,
-  @Nonnull Sort.Direction sortDirection
+  @Nonnull Sort.Direction sortDirection,
+  boolean paged
 ) {}
