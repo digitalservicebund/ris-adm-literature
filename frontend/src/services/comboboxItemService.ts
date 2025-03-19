@@ -38,9 +38,10 @@ function fetchFromEndpoint(
   filter: Ref<string | undefined>,
   options?: { size?: number; paged?: boolean },
 ) {
-  const requestParams = computed<{ searchQuery?: string; size?: string; paged?: boolean }>(() => ({
+  const requestParams = computed<{ searchQuery?: string; size?: string; paged?: string }>(() => ({
     ...(filter.value ? { searchQuery: filter.value } : {}),
-    ...(options != undefined ? options : {}),
+    ...(options?.size != undefined ? { size: options.size.toString() } : {}),
+    ...(options?.paged != undefined ? { paged: options?.paged?.toString() } : {}),
   }))
   const url = computed(() => {
     const queryParams = new URLSearchParams(requestParams.value).toString()
