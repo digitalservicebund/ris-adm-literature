@@ -13,6 +13,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,13 +34,14 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
-    given(documentTypesRepository.findAll()).willReturn(List.of(documentTypeEntity));
+    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
-    List<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(null);
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(new DocumentTypeQuery(null,
+      new PageQuery(0, 10, "name", Sort.Direction.ASC)));
 
     // then
-    assertThat(documentTypes).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 
   @Test
@@ -57,11 +59,11 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
-    List<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
       new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC))
     );
 
     // then
-    assertThat(documentTypes).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 }

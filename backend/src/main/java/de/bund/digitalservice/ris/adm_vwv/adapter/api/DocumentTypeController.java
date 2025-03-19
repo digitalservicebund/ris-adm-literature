@@ -1,9 +1,12 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +28,9 @@ public class DocumentTypeController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection
   ) {
     PageQuery pageQuery = new PageQuery(page, size, sortBy, sortDirection);
+    Page<DocumentType> resultPage = lookupTablesPort.findBySearchQuery(new DocumentTypeQuery(searchQuery, pageQuery));
     return ResponseEntity.ok(
-      new DocumentTypeResponse(lookupTablesPort.findBySearchQuery(new DocumentTypeQuery(searchQuery, pageQuery)))
+      new DocumentTypeResponse(resultPage.getContent(), resultPage)
     );
   }
 }

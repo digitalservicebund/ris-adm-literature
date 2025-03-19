@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -37,15 +38,17 @@ class DocumentTypeControllerTest {
     String searchQuery = "verwaltungs";
     given(lookupTablesPort.findBySearchQuery(new DocumentTypeQuery(searchQuery,
       new PageQuery(0, 2, "name", Sort.Direction.ASC)))).willReturn(
-      List.of(
+      new PageImpl<>(List.of(
         new DocumentType("VE", "Verwaltungsvereinbarung"),
         new DocumentType("VR", "Verwaltungsregelung")
-      )
+      ))
     );
 
     // when
     mockMvc
-      .perform(get("/api/lookup-tables/document-types").param("searchQuery", searchQuery))
+      .perform(get("/api/lookup-tables/document-types")
+        .param("searchQuery", searchQuery)
+        .param("size", "2"))
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())

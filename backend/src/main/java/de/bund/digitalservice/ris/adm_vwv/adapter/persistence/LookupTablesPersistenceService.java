@@ -20,7 +20,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final DocumentTypesRepository documentTypesRepository;
 
   @Override
-  public List<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query) {
+  public Page<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query) {
     PageQuery pageQuery = query.pageQuery();
     String searchQuery = query.searchQuery();
     Pageable pageable = PageRequest.of(
@@ -37,10 +37,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       );
 
     return documentTypes
-      .stream()
       .map(documentTypeEntity ->
         new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName())
-      )
-      .toList();
+      );
   }
 }

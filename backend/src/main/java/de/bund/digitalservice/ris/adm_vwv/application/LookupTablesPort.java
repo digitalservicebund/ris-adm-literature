@@ -1,8 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
+
 import javax.annotation.Nonnull;
 
 public interface LookupTablesPort {
-  List<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query);
+  Page<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query);
 }
