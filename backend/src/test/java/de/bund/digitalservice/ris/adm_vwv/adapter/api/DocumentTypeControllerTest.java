@@ -36,19 +36,26 @@ class DocumentTypeControllerTest {
   void getDocumentTypes() throws Exception {
     // given
     String searchQuery = "verwaltungs";
-    given(lookupTablesPort.findBySearchQuery(new DocumentTypeQuery(searchQuery,
-      new PageQuery(0, 2, "name", Sort.Direction.ASC)))).willReturn(
-      new PageImpl<>(List.of(
-        new DocumentType("VE", "Verwaltungsvereinbarung"),
-        new DocumentType("VR", "Verwaltungsregelung")
-      ))
+    given(
+      lookupTablesPort.findBySearchQuery(
+        new DocumentTypeQuery(searchQuery, new PageQuery(0, 2, "name", Sort.Direction.ASC))
+      )
+    ).willReturn(
+      new PageImpl<>(
+        List.of(
+          new DocumentType("VE", "Verwaltungsvereinbarung"),
+          new DocumentType("VR", "Verwaltungsregelung")
+        )
+      )
     );
 
     // when
     mockMvc
-      .perform(get("/api/lookup-tables/document-types")
-        .param("searchQuery", searchQuery)
-        .param("size", "2"))
+      .perform(
+        get("/api/lookup-tables/document-types")
+          .param("searchQuery", searchQuery)
+          .param("size", "2")
+      )
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())

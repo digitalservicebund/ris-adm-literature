@@ -4,7 +4,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
-import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +35,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         pageable
       );
 
-    return documentTypes
-      .map(documentTypeEntity ->
-        new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName())
-      );
+    return documentTypes.map(documentTypeEntity ->
+      new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName())
+    );
   }
 }

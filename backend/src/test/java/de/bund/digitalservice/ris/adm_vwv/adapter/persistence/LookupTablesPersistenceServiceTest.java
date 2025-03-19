@@ -6,10 +6,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
-import java.util.List;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,11 +33,14 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
-    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
+    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(documentTypeEntity))
+    );
 
     // when
-    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(new DocumentTypeQuery(null,
-      new PageQuery(0, 10, "name", Sort.Direction.ASC)));
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+      new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC))
+    );
 
     // then
     assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
