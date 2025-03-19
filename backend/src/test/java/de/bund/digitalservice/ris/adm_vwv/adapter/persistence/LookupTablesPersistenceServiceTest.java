@@ -1,13 +1,21 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import java.util.List;
+
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
@@ -42,14 +50,15 @@ class LookupTablesPersistenceServiceTest {
     documentTypeEntity.setName("Verwaltungsregelung");
     given(
       documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
-        "something",
-        "something"
+        eq("something"),
+        eq("something"),
+        any(Pageable.class)
       )
-    ).willReturn(List.of(documentTypeEntity));
+    ).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
     List<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
-      "something"
+      new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC))
     );
 
     // then
