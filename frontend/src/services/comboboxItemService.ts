@@ -33,10 +33,15 @@ function formatDropdownItems(
   return []
 }
 
-function fetchFromEndpoint(endpoint: Endpoint, filter: Ref<string | undefined>, size?: number) {
-  const requestParams = computed<{ searchQuery?: string; sz?: string }>(() => ({
+function fetchFromEndpoint(
+  endpoint: Endpoint,
+  filter: Ref<string | undefined>,
+  options?: { size?: number; paged?: boolean },
+) {
+  const requestParams = computed<{ searchQuery?: string; size?: string; paged?: string }>(() => ({
     ...(filter.value ? { searchQuery: filter.value } : {}),
-    ...(size != undefined ? { sz: size.toString(), pg: '0' } : {}),
+    ...(options?.size != undefined ? { size: options.size.toString() } : {}),
+    ...(options?.paged != undefined ? { paged: options?.paged?.toString() } : {}),
   }))
   const url = computed(() => {
     const queryParams = new URLSearchParams(requestParams.value).toString()
@@ -142,7 +147,7 @@ const service: ComboboxItemService = {
     return result
   },
   getDocumentTypes: (filter: Ref<string | undefined>) =>
-    fetchFromEndpoint(Endpoint.documentTypes, filter),
+    fetchFromEndpoint(Endpoint.documentTypes, filter, { paged: false }),
   getRisAbbreviations: (filter: Ref<string | undefined>) => {
     const risAbbreviationValues = [
       { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },

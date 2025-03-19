@@ -1,13 +1,21 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
@@ -25,13 +33,17 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
-    given(documentTypesRepository.findAll()).willReturn(List.of(documentTypeEntity));
+    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(documentTypeEntity))
+    );
 
     // when
-    List<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(null);
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+      new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
+    );
 
     // then
-    assertThat(documentTypes).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 
   @Test
@@ -42,17 +54,18 @@ class LookupTablesPersistenceServiceTest {
     documentTypeEntity.setName("Verwaltungsregelung");
     given(
       documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
-        "something",
-        "something"
+        eq("something"),
+        eq("something"),
+        any(Pageable.class)
       )
-    ).willReturn(List.of(documentTypeEntity));
+    ).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
-    List<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
-      "something"
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+      new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(documentTypes).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 }
