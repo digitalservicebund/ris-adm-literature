@@ -30,7 +30,7 @@ repositories {
   mavenCentral()
 }
 
-val kubernetesConfigVersion = "3.2.0"
+val kubernetesConfigVersion = "3.2.1"
 val protobufVersion = "4.30.1"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
