@@ -28,7 +28,7 @@ class LookupTablesPersistenceServiceTest {
   private DocumentTypesRepository documentTypesRepository;
 
   @Test
-  void findBySearchQuery_all() {
+  void findDocumentTypes_all() {
     // given
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
@@ -38,7 +38,7 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
       new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
     );
 
@@ -47,7 +47,7 @@ class LookupTablesPersistenceServiceTest {
   }
 
   @Test
-  void findBySearchQuery_something() {
+  void findDocumentTypes_something() {
     // given
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
@@ -61,7 +61,7 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
-    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findBySearchQuery(
+    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
       new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
     );
 
