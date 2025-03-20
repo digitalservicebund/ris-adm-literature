@@ -6,5 +6,7 @@ import org.springframework.data.domain.Page;
 
 public interface LookupTablesPort {
   Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query);
-  List<FieldOfLaw> findChildrenOfFieldOfLaw(String identifier);
+
+  List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier);
+  List<FieldOfLaw> findFieldsOfLawParents();
 }

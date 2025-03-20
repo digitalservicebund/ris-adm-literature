@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LookupTablesPersistenceService implements LookupTablesPersistencePort {
 
-  private static final String ROOT_ID = "root";
-
   private final DocumentTypesRepository documentTypesRepository;
   private final FieldOfLawRepository fieldOfLawRepository;
 
@@ -43,21 +41,25 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Transactional(readOnly = true)
-  public List<FieldOfLaw> findChildrenOfFieldOfLaw(String identifier) {
-    if (identifier.equalsIgnoreCase(ROOT_ID)) {
-      return fieldOfLawRepository
-        .findByParentIsNullAndNotationOrderByIdentifier("NEW")
-        .stream()
-        .map(fieldOfLawEntity ->
-          FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
-        )
-        .toList();
-    }
+  @Override
+  public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
     return fieldOfLawRepository
       .findByIdentifier(identifier)
       .map(fieldOfLawEntity -> FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, true, true)
       )
       .map(FieldOfLaw::children)
       .orElse(List.of());
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<FieldOfLaw> findFieldsOfLawParents() {
+    return fieldOfLawRepository
+      .findByParentIsNullAndNotationOrderByIdentifier("NEW")
+      .stream()
+      .map(fieldOfLawEntity ->
+        FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
+      )
+      .toList();
   }
 }

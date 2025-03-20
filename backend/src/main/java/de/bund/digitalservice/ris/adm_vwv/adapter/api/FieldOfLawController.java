@@ -13,10 +13,15 @@ public class FieldOfLawController {
 
   private final LookupTablesPort lookupTablesPort;
 
+  @GetMapping("api/lookup-tables/fields-of-law/root/children")
+  public ResponseEntity<FieldOfLawResponse> getFieldsOfLawRoot() {
+    return ResponseEntity.ok(new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawParents()));
+  }
+
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}/children")
   public ResponseEntity<FieldOfLawResponse> getFieldsOfLaw(@PathVariable String identifier) {
     return ResponseEntity.ok(
-      new FieldOfLawResponse(lookupTablesPort.findChildrenOfFieldOfLaw(identifier))
+      new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
     );
   }
 }

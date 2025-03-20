@@ -18,7 +18,12 @@ public class LookupTablesService implements LookupTablesPort {
   }
 
   @Override
-  public List<FieldOfLaw> findChildrenOfFieldOfLaw(String identifier) {
-    return lookupTablesPersistencePort.findChildrenOfFieldOfLaw(identifier);
+  public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
+    return lookupTablesPersistencePort.findFieldsOfLawChildren(identifier);
+  }
+
+  @Override
+  public List<FieldOfLaw> findFieldsOfLawParents() {
+    return lookupTablesPersistencePort.findFieldsOfLawParents();
   }
 }
