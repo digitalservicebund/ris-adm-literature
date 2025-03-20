@@ -1,9 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.*;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,9 +11,9 @@ import java.util.*;
 @Builder(toBuilder = true)
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(
-  name = "field_of_law_view")
+@Table(name = "field_of_law_view")
 public class FieldOfLawEntity {
+
   @Id
   private UUID id;
 
@@ -22,16 +21,15 @@ public class FieldOfLawEntity {
 
   private String text;
 
-  @OneToMany(
-    mappedBy = "fieldOfLaw",
-    fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "fieldOfLaw", fetch = FetchType.LAZY)
   private Set<FieldOfLawNormEntity> norms = new HashSet<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinTable(
     name = "field_of_law_field_of_law_parent_view",
     joinColumns = @JoinColumn(name = "field_of_law_id"),
-    inverseJoinColumns = @JoinColumn(name = "field_of_law_parent_id"))
+    inverseJoinColumns = @JoinColumn(name = "field_of_law_parent_id")
+  )
   private FieldOfLawEntity parent;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")

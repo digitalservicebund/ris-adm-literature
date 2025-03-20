@@ -1,10 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-
 import java.util.UUID;
+import lombok.*;
 
 @Getter
 @Setter
@@ -14,11 +12,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "field_of_law_norm_view")
 public class FieldOfLawNormEntity {
-  @Id private UUID id;
+
+  @Id
+  private UUID id;
 
   private String abbreviation;
 
-//  @Column(name = "single_norm_description")
+  //  @Column(name = "single_norm_description")
   private String singleNormDescription;
 
   @ManyToOne
