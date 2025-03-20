@@ -29,16 +29,16 @@ class FieldOfLawControllerTest {
   private LookupTablesPort lookupTablesPort;
 
   @Test
-  @DisplayName("GET returns HTTP 200 and a JSON with one field of law")
+  @DisplayName("GET returns HTTP 200 and a JSON with one field of law child")
   void getFieldsOfLaw() throws Exception {
     // given
-    given(lookupTablesPort.findFieldsOfLawChildren("root")).willReturn(
+    given(lookupTablesPort.findFieldsOfLawChildren("AR-01")).willReturn(
       List.of(
         new FieldOfLaw(
           UUID.randomUUID(),
           false,
-          "AR-01",
-          "Arbeitsrecht allgemein",
+          "AR-01-05",
+          "Arbeitsrecht speziell",
           List.of(),
           List.of(),
           List.of(),
@@ -49,11 +49,40 @@ class FieldOfLawControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "root"))
+      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "AR-01"))
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR-01"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht allgemein"));
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR-01-05"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht speziell"));
+  }
+
+  @Test
+  @DisplayName("GET returns HTTP 200 and a JSON with one field of law root (parent)")
+  void getFieldsOfLawParents() throws Exception {
+    // given
+    given(lookupTablesPort.findFieldsOfLawParents()).willReturn(
+      List.of(
+        new FieldOfLaw(
+          UUID.randomUUID(),
+          false,
+          "AR",
+          "Arbeitsrecht",
+          List.of(),
+          List.of(),
+          List.of(),
+          null
+        )
+      )
+    );
+
+    // when
+    mockMvc
+      .perform(get("/api/lookup-tables/fields-of-law/root/children"))
+      // then
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht"));
   }
 }
