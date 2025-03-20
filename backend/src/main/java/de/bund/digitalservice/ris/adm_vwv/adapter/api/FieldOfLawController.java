@@ -20,7 +20,9 @@ public class FieldOfLawController {
   }
 
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}/children")
-  public ResponseEntity<FieldOfLawResponse> getFieldsOfLawChildren(@PathVariable String identifier) {
+  public ResponseEntity<FieldOfLawResponse> getFieldsOfLawChildren(
+    @PathVariable String identifier
+  ) {
     return ResponseEntity.ok(
       new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
     );
@@ -28,9 +30,9 @@ public class FieldOfLawController {
 
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}")
   public ResponseEntity<FieldOfLaw> getTreeForFieldOfLaw(@PathVariable String identifier) {
-    return lookupTablesPort.findFieldOfLaw(identifier)
+    return lookupTablesPort
+      .findFieldOfLaw(identifier)
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
   }
-
 }

@@ -3,10 +3,8 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw.FieldOfLawBuilder;
 import de.bund.digitalservice.ris.adm_vwv.application.Norm;
-
 import java.util.Collections;
 import java.util.List;
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
