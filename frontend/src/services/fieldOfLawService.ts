@@ -1,7 +1,8 @@
-import type { ServiceResponse } from './httpClient'
+import httpClient, { type ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import fieldsOfLawMocking from './fieldsOfLaw.json'
+import errorMessages from '@/i18n/errors.json'
 
 const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
   return {
@@ -28,44 +29,23 @@ interface FieldOfLawService {
 
 const service: FieldOfLawService = {
   async getChildrenOf(identifier: string) {
-    console.log(identifier)
-
-    if (identifier != 'root')
-      return {
-        status: 200,
-        data: [
-          {
-            hasChildren: false,
-            identifier: 'AR-01',
-            text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
-            linkedFields: [],
-            norms: [
-              {
-                abbreviation: 'BGB',
-                singleNormDescription: '§ 611a',
-              },
-              {
-                abbreviation: 'GewO',
-                singleNormDescription: '§ 105',
-              },
-            ],
-            children: [],
-            parent: {
-              hasChildren: true,
-              identifier: 'AR',
-              text: 'Arbeitsrecht',
-              linkedFields: [],
-              norms: [],
-              children: [],
-              parent: undefined,
-            },
-          },
-        ],
+    const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[] }>(
+      `lookup-tables/fields-of-law/${identifier}/children`,
+    )
+    if (response.status >= 300) {
+      response.error = {
+        title: errorMessages.FIELDS_OF_LAW_COULD_NOT_BE_LOADED.title.replace(
+          '${identifier}',
+          identifier,
+        ),
       }
+    }
+
+    if (response.error) return response
 
     return {
-      status: 200,
-      data: content,
+      status: response.status,
+      data: response.data?.fieldsOfLaw,
     }
   },
   async getTreeForIdentifier(identifier: string) {
