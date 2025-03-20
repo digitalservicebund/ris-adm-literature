@@ -3,14 +3,12 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.*;
+import org.springframework.data.annotation.Immutable;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 @Entity
 @Table(name = "field_of_law_norm_view")
+@Immutable
 public class FieldOfLawNormEntity {
 
   @Id
@@ -18,7 +16,6 @@ public class FieldOfLawNormEntity {
 
   private String abbreviation;
 
-  //  @Column(name = "single_norm_description")
   private String singleNormDescription;
 
   @ManyToOne

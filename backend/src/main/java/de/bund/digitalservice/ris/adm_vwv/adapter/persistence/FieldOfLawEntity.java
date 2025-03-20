@@ -3,15 +3,14 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import jakarta.persistence.*;
 import java.util.*;
 import lombok.*;
+import org.springframework.data.annotation.Immutable;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(toBuilder = true)
+@Data
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(exclude = "children")
+@ToString(exclude = "children")
 @Table(name = "field_of_law_view")
+@Immutable
 public class FieldOfLawEntity {
 
   @Id
@@ -34,7 +33,6 @@ public class FieldOfLawEntity {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
   @OrderBy("identifier")
-  @Builder.Default
   private Set<FieldOfLawEntity> children = new HashSet<>();
 
   private Integer jurisId;
