@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,4 +25,12 @@ public class FieldOfLawController {
       new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
     );
   }
+
+  @GetMapping("api/lookup-tables/fields-of-law/{identifier}")
+  public ResponseEntity<FieldOfLaw> getTreeForFieldOfLaw(@PathVariable String identifier) {
+    return lookupTablesPort.findFieldOfLaw(identifier)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+
 }

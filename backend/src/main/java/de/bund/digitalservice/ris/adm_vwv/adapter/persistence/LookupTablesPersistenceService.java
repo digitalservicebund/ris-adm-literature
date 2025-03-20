@@ -1,14 +1,19 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import java.util.List;
-import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -40,8 +45,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
     return fieldOfLawRepository
       .findByIdentifier(identifier)
@@ -51,8 +56,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .orElse(List.of());
   }
 
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawParents() {
     return fieldOfLawRepository
       .findByParentIsNullAndNotationOrderByIdentifier("NEW")
@@ -61,5 +66,14 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
       )
       .toList();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
+    return fieldOfLawRepository
+      .findByIdentifier(identifier)
+      .map(fieldOfLawEntity ->
+        FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, true, true));
   }
 }

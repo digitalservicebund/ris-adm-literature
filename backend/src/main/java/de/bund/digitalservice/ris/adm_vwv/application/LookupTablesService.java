@@ -1,8 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +27,10 @@ public class LookupTablesService implements LookupTablesPort {
   @Override
   public List<FieldOfLaw> findFieldsOfLawParents() {
     return lookupTablesPersistencePort.findFieldsOfLawParents();
+  }
+
+  @Override
+  public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
+    return lookupTablesPersistencePort.findFieldOfLaw(identifier);
   }
 }
