@@ -22,19 +22,6 @@ public class FieldOfLawTransformer {
     if (fieldOfLawEntity.getParent() != null) {
       builder.parent(transformToDomain(fieldOfLawEntity.getParent(), false, false));
     }
-    if (withNorms && fieldOfLawEntity.getNorms() != null) {
-      List<Norm> norms = fieldOfLawEntity
-        .getNorms()
-        .stream()
-        .map(fieldOfLawNormEntity ->
-          Norm.builder()
-            .abbreviation(fieldOfLawNormEntity.getAbbreviation())
-            .singleNormDescription(fieldOfLawNormEntity.getSingleNormDescription())
-            .build()
-        )
-        .toList();
-      builder.norms(norms);
-    }
     builder.hasChildren(!fieldOfLawEntity.getChildren().isEmpty());
     if (withChildren) {
       List<FieldOfLaw> children = fieldOfLawEntity
@@ -46,6 +33,19 @@ public class FieldOfLawTransformer {
       builder.hasChildren(true);
     } else {
       builder.children(Collections.emptyList());
+    }
+    if (withNorms) {
+      List<Norm> norms = fieldOfLawEntity
+        .getNorms()
+        .stream()
+        .map(fieldOfLawNormEntity ->
+          Norm.builder()
+            .abbreviation(fieldOfLawNormEntity.getAbbreviation())
+            .singleNormDescription(fieldOfLawNormEntity.getSingleNormDescription())
+            .build()
+        )
+        .toList();
+      builder.norms(norms);
     }
     return builder.build();
   }

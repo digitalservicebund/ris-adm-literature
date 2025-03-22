@@ -1,19 +1,7 @@
 import httpClient, { type ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
-import fieldsOfLawMocking from './fieldsOfLaw.json'
 import errorMessages from '@/i18n/errors.json'
-
-const content: FieldOfLaw[] = fieldsOfLawMocking.map((fieldOfLaw) => {
-  return {
-    identifier: fieldOfLaw.identifier,
-    text: fieldOfLaw.text,
-    linkedFields: fieldOfLaw.linkedFields,
-    norms: [],
-    children: [],
-    hasChildren: fieldOfLaw.text == 'Arbeitsrecht',
-  }
-})
 
 interface FieldOfLawService {
   getChildrenOf(identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
@@ -49,11 +37,13 @@ const service: FieldOfLawService = {
     }
   },
   async getTreeForIdentifier(identifier: string) {
-    console.log(identifier)
-    return {
-      status: 200,
-      data: content[0],
+    const response = await httpClient.get<FieldOfLaw>(`lookup-tables/fields-of-law/${identifier}`)
+    if (response.status >= 300) {
+      response.error = {
+        title: errorMessages.FIELD_OF_LAW_COULD_NOT_BE_LOADED.title,
+      }
     }
+    return response
   },
   async searchForFieldsOfLaw(
     page: number,
@@ -62,19 +52,15 @@ const service: FieldOfLawService = {
     identifier?: string,
     norm?: string,
   ) {
-    console.log(page, size, query, identifier, norm)
-    return {
-      status: 200,
-      data: {
-        content,
-        size: 0,
-        number: 0,
-        numberOfElements: 20,
-        first: true,
-        last: false,
-        empty: false,
-      },
+    const response = await httpClient.get<Page<FieldOfLaw>>(
+      `lookup-tables/fields-of-law?page=${page}&size=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
+    )
+    if (response.status >= 300) {
+      response.error = {
+        title: errorMessages.FIELD_OF_LAW_SEARCH_FAILED.title,
+      }
     }
+    return response
   },
 }
 
