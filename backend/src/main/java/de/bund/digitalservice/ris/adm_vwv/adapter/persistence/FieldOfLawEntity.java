@@ -35,6 +35,14 @@ public class FieldOfLawEntity {
   @OrderBy("identifier")
   private Set<FieldOfLawEntity> children = new HashSet<>();
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+    name = "field_of_law_field_of_law_text_reference_view",
+    joinColumns = @JoinColumn(name = "field_of_law_id"),
+    inverseJoinColumns = @JoinColumn(name = "field_of_law_text_reference_id")
+  )
+  private Set<FieldOfLawEntity> fieldOfLawTextReferences = new HashSet<>();
+
   private Integer jurisId;
 
   private String notation;

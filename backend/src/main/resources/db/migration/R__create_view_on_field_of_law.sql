@@ -16,3 +16,7 @@ SELECT id,
        single_norm_description,
        field_of_law_id
 FROM lookup_tables.field_of_law_norm;
+
+CREATE OR REPLACE VIEW field_of_law_field_of_law_text_reference_view AS
+SELECT field_of_law_id, field_of_law_text_reference_id
+FROM lookup_tables.field_of_law_field_of_law_text_reference;

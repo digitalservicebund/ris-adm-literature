@@ -157,4 +157,22 @@ INSERT INTO lookup_tables.field_of_law_norm
 (id, abbreviation, single_norm_description, field_of_law_id)
 VALUES('d74ab1e8-3ebe-4571-98b7-852e3b07e3c1'::uuid, 'AStG', '§ 17', 'b3213dee-a986-4807-9ef3-03a3ed32c45a'::uuid);
 
+INSERT INTO lookup_tables.field_of_law
+(id, identifier, "text", juris_id, "notation")
+VALUES('f478913c-979b-4e34-843c-441b9f559899'::uuid, 'SO', 'Sozialrecht', 11682, 'NEW');
+INSERT INTO lookup_tables.field_of_law
+(id, identifier, "text", juris_id, "notation")
+VALUES('14728419-119a-40f7-8f9a-47ec342c6286'::uuid, 'SO-03', 'Arbeitsförderungsrecht; Versicherungspflicht oder -freiheit siehe SO-04-02 oder SO-04-03;- Beitragsrecht siehe SO-04-05', 12511, 'NEW');
+INSERT INTO lookup_tables.field_of_law
+(id, identifier, "text", juris_id, "notation")
+VALUES('5eaf2263-2717-4375-8ce2-0c45fc10eaaa'::uuid, 'SO-04-02', 'Versicherter Personenkreis: Versicherungspflicht und Beitragspflicht; Beginn, Ende, Fortbestand der Mitgliedschaft siehe SO-05-07-04 bis -05', 11839, 'NEW');
+
+INSERT INTO lookup_tables.field_of_law_field_of_law_parent
+(field_of_law_id, field_of_law_parent_id)
+VALUES('14728419-119a-40f7-8f9a-47ec342c6286'::uuid, 'f478913c-979b-4e34-843c-441b9f559899'::uuid);
+
+INSERT INTO lookup_tables.field_of_law_field_of_law_text_reference
+(field_of_law_id, field_of_law_text_reference_id)
+VALUES('14728419-119a-40f7-8f9a-47ec342c6286'::uuid, '5eaf2263-2717-4375-8ce2-0c45fc10eaaa'::uuid);
+
 set role test;
