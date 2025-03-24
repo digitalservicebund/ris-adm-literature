@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for querying lookup tables
+ */
 @Service
 @RequiredArgsConstructor
 public class LookupTablesService implements LookupTablesPort {
