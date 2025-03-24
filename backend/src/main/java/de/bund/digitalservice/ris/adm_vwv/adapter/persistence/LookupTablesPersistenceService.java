@@ -177,7 +177,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     int score = 0;
     var normWithParagraphsLowerCase = normWithParagraphs.toLowerCase();
     for (Norm norm : fieldOfLaw.norms()) {
-      // TODO: Check if norm.singleNormDescription can ever be null
       String description = norm.singleNormDescription() == null
         ? ""
         : norm.singleNormDescription().toLowerCase();

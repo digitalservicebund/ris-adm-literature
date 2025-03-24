@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.Specification;
 @RequiredArgsConstructor
 public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> {
 
+  private static final String NORMS = "norms";
+
   private final String identifier;
   private final List<String> textTerms;
   private final List<String> normTerms;
@@ -44,14 +46,14 @@ public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> 
       predicates.add(identifierPredicate);
     }
     if (!normTerms.isEmpty()) {
-      root.fetch("norms", JoinType.LEFT);
+      root.fetch(NORMS, JoinType.LEFT);
       for (String searchTerm : normTerms) {
         Predicate normAbbreviationPredicate = criteriaBuilder.like(
-          criteriaBuilder.lower(root.get("norms").get("abbreviation")),
+          criteriaBuilder.lower(root.get(NORMS).get("abbreviation")),
           "%" + searchTerm.toLowerCase() + "%"
         );
         Predicate singleNormPredicate = criteriaBuilder.like(
-          criteriaBuilder.lower(root.get("norms").get("singleNormDescription")),
+          criteriaBuilder.lower(root.get(NORMS).get("singleNormDescription")),
           "%" + searchTerm.toLowerCase() + "%"
         );
         Predicate combined = criteriaBuilder.or(normAbbreviationPredicate, singleNormPredicate);
