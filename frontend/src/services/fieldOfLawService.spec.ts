@@ -34,17 +34,6 @@ const fieldOfLawResponse = {
   ],
 }
 
-describe('fieldOfLawService Mock before implementation', () => {
-  it('getTreeForIdentifier', async () => {
-    const fields = await FieldOfLawService.getTreeForIdentifier('')
-    expect(fields.status).toEqual(200)
-  })
-  it('searchForFieldsOfLaw', async () => {
-    const fields = await FieldOfLawService.searchForFieldsOfLaw(0, 0)
-    expect(fields.status).toEqual(200)
-  })
-})
-
 describe('fieldOfLawService getChildrenOf', () => {
   let server: MockAdapter
 
@@ -71,6 +60,39 @@ describe('fieldOfLawService getChildrenOf', () => {
     server.onAny().reply(400)
 
     const response = await FieldOfLawService.getChildrenOf('THIS_DOES_NOT_EXIST')
+
+    expect(response.data).toBeUndefined()
+    expect(response.error).toBeDefined()
+  })
+
+  it('responds with data property and no error when http code is 200 on get tree', async () => {
+    server.onAny().reply(200, fieldOfLawResponse)
+
+    const response = await FieldOfLawService.getTreeForIdentifier('AR-01')
+
+    expect(server.history.get).toBeDefined()
+    expect(server.history.get[0].url).toBe('/api/lookup-tables/fields-of-law/AR-01')
+    expect(response.data).toBeDefined()
+    expect(response.error).toBeUndefined()
+  })
+
+  it('responds with data property and no error when http code is 200 on search', async () => {
+    server.onAny().reply(200, fieldOfLawResponse)
+
+    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'AR', '')
+
+    expect(server.history.get).toBeDefined()
+    expect(server.history.get[0].url).toBe(
+      '/api/lookup-tables/fields-of-law?page=0&size=10&identifier=AR&text=&norm=',
+    )
+    expect(response.data).toBeDefined()
+    expect(response.error).toBeUndefined()
+  })
+
+  it('responds with no data property and error when http code is >= 300 on search', async () => {
+    server.onAny().reply(500)
+
+    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'AR', '')
 
     expect(response.data).toBeUndefined()
     expect(response.error).toBeDefined()
