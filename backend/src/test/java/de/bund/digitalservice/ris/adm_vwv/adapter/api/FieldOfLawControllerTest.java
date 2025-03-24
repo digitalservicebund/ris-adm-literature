@@ -5,15 +5,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
+import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -83,6 +88,89 @@ class FieldOfLawControllerTest {
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht"));
+  }
+
+  @Test
+  @DisplayName("GET returns HTTP 200 and a JSON with one field of law")
+  void getTreeForFieldOfLaw() throws Exception {
+    // given
+    given(lookupTablesPort.findFieldOfLaw("AR")).willReturn(
+      Optional.of(
+        new FieldOfLaw(
+          UUID.randomUUID(),
+          false,
+          "AR",
+          "Arbeitsrecht",
+          List.of(),
+          List.of(),
+          List.of(),
+          null
+        )
+      )
+    );
+
+    // when
+    mockMvc
+      .perform(get("/api/lookup-tables/fields-of-law/{identifier}", "AR"))
+      // then
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.identifier").value("AR"))
+      .andExpect(jsonPath("$.text").value("Arbeitsrecht"));
+  }
+
+  @Test
+  @DisplayName("GET returns HTTP 404 for unknown identifier")
+  void getTreeForFieldOfLaw_notFound() throws Exception {
+    // given
+    given(lookupTablesPort.findFieldOfLaw("BR-123456")).willReturn(Optional.empty());
+
+    // when
+    mockMvc
+      .perform(get("/api/lookup-tables/fields-of-law/{identifier}", "BR-123456"))
+      // then
+      .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName("GET returns HTTP 200 and a JSON with one field of law")
+  void findFieldsOfLaw() throws Exception {
+    // given
+    FieldOfLawQuery query = new FieldOfLawQuery(
+      "AR-05",
+      "arbeit",
+      null,
+      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+    );
+    given(lookupTablesPort.findFieldsOfLaw(query)).willReturn(
+      new PageImpl<>(
+        List.of(
+          new FieldOfLaw(
+            UUID.randomUUID(),
+            false,
+            "AR-05",
+            "Arbeitsrecht",
+            List.of(),
+            List.of(),
+            List.of(),
+            null
+          )
+        )
+      )
+    );
+
+    // when
+    mockMvc
+      .perform(get("/api/lookup-tables/fields-of-law")
+        .param("identifier", "AR-05")
+        .param("text", "arbeit")
+        .param("sortBy", "identifier")
+        .param("size", "10"))
+      // then
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR-05"))
       .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht"));
   }
 }

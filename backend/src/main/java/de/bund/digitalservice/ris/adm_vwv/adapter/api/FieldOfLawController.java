@@ -43,7 +43,7 @@ public class FieldOfLawController {
   }
 
   @GetMapping("api/lookup-tables/fields-of-law")
-  public Page<FieldOfLaw> findFieldsOfLaw(
+  public FieldOfLawQueryResponse findFieldsOfLaw(
     @RequestParam(value = "identifier", required = false) String identifier,
     @RequestParam(value = "text", required = false) String text,
     @RequestParam(value = "norm", required = false) String norm,
@@ -54,8 +54,7 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "true") boolean paged
   ) {
     PageQuery pageQuery = new PageQuery(page, size, sortBy, sortDirection, paged);
-
-    return lookupTablesPort.findFieldsOfLaw(
+    Page<FieldOfLaw> result = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),
@@ -63,5 +62,6 @@ public class FieldOfLawController {
         pageQuery
       )
     );
+    return new FieldOfLawQueryResponse(result.getContent(), result);
   }
 }

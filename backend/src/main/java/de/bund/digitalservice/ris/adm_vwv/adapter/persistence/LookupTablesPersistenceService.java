@@ -142,7 +142,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     String normParagraphsWithSpace,
     List<FieldOfLaw> fieldsOfLaw
   ) {
-    List<ScoredFieldOfLaw> scoredFieldOfLaws = new ArrayList<>();
+    List<ScoredFieldOfLaw> scoredFieldsOfLaw = new ArrayList<>();
     fieldsOfLaw.forEach(fieldOfLaw -> {
       int score = 0;
       for (String textTerm : textTerms) {
@@ -151,9 +151,9 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       if (normParagraphsWithSpace != null) {
         score += calculateScoreByNormWithParagraphs(fieldOfLaw, normParagraphsWithSpace);
       }
-      scoredFieldOfLaws.add(new ScoredFieldOfLaw(fieldOfLaw, score));
+      scoredFieldsOfLaw.add(new ScoredFieldOfLaw(fieldOfLaw, score));
     });
-    return scoredFieldOfLaws;
+    return scoredFieldsOfLaw;
   }
 
   private int calculateScoreByTextTerm(@Nonnull FieldOfLaw fieldOfLaw, @Nonnull String textTerm) {

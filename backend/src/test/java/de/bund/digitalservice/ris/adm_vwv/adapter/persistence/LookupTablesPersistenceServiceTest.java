@@ -176,8 +176,12 @@ class LookupTablesPersistenceServiceTest {
     given(
       fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
     ).willReturn(
-      new PageImpl<>(List.of(createFieldOfLaw("AR-05", "Beendigung des Arbeitsverhältnisses"),
-        createFieldOfLaw("BR-05", "Bericht")))
+      new PageImpl<>(
+        List.of(
+          createFieldOfLaw("AR-05", "Beendigung des Arbeitsverhältnisses"),
+          createFieldOfLaw("BR-05", "Bericht")
+        )
+      )
     );
 
     // when
