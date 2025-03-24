@@ -54,7 +54,7 @@
     "@tiptap/extension-underline": "^2.11.5",
     "@tiptap/pm": "^2.11.5",
     "@tiptap/vue-3": "^2.11.5",
-    "@tsconfig/node23": "^23.0.0",
+    "@tsconfig/node23": "^23.0.1",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vue/tsconfig": "^0.7.0",
