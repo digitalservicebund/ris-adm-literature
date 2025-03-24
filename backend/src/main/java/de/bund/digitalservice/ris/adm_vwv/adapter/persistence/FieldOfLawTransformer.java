@@ -47,10 +47,11 @@ public class FieldOfLawTransformer {
         .toList();
       builder.norms(norms);
     }
-    List<String> linkedFields =
-      fieldOfLawEntity.getFieldOfLawTextReferences().stream()
-        .map(FieldOfLawEntity::getIdentifier)
-        .toList();
+    List<String> linkedFields = fieldOfLawEntity
+      .getFieldOfLawTextReferences()
+      .stream()
+      .map(FieldOfLawEntity::getIdentifier)
+      .toList();
     builder.linkedFields(linkedFields);
     return builder.build();
   }
