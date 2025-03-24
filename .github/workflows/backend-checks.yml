@@ -50,9 +50,12 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
-      - name: Run check
+      - name: Run checkstyleMain
         working-directory: ./backend
-        run: ./gradlew check
+        run: ./gradlew checkstyleMain
+      - name: Run checkstyleTest
+        working-directory: ./backend
+        run: ./gradlew checkstyleTest
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
