@@ -162,11 +162,13 @@ class FieldOfLawControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/lookup-tables/fields-of-law")
-        .param("identifier", "AR-05")
-        .param("text", "arbeit")
-        .param("sortBy", "identifier")
-        .param("size", "10"))
+      .perform(
+        get("/api/lookup-tables/fields-of-law")
+          .param("identifier", "AR-05")
+          .param("text", "arbeit")
+          .param("sortBy", "identifier")
+          .param("size", "10")
+      )
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
