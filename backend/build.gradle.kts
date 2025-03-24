@@ -34,7 +34,7 @@ val kubernetesConfigVersion = "3.2.1"
 val protobufVersion = "4.30.1"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
-val springdocVersion = "2.8.5"
+val springdocVersion = "2.8.6"
 val sentryVersion = "8.5.0"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
