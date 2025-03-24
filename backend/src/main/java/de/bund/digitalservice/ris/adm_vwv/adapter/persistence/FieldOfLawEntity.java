@@ -24,11 +24,7 @@ public class FieldOfLawEntity {
   private Set<FieldOfLawNormEntity> norms = new HashSet<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinTable(
-    name = "field_of_law_field_of_law_parent_view",
-    joinColumns = @JoinColumn(name = "field_of_law_id"),
-    inverseJoinColumns = @JoinColumn(name = "field_of_law_parent_id")
-  )
+  @JoinColumn(name = "field_of_law_parent_id")
   private FieldOfLawEntity parent;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
