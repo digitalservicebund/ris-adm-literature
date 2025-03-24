@@ -4,7 +4,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * DocumentType as fetched from lookup table
- * 
+ *
  * @param abbreviation The abbreviated name of the documen type
  * @param name The full / official of the document type
  */

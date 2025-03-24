@@ -5,7 +5,7 @@ import org.springframework.data.domain.Sort;
 
 /**
  * Details on pagination and sorting
- * 
+ *
  * @param paged Query with pagination?
  * @param page What page (of pagination) to return
  * @param size How many elements in a page (of pagination)
