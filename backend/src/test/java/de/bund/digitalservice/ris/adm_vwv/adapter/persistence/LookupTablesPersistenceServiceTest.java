@@ -176,6 +176,32 @@ class LookupTablesPersistenceServiceTest {
     given(
       fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
     ).willReturn(
+      new PageImpl<>(List.of(createFieldOfLaw("AR-05", "Beendigung des Arbeitsverhältnisses"),
+        createFieldOfLaw("BR-05", "Bericht")))
+    );
+
+    // when
+    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+
+    // then
+    assertThat(result.getContent())
+      .hasSize(2)
+      .extracting(FieldOfLaw::text)
+      .containsOnly("Beendigung des Arbeitsverhältnisses", "Bericht");
+  }
+
+  @Test
+  void findFieldsOfLaw_byNormOnly() {
+    // given
+    FieldOfLawQuery query = new FieldOfLawQuery(
+      null,
+      null,
+      "AStG",
+      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+    );
+    given(
+      fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
+    ).willReturn(
       new PageImpl<>(List.of(createFieldOfLaw("AR-05", "Beendigung des Arbeitsverhältnisses")))
     );
 
@@ -189,11 +215,36 @@ class LookupTablesPersistenceServiceTest {
       .containsOnly("Beendigung des Arbeitsverhältnisses");
   }
 
+  @Test
+  void findFieldsOfLaw_noResults() {
+    // given
+    FieldOfLawQuery query = new FieldOfLawQuery(
+      "AR-05-01-XX-YY-ZZ",
+      "arbeitsbeschaffungsmaßnahmengegenentwurf",
+      null,
+      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+    );
+    given(
+      fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
+    ).willReturn(new PageImpl<>(List.of()));
+
+    // when
+    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+
+    // then
+    assertThat(result.getContent()).isEmpty();
+  }
+
   private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {
     FieldOfLawEntity fieldOfLawEntity = new FieldOfLawEntity();
     fieldOfLawEntity.setId(UUID.randomUUID());
     fieldOfLawEntity.setIdentifier(identifier);
     fieldOfLawEntity.setText(text);
+    FieldOfLawNormEntity normEntity = new FieldOfLawNormEntity();
+    normEntity.setId(UUID.randomUUID());
+    normEntity.setAbbreviation("AStG");
+    normEntity.setSingleNormDescription("§ 17");
+    fieldOfLawEntity.getNorms().add(normEntity);
     return fieldOfLawEntity;
   }
 }
