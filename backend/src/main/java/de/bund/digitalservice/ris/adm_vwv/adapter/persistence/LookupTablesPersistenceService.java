@@ -91,28 +91,24 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       textTerms,
       normTerms
     );
-    Page<FieldOfLaw> unorderedList = fieldOfLawRepository
+    Page<FieldOfLaw> searchResult = fieldOfLawRepository
       .findAll(fieldOfLawSpecification, pageable)
       .map(fieldOfLawEntity ->
         FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
       );
 
-    if (unorderedList.isEmpty()) {
+    if (searchResult.isEmpty()) {
       // If no results found, do not re-sort result
-      return unorderedList;
+      return searchResult;
     }
 
     String normParagraphsWithSpace = RegExUtils.replaceAll(
-      StringUtils.trim(query.identifier()),
+      StringUtils.trim(query.norm()),
       "§(\\d+)",
       "§ $1"
     );
-    List<FieldOfLaw> orderedList = orderResults(textTerms, normParagraphsWithSpace, unorderedList);
-    return new PageImpl<>(
-      orderedList,
-      unorderedList.getPageable(),
-      unorderedList.getTotalElements()
-    );
+    List<FieldOfLaw> orderedList = orderResults(textTerms, normParagraphsWithSpace, searchResult);
+    return new PageImpl<>(orderedList, searchResult.getPageable(), searchResult.getTotalElements());
   }
 
   private List<String> splitSearchTerms(String searchStr) {
@@ -122,13 +118,13 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private List<FieldOfLaw> orderResults(
     List<String> textTerms,
     String normParagraphsWithSpace,
-    Page<FieldOfLaw> unorderedList
+    Page<FieldOfLaw> searchResult
   ) {
     // Calculate scores and sort the list based on the score and identifier
     List<ScoredFieldOfLaw> scores = calculateScore(
       textTerms,
       normParagraphsWithSpace,
-      unorderedList.getContent()
+      searchResult.getContent()
     );
     return scores
       .stream()
@@ -144,10 +140,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private List<ScoredFieldOfLaw> calculateScore(
     List<String> textTerms,
     String normParagraphsWithSpace,
-    List<FieldOfLaw> fieldOfLaws
+    List<FieldOfLaw> fieldsOfLaw
   ) {
     List<ScoredFieldOfLaw> scoredFieldOfLaws = new ArrayList<>();
-    fieldOfLaws.forEach(fieldOfLaw -> {
+    fieldsOfLaw.forEach(fieldOfLaw -> {
       int score = 0;
       for (String textTerm : textTerms) {
         score += calculateScoreByTextTerm(fieldOfLaw, textTerm);

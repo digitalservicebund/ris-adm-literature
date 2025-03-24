@@ -1,11 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.persistence.criteria.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,7 +18,8 @@ public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> 
   public Predicate toPredicate(
     @Nonnull Root<FieldOfLawEntity> root,
     CriteriaQuery<?> query,
-    @Nonnull CriteriaBuilder criteriaBuilder) {
+    @Nonnull CriteriaBuilder criteriaBuilder
+  ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
 
     Predicate notationPredicate = criteriaBuilder.equal(

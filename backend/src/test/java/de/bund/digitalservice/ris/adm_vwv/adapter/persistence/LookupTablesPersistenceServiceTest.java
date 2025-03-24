@@ -5,10 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -138,6 +135,58 @@ class LookupTablesPersistenceServiceTest {
 
     // then
     assertThat(fieldsOfLaw).hasSize(1).extracting(FieldOfLaw::text).containsOnly("Arbeitsrecht");
+  }
+
+  @Test
+  void findFieldOfLaw() {
+    // given
+    FieldOfLawEntity fieldOfLawEntity = createFieldOfLaw("AR", "Arbeitsrecht");
+    given(fieldOfLawRepository.findByIdentifier("AR")).willReturn(Optional.of(fieldOfLawEntity));
+
+    // when
+    Optional<FieldOfLaw> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("AR");
+
+    // then
+    assertThat(actualFieldOfLaw)
+      .isPresent()
+      .hasValueSatisfying(fieldOfLaw -> assertThat(fieldOfLaw.text()).isEqualTo("Arbeitsrecht"));
+  }
+
+  @Test
+  void findFieldOfLaw_notFound() {
+    // given
+    given(fieldOfLawRepository.findByIdentifier("BR")).willReturn(Optional.empty());
+
+    // when
+    Optional<FieldOfLaw> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("BR");
+
+    // then
+    assertThat(actualFieldOfLaw).isEmpty();
+  }
+
+  @Test
+  void findFieldsOfLaw() {
+    // given
+    FieldOfLawQuery query = new FieldOfLawQuery(
+      "AR-05",
+      "arbeit",
+      "AStG",
+      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+    );
+    given(
+      fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
+    ).willReturn(
+      new PageImpl<>(List.of(createFieldOfLaw("AR-05", "Beendigung des Arbeitsverhältnisses")))
+    );
+
+    // when
+    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+
+    // then
+    assertThat(result.getContent())
+      .hasSize(1)
+      .extracting(FieldOfLaw::text)
+      .containsOnly("Beendigung des Arbeitsverhältnisses");
   }
 
   private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {
