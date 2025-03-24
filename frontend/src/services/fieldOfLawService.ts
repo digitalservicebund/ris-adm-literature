@@ -52,7 +52,7 @@ const service: FieldOfLawService = {
     identifier?: string,
     norm?: string,
   ) {
-    const response = await httpClient.get<Page<FieldOfLaw>>(
+    const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page<FieldOfLaw> }>(
       `lookup-tables/fields-of-law?page=${page}&size=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
     )
     if (response.status >= 300) {
@@ -60,7 +60,12 @@ const service: FieldOfLawService = {
         title: errorMessages.FIELD_OF_LAW_SEARCH_FAILED.title,
       }
     }
-    return response
+    if (response.error) return response
+
+    return {
+      status: response.status,
+      data: response.data?.page,
+    }
   },
 }
 

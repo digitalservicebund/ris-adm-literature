@@ -4,37 +4,48 @@ import { axiosInstance } from '@/services/httpClient'
 import FieldOfLawService from '@/services/fieldOfLawService.ts'
 
 const fieldOfLawResponse = {
-  fieldsOfLaw: [
-    {
-      hasChildren: false,
-      identifier: 'AR-01',
-      text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
-      linkedFields: [],
-      norms: [
+  fieldsOfLaw: [],
+  page: {
+    content: {
+      fieldsOfLaw: [
         {
-          abbreviation: 'BGB',
-          singleNormDescription: '§ 611a',
-        },
-        {
-          abbreviation: 'GewO',
-          singleNormDescription: '§ 105',
+          hasChildren: false,
+          identifier: 'AR-01',
+          text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
+          linkedFields: [],
+          norms: [
+            {
+              abbreviation: 'BGB',
+              singleNormDescription: '§ 611a',
+            },
+            {
+              abbreviation: 'GewO',
+              singleNormDescription: '§ 105',
+            },
+          ],
+          children: [],
+          parent: {
+            hasChildren: true,
+            identifier: 'AR',
+            text: 'Arbeitsrecht',
+            linkedFields: [],
+            norms: [],
+            children: [],
+            parent: undefined,
+          },
         },
       ],
-      children: [],
-      parent: {
-        hasChildren: true,
-        identifier: 'AR',
-        text: 'Arbeitsrecht',
-        linkedFields: [],
-        norms: [],
-        children: [],
-        parent: undefined,
-      },
     },
-  ],
+    size: 1,
+    number: 1,
+    numberOfElements: 1,
+    first: true,
+    last: true,
+    empty: false,
+  },
 }
 
-describe('fieldOfLawService getChildrenOf', () => {
+describe('fieldOfLawService', () => {
   let server: MockAdapter
 
   beforeEach(() => {
