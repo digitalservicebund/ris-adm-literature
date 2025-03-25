@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
 
+/**
+ * Database entity for documentation units
+ */
 @Entity
 @Data
 @Table(name = "documentation_unit")
