@@ -32,9 +32,6 @@ repositories {
 }
 
 val kubernetesConfigVersion = "3.2.1"
-// val protobufVersion = "4.30.1"
-// val joseVersion = "0.9.6"
-// val okioVersion = "3.10.2"
 val springdocVersion = "2.8.6"
 val sentryVersion = "8.5.0"
 dependencies {
@@ -43,18 +40,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion") {
-    // exclude("com.google.protobuf", "protobuf-java")
-
-    // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/12
-    // exclude("org.bitbucket.b_c", "jose4j")
-
-    // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/11
-    // exclude("com.squareup.okio", "okio-jvm")
-  }
-  // implementation("com.google.protobuf:protobuf-java:$protobufVersion")
-  // implementation("org.bitbucket.b_c:jose4j:$joseVersion")
-  // implementation("com.squareup.okio:okio-jvm:$okioVersion")
+  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
