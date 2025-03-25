@@ -5,6 +5,9 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for CRUD operations on DocumentUnits
+ */
 @Service
 @RequiredArgsConstructor
 public class DocumentationUnitService implements DocumentationUnitPort {
