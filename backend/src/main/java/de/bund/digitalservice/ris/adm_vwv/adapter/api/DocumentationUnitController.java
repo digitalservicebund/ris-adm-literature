@@ -44,7 +44,7 @@ public class DocumentationUnitController {
   }
 
   /**
-   * Update a documentation unit
+   * Updates a documentation unit
    *
    * @param documentNumber The ID of the document to update
    * @param documentationUnit The JSON of the documentation unit to update
