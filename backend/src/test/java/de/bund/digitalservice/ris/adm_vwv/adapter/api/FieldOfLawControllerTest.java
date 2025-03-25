@@ -37,13 +37,13 @@ class FieldOfLawControllerTest {
   @DisplayName("GET returns HTTP 200 and a JSON with one field of law child")
   void getFieldsOfLaw() throws Exception {
     // given
-    given(lookupTablesPort.findFieldsOfLawChildren("AR-01")).willReturn(
+    given(lookupTablesPort.findFieldsOfLawChildren("PR-01")).willReturn(
       List.of(
         new FieldOfLaw(
           UUID.randomUUID(),
           false,
-          "AR-01-05",
-          "Arbeitsrecht speziell",
+          "PR-01-05",
+          "Phantasierecht speziell",
           List.of(),
           List.of(),
           List.of(),
@@ -54,12 +54,12 @@ class FieldOfLawControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "AR-01"))
+      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "PR-01"))
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR-01-05"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht speziell"));
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("PR-01-05"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht speziell"));
   }
 
   @Test
@@ -72,7 +72,7 @@ class FieldOfLawControllerTest {
           UUID.randomUUID(),
           false,
           "AR",
-          "Arbeitsrecht",
+          "Phantasierecht",
           List.of(),
           List.of(),
           List.of(),
@@ -88,7 +88,7 @@ class FieldOfLawControllerTest {
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht"));
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht"));
   }
 
   @Test
@@ -101,7 +101,7 @@ class FieldOfLawControllerTest {
           UUID.randomUUID(),
           false,
           "AR",
-          "Arbeitsrecht",
+          "Phantasierecht",
           List.of(),
           List.of(),
           List.of(),
@@ -117,7 +117,7 @@ class FieldOfLawControllerTest {
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.identifier").value("AR"))
-      .andExpect(jsonPath("$.text").value("Arbeitsrecht"));
+      .andExpect(jsonPath("$.text").value("Phantasierecht"));
   }
 
   @Test
@@ -138,7 +138,7 @@ class FieldOfLawControllerTest {
   void findFieldsOfLaw() throws Exception {
     // given
     FieldOfLawQuery query = new FieldOfLawQuery(
-      "AR-05",
+      "PR-05",
       "arbeit",
       null,
       new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
@@ -149,8 +149,8 @@ class FieldOfLawControllerTest {
           new FieldOfLaw(
             UUID.randomUUID(),
             false,
-            "AR-05",
-            "Arbeitsrecht",
+            "PR-05",
+            "Phantasierecht",
             List.of(),
             List.of(),
             List.of(),
@@ -164,7 +164,7 @@ class FieldOfLawControllerTest {
     mockMvc
       .perform(
         get("/api/lookup-tables/fields-of-law")
-          .param("identifier", "AR-05")
+          .param("identifier", "PR-05")
           .param("text", "arbeit")
           .param("sortBy", "identifier")
           .param("size", "10")
@@ -172,7 +172,7 @@ class FieldOfLawControllerTest {
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR-05"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Arbeitsrecht"));
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("PR-05"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht"));
   }
 }

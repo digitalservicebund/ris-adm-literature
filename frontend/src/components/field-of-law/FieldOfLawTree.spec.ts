@@ -28,8 +28,8 @@ describe('FieldOfLawTree', () => {
     data: [
       {
         hasChildren: true,
-        identifier: 'AR',
-        text: 'Arbeitsrecht',
+        identifier: 'PR',
+        text: 'Phantasierecht',
         linkedFields: [],
         norms: [],
         children: [],
@@ -66,7 +66,7 @@ describe('FieldOfLawTree', () => {
     data: [
       {
         hasChildren: true,
-        identifier: 'AR-01',
+        identifier: 'PR-01',
         text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
         linkedFields: [],
         norms: [
@@ -82,8 +82,8 @@ describe('FieldOfLawTree', () => {
         children: [],
         parent: {
           hasChildren: true,
-          identifier: 'AR',
-          text: 'Arbeitsrecht',
+          identifier: 'PR',
+          text: 'Phantasierecht',
           linkedFields: [],
           norms: [],
           children: [],
@@ -125,9 +125,9 @@ describe('FieldOfLawTree', () => {
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
-    await user.click(screen.getByLabelText('Arbeitsrecht aufklappen'))
+    await user.click(screen.getByLabelText('Phantasierecht aufklappen'))
 
-    expect(fetchSpy).toBeCalledWith('AR')
+    expect(fetchSpy).toBeCalledWith('PR')
 
     expect(
       screen.getByText('Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang'),
@@ -138,8 +138,8 @@ describe('FieldOfLawTree', () => {
     renderComponent({
       nodeOfInterest: {
         hasChildren: true,
-        identifier: 'AR',
-        text: 'Arbeitsrecht',
+        identifier: 'PR',
+        text: 'Phantasierecht',
         linkedFields: [],
         norms: [],
         children: [],

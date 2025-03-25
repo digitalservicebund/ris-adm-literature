@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('RubrikenPage - Sachgebiete', () => {
-  const arbeitsrecht = 'AR | Arbeitsrecht'
+  const phantasierecht = 'PR | Phantasierecht'
 
   test.describe('With mocked routes', () => {
     test.beforeEach(async ({ page }) => {
@@ -70,13 +70,13 @@ test.describe('RubrikenPage - Sachgebiete', () => {
           })
           .click()
 
-        await expect(page.getByText(arbeitsrecht, { exact: true })).toBeVisible()
-        await expect(page.getByText('Beendigung des Arbeitsverhältnisses')).toBeHidden()
+        await expect(page.getByText(phantasierecht, { exact: true })).toBeVisible()
+        await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeHidden()
       },
     )
 
     test(
-      "click on root element in 'fields of law'-tree and on level one on 'Arbeitsrecht'",
+      "click on root element in 'fields of law'-tree and on level one on 'Phantasierecht'",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given, when
@@ -91,15 +91,15 @@ test.describe('RubrikenPage - Sachgebiete', () => {
           })
           .click()
 
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
 
-        await expect(page.getByText(arbeitsrecht, { exact: true })).toBeVisible()
-        await expect(page.getByText('Beendigung des Arbeitsverhältnisses')).toBeVisible()
+        await expect(page.getByText(phantasierecht, { exact: true })).toBeVisible()
+        await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeVisible()
       },
     )
 
     test(
-      "click on root element in 'fields of law'-tree and on level one on 'Arbeitsrecht, close and reopen root then sub-tree is still open'",
+      "click on root element in 'fields of law'-tree and on level one on 'Phantasierecht, close and reopen root then sub-tree is still open'",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -110,18 +110,18 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByLabel('Sachgebietsuche auswählen').click()
 
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
         await page.getByRole('button', { name: 'Alle Sachgebiete einklappen' }).click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
 
         // then
-        await expect(page.getByText(arbeitsrecht, { exact: true })).toBeVisible()
-        await expect(page.getByText('Beendigung des Arbeitsverhältnisses')).toBeVisible()
+        await expect(page.getByText(phantasierecht, { exact: true })).toBeVisible()
+        await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeVisible()
       },
     )
 
     test(
-      "open 'Arbeitsrecht' - tree and add 'Beendigung des Arbeitsverhältnisses' from tree",
+      "open 'Phantasierecht' - tree and add 'Beendigung der Phantasieverhältnisse' from tree",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -131,22 +131,22 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
-        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen').click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
+        await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen').click()
 
         // then
         await expect(page.getByText('Die Liste ist aktuell leer')).toBeHidden()
         await expect(
-          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses im Sachgebietsbaum anzeigen'),
+          page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse im Sachgebietsbaum anzeigen'),
         ).toBeVisible()
         await expect(
-          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses entfernen'),
+          page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse entfernen'),
         ).toBeVisible()
       },
     )
 
     test(
-      "open 'Arbeitsrecht' - tree, add and remove 'Beendigung des Arbeitsverhältnisses' from tree",
+      "open 'Phantasierecht' - tree, add and remove 'Beendigung der Phantasieverhältnisse' from tree",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -156,13 +156,13 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
-        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen').click()
-        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses entfernen').click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
+        await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen').click()
+        await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse entfernen').click()
 
         // then
         await expect(
-          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen'),
+          page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen'),
         ).toBeVisible()
       },
     )
@@ -178,17 +178,17 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
         await page
-          .getByRole('button', { name: 'Beendigung des Arbeitsverhältnisses aufklappen' })
+          .getByRole('button', { name: 'Beendigung der Phantasieverhältnisse aufklappen' })
           .click()
 
         // then
         await expect(
-          page.getByText('Beendigungen besonderer Art, nachvertragliche Ansprüche'),
+          page.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
         ).toBeVisible()
         await expect(
-          page.getByLabel('Beendigungen besonderer Art, nachvertragliche Ansprüche aufklappen'),
+          page.getByLabel('Phantasie besonderer Art, Ansprüche anderer Art aufklappen'),
         ).toBeHidden()
       },
     )
@@ -204,16 +204,16 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
-        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
-        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen').click()
-        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses entfernen').click()
+        await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
+        await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen').click()
+        await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse entfernen').click()
 
         // then
         await expect(
-          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses aus Liste entfernen'),
+          page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen'),
         ).toBeHidden()
         await expect(
-          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen'),
+          page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen'),
         ).toBeVisible()
       },
     )
@@ -265,14 +265,14 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-        await page.getByLabel('Sachgebietsbezeichnung').fill('nachvertragliche')
+        await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
         await page.keyboard.press('Enter')
 
         // then
         // if these two are visible, it must mean that the tree opened automatically with the first result
-        await expect(page.getByText('Beendigung des Arbeitsverhältnisses')).toBeVisible()
+        await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeVisible()
         await expect(
-          page.getByText('Beendigungen besonderer Art, nachvertragliche Ansprüche'),
+          page.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
         ).toBeVisible()
       },
     )
@@ -287,15 +287,15 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
+        await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
         await page.keyboard.press('Enter')
-        const searchResult = page.getByLabel('AR-05 hinzufügen')
+        const searchResult = page.getByLabel('PR-05 hinzufügen')
         await searchResult.click()
 
         // then
         await expect(
           page.getByRole('button', {
-            name: 'AR-05 Beendigung des Arbeitsverhältnisses aus Liste entfernen',
+            name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
           }),
         ).toBeVisible()
       },
@@ -312,14 +312,14 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
 
-        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
-        await page.getByLabel('Sachgebietsnorm').fill('§ 17')
+        await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
+        await page.getByLabel('Sachgebietsnorm').fill('§ 99')
         await page.keyboard.press('Enter')
 
-        await expect(page.getByLabel('AR 05 hinzufügen')).toBeVisible()
+        await expect(page.getByLabel('PR-05 hinzufügen')).toBeVisible()
 
         // if this is visible, it means that the "Normen anzeigen" checkbox got set to true
-        await expect(page.getByText('§ 17 AStG').first()).toBeVisible()
+        await expect(page.getByText('§ 99 PStG').first()).toBeVisible()
       },
     )
 
@@ -333,9 +333,9 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-        await page.getByLabel('Sachgebietskürzel').fill('AR')
+        await page.getByLabel('Sachgebietskürzel').fill('PR')
         await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
-        await page.getByLabel('Sachgebietsnorm').fill('§ 17')
+        await page.getByLabel('Sachgebietsnorm').fill('§ 99')
         await page.keyboard.press('Enter')
         await page.getByRole('button', { name: 'Suche zurücksetzen' }).click()
 
@@ -358,19 +358,19 @@ test.describe('RubrikenPage - Sachgebiete', () => {
 
       // when
       await page.getByRole('button', { name: 'Sachgebiete' }).click()
-      await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('AR')
+      await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('PR')
       await page.getByText('Abschluss').click()
 
       // then
       // it was added to the selection list
       await expect(
         page.getByLabel(
-          'AR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang im Sachgebietsbaum anzeigen',
+          'PR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang im Sachgebietsbaum anzeigen',
         ),
       ).toBeVisible()
       await expect(
         page.getByLabel(
-          'AR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang aus Liste entfernen',
+          'PR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang aus Liste entfernen',
         ),
       ).toBeVisible()
     })
@@ -391,16 +391,16 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
     await page
       .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'Arbeitsrecht' })
+      .filter({ hasText: 'Phantasierecht' })
       .click()
     // then
     await expect(page.getByRole('button', { name: 'Fertig' })).toHaveCount(1)
-    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
+    await expect(page.getByText('PRPhantasierecht')).toHaveCount(1)
 
     //when
     await page.getByRole('button', { name: 'Speichern', exact: true }).click()
     await page.reload()
     // then
-    await expect(page.getByText('ARArbeitsrecht')).toHaveCount(1)
+    await expect(page.getByText('PRPhantasierecht')).toHaveCount(1)
   })
 })

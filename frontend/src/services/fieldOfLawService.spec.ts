@@ -10,7 +10,7 @@ const fieldOfLawResponse = {
       fieldsOfLaw: [
         {
           hasChildren: false,
-          identifier: 'AR-01',
+          identifier: 'PR-01',
           text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
           linkedFields: [],
           norms: [
@@ -26,8 +26,8 @@ const fieldOfLawResponse = {
           children: [],
           parent: {
             hasChildren: true,
-            identifier: 'AR',
-            text: 'Arbeitsrecht',
+            identifier: 'PR',
+            text: 'Phantasierecht',
             linkedFields: [],
             norms: [],
             children: [],
@@ -79,10 +79,10 @@ describe('fieldOfLawService', () => {
   it('responds with data property and no error when http code is 200 on get tree', async () => {
     server.onAny().reply(200, fieldOfLawResponse)
 
-    const response = await FieldOfLawService.getTreeForIdentifier('AR-01')
+    const response = await FieldOfLawService.getTreeForIdentifier('PR-01')
 
     expect(server.history.get).toBeDefined()
-    expect(server.history.get[0].url).toBe('/api/lookup-tables/fields-of-law/AR-01')
+    expect(server.history.get[0].url).toBe('/api/lookup-tables/fields-of-law/PR-01')
     expect(response.data).toBeDefined()
     expect(response.error).toBeUndefined()
   })
@@ -90,11 +90,11 @@ describe('fieldOfLawService', () => {
   it('responds with data property and no error when http code is 200 on search', async () => {
     server.onAny().reply(200, fieldOfLawResponse)
 
-    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'AR', '')
+    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'PR', '')
 
     expect(server.history.get).toBeDefined()
     expect(server.history.get[0].url).toBe(
-      '/api/lookup-tables/fields-of-law?page=0&size=10&identifier=AR&text=&norm=',
+      '/api/lookup-tables/fields-of-law?page=0&size=10&identifier=PR&text=&norm=',
     )
     expect(response.data).toBeDefined()
     expect(response.error).toBeUndefined()
@@ -103,7 +103,7 @@ describe('fieldOfLawService', () => {
   it('responds with no data property and error when http code is >= 300 on search', async () => {
     server.onAny().reply(500)
 
-    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'AR', '')
+    const response = await FieldOfLawService.searchForFieldsOfLaw(0, 10, '', 'PR', '')
 
     expect(response.data).toBeUndefined()
     expect(response.error).toBeDefined()

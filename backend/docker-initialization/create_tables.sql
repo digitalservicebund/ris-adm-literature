@@ -128,27 +128,27 @@ CREATE
 
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation")
-VALUES('a785fb96-a45d-4d4c-8d9c-92d8a6592b22', 'AR', 'Arbeitsrecht', 10517, 'NEW');
+VALUES('a785fb96-a45d-4d4c-8d9c-92d8a6592b22', 'PR', 'Phantasierecht', 12345, 'NEW');
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation", "field_of_law_parent_id")
-VALUES('b3213dee-a986-4807-9ef3-03a3ed32c45a', 'AR-05', 'Beendigung des Arbeitsverhältnisses', 10705, 'NEW', 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22');
+VALUES('b3213dee-a986-4807-9ef3-03a3ed32c45a', 'PR-05', 'Beendigung der Phantasieverhältnisse', 12346, 'NEW', 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22');
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation", "field_of_law_parent_id")
-VALUES('9c06a4e1-02a0-4a73-b721-45ea0d98429b', 'AR-05-01', 'Beendigungen besonderer Art, nachvertragliche Ansprüche', 10706, 'NEW', 'b3213dee-a986-4807-9ef3-03a3ed32c45a');
+VALUES('9c06a4e1-02a0-4a73-b721-45ea0d98429b', 'PR-05-01', 'Phantasie besonderer Art, Ansprüche anderer Art', 12347, 'NEW', 'b3213dee-a986-4807-9ef3-03a3ed32c45a');
 
 INSERT INTO lookup_tables.field_of_law_norm
 (id, abbreviation, single_norm_description, field_of_law_id)
-VALUES('d74ab1e8-3ebe-4571-98b7-852e3b07e3c1', 'AStG', '§ 17', 'b3213dee-a986-4807-9ef3-03a3ed32c45a');
+VALUES('d74ab1e8-3ebe-4571-98b7-852e3b07e3c1', 'PStG', '§ 99', 'b3213dee-a986-4807-9ef3-03a3ed32c45a');
 
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation")
-VALUES('f478913c-979b-4e34-843c-441b9f559899', 'SO', 'Sozialrecht', 11682, 'NEW');
+VALUES('f478913c-979b-4e34-843c-441b9f559899', 'XX', 'Anderesrecht', 12348, 'NEW');
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation", "field_of_law_parent_id")
-VALUES('14728419-119a-40f7-8f9a-47ec342c6286', 'SO-03', 'Arbeitsförderungsrecht; Versicherungspflicht oder -freiheit siehe SO-04-02 oder SO-04-03;- Beitragsrecht siehe SO-04-05', 12511, 'NEW', 'f478913c-979b-4e34-843c-441b9f559899');
+VALUES('14728419-119a-40f7-8f9a-47ec342c6286', 'XX-03', 'Arbeitsförderungsrecht; Versicherungspflicht oder -freiheit siehe XX-04-02 oder XX-04-03;- Beitragsrecht siehe XX-04-05', 12349, 'NEW', 'f478913c-979b-4e34-843c-441b9f559899');
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation")
-VALUES('5eaf2263-2717-4375-8ce2-0c45fc10eaaa', 'SO-04-02', 'Versicherter Personenkreis: Versicherungspflicht und Beitragspflicht; Beginn, Ende, Fortbestand der Mitgliedschaft siehe SO-05-07-04 bis -05', 11839, 'NEW');
+VALUES('5eaf2263-2717-4375-8ce2-0c45fc10eaaa', 'XX-04-02', 'Versicherter Personenkreis: Versicherungspflicht und Beitragspflicht; Beginn, Ende, Fortbestand der Mitgliedschaft siehe XX-05-07-04 bis -05', 12350, 'NEW');
 
 INSERT INTO lookup_tables.field_of_law_field_of_law_text_reference
 (field_of_law_id, field_of_law_text_reference_id)

@@ -9,11 +9,11 @@ describe('comboboxItemService', () => {
     expect(fieldsOfLaw.data.value as ComboboxItem[]).toEqual(
       expect.arrayContaining([
         <ComboboxItem>{
-          label: 'Arbeitsrecht',
+          label: 'Phantasierecht',
           value: {
             hasChildren: true,
-            identifier: 'AR',
-            text: 'Arbeitsrecht',
+            identifier: 'PR',
+            text: 'Phantasierecht',
             linkedFields: [],
             norms: [],
             children: [],

@@ -2,8 +2,8 @@
   {
     "id": "a785fb96-a45d-4d4c-8d9c-92d8a6592b22",
     "hasChildren": true,
-    "identifier": "AR",
-    "text": "Arbeitsrecht",
+    "identifier": "PR",
+    "text": "Phantasierecht",
     "linkedFields": [],
     "norms": [],
     "children": [],
@@ -107,8 +107,8 @@
   {
     "id": "aae1de7f-d1e9-4c0f-a396-033bbc82597c",
     "hasChildren": true,
-    "identifier": "SO",
-    "text": "Sozialrecht",
+    "identifier": "XX",
+    "text": "Anderesrecht",
     "linkedFields": [],
     "norms": [],
     "children": [],

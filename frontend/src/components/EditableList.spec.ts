@@ -248,7 +248,7 @@ describe('EditableList', () => {
         modelValue: [
           new Reference({
             legalPeriodical: new LegalPeriodical({
-              title: 'Arbeitsrecht aktiv',
+              title: 'Phantasierecht aktiv',
               abbreviation: 'AA',
             }),
             citation: '12345',

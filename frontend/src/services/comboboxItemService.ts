@@ -88,12 +88,12 @@ const service: ComboboxItemService = {
       sideInformation: 'amtlich',
     }
     const aaLegalPeriodical = new LegalPeriodical({
-      title: 'Arbeitsrecht aktiv',
+      title: 'Phantasierecht aktiv',
       abbreviation: 'AA',
       citationStyle: '2011',
     })
     const aaItem: ComboboxItem = {
-      label: 'AA | Arbeitsrecht aktiv',
+      label: 'AA | Phantasierecht aktiv',
       value: aaLegalPeriodical,
       sideInformation: 'amtlich',
     }
@@ -259,8 +259,8 @@ const service: ComboboxItemService = {
     const fieldOfLawValues: FieldOfLaw[] = [
       {
         hasChildren: true,
-        identifier: 'AR',
-        text: 'Arbeitsrecht',
+        identifier: 'PR',
+        text: 'Phantasierecht',
         linkedFields: [],
         norms: [],
         children: [],
@@ -268,7 +268,7 @@ const service: ComboboxItemService = {
       },
       {
         hasChildren: true,
-        identifier: 'AR-01',
+        identifier: 'PR-01',
         text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
         linkedFields: [],
         norms: [
@@ -284,8 +284,8 @@ const service: ComboboxItemService = {
         children: [],
         parent: {
           hasChildren: true,
-          identifier: 'AR',
-          text: 'Arbeitsrecht',
+          identifier: 'PR',
+          text: 'Phantasierecht',
           linkedFields: [],
           norms: [],
           children: [],

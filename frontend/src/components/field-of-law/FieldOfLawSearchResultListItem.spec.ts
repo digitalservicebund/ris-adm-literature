@@ -9,8 +9,8 @@ function renderComponent(options?: {
   linkedFields?: string[]
 }) {
   const fieldOfLaw = {
-    identifier: options?.identifier ?? 'AR',
-    text: options?.text ?? 'Arbeitsrecht',
+    identifier: options?.identifier ?? 'PR',
+    text: options?.text ?? 'Phantasierecht',
     linkedFields: options?.linkedFields ?? [],
     norms: [],
     children: [],
@@ -30,14 +30,14 @@ describe('FieldOfLawSearchResults', () => {
   it('render search results', () => {
     renderComponent()
 
-    expect(screen.getByText('AR')).toBeInTheDocument()
-    expect(screen.getByText('Arbeitsrecht')).toBeInTheDocument()
+    expect(screen.getByText('PR')).toBeInTheDocument()
+    expect(screen.getByText('Phantasierecht')).toBeInTheDocument()
   })
 
   it("on identifier click emit 'node:add'", async () => {
-    const { emitted, user } = renderComponent({ identifier: 'AR-01' })
+    const { emitted, user } = renderComponent({ identifier: 'PR-01' })
 
-    await user.click(screen.getByLabelText('AR-01 hinzufügen'))
+    await user.click(screen.getByLabelText('PR-01 hinzufügen'))
 
     expect(emitted()['node:add']).toBeTruthy()
   })
