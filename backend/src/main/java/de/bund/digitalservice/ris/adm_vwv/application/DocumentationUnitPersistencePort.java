@@ -4,7 +4,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Optional;
 
 /**
- * Port for CRUD operations on DocumentationUnits
+ * Output persistence port for CRUD operations on documentation units.
  */
 public interface DocumentationUnitPersistencePort {
   Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber);

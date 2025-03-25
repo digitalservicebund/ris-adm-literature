@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for CRUD operations on DocumentUnits
+ * Application service for CRUD operations on document units.
  */
 @Service
 @RequiredArgsConstructor

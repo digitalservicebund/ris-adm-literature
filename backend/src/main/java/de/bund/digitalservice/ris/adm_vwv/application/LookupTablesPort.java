@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 
 /**
- * The port for looking up document types
+ * Input port for document types.
  */
 public interface LookupTablesPort {
   Page<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query);

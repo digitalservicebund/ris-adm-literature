@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for querying lookup tables
+ * Application service for lookup tables.
  */
 @Service
 @RequiredArgsConstructor

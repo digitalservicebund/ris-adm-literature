@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 
 /**
- * Port for lookup table access
+ * Output persistence port for lookup tables.
  */
 public interface LookupTablesPersistencePort {
   Page<DocumentType> findBySearchQuery(@Nonnull DocumentTypeQuery query);
