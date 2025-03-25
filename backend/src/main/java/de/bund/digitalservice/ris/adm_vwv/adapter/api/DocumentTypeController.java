@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller for acessing the DocumentType ressource (lookup table)
+ * REST controller for accessing the {@link DocumentType} resource (lookup table).
  */
 @RestController
 @RequiredArgsConstructor
