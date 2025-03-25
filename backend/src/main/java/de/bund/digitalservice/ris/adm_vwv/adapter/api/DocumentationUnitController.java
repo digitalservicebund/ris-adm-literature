@@ -18,7 +18,7 @@ public class DocumentationUnitController {
   private final DocumentationUnitPort documentationUnitPort;
 
   /**
-   * GET a single documentation unit by it's ID
+   * Returns a single documentation unit by its document number
    *
    * @param documentNumber The ID of the document unit to be returned
    *
