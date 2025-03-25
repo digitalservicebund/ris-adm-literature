@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * DocumentTypes as returned by controller
+ * Response with DocumentTypes and pagination information
  *
  * @param documentTypes List of document types to be returned
  * @param page List of paginated document types to be returned
