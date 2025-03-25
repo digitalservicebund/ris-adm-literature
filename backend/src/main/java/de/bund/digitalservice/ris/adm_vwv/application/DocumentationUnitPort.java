@@ -3,6 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 
+/**
+ * Input port for CRUD operations on documentation units.
+ */
 public interface DocumentationUnitPort {
   Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber);
   DocumentationUnit create();

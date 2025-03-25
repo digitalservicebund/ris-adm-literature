@@ -3,12 +3,13 @@ import com.github.jk1.license.filter.LicenseBundleNormalizer
 
 plugins {
   java
-  id("org.springframework.boot") version "3.4.3"
+  id("org.springframework.boot") version "3.4.4"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
-  id("org.sonarqube") version "6.0.1.5171"
+  id("org.sonarqube") version "6.1.0.5360"
   id("com.github.jk1.dependency-license-report") version "2.9"
   id("com.diffplug.spotless") version "7.0.2"
+  id("checkstyle")
 }
 
 group = "de.bund.digitalservice"
@@ -30,11 +31,11 @@ repositories {
   mavenCentral()
 }
 
-val kubernetesConfigVersion = "3.2.0"
+val kubernetesConfigVersion = "3.2.1"
 val protobufVersion = "4.30.1"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
-val springdocVersion = "2.8.5"
+val springdocVersion = "2.8.6"
 val sentryVersion = "8.5.0"
 val hypersistenceVersion = "3.9.5"
 dependencies {
@@ -194,4 +195,14 @@ spotless {
   if (System.getProperty("os.name", "undefined").contains("Windows")) {
     lineEndings = LineEnding.UNIX
   }
+}
+
+tasks.named<Checkstyle>("checkstyleMain") {
+  source = sourceSets["main"].allJava
+  configFile = rootProject.file("checkstyle/config-main.xml")
+}
+
+tasks.named<Checkstyle>("checkstyleTest") {
+  source = sourceSets["test"].allJava
+  configFile = rootProject.file("checkstyle/config-test.xml")
 }
