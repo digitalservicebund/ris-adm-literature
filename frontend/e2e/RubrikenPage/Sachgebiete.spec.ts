@@ -192,6 +192,188 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         ).toBeHidden()
       },
     )
+
+    test(
+      'add field of law from tree and remove via selection list',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
+        await page.getByRole('button', { name: 'Arbeitsrecht aufklappen' }).click()
+        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen').click()
+        await page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses entfernen').click()
+
+        // then
+        await expect(
+          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses aus Liste entfernen'),
+        ).toBeHidden()
+        await expect(
+          page.getByLabel('AR-05 Beendigung des Arbeitsverhältnisses hinzufügen'),
+        ).toBeVisible()
+      },
+    )
+
+    // Search
+
+    test('Search without results', { tag: ['@RISDEV-6315'] }, async ({ page }) => {
+      // given
+      await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+      // when
+      await page.getByRole('button', { name: 'Sachgebiete' }).click()
+      await page.getByLabel('Sachgebietsuche auswählen').click()
+      await page.getByLabel('Sachgebietskürzel').fill('xyz')
+      await page.keyboard.press('Enter')
+
+      // then
+      await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+    })
+
+    test(
+      'Search with paginated results - test the pagination navigation',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
+        await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
+
+        // then
+        // There are only 3 results
+        await expect(page.getByText('Seite 1')).toBeHidden()
+        await expect(page.getByRole('button', { name: 'vorherige Ergebnisse' })).toBeHidden()
+        await expect(page.getByRole('button', { name: 'nächste Ergebnisse' })).toBeHidden()
+      },
+    )
+
+    test(
+      'Search with paginated results - first result to open in tree',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('nachvertragliche')
+        await page.keyboard.press('Enter')
+
+        // then
+        // if these two are visible, it must mean that the tree opened automatically with the first result
+        await expect(page.getByText('Beendigung des Arbeitsverhältnisses')).toBeVisible()
+        await expect(
+          page.getByText('Beendigungen besonderer Art, nachvertragliche Ansprüche'),
+        ).toBeVisible()
+      },
+    )
+
+    test(
+      'Search with paginated results - click on result opens tree and adds result to list',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
+        await page.keyboard.press('Enter')
+        const searchResult = page.getByLabel('AR-05 hinzufügen')
+        await searchResult.click()
+
+        // then
+        await expect(
+          page.getByRole('button', {
+            name: 'AR-05 Beendigung des Arbeitsverhältnisses aus Liste entfernen',
+          }),
+        ).toBeVisible()
+      },
+    )
+
+    test(
+      'Search with both norm string and description - sets show norm checkbox to true',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+
+        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
+        await page.getByLabel('Sachgebietsnorm').fill('§ 17')
+        await page.keyboard.press('Enter')
+
+        await expect(page.getByLabel('AR 05 hinzufügen')).toBeVisible()
+
+        // if this is visible, it means that the "Normen anzeigen" checkbox got set to true
+        await expect(page.getByText('§ 17 AStG').first()).toBeVisible()
+      },
+    )
+
+    test(
+      "click on 'Suche zurücksetzen' empties search inputs, hides search results and collapses tree",
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietskürzel').fill('AR')
+        await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
+        await page.getByLabel('Sachgebietsnorm').fill('§ 17')
+        await page.keyboard.press('Enter')
+        await page.getByRole('button', { name: 'Suche zurücksetzen' }).click()
+
+        // then
+        await expect(page.getByLabel('Sachgebietskürzel')).toHaveValue('')
+        await expect(page.getByLabel('Sachgebietsbezeichnung')).toHaveValue('')
+        await expect(page.getByLabel('Sachgebietsnorm')).toHaveValue('')
+        await expect(page.getByLabel('BR-05-01-06 hinzufügen')).toBeHidden()
+        await expect(
+          page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }),
+        ).toBeVisible()
+      },
+    )
+
+    // Direct input
+
+    test('Direct input - search and choose item', { tag: ['@RISDEV-6315'] }, async ({ page }) => {
+      // given
+      await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+      // when
+      await page.getByRole('button', { name: 'Sachgebiete' }).click()
+      await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('AR')
+      await page.getByText('Abschluss').click()
+
+      // then
+      // it was added to the selection list
+      await expect(
+        page.getByLabel(
+          'AR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang im Sachgebietsbaum anzeigen',
+        ),
+      ).toBeVisible()
+      await expect(
+        page.getByLabel(
+          'AR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang aus Liste entfernen',
+        ),
+      ).toBeVisible()
+    })
   })
 
   test('Direkteingabe allows for entering data which persists through a reload', async ({
