@@ -12,7 +12,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for lookup tables persistence
+ * Persistence service for lookup tables
  */
 @Service
 @Slf4j
