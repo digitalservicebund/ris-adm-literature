@@ -7,6 +7,9 @@ import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * JPA specification for querying fields of law by identifier, text and norm.
+ */
 @RequiredArgsConstructor
 public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> {
 

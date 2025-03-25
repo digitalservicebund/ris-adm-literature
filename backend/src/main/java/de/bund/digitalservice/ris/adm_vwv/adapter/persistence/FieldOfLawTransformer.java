@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class FieldOfLawTransformer {
+class FieldOfLawTransformer {
 
   public static FieldOfLaw transformToDomain(
     FieldOfLawEntity fieldOfLawEntity,

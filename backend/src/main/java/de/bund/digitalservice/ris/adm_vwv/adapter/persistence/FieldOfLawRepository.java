@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface FieldOfLawRepository
+interface FieldOfLawRepository
   extends JpaRepository<FieldOfLawEntity, UUID>, JpaSpecificationExecutor<FieldOfLawEntity> {
   Optional<FieldOfLawEntity> findByIdentifier(String identifier);
 
