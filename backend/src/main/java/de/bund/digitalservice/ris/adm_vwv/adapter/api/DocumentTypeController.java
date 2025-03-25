@@ -22,7 +22,7 @@ public class DocumentTypeController {
   private final LookupTablesPort lookupTablesPort;
 
   /**
-   * GET document types (optionally with search term, pagination, sorting)
+   * Return document types (optionally with search term, pagination, sorting)
    *
    * @param searchQuery Keyword to restrict results to.
    * @param paged Search with pagination?
