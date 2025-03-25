@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Allowed routes, HTTP verbs as well as CSRF and CORS settings
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
