@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.Data;
 
 /**
- * Database entity for documentation units
+ * Documentation unit JPA entity
  */
 @Entity
 @Data
