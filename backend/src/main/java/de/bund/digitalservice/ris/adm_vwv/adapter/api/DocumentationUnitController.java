@@ -17,6 +17,13 @@ public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
 
+  /**
+ * GET a single documentation unit by it's ID
+ * 
+ * @param documentNumber The ID of the document unit to be returned
+ * 
+ * @return The document unit if found
+ */
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitPort
@@ -36,6 +43,14 @@ public class DocumentationUnitController {
     return documentationUnitPort.create();
   }
 
+  /**
+ * Update a documentation unit
+ * 
+ * @param documentNumber The ID of the document to update
+ * @param documentationUnit The JSON of the documentation unit to update
+ * 
+ * @return the updated documenation unit if found
+ */
   @PutMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
     @PathVariable String documentNumber,
