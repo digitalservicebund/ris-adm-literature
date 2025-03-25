@@ -359,19 +359,14 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       // when
       await page.getByRole('button', { name: 'Sachgebiete' }).click()
       await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('PR')
-      await page.getByText('Abschluss').click()
+      await page.getByText('Beendigung').click()
 
       // then
       // it was added to the selection list
       await expect(
-        page.getByLabel(
-          'PR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang im Sachgebietsbaum anzeigen',
-        ),
-      ).toBeVisible()
-      await expect(
-        page.getByLabel(
-          'PR-01 Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang aus Liste entfernen',
-        ),
+        page.getByRole('button', {
+          name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+        }),
       ).toBeVisible()
     })
   })
