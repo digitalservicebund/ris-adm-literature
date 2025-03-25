@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service for CRUD operations on documentation units
+ * Persistence service for CRUD operations on documentation units
  */
 @Service
 @Slf4j
