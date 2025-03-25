@@ -9,6 +9,7 @@ plugins {
   id("org.sonarqube") version "6.0.1.5171"
   id("com.github.jk1.dependency-license-report") version "2.9"
   id("com.diffplug.spotless") version "7.0.2"
+  id("checkstyle")
 }
 
 group = "de.bund.digitalservice"
@@ -192,4 +193,14 @@ spotless {
   if (System.getProperty("os.name", "undefined").contains("Windows")) {
     lineEndings = LineEnding.UNIX
   }
+}
+
+tasks.named<Checkstyle>("checkstyleMain") {
+  source = sourceSets["main"].allJava
+  configFile = rootProject.file("checkstyle/config-main.xml")
+}
+
+tasks.named<Checkstyle>("checkstyleTest") {
+  source = sourceSets["test"].allJava
+  configFile = rootProject.file("checkstyle/config-test.xml")
 }

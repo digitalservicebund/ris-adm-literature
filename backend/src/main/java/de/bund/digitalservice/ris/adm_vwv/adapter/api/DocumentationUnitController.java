@@ -8,12 +8,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for CRUD on documentation units.
+ */
 @RestController
 @RequiredArgsConstructor
 public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
 
+  /**
+   * Returns a single documentation unit by its document number
+   *
+   * @param documentNumber The document number of the document unit to be returned
+   *
+   * @return The document unit or HTTP 404 if not found
+   */
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitPort
@@ -33,6 +43,14 @@ public class DocumentationUnitController {
     return documentationUnitPort.create();
   }
 
+  /**
+   * Updates a documentation unit
+   *
+   * @param documentNumber The document number of the document to update
+   * @param documentationUnit The JSON of the documentation unit to update
+   *
+   * @return the updated documentation unit or HTTP 404 if not found
+   */
   @PutMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
     @PathVariable String documentNumber,

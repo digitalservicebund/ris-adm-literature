@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+/**
+ * Persistence service for lookup tables
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
