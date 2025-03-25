@@ -31,7 +31,7 @@ public class DocumentTypeController {
    * @param sortBy Sort by what property?
    * @param sortDirection Sort ascending or descending?
    *
-   * @return DocumentTypeResponse
+   * @return Response object with list of DocumentTypes and pagination information
    */
   @GetMapping("api/lookup-tables/document-types")
   public ResponseEntity<DocumentTypeResponse> getDocumentTypes(
