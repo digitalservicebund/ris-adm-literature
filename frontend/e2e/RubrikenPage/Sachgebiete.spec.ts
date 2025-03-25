@@ -343,7 +343,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await expect(page.getByLabel('Sachgebietskürzel')).toHaveValue('')
         await expect(page.getByLabel('Sachgebietsbezeichnung')).toHaveValue('')
         await expect(page.getByLabel('Sachgebietsnorm')).toHaveValue('')
-        await expect(page.getByLabel('BR-05-01-06 hinzufügen')).toBeHidden()
+        await expect(page.getByLabel('PR-05 hinzufügen')).toBeHidden()
         await expect(
           page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }),
         ).toBeVisible()
