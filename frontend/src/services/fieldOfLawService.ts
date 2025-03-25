@@ -55,6 +55,7 @@ const service: FieldOfLawService = {
     const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page<FieldOfLaw> }>(
       `lookup-tables/fields-of-law?page=${page}&size=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
     )
+    // TODO why sending fieldsOfLaw?
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.FIELD_OF_LAW_SEARCH_FAILED.title,

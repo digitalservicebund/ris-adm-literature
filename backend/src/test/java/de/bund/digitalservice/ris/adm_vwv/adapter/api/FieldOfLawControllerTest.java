@@ -172,7 +172,7 @@ class FieldOfLawControllerTest {
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.page.content[0].identifier").value("PR-05"))
-      .andExpect(jsonPath("$.page.content[0].text").value("Phantasierecht"));
+      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("PR-05"))
+      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht"));
   }
 }

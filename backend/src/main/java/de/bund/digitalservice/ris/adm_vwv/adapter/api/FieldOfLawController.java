@@ -95,6 +95,6 @@ public class FieldOfLawController {
         pageQuery
       )
     );
-    return new FieldOfLawQueryResponse(result);
+    return new FieldOfLawQueryResponse(result.getContent(), result);
   }
 }
