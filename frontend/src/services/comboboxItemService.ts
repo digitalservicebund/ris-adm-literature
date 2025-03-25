@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { API_PREFIX } from './httpClient'
 import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
-import type { Court } from '@/domain/documentUnit'
+import type { Court, DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
@@ -14,22 +14,33 @@ import errorMessages from '@/i18n/errors.json'
 
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
+  fieldsOfLaw = 'lookup-tables/fields-of-law',
 }
 
 function formatDropdownItems(
   responseData: ComboboxInputModelType[],
   endpoint: Endpoint,
 ): ComboboxItem[] {
-  if (endpoint == Endpoint.documentTypes) {
-    return (responseData as { abbreviation: string; name: string }[]).map((item) => ({
-      label: item.name,
-      value: {
+  switch (endpoint) {
+    case Endpoint.documentTypes: {
+      return (responseData as DocumentType[]).map((item) => ({
         label: item.name,
-        abbreviation: item.abbreviation,
-      },
-      additionalInformation: item.abbreviation,
-    }))
+        value: {
+          label: item.name,
+          abbreviation: item.abbreviation,
+        },
+        additionalInformation: item.abbreviation,
+      }))
+    }
+    case Endpoint.fieldsOfLaw: {
+      return (responseData as FieldOfLaw[]).map((item) => ({
+        label: item.identifier,
+        value: item,
+        additionalInformation: item.text,
+      }))
+    }
   }
+
   return []
 }
 
@@ -44,13 +55,22 @@ function fetchFromEndpoint(
     ...(options?.paged != undefined ? { paged: options?.paged?.toString() } : {}),
   }))
   const url = computed(() => {
-    const queryParams = new URLSearchParams(requestParams.value).toString()
+    let queryParams = new URLSearchParams(requestParams.value).toString()
+    if (endpoint == Endpoint.fieldsOfLaw) {
+      queryParams = queryParams.replace('searchQuery', 'identifier')
+    }
     return `${API_PREFIX}${endpoint}?${queryParams}`
   })
 
   return useFetch<ComboboxItem[]>(url, {
     afterFetch: (ctx) => {
-      ctx.data = formatDropdownItems(ctx.data.documentTypes, endpoint)
+      switch (endpoint) {
+        case Endpoint.documentTypes:
+          ctx.data = formatDropdownItems(ctx.data.documentTypes, endpoint)
+          break
+        case Endpoint.fieldsOfLaw:
+          ctx.data = formatDropdownItems(ctx.data.fieldsOfLaw, endpoint)
+      }
       return ctx
     },
     onFetchError: ({ response }) => ({
@@ -254,72 +274,8 @@ const service: ComboboxItemService = {
     }
     return result
   },
-  // Once there is a backend, look into Caselaw for implementing loading of items (type UseFetchReturn).
-  getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) => {
-    const fieldOfLawValues: FieldOfLaw[] = [
-      {
-        hasChildren: true,
-        identifier: 'PR',
-        text: 'Phantasierecht',
-        linkedFields: [],
-        norms: [],
-        children: [],
-        parent: undefined,
-      },
-      {
-        hasChildren: true,
-        identifier: 'PR-01',
-        text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
-        linkedFields: [],
-        norms: [
-          {
-            abbreviation: 'BGB',
-            singleNormDescription: '§ 611a',
-          },
-          {
-            abbreviation: 'GewO',
-            singleNormDescription: '§ 105',
-          },
-        ],
-        children: [],
-        parent: {
-          hasChildren: true,
-          identifier: 'PR',
-          text: 'Phantasierecht',
-          linkedFields: [],
-          norms: [],
-          children: [],
-          parent: undefined,
-        },
-      },
-    ]
-    const fieldOfLaw = ref(
-      fieldOfLawValues.map((item) => <ComboboxItem>{ label: item.text, value: item }),
-    )
-    const execute = async () => {
-      if (filter?.value && filter.value.length > 0) {
-        const filteredItems = fieldOfLawValues.filter((item) =>
-          item.text.toLowerCase().startsWith((filter.value as string).toLowerCase()),
-        )
-        const filteredComboBoxItems = filteredItems.map(
-          (item) => <ComboboxItem>{ label: item.text, value: item },
-        )
-        fieldOfLaw.value = [...filteredComboBoxItems]
-      } else {
-        fieldOfLaw.value = fieldOfLawValues.map(
-          (item) => <ComboboxItem>{ label: item.text, value: item },
-        )
-      }
-      return service.getFieldOfLawSearchByIdentifier(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: fieldOfLaw,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
+  getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) =>
+    fetchFromEndpoint(Endpoint.fieldsOfLaw, filter, { size: 30 }),
 }
 
 export default service
