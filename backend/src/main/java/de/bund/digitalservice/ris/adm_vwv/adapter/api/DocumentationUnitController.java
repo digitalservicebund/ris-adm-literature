@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for CRUD on documentation units
+ * REST controller for CRUD on documentation units.
  */
 @RestController
 @RequiredArgsConstructor
