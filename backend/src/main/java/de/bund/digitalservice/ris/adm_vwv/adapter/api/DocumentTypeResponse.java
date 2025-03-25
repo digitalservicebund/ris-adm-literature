@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 /**
  * Response with DocumentTypes and pagination information
  *
- * @param documentTypes List of document types to be returned
+ * @param documentTypes List of document types
  * @param page List of paginated document types to be returned
  */
 public record DocumentTypeResponse(List<DocumentType> documentTypes, Page<DocumentType> page) {}
