@@ -44,9 +44,3 @@ Check tests
 ```bash
 ./gradlew checkstyleTest
 ```
-
-Check both
-
-```bash
-./gradlew check
-```
