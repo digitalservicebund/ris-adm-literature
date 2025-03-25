@@ -22,7 +22,7 @@ public class DocumentationUnitController {
    *
    * @param documentNumber The document number of the document unit to be returned
    *
-   * @return The document unit if found
+   * @return The document unit or HTTP 404 if not found
    */
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
