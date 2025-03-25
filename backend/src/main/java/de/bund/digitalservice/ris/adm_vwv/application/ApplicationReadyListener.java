@@ -6,7 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Respond to application startup completion
+ * Listener for application readiness
  */
 @Component
 @Slf4j
