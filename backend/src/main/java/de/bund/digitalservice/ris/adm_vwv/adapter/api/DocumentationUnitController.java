@@ -20,7 +20,7 @@ public class DocumentationUnitController {
   /**
    * Returns a single documentation unit by its document number
    *
-   * @param documentNumber The ID of the document unit to be returned
+   * @param documentNumber The document number of the document unit to be returned
    *
    * @return The document unit if found
    */
