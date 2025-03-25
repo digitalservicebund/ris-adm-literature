@@ -102,7 +102,7 @@ describe('FieldOfLawTree', () => {
 
   it('Tree is fully closed upon at start', async () => {
     renderComponent()
-    expect(fetchSpy).toBeCalledTimes(1)
+    expect(fetchSpy).toBeCalledTimes(0)
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
     expect(screen.getByLabelText('Alle Sachgebiete aufklappen')).toBeInTheDocument()
     expect(screen.queryByText('Text for AB')).not.toBeInTheDocument()
@@ -114,7 +114,7 @@ describe('FieldOfLawTree', () => {
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
-    expect(fetchSpy).toBeCalledTimes(4)
+    expect(fetchSpy).toBeCalledTimes(1)
     expect(screen.getByText('Text for AB')).toBeInTheDocument()
     expect(screen.getByText('And text for CD with link to AB-01')).toBeInTheDocument()
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
