@@ -11,6 +11,9 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service for CRUD operations on documentation units
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
