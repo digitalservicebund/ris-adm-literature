@@ -6,7 +6,7 @@ plugins {
   id("org.springframework.boot") version "3.4.4"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
-  id("org.sonarqube") version "6.0.1.5171"
+  id("org.sonarqube") version "6.1.0.5360"
   id("com.github.jk1.dependency-license-report") version "2.9"
   id("com.diffplug.spotless") version "7.0.2"
   id("checkstyle")
