@@ -61,22 +61,18 @@ describe('FieldOfLawTree', () => {
       },
     ],
   })
-  const dataOnAR = Promise.resolve({
+  const dataOnPR = Promise.resolve({
     status: 200,
     data: [
       {
         hasChildren: true,
-        identifier: 'PR-01',
-        text: 'Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang',
+        identifier: 'PR-05',
+        text: 'Beendigung der Phantasieverhältnisse',
         linkedFields: [],
         norms: [
           {
-            abbreviation: 'BGB',
-            singleNormDescription: '§ 611a',
-          },
-          {
-            abbreviation: 'GewO',
-            singleNormDescription: '§ 105',
+            abbreviation: 'PStG',
+            singleNormDescription: '§ 99',
           },
         ],
         children: [],
@@ -96,8 +92,8 @@ describe('FieldOfLawTree', () => {
   const fetchSpy = vi
     .spyOn(FieldOfLawService, 'getChildrenOf')
     .mockImplementation((identifier: string) => {
-      if (identifier != 'root') return dataOnAR
-      return dataOnRoot
+      if (identifier == 'root') return dataOnRoot
+      return dataOnPR
     })
 
   it('Tree is fully closed upon at start', async () => {
@@ -129,9 +125,7 @@ describe('FieldOfLawTree', () => {
 
     expect(fetchSpy).toBeCalledWith('PR')
 
-    expect(
-      screen.getByText('Arbeitsvertrag: Abschluss, Klauseln, Arten, Betriebsübergang'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Beendigung der Phantasieverhältnisse')).toBeInTheDocument()
   })
 
   it('Node of interest is set and the tree is truncated', async () => {
