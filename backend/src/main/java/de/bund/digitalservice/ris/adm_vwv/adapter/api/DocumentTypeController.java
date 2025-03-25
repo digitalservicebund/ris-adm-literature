@@ -22,17 +22,17 @@ public class DocumentTypeController {
   private final LookupTablesPort lookupTablesPort;
 
   /**
- * GET document types (optionally with search term, pagination, sorting)
- * 
- * @param searchQuery Keyword to restrict results to.
- * @param paged Search with pagination?
- * @param page Which page of pagination to return?
- * @param size How many elements per page in pagination?
- * @param sortBy Sort by what property?
- * @param sortDirection Sort ascending or descending?
- * 
- * @return DocumentTypeResponse
- */
+   * GET document types (optionally with search term, pagination, sorting)
+   *
+   * @param searchQuery Keyword to restrict results to.
+   * @param paged Search with pagination?
+   * @param page Which page of pagination to return?
+   * @param size How many elements per page in pagination?
+   * @param sortBy Sort by what property?
+   * @param sortDirection Sort ascending or descending?
+   *
+   * @return DocumentTypeResponse
+   */
   @GetMapping("api/lookup-tables/document-types")
   public ResponseEntity<DocumentTypeResponse> getDocumentTypes(
     @RequestParam(required = false) String searchQuery,
