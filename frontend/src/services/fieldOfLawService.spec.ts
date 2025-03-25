@@ -79,7 +79,7 @@ describe('fieldOfLawService', () => {
   it('responds with data property and no error when http code is 200 on get tree', async () => {
     server.onAny().reply(200, fieldOfLawResponse)
 
-    const response = await FieldOfLawService.getTreeForIdentifier('PR-01')
+    const response = await FieldOfLawService.getParentAndChildrenForIdentifier('PR-01')
 
     expect(server.history.get).toBeDefined()
     expect(server.history.get[0].url).toBe('/api/lookup-tables/fields-of-law/PR-01')

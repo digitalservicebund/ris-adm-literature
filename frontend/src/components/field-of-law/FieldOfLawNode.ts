@@ -23,18 +23,36 @@ export class NodeHelper implements NodeHelperInterface {
     if (StringsUtil.isEmpty(clickedIdentifier)) {
       return Array.from(itemsToReturn.values())
     }
-    const response = await FieldOfLawService.getTreeForIdentifier(clickedIdentifier)
+    const response = await FieldOfLawService.getParentAndChildrenForIdentifier(clickedIdentifier)
     if (response.data) {
-      this.extractNodes(itemsToReturn, response.data)
+      this.extractChildren(itemsToReturn, response.data)
+      this.extractParents(itemsToReturn, response.data)
     }
     return Array.from(itemsToReturn.values())
   }
 
-  extractNodes(itemsToReturn: Map<string, FieldOfLaw>, node: FieldOfLaw): Map<string, FieldOfLaw> {
+  extractChildren(
+    itemsToReturn: Map<string, FieldOfLaw>,
+    node: FieldOfLaw,
+  ): Map<string, FieldOfLaw> {
     itemsToReturn.set(node.identifier, node)
     if (node.children.length > 0) {
       for (const child of node.children) {
-        this.extractNodes(itemsToReturn, child)
+        this.extractChildren(itemsToReturn, child)
+      }
+    }
+
+    return itemsToReturn
+  }
+
+  extractParents(
+    itemsToReturn: Map<string, FieldOfLaw>,
+    node: FieldOfLaw,
+  ): Map<string, FieldOfLaw> {
+    if (node.parent) {
+      itemsToReturn.set(node.parent.identifier, node.parent)
+      if (node.parent.parent) {
+        this.extractParents(itemsToReturn, node.parent)
       }
     }
 

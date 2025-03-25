@@ -5,7 +5,7 @@ import errorMessages from '@/i18n/errors.json'
 
 interface FieldOfLawService {
   getChildrenOf(identifier: string): Promise<ServiceResponse<FieldOfLaw[]>>
-  getTreeForIdentifier(identifier: string): Promise<ServiceResponse<FieldOfLaw>>
+  getParentAndChildrenForIdentifier(identifier: string): Promise<ServiceResponse<FieldOfLaw>>
   searchForFieldsOfLaw(
     page: number,
     size: number,
@@ -36,7 +36,7 @@ const service: FieldOfLawService = {
       data: response.data?.fieldsOfLaw,
     }
   },
-  async getTreeForIdentifier(identifier: string) {
+  async getParentAndChildrenForIdentifier(identifier: string) {
     const response = await httpClient.get<FieldOfLaw>(`lookup-tables/fields-of-law/${identifier}`)
     if (response.status >= 300) {
       response.error = {
@@ -55,6 +55,7 @@ const service: FieldOfLawService = {
     const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page<FieldOfLaw> }>(
       `lookup-tables/fields-of-law?page=${page}&size=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
     )
+    // TODO why sending fieldsOfLaw?
     if (response.status >= 300) {
       response.error = {
         title: errorMessages.FIELD_OF_LAW_SEARCH_FAILED.title,

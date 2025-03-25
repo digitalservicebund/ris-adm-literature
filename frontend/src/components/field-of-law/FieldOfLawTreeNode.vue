@@ -57,23 +57,11 @@ function toggleExpanded() {
 }
 
 watch(
-  props,
+  () => props.expandValues,
   () => {
-    isExpanded.value = props.expandValues.some(
-      (expandedNode) => expandedNode.identifier == props.node.identifier,
-    )
-  },
-  { immediate: true },
-)
-
-watch(
-  props,
-  async () => {
-    if (props.nodeOfInterest && props.isRoot) {
-      children.value = await props.nodeHelper.getFilteredChildren(props.node, props.expandValues)
-    } else if (props.isRoot) {
-      children.value = await props.nodeHelper.getChildren(props.node)
-    }
+    isExpanded.value = props.expandValues.some((expandedNode) => {
+      return expandedNode.identifier == props.node.identifier
+    })
   },
   { immediate: true },
 )

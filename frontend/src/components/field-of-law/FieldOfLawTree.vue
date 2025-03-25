@@ -29,20 +29,23 @@ const showNormsModelValue = computed({
   set: () => emit('toggle-show-norms'),
 })
 
-async function expandNode(node: FieldOfLaw) {
+async function expandNodeOfInterest(node: FieldOfLaw) {
   const itemsToReturn = new Map<string, FieldOfLaw>()
-  if (props.nodeOfInterest) {
-    itemsToReturn.set(node.identifier, node)
-    const response = await nodeHelper.value.getAncestors(props.nodeOfInterest.identifier)
-    for (const node of response) {
-      itemsToReturn.set(node.identifier, node)
-    }
-    itemsToReturn.set(root.value.identifier, root.value)
+
+  itemsToReturn.set(root.value.identifier, root.value)
+
+  const response = await nodeHelper.value.getAncestors(node.identifier)
+  for (const ancestorNode of response) {
+    itemsToReturn.set(ancestorNode.identifier, ancestorNode)
   }
+
   expandedNodes.value = Array.from(itemsToReturn.values())
 }
 
 async function expandNodesUpTo(node: FieldOfLaw) {
+  // if the root node is expanded all nodes are getting expanded, that are selected
+  // else only the selected node gets expanded
+
   const itemsToReturn = new Map<string, FieldOfLaw>()
 
   if (node.identifier == 'root') {
@@ -79,8 +82,8 @@ function collapseTree() {
 watch(
   () => props.nodeOfInterest,
   async (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      if (props.nodeOfInterest) await expandNode(props.nodeOfInterest)
+    if (newValue !== oldValue && props.nodeOfInterest) {
+      await expandNodeOfInterest(props.nodeOfInterest)
     }
   },
   { immediate: true },
