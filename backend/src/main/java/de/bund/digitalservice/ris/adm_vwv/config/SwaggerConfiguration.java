@@ -14,6 +14,8 @@ public class SwaggerConfiguration {
 
   /**
  * OpenAPI bean
+ * 
+ * @return OpenAPI object
  */
   @Bean
   public OpenAPI customOpenAPI() {
