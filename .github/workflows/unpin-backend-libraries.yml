@@ -69,6 +69,10 @@ jobs:
           retention-days: 3
           path: trivy-image-results.sarif
           if-no-files-found: error
-
       - name: Print trivy results (sarif format)
         run: cat trivy-image-results.sarif
+
+      - name: Get CVE numbers from trivy
+        run: jq -r '.runs[].tool.driver.rules[].id' trivy-image-results.sarif > trivy-cves.txt
+      - name: Print trivy CVE numbers
+        run: cat trivy-cves.txt
