@@ -15,7 +15,7 @@ jobs:
       - name: Where am I?
         run: |
           pwd
-          tree .
+          tree -a .
       - name: collect-and-comment-out-pinned-libraries
         # the result is twofold:
         # 1. the libraries are unpinned in build.gradle.kts
@@ -24,7 +24,9 @@ jobs:
         run: ./.github/scripts/unpin-backend-libraries.sh
       - name: Confirm commenting in build.gradle.kts
         run: cat ./backend/build.gradle.kts
-      - name: Confirm cve-list.txt
-        run: cat ./.github/scripts/cve-list.txt
-      - name: Confirm pinned-deps.txt
-        run: cat ./.github/scripts/pinned-deps.txt
+      # - name: Confirm cve-list.txt
+      #   run: cat ./.github/scripts/cve-list.txt
+      # - name: Confirm pinned-deps.txt
+      #   run: cat ./.github/scripts/pinned-deps.txt
+      - name: New files?
+        run: tree -a .
