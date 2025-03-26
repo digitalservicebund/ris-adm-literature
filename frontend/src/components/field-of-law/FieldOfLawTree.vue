@@ -30,33 +30,33 @@ const showNormsModelValue = computed({
 })
 
 async function expandNodeOfInterest(node: FieldOfLaw) {
-  const itemsToReturn = new Map<string, FieldOfLaw>()
+  const mapOfTreeNodesToExpand = new Map<string, FieldOfLaw>()
 
-  itemsToReturn.set(root.value.identifier, root.value)
+  mapOfTreeNodesToExpand.set(root.value.identifier, root.value)
 
   const response = await nodeHelper.value.getAncestors(node.identifier)
   for (const ancestorNode of response) {
-    itemsToReturn.set(ancestorNode.identifier, ancestorNode)
+    mapOfTreeNodesToExpand.set(ancestorNode.identifier, ancestorNode)
   }
 
-  expandedNodes.value = Array.from(itemsToReturn.values())
+  expandedNodes.value = Array.from(mapOfTreeNodesToExpand.values())
 }
 
-async function expandNodesUpTo(node: FieldOfLaw) {
+async function expandSelectedNodesUpTo(node: FieldOfLaw) {
   // if the root node is expanded all nodes are getting expanded, that are selected
   // else only the selected node gets expanded
 
-  const itemsToReturn = new Map<string, FieldOfLaw>()
+  const mapOfTreeNodesToExpand = new Map<string, FieldOfLaw>()
 
   if (node.identifier == 'root') {
-    itemsToReturn.set(node.identifier, node)
+    mapOfTreeNodesToExpand.set(node.identifier, node)
     for (const selected of props.modelValue) {
       const response = await nodeHelper.value.getAncestors(selected.identifier)
       for (const node of response) {
-        itemsToReturn.set(node.identifier, node)
+        mapOfTreeNodesToExpand.set(node.identifier, node)
       }
     }
-    expandedNodes.value = Array.from(addExpandedNodes(itemsToReturn).values())
+    expandedNodes.value = Array.from(addExpandedNodes(mapOfTreeNodesToExpand).values())
   } else {
     expandedNodes.value.push(node)
   }
@@ -129,7 +129,7 @@ defineExpose({ collapseTree })
       @node-of-interest:reset="emit('node-of-interest:reset')"
       @node:add="emit('node:add', $event)"
       @node:collapse="collapseNode"
-      @node:expand="expandNodesUpTo"
+      @node:expand="expandSelectedNodesUpTo"
       @node:remove="emit('node:remove', $event)"
     />
   </div>

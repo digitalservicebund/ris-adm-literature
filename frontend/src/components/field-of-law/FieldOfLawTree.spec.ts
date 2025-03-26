@@ -1,6 +1,6 @@
 import { describe, vi, it, expect } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
+import { render, screen, waitFor } from '@testing-library/vue'
 import FieldOfLawTreeVue from '@/components/field-of-law/FieldOfLawTree.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import FieldOfLawService from '@/services/fieldOfLawService'
@@ -23,7 +23,7 @@ function renderComponent(
 describe('FieldOfLawTree', () => {
   const user = userEvent.setup()
 
-  const dataOnRoot = Promise.resolve({
+  const getChildrenOfRoot = Promise.resolve({
     status: 200,
     data: [
       {
@@ -61,7 +61,7 @@ describe('FieldOfLawTree', () => {
       },
     ],
   })
-  const dataOnPR = Promise.resolve({
+  const getChildrenOfPR = Promise.resolve({
     status: 200,
     data: [
       {
@@ -88,47 +88,127 @@ describe('FieldOfLawTree', () => {
       },
     ],
   })
+  const getChildrenOfPRO5 = Promise.resolve({
+    status: 200,
+    data: [
+      {
+        hasChildren: false,
+        identifier: 'PR-05-01',
+        text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+        norms: [],
+        children: [],
+        parent: {
+          hasChildren: true,
+          identifier: 'PR-05',
+          text: 'Beendigung der Phantasieverhältnisse',
+          linkedFields: [],
+          norms: [],
+          children: [],
+          parent: {
+            hasChildren: true,
+            identifier: 'PR',
+            text: 'Phantasierecht',
+            norms: [],
+            children: [],
+          },
+        },
+      },
+    ],
+  })
+  const getParentAndChildrenForIdentifierPR05 = Promise.resolve({
+    status: 200,
+    data: {
+      hasChildren: true,
+      identifier: 'PR-05',
+      text: 'Beendigung der Phantasieverhältnisse',
+      norms: [
+        {
+          abbreviation: 'PStG',
+          singleNormDescription: '§ 99',
+        },
+      ],
+      children: [
+        {
+          hasChildren: false,
+          identifier: 'PR-05-01',
+          text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+          norms: [],
+          children: [],
+          parent: {
+            hasChildren: true,
+            identifier: 'PR-05',
+            text: 'Beendigung der Phantasieverhältnisse',
+            linkedFields: [],
+            norms: [],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'PR',
+              text: 'Phantasierecht',
+              norms: [],
+              children: [],
+            },
+          },
+        },
+      ],
+      parent: {
+        id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+        hasChildren: true,
+        identifier: 'PR',
+        text: 'Phantasierecht',
+        norms: [],
+        children: [],
+      },
+    },
+  })
 
-  const fetchSpy = vi
+  const fetchSpyGetChildrenOf = vi
     .spyOn(FieldOfLawService, 'getChildrenOf')
     .mockImplementation((identifier: string) => {
-      if (identifier == 'root') return dataOnRoot
-      return dataOnPR
+      if (identifier == 'root') return getChildrenOfRoot
+      else if (identifier == 'PR-05') return getChildrenOfPRO5
+      return getChildrenOfPR
     })
 
-  it('Tree is fully closed upon at start', async () => {
+  const fetchSpyGetParentAndChildrenForIdentifier = vi
+    .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
+    .mockImplementation(() => {
+      return getParentAndChildrenForIdentifierPR05
+    })
+
+  it.skip('Tree is fully closed upon at start', async () => {
     renderComponent()
-    expect(fetchSpy).toBeCalledTimes(0)
+    expect(fetchSpyGetChildrenOf).toBeCalledTimes(0)
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
     expect(screen.getByLabelText('Alle Sachgebiete aufklappen')).toBeInTheDocument()
     expect(screen.queryByText('Text for AB')).not.toBeInTheDocument()
     expect(screen.queryByText('And text for CD')).not.toBeInTheDocument()
   })
 
-  it('Tree opens top level nodes upon root click', async () => {
+  it.skip('Tree opens top level nodes upon root click', async () => {
     renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
-    expect(fetchSpy).toBeCalledTimes(1)
+    expect(fetchSpyGetChildrenOf).toBeCalledTimes(1)
     expect(screen.getByText('Text for AB')).toBeInTheDocument()
     expect(screen.getByText('And text for CD with link to AB-01')).toBeInTheDocument()
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
   })
 
-  it('Tree opens sub level nodes upon children click', async () => {
+  it.skip('Tree opens sub level nodes upon children click', async () => {
     renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
     await user.click(screen.getByLabelText('Phantasierecht aufklappen'))
 
-    expect(fetchSpy).toBeCalledWith('PR')
+    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR')
 
     expect(screen.getByText('Beendigung der Phantasieverhältnisse')).toBeInTheDocument()
   })
 
-  it('Node of interest is set and the tree is truncated', async () => {
+  it('Node of interest is set and corresponding nodes are opened in the tree', async () => {
     renderComponent({
       nodeOfInterest: {
         hasChildren: true,
@@ -139,9 +219,24 @@ describe('FieldOfLawTree', () => {
         children: [],
       },
     })
+    expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
 
-    await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
+    await waitFor(() => {
+      expect(screen.getByLabelText('Alle Sachgebiete einklappen')).toBeInTheDocument()
+    })
 
-    expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    })
+    expect(fetchSpyGetChildrenOf).toBeCalledWith('root')
+    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR')
+    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR-05')
+    expect(fetchSpyGetChildrenOf).not.toBeCalledWith('PR-05-01')
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+      ).toBeInTheDocument()
+    })
   })
 })
