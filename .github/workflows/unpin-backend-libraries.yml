@@ -62,5 +62,13 @@ jobs:
           output: "trivy-image-results.sarif"
           exit-code: 0
 
+      - name: Upload trivy results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-trivy-image-results.sarif
+          retention-days: 3
+          path: trivy-image-results.sarif
+          if-no-files-found: error
+
       - name: Print trivy results (sarif format)
         run: cat trivy-image-results.sarif
