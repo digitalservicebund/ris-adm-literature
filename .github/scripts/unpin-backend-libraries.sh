@@ -13,8 +13,8 @@
 # 4. Unpin the pinned CVEs in "build.gradle.kts"
 
 BUILD_GRADLE_KTS="../../backend/build.gradle.kts"
-LIST_OF_PINNED_FILE="pinned_deps.txt"
-LIST_OF_CVES_FILE="cve_list.txt"
+LIST_OF_PINNED_FILE="pinned-deps.txt"
+LIST_OF_CVES_FILE="cve-list.txt"
 
 echo "Extracting list of CVEs to $LIST_OF_CVES_FILE"
 grep "// CVE-" $BUILD_GRADLE_KTS > $LIST_OF_CVES_FILE || true

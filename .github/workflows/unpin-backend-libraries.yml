@@ -1,0 +1,22 @@
+name: Unpin backend libraries
+
+on:
+  # Allow to run this workflow manually
+  workflow_dispatch:
+
+jobs:
+  collect-and-comment-out-pinned-libraries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: collect-and-comment-out-pinned-libraries
+        # the result is twofold:
+        # 1. the libraries are unpinned in build.gradle.kts
+        # 2. we have files that contain the CVE names and the library information
+        # (cve_list.txt and pinned_deps.txta)
+        run: ./.github/scripts/unpin-backend-libraries.sh
+      - name: Confirm commenting in build.gradle.kts
+        run: cat ./backend/build.gradle.kts
+      - name: Confirm cve-list.txt
+        run: cat ./.github/scripts/cve-list.txt
+      - name: Confirm pinned-deps.txt
+        run: cat ./.github/scripts/pinned-deps.txt
