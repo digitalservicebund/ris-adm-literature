@@ -9,6 +9,10 @@ jobs:
   collect-and-comment-out-pinned-libraries:
     runs-on: ubuntu-latest
     steps:
+      - name: Where am I?
+        run: |
+          pwd
+          tree .
       - name: collect-and-comment-out-pinned-libraries
         # the result is twofold:
         # 1. the libraries are unpinned in build.gradle.kts
