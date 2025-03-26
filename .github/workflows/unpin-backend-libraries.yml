@@ -5,28 +5,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  collect-and-comment-out-pinned-libraries:
+  test-unpinning-libraries:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Where am I?
-        run: |
-          pwd
-          tree -a .
+      # - name: Where am I?
+      #   run: |
+      #     pwd
+      #     tree -a .
       - name: collect-and-comment-out-pinned-libraries
         # the result is twofold:
         # 1. the libraries are unpinned in build.gradle.kts
         # 2. we have files that contain the CVE names and the library information
         # (cve_list.txt and pinned_deps.txta)
         run: ./.github/scripts/unpin-backend-libraries.sh
-      - name: New files?
-        run: tree -a .
-      - name: Confirm commenting in build.gradle.kts
-        run: cat ./backend/build.gradle.kts
-      - name: Confirm cve-list.txt
-        run: cat cve-list.txt
-      - name: Confirm pinned-deps.txt
-        run: cat pinned-deps.txt
+      # - name: New files?
+      #   run: tree -a .
+      # - name: Confirm commenting in build.gradle.kts
+      #   run: cat ./backend/build.gradle.kts
+      # - name: Confirm cve-list.txt
+      #   run: cat cve-list.txt
+      # - name: Confirm pinned-deps.txt
+      #   run: cat pinned-deps.txt
+
+      - name: Build backend image
+        working-directory: ./backend
+        env:
+          CONTAINER_REGISTRY: ghcr.io
+          IMAGE_REF: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+        run: ./gradlew bootBuildImage
+
+      - name: Run Trivy vulnerability image scanner
+        # Note: This scan is what is shown in the GitHub Security tab
+        #       cf. step "Upload Trivy scan results to GitHub Security tab"
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
+        env:
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+          format: "sarif"
+          output: "trivy-image-results.sarif"
+          exit-code: 0
+
+      - name: Print trivy results (sarif format)
+        run: cat trivy-image-results.sarif
