@@ -383,11 +383,10 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 
     // when
-    await page.getByRole('textbox', { name: 'Direkteingabe-' }).fill('Arbeitsr')
-    await page
-      .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'Phantasierecht' })
-      .click()
+    await page.getByRole('textbox', { name: 'Direkteingabe-' }).click()
+    await expect(page.getByText('Phantasierecht')).toBeVisible()
+    await page.getByText('Phantasierecht').click()
+
     // then
     await expect(page.getByRole('button', { name: 'Fertig' })).toHaveCount(1)
     await expect(page.getByText('PRPhantasierecht')).toHaveCount(1)
