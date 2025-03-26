@@ -270,9 +270,11 @@ test.describe('RubrikenPage - Sachgebiete', () => {
 
         // then
         // if these two are visible, it must mean that the tree opened automatically with the first result
-        await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeVisible()
         await expect(
-          page.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+          page.getByText('Beendigung der Phantasieverhältnisse', { exact: true }),
+        ).toBeVisible()
+        await expect(
+          page.getByText('Phantasie besonderer Art, Ansprüche anderer Art', { exact: true }),
         ).toBeVisible()
       },
     )
