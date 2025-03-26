@@ -8,16 +8,25 @@
 # The unpinning is done as follows
 #
 # 1. Scan the file "build.gradle.kts" for lines that start with "# CVE"
-# 2. Write all found CVEs to a file "pinned-dependencies.txt"
-# 3. Unpin the pinned CVEs in "build.gradle.kts"
+# 2. Write all found CVEs to a file
+# 3. Write all pinned dependencies to a file
+# 4. Unpin the pinned CVEs in "build.gradle.kts"
 
-LIST_OF_PINNED_FILE="pinned_deps.txt"
 BUILD_GRADLE_KTS="../../backend/build.gradle.kts"
+LIST_OF_PINNED_FILE="pinned_deps.txt"
+LIST_OF_CVES_FILE="cve_list.txt"
+
+echo "Extracting list of CVEs to $LIST_OF_CVES_FILE"
+grep "// CVE-" $BUILD_GRADLE_KTS > $LIST_OF_CVES_FILE || true
 
 echo "Extracting pinned dependencies to $LIST_OF_PINNED_FILE..."
-grep -A1 "// CVE-" $BUILD_GRADLE_KTS | grep -v "^--$" > $LIST_OF_PINNED_FILE || true
+grep -A1 "// CVE-" $BUILD_GRADLE_KTS | grep "exclude" > $LIST_OF_PINNED_FILE || true
 
 echo "Unpinning the pinned dependencies"
 while read -r line; do
-    echo $line
+    # Extract the library domain and name
+    LIBRARY_DOMAIN=`echo "$line" | cut -d'"' -f2`
+    LIBRARY_NAME=`echo "$line" | cut -d'"' -f4`
+
+    echo "found: $LIBRARY_DOMAIN - $LIBRARY_NAME"
 done < $LIST_OF_PINNED_FILE
