@@ -34,12 +34,12 @@ jobs:
 
       # - name: New files?
       #   run: tree -a .
-      # - name: Confirm commenting in build.gradle.kts
-      #   run: cat ./backend/build.gradle.kts
-      # - name: Confirm cve-list.txt
-      #   run: cat cve-list.txt
-      # - name: Confirm pinned-deps.txt
-      #   run: cat pinned-deps.txt
+      - name: Confirm commenting in build.gradle.kts
+        run: cat ./backend/build.gradle.kts
+      - name: Confirm cve-list.txt
+        run: cat cve-list.txt
+      - name: Confirm pinned-deps.txt
+        run: cat pinned-deps.txt
 
       - name: Build backend image
         working-directory: ./backend
