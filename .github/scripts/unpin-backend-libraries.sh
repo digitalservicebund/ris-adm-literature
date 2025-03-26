@@ -12,7 +12,7 @@
 # 3. Write all pinned dependencies to a file
 # 4. Unpin the pinned CVEs in "build.gradle.kts"
 
-BUILD_GRADLE_KTS="../../backend/build.gradle.kts"
+BUILD_GRADLE_KTS="backend/build.gradle.kts"
 LIST_OF_PINNED_FILE="pinned-deps.txt"
 LIST_OF_CVES_FILE="cve-list.txt"
 
