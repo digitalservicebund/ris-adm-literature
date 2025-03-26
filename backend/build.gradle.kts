@@ -46,10 +46,10 @@ dependencies {
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion") {
     exclude("com.google.protobuf", "protobuf-java")
 
-    // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/12
+    // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
 
-    // https://github.com/digitalservicebund/ris-adm-vwv/security/code-scanning/11
+    // CVE-2023-3635
     exclude("com.squareup.okio", "okio-jvm")
   }
   implementation("com.google.protobuf:protobuf-java:$protobufVersion")
