@@ -27,3 +27,6 @@ replay_pid*
 /.idea/
 *.iml
 /.vscode/
+
+# temp files
+.github/scripts/pinned_deps.txt
