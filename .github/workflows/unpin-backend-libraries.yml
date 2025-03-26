@@ -1,8 +1,6 @@
 name: Unpin backend libraries
 
 on:
-  pull_request:
-  # Allow to run this workflow manually
   workflow_dispatch:
 
 jobs:
