@@ -1,6 +1,7 @@
 name: Unpin backend libraries
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
