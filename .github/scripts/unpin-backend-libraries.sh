@@ -37,7 +37,6 @@ while read -r line; do
     # comment out "implementation" lines
     echo "Comment out related \"implementation\" lines"
     IMPLEMENTATION_LINE_START="implementation(\"$LIBRARY_DOMAIN:$LIBRARY_NAME"
-    echo "implementation line starts with: $IMPLEMENTATION_LINE_START"
     sed -i "s/$IMPLEMENTATION_LINE_START/\/\/ $IMPLEMENTATION_LINE_START/" $BUILD_GRADLE_KTS
 
 
