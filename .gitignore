@@ -29,4 +29,4 @@ replay_pid*
 /.vscode/
 
 # temp files
-.github/scripts/pinned_deps.txt
+.github/scripts/*.txt
