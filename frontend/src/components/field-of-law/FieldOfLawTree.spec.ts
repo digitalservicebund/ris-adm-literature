@@ -1,4 +1,4 @@
-import { describe, vi, it, expect } from 'vitest'
+import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import FieldOfLawTreeVue from '@/components/field-of-law/FieldOfLawTree.vue'
@@ -23,111 +23,77 @@ function renderComponent(
 describe('FieldOfLawTree', () => {
   const user = userEvent.setup()
 
-  const getChildrenOfRoot = Promise.resolve({
-    status: 200,
-    data: [
-      {
-        hasChildren: true,
-        identifier: 'PR',
-        text: 'Phantasierecht',
-        linkedFields: [],
-        norms: [],
-        children: [],
-      },
-      {
-        hasChildren: true,
-        identifier: 'AV',
-        text: 'Allgemeines Verwaltungsrecht',
-        linkedFields: [],
-        norms: [],
-        children: [],
-      },
-      {
-        identifier: 'AB-01',
-        text: 'Text for AB',
-        children: [],
-        norms: [],
-        isExpanded: false,
-        hasChildren: false,
-      },
-      {
-        identifier: 'CD-02',
-        text: 'And text for CD with link to AB-01',
-        children: [],
-        norms: [],
-        linkedFields: ['AB-01'],
-        isExpanded: false,
-        hasChildren: false,
-      },
-    ],
-  })
-  const getChildrenOfPR = Promise.resolve({
-    status: 200,
-    data: [
-      {
-        hasChildren: true,
-        identifier: 'PR-05',
-        text: 'Beendigung der Phantasieverhältnisse',
-        linkedFields: [],
-        norms: [
-          {
-            abbreviation: 'PStG',
-            singleNormDescription: '§ 99',
-          },
-        ],
-        children: [],
-        parent: {
+  const getChildrenOfRoot = () =>
+    Promise.resolve({
+      status: 200,
+      data: [
+        {
           hasChildren: true,
           identifier: 'PR',
           text: 'Phantasierecht',
           linkedFields: [],
           norms: [],
           children: [],
-          parent: undefined,
         },
-      },
-    ],
-  })
-  const getChildrenOfPRO5 = Promise.resolve({
-    status: 200,
-    data: [
-      {
-        hasChildren: false,
-        identifier: 'PR-05-01',
-        text: 'Phantasie besonderer Art, Ansprüche anderer Art',
-        norms: [],
-        children: [],
-        parent: {
+        {
+          hasChildren: true,
+          identifier: 'AV',
+          text: 'Allgemeines Verwaltungsrecht',
+          linkedFields: [],
+          norms: [],
+          children: [],
+        },
+        {
+          identifier: 'AB-01',
+          text: 'Text for AB',
+          children: [],
+          norms: [],
+          isExpanded: false,
+          hasChildren: false,
+        },
+        {
+          identifier: 'CD-02',
+          text: 'And text for CD with link to AB-01',
+          children: [],
+          norms: [],
+          linkedFields: ['AB-01'],
+          isExpanded: false,
+          hasChildren: false,
+        },
+      ],
+    })
+  const getChildrenOfPR = () =>
+    Promise.resolve({
+      status: 200,
+      data: [
+        {
           hasChildren: true,
           identifier: 'PR-05',
           text: 'Beendigung der Phantasieverhältnisse',
           linkedFields: [],
-          norms: [],
+          norms: [
+            {
+              abbreviation: 'PStG',
+              singleNormDescription: '§ 99',
+            },
+          ],
           children: [],
           parent: {
             hasChildren: true,
             identifier: 'PR',
             text: 'Phantasierecht',
+            linkedFields: [],
             norms: [],
             children: [],
+            parent: undefined,
           },
         },
-      },
-    ],
-  })
-  const getParentAndChildrenForIdentifierPR05 = Promise.resolve({
-    status: 200,
-    data: {
-      hasChildren: true,
-      identifier: 'PR-05',
-      text: 'Beendigung der Phantasieverhältnisse',
-      norms: [
-        {
-          abbreviation: 'PStG',
-          singleNormDescription: '§ 99',
-        },
       ],
-      children: [
+    })
+  const getChildrenOfPRO5 = () =>
+    Promise.resolve({
+      status: 200,
+      data: [
         {
           hasChildren: false,
           identifier: 'PR-05-01',
@@ -151,32 +117,105 @@ describe('FieldOfLawTree', () => {
           },
         },
       ],
-      parent: {
-        id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+    })
+
+  const getChildrenOfPR0501 = () =>
+    Promise.resolve({
+      status: 200,
+      data: [
+        {
+          hasChildren: false,
+          identifier: 'PR-05-01',
+          text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+          norms: [],
+          children: [],
+          parent: {
+            hasChildren: true,
+            identifier: 'PR-05',
+            text: 'Beendigung der Phantasieverhältnisse',
+            linkedFields: [],
+            norms: [],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'PR',
+              text: 'Phantasierecht',
+              norms: [],
+              children: [],
+            },
+          },
+        },
+      ],
+    })
+
+  const getParentAndChildrenForIdentifierPR05 = () =>
+    Promise.resolve({
+      status: 200,
+      data: {
         hasChildren: true,
-        identifier: 'PR',
-        text: 'Phantasierecht',
-        norms: [],
-        children: [],
+        identifier: 'PR-05',
+        text: 'Beendigung der Phantasieverhältnisse',
+        norms: [
+          {
+            abbreviation: 'PStG',
+            singleNormDescription: '§ 99',
+          },
+        ],
+        children: [
+          {
+            hasChildren: false,
+            identifier: 'PR-05-01',
+            text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+            norms: [],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'PR-05',
+              text: 'Beendigung der Phantasieverhältnisse',
+              linkedFields: [],
+              norms: [],
+              children: [],
+              parent: {
+                hasChildren: true,
+                identifier: 'PR',
+                text: 'Phantasierecht',
+                norms: [],
+                children: [],
+              },
+            },
+          },
+        ],
+        parent: {
+          id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+          hasChildren: true,
+          identifier: 'PR',
+          text: 'Phantasierecht',
+          norms: [],
+          children: [],
+        },
       },
-    },
+    })
+
+  let fetchSpyGetChildrenOf: MockInstance
+  let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
+
+  beforeEach(() => {
+    fetchSpyGetChildrenOf = vi
+      .spyOn(FieldOfLawService, 'getChildrenOf')
+      .mockImplementation((identifier: string) => {
+        if (identifier == 'root') return getChildrenOfRoot()
+        else if (identifier == 'PR') return getChildrenOfPR()
+        else if (identifier == 'PR-05') return getChildrenOfPRO5()
+        return getChildrenOfPR0501()
+      })
+    fetchSpyGetParentAndChildrenForIdentifier = vi
+      .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
+      .mockImplementation(() => {
+        return getParentAndChildrenForIdentifierPR05()
+      })
   })
 
-  const fetchSpyGetChildrenOf = vi
-    .spyOn(FieldOfLawService, 'getChildrenOf')
-    .mockImplementation((identifier: string) => {
-      if (identifier == 'root') return getChildrenOfRoot
-      else if (identifier == 'PR-05') return getChildrenOfPRO5
-      return getChildrenOfPR
-    })
-
-  const fetchSpyGetParentAndChildrenForIdentifier = vi
-    .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
-    .mockImplementation(() => {
-      return getParentAndChildrenForIdentifierPR05
-    })
-
-  it.skip('Tree is fully closed upon at start', async () => {
+  it('Tree is fully closed upon at start', async () => {
     renderComponent()
     expect(fetchSpyGetChildrenOf).toBeCalledTimes(0)
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
@@ -185,7 +224,7 @@ describe('FieldOfLawTree', () => {
     expect(screen.queryByText('And text for CD')).not.toBeInTheDocument()
   })
 
-  it.skip('Tree opens top level nodes upon root click', async () => {
+  it('Tree opens top level nodes upon root click', async () => {
     renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
@@ -196,7 +235,7 @@ describe('FieldOfLawTree', () => {
     expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
   })
 
-  it.skip('Tree opens sub level nodes upon children click', async () => {
+  it('Tree opens sub level nodes upon children click', async () => {
     renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
@@ -208,7 +247,7 @@ describe('FieldOfLawTree', () => {
     expect(screen.getByText('Beendigung der Phantasieverhältnisse')).toBeInTheDocument()
   })
 
-  it('Node of interest is set and corresponding nodes are opened in the tree', async () => {
+  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated)', async () => {
     renderComponent({
       nodeOfInterest: {
         hasChildren: true,
@@ -238,5 +277,6 @@ describe('FieldOfLawTree', () => {
         screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
       ).toBeInTheDocument()
     })
+    expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
   })
 })

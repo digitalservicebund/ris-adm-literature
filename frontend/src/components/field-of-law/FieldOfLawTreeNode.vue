@@ -87,6 +87,11 @@ watch(
   async () => {
     if (isExpanded.value) {
       children.value = await props.nodeHelper.getChildren(props.node)
+      if (props.nodeOfInterest && props.isRoot) {
+        // Filter children of root (1st level) to only parent node of interest.
+        // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
+        children.value = await props.nodeHelper.findRootParent(props.nodeOfInterest)
+      }
     }
   },
   { immediate: true },
