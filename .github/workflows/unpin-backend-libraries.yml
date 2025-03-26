@@ -9,6 +9,10 @@ jobs:
   collect-and-comment-out-pinned-libraries:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Where am I?
         run: |
           pwd
