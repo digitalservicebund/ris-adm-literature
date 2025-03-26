@@ -12,16 +12,26 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+
       # - name: Where am I?
       #   run: |
       #     pwd
       #     tree -a .
+
+      # the result is twofold:
+      # 1. the libraries are unpinned in build.gradle.kts
+      # 2. we have files that contain the CVE names and the library information
+      # (cve_list.txt and pinned_deps.txta)
       - name: collect-and-comment-out-pinned-libraries
-        # the result is twofold:
-        # 1. the libraries are unpinned in build.gradle.kts
-        # 2. we have files that contain the CVE names and the library information
-        # (cve_list.txt and pinned_deps.txta)
         run: ./.github/scripts/unpin-backend-libraries.sh
+
       # - name: New files?
       #   run: tree -a .
       # - name: Confirm commenting in build.gradle.kts
@@ -39,8 +49,7 @@ jobs:
         run: ./gradlew bootBuildImage
 
       - name: Run Trivy vulnerability image scanner
-        # Note: This scan is what is shown in the GitHub Security tab
-        #       cf. step "Upload Trivy scan results to GitHub Security tab"
+        # Note: This scan is NOT what is shown in the GitHub Security tab
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
