@@ -27,6 +27,18 @@ while read -r line; do
     # Extract the library domain and name
     LIBRARY_DOMAIN=`echo "$line" | cut -d'"' -f2`
     LIBRARY_NAME=`echo "$line" | cut -d'"' -f4`
-
     echo "found: $LIBRARY_DOMAIN - $LIBRARY_NAME"
+
+    # comment out "exclude" lines
+    echo "Comment out related \"exclude\" lines"
+    sed -i "s/$line/\/\/ $line/" $BUILD_GRADLE_KTS
+
+
+    # comment out "implementation" lines
+    echo "Comment out related \"implementation\" lines"
+    IMPLEMENTATION_LINE_START="implementation(\"$LIBRARY_DOMAIN:$LIBRARY_NAME"
+    echo "implementation line starts with: $IMPLEMENTATION_LINE_START"
+    sed -i "s/$IMPLEMENTATION_LINE_START/\/\/ $IMPLEMENTATION_LINE_START/" $BUILD_GRADLE_KTS
+
+
 done < $LIST_OF_PINNED_FILE
