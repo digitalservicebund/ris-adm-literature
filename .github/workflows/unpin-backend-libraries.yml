@@ -77,9 +77,17 @@ jobs:
       - name: Print trivy CVE numbers
         run: cat trivy-cves.txt
 
-      - name: Pin libraries again which were reported by trivy
+      - name: Pin libraries again which were reported by trivy. Remove those that are fine, now.
         run: ./.github/scripts/pin-libraries-again-reported-by-trivy.sh
       - name: Confirm cves-with-libraries.txt
         run: cat cves-with-libraries.txt
       - name: Confirm build.gradle.kts
         run: cat ./backend/build.gradle.kts
+
+      - name: Apply spotless
+        working-directory: ./backend
+        run: ./gradlew spotlessApply
+      - name: Confirm build.gradle.kts
+        run: cat ./backend/build.gradle.kts
+
+      # TODO: commit 
