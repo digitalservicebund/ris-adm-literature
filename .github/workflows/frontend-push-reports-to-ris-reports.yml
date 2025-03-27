@@ -40,6 +40,8 @@ jobs:
         with:
           name: frontend-license-report
           path: tmp/frontend-license-report/
+      - name: DEBUG - What's in tmp/frontend-license-report?
+        run: tree tmp/frontend-license-report/
       - name: Add frontend license report for push
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
