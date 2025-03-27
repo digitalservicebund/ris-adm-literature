@@ -7,7 +7,7 @@ import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import { buildRoot, type FieldOfLaw } from '@/domain/fieldOfLaw'
 
 const props = defineProps<{
-  modelValue: FieldOfLaw[]
+  selectedNodes: FieldOfLaw[]
   nodeOfInterest?: FieldOfLaw
   searchResults?: FieldOfLaw[]
   showNorms: boolean
@@ -45,12 +45,11 @@ async function expandNodeOfInterest(node: FieldOfLaw) {
 async function expandSelectedNodesUpTo(node: FieldOfLaw) {
   // if the root node is expanded all nodes are getting expanded, that are selected
   // else only the selected node gets expanded
-
   const mapOfTreeNodesToExpand = new Map<string, FieldOfLaw>()
 
   if (node.identifier == 'root') {
     mapOfTreeNodesToExpand.set(node.identifier, node)
-    for (const selected of props.modelValue) {
+    for (const selected of props.selectedNodes) {
       const response = await nodeHelper.value.getAncestors(selected.identifier)
       for (const node of response) {
         mapOfTreeNodesToExpand.set(node.identifier, node)
@@ -58,7 +57,7 @@ async function expandSelectedNodesUpTo(node: FieldOfLaw) {
     }
     expandedNodes.value = Array.from(addExpandedNodes(mapOfTreeNodesToExpand).values())
   } else {
-    expandedNodes.value.push(node)
+    expandedNodes.value = [...expandedNodes.value, node]
   }
 }
 
@@ -118,9 +117,9 @@ defineExpose({ collapseTree })
 
     <FieldOfLawTreeNode
       :key="root.identifier"
-      :expand-values="expandedNodes"
+      :expanded-nodes="expandedNodes"
       is-root
-      :model-value="modelValue"
+      :selected-nodes="selectedNodes"
       :node="root"
       :node-helper="nodeHelper"
       :node-of-interest="nodeOfInterest"

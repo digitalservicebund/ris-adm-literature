@@ -10,11 +10,11 @@ import IconArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
 
 interface Props {
   node: FieldOfLaw
-  modelValue: FieldOfLaw[]
+  selectedNodes: FieldOfLaw[]
   showNorms: boolean
   nodeHelper: NodeHelperInterface
   searchResults?: FieldOfLaw[]
-  expandValues: FieldOfLaw[]
+  expandedNodes: FieldOfLaw[]
   isRoot?: boolean
   rootChild?: boolean
   nodeOfInterest?: FieldOfLaw
@@ -34,7 +34,7 @@ const isExpanded = ref(false)
 const children = ref<FieldOfLaw[]>([])
 const isSearchCandidate = ref<boolean>(false)
 const isSelected = computed({
-  get: () => props.modelValue.some(({ identifier }) => identifier === props.node.identifier),
+  get: () => props.selectedNodes.some(({ identifier }) => identifier === props.node.identifier),
   set: (value) => {
     if (value) {
       emit('node:add', props.node)
@@ -57,11 +57,20 @@ function toggleExpanded() {
 }
 
 watch(
-  () => props.expandValues,
-  () => {
-    isExpanded.value = props.expandValues.some((expandedNode) => {
+  () => props.expandedNodes,
+  async () => {
+    isExpanded.value = props.expandedNodes.some((expandedNode) => {
       return expandedNode.identifier == props.node.identifier
     })
+    if (isExpanded.value) {
+      if (props.nodeOfInterest && props.isRoot) {
+        // Filter children of root (1st level) to only parent node of interest.
+        // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
+        children.value = await props.nodeHelper.findRootParent(props.nodeOfInterest)
+      } else {
+        children.value = await props.nodeHelper.getChildren(props.node)
+      }
+    }
   },
   { immediate: true },
 )
@@ -82,21 +91,6 @@ watch(
   { immediate: true },
 )
 
-watch(
-  isExpanded,
-  async () => {
-    if (isExpanded.value) {
-      if (props.nodeOfInterest && props.isRoot) {
-        // Filter children of root (1st level) to only parent node of interest.
-        // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
-        children.value = await props.nodeHelper.findRootParent(props.nodeOfInterest)
-      } else {
-        children.value = await props.nodeHelper.getChildren(props.node)
-      }
-    }
-  },
-  { immediate: true },
-)
 </script>
 
 <template>
@@ -145,8 +139,8 @@ watch(
         <div class="flex flex-col">
           <div class="ds-label-02-reg flex flex-row">
             <div v-if="!props.isRoot" class="pl-6">
-              <span class="whitespace-nowrap p-2" :class="isSearchCandidate ? 'bg-yellow-300' : ''">
-                {{ node.identifier }} |
+              <span class="whitespace-nowrap p-2">
+                <span :class="isSearchCandidate ? 'bg-yellow-300' : ''">{{ node.identifier }}</span><span> | </span>
               </span>
             </div>
             {{ node.text }}
@@ -168,8 +162,8 @@ watch(
         :key="child.identifier"
         class="pl-36"
         expand-if-selected
-        :expand-values="expandValues"
-        :model-value="modelValue"
+        :expanded-nodes="expandedNodes"
+        :selected-nodes="selectedNodes"
         :node="child"
         :node-helper="nodeHelper"
         :node-of-interest="nodeOfInterest"

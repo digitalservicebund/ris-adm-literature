@@ -7,13 +7,13 @@ import FieldOfLawService from '@/services/fieldOfLawService'
 
 function renderComponent(
   options: {
-    modelValue?: FieldOfLaw[]
+    selectedNodes?: FieldOfLaw[]
     nodeOfInterest?: FieldOfLaw
   } = {},
 ) {
   return render(FieldOfLawTreeVue, {
     props: {
-      modelValue: options.modelValue ?? [],
+      selectedNodes: options.selectedNodes ?? [],
       nodeOfInterest: options.nodeOfInterest,
       showNorms: false,
     },
