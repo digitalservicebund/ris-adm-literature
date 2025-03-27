@@ -29,4 +29,8 @@ replay_pid*
 /.vscode/
 
 # temp files
-.github/scripts/*.txt
+cve-list.txt
+cves-with-libraries.txt
+pinned-deps.txt
+trivy-cves.txt
+trivy-image-results.sarif
