@@ -27,11 +27,11 @@ jobs:
       # 3. if pinned file are found, PINNED_DEPS_FOUND=true is written to $GITHUB_ENV
       - name: collect-and-comment-out-pinned-libraries
         run: ./.github/scripts/unpin-backend-libraries.sh
-      - name: Confirm commenting in build.gradle.kts
+      - name: Print build.gradle.kts (you may check for commented out lines)
         run: cat ./backend/build.gradle.kts
-      - name: Confirm cve-list.txt
+      - name: Print cve-list.txt (what CVEs have been found?)
         run: cat cve-list.txt
-      - name: Confirm pinned-deps.txt
+      - name: Print pinned-deps.txt (what libraries have been unpinned)
         run: cat pinned-deps.txt
 
       # Step 2: Build and test
@@ -82,17 +82,17 @@ jobs:
       - name: Pin libraries again which were reported by trivy. Remove those that are fine, now.
         if: env.PINNED_DEPS_FOUND == 'true'
         run: ./.github/scripts/pin-libraries-again-reported-by-trivy.sh
-      - name: Confirm cves-with-libraries.txt
+      - name: Print cves-with-libraries.txt (aligns CVEs with library domains and names)
         if: env.PINNED_DEPS_FOUND == 'true'
         run: cat cves-with-libraries.txt
-      - name: Confirm build.gradle.kts
+      - name: Print build.gradle.kts (you may check for lines that were removed or pinnings that were uncommented)
         if: env.PINNED_DEPS_FOUND == 'true'
         run: cat ./backend/build.gradle.kts
       - name: Apply spotless
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         working-directory: ./backend
         run: ./gradlew spotlessApply
-      - name: Confirm build.gradle.kts
+      - name: Print build.gradle.kts (empty lines should be removed)
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         run: cat ./backend/build.gradle.kts
 
@@ -114,7 +114,7 @@ jobs:
         with:
           image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
           format: "sarif"
-          output: "trivy-image-results.sarif"
+          output: "trivy-image-results-2.sarif"
           exit-code: 1 # if any level of CVE is found, break the pipeline
       - name: Upload new trivy results as artifact
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
