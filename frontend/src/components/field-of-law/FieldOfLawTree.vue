@@ -42,23 +42,22 @@ async function expandNodeOfInterest(node: FieldOfLaw) {
   expandedNodes.value = Array.from(mapOfTreeNodesToExpand.values())
 }
 
-async function expandSelectedNodesUpTo(node: FieldOfLaw) {
-  // if the root node is expanded all nodes are getting expanded, that are selected
-  // else only the selected node gets expanded
+async function expandSelectedNodesFromRoot() {
   const mapOfTreeNodesToExpand = new Map<string, FieldOfLaw>()
 
-  if (node.identifier == 'root') {
-    mapOfTreeNodesToExpand.set(node.identifier, node)
-    for (const selected of props.selectedNodes) {
-      const response = await nodeHelper.value.getAncestors(selected.identifier)
-      for (const node of response) {
-        mapOfTreeNodesToExpand.set(node.identifier, node)
-      }
+  mapOfTreeNodesToExpand.set(root.value.identifier, root.value)
+
+  for (const selected of props.selectedNodes) {
+    const response = await nodeHelper.value.getAncestors(selected.identifier)
+    for (const node of response) {
+      mapOfTreeNodesToExpand.set(node.identifier, node)
     }
-    expandedNodes.value = Array.from(addExpandedNodes(mapOfTreeNodesToExpand).values())
-  } else {
-    expandedNodes.value = [...expandedNodes.value, node]
   }
+  expandedNodes.value = Array.from(addExpandedNodes(mapOfTreeNodesToExpand).values())
+}
+
+function expandNode(node: FieldOfLaw) {
+  expandedNodes.value = [...expandedNodes.value, node]
 }
 
 function collapseNode(collapsedNode: FieldOfLaw) {
@@ -128,7 +127,8 @@ defineExpose({ collapseTree })
       @node-of-interest:reset="emit('node-of-interest:reset')"
       @node:add="emit('node:add', $event)"
       @node:collapse="collapseNode"
-      @node:expand="expandSelectedNodesUpTo"
+      @node:expand="expandNode"
+      @node:expand-root="expandSelectedNodesFromRoot"
       @node:remove="emit('node:remove', $event)"
     />
   </div>

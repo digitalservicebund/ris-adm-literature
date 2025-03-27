@@ -26,6 +26,7 @@ const emit = defineEmits<{
   'node:add': [node: FieldOfLaw]
   'node:remove': [node: FieldOfLaw]
   'node:expand': [node: FieldOfLaw]
+  'node:expandRoot': []
   'node:collapse': [node: FieldOfLaw]
   'node-of-interest:reset': []
 }>()
@@ -47,7 +48,8 @@ const isSelected = computed({
 function toggleExpanded() {
   isExpanded.value = !isExpanded.value
   if (isExpanded.value) {
-    emit('node:expand', props.node)
+    if (props.isRoot) emit('node:expandRoot')
+    else emit('node:expand', props.node)
   } else {
     emit('node:collapse', props.node)
     if (props.nodeOfInterest && props.rootChild) {
@@ -90,7 +92,6 @@ watch(
   },
   { immediate: true },
 )
-
 </script>
 
 <template>
@@ -140,7 +141,8 @@ watch(
           <div class="ds-label-02-reg flex flex-row">
             <div v-if="!props.isRoot" class="pl-6">
               <span class="whitespace-nowrap p-2">
-                <span :class="isSearchCandidate ? 'bg-yellow-300' : ''">{{ node.identifier }}</span><span> | </span>
+                <span :class="isSearchCandidate ? 'bg-yellow-300' : ''">{{ node.identifier }}</span
+                ><span> | </span>
               </span>
             </div>
             {{ node.text }}
@@ -174,6 +176,7 @@ watch(
         @node:add="emit('node:add', $event)"
         @node:collapse="emit('node:collapse', $event)"
         @node:expand="emit('node:expand', $event)"
+        @node:expand-root="emit('node:expandRoot')"
         @node:remove="emit('node:remove', $event)"
       />
     </div>
