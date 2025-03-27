@@ -280,4 +280,40 @@ describe('FieldOfLawTree', () => {
     })
     expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
   })
+
+  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+    // given
+    renderComponent({
+      nodeOfInterest: {
+        hasChildren: true,
+        identifier: 'PR',
+        text: 'Phantasierecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+    })
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
+    })
+    await waitFor(() => {
+      expect(
+        screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+      ).toBeInTheDocument()
+    })
+
+    // when
+    await user.click(screen.getByLabelText('Phantasierecht einklappen'))
+
+    // this means one more call for children
+    // TODO not happening because removeNodeOfInterest() is in FieldsOfLaw.vue
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    })
+
+    // then
+    await waitFor(() => {
+      expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+    })
+  })
 })

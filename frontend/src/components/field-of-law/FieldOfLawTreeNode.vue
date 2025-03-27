@@ -53,6 +53,11 @@ function toggleExpanded() {
   } else {
     emit('node:collapse', props.node)
     if (props.nodeOfInterest && props.rootChild) {
+      // when searching, the tree is truncated to show only
+      // branches attached to the nodeOfInterest
+      // But when a root-child is collapsed, the reset
+      // of the nodeOfInterest will trigger the re-load and
+      // show of the whole tree with all root children
       emit('node-of-interest:reset')
     }
   }
