@@ -10,11 +10,11 @@ import IconArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
 
 interface Props {
   node: FieldOfLaw
-  modelValue: FieldOfLaw[]
+  selectedNodes: FieldOfLaw[]
   showNorms: boolean
   nodeHelper: NodeHelperInterface
   searchResults?: FieldOfLaw[]
-  expandValues: FieldOfLaw[]
+  expandedNodes: FieldOfLaw[]
   isRoot?: boolean
   rootChild?: boolean
   nodeOfInterest?: FieldOfLaw
@@ -26,6 +26,7 @@ const emit = defineEmits<{
   'node:add': [node: FieldOfLaw]
   'node:remove': [node: FieldOfLaw]
   'node:expand': [node: FieldOfLaw]
+  'node:expandRoot': []
   'node:collapse': [node: FieldOfLaw]
   'node-of-interest:reset': []
 }>()
@@ -34,7 +35,7 @@ const isExpanded = ref(false)
 const children = ref<FieldOfLaw[]>([])
 const isSearchCandidate = ref<boolean>(false)
 const isSelected = computed({
-  get: () => props.modelValue.some(({ identifier }) => identifier === props.node.identifier),
+  get: () => props.selectedNodes.some(({ identifier }) => identifier === props.node.identifier),
   set: (value) => {
     if (value) {
       emit('node:add', props.node)
@@ -47,32 +48,35 @@ const isSelected = computed({
 function toggleExpanded() {
   isExpanded.value = !isExpanded.value
   if (isExpanded.value) {
-    emit('node:expand', props.node)
+    if (props.isRoot) emit('node:expandRoot')
+    else emit('node:expand', props.node)
   } else {
     emit('node:collapse', props.node)
     if (props.nodeOfInterest && props.rootChild) {
+      // when searching, the tree is truncated to show only
+      // branches attached to the nodeOfInterest
+      // But when a root-child is collapsed, the reset
+      // of the nodeOfInterest will trigger the re-load and
+      // show of the whole tree with all root children
       emit('node-of-interest:reset')
     }
   }
 }
 
 watch(
-  props,
-  () => {
-    isExpanded.value = props.expandValues.some(
-      (expandedNode) => expandedNode.identifier == props.node.identifier,
-    )
-  },
-  { immediate: true },
-)
-
-watch(
-  props,
+  () => props.expandedNodes,
   async () => {
-    if (props.nodeOfInterest && props.isRoot) {
-      children.value = await props.nodeHelper.getFilteredChildren(props.node, props.expandValues)
-    } else if (props.isRoot) {
-      children.value = await props.nodeHelper.getChildren(props.node)
+    isExpanded.value = props.expandedNodes.some((expandedNode) => {
+      return expandedNode.identifier == props.node.identifier
+    })
+    if (isExpanded.value) {
+      if (props.nodeOfInterest && props.isRoot) {
+        // Filter children of root (1st level) to only parent node of interest.
+        // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
+        children.value = await props.nodeHelper.findRootParent(props.nodeOfInterest)
+      } else {
+        children.value = await props.nodeHelper.getChildren(props.node)
+      }
     }
   },
   { immediate: true },
@@ -89,16 +93,6 @@ watch(
       } else {
         isSearchCandidate.value = false
       }
-    }
-  },
-  { immediate: true },
-)
-
-watch(
-  isExpanded,
-  async () => {
-    if (isExpanded.value) {
-      children.value = await props.nodeHelper.getChildren(props.node)
     }
   },
   { immediate: true },
@@ -151,8 +145,9 @@ watch(
         <div class="flex flex-col">
           <div class="ds-label-02-reg flex flex-row">
             <div v-if="!props.isRoot" class="pl-6">
-              <span class="whitespace-nowrap p-2" :class="isSearchCandidate ? 'bg-yellow-300' : ''">
-                {{ node.identifier }} |
+              <span class="whitespace-nowrap p-2">
+                <span :class="isSearchCandidate ? 'bg-yellow-300' : ''">{{ node.identifier }}</span
+                ><span> | </span>
               </span>
             </div>
             {{ node.text }}
@@ -174,8 +169,8 @@ watch(
         :key="child.identifier"
         class="pl-36"
         expand-if-selected
-        :expand-values="expandValues"
-        :model-value="modelValue"
+        :expanded-nodes="expandedNodes"
+        :selected-nodes="selectedNodes"
         :node="child"
         :node-helper="nodeHelper"
         :node-of-interest="nodeOfInterest"
@@ -186,6 +181,7 @@ watch(
         @node:add="emit('node:add', $event)"
         @node:collapse="emit('node:collapse', $event)"
         @node:expand="emit('node:expand', $event)"
+        @node:expand-root="emit('node:expandRoot')"
         @node:remove="emit('node:remove', $event)"
       />
     </div>
