@@ -110,7 +110,15 @@ jobs:
           format: "sarif"
           output: "trivy-image-results.sarif"
           exit-code: 1 # if any level of CVE is found, break the pipeline
-
+      - name: Upload new trivy results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-trivy-image-results-2.sarif
+          retention-days: 3
+          path: trivy-image-results-2.sarif
+          if-no-files-found: error
+      - name: Print new trivy results (sarif format)
+        run: cat trivy-image-results-2.sarif
 
       # TODO: commit new build.gradle.kts to main
       # TODO: skip steps if not needed
