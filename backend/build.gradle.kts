@@ -32,7 +32,7 @@ repositories {
 }
 
 val kubernetesConfigVersion = "3.2.1"
-val protobufVersion = "4.30.1"
+val protobufVersion = "4.30.2"
 val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
 val springdocVersion = "2.8.6"
