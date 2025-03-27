@@ -49,11 +49,8 @@ dependencies {
 
     // CVE-2023-3635
     exclude("com.squareup.okio", "okio-jvm")
-
-    // CVE-2025-25193
-    exclude("io.netty:netty-common", "4.1.119.Final")
   }
-  implementation("io.netty:netty-common:4.1.119.Final")
+
   implementation("com.google.protobuf:protobuf-java:4.30.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.squareup.okio:okio-jvm:3.10.2")
