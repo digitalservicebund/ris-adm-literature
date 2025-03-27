@@ -128,7 +128,7 @@ jobs:
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         run: cat trivy-image-results-2.sarif
 
-      # Step 5: Commit changes to main (if no error before)
+      # Step 5: Commit changes to current branch (if no error before)
       - name: Commit updates to main
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         working-directory: ./backend
