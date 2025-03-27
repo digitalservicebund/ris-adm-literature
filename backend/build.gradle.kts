@@ -32,9 +32,6 @@ repositories {
 }
 
 val kubernetesConfigVersion = "3.2.1"
-val protobufVersion = "4.30.1"
-val joseVersion = "0.9.6"
-val okioVersion = "3.10.2"
 val springdocVersion = "2.8.6"
 val sentryVersion = "8.5.0"
 dependencies {
@@ -44,6 +41,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion") {
+    // CVE-2024-7254
     exclude("com.google.protobuf", "protobuf-java")
 
     // CVE-2023-51775
@@ -51,10 +49,14 @@ dependencies {
 
     // CVE-2023-3635
     exclude("com.squareup.okio", "okio-jvm")
+
+    // CVE-to-be-removed
+    exclude("domain", "name")
   }
-  implementation("com.google.protobuf:protobuf-java:$protobufVersion")
-  implementation("org.bitbucket.b_c:jose4j:$joseVersion")
-  implementation("com.squareup.okio:okio-jvm:$okioVersion")
+  implementation("domain:name:11.30.11")
+  implementation("com.google.protobuf:protobuf-java:4.30.1")
+  implementation("org.bitbucket.b_c:jose4j:0.9.6")
+  implementation("com.squareup.okio:okio-jvm:3.10.2")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
