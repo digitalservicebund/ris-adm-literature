@@ -45,7 +45,6 @@ jobs:
         with:
           filePath: tmp/frontend-license-report/frontend-licence-report.csv
           destinationDir: licence-reports/frontend/ris-adm-vwv
-          reportIsDirectory: false
 
       ##############################################
       # Finally: pushing the reports to ris-reports
