@@ -9,9 +9,7 @@ import FieldOfLawSearchInput from '@/components/field-of-law/FieldOfLawSearchInp
 import FieldOfLawSearchResultList from '@/components/field-of-law/FieldOfLawSearchResults.vue'
 import FieldOfLawTree from '@/components/field-of-law/FieldOfLawTree.vue'
 import { type Page } from '@/components/Pagination.vue'
-
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-
 import service from '@/services/fieldOfLawService'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import StringsUtil from '@/utils/stringsUtil'
