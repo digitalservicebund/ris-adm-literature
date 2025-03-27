@@ -76,7 +76,7 @@ describe('fieldOfLawService', () => {
     expect(response.error).toBeDefined()
   })
 
-  it('responds with data property and no error when http code is 200 on get tree', async () => {
+  it('responds with data property and no error when http code is 200 on get parent and children', async () => {
     server.onAny().reply(200, fieldOfLawResponse)
 
     const response = await FieldOfLawService.getParentAndChildrenForIdentifier('PR-01')
@@ -85,6 +85,15 @@ describe('fieldOfLawService', () => {
     expect(server.history.get[0].url).toBe('/api/lookup-tables/fields-of-law/PR-01')
     expect(response.data).toBeDefined()
     expect(response.error).toBeUndefined()
+  })
+
+  it('responds with no data property and error when http code is >= 300 get parent and children', async () => {
+    server.onAny().reply(500)
+
+    const response = await FieldOfLawService.getParentAndChildrenForIdentifier('PR-YY-XX-ZZ')
+
+    expect(response.data).toBeUndefined()
+    expect(response.error).toBeDefined()
   })
 
   it('responds with data property and no error when http code is 200 on search', async () => {
