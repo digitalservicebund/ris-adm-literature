@@ -280,5 +280,4 @@ describe('FieldOfLawTree', () => {
     })
     expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
   })
-
 })
