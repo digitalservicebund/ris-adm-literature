@@ -76,3 +76,10 @@ jobs:
         run: jq -r '.runs[].tool.driver.rules[].id' trivy-image-results.sarif > trivy-cves.txt
       - name: Print trivy CVE numbers
         run: cat trivy-cves.txt
+
+      - name: Pin libraries again which were reported by trivy
+        run: ./.github/scripts/pin-libraries-again-reported-by-trivy.sh
+      - name: Confirm cves-with-libraries.txt
+        run: cat cves-with-libraries.txt
+      - name: Confirm build.gradle.kts
+        run: cat ./backend/build.gradle.kts
