@@ -90,4 +90,5 @@ jobs:
       - name: Confirm build.gradle.kts
         run: cat ./backend/build.gradle.kts
 
-      # TODO: commit 
+      # TODO: commit new build.gradle.kts to main
+      # TODO: skip steps if not needed
