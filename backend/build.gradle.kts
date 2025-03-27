@@ -53,7 +53,7 @@ dependencies {
     // CVE-to-be-removed
     exclude("domain", "name")
   }
-  implementation("domain:name:11.30.11")
+  // implementation("domain:name:11.30.11")
   implementation("com.google.protobuf:protobuf-java:4.30.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.squareup.okio:okio-jvm:3.10.2")
