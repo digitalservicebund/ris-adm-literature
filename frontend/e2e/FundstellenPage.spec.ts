@@ -64,7 +64,7 @@ test.describe('FundstellenPage', () => {
 
       // Action
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
-      await page.getByText('AA | Arbeitsrecht aktiv').click()
+      await page.getByText('AA | Phantasierecht aktiv').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
       await page.getByTestId('list-entry-0').click()
@@ -84,7 +84,7 @@ test.describe('FundstellenPage', () => {
 
       // Action
       await page.getByRole('textbox', { name: 'Periodikum' }).click()
-      await page.getByText('AA | Arbeitsrecht aktiv').click()
+      await page.getByText('AA | Phantasierecht aktiv').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
 
@@ -138,14 +138,14 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
-      await page.getByText('AA | Arbeitsrecht aktiv').click()
+      await page.getByText('AA | Phantasierecht aktiv').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
       // Mock the PUT and GET requests again
       await page.unrouteAll()
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
         const legalPeriodical = new LegalPeriodical({
-          title: 'Arbeitsrecht aktiv',
+          title: 'Phantasierecht aktiv',
           abbreviation: 'AA',
           citationStyle: '2011',
         })

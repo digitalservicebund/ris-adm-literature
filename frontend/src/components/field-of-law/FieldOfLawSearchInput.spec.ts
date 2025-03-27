@@ -25,13 +25,13 @@ describe('FieldOfLawSearchInput', () => {
   })
 
   it('render input fields with given text', () => {
-    renderComponent('AR-01-01', 'Kurzarbeit', 'BGB')
+    renderComponent('PR-01-01', 'Kurzarbeit', 'BGB')
 
     expect(screen.getByText('Sachgebiet')).toBeInTheDocument()
     expect(screen.getByText('Bezeichnung')).toBeInTheDocument()
     expect(screen.getByText('Norm')).toBeInTheDocument()
 
-    expect(screen.getByLabelText('Sachgebietskürzel')).toHaveValue('AR-01-01')
+    expect(screen.getByLabelText('Sachgebietskürzel')).toHaveValue('PR-01-01')
     expect(screen.getByLabelText('Sachgebietsbezeichnung')).toHaveValue('Kurzarbeit')
     expect(screen.getByLabelText('Sachgebietsnorm')).toHaveValue('BGB')
   })
@@ -47,7 +47,7 @@ describe('FieldOfLawSearchInput', () => {
   it("type in identifier input field should emit 'update:identifier'", async () => {
     const { emitted, user } = renderComponent(undefined, undefined, undefined)
 
-    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'AR-02-02')
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-02-02')
 
     expect(emitted()['update:identifier']).toBeTruthy()
   })

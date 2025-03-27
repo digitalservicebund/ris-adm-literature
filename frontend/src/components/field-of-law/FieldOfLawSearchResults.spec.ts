@@ -6,8 +6,8 @@ import FieldOfLawSearchResults from '@/components/field-of-law/FieldOfLawSearchR
 function renderComponent() {
   const results = [
     {
-      identifier: 'AR',
-      text: 'Arbeitsrecht',
+      identifier: 'PR',
+      text: 'Phantasierecht',
       linkedFields: undefined,
       norms: [],
       children: [],
@@ -15,7 +15,7 @@ function renderComponent() {
       hasChildren: false,
     },
     {
-      identifier: 'AR-01',
+      identifier: 'PR-01',
       text: 'Arbeitsvertrag',
       linkedFields: undefined,
       norms: [],
@@ -56,9 +56,9 @@ describe('FieldOfLawSearchResults', () => {
   it('render search results', () => {
     renderComponent()
 
-    expect(screen.getByText('AR')).toBeInTheDocument()
-    expect(screen.getByText('Arbeitsrecht')).toBeInTheDocument()
-    expect(screen.getByText('AR-01')).toBeInTheDocument()
+    expect(screen.getByText('PR')).toBeInTheDocument()
+    expect(screen.getByText('Phantasierecht')).toBeInTheDocument()
+    expect(screen.getByText('PR-01')).toBeInTheDocument()
     expect(screen.getByText('Arbeitsvertrag')).toBeInTheDocument()
     expect(screen.getByText('3 Ergebnisse angezeigt')).toBeInTheDocument()
   })
@@ -66,7 +66,7 @@ describe('FieldOfLawSearchResults', () => {
   it("on identifier click emit 'node:add'", async () => {
     const { emitted, user } = renderComponent()
 
-    await user.click(screen.getByLabelText('AR-01 hinzufügen'))
+    await user.click(screen.getByLabelText('PR-01 hinzufügen'))
 
     expect(emitted()['node:add']).toBeTruthy()
   })

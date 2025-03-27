@@ -37,6 +37,7 @@ val joseVersion = "0.9.6"
 val okioVersion = "3.10.2"
 val springdocVersion = "2.8.6"
 val sentryVersion = "8.5.0"
+val hypersistenceVersion = "3.9.5"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -71,6 +72,7 @@ dependencies {
   testImplementation("org.springframework.security:spring-security-test")
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:postgresql")
+  testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

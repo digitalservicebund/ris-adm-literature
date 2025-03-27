@@ -26,7 +26,7 @@ describe('DocumentUnit', () => {
       references: [
         new Reference({
           legalPeriodical: new LegalPeriodical({
-            title: 'Arbeitsrecht aktiv',
+            title: 'Phantasierecht aktiv',
             abbreviation: 'AA',
           }),
           citation: '12345',
@@ -37,7 +37,7 @@ describe('DocumentUnit', () => {
 
     // then
     expect(documentUnit.references).toHaveLength(1)
-    expect(documentUnit.references?.at(0)?.legalPeriodical?.title).toEqual('Arbeitsrecht aktiv')
+    expect(documentUnit.references?.at(0)?.legalPeriodical?.title).toEqual('Phantasierecht aktiv')
     expect(documentUnit.references?.at(0)?.legalPeriodical?.abbreviation).toEqual('AA')
     expect(documentUnit.references?.at(0)?.citation).toEqual('12345')
   })

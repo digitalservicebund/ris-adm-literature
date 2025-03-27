@@ -44,7 +44,7 @@ describe('Combobox Element', () => {
     renderComponent()
 
     expect(screen.queryByDisplayValue('Bundesanzeiger')).not.toBeInTheDocument()
-    expect(screen.queryByDisplayValue('Arbeitsrecht aktiv')).not.toBeInTheDocument()
+    expect(screen.queryByDisplayValue('Phantasierecht aktiv')).not.toBeInTheDocument()
   })
 
   it('is opened', async () => {
@@ -114,7 +114,7 @@ describe('Combobox Element', () => {
     const { emitted } = renderComponent()
     const input = screen.getByLabelText('test label')
 
-    await user.type(input, 'arbeitsrecht')
+    await user.type(input, 'phantasierecht')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[1])
@@ -128,7 +128,7 @@ describe('Combobox Element', () => {
     expect(emitted()['update:modelValue']).toEqual([
       [
         {
-          title: 'Arbeitsrecht aktiv',
+          title: 'Phantasierecht aktiv',
           abbreviation: 'AA',
           citationStyle: '2011',
         },
