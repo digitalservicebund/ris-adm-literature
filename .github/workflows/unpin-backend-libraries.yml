@@ -28,12 +28,10 @@ jobs:
       # the result is twofold:
       # 1. the libraries are unpinned in build.gradle.kts
       # 2. we have files that contain the CVE names and the library information
-      # (cve_list.txt and pinned_deps.txta)
+      # (cve_list.txt and pinned_deps.txt)
+      # 3. PINNED_DEPS_FOUND=true is written to $GITHUB_ENV
       - name: collect-and-comment-out-pinned-libraries
         run: ./.github/scripts/unpin-backend-libraries.sh
-
-      # - name: New files?
-      #   run: tree -a .
       - name: Confirm commenting in build.gradle.kts
         run: cat ./backend/build.gradle.kts
       - name: Confirm cve-list.txt
@@ -42,6 +40,7 @@ jobs:
         run: cat pinned-deps.txt
 
       - name: Build backend image
+        if: env.PINNED_DEPS_FOUND == 'true'
         working-directory: ./backend
         env:
           CONTAINER_REGISTRY: ghcr.io
@@ -49,9 +48,8 @@ jobs:
         run: ./gradlew bootBuildImage
 
       - name: Run Trivy vulnerability image scanner
+        if: env.PINNED_DEPS_FOUND == 'true'
         # Note: This scan is NOT what is shown in the GitHub Security tab
-        # Third-party action, pin to commit SHA!
-        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
@@ -63,6 +61,7 @@ jobs:
           exit-code: 0
 
       - name: Upload trivy results as artifact
+        if: env.PINNED_DEPS_FOUND == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: backend-trivy-image-results.sarif
@@ -70,27 +69,40 @@ jobs:
           path: trivy-image-results.sarif
           if-no-files-found: error
       - name: Print trivy results (sarif format)
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: cat trivy-image-results.sarif
 
       - name: Get CVE numbers from trivy
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: jq -r '.runs[].tool.driver.rules[].id' trivy-image-results.sarif > trivy-cves.txt
       - name: Print trivy CVE numbers
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: cat trivy-cves.txt
 
+      # Now we 
+      # 1. find out which unpinned libraries were not reported by trivy
+      # 2. remove these from build.gradle.kts
+      # 3. Write CHANGES_MADE=true" to $GITHUB_ENV
       - name: Pin libraries again which were reported by trivy. Remove those that are fine, now.
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: ./.github/scripts/pin-libraries-again-reported-by-trivy.sh
       - name: Confirm cves-with-libraries.txt
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: cat cves-with-libraries.txt
       - name: Confirm build.gradle.kts
+        if: env.PINNED_DEPS_FOUND == 'true'
         run: cat ./backend/build.gradle.kts
 
       - name: Apply spotless
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         working-directory: ./backend
         run: ./gradlew spotlessApply
       - name: Confirm build.gradle.kts
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         run: cat ./backend/build.gradle.kts
 
       - name: Build backend image again
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         working-directory: ./backend
         env:
           CONTAINER_REGISTRY: ghcr.io
@@ -98,9 +110,8 @@ jobs:
         run: ./gradlew bootBuildImage
 
       - name: Run Trivy vulnerability image scanner again
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         # Note: This scan is NOT what is shown in the GitHub Security tab
-        # Third-party action, pin to commit SHA!
-        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
@@ -111,6 +122,7 @@ jobs:
           output: "trivy-image-results.sarif"
           exit-code: 1 # if any level of CVE is found, break the pipeline
       - name: Upload new trivy results as artifact
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: backend-trivy-image-results-2.sarif
@@ -118,6 +130,7 @@ jobs:
           path: trivy-image-results-2.sarif
           if-no-files-found: error
       - name: Print new trivy results (sarif format)
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         run: cat trivy-image-results-2.sarif
 
       # TODO: commit new build.gradle.kts to main
