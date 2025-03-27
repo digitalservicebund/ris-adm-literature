@@ -27,16 +27,21 @@ while read -r line; do
     LIBRARY_NAME=`echo $line | cut -d'"' -f4`
     echo $CVE - $LIBRARY_DOMAIN - $LIBRARY_NAME
 
+    EXCLUDE_INFO="exclude(\"$LIBRARY_DOMAIN\", \"$LIBRARY_NAME\")"
+    IMPLEMENTATION_INFO_START="implementation(\"$LIBRARY_DOMAIN:$LIBRARY_NAME"
+    
     if grep -q "$CVE" $LIST_OF_TRIVY_CVES_FILE; then
-        echo "--> still found by trivy"
         # remove the comments (= pin again)
-        EXCLUDE_INFO="exclude(\"$LIBRARY_DOMAIN\", \"$LIBRARY_NAME\")"
-        IMPLEMENTATION_INFO_START="implementation(\"$LIBRARY_DOMAIN:$LIBRARY_NAME"
+        echo "--> still found by trivy"
         sed -i "s/\/\/ $EXCLUDE_INFO/$EXCLUDE_INFO/" $BUILD_GRADLE_KTS
         sed -i "s/\/\/ $IMPLEMENTATION_INFO_START/$IMPLEMENTATION_INFO_START/" $BUILD_GRADLE_KTS
-
     else
-        echo "--> no longer found by trivy. No more pinning needed."
+        # remove the pinning
+        echo "--> no longer found by trivy. Will remove"
+        sed -i "s/\/\/ $EXCLUDE_INFO.*$//" $BUILD_GRADLE_KTS
+        sed -i "s/\/\/ $IMPLEMENTATION_INFO_START.*$//" $BUILD_GRADLE_KTS
+        sed -i "s/\/\/ $CVE.*$//" $BUILD_GRADLE_KTS
+        echo "--> removed."
     fi
 
 done < $LIST_OF_CVES_WITH_LIBRARIES
