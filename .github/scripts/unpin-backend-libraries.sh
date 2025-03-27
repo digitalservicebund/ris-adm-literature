@@ -19,8 +19,14 @@ LIST_OF_CVES_FILE="cve-list.txt"
 echo "Extracting list of CVEs to $LIST_OF_CVES_FILE"
 grep "// CVE-" $BUILD_GRADLE_KTS > $LIST_OF_CVES_FILE || true
 
+
 echo "Extracting pinned dependencies to $LIST_OF_PINNED_FILE..."
 grep -A1 "// CVE-" $BUILD_GRADLE_KTS | grep "exclude" > $LIST_OF_PINNED_FILE || true
+
+# notify "FOUND" to GitHub workflow
+if [[ -s $LIST_OF_PINNED_FILE ]]; then
+    echo "PINNED_DEPS_FOUND=true" >> $GITHUB_ENV
+fi
 
 echo "Unpinning the pinned dependencies"
 while read -r line; do

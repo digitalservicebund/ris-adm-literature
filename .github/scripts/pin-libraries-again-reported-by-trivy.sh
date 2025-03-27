@@ -16,6 +16,8 @@ LIST_OF_TRIVY_CVES_FILE="trivy-cves.txt" # expected to exist
 LIST_OF_CVES_WITH_LIBRARIES="cves-with-libraries.txt" # will be created during operation
 BUILD_GRADLE_KTS="backend/build.gradle.kts" # will be manipulated for pinning/unpinning
 
+echo "CHANGES_MADE=false" >> $GITHUB_ENV
+
 echo "Compile CVEs with libraries (for lookup)"
 paste $LIST_OF_CVES_FILE $LIST_OF_PINNED_FILE > $LIST_OF_CVES_WITH_LIBRARIES
 
@@ -42,6 +44,8 @@ while read -r line; do
         sed -i "s/\/\/ $IMPLEMENTATION_INFO_START.*$//" $BUILD_GRADLE_KTS
         sed -i "s/\/\/ $CVE.*$//" $BUILD_GRADLE_KTS
         echo "--> removed."
+        # notify "CHANGES MADE" to github workflow
+        echo "CHANGES_MADE=true" >> $GITHUB_ENV
     fi
 
 done < $LIST_OF_CVES_WITH_LIBRARIES
