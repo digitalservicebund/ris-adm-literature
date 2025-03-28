@@ -1,0 +1,148 @@
+name: Unpin backend libraries if their CVEs have been fixed
+
+on:
+  workflow_dispatch: # Manual trigger
+  schedule:
+    - cron: "0 3 * * 1" # Mondays at 4am (winter) or 5am (summer) Berlin time
+
+jobs:
+  test-unpinning-libraries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+
+      # Step 1: Unpin pinned libraries:
+      # 1. the libraries are unpinned in build.gradle.kts
+      # 2. create files that contain the CVE names and the library information
+      # (cve_list.txt and pinned_deps.txt)
+      # 3. if pinned file are found, PINNED_DEPS_FOUND=true is written to $GITHUB_ENV
+      - name: collect-and-comment-out-pinned-libraries
+        run: ./.github/scripts/unpin-backend-libraries.sh
+      - name: Print build.gradle.kts (you may check for commented out lines)
+        run: cat ./backend/build.gradle.kts
+      - name: Print cve-list.txt (what CVEs have been found?)
+        run: cat cve-list.txt
+      - name: Print pinned-deps.txt (what libraries have been unpinned)
+        run: cat pinned-deps.txt
+
+      # Step 2: Build and test
+      # 1. build image
+      # 2. scan with trivy
+      # 3. create file that lists CVEs found by trivy
+      - name: Build backend image
+        if: env.PINNED_DEPS_FOUND == 'true'
+        working-directory: ./backend
+        env:
+          CONTAINER_REGISTRY: ghcr.io
+          IMAGE_REF: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+        run: ./gradlew bootBuildImage
+      - name: Run Trivy vulnerability image scanner
+        if: env.PINNED_DEPS_FOUND == 'true'
+        # Note: This scan is NOT what is shown in the GitHub Security tab
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
+        env:
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+          format: "sarif"
+          output: "trivy-image-results.sarif"
+          exit-code: 0
+      - name: Upload trivy results as artifact
+        if: env.PINNED_DEPS_FOUND == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-trivy-image-results.sarif
+          retention-days: 3
+          path: trivy-image-results.sarif
+          if-no-files-found: error
+      - name: Print trivy results (sarif format)
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: cat trivy-image-results.sarif
+      - name: Get CVE numbers from trivy
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: jq -r '.runs[].tool.driver.rules[].id' trivy-image-results.sarif > trivy-cves.txt
+      - name: Print trivy CVE numbers
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: cat trivy-cves.txt
+
+      # Step 3: Decide if we can leave some unpinned
+      # 1. find out which unpinned libraries were not reported by trivy
+      # 2. remove these from build.gradle.kts
+      # 3. if we did remove some pinning, CHANGES_MADE=true" is written to $GITHUB_ENV
+      - name: Pin libraries again which were reported by trivy. Remove those that are fine, now.
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: ./.github/scripts/pin-libraries-again-reported-by-trivy.sh
+      - name: Print cves-with-libraries.txt (aligns CVEs with library domains and names)
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: cat cves-with-libraries.txt
+      - name: Print build.gradle.kts (you may check for lines that were removed or pinnings that were uncommented)
+        if: env.PINNED_DEPS_FOUND == 'true'
+        run: cat ./backend/build.gradle.kts
+      - name: Apply spotless
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        working-directory: ./backend
+        run: ./gradlew spotlessApply
+      - name: Print build.gradle.kts (empty lines should be removed)
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        run: cat ./backend/build.gradle.kts
+
+      # Step 4: Build and scan again
+      - name: Build backend image again
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        working-directory: ./backend
+        env:
+          CONTAINER_REGISTRY: ghcr.io
+          IMAGE_REF: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+        run: ./gradlew bootBuildImage
+      - name: Run Trivy vulnerability image scanner again
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        # Note: This scan is NOT what is shown in the GitHub Security tab
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
+        env:
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+          format: "sarif"
+          output: "trivy-image-results-2.sarif"
+          exit-code: 1 # if any level of CVE is found, break the pipeline
+      - name: Upload new trivy results as artifact
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-trivy-image-results-2.sarif
+          retention-days: 3
+          path: trivy-image-results-2.sarif
+          if-no-files-found: error
+      - name: Print new trivy results (sarif format)
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        run: cat trivy-image-results-2.sarif
+
+      # Step 5: Commit changes to current branch (if no error before)
+      - name: Commit updates to main
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        working-directory: ./backend
+        run: git add build.gradle.kts
+        # Creates commit via GH API using the GITHUB_TOKEN that is generated for every job automatically. Good explanation here:
+        # https://github.com/Nautilus-Cyberneering/pygithub/blob/main/docs/how_to_sign_automatic_commits_in_github_actions.md#solution-01-using-the-temporary-github_token-generated-for-each-workflow-job
+      - name: Create Commit with GPG Signature
+        if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
+        uses: qoomon/actions--create-commit@f52c52eb49ad768abb2a39a6b42135a09de14820
+        id: commit
+        with:
+          message: "Auto-update: Manage pinned dependencies based on CVE results"
+          skip-empty: true
+      - name: Push Changes
+        if: ${{ steps.commit.outputs.commit }}
+        run: git push
