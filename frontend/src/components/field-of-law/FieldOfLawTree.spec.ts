@@ -195,61 +195,9 @@ describe('FieldOfLawTree', () => {
         },
       },
     })
-  const searchForFieldsOfLawForPR05 = () =>
-    Promise.resolve({
-      status: 200,
-      data: {
-        content: [
-          {
-            hasChildren: true,
-            identifier: 'PR-05',
-            text: 'Beendigung der Phantasieverhältnisse',
-            norms: [],
-            children: [],
-            parent: {
-              id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
-              hasChildren: true,
-              identifier: 'PR',
-              text: 'Phantasierecht',
-              norms: [],
-              children: [],
-            },
-          },
-          {
-            hasChildren: false,
-            identifier: 'PR-05-01',
-            text: 'Phantasie besonderer Art, Ansprüche anderer Art',
-            norms: [],
-            children: [],
-            parent: {
-              hasChildren: true,
-              identifier: 'PR-05',
-              text: 'Beendigung der Phantasieverhältnisse',
-              norms: [],
-              children: [],
-              parent: {
-                id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
-                hasChildren: true,
-                identifier: 'PR',
-                text: 'Phantasierecht',
-                norms: [],
-                children: [],
-              },
-            },
-          },
-        ],
-        size: 2,
-        number: 0,
-        numberOfElements: 2,
-        first: true,
-        last: true,
-        empty: false,
-      },
-    })
 
   let fetchSpyGetChildrenOf: MockInstance
   let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
-  let fetchSpySearchForFieldsOfLawForPR05: MockInstance
 
   beforeEach(() => {
     fetchSpyGetChildrenOf = vi
@@ -264,11 +212,6 @@ describe('FieldOfLawTree', () => {
       .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
       .mockImplementation(() => {
         return getParentAndChildrenForIdentifierPR05()
-      })
-    fetchSpySearchForFieldsOfLawForPR05 = vi
-      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
-      .mockImplementation(() => {
-        return searchForFieldsOfLawForPR05()
       })
   })
 
@@ -340,7 +283,7 @@ describe('FieldOfLawTree', () => {
 
   it.only('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
     // given
-    const { rerender, emitted, user } = renderComponent({
+    const { rerender, user } = renderComponent({
       nodeOfInterest: {
         hasChildren: true,
         identifier: 'PR',
@@ -356,38 +299,21 @@ describe('FieldOfLawTree', () => {
       ).toBeInTheDocument()
     })
 
-    // await waitFor(() => {
-    //   expect(fetchSpySearchForFieldsOfLawForPR05).toBeCalledTimes(1)
-    // })
-    // await waitFor(() => {
-    //   expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
-    // })
-    // await waitFor(() => {
-    //   expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
-    // })
-    // await waitFor(() => {
-    //   expect(
-    //     screen.getAllByText('Phantasie besonderer Art, Ansprüche anderer Art')[0],
-    //   ).toBeInTheDocument()
-    // })
-
-    // // when
-    // await user.click(screen.getByLabelText('Phantasierecht einklappen'))
-
-    // console.log(emitted)
-
-    // rerender({
-    //   nodeOfInterest: undefined,
-    // })
+    // when
+    // Simulate executing the event 'node-of-interest:reset'
+    await rerender({
+      nodeOfInterest: undefined,
+    })
+    await user.click(screen.getByLabelText('Phantasierecht einklappen'))
 
     // this means one more call for children
-    // await waitFor(() => {
-    //   expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
-    // })
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    })
 
     // then
-    // await waitFor(() => {
-    //   expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
-    // })
+    await waitFor(() => {
+      expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+    })
   })
 })
