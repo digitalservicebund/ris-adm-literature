@@ -24,15 +24,9 @@ function renderComponent(user: UserEvent) {
                   },
                 },
               },
-              // stubActions: false,
             }),
           ],
         ],
-        // stubs: {
-        //   routerLink: {
-        //     template: '<a><slot/></a>',
-        //   },
-        // },
       },
     }),
   }
@@ -211,7 +205,6 @@ describe('FieldsOfLaw', () => {
         },
       },
     })
-
   const searchForFieldsOfLawForPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -289,7 +282,7 @@ describe('FieldsOfLaw', () => {
       })
   })
 
-  it.skip('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
     // given
     renderComponent(user)
 
