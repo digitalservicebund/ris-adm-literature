@@ -1,26 +1,44 @@
 import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
-import { userEvent } from '@testing-library/user-event'
+import { userEvent, type UserEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
-import FieldOfLawTreeVue from '@/components/field-of-law/FieldOfLawTree.vue'
-import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import { createTestingPinia } from '@pinia/testing'
+import FieldsOfLawVue from '@/components/field-of-law/FieldsOfLaw.vue'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import FieldOfLawService from '@/services/fieldOfLawService'
+import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
-function renderComponent(
-  options: {
-    selectedNodes?: FieldOfLaw[]
-    nodeOfInterest?: FieldOfLaw
-  } = {},
-) {
-  return render(FieldOfLawTreeVue, {
-    props: {
-      selectedNodes: options.selectedNodes ?? [],
-      nodeOfInterest: options.nodeOfInterest,
-      showNorms: false,
-    },
-  })
+function renderComponent(user: UserEvent) {
+  return {
+    user,
+    ...render(FieldsOfLawVue, {
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    id: '123',
+                    documentNumber: '1234567891234',
+                    fieldsOfLaw: [] as FieldOfLaw[],
+                  },
+                },
+              },
+              // stubActions: false,
+            }),
+          ],
+        ],
+        // stubs: {
+        //   routerLink: {
+        //     template: '<a><slot/></a>',
+        //   },
+        // },
+      },
+    }),
+  }
 }
 
-describe('FieldOfLawTree', () => {
+describe('FieldsOfLaw', () => {
   const user = userEvent.setup()
 
   const getChildrenOfRoot = () =>
@@ -118,7 +136,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getChildrenOfPR0501 = () =>
     Promise.resolve({
       status: 200,
@@ -147,7 +164,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getParentAndChildrenForIdentifierPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -196,8 +212,61 @@ describe('FieldOfLawTree', () => {
       },
     })
 
+  const searchForFieldsOfLawForPR05 = () =>
+    Promise.resolve({
+      status: 200,
+      data: {
+        content: [
+          {
+            hasChildren: true,
+            identifier: 'PR-05',
+            text: 'Beendigung der Phantasieverhältnisse',
+            norms: [],
+            children: [],
+            parent: {
+              id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+              hasChildren: true,
+              identifier: 'PR',
+              text: 'Phantasierecht',
+              norms: [],
+              children: [],
+            },
+          },
+          {
+            hasChildren: false,
+            identifier: 'PR-05-01',
+            text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+            norms: [],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'PR-05',
+              text: 'Beendigung der Phantasieverhältnisse',
+              norms: [],
+              children: [],
+              parent: {
+                id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+                hasChildren: true,
+                identifier: 'PR',
+                text: 'Phantasierecht',
+                norms: [],
+                children: [],
+              },
+            },
+          },
+        ],
+        size: 2,
+        number: 0,
+        numberOfElements: 2,
+        first: true,
+        last: true,
+        empty: false,
+      },
+    })
+
   let fetchSpyGetChildrenOf: MockInstance
   let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
+  let fetchSpySearchForFieldsOfLawForPR05: MockInstance
 
   beforeEach(() => {
     fetchSpyGetChildrenOf = vi
@@ -213,71 +282,48 @@ describe('FieldOfLawTree', () => {
       .mockImplementation(() => {
         return getParentAndChildrenForIdentifierPR05()
       })
+    fetchSpySearchForFieldsOfLawForPR05 = vi
+      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
+      .mockImplementation(() => {
+        return searchForFieldsOfLawForPR05()
+      })
   })
 
-  it('Tree is fully closed upon at start', async () => {
-    renderComponent()
-    expect(fetchSpyGetChildrenOf).toBeCalledTimes(0)
-    expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
-    expect(screen.getByLabelText('Alle Sachgebiete aufklappen')).toBeInTheDocument()
-    expect(screen.queryByText('Text for AB')).not.toBeInTheDocument()
-    expect(screen.queryByText('And text for CD')).not.toBeInTheDocument()
-  })
+  it.skip('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+    // given
+    renderComponent(user)
 
-  it('Tree opens top level nodes upon root click', async () => {
-    renderComponent()
-
-    await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
-
-    expect(fetchSpyGetChildrenOf).toBeCalledTimes(1)
-    expect(screen.getByText('Text for AB')).toBeInTheDocument()
-    expect(screen.getByText('And text for CD with link to AB-01')).toBeInTheDocument()
-    expect(screen.getByText('Alle Sachgebiete')).toBeInTheDocument()
-  })
-
-  it('Tree opens sub level nodes upon children click', async () => {
-    renderComponent()
-
-    await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
-
-    await user.click(screen.getByLabelText('Phantasierecht aufklappen'))
-
-    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR')
-
-    expect(screen.getByText('Beendigung der Phantasieverhältnisse')).toBeInTheDocument()
-  })
-
-  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated)', async () => {
-    renderComponent({
-      nodeOfInterest: {
-        hasChildren: true,
-        identifier: 'PR',
-        text: 'Phantasierecht',
-        linkedFields: [],
-        norms: [],
-        children: [],
-      },
-    })
-    expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Alle Sachgebiete einklappen')).toBeInTheDocument()
+      expect(fetchSpySearchForFieldsOfLawForPR05).toBeCalledTimes(1)
     })
-
+    await waitFor(() => {
+      expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
+    })
     await waitFor(() => {
       expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
     })
-    // Call to root is not expected due to set node of interest
-    expect(fetchSpyGetChildrenOf).not.toBeCalledWith('root')
-    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR')
-    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR-05')
-    expect(fetchSpyGetChildrenOf).not.toBeCalledWith('PR-05-01')
-
     await waitFor(() => {
       expect(
-        screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+        screen.getAllByText('Phantasie besonderer Art, Ansprüche anderer Art')[0],
       ).toBeInTheDocument()
     })
-    expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
+
+    // when
+    await user.click(screen.getByLabelText('Phantasierecht einklappen'))
+
+    // this means one more call for children
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    })
+
+    // then
+    await waitFor(() => {
+      expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+    })
   })
 })

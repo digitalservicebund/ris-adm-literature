@@ -9,9 +9,7 @@ import FieldOfLawSearchInput from '@/components/field-of-law/FieldOfLawSearchInp
 import FieldOfLawSearchResultList from '@/components/field-of-law/FieldOfLawSearchResults.vue'
 import FieldOfLawTree from '@/components/field-of-law/FieldOfLawTree.vue'
 import { type Page } from '@/components/Pagination.vue'
-
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-
 import service from '@/services/fieldOfLawService'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import StringsUtil from '@/utils/stringsUtil'
@@ -31,7 +29,7 @@ const currentPage = ref<Page<FieldOfLaw>>()
 const itemsPerPage = 10
 
 const store = useDocumentUnitStore()
-const localModelValue = computed({
+const selectedNodes = computed({
   get: () => store.documentUnit!.fieldsOfLaw as FieldOfLaw[],
   set: (newValues) => {
     store.documentUnit!.fieldsOfLaw = newValues?.filter((value) => {
@@ -82,15 +80,15 @@ async function submitSearch(page: number) {
 }
 
 const addFieldOfLaw = async (fieldOfLaw: FieldOfLaw) => {
-  if (!localModelValue.value?.find((entry) => entry.identifier === fieldOfLaw.identifier)) {
-    localModelValue.value?.push(fieldOfLaw)
+  if (!selectedNodes.value?.find((entry) => entry.identifier === fieldOfLaw.identifier)) {
+    selectedNodes.value?.push(fieldOfLaw)
   }
   await setScrollPosition()
 }
 
 const removeFieldOfLaw = async (fieldOfLaw: FieldOfLaw) => {
-  localModelValue.value =
-    localModelValue.value?.filter((entry) => entry.identifier !== fieldOfLaw.identifier) ?? []
+  selectedNodes.value =
+    selectedNodes.value?.filter((entry) => entry.identifier !== fieldOfLaw.identifier) ?? []
   await setScrollPosition()
 }
 
@@ -152,8 +150,8 @@ function updateInputMethod(value: InputMethod) {
 
 <template>
   <FieldOfLawExpandableContainer
-    v-if="localModelValue"
-    :fields-of-law="localModelValue"
+    v-if="selectedNodes"
+    :fields-of-law="selectedNodes"
     :is-reset-button-visible="isResetButtonVisible"
     @editing-done="resetSearch"
     @input-method-selected="updateInputMethod"
@@ -188,9 +186,9 @@ function updateInputMethod(value: InputMethod) {
       />
 
       <FieldOfLawTree
-        v-if="localModelValue"
+        v-if="selectedNodes"
         ref="treeRef"
-        v-model="localModelValue"
+        :selected-nodes="selectedNodes"
         :node-of-interest="nodeOfInterest"
         :search-results="results"
         :show-norms="showNorms"
