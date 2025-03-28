@@ -11,18 +11,20 @@ function renderComponent(
     nodeOfInterest?: FieldOfLaw
   } = {},
 ) {
-  return render(FieldOfLawTreeVue, {
-    props: {
-      selectedNodes: options.selectedNodes ?? [],
-      nodeOfInterest: options.nodeOfInterest,
-      showNorms: false,
-    },
-  })
+  const user = userEvent.setup()
+  return {
+    user,
+    ...render(FieldOfLawTreeVue, {
+      props: {
+        selectedNodes: options.selectedNodes ?? [],
+        nodeOfInterest: options.nodeOfInterest,
+        showNorms: false,
+      },
+    }),
+  }
 }
 
 describe('FieldOfLawTree', () => {
-  const user = userEvent.setup()
-
   const getChildrenOfRoot = () =>
     Promise.resolve({
       status: 200,
@@ -118,7 +120,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getChildrenOfPR0501 = () =>
     Promise.resolve({
       status: 200,
@@ -147,7 +148,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getParentAndChildrenForIdentifierPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -225,7 +225,7 @@ describe('FieldOfLawTree', () => {
   })
 
   it('Tree opens top level nodes upon root click', async () => {
-    renderComponent()
+    const { user } = renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
@@ -236,7 +236,7 @@ describe('FieldOfLawTree', () => {
   })
 
   it('Tree opens sub level nodes upon children click', async () => {
-    renderComponent()
+    const { user } = renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
@@ -279,5 +279,41 @@ describe('FieldOfLawTree', () => {
       ).toBeInTheDocument()
     })
     expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
+  })
+
+  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+    // given
+    const { rerender, user } = renderComponent({
+      nodeOfInterest: {
+        hasChildren: true,
+        identifier: 'PR',
+        text: 'Phantasierecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+    })
+    await waitFor(() => {
+      expect(
+        screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+      ).toBeInTheDocument()
+    })
+
+    // when
+    // Simulate executing the event 'node-of-interest:reset'
+    await rerender({
+      nodeOfInterest: undefined,
+    })
+    await user.click(screen.getByLabelText('Phantasierecht einklappen'))
+
+    // this means one more call for children
+    await waitFor(() => {
+      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    })
+
+    // then
+    await waitFor(() => {
+      expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+    })
   })
 })
