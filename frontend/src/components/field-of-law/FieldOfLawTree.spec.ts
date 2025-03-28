@@ -11,18 +11,20 @@ function renderComponent(
     nodeOfInterest?: FieldOfLaw
   } = {},
 ) {
-  return render(FieldOfLawTreeVue, {
-    props: {
-      selectedNodes: options.selectedNodes ?? [],
-      nodeOfInterest: options.nodeOfInterest,
-      showNorms: false,
-    },
-  })
+  const user = userEvent.setup()
+  return {
+    user,
+    ...render(FieldOfLawTreeVue, {
+      props: {
+        selectedNodes: options.selectedNodes ?? [],
+        nodeOfInterest: options.nodeOfInterest,
+        showNorms: false,
+      },
+    }),
+  }
 }
 
 describe('FieldOfLawTree', () => {
-  const user = userEvent.setup()
-
   const getChildrenOfRoot = () =>
     Promise.resolve({
       status: 200,
@@ -118,7 +120,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getChildrenOfPR0501 = () =>
     Promise.resolve({
       status: 200,
@@ -147,7 +148,6 @@ describe('FieldOfLawTree', () => {
         },
       ],
     })
-
   const getParentAndChildrenForIdentifierPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -195,9 +195,61 @@ describe('FieldOfLawTree', () => {
         },
       },
     })
+  const searchForFieldsOfLawForPR05 = () =>
+    Promise.resolve({
+      status: 200,
+      data: {
+        content: [
+          {
+            hasChildren: true,
+            identifier: 'PR-05',
+            text: 'Beendigung der Phantasieverhältnisse',
+            norms: [],
+            children: [],
+            parent: {
+              id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+              hasChildren: true,
+              identifier: 'PR',
+              text: 'Phantasierecht',
+              norms: [],
+              children: [],
+            },
+          },
+          {
+            hasChildren: false,
+            identifier: 'PR-05-01',
+            text: 'Phantasie besonderer Art, Ansprüche anderer Art',
+            norms: [],
+            children: [],
+            parent: {
+              hasChildren: true,
+              identifier: 'PR-05',
+              text: 'Beendigung der Phantasieverhältnisse',
+              norms: [],
+              children: [],
+              parent: {
+                id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
+                hasChildren: true,
+                identifier: 'PR',
+                text: 'Phantasierecht',
+                norms: [],
+                children: [],
+              },
+            },
+          },
+        ],
+        size: 2,
+        number: 0,
+        numberOfElements: 2,
+        first: true,
+        last: true,
+        empty: false,
+      },
+    })
 
   let fetchSpyGetChildrenOf: MockInstance
   let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
+  let fetchSpySearchForFieldsOfLawForPR05: MockInstance
 
   beforeEach(() => {
     fetchSpyGetChildrenOf = vi
@@ -213,6 +265,11 @@ describe('FieldOfLawTree', () => {
       .mockImplementation(() => {
         return getParentAndChildrenForIdentifierPR05()
       })
+    fetchSpySearchForFieldsOfLawForPR05 = vi
+      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
+      .mockImplementation(() => {
+        return searchForFieldsOfLawForPR05()
+      })
   })
 
   it('Tree is fully closed upon at start', async () => {
@@ -225,7 +282,7 @@ describe('FieldOfLawTree', () => {
   })
 
   it('Tree opens top level nodes upon root click', async () => {
-    renderComponent()
+    const { user } = renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
@@ -236,7 +293,7 @@ describe('FieldOfLawTree', () => {
   })
 
   it('Tree opens sub level nodes upon children click', async () => {
-    renderComponent()
+    const { user } = renderComponent()
 
     await user.click(screen.getByLabelText('Alle Sachgebiete aufklappen'))
 
@@ -279,5 +336,58 @@ describe('FieldOfLawTree', () => {
       ).toBeInTheDocument()
     })
     expect(screen.queryByText('Allgemeines Verwaltungsrecht')).not.toBeInTheDocument()
+  })
+
+  it.only('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+    // given
+    const { rerender, emitted, user } = renderComponent({
+      nodeOfInterest: {
+        hasChildren: true,
+        identifier: 'PR',
+        text: 'Phantasierecht',
+        linkedFields: [],
+        norms: [],
+        children: [],
+      },
+    })
+    await waitFor(() => {
+      expect(
+        screen.getByText('Phantasie besonderer Art, Ansprüche anderer Art'),
+      ).toBeInTheDocument()
+    })
+
+    // await waitFor(() => {
+    //   expect(fetchSpySearchForFieldsOfLawForPR05).toBeCalledTimes(1)
+    // })
+    // await waitFor(() => {
+    //   expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
+    // })
+    // await waitFor(() => {
+    //   expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
+    // })
+    // await waitFor(() => {
+    //   expect(
+    //     screen.getAllByText('Phantasie besonderer Art, Ansprüche anderer Art')[0],
+    //   ).toBeInTheDocument()
+    // })
+
+    // // when
+    // await user.click(screen.getByLabelText('Phantasierecht einklappen'))
+
+    // console.log(emitted)
+
+    // rerender({
+    //   nodeOfInterest: undefined,
+    // })
+
+    // this means one more call for children
+    // await waitFor(() => {
+    //   expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
+    // })
+
+    // then
+    // await waitFor(() => {
+    //   expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+    // })
   })
 })

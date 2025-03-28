@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { userEvent, type UserEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
@@ -5,9 +6,11 @@ import { createTestingPinia } from '@pinia/testing'
 import FieldsOfLawVue from '@/components/field-of-law/FieldsOfLaw.vue'
 import { type DocumentUnit } from '@/domain/documentUnit'
 import FieldOfLawService from '@/services/fieldOfLawService'
+import ComboboxItemService from '@/services/comboboxItemService'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
-function renderComponent(user: UserEvent) {
+function renderComponent() {
+  const user = userEvent.setup()
   return {
     user,
     ...render(FieldsOfLawVue, {
@@ -39,8 +42,6 @@ function renderComponent(user: UserEvent) {
 }
 
 describe('FieldsOfLaw', () => {
-  const user = userEvent.setup()
-
   const getChildrenOfRoot = () =>
     Promise.resolve({
       status: 200,
@@ -211,7 +212,6 @@ describe('FieldsOfLaw', () => {
         },
       },
     })
-
   const searchForFieldsOfLawForPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -287,12 +287,19 @@ describe('FieldsOfLaw', () => {
       .mockImplementation(() => {
         return searchForFieldsOfLawForPR05()
       })
+    // vi.spyOn(ComboboxItemService, 'getFieldOfLawSearchByIdentifier').mockImplementation(() => {
+    //   return {
+    //     data: ref([]),
+    //     execute: ComboboxItemService.getFieldOfLawSearchByIdentifier,
+    //     abort: () => {},
+    //     canAbort: false,
+    //   }
+    // })
   })
 
   it.skip('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
     // given
-    renderComponent(user)
-
+    const { user } = renderComponent()
     await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
     await user.click(screen.getByLabelText('Suche'))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
