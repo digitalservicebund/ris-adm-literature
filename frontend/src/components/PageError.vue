@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import TextButton from '@/components/input/TextButton.vue'
-import router from '@/router'
+const router = useRouter()
 
 interface Props {
   title?: string
