@@ -1,12 +1,10 @@
-import { ref } from 'vue'
 import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
-import { userEvent, type UserEvent } from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { createTestingPinia } from '@pinia/testing'
 import FieldsOfLawVue from '@/components/field-of-law/FieldsOfLaw.vue'
 import { type DocumentUnit } from '@/domain/documentUnit'
 import FieldOfLawService from '@/services/fieldOfLawService'
-import ComboboxItemService from '@/services/comboboxItemService'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
 function renderComponent() {
