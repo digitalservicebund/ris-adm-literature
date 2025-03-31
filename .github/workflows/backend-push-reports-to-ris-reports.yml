@@ -47,7 +47,7 @@ jobs:
           destinationDir: licence-reports/backend/ris-adm-vwv
 
       ## Backend code documentation
-      - name: Download artifact backend license report
+      - name: Download backend code documentation
         uses: actions/download-artifact@v4
         with:
           name: backend-license-report
