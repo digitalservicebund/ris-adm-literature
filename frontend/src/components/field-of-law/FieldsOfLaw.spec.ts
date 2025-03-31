@@ -295,7 +295,7 @@ describe('FieldsOfLaw', () => {
     // })
   })
 
-  it.skip('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+  it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
     // given
     const { user } = renderComponent()
     await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
