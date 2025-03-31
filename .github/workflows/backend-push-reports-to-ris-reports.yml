@@ -22,12 +22,12 @@ jobs:
       ########################################################################
 
       ## Backend unit test report
-      - name: Download artifact backend unit test report
+      - name: Download artifact backend test report
         uses: actions/download-artifact@v4
         with:
           name: backend-test-report
           path: tmp/backend-test-report/
-      - name: Add backend unit test report for push
+      - name: Add backend test report for push
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/backend-test-report
@@ -45,6 +45,19 @@ jobs:
         with:
           filePath: tmp/backend-license-report/index.html
           destinationDir: licence-reports/backend/ris-adm-vwv
+
+      ## Backend code documentation
+      - name: Download artifact backend license report
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-license-report
+          path: tmp/backend-code-documentation/
+      - name: Add backend code documentation for push
+        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+        with:
+          filePath: tmp/backend-code-documentation
+          destinationDir: code-documentation/backend/ris-adm-vwv
+          reportIsDirectory: true
 
       ##############################################
       # Finally: pushing the reports to ris-reports
