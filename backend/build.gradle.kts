@@ -1,5 +1,6 @@
 import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
+import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
   java
@@ -10,6 +11,7 @@ plugins {
   id("com.github.jk1.dependency-license-report") version "2.9"
   id("com.diffplug.spotless") version "7.0.2"
   id("checkstyle")
+  id("io.franzbecker.gradle-lombok") version "5.0.0"
 }
 
 group = "de.bund.digitalservice"
@@ -204,4 +206,31 @@ tasks.named<Checkstyle>("checkstyleMain") {
 tasks.named<Checkstyle>("checkstyleTest") {
   source = sourceSets["test"].allJava
   configFile = rootProject.file("checkstyle/config-test.xml")
+}
+
+lombok {
+  version = "1.18.36"
+}
+
+tasks {
+  val delombok by registering(DelombokTask::class) {
+    dependsOn(compileJava)
+    mainClass.set("lombok.launch.Main")
+    val outputDir by extra { file("${project.layout.buildDirectory.get()}/delombok") }
+    outputs.dir(outputDir)
+    sourceSets["main"].java.srcDirs.forEach {
+      inputs.dir(it)
+      args(it, "-d", outputDir)
+    }
+    doFirst {
+      outputDir.delete()
+    }
+  }
+
+  javadoc {
+    dependsOn(delombok)
+    val outputDir: File by delombok.get().extra
+    source = fileTree(outputDir)
+    isFailOnError = false
+  }
 }
