@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw.FieldOfLawBuilder;
 import de.bund.digitalservice.ris.adm_vwv.application.Norm;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +14,7 @@ class FieldOfLawTransformer {
     boolean withChildren,
     boolean withNorms
   ) {
-    FieldOfLawBuilder builder = FieldOfLaw.builder()
+    FieldOfLaw.FieldOfLawBuilder builder = FieldOfLaw.builder()
       .id(fieldOfLawEntity.getId())
       .identifier(fieldOfLawEntity.getIdentifier())
       .text(fieldOfLawEntity.getText());
