@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { createTestingPinia } from '@pinia/testing'
@@ -289,30 +289,19 @@ describe('FieldsOfLaw', () => {
       },
     })
 
-  let fetchSpyGetChildrenOf: MockInstance
-  let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
-  let fetchSpySearchForFieldsOfLawForPR05: MockInstance
-  let fetchSpySearchForFieldsOfLawFail: MockInstance
-
   beforeEach(() => {
-    fetchSpyGetChildrenOf = vi
-      .spyOn(FieldOfLawService, 'getChildrenOf')
-      .mockImplementation((identifier: string) => {
-        if (identifier == 'root') return getChildrenOfRoot()
-        else if (identifier == 'PR') return getChildrenOfPR()
-        else if (identifier == 'PR-05') return getChildrenOfPRO5()
-        return getChildrenOfPR0501()
-      })
-    fetchSpyGetParentAndChildrenForIdentifier = vi
-      .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
-      .mockImplementation(() => {
-        return getParentAndChildrenForIdentifierPR05()
-      })
-    fetchSpySearchForFieldsOfLawForPR05 = vi
-      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
-      .mockImplementation(() => {
-        return searchForFieldsOfLawForPR05()
-      })
+    vi.spyOn(FieldOfLawService, 'getChildrenOf').mockImplementation((identifier: string) => {
+      if (identifier == 'root') return getChildrenOfRoot()
+      else if (identifier == 'PR') return getChildrenOfPR()
+      else if (identifier == 'PR-05') return getChildrenOfPRO5()
+      return getChildrenOfPR0501()
+    })
+    vi.spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier').mockImplementation(() => {
+      return getParentAndChildrenForIdentifierPR05()
+    })
+    vi.spyOn(FieldOfLawService, 'searchForFieldsOfLaw').mockImplementation(() => {
+      return searchForFieldsOfLawForPR05()
+    })
   })
 
   it('Shows button Sachgebiete', async () => {
@@ -320,7 +309,7 @@ describe('FieldsOfLaw', () => {
     renderComponent()
 
     // then
-    expect(screen.getByRole('button', { name: 'Sachgebiete' }))
+    expect(screen.getByRole('button', { name: 'Sachgebiete' })).toBeInTheDocument()
   })
 
   it('Shows Radio group when clicking Sachgebiete button', async () => {
@@ -370,24 +359,21 @@ describe('FieldsOfLaw', () => {
     // when
     await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
     await user.click(screen.getByLabelText('Suche'))
-    await user.click(screen.getByLabelText('Normen anzeigen'))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await user.click(screen.getAllByRole('checkbox')[0])
 
     // then
-    // TODO this is not working
-    // await waitFor(() => {
-    //   expect(screen.getByText('§ 99 PStG')).toBeInTheDocument()
-    // })
+    await waitFor(() => {
+      expect(screen.getByText('§ 99')).toBeInTheDocument()
+    })
   })
 
   it('Shows warning when backend responds with error message', async () => {
     // given
-    fetchSpySearchForFieldsOfLawFail = vi
-      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
-      .mockImplementation(() => {
-        return searchForFieldsOfLawFail()
-      })
+    vi.spyOn(FieldOfLawService, 'searchForFieldsOfLaw').mockImplementation(() => {
+      return searchForFieldsOfLawFail()
+    })
     const { user } = renderComponent()
 
     // when
