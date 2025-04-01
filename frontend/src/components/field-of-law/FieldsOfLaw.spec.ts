@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { createTestingPinia } from '@pinia/testing'
@@ -13,6 +13,10 @@ function renderComponent() {
     user,
     ...render(FieldsOfLawVue, {
       global: {
+        stubs: {
+          // this way the comboboxItemService is not triggered
+          FieldOfLawDirectInputSearch: true,
+        },
         plugins: [
           [
             createTestingPinia({
@@ -25,15 +29,9 @@ function renderComponent() {
                   },
                 },
               },
-              // stubActions: false,
             }),
           ],
         ],
-        // stubs: {
-        //   routerLink: {
-        //     template: '<a><slot/></a>',
-        //   },
-        // },
       },
     }),
   }
@@ -122,7 +120,12 @@ describe('FieldsOfLaw', () => {
             identifier: 'PR-05',
             text: 'Beendigung der Phantasieverhältnisse',
             linkedFields: [],
-            norms: [],
+            norms: [
+              {
+                abbreviation: 'PStG',
+                singleNormDescription: '§ 99',
+              },
+            ],
             children: [],
             parent: {
               hasChildren: true,
@@ -150,7 +153,12 @@ describe('FieldsOfLaw', () => {
             identifier: 'PR-05',
             text: 'Beendigung der Phantasieverhältnisse',
             linkedFields: [],
-            norms: [],
+            norms: [
+              {
+                abbreviation: 'PStG',
+                singleNormDescription: '§ 99',
+              },
+            ],
             children: [],
             parent: {
               hasChildren: true,
@@ -188,7 +196,12 @@ describe('FieldsOfLaw', () => {
               identifier: 'PR-05',
               text: 'Beendigung der Phantasieverhältnisse',
               linkedFields: [],
-              norms: [],
+              norms: [
+                {
+                  abbreviation: 'PStG',
+                  singleNormDescription: '§ 99',
+                },
+              ],
               children: [],
               parent: {
                 hasChildren: true,
@@ -219,7 +232,12 @@ describe('FieldsOfLaw', () => {
             hasChildren: true,
             identifier: 'PR-05',
             text: 'Beendigung der Phantasieverhältnisse',
-            norms: [],
+            norms: [
+              {
+                abbreviation: 'PStG',
+                singleNormDescription: '§ 99',
+              },
+            ],
             children: [],
             parent: {
               id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
@@ -240,7 +258,12 @@ describe('FieldsOfLaw', () => {
               hasChildren: true,
               identifier: 'PR-05',
               text: 'Beendigung der Phantasieverhältnisse',
-              norms: [],
+              norms: [
+                {
+                  abbreviation: 'PStG',
+                  singleNormDescription: '§ 99',
+                },
+              ],
               children: [],
               parent: {
                 id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
@@ -261,74 +284,204 @@ describe('FieldsOfLaw', () => {
         empty: false,
       },
     })
-
-  let fetchSpyGetChildrenOf: MockInstance
-  let fetchSpyGetParentAndChildrenForIdentifier: MockInstance
-  let fetchSpySearchForFieldsOfLawForPR05: MockInstance
+  const searchForFieldsOfLawFail = () =>
+    Promise.resolve({
+      status: 500,
+      error: {
+        title: 'Something went wrong',
+      },
+    })
 
   beforeEach(() => {
-    fetchSpyGetChildrenOf = vi
-      .spyOn(FieldOfLawService, 'getChildrenOf')
-      .mockImplementation((identifier: string) => {
-        if (identifier == 'root') return getChildrenOfRoot()
-        else if (identifier == 'PR') return getChildrenOfPR()
-        else if (identifier == 'PR-05') return getChildrenOfPRO5()
-        return getChildrenOfPR0501()
-      })
-    fetchSpyGetParentAndChildrenForIdentifier = vi
-      .spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier')
-      .mockImplementation(() => {
-        return getParentAndChildrenForIdentifierPR05()
-      })
-    fetchSpySearchForFieldsOfLawForPR05 = vi
-      .spyOn(FieldOfLawService, 'searchForFieldsOfLaw')
-      .mockImplementation(() => {
-        return searchForFieldsOfLawForPR05()
-      })
-    // vi.spyOn(ComboboxItemService, 'getFieldOfLawSearchByIdentifier').mockImplementation(() => {
-    //   return {
-    //     data: ref([]),
-    //     execute: ComboboxItemService.getFieldOfLawSearchByIdentifier,
-    //     abort: () => {},
-    //     canAbort: false,
-    //   }
-    // })
+    vi.spyOn(FieldOfLawService, 'getChildrenOf').mockImplementation((identifier: string) => {
+      if (identifier == 'root') return getChildrenOfRoot()
+      else if (identifier == 'PR') return getChildrenOfPR()
+      else if (identifier == 'PR-05') return getChildrenOfPRO5()
+      return getChildrenOfPR0501()
+    })
+    vi.spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier').mockImplementation(() => {
+      return getParentAndChildrenForIdentifierPR05()
+    })
+    vi.spyOn(FieldOfLawService, 'searchForFieldsOfLaw').mockImplementation(() => {
+      return searchForFieldsOfLawForPR05()
+    })
   })
 
-  it.skip('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
+  it('Shows button Sachgebiete', async () => {
+    // given when
+    renderComponent()
+
+    // then
+    expect(screen.getByRole('button', { name: 'Sachgebiete' })).toBeInTheDocument()
+  })
+
+  it('Shows Radio group when clicking Sachgebiete button', async () => {
     // given
     const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+
+    // then
+    expect(screen.getByLabelText('Suche')).toBeInTheDocument()
+  })
+
+  it('Shows error message when no search term is entered', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+
+    // then
+    expect(screen.getByText('Geben Sie mindestens ein Suchkriterium ein')).toBeInTheDocument()
+  })
+
+  it('Lists search results', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
     await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
     await user.click(screen.getByLabelText('Suche'))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
 
+    // then
     await waitFor(() => {
-      expect(fetchSpySearchForFieldsOfLawForPR05).toBeCalledTimes(1)
+      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
     })
-    await waitFor(() => {
-      expect(fetchSpyGetParentAndChildrenForIdentifier).toBeCalledTimes(1)
-    })
-    await waitFor(() => {
-      expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
-    })
-    await waitFor(() => {
-      expect(
-        screen.getAllByText('Phantasie besonderer Art, Ansprüche anderer Art')[0],
-      ).toBeInTheDocument()
-    })
+  })
+
+  it('Shows norms when required', async () => {
+    // given
+    const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByLabelText('Phantasierecht einklappen'))
-
-    // this means one more call for children
-    await waitFor(() => {
-      expect(fetchSpyGetChildrenOf).toBeCalledTimes(3)
-    })
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await user.click(screen.getAllByRole('checkbox')[0])
 
     // then
     await waitFor(() => {
-      expect(screen.getByText('Allgemeines Verwaltungsrecht')).toBeInTheDocument()
+      expect(screen.getByText('§ 99')).toBeInTheDocument()
     })
+  })
+
+  it('Shows warning when backend responds with error message', async () => {
+    // given
+    vi.spyOn(FieldOfLawService, 'searchForFieldsOfLaw').mockImplementation(() => {
+      return searchForFieldsOfLawFail()
+    })
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'this triggers an error')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+
+    // then
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          'Leider ist ein Fehler aufgetreten. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.',
+        ),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('Resets search results', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await waitFor(() => {
+      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('button', { name: 'Suche zurücksetzen' }))
+
+    // then
+    expect(screen.queryByText('Beendigung der Phantasieverhältnisse')).not.toBeInTheDocument()
+  })
+
+  it('Adds a field of law to the selection', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await waitFor(() => {
+      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+    })
+    await user.click(screen.getByLabelText('PR-05 hinzufügen'))
+
+    // then
+    expect(
+      screen.getByRole('button', {
+        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+      }),
+    ).toBeInTheDocument()
+  })
+
+  it('Cannot add a field of law to the selection twice', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await waitFor(() => {
+      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+    })
+    await user.click(screen.getByLabelText('PR-05 hinzufügen'))
+    await user.click(screen.getByLabelText('PR-05 hinzufügen'))
+
+    // then
+    expect(
+      screen.getAllByRole('button', {
+        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+      }).length,
+    ).toBe(1)
+  })
+
+  it('Remove a selected field of law', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await waitFor(() => {
+      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+    })
+    await user.click(screen.getByLabelText('PR-05 hinzufügen'))
+    await user.click(
+      screen.getByRole('button', {
+        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+      }),
+    )
+
+    // then
+    expect(
+      screen.queryByRole('button', {
+        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+      }),
+    ).not.toBeInTheDocument()
   })
 })
