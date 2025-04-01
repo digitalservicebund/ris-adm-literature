@@ -13,6 +13,10 @@ function renderComponent() {
     user,
     ...render(FieldsOfLawVue, {
       global: {
+        stubs: {
+          // this way the comboboxItemService is not triggered
+          FieldOfLawDirectInputSearch: true,
+        },
         plugins: [
           [
             createTestingPinia({
@@ -25,7 +29,6 @@ function renderComponent() {
                   },
                 },
               },
-              // stubActions: false,
             }),
           ],
         ],
