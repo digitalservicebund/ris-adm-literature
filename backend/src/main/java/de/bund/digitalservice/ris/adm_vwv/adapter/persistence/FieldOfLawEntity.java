@@ -14,7 +14,7 @@ import org.springframework.data.annotation.Immutable;
  */
 @Data
 @Entity
-@EqualsAndHashCode(exclude = { "children", "parent", "norms" })
+@EqualsAndHashCode(exclude = { "children", "parent", "norms", "fieldOfLawTextReferences" })
 @ToString(exclude = "children")
 @Table(name = "field_of_law_view")
 @Immutable
