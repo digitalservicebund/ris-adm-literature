@@ -12,6 +12,14 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Development Tooling
 
+### Node version
+The `.node-version` file specifies the node version used in this project. You can use [nodenv](https://github.com/nodenv/nodenv) to switch between versions.
+
+```sh
+nodenv version # Display the currently active node version
+nodenv install # Install the missing node version
+```
+
 ### Installing Dependencies
 
 ```sh
