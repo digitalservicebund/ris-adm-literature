@@ -167,8 +167,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     // split by whitespace and hyphen to get words
     for (String textPart : text.split("[\\s-]+")) {
       if (textPart.equals(textTerm)) score += 4;
-      if (textPart.startsWith(textTerm)) score += 3;
-      if (textPart.contains(textTerm)) score += 1;
+      else if (textPart.startsWith(textTerm)) score += 3;
+      else if (textPart.contains(textTerm)) score += 1;
     }
     return score;
   }
@@ -185,8 +185,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         : norm.singleNormDescription().toLowerCase();
       String normText = description + " " + norm.abbreviation().toLowerCase();
       if (description.equals(normWithParagraphsLowerCase)) score += 8;
-      if (description.startsWith(normWithParagraphsLowerCase)) score += 5;
-      if (normText.contains(normWithParagraphsLowerCase)) score += 5;
+      else if (description.startsWith(normWithParagraphsLowerCase)) score += 5;
+      else if (normText.contains(normWithParagraphsLowerCase)) score += 5;
     }
     return score;
   }
