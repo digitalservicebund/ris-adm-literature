@@ -86,13 +86,13 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePaging
   ) {
-    QueryOptions pageQuery = new QueryOptions(pageNumber, pageSize, sortBy, sortDirection, usePaging);
+    QueryOptions queryOptions = new QueryOptions(pageNumber, pageSize, sortBy, sortDirection, usePaging);
     Page<FieldOfLaw> result = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),
         StringUtils.trimToNull(norm),
-        pageQuery
+        queryOptions
       )
     );
     return new FieldOfLawQueryResponse(result.getContent(), result);

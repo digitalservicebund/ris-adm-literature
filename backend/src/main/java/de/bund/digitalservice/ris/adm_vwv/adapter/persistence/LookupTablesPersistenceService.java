@@ -28,7 +28,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     QueryOptions queryOptions = query.queryOptions();
     String searchTerm = query.searchTerm();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
-    Pageable pageable = queryOptions.paged()
+    Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
     Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchTerm)
@@ -79,10 +79,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
-    QueryOptions pageQuery = query.pageQuery();
-    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortByProperty());
-    Pageable pageable = pageQuery.paged()
-      ? PageRequest.of(pageQuery.pageNumber(), pageQuery.pageSize(), sort)
+    QueryOptions queryOptions = query.queryOptions();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
 
     List<String> textTerms = splitSearchTerms(query.text());
