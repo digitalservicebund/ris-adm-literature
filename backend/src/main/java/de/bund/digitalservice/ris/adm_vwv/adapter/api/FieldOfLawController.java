@@ -86,7 +86,13 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePaging
   ) {
-    QueryOptions queryOptions = new QueryOptions(pageNumber, pageSize, sortBy, sortDirection, usePaging);
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+      usePaging
+    );
     Page<FieldOfLaw> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
