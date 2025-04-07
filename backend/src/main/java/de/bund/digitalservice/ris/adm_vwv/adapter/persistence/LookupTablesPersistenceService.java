@@ -79,10 +79,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
-    QueryOptions queryOptions = query.queryOptions();
-    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
-    Pageable pageable = queryOptions.usePagination()
-      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+    QueryOptions pageQuery = query.queryOptions();
+    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortByProperty());
+    Pageable pageable = pageQuery.usePagination()
+      ? PageRequest.of(pageQuery.pageNumber(), pageQuery.pageSize(), sort)
       : Pageable.unpaged(sort);
 
     List<String> textTerms = splitSearchTerms(query.text());
