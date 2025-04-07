@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
  * @param identifier Identifier to search for
  * @param text Text to search for
  * @param norm Norm to search for
- * @param pageQuery Page query
+ * @param queryOptions Page query options
  */
 public record FieldOfLawQuery(
   String identifier,
   String text,
   String norm,
-  @Nonnull QueryOptions pageQuery
+  @Nonnull QueryOptions queryOptions
 ) {}

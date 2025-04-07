@@ -49,9 +49,11 @@ public class DocumentTypeController {
       sortDirection,
       usePagination
     );
-    Page<DocumentType> resultPage = lookupTablesPort.findDocumentTypes(
+    Page<DocumentType> paginatedDocumentTypes = lookupTablesPort.findDocumentTypes(
       new DocumentTypeQuery(searchTerm, queryOptions)
     );
-    return ResponseEntity.ok(new DocumentTypeResponse(resultPage.getContent(), resultPage));
+    return ResponseEntity.ok(
+      new DocumentTypeResponse(paginatedDocumentTypes.getContent(), paginatedDocumentTypes)
+    );
   }
 }
