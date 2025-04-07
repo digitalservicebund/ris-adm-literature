@@ -73,8 +73,11 @@ watch(
       if (props.nodeOfInterest && props.isRoot) {
         // Filter children of root (1st level) to only parent node of interest.
         // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
-        children.value = (await props.nodeHelper.getChildren(props.node))
-          .filter(fol => props.expandedNodes.some((expandedNode) => {return expandedNode.identifier == fol.identifier}))
+        children.value = (await props.nodeHelper.getChildren(props.node)).filter((fol) =>
+          props.expandedNodes.some((expandedNode) => {
+            return expandedNode.identifier == fol.identifier
+          }),
+        )
       } else {
         children.value = await props.nodeHelper.getChildren(props.node)
       }
