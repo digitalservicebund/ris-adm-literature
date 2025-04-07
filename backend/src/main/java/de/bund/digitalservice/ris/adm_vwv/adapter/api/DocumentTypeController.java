@@ -42,7 +42,13 @@ public class DocumentTypeController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
-    QueryOptions queryOptions = new QueryOptions(pageNumber, pageSize, sortByProperty, sortDirection, usePagination);
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      sortByProperty,
+      sortDirection,
+      usePagination
+    );
     Page<DocumentType> resultPage = lookupTablesPort.findDocumentTypes(
       new DocumentTypeQuery(searchTerm, queryOptions)
     );

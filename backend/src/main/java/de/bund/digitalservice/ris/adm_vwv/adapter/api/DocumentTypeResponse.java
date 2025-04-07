@@ -10,4 +10,7 @@ import org.springframework.data.domain.Page;
  * @param documentTypes List of document types
  * @param paginatedDocumentTypes List of paginated document types
  */
-public record DocumentTypeResponse(List<DocumentType> documentTypes, Page<DocumentType> paginatedDocumentTypes) {}
+public record DocumentTypeResponse(
+  List<DocumentType> documentTypes,
+  Page<DocumentType> paginatedDocumentTypes
+) {}
