@@ -14,5 +14,5 @@ public record FieldOfLawQuery(
   String identifier,
   String text,
   String norm,
-  @Nonnull PageQuery pageQuery
+  @Nonnull QueryOptions pageQuery
 ) {}

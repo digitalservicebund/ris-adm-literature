@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
-import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
@@ -141,7 +141,7 @@ class FieldOfLawControllerTest {
       "PR-05",
       "arbeit",
       null,
-      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+      new QueryOptions(0, 10, "identifier", Sort.Direction.ASC, true)
     );
     given(lookupTablesPort.findFieldsOfLaw(query)).willReturn(
       new PageImpl<>(

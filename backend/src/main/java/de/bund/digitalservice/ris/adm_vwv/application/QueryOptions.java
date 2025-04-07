@@ -4,18 +4,18 @@ import javax.annotation.Nonnull;
 import org.springframework.data.domain.Sort;
 
 /**
- * Query object
+ * Pagination details object
  *
- * @param page Page (of pagination) to return
- * @param size Size of page
- * @param sortBy Property to sort by
+ * @param pageNumber Page (of pagination) to return
+ * @param pageSize Size of page
+ * @param sortByProperty Property to sort by
  * @param sortDirection Direction to sort by
  * @param paged {@code true} if result should be paginated, {@code false} otherwise
  */
-public record PageQuery(
-  int page,
-  int size,
-  @Nonnull String sortBy,
+public record QueryOptions(
+  int pageNumber,
+  int pageSize,
+  @Nonnull String sortByProperty,
   @Nonnull Sort.Direction sortDirection,
   boolean paged
 ) {}
