@@ -166,8 +166,8 @@ class FieldOfLawControllerTest {
         get("/api/lookup-tables/fields-of-law")
           .param("identifier", "PR-05")
           .param("text", "arbeit")
-          .param("sortBy", "identifier")
-          .param("size", "10")
+          .param("sortByProperty", "identifier")
+          .param("pageSize", "10")
       )
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
