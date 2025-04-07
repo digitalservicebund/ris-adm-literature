@@ -25,17 +25,17 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
-    QueryOptions pageQuery = query.queryOptions();
-    String searchQuery = query.searchTerm();
-    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortByProperty());
-    Pageable pageable = pageQuery.paged()
-      ? PageRequest.of(pageQuery.pageNumber(), pageQuery.pageSize(), sort)
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.paged()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchQuery)
+    Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchTerm)
       ? documentTypesRepository.findAll(pageable)
       : documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
-        searchQuery,
-        searchQuery,
+        searchTerm,
+        searchTerm,
         pageable
       );
 
