@@ -68,11 +68,11 @@ public class FieldOfLawController {
    * @param identifier The identifier to search for
    * @param text The text term(s) to search for
    * @param norm The norm term(s) to search for
-   * @param page The page number
-   * @param size Size of page
+   * @param pageNumber The page number
+   * @param pageSize Size of page
    * @param sortBy Attribute to sort by
    * @param sortDirection Sort direction
-   * @param paged {@code true} if the result have to be paginated, {@code false} otherwise
+   * @param usePaging {@code true} if the result have to be paginated, {@code false} otherwise
    * @return Query result
    */
   @GetMapping("api/lookup-tables/fields-of-law")
@@ -80,13 +80,13 @@ public class FieldOfLawController {
     @RequestParam(value = "identifier", required = false) String identifier,
     @RequestParam(value = "text", required = false) String text,
     @RequestParam(value = "norm", required = false) String norm,
-    @RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "30") int size,
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "30") int pageSize,
     @RequestParam(defaultValue = "identifier") String sortBy,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
-    @RequestParam(defaultValue = "true") boolean paged
+    @RequestParam(defaultValue = "true") boolean usePaging
   ) {
-    QueryOptions pageQuery = new QueryOptions(page, size, sortBy, sortDirection, paged);
+    QueryOptions pageQuery = new QueryOptions(pageNumber, pageSize, sortBy, sortDirection, usePaging);
     Page<FieldOfLaw> result = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
