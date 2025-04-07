@@ -87,7 +87,7 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "true") boolean usePaging
   ) {
     QueryOptions queryOptions = new QueryOptions(pageNumber, pageSize, sortBy, sortDirection, usePaging);
-    Page<FieldOfLaw> result = lookupTablesPort.findFieldsOfLaw(
+    Page<FieldOfLaw> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),
@@ -95,6 +95,6 @@ public class FieldOfLawController {
         queryOptions
       )
     );
-    return new FieldOfLawQueryResponse(result.getContent(), result);
+    return new FieldOfLawQueryResponse(paginatedFieldsOfLaw.getContent(), paginatedFieldsOfLaw);
   }
 }
