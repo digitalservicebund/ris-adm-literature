@@ -3,7 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
-import de.bund.digitalservice.ris.adm_vwv.application.PageQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -86,7 +86,7 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean paged
   ) {
-    PageQuery pageQuery = new PageQuery(page, size, sortBy, sortDirection, paged);
+    QueryOptions pageQuery = new QueryOptions(page, size, sortBy, sortDirection, paged);
     Page<FieldOfLaw> result = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),

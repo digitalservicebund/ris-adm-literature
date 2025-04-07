@@ -25,11 +25,11 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
-    PageQuery pageQuery = query.pageQuery();
-    String searchQuery = query.searchQuery();
-    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortBy());
+    QueryOptions pageQuery = query.queryOptions();
+    String searchQuery = query.searchTerm();
+    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortByProperty());
     Pageable pageable = pageQuery.paged()
-      ? PageRequest.of(pageQuery.page(), pageQuery.size(), sort)
+      ? PageRequest.of(pageQuery.pageNumber(), pageQuery.pageSize(), sort)
       : Pageable.unpaged(sort);
     Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchQuery)
       ? documentTypesRepository.findAll(pageable)
@@ -79,10 +79,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
-    PageQuery pageQuery = query.pageQuery();
-    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortBy());
+    QueryOptions pageQuery = query.pageQuery();
+    Sort sort = Sort.by(pageQuery.sortDirection(), pageQuery.sortByProperty());
     Pageable pageable = pageQuery.paged()
-      ? PageRequest.of(pageQuery.page(), pageQuery.size(), sort)
+      ? PageRequest.of(pageQuery.pageNumber(), pageQuery.pageSize(), sort)
       : Pageable.unpaged(sort);
 
     List<String> textTerms = splitSearchTerms(query.text());
