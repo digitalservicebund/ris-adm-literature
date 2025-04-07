@@ -43,7 +43,7 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
-      new DocumentTypeQuery(null, new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
+      new DocumentTypeQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
@@ -66,7 +66,7 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
-      new DocumentTypeQuery("something", new PageQuery(0, 10, "name", Sort.Direction.ASC, true))
+      new DocumentTypeQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
@@ -174,7 +174,7 @@ class LookupTablesPersistenceServiceTest {
       "PR-05",
       "arbeit",
       "PStG",
-      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+      new QueryOptions(0, 10, "identifier", Sort.Direction.ASC, true)
     );
     given(
       fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
@@ -204,7 +204,7 @@ class LookupTablesPersistenceServiceTest {
       null,
       null,
       "PStG",
-      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+      new QueryOptions(0, 10, "identifier", Sort.Direction.ASC, true)
     );
     given(
       fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
@@ -229,7 +229,7 @@ class LookupTablesPersistenceServiceTest {
       "IDENTIFIER-UNKNOWN",
       "arbeitsbeschaffungsmaßnahmengegenentwurf",
       null,
-      new PageQuery(0, 10, "identifier", Sort.Direction.ASC, true)
+      new QueryOptions(0, 10, "identifier", Sort.Direction.ASC, true)
     );
     given(
       fieldOfLawRepository.findAll(any(FieldOfLawSpecification.class), any(Pageable.class))
