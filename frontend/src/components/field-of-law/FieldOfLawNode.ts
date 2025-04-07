@@ -7,8 +7,6 @@ export interface NodeHelperInterface {
 
   getChildren(node: FieldOfLaw): Promise<FieldOfLaw[]>
 
-  findRootParent(node: FieldOfLaw): Promise<FieldOfLaw[]>
-
   getAncestors(clickedIdentifier: string): Promise<FieldOfLaw[]>
 }
 
@@ -89,12 +87,5 @@ export class NodeHelper implements NodeHelperInterface {
     } else {
       return []
     }
-  }
-
-  async findRootParent(node: FieldOfLaw): Promise<FieldOfLaw[]> {
-    if (!node.parent || node.parent.identifier === 'root') {
-      return [node]
-    }
-    return this.findRootParent(node.parent)
   }
 }

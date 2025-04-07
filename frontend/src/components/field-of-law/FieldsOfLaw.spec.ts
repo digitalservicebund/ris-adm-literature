@@ -59,21 +59,12 @@ describe.skip('FieldsOfLaw', () => {
           children: [],
         },
         {
-          identifier: 'AB-01',
-          text: 'Text for AB',
-          children: [],
+          hasChildren: true,
+          identifier: 'AB',
+          text: 'ABrecht',
+          linkedFields: [],
           norms: [],
-          isExpanded: false,
-          hasChildren: false,
-        },
-        {
-          identifier: 'CD-02',
-          text: 'And text for CD with link to AB-01',
           children: [],
-          norms: [],
-          linkedFields: ['AB-01'],
-          isExpanded: false,
-          hasChildren: false,
         },
       ],
     })
@@ -171,6 +162,28 @@ describe.skip('FieldsOfLaw', () => {
         },
       ],
     })
+  const getChildrenOfAB = () =>
+    Promise.resolve({
+      status: 200,
+      data: [
+        {
+          hasChildren: false,
+          identifier: 'AB-01',
+          text: 'AB01 Text',
+          linkedFields: [],
+          norms: [],
+          children: [],
+          parent: {
+            hasChildren: true,
+            identifier: 'AB',
+            text: 'ABrecht',
+            linkedFields: [],
+            norms: [],
+            children: [],
+          },
+        },
+      ],
+    })
   const getParentAndChildrenForIdentifierPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -223,6 +236,26 @@ describe.skip('FieldsOfLaw', () => {
         },
       },
     })
+  const getParentAndChildrenForIdentifierAB01 = () =>
+    Promise.resolve({
+      status: 200,
+      data: {
+        hasChildren: false,
+        identifier: 'AB-01',
+        text: 'AB01 Text',
+        linkedFields: [],
+        norms: [],
+        children: [],
+        parent: {
+          hasChildren: true,
+          identifier: 'AB',
+          text: 'ABrecht',
+          linkedFields: [],
+          norms: [],
+          children: [],
+        },
+      },
+    })
   const searchForFieldsOfLawForPR05 = () =>
     Promise.resolve({
       status: 200,
@@ -231,13 +264,14 @@ describe.skip('FieldsOfLaw', () => {
           {
             hasChildren: true,
             identifier: 'PR-05',
-            text: 'Beendigung der Phantasieverhältnisse',
+            text: 'Beendigung der Phantasieverhältnisse mit link to AB-01',
             norms: [
               {
                 abbreviation: 'PStG',
                 singleNormDescription: '§ 99',
               },
             ],
+            linkedFields: ['AB-01'],
             children: [],
             parent: {
               id: 'a785fb96-a45d-4d4c-8d9c-92d8a6592b22',
@@ -297,11 +331,15 @@ describe.skip('FieldsOfLaw', () => {
       if (identifier == 'root') return getChildrenOfRoot()
       else if (identifier == 'PR') return getChildrenOfPR()
       else if (identifier == 'PR-05') return getChildrenOfPRO5()
+      else if (identifier == 'AB') return getChildrenOfAB()
       return getChildrenOfPR0501()
     })
-    vi.spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier').mockImplementation(() => {
-      return getParentAndChildrenForIdentifierPR05()
-    })
+    vi.spyOn(FieldOfLawService, 'getParentAndChildrenForIdentifier').mockImplementation(
+      (identifier: string) => {
+        if (identifier == 'AB-01') return getParentAndChildrenForIdentifierAB01()
+        return getParentAndChildrenForIdentifierPR05()
+      },
+    )
     vi.spyOn(FieldOfLawService, 'searchForFieldsOfLaw').mockImplementation(() => {
       return searchForFieldsOfLawForPR05()
     })
@@ -423,14 +461,16 @@ describe.skip('FieldsOfLaw', () => {
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
     await waitFor(() => {
-      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+      expect(
+        screen.getAllByText('Beendigung der Phantasieverhältnisse mit link to')[0],
+      ).toBeInTheDocument()
     })
     await user.click(screen.getByLabelText('PR-05 hinzufügen'))
 
     // then
     expect(
       screen.getByRole('button', {
-        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+        name: 'PR-05 Beendigung der Phantasieverhältnisse mit link to AB-01 aus Liste entfernen',
       }),
     ).toBeInTheDocument()
   })
@@ -445,7 +485,9 @@ describe.skip('FieldsOfLaw', () => {
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
     await waitFor(() => {
-      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+      expect(
+        screen.getAllByText('Beendigung der Phantasieverhältnisse mit link to')[0],
+      ).toBeInTheDocument()
     })
     await user.click(screen.getByLabelText('PR-05 hinzufügen'))
     await user.click(screen.getByLabelText('PR-05 hinzufügen'))
@@ -453,7 +495,7 @@ describe.skip('FieldsOfLaw', () => {
     // then
     expect(
       screen.getAllByRole('button', {
-        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+        name: 'PR-05 Beendigung der Phantasieverhältnisse mit link to AB-01 aus Liste entfernen',
       }).length,
     ).toBe(1)
   })
@@ -468,20 +510,42 @@ describe.skip('FieldsOfLaw', () => {
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
     await waitFor(() => {
-      expect(screen.getAllByText('Beendigung der Phantasieverhältnisse')[0]).toBeInTheDocument()
+      expect(
+        screen.getAllByText('Beendigung der Phantasieverhältnisse mit link to')[0],
+      ).toBeInTheDocument()
     })
     await user.click(screen.getByLabelText('PR-05 hinzufügen'))
     await user.click(
       screen.getByRole('button', {
-        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+        name: 'PR-05 Beendigung der Phantasieverhältnisse mit link to AB-01 aus Liste entfernen',
       }),
     )
 
     // then
     expect(
       screen.queryByRole('button', {
-        name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
+        name: 'PR-05 Beendigung der Phantasieverhältnisse mit link to AB-01 aus Liste entfernen',
       }),
     ).not.toBeInTheDocument()
+  })
+
+  it('Click on linked field opens it on the tree', async () => {
+    // given
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByLabelText('Suche'))
+    await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
+    await waitFor(() => {
+      expect(screen.getByText('AB-01')).toBeInTheDocument()
+    })
+    await user.click(screen.getByText('AB-01'))
+
+    // then
+    await waitFor(() => {
+      expect(screen.getByText('AB01 Text')).toBeInTheDocument()
+    })
   })
 })
