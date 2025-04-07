@@ -47,17 +47,17 @@ function formatDropdownItems(
 function fetchFromEndpoint(
   endpoint: Endpoint,
   filter: Ref<string | undefined>,
-  options?: { size?: number; paged?: boolean },
+  options?: { pageSize?: number; usePagination?: boolean },
 ) {
-  const requestParams = computed<{ searchQuery?: string; size?: string; paged?: string }>(() => ({
-    ...(filter.value ? { searchQuery: filter.value } : {}),
-    ...(options?.size != undefined ? { size: options.size.toString() } : {}),
-    ...(options?.paged != undefined ? { paged: options?.paged?.toString() } : {}),
+  const requestParams = computed<{ searchTerm?: string; size?: string; paged?: string }>(() => ({
+    ...(filter.value ? { searchTerm: filter.value } : {}),
+    ...(options?.pageSize != undefined ? { size: options.pageSize.toString() } : {}),
+    ...(options?.usePagination != undefined ? { paged: options?.usePagination?.toString() } : {}),
   }))
   const url = computed(() => {
     let queryParams = new URLSearchParams(requestParams.value).toString()
     if (endpoint == Endpoint.fieldsOfLaw) {
-      queryParams = queryParams.replace('searchQuery', 'identifier')
+      queryParams = queryParams.replace('searchTerm', 'identifier')
     }
     return `${API_PREFIX}${endpoint}?${queryParams}`
   })
@@ -167,7 +167,7 @@ const service: ComboboxItemService = {
     return result
   },
   getDocumentTypes: (filter: Ref<string | undefined>) =>
-    fetchFromEndpoint(Endpoint.documentTypes, filter, { paged: false }),
+    fetchFromEndpoint(Endpoint.documentTypes, filter, { usePagination: false }),
   getRisAbbreviations: (filter: Ref<string | undefined>) => {
     const risAbbreviationValues = [
       { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
@@ -275,7 +275,7 @@ const service: ComboboxItemService = {
     return result
   },
   getFieldOfLawSearchByIdentifier: (filter: Ref<string | undefined>) =>
-    fetchFromEndpoint(Endpoint.fieldsOfLaw, filter, { size: 30 }),
+    fetchFromEndpoint(Endpoint.fieldsOfLaw, filter, { pageSize: 30 }),
 }
 
 export default service
