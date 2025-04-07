@@ -72,7 +72,7 @@ public class FieldOfLawController {
    * @param pageSize Size of page
    * @param sortBy Attribute to sort by
    * @param sortDirection Sort direction
-   * @param usePaging {@code true} if the result have to be paginated, {@code false} otherwise
+   * @param usePagination {@code true} if the result have to be paginated, {@code false} otherwise
    * @return Query result
    */
   @GetMapping("api/lookup-tables/fields-of-law")
@@ -84,14 +84,14 @@ public class FieldOfLawController {
     @RequestParam(defaultValue = "30") int pageSize,
     @RequestParam(defaultValue = "identifier") String sortBy,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
-    @RequestParam(defaultValue = "true") boolean usePaging
+    @RequestParam(defaultValue = "true") boolean usePagination
   ) {
     QueryOptions queryOptions = new QueryOptions(
       pageNumber,
       pageSize,
       sortBy,
       sortDirection,
-      usePaging
+      usePagination
     );
     Page<FieldOfLaw> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
