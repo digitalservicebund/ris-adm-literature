@@ -52,7 +52,7 @@ class DocumentTypeControllerTest {
     // when
     mockMvc
       .perform(
-        get("/api/lookup-tables/document-types").param("searchQuery", searchTerm).param("size", "2")
+        get("/api/lookup-tables/document-types").param("searchTerm", searchTerm).param("pageSize", "2")
       )
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
