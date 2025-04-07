@@ -267,10 +267,9 @@ describe('FieldOfLawTree', () => {
     await waitFor(() => {
       expect(fetchSpyGetChildrenOf).toBeCalledTimes(2)
     })
-    // Call to root is not expected due to set node of interest
-    expect(fetchSpyGetChildrenOf).not.toBeCalledWith('root')
+    expect(fetchSpyGetChildrenOf).toBeCalledWith('root')
     expect(fetchSpyGetChildrenOf).toBeCalledWith('PR')
-    expect(fetchSpyGetChildrenOf).toBeCalledWith('PR-05')
+    expect(fetchSpyGetChildrenOf).not.toBeCalledWith('PR-05')
     expect(fetchSpyGetChildrenOf).not.toBeCalledWith('PR-05-01')
 
     await waitFor(() => {
