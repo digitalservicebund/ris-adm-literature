@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import dayjs from 'dayjs'
 
 test.describe('RubrikenPage - Formatdaten', () => {
   test.describe('With mocked responses', () => {
@@ -222,7 +223,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Zitierdatum: invalid date cannot be entered, valid date can be entered and persists through a reload',
+    'Zitierdatum: invalid date with letters cannot be entered, valid date can be entered and persists through a reload',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
       // given
@@ -253,7 +254,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Zitierdatum: incomplete date can be entered and persists through a reload',
+    'Zitierdatum: invalid date can be entered but a validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
       // given
@@ -262,19 +263,40 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatumElement = page.getByText('Zitierdatum')
+      const zitierdatumElement = page.getByRole('textbox', { name: 'Zitierdatum' })
       await expect(zitierdatumElement).toHaveCount(1)
 
       // when
       await zitierdatumElement.fill('20')
+      await zitierdatumElement.press('Tab') // Triggers validation
       // then
       await expect(zitierdatumElement).toHaveValue('20')
+      await expect(zitierdatumElement).toHaveClass(/has-error/)
+      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+    },
+  )
+
+  test(
+    'Ausserkrafttretensdatum: a future date can be entered and no validation error is shown',
+    { tag: ['@RISDEV-6296'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+
+      const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
+      await expect(ausserkrafttretedatumElement).toHaveCount(1)
+      const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
 
       // when
-      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
-      await page.reload()
+      await ausserkrafttretedatumElement.fill(tomorrow)
+      await ausserkrafttretedatumElement.press('Tab') // Triggers validation
       // then
-      await expect(zitierdatumElement).toHaveValue('20')
+      await expect(ausserkrafttretedatumElement).toHaveValue(tomorrow)
+      await expect(ausserkrafttretedatumElement).not.toHaveClass(/has-error/)
+      await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeHidden()
     },
   )
 })

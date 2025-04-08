@@ -103,12 +103,19 @@ const dokumenttypZusatz = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="zitierdatum" label="Zitierdatum *" class="w-full min-w-0">
+        <InputField
+          id="zitierdatum"
+          label="Zitierdatum *"
+          class="w-full min-w-0"
+          v-slot="slotProps"
+        >
           <DateInput
             id="zitierdatum"
             v-model="zitierdatum"
             ariaLabel="Zitierdatum"
             class="ds-input-medium"
+            :has-error="slotProps.hasError"
+            @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
         </InputField>
         <InputField id="courtInput" label="Normgeber *" class="w-full">
@@ -160,24 +167,31 @@ const dokumenttypZusatz = computed({
           id="inkrafttretedatum"
           label="Datum des Inkrafttretens *"
           class="w-full min-w-0"
+          v-slot="slotProps"
         >
           <DateInput
             id="inkrafttretedatum"
             v-model="inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
+            :has-error="slotProps.hasError"
+            @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
         </InputField>
         <InputField
           id="ausserkrafttretedatum"
           label="Datum des Ausserkrafttretens"
           class="w-full min-w-0"
+          v-slot="slotProps"
         >
           <DateInput
             id="ausserkrafttretedatum"
             v-model="ausserkrafttretedatum"
             ariaLabel="Ausserkrafttretedatum"
             class="ds-input-medium"
+            is-future-date
+            :has-error="slotProps.hasError"
+            @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
         </InputField>
       </div>
