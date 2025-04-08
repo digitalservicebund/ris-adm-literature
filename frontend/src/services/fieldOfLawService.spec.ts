@@ -103,7 +103,7 @@ describe('fieldOfLawService', () => {
 
     expect(server.history.get).toBeDefined()
     expect(server.history.get[0].url).toBe(
-      '/api/lookup-tables/fields-of-law?page=0&size=10&identifier=PR&text=&norm=',
+      '/api/lookup-tables/fields-of-law?pageNumber=0&pageSize=10&identifier=PR&text=&norm=',
     )
     expect(response.data).toBeDefined()
     expect(response.error).toBeUndefined()

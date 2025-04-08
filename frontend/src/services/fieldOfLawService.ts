@@ -53,7 +53,7 @@ const service: FieldOfLawService = {
     norm?: string,
   ) {
     const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page<FieldOfLaw> }>(
-      `lookup-tables/fields-of-law?page=${page}&size=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
+      `lookup-tables/fields-of-law?pageNumber=${page}&pageSize=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
     )
     if (response.status >= 300) {
       response.error = {
