@@ -26,13 +26,11 @@ public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> 
     @Nonnull CriteriaBuilder criteriaBuilder
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
-
     Predicate notationPredicate = criteriaBuilder.equal(
       root.get("notation"),
       criteriaBuilder.literal("NEW")
     );
     predicates.add(notationPredicate);
-
     for (String searchTerm : textTerms) {
       predicates.add(
         criteriaBuilder.like(
@@ -61,6 +59,7 @@ public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> 
         Predicate combined = criteriaBuilder.or(normAbbreviationPredicate, singleNormPredicate);
         predicates.add(combined);
       }
+      query.distinct(true);
     }
     return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
   }

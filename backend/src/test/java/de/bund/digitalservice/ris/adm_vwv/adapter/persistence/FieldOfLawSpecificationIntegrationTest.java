@@ -56,7 +56,9 @@ class FieldOfLawSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql).contains("where fole1_0.notation='NEW' and fole1_0.identifier like ?");
+    assertThat(sql).endsWith(
+      "where fole1_0.notation='NEW' and fole1_0.identifier like ? escape ''"
+    );
   }
 
   @Test
@@ -78,7 +80,7 @@ class FieldOfLawSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql).contains(
+    assertThat(sql).endsWith(
       "where fole1_0.notation='NEW' and lower(fole1_0.text) like ? escape '' and lower(fole1_0.text) like ? escape '' and fole1_0.identifier like ? escape ''"
     );
   }
@@ -102,14 +104,16 @@ class FieldOfLawSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql).contains(
-      """
-      where fole1_0.notation='NEW' and fole1_0.identifier like ? escape ''
-      and (lower(n1_0.abbreviation) like ? escape '' or lower(n1_0.single_norm_description) like ? escape '')
-      and (lower(n1_0.abbreviation) like ? escape ''
-      or lower(n1_0.single_norm_description) like ? escape '')
-      """.replaceAll("\n", " ").trim()
-    );
+    assertThat(sql)
+      .startsWith("select distinct")
+      .endsWith(
+        """
+        where fole1_0.notation='NEW' and fole1_0.identifier like ? escape ''
+        and (lower(n1_0.abbreviation) like ? escape '' or lower(n1_0.single_norm_description) like ? escape '')
+        and (lower(n1_0.abbreviation) like ? escape ''
+        or lower(n1_0.single_norm_description) like ? escape '')
+        """.replaceAll("\n", " ").trim()
+      );
   }
 
   @Test
@@ -131,13 +135,15 @@ class FieldOfLawSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql).contains(
-      """
-      where fole1_0.notation='NEW' and lower(fole1_0.text) like ? escape '' and lower(fole1_0.text) like ? escape ''
-      and fole1_0.identifier like ? escape '' and (lower(n1_0.abbreviation) like ? escape '' or
-      lower(n1_0.single_norm_description) like ? escape '') and (lower(n1_0.abbreviation) like ? escape ''
-      or lower(n1_0.single_norm_description) like ? escape '')
-      """.replaceAll("\n", " ").trim()
-    );
+    assertThat(sql)
+      .startsWith("select distinct")
+      .endsWith(
+        """
+        where fole1_0.notation='NEW' and lower(fole1_0.text) like ? escape '' and lower(fole1_0.text) like ? escape ''
+        and fole1_0.identifier like ? escape '' and (lower(n1_0.abbreviation) like ? escape '' or
+        lower(n1_0.single_norm_description) like ? escape '') and (lower(n1_0.abbreviation) like ? escape ''
+        or lower(n1_0.single_norm_description) like ? escape '')
+        """.replaceAll("\n", " ").trim()
+      );
   }
 }
