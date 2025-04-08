@@ -49,7 +49,6 @@ public class FieldOfLawSpecification implements Specification<FieldOfLawEntity> 
       predicates.add(identifierPredicate);
     }
     if (!normTerms.isEmpty()) {
-      root.fetch(NORMS, JoinType.LEFT);
       for (String searchTerm : normTerms) {
         Predicate normAbbreviationPredicate = criteriaBuilder.like(
           criteriaBuilder.lower(root.get(NORMS).get("abbreviation")),

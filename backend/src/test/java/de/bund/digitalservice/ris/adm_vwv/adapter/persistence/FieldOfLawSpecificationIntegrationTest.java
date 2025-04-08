@@ -105,9 +105,9 @@ class FieldOfLawSpecificationIntegrationTest {
     assertThat(sql).contains(
       """
       where fole1_0.notation='NEW' and fole1_0.identifier like ? escape ''
-      and (lower(n2_0.abbreviation) like ? escape '' or lower(n2_0.single_norm_description) like ? escape '')
-      and (lower(n2_0.abbreviation) like ? escape ''
-      or lower(n2_0.single_norm_description) like ? escape '')
+      and (lower(n1_0.abbreviation) like ? escape '' or lower(n1_0.single_norm_description) like ? escape '')
+      and (lower(n1_0.abbreviation) like ? escape ''
+      or lower(n1_0.single_norm_description) like ? escape '')
       """.replaceAll("\n", " ").trim()
     );
   }
@@ -134,9 +134,9 @@ class FieldOfLawSpecificationIntegrationTest {
     assertThat(sql).contains(
       """
       where fole1_0.notation='NEW' and lower(fole1_0.text) like ? escape '' and lower(fole1_0.text) like ? escape ''
-      and fole1_0.identifier like ? escape '' and (lower(n2_0.abbreviation) like ? escape '' or
-      lower(n2_0.single_norm_description) like ? escape '') and (lower(n2_0.abbreviation) like ? escape ''
-      or lower(n2_0.single_norm_description) like ? escape '')
+      and fole1_0.identifier like ? escape '' and (lower(n1_0.abbreviation) like ? escape '' or
+      lower(n1_0.single_norm_description) like ? escape '') and (lower(n1_0.abbreviation) like ? escape ''
+      or lower(n1_0.single_norm_description) like ? escape '')
       """.replaceAll("\n", " ").trim()
     );
   }
