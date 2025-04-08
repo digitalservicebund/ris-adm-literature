@@ -51,8 +51,10 @@ function fetchFromEndpoint(
 ) {
   const requestParams = computed<{ searchTerm?: string; size?: string; paged?: string }>(() => ({
     ...(filter.value ? { searchTerm: filter.value } : {}),
-    ...(options?.pageSize != undefined ? { size: options.pageSize.toString() } : {}),
-    ...(options?.usePagination != undefined ? { paged: options?.usePagination?.toString() } : {}),
+    ...(options?.pageSize != undefined ? { pageSize: options.pageSize.toString() } : {}),
+    ...(options?.usePagination != undefined
+      ? { usePagination: options?.usePagination?.toString() }
+      : {}),
   }))
   const url = computed(() => {
     let queryParams = new URLSearchParams(requestParams.value).toString()
