@@ -33,6 +33,9 @@ export default mergeConfig(
           '**/*.d.ts',
           'src/components/input/types.ts',
 
+          // Assets
+          'html/assets/*',
+
           // Tests
           '**/*.spec.ts',
           'e2e/**/*',
