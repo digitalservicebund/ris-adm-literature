@@ -18,7 +18,7 @@ export default mergeConfig(
         json: './frontend-unit-test-report.json',
       },
       coverage: {
-        provider: 'istanbul',
+        provider: 'v8',
         reporter: ['lcov', 'text', 'html'],
         // Changes to this also need to be reflected in the sonar-project.properties
         exclude: [
@@ -32,9 +32,6 @@ export default mergeConfig(
           // Types
           '**/*.d.ts',
           'src/components/input/types.ts',
-
-          // Assets
-          'html/assets/*',
 
           // Tests
           '**/*.spec.ts',
