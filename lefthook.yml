@@ -4,3 +4,10 @@ pre-commit:
     "trivy-secrets.sh":
       runner: sh
       tags: security
+
+pre-push:
+  commands:
+    spotlessCheck:
+      glob: "./backend/**/*"
+      root: backend
+      run: ./gradlew spotlessCheck
