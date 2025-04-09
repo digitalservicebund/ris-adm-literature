@@ -64,28 +64,20 @@ export class NodeHelper implements NodeHelperInterface {
 
   async getChildren(node: FieldOfLaw): Promise<FieldOfLaw[]> {
     if (node.hasChildren) {
-      try {
-        const fromLocal = this.getChildrenByParentId(node.identifier)
-        if (fromLocal) {
-          return fromLocal
-        }
-        const response = await FieldOfLawService.getChildrenOf(node.identifier)
-        if (response.data) {
-          // Put resulting elements to nodes map
-          response.data.forEach((fieldOfLaw) => this.nodes.set(fieldOfLaw.identifier, fieldOfLaw))
-          // Add resulting elements as children to requested node and put it to map
-          node.children = response.data
-          this.nodes.set(node.identifier, node)
-          return response.data
-        } else {
-          return []
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        return []
+      const fromLocal = this.getChildrenByParentId(node.identifier)
+      if (fromLocal) {
+        return fromLocal
       }
-    } else {
-      return []
+      const response = await FieldOfLawService.getChildrenOf(node.identifier)
+      if (response.data) {
+        // Put resulting elements to nodes map
+        response.data.forEach((fieldOfLaw) => this.nodes.set(fieldOfLaw.identifier, fieldOfLaw))
+        // Add resulting elements as children to requested node and put it to map
+        node.children = response.data
+        this.nodes.set(node.identifier, node)
+        return response.data
+      }
     }
+    return []
   }
 }
