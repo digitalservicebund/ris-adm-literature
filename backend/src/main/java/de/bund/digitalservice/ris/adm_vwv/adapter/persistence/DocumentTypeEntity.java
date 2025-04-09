@@ -16,7 +16,7 @@ import org.springframework.data.annotation.Immutable;
  */
 @Entity
 @Data
-@Table(name = "document_types_view")
+@Table(name = "document_type_view")
 @Immutable
 public class DocumentTypeEntity {
 

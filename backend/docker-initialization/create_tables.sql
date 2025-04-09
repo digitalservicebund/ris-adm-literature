@@ -1,16 +1,20 @@
 set role lookup_tables;
 
 CREATE TABLE
-IF NOT EXISTS
-lookup_tables.document_types (
-    id uuid not null,
-    abbreviation character varying(255),
-    name character varying(255),
-    constraint document_types_pkey primary key (id)
+    IF NOT EXISTS
+    document_type
+(
+    id UUID NOT NULL
+        CONSTRAINT document_type_pkey PRIMARY KEY,
+    abbreviation VARCHAR(32) NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    category VARCHAR(1) NOT NULL,
+    CONSTRAINT document_type_abbreviation_category_uc UNIQUE(abbreviation, category)
 );
 
-INSERT INTO lookup_tables.document_types VALUES ('b678b77b-ffc4-4756-825d-a4376b985b0d', 'VE', 'Verwaltungsvereinbarung');
-INSERT INTO lookup_tables.document_types VALUES ('8de5e4a0-6b67-4d65-98db-efe877a260c4', 'VR', 'Verwaltungsregelung');
+INSERT INTO lookup_tables.document_type VALUES ('b678b77b-ffc4-4756-825d-a4376b985b0d', 'VE', 'Verwaltungsvereinbarung', 'N');
+INSERT INTO lookup_tables.document_type VALUES ('8de5e4a0-6b67-4d65-98db-efe877a260c4', 'VR', 'Verwaltungsregelung', 'N');
+INSERT INTO lookup_tables.document_type VALUES ('77da35f0-aa4c-4ed3-9048-59b8e10f7478', 'VV', 'Verwaltungsvorschrift', 'N');
 
 CREATE TABLE
     IF NOT EXISTS
