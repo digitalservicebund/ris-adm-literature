@@ -8,6 +8,5 @@ pre-commit:
 pre-push:
   commands:
     spotlessCheck:
-      glob: "./backend/**/*"
       root: backend
       run: ./gradlew spotlessCheck
