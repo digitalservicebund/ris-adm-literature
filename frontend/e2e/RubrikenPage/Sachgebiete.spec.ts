@@ -29,27 +29,48 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     )
 
     test(
-      "rendering initial state, switching between 'Direkteingabe' and 'Suche', collapsing inputs",
+      'Clicking the Sachgebiete button shows the Direkteingabe Sachgebiete',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
-        // given, when
+        // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
-
-        await expect(page.getByRole('heading', { name: 'Sachgebiete' })).toBeVisible()
-        await expect(page.getByRole('button', { name: 'Sachgebiete' })).toBeVisible()
+        // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
-
+        // then
         await expect(page.getByText('Direkteingabe Sachgebiet')).toBeVisible()
+      },
+    )
 
+    test(
+      'When chosing the Sachgebietssuche then the 3 input fields, the Sachgebietsbaum and the Search button are shown.',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-
+        // then
         await expect(page.getByLabel('Sachgebietskürzel')).toBeVisible()
         await expect(page.getByLabel('Sachgebietsbezeichnung')).toBeVisible()
         await expect(page.getByLabel('Sachgebietsnorm')).toBeVisible()
         await expect(page.getByLabel('Sachgebietssuche ausführen')).toBeVisible()
         await expect(page.getByText('Sachgebietsbaum')).toBeVisible()
+      },
+    )
 
+    test(
+      'When clicking Fertig Button in Sachgebietssuche then close the section and show the Sachgebeite Button again',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Fertig' }).click()
+
+        // then
         await expect(page.getByRole('button', { name: 'Sachgebiete' })).toBeVisible()
       },
     )
@@ -58,18 +79,17 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       "click on root element in 'fields of law'-tree open level one",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
-        // given, when
+        // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
-
+        // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-
         await page
           .getByRole('button', {
             name: 'Alle Sachgebiete aufklappen',
           })
           .click()
-
+        // then
         await expect(page.getByText(phantasierecht, { exact: true })).toBeVisible()
         await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeHidden()
       },
@@ -79,20 +99,18 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       "click on root element in 'fields of law'-tree and on level one on 'Phantasierecht'",
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
-        // given, when
+        // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
-
+        // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-
         await page
           .getByRole('button', {
             name: 'Alle Sachgebiete aufklappen',
           })
           .click()
-
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
-
+        // then
         await expect(page.getByText(phantasierecht, { exact: true })).toBeVisible()
         await expect(page.getByText('Beendigung der Phantasieverhältnisse')).toBeVisible()
       },
@@ -108,7 +126,6 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
-
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
         await page.getByRole('button', { name: 'Alle Sachgebiete einklappen' }).click()
@@ -220,22 +237,43 @@ test.describe('RubrikenPage - Sachgebiete', () => {
 
     // Search
 
-    test('Search without results', { tag: ['@RISDEV-6315'] }, async ({ page }) => {
-      // given
-      await page.goto('/documentUnit/KSNR054920707/rubriken')
+    test(
+      'Show warning when no search paramater is set',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
 
-      // when
-      await page.getByRole('button', { name: 'Sachgebiete' }).click()
-      await page.getByLabel('Sachgebietsuche auswählen').click()
-      await page.getByLabel('Sachgebietskürzel').fill('xyz')
-      await page.keyboard.press('Enter')
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
 
-      // then
-      await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
-    })
+        // then
+        await expect(page.getByText('Geben Sie mindestens ein Suchkriterium ein')).toBeVisible()
+      },
+    )
 
     test(
-      'Search with paginated results - test the pagination navigation',
+      'Show warning when search results are empty',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietskürzel').fill('xyz')
+        await page.keyboard.press('Enter')
+
+        // then
+        await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+      },
+    )
+
+    test(
+      'Do not show pagination if there are less than 10 results',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -248,7 +286,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
 
         // then
-        // There are only 3 results
+        // there is only 1 result
         await expect(page.getByText('Seite 1')).toBeHidden()
         await expect(page.getByRole('button', { name: 'vorherige Ergebnisse' })).toBeHidden()
         await expect(page.getByRole('button', { name: 'nächste Ergebnisse' })).toBeHidden()
@@ -256,7 +294,27 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     )
 
     test(
-      'Search with paginated results - first result to open in tree',
+      'Show pagination if there are more than 10 results',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('e')
+        await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
+
+        // then
+        await expect(page.getByText('Seite 1')).toBeVisible()
+        await expect(page.getByRole('button', { name: 'vorherige Ergebnisse' })).toBeVisible()
+        await expect(page.getByRole('button', { name: 'nächste Ergebnisse' })).toBeVisible()
+      },
+    )
+
+    test(
+      'Unfold the tree and open the node of interest',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -280,7 +338,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     )
 
     test(
-      'Search with paginated results - click on result opens tree and adds result to list',
+      'Add a search result from the tree to the list of selected items',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
         // given
@@ -291,8 +349,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
         await page.keyboard.press('Enter')
-        const searchResult = page.getByLabel('PR-05 hinzufügen')
-        await searchResult.click()
+        await page.getByLabel('PR-05 hinzufügen').click()
 
         // then
         await expect(
@@ -300,6 +357,25 @@ test.describe('RubrikenPage - Sachgebiete', () => {
             name: 'PR-05 Beendigung der Phantasieverhältnisse aus Liste entfernen',
           }),
         ).toBeVisible()
+      },
+    )
+
+    test(
+      'Search for a description and check the box for showing Norms - should show norms in tree',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
+        await page.keyboard.press('Enter')
+        await page.getByRole('checkbox', { name: 'Mit Normen' }).click()
+
+        // then
+        await expect(page.getByText('§ 99 PStG').first()).toBeVisible()
       },
     )
 
@@ -313,8 +389,29 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // when
         await page.getByRole('button', { name: 'Sachgebiete' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
+        await page.getByLabel('Sachgebietsnorm').fill('§ 99')
+        await page.keyboard.press('Enter')
 
-        await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
+        await expect(page.getByLabel('PR-05 hinzufügen')).toBeVisible()
+
+        // if this is visible, it means that the "Normen anzeigen" checkbox got set to true
+        await expect(page.getByText('§ 99 PStG').first()).toBeVisible()
+      },
+    )
+
+    test(
+      'Search with all three: Sachgebiet, Bezeichnung and Norm',
+      { tag: ['@RISDEV-6315'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByLabel('Sachgebietskürzel').fill('PR')
+        await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
         await page.getByLabel('Sachgebietsnorm').fill('§ 99')
         await page.keyboard.press('Enter')
 

@@ -153,7 +153,19 @@ VALUES('14728419-119a-40f7-8f9a-47ec342c6286', 'XX-03', 'Arbeitsförderungsrecht
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation")
 VALUES('5eaf2263-2717-4375-8ce2-0c45fc10eaaa', 'XX-04-02', 'Versicherter Personenkreis: Versicherungspflicht und Beitragspflicht; Beginn, Ende, Fortbestand der Mitgliedschaft siehe XX-05-07-04 bis -05', 12350, 'NEW');
-
+INSERT INTO lookup_tables.field_of_law
+(id, identifier, "text", juris_id, "notation")
+VALUES
+('7e0b1fe7-fe65-4cba-a282-5ed52d2ce32a', 'test-0', 'test-0', 90000, 'NEW'),
+('3951b3f9-fb58-4501-9670-ae7531b5b173', 'test-1', 'test-1', 90001, 'NEW'),
+('23e7c5c8-0cfc-4d18-a259-cd79d76c2b02', 'test-2', 'test-2', 90002, 'NEW'),
+('3541cd6f-9360-446a-ad9f-f9ebd5a5ec21', 'test-3', 'test-3', 90003, 'NEW'),
+('f02ac7fb-8d2d-46bf-821a-e748d3466497', 'test-4', 'test-4', 90004, 'NEW'),
+('3b7633a7-0452-446c-a82a-ccf866e3c75e', 'test-5', 'test-5', 90005, 'NEW'),
+('ff49f0f5-a44d-48b5-ac13-810edaecd9d6', 'test-6', 'test-6', 90006, 'NEW'),
+('56c5d5df-4572-4ec0-a672-7f85aa48fd80', 'test-7', 'test-7', 90007, 'NEW'),
+('d6763f52-9aaa-4eb8-a59d-58dd94a10651', 'test-8', 'test-8', 90008, 'NEW'),
+('0f1d3881-16f4-4d30-af35-3dc6ab89308b', 'test-9', 'test-9', 90009, 'NEW');
 INSERT INTO lookup_tables.field_of_law_field_of_law_text_reference
 (field_of_law_id, field_of_law_text_reference_id)
 VALUES('14728419-119a-40f7-8f9a-47ec342c6286', '5eaf2263-2717-4375-8ce2-0c45fc10eaaa');
