@@ -8,5 +8,7 @@ pre-commit:
 pre-push:
   commands:
     spotlessCheckOnBackendChange:
-      root: backend
-      run: ./lefthook/spotless-check.sh
+      root: backend # restrict to changes in the backend folder
+      run: |
+        pwd
+        ../.lefthook/pre-push/spotless-check.sh
