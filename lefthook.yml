@@ -9,4 +9,4 @@ pre-push:
   commands:
     spotlessCheckOnBackendChange:
       root: backend
-      run: ./gradlew spotlessCheck
+      run: ./lefthook/spotless-check.sh
