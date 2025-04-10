@@ -6,8 +6,8 @@ pre-commit:
       tags: security
 
 pre-push:
-  jobs:
-    - name: Spotless Check on Backend
-      root: backend/
-      script: spotless-check.sh
-      runner: sh
+  commands:
+    spotlessCheckOnBackendChange:
+      root: backend # restrict to changes in the backend folder
+      run: |
+        ../.lefthook/spotless-check.sh
