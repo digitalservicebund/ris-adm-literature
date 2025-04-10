@@ -54,10 +54,10 @@ dependencies {
     exclude("com.squareup.okio", "okio-jvm")
   }
 
-  implementation("com.google.protobuf:protobuf-java:4.30.2")
-  implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.squareup.okio:okio-jvm:3.10.2")
-  implementation("org.springframework.retry:spring-retry")
+          implementation("com.google.protobuf:protobuf-java:4.30.2")
+          implementation("org.bitbucket.b_c:jose4j:0.9.6")
+          implementation("com.squareup.okio:okio-jvm:3.10.2")
+          implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.session:spring-session-core")
