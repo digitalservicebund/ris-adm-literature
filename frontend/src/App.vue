@@ -8,6 +8,7 @@ import NavbarTop from './components/NavbarTop.vue'
 
 
 
+
 <template>
   <div class="flex min-h-screen flex-col">
     <NavbarTop />
