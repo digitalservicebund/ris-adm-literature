@@ -56,4 +56,5 @@ public class DocumentTypeController {
       new DocumentTypeResponse(paginatedDocumentTypes.getContent(), paginatedDocumentTypes)
     );
   }
+
 }
