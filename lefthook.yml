@@ -7,7 +7,13 @@ pre-commit:
 
 pre-push:
   commands:
+    lintAndFormatCheckOnFrontendChange:
+      # run only on changes in the backend folder
+      # also: set the working directory for the command in 'run'
+      root: frontend
+      run: ../.lefthook/lint-format-frontend.sh
     spotlessCheckOnBackendChange:
-      root: backend # restrict to changes in the backend folder
-      run: |
-        ../.lefthook/spotless-check.sh
+      # run only on changes in the backend folder
+      # also: set the working directory for the command in 'run'
+      root: backend
+      run: ../.lefthook/spotless-check.sh
