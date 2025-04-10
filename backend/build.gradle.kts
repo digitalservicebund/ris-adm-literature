@@ -56,7 +56,7 @@ dependencies {
 
   implementation("com.google.protobuf:protobuf-java:4.30.2")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.squareup.okio:okio-jvm:3.10.2")
+  implementation("com.squareup.okio:okio-jvm:3.11.0")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
