@@ -4,3 +4,10 @@ pre-commit:
     "trivy-secrets.sh":
       runner: sh
       tags: security
+
+pre-push:
+  commands:
+    spotlessCheckOnBackendChange:
+      root: backend # restrict to changes in the backend folder
+      run: |
+        ../.lefthook/spotless-check.sh
