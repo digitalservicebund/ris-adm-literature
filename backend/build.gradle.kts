@@ -1,4 +1,3 @@
-
 import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 import io.franzbecker.gradle.lombok.task.DelombokTask
