@@ -10,5 +10,4 @@ pre-push:
     spotlessCheckOnBackendChange:
       root: backend # restrict to changes in the backend folder
       run: |
-        pwd
         ../.lefthook/pre-push/spotless-check.sh
