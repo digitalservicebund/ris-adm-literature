@@ -4,3 +4,9 @@ pre-commit:
     "trivy-secrets.sh":
       runner: sh
       tags: security
+
+pre-push:
+  commands:
+    lintAndFormatCheckOnFrontendChange:
+      root: frontend
+      run: ../.lefthook/pre-push/lint-format-frontend.sh
