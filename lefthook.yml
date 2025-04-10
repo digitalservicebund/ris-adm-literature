@@ -9,8 +9,7 @@ pre-push:
   commands:
     lintAndFormatCheckOnFrontendChange:
       root: frontend
-      run: ../.lefthook/pre-push/lint-format-frontend.sh
+      run: ../.lefthook/lint-format-frontend.sh
     spotlessCheckOnBackendChange:
       root: backend # restrict to changes in the backend folder
-      run: |
-        ../.lefthook/spotless-check.sh
+      run: ../.lefthook/spotless-check.sh
