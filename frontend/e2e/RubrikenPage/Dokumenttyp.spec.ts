@@ -41,12 +41,13 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await page.getByText('VV').click()
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
-      await page.getByRole('button', { name: 'Auswahl zurücksetzen', exact: true}).click()
+      await page.getByRole('button', { name: 'Auswahl zurücksetzen', exact: true }).click()
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
 
       // then
       const dokumentTypTextbox = page.getByRole('textbox', { name: 'Dokumenttyp', exact: true })
       await expect(dokumentTypTextbox.getByText('Verwaltungsvorschrift')).toHaveCount(0)
-    })
+    },
+  )
 })
