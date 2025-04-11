@@ -17,10 +17,10 @@ test.describe('RubrikenPage - Schlagwörter', () => {
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
 
-    const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
-    await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
+    await expect(page.getByRole('heading', { name: 'Schlagwörter' })).toHaveCount(1)
 
     // enter single schlagwort, assert that it's visible after confirming
+    await page.getByRole('button', { name: 'Schlagwörter hinzufügen' }).click()
     const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.fill('Schlagwort 1')
@@ -86,6 +86,7 @@ test.describe('RubrikenPage - Schlagwörter with persistence', () => {
       await page.getByText('Rubriken').click()
       const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
       await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
+      await page.getByRole('button', { name: 'Schlagwörter hinzufügen' }).click()
       const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
       await schlagwoerterListEditElement.click()
       await schlagwoerterListEditElement.fill('BSG 1')
