@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import ListInputDisplay from './ListInputDisplay.vue'
 import ListInputEdit from './ListInputEdit.vue'
 
@@ -14,7 +14,7 @@ const emit = defineEmits<{
 }>()
 
 const list = ref(props.modelValue ?? [])
-const editMode = ref(true)
+const editMode = ref(false)
 const sortAlphabetically = ref(false)
 
 /**
@@ -59,9 +59,8 @@ const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(nu
 async function toggleEditMode() {
   // Reset sorting option
   sortAlphabetically.value = false
-  if (list.value?.length) {
-    editMode.value = !editMode.value
-  } else emit('reset')
+
+  editMode.value = !editMode.value
 
   if (!editMode.value) {
     // Toggle from edit to display: As height of display mode can be less than edit mode -> scroll into view.
@@ -72,12 +71,15 @@ async function toggleEditMode() {
   }
 }
 
-/**
- * Initializes the edit mode based on whether the list is empty or not.
- */
-onMounted(() => {
-  editMode.value = !props.modelValue?.length
-})
+watch(
+  () => props.modelValue,
+  () => {
+    if (props.modelValue) {
+      list.value = props.modelValue
+    }
+  },
+  { deep: true },
+)
 </script>
 
 <template>

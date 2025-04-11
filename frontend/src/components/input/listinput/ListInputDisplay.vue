@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import TextButton from '@/components/input/TextButton.vue'
+import { computed } from 'vue'
+import IconAdd from '~icons/material-symbols/add'
 
-defineProps<{
+const props = defineProps<{
   label: string
   modelValue: string[]
 }>()
@@ -13,12 +15,15 @@ const emit = defineEmits<{
 function normalize(str: string) {
   return str.replace(/[^A-Z0-9]/gi, '_').toLowerCase()
 }
+
+const buttonLabel = computed(() =>
+  props.modelValue.length > 0 ? `${props.label} bearbeiten` : `${props.label} hinzufügen`,
+)
 </script>
 
 <template>
   <div class="flex scroll-m-64 flex-col gap-16">
     <div class="flex flex-col gap-4">
-      <span class="ds-label-02-reg">{{ label }}</span>
       <ul class="m-0 flex flex-row flex-wrap gap-8 p-0">
         <li
           v-for="chip in modelValue"
@@ -35,11 +40,22 @@ function normalize(str: string) {
       </ul>
     </div>
     <TextButton
-      :aria-label="`${label} bearbeiten`"
+      v-if="modelValue.length > 0"
+      :aria-label="buttonLabel"
       button-type="tertiary"
       class="self-start"
-      :label="`${label} bearbeiten`"
+      :label="buttonLabel"
       size="small"
+      @click.stop="emit('toggle')"
+    />
+    <TextButton
+      v-else
+      :aria-label="buttonLabel"
+      button-type="tertiary"
+      class="self-start"
+      :label="buttonLabel"
+      size="small"
+      :icon="IconAdd"
       @click.stop="emit('toggle')"
     />
   </div>

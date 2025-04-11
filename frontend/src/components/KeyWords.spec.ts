@@ -36,12 +36,10 @@ function renderComponent(keywords?: string[]) {
 }
 
 describe('Keywords', () => {
-  test('if no keywords render edit mode', async () => {
+  test('if no keywords render add keywords button', async () => {
     renderComponent()
 
-    expect(
-      screen.getByPlaceholderText('Geben Sie jeden Wert in eine eigene Zeile ein'),
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Schlagwörter hinzufügen')).toBeInTheDocument()
   })
 
   test('if keywords render display mode', async () => {
@@ -64,6 +62,7 @@ describe('Keywords', () => {
   test('in edit mode, click on "Übernehmen" with input, saves input and opens display mode', async () => {
     const { user } = renderComponent()
 
+    await user.click(screen.getByLabelText('Schlagwörter hinzufügen'))
     await user.type(screen.getByLabelText('Schlagwörter Input'), 'one {enter}')
     await user.click(screen.getByLabelText('Schlagwörter übernehmen'))
     expect(await screen.findByLabelText('Schlagwörter bearbeiten')).toBeVisible()
@@ -86,12 +85,13 @@ describe('Keywords', () => {
     expect(screen.getByText(/three/)).toBeVisible()
   })
 
-  test('in edit mode, click on "Übernehmen" with no input stays in edit mode', async () => {
+  test('in edit mode, click on "Übernehmen" with no input toggles display mode', async () => {
     const { user } = renderComponent()
 
+    await user.click(screen.getByLabelText('Schlagwörter hinzufügen'))
     await user.click(screen.getByLabelText('Schlagwörter übernehmen'))
-    expect(screen.queryByLabelText('Schlagwörter bearbeiten')).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Schlagwörter Input')).toHaveValue('')
+    expect(screen.queryByText('Schlagwörter bearbeiten')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Schlagwörter hinzufügen')).toBeInTheDocument()
   })
 
   test('in edit mode, click on "Abbrechen" with input reverts to display mode without changes', async () => {
@@ -110,12 +110,12 @@ describe('Keywords', () => {
     expect(screen.queryByText(/three/)).not.toBeInTheDocument()
   })
 
-  test('in edit mode, click on "Abbrechen" with no input stays in edit mode', async () => {
+  test('in edit mode, click on "Abbrechen" with no input leaves the edit mode', async () => {
     const { user } = renderComponent()
 
+    await user.click(screen.getByLabelText('Schlagwörter hinzufügen'))
     await user.click(screen.getByLabelText('Abbrechen'))
-
-    expect(screen.queryByLabelText('Schlagwörter bearbeiten')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Schlagwörter hinzufügen')).toBeInTheDocument()
   })
 
   test('sort alphabetically', async () => {
