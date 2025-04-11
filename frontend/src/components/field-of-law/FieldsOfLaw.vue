@@ -200,5 +200,4 @@ function updateInputMethod(value: InputMethod) {
       />
     </div>
   </FieldOfLawExpandableContainer>
-  
 </template>
