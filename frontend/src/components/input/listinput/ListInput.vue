@@ -95,7 +95,7 @@ watch(
   <ListInputDisplay
     v-else
     ref="listInputDisplayRef"
-    v-model="list"
+    :chips="list"
     :label="label"
     @toggle="toggleEditMode"
   />
