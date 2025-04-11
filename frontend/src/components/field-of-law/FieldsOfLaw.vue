@@ -143,7 +143,6 @@ function resetSearch() {
 }
 
 const inputMethod = ref(InputMethod.DIRECT)
-
 function updateInputMethod(value: InputMethod) {
   inputMethod.value = value
 }
