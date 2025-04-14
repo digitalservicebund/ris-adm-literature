@@ -110,7 +110,7 @@ export type ComboboxItemService = {
   getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getFieldOfLawSearchByIdentifier: (
     filter: Ref<string | undefined>,
-  ) => ComboboxResult<ComboboxItem[]>
+  ) => UseFetchReturn<ComboboxItem[]>
 }
 
 const service: ComboboxItemService = {

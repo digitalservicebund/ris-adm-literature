@@ -8,7 +8,7 @@ import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 
-const items = [
+const legalPeriodicalItems = [
   {
     title: 'Bundesanzeiger',
     abbreviation: 'BAnz',
@@ -20,8 +20,18 @@ const items = [
     citationStyle: '2011',
   },
 ]
+const fieldOfLawItems = [
+  {
+    identifier: 'PR',
+    text: 'Phantasierecht',
+  },
+  {
+    identifier: 'AV',
+    text: 'Allgemeines Verwaltungsrecht',
+  },
+]
 
-const paginatedLegalPeriodicals = {
+const pagination = {
   pageable: 'INSTANCE',
   last: true,
   totalElements: 2,
@@ -42,16 +52,29 @@ const server = setupServer(
   http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
     const searchTerm = new URL(request.url).searchParams.get('searchTerm')
     const filteredItems = searchTerm
-      ? items.filter(
+      ? legalPeriodicalItems.filter(
           (item) =>
             item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.title.toLowerCase().includes(searchTerm.toLowerCase()),
         )
-      : items
+      : legalPeriodicalItems
 
     return HttpResponse.json({
       legalPeriodicals: filteredItems,
-      paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: filteredItems },
+      paginatedLegalPeriodicals: { ...pagination, content: filteredItems },
+    })
+  }),
+  http.get('/api/lookup-tables/fields-of-law', ({ request }) => {
+    const identifier = new URL(request.url).searchParams.get('identifier')
+    const filteredItems = identifier
+      ? fieldOfLawItems.filter((item) =>
+          item.identifier.toLowerCase().includes(identifier.toLowerCase()),
+        )
+      : fieldOfLawItems
+
+    return HttpResponse.json({
+      fieldsOfLaw: filteredItems,
+      page: { ...pagination, content: filteredItems },
     })
   }),
 )
@@ -317,6 +340,22 @@ describe('Combobox Element', () => {
 
     expect(dropdownItems).toHaveLength(2)
     expect(dropdownItems[0]).toHaveTextContent('BAnz | Bundesanzeiger')
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
+  })
+
+  it('uses endpoint to fetch all field of law items', async () => {
+    renderComponent({
+      itemService: comboboxItemService.getFieldOfLawSearchByIdentifier,
+    })
+
+    const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
+    await user.click(openDropdownContainer)
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
+
+    const dropdownItems = screen.getAllByLabelText('dropdown-option')
+
+    expect(dropdownItems).toHaveLength(2)
+    expect(dropdownItems[0]).toHaveTextContent('PRPhantasierecht')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
   })
 
