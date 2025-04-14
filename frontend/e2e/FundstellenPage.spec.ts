@@ -76,6 +76,22 @@ test.describe('FundstellenPage', () => {
   )
 
   test(
+    'Visiting the "Fundstellen" page, select a Fundstelle - now the citation style shall be shown',
+    { tag: ['@RISDEV-6312'] },
+    async ({ page }) => {
+      // Arrange
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
+
+      // Action
+      await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
+      await page.getByText('BKK | Die Betriebskrankenkasse').click()
+
+      // Assert
+      await expect(page.getByText('Zitierbeispiel: 1969, 138-140')).toHaveCount(1)
+    },
+  )
+
+  test(
     'Visiting the "Fundstellen" page, add two item of fundstelle, delete the first item',
     { tag: ['@RISDEV-6042'] },
     async ({ page }) => {
