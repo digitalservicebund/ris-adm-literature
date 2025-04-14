@@ -277,6 +277,30 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
+    'Zitierdatum: a future date can be entered but a validation error is shown',
+    { tag: ['@RISDEV-6296'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+
+      const zitierdatumElement = page.getByRole('textbox', { name: 'Zitierdatum' })
+      await expect(zitierdatumElement).toHaveCount(1)
+      const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
+
+      // when
+      await zitierdatumElement.fill(tomorrow)
+      await zitierdatumElement.press('Tab') // Triggers validation
+      // then
+      await expect(zitierdatumElement).toHaveValue(tomorrow)
+      await expect(zitierdatumElement).toHaveClass(/has-error/)
+      await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
+    },
+  )
+
+  test(
     'Ausserkrafttretensdatum: a future date can be entered and no validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
