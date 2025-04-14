@@ -15,6 +15,7 @@ import errorMessages from '@/i18n/errors.json'
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
   fieldsOfLaw = 'lookup-tables/fields-of-law',
+  legalPeriodicals = 'lookup-tables/legal-periodicals',
 }
 
 function formatDropdownItems(
@@ -37,6 +38,18 @@ function formatDropdownItems(
         label: item.identifier,
         value: item,
         additionalInformation: item.text,
+      }))
+    }
+    case Endpoint.legalPeriodicals: {
+      return (responseData as LegalPeriodical[]).map((item) => ({
+        label: '' + item.abbreviation + ' | ' + item.title,
+        value: {
+          abbreviation: item.abbreviation,
+          title: item.title,
+          subtitle: item.subtitle,
+          citationStyle: item.citationStyle,
+        },
+        additionalInformation: item.subtitle,
       }))
     }
   }
@@ -72,6 +85,9 @@ function fetchFromEndpoint(
           break
         case Endpoint.fieldsOfLaw:
           ctx.data = formatDropdownItems(ctx.data.fieldsOfLaw, endpoint)
+          break
+        case Endpoint.legalPeriodicals:
+          ctx.data = formatDropdownItems(ctx.data.legalPeriodicals, endpoint)
       }
       return ctx
     },
@@ -86,7 +102,7 @@ function fetchFromEndpoint(
 }
 
 export type ComboboxItemService = {
-  getLegalPeriodicals: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getLegalPeriodicals: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -98,44 +114,8 @@ export type ComboboxItemService = {
 }
 
 const service: ComboboxItemService = {
-  getLegalPeriodicals: (filter: Ref<string | undefined>) => {
-    const banzLegalPeriodical = new LegalPeriodical({
-      title: 'Bundesanzeiger',
-      abbreviation: 'BAnz',
-      citationStyle: '2009, Seite 21',
-    })
-    const banzItem: ComboboxItem = {
-      label: 'BAnz | Bundesanzeiger',
-      value: banzLegalPeriodical,
-      sideInformation: 'amtlich',
-    }
-    const aaLegalPeriodical = new LegalPeriodical({
-      title: 'Phantasierecht aktiv',
-      abbreviation: 'AA',
-      citationStyle: '2011',
-    })
-    const aaItem: ComboboxItem = {
-      label: 'AA | Phantasierecht aktiv',
-      value: aaLegalPeriodical,
-      sideInformation: 'amtlich',
-    }
-    let items = ref([banzItem, aaItem])
-    if (filter?.value?.startsWith('a')) {
-      items = ref([aaItem])
-    } else if (filter?.value?.startsWith('b')) {
-      items = ref([banzItem])
-    }
-    const execute = async () => {
-      return service.getLegalPeriodicals(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
+  getLegalPeriodicals: (filter: Ref<string | undefined>) =>
+    fetchFromEndpoint(Endpoint.legalPeriodicals, filter, { usePagination: false }),
   getCourts: (filter: Ref<string | undefined>) => {
     const agAachen = {
       label: 'AG Aachen',

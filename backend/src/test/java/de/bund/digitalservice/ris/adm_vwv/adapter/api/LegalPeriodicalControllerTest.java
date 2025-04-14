@@ -67,10 +67,10 @@ class LegalPeriodicalControllerTest {
       .andExpect(jsonPath("$.legalPeriodicals[0].abbreviation").value(lp1Abbreviation))
       .andExpect(jsonPath("$.legalPeriodicals[0].title").value(lp1Title))
       .andExpect(jsonPath("$.legalPeriodicals[0].subtitle").value(lp1Subtitle))
-      .andExpect(jsonPath("$.legalPeriodicals[0].citation_style").value(lp1CitationStyle))
+      .andExpect(jsonPath("$.legalPeriodicals[0].citationStyle").value(lp1CitationStyle))
       .andExpect(jsonPath("$.legalPeriodicals[1].abbreviation").value(lp2Abbreviation))
       .andExpect(jsonPath("$.legalPeriodicals[1].title").value(lp2Title))
       .andExpect(jsonPath("$.legalPeriodicals[1].subtitle").value(lp2Subtitle))
-      .andExpect(jsonPath("$.legalPeriodicals[1].citation_style").value(lp2CitationStyle));
+      .andExpect(jsonPath("$.legalPeriodicals[1].citationStyle").value(lp2CitationStyle));
   }
 }
