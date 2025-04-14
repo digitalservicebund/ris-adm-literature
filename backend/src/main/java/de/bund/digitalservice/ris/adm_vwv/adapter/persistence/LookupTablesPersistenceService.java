@@ -21,6 +21,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
   private final DocumentTypesRepository documentTypesRepository;
   private final FieldOfLawRepository fieldOfLawRepository;
+  private final LegalPeriodicalsRepository legalPeriodicalsRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -112,6 +113,27 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
     List<FieldOfLaw> orderedList = orderResults(textTerms, normParagraphsWithSpace, searchResult);
     return new PageImpl<>(orderedList, searchResult.getPageable(), searchResult.getTotalElements());
+  }
+
+  @Override
+  public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    Page<LegalPeriodicalEntity> legalPeriodicals = StringUtils.isBlank(searchTerm)
+      ? legalPeriodicalsRepository.findAll(pageable)
+      : legalPeriodicalsRepository.findByAbbreviationContainingIgnoreCaseOrTitleContainingIgnoreCase(
+      searchTerm,
+      searchTerm,
+      pageable
+    );
+
+    return legalPeriodicals.map(legalPeriodicalEntity ->
+      new LegalPeriodical(legalPeriodicalEntity.getAbbreviation(), legalPeriodicalEntity.getTitle(), legalPeriodicalEntity.getSubtitle(), legalPeriodicalEntity.getCitationStyle())
+    );
   }
 
   private List<String> splitSearchTerms(String searchStr) {
