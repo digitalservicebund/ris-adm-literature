@@ -41,4 +41,9 @@ public class LookupTablesService implements LookupTablesPort {
   public Page<FieldOfLaw> findFieldsOfLaw(@NotNull FieldOfLawQuery query) {
     return lookupTablesPersistencePort.findFieldsOfLaw(query);
   }
+
+  @Override
+  public Page<LegalPeriodical> findLegalPeriodicals(@NotNull LegalPeriodicalQuery query) {
+    return lookupTablesPersistencePort.findLegalPeriodicals(query);
+  }
 }
