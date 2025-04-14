@@ -46,12 +46,12 @@ test.describe('FundstellenPage', () => {
 
       // Action
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
-      await page.getByText('BAnz | Bundesanzeiger').click()
+      await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
       await page.getByText('Übernehmen').click()
 
       // Assert
-      await expect(page.getByText('BAnz 2024, Seite 24')).toHaveCount(1)
+      await expect(page.getByText('ABc 2024, Seite 24')).toHaveCount(1)
     },
   )
 
@@ -64,14 +64,14 @@ test.describe('FundstellenPage', () => {
 
       // Action
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
-      await page.getByText('AA | Phantasierecht aktiv').click()
+      await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
       await page.getByTestId('list-entry-0').click()
       await page.getByText('Abbrechen').click()
 
       // Assert
-      await expect(page.getByText('AA 1991, Seite 92')).toHaveCount(1)
+      await expect(page.getByText('ABc 1991, Seite 92')).toHaveCount(1)
     },
   )
 
@@ -84,12 +84,12 @@ test.describe('FundstellenPage', () => {
 
       // Action
       await page.getByRole('textbox', { name: 'Periodikum' }).click()
-      await page.getByText('AA | Phantasierecht aktiv').click()
+      await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
 
       await page.getByRole('textbox', { name: 'Periodikum' }).click()
-      await page.getByText('BAnz | Bundesanzeiger').click()
+      await page.getByText('BKK | Die Betriebskrankenkasse').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
       await page.getByText('Übernehmen').click()
 
@@ -97,8 +97,8 @@ test.describe('FundstellenPage', () => {
       await page.getByText('Eintrag löschen').click()
 
       // Assert
-      await expect.soft(page.getByText('AA 1991, Seite 92')).toHaveCount(0)
-      await expect(page.getByText('BAnz 2001, Seite 21')).toHaveCount(1)
+      await expect.soft(page.getByText('ABc 1991, Seite 92')).toHaveCount(0)
+      await expect(page.getByText('BKK 2001, Seite 21')).toHaveCount(1)
     },
   )
 })
@@ -125,6 +125,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
           documentNumber: 'KSNR054920707',
           references: [],
           fieldsOfLaw: [],
+          note: '',
         }
         const json = {
           documentNumber: 'KSNR054920707',
@@ -138,20 +139,20 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
-      await page.getByText('AA | Phantasierecht aktiv').click()
+      await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('1991, Seite 92')
       await page.getByText('Übernehmen').click()
       // Mock the PUT and GET requests again
       await page.unrouteAll()
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
         const legalPeriodical = new LegalPeriodical({
-          title: 'Phantasierecht aktiv',
-          abbreviation: 'AA',
+          title: 'Die Beispieler',
+          abbreviation: 'ABc',
           citationStyle: '2011',
         })
         const reference = new Reference({
           citation: '1991, Seite 92',
-          legalPeriodicalRawValue: 'AA',
+          legalPeriodicalRawValue: 'ABc',
           legalPeriodical: legalPeriodical,
         })
         const documentUnit: DocumentUnit = {
@@ -159,6 +160,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
           documentNumber: 'KSNR054920707',
           references: [reference],
           fieldsOfLaw: [],
+          note: '',
         }
         const json = {
           documentNumber: 'KSNR054920707',
@@ -173,7 +175,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
 
       // Assert
-      await expect(page.getByText('AA 1991, Seite 92')).toHaveCount(1)
+      await expect(page.getByText('ABc 1991, Seite 92')).toHaveCount(1)
     },
   )
 })
