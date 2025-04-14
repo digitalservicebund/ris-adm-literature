@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "@digitalservicebund/ris-ui/style.css";
+@import 'tailwindcss';
+@import '@digitalservicebund/ris-ui/style.css';
 
 @source "../../node_modules/@digitalservicebund/ris-ui/dist/**/*.{js,vue,ts}";
 
@@ -7,6 +7,7 @@ body {
   @apply ris-body1-regular;
 }
 
+/* TODO: cleanup, remove unused classes */
 /*
 a {
   @apply text-black no-underline;
