@@ -8,11 +8,61 @@ import EditableList from '@/components/EditableList.vue'
 import type EditableListItem from '@/domain/editableListItem'
 import DummyInputGroupVue from '@/kitchensink/components/DummyInputGroup.vue'
 import DummyListItem from '@/kitchensink/domain/dummyListItem'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest'
 import Reference from '@/domain/reference.ts'
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
 import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
+
+const items = [
+  {
+    title: 'Bundesanzeiger',
+    abbreviation: 'BAnz',
+    citationStyle: '2009, Seite 21',
+  },
+  {
+    title: 'Phantasierecht aktiv',
+    abbreviation: 'AA',
+    citationStyle: '2011',
+  },
+]
+
+const paginatedLegalPeriodicals = {
+  pageable: 'INSTANCE',
+  last: true,
+  totalElements: 2,
+  totalPages: 1,
+  first: true,
+  size: 2,
+  number: 0,
+  sort: {
+    empty: true,
+    sorted: false,
+    unsorted: true,
+  },
+  numberOfElements: 2,
+  empty: false,
+}
+
+const server = setupServer(
+  http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
+    const searchTerm = new URL(request.url).searchParams.get('searchTerm')
+    const filteredItems = searchTerm
+      ? items.filter(
+          (item) =>
+            item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      : items
+
+    return HttpResponse.json({
+      legalPeriodicals: filteredItems,
+      paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: filteredItems },
+    })
+  }),
+)
 
 const listWithEntries = ref<DummyListItem[]>([
   new DummyListItem({ text: 'foo', uuid: '123' }),
@@ -53,6 +103,9 @@ async function renderComponent<T>(options?: {
 }
 
 describe('EditableList', () => {
+  afterEach(() => {
+    server.resetHandlers()
+  })
   it('renders a summary per model entry on initial render with entries', async () => {
     await renderComponent()
 
@@ -217,6 +270,8 @@ describe('EditableList', () => {
   })
 
   describe('EditableList with DocumentUnitInputReference', () => {
+    beforeAll(() => server.listen())
+    afterAll(() => server.close())
     it('add reference', async () => {
       // Arrange
       await renderComponent({

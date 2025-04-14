@@ -3,8 +3,81 @@ import { render, screen, fireEvent } from '@testing-library/vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import type { ComboboxItem, ComboboxAttributes } from '@/components/input/types'
 import comboboxItemService from '@/services/comboboxItemService'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
+
+const legalPeriodicalItems = [
+  {
+    title: 'Bundesanzeiger',
+    abbreviation: 'BAnz',
+    citationStyle: '2009, Seite 21',
+  },
+  {
+    title: 'Phantasierecht aktiv',
+    abbreviation: 'AA',
+    citationStyle: '2011',
+  },
+]
+const fieldOfLawItems = [
+  {
+    identifier: 'PR',
+    text: 'Phantasierecht',
+  },
+  {
+    identifier: 'AV',
+    text: 'Allgemeines Verwaltungsrecht',
+  },
+]
+
+const pagination = {
+  pageable: 'INSTANCE',
+  last: true,
+  totalElements: 2,
+  totalPages: 1,
+  first: true,
+  size: 2,
+  number: 0,
+  sort: {
+    empty: true,
+    sorted: false,
+    unsorted: true,
+  },
+  numberOfElements: 2,
+  empty: false,
+}
+
+const server = setupServer(
+  http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
+    const searchTerm = new URL(request.url).searchParams.get('searchTerm')
+    const filteredItems = searchTerm
+      ? legalPeriodicalItems.filter(
+          (item) =>
+            item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      : legalPeriodicalItems
+
+    return HttpResponse.json({
+      legalPeriodicals: filteredItems,
+      paginatedLegalPeriodicals: { ...pagination, content: filteredItems },
+    })
+  }),
+  http.get('/api/lookup-tables/fields-of-law', ({ request }) => {
+    const identifier = new URL(request.url).searchParams.get('identifier')
+    const filteredItems = identifier
+      ? fieldOfLawItems.filter((item) =>
+          item.identifier.toLowerCase().includes(identifier.toLowerCase()),
+        )
+      : fieldOfLawItems
+
+    return HttpResponse.json({
+      fieldsOfLaw: filteredItems,
+      page: { ...pagination, content: filteredItems },
+    })
+  }),
+)
 
 function renderComponent(
   options: {
@@ -33,12 +106,19 @@ function renderComponent(
 const debounceTimeout = 200
 
 describe('Combobox Element', () => {
-  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-  beforeEach(() => vi.useFakeTimers())
+  beforeAll(() => server.listen())
+  afterAll(() => server.close())
+  beforeEach(() =>
+    vi.useFakeTimers({
+      toFake: ['setTimeout', 'clearTimeout', 'Date'],
+    }),
+  )
   afterEach(() => {
+    server.resetHandlers()
     vi.runOnlyPendingTimers()
     vi.useRealTimers()
   })
+  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
 
   it('is closed', () => {
     renderComponent()
@@ -117,7 +197,7 @@ describe('Combobox Element', () => {
     await user.type(input, 'phantasierecht')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    await user.click(dropdownItems[1])
+    await user.click(dropdownItems[0])
 
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
 
@@ -263,6 +343,22 @@ describe('Combobox Element', () => {
     await vi.advanceTimersByTimeAsync(debounceTimeout)
   })
 
+  it('uses endpoint to fetch all field of law items', async () => {
+    renderComponent({
+      itemService: comboboxItemService.getFieldOfLawSearchByIdentifier,
+    })
+
+    const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
+    await user.click(openDropdownContainer)
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
+
+    const dropdownItems = screen.getAllByLabelText('dropdown-option')
+
+    expect(dropdownItems).toHaveLength(2)
+    expect(dropdownItems[0]).toHaveTextContent('PRPhantasierecht')
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
+  })
+
   it('uses endpoint to fetch all court items', async () => {
     renderComponent({
       itemService: comboboxItemService.getCourts,
@@ -301,8 +397,8 @@ describe('Combobox Element', () => {
     await vi.advanceTimersByTimeAsync(debounceTimeout)
 
     let dropdownItems = screen.getAllByLabelText('dropdown-option')
-    expect(dropdownItems).toHaveLength(2)
-    // expect(dropdownItems[0]).toHaveTextContent("Kein passender Eintrag")
+    expect(dropdownItems).toHaveLength(1)
+    expect(dropdownItems[0]).toHaveTextContent('Kein passender Eintrag')
 
     await user.keyboard('{escape}')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
@@ -310,11 +406,11 @@ describe('Combobox Element', () => {
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
     expect(input).toHaveValue('')
 
-    await user.type(input, 'courtlabel1')
+    await user.type(input, 'Bundesanzeiger')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     dropdownItems = screen.getAllByLabelText('dropdown-option')
 
-    expect(dropdownItems).toHaveLength(2)
+    expect(dropdownItems).toHaveLength(1)
     expect(dropdownItems[0]).toHaveTextContent('BAnz | Bundesanzeiger')
 
     // await user.keyboard("{enter}") // save the value
@@ -440,7 +536,7 @@ describe('Combobox Element', () => {
   it('does not render clear button if noClear flag is set', async () => {
     renderComponent({ noClear: true })
 
-    await user.type(screen.getByLabelText('test label'), 'court')
+    await user.type(screen.getByLabelText('test label'), 'a')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[1])

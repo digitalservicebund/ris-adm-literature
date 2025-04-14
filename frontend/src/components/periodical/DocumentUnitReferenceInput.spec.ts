@@ -1,9 +1,59 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import Reference from '@/domain/reference.ts'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
 import { userEvent } from '@testing-library/user-event'
+
+const items = [
+  {
+    title: 'Bundesanzeiger',
+    abbreviation: 'BAnz',
+    citationStyle: '2009, Seite 21',
+  },
+  {
+    title: 'Phantasierecht aktiv',
+    abbreviation: 'AA',
+    citationStyle: '2011',
+  },
+]
+
+const paginatedLegalPeriodicals = {
+  pageable: 'INSTANCE',
+  last: true,
+  totalElements: 2,
+  totalPages: 1,
+  first: true,
+  size: 2,
+  number: 0,
+  sort: {
+    empty: true,
+    sorted: false,
+    unsorted: true,
+  },
+  numberOfElements: 2,
+  empty: false,
+}
+
+const server = setupServer(
+  http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
+    const searchTerm = new URL(request.url).searchParams.get('searchTerm')
+    const filteredItems = searchTerm
+      ? items.filter(
+          (item) =>
+            item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      : items
+
+    return HttpResponse.json({
+      legalPeriodicals: filteredItems,
+      paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: filteredItems },
+    })
+  }),
+)
 
 function renderComponent(
   options: {
@@ -23,9 +73,12 @@ function renderComponent(
 const debounceTimeout = 200
 
 describe('DocumentUnitReferenceInput', () => {
+  beforeAll(() => server.listen())
+  afterAll(() => server.close())
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
   beforeEach(() => vi.useFakeTimers())
   afterEach(() => {
+    server.resetHandlers()
     vi.runOnlyPendingTimers()
     vi.useRealTimers()
   })
@@ -71,9 +124,11 @@ describe('DocumentUnitReferenceInput', () => {
 
     const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
     await user.click(openDropdownContainer)
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
 
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[0])
+    await vi.advanceTimersByTimeAsync(debounceTimeout)
 
     const citationInput = screen.getByLabelText('Zitatstelle')
     await user.type(citationInput, 'abcde')

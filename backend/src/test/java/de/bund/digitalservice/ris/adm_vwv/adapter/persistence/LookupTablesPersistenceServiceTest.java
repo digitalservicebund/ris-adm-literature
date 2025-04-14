@@ -31,6 +31,9 @@ class LookupTablesPersistenceServiceTest {
   @Mock
   private FieldOfLawRepository fieldOfLawRepository;
 
+  @Mock
+  private LegalPeriodicalsRepository legalPeriodicalsRepository;
+
   @Test
   void findDocumentTypes_all() {
     // given
@@ -240,6 +243,70 @@ class LookupTablesPersistenceServiceTest {
 
     // then
     assertThat(result.getContent()).isEmpty();
+  }
+
+  @Test
+  void findLegalPeriodicals_all() {
+    // given
+    var lpAbbreviation = "BKK";
+    var lpTitle = "Die Betriebskrankenkasse";
+    var lpSubtitle = "Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen";
+    var lpCitationStyle = "1969, 138-140; BKK 2007, Sonderbeilage, 1-5";
+    LegalPeriodicalEntity legalPeriodicalEntity = new LegalPeriodicalEntity();
+    legalPeriodicalEntity.setAbbreviation(lpAbbreviation);
+    legalPeriodicalEntity.setTitle(lpTitle);
+    legalPeriodicalEntity.setSubtitle(lpSubtitle);
+    legalPeriodicalEntity.setCitationStyle(lpCitationStyle);
+    given(legalPeriodicalsRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(legalPeriodicalEntity))
+    );
+
+    // when
+    Page<LegalPeriodical> legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
+      new LegalPeriodicalQuery(
+        null,
+        new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
+      )
+    );
+
+    // then
+    assertThat(legalPeriodicals.getContent()).contains(
+      new LegalPeriodical(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle)
+    );
+  }
+
+  @Test
+  void findLegalPeriodicals_something() {
+    // given
+    var lpAbbreviation = "BKK";
+    var lpTitle = "Die Betriebskrankenkasse";
+    var lpSubtitle = "Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen";
+    var lpCitationStyle = "1969, 138-140; BKK 2007, Sonderbeilage, 1-5";
+    LegalPeriodicalEntity legalPeriodicalEntity = new LegalPeriodicalEntity();
+    legalPeriodicalEntity.setAbbreviation(lpAbbreviation);
+    legalPeriodicalEntity.setTitle(lpTitle);
+    legalPeriodicalEntity.setSubtitle(lpSubtitle);
+    legalPeriodicalEntity.setCitationStyle(lpCitationStyle);
+    given(
+      legalPeriodicalsRepository.findByAbbreviationContainingIgnoreCaseOrTitleContainingIgnoreCase(
+        eq("something"),
+        eq("something"),
+        any(Pageable.class)
+      )
+    ).willReturn(new PageImpl<>(List.of(legalPeriodicalEntity)));
+
+    // when
+    Page<LegalPeriodical> legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
+      new LegalPeriodicalQuery(
+        "something",
+        new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
+      )
+    );
+
+    // then
+    assertThat(legalPeriodicals.getContent()).contains(
+      new LegalPeriodical(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle)
+    );
   }
 
   private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {

@@ -17,4 +17,6 @@ public interface LookupTablesPersistencePort {
   Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier);
 
   Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query);
+
+  Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query);
 }

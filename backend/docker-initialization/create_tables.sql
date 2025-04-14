@@ -170,4 +170,55 @@ INSERT INTO lookup_tables.field_of_law_field_of_law_text_reference
 (field_of_law_id, field_of_law_text_reference_id)
 VALUES('14728419-119a-40f7-8f9a-47ec342c6286', '5eaf2263-2717-4375-8ce2-0c45fc10eaaa');
 
+CREATE TABLE
+  IF NOT EXISTS
+  documentation_office
+(
+  id           UUID NOT NULL
+    CONSTRAINT documentation_office_pkey PRIMARY KEY,
+  abbreviation VARCHAR(6)
+    CONSTRAINT documentation_office_abbreviation_uc UNIQUE,
+  jurisdiction_type_id UUID
+);
+
+CREATE TABLE
+  IF NOT EXISTS
+  legal_periodical
+(
+  id                                          UUID         NOT NULL
+    CONSTRAINT legal_periodical_pkey PRIMARY KEY,
+  abbreviation                                VARCHAR(255) NOT NULL,
+  title                                       VARCHAR(255),
+  subtitle                                    VARCHAR(255),
+  primary_reference                           BOOLEAN,
+  evaluation                                  BOOLEAN,
+  remark                                      TEXT,
+  publisher                                   VARCHAR(255),
+  editor                                      VARCHAR(255),
+  publications_per_year                       INTEGER,
+  citation_style                              VARCHAR(255),
+  responsible_documentation_office_caselaw_id UUID
+    CONSTRAINT documentation_office_fkey REFERENCES documentation_office,
+  published_from                              VARCHAR(4),
+  published_to                                VARCHAR(4),
+  literature_evaluation_from                  VARCHAR(4),
+  literature_evaluation_to                    VARCHAR(4),
+  literature_evaluation_complete              VARCHAR(4),
+  caselaw_evaluation_from                     VARCHAR(4),
+  caselaw_evaluation_to                       VARCHAR(4),
+  caselaw_evaluation_complete                 VARCHAR(4),
+  attachment_to                               VARCHAR(10),
+  juris_id                                    VARCHAR(255) NOT NULL
+    CONSTRAINT legal_periodical_juris_id_uc UNIQUE
+);
+
+CREATE INDEX
+  IF NOT EXISTS
+  legal_periodical_documentation_office_caselaw_idx ON
+  legal_periodical (responsible_documentation_office_caselaw_id);
+
+INSERT INTO legal_periodical (id, abbreviation, title, subtitle, citation_style, juris_id) VALUES
+(gen_random_uuid(), 'BKK', 'Die Betriebskrankenkasse', 'Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen', '1969, 138-140; BKK 2007, Sonderbeilage, 1-5', '9999'),
+(gen_random_uuid(), 'ABc', 'Die Beispieler', 'Zeitschrift des Beispiels', 'ab ab ab ab abc', '999');
+
 set role test;
