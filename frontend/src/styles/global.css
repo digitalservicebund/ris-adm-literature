@@ -1,40 +1,7 @@
 @import 'tailwindcss';
 @import '@digitalservicebund/ris-ui/style.css';
-
 @source "../../node_modules/@digitalservicebund/ris-ui/dist/**/*.{js,vue,ts}";
 
 body {
   @apply ris-body1-regular;
 }
-
-/* TODO: cleanup, remove unused classes */
-/*
-a {
-  @apply text-black no-underline;
-}
-
-.ds-button-label {
-  font-size: 16px;
-}
-
-.ds-input,
-.ds-select,
-.ds-input input,
-.ds-select select {
-  &::placeholder {
-    color: theme('colors.gray.800');
-    font-family: BundesSansWeb, sans-serif;
-    font-style: normal;
-  }
-}
-
-ul,
-ol {
-  padding: revert;
-  margin: revert;
-}
-
-blockquote {
-  margin-left: 40px;
-}
-*/
