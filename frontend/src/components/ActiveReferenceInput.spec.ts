@@ -35,8 +35,10 @@ describe('ActiveReferenceInput', () => {
 
   it('render empty norm input group on initial load', async () => {
     renderComponent()
-    expect(screen.getByLabelText('Norm')).toBeInTheDocument()
-    expect(screen.getByLabelText('Verwaltungsvorschrift')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Norm auswählen' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }),
+    ).toBeInTheDocument()
     expect(screen.getByLabelText('RIS-Abkürzung')).toBeInTheDocument()
     expect(screen.getByLabelText('Art der Verweisung')).toBeInTheDocument()
 
