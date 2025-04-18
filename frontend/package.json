@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.1",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.52.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
