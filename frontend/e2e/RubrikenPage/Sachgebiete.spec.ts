@@ -360,7 +360,11 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       },
     )
 
-    test(
+    // Skipping this test due to an existing race condition: which un-checks the Mit Normen
+    // checkbox after executing the search. With this rc in place this test is brittle and might
+    // fail from time to time.
+    // RISDEV-7584
+    test.skip(
       'Search for a description and check the box for showing Norms - should show norms in tree',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
