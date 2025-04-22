@@ -41,20 +41,6 @@ export interface BaseInputField {
   inputAttributes: BaseInputAttributes
 }
 
-//TEXT
-
-export interface TextInputAttributes extends BaseInputAttributes {
-  placeholder?: string
-  readOnly?: boolean
-  maxlength?: string
-  autofocus?: boolean
-}
-
-export interface TextInputField extends BaseInputField {
-  type: InputType.TEXT
-  inputAttributes: TextInputAttributes
-}
-
 //CHIPS
 export type ChipsInputModelType = string[]
 
@@ -167,7 +153,6 @@ export interface TextAreaInputField extends BaseInputField {
 }
 
 export type InputField =
-  | TextInputField
   | DropdownInputField
   | DateInputField
   | ChipsInputField
@@ -177,7 +162,6 @@ export type InputField =
   | TextAreaInputField
 
 export type InputAttributes =
-  | TextInputAttributes
   | DropdownAttributes
   | ChipsInputAttributes
   | NestedInputAttributes

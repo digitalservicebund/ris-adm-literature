@@ -10,8 +10,8 @@ import ActiveReference, {
 } from '@/domain/activeReference.ts'
 import { createTestingPinia } from '@pinia/testing'
 import type { DocumentUnit } from '@/domain/documentUnit.ts'
-import InputText from 'primevue/inputtext'
 import { config } from '@vue/test-utils'
+import InputText from 'primevue/inputtext'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()

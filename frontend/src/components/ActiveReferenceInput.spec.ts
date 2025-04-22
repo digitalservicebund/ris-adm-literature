@@ -17,19 +17,12 @@ function renderComponent(options?: { modelValue?: ActiveReference }) {
 
 describe('ActiveReferenceInput', () => {
   beforeAll(() => {
-    // InputMask evaluates cursor position on every keystroke, however, our browser vitest setup does not
-    // implement any layout-related functionality, meaning the required functions for cursor offset
-    // calculation are missing. When we deal with typing in date/ year / time inputs, we can mock it with
-    // TextInput, as we only need the string and do not need to test the actual mask behaviour.
     config.global.stubs = {
       InputMask: InputText,
     }
   })
 
   afterAll(() => {
-    // Mock needs to be reset (and can not be mocked globally) because InputMask has interdependencies
-    // with the PrimeVue select component. When testing the select components with InputMask
-    // mocked globally, they fail due to these dependencies.
     config.global.stubs = {}
   })
 
@@ -259,20 +252,18 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('does not add norm with invalid year input', async () => {
-    renderComponent({
+    const { user } = renderComponent({
       modelValue: {
         referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-        singleNorms: [
-          {
-            dateOfRelevance: '0000',
-          },
-        ],
       } as ActiveReference,
     })
 
     const yearInput = await screen.findByLabelText('Jahr der Norm')
-    expect(yearInput).toHaveValue('0000')
+    expect(yearInput).toHaveValue('')
+
+    await user.type(yearInput, '0000')
+    await user.tab()
 
     await screen.findByText(/Kein valides Jahr/)
     screen.getByLabelText('Verweis speichern').click()
