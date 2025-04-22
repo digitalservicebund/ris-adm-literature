@@ -1,8 +1,10 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import ActiveReferenceInput from '@/components/ActiveReferenceInput.vue'
+import { config } from '@vue/test-utils'
+import InputText from 'primevue/inputtext'
 
 function renderComponent(options?: { modelValue?: ActiveReference }) {
   const user = userEvent.setup()
@@ -14,10 +16,22 @@ function renderComponent(options?: { modelValue?: ActiveReference }) {
 }
 
 describe('ActiveReferenceInput', () => {
+  beforeAll(() => {
+    config.global.stubs = {
+      InputMask: InputText,
+    }
+  })
+
+  afterAll(() => {
+    config.global.stubs = {}
+  })
+
   it('render empty norm input group on initial load', async () => {
     renderComponent()
-    expect(screen.getByLabelText('Norm')).toBeInTheDocument()
-    expect(screen.getByLabelText('Verwaltungsvorschrift')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Norm auswählen' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }),
+    ).toBeInTheDocument()
     expect(screen.getByLabelText('RIS-Abkürzung')).toBeInTheDocument()
     expect(screen.getByLabelText('Art der Verweisung')).toBeInTheDocument()
 
@@ -238,20 +252,18 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('does not add norm with invalid year input', async () => {
-    renderComponent({
+    const { user } = renderComponent({
       modelValue: {
         referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
-        singleNorms: [
-          {
-            dateOfRelevance: '0000',
-          },
-        ],
       } as ActiveReference,
     })
 
     const yearInput = await screen.findByLabelText('Jahr der Norm')
-    expect(yearInput).toHaveValue('0000')
+    expect(yearInput).toHaveValue('')
+
+    await user.type(yearInput, '0000')
+    await user.tab()
 
     await screen.findByText(/Kein valides Jahr/)
     screen.getByLabelText('Verweis speichern').click()

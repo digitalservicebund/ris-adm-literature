@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import InputField from '@/components/input/InputField.vue'
-import TextButton from '@/components/input/TextButton.vue'
-import TextInput from '@/components/input/TextInput.vue'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import { useValidationStore } from '@/composables/useValidationStore'
 import LegalPeriodical from '@/domain/legalPeriodical'
@@ -114,16 +114,17 @@ watch(
             label="Zitatstelle *"
             :validation-error="validationStore.getByField('citation')"
           >
-            <TextInput
+            <InputText
               id="citation"
               v-model="reference.citation"
-              ariaLabel="Zitatstelle"
-              :has-error="slotProps.hasError"
-              size="medium"
+              aria-label="Zitatstelle"
+              fluid
+              :invalid="slotProps.hasError"
+              size="small"
               @focus="validationStore.remove('citation')"
-            ></TextInput>
+            />
           </InputField>
-          <span v-if="legalPeriodical" class="ds-label-03-reg pt-4"
+          <span v-if="legalPeriodical" class="ris-label3-regular pt-4"
             >Zitierbeispiel: {{ legalPeriodical.value.citationStyle }}</span
           >
         </div>
@@ -132,30 +133,30 @@ watch(
     <div class="flex w-full flex-row justify-between">
       <div>
         <div class="flex gap-16">
-          <TextButton
+          <Button
             aria-label="Fundstelle speichern"
-            button-type="tertiary"
             :disabled="reference.isEmpty"
             label="Übernehmen"
             size="small"
+            severity="secondary"
             @click.stop="addReference"
           />
-          <TextButton
+          <Button
             v-if="!lastSavedModelValue.isEmpty"
             aria-label="Abbrechen"
-            button-type="ghost"
             label="Abbrechen"
             size="small"
+            text
             @click.stop="emit('cancelEdit')"
           />
         </div>
       </div>
-      <TextButton
+      <Button
         v-if="!lastSavedModelValue.isEmpty"
         aria-label="Eintrag löschen"
-        button-type="destructive"
         label="Eintrag löschen"
         size="small"
+        severity="danger"
         @click.stop="emit('removeEntry', true)"
       />
     </div>

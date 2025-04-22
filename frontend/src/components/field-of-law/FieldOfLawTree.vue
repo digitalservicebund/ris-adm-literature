@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import FieldOfLawTreeNode from './FieldOfLawTreeNode.vue'
 import { NodeHelper, type NodeHelperInterface } from '@/components/field-of-law/FieldOfLawNode'
-import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import Checkbox from 'primevue/checkbox'
 import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import { buildRoot, type FieldOfLaw } from '@/domain/fieldOfLaw'
 
@@ -94,22 +94,17 @@ defineExpose({ collapseTree })
   <div class="flex flex-1 flex-col bg-blue-200 p-16">
     <div class="mb-20 flex w-full flex-row justify-between">
       <div class="flex">
-        <p class="ds-label-01-reg">Sachgebietsbaum</p>
+        <p class="ris-label1-regular">Sachgebietsbaum</p>
       </div>
       <div class="flex">
         <InputField
           id="showNorms"
           aria-label="Normen anzeigen"
           label="Mit Normen"
-          label-class="ds-label-02-reg"
+          label-class="ris-label2-regular"
           :label-position="LabelPosition.RIGHT"
         >
-          <CheckboxInput
-            id="showNorms"
-            v-model="showNormsModelValue"
-            class="ds-checkbox-mini bg-white"
-            size="small"
-          />
+          <Checkbox v-model="showNormsModelValue" binary input-id="showNorms" />
         </InputField>
       </div>
     </div>

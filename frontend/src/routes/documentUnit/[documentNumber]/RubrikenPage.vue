@@ -6,9 +6,9 @@ import InputField, { LabelPosition } from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
-import TextInput from '@/components/input/TextInput.vue'
+import InputText from 'primevue/inputtext'
 import ChipsInput from '@/components/input/ChipsInput.vue'
-import CheckboxInput from '@/components/input/CheckboxInput.vue'
+import Checkbox from 'primevue/checkbox'
 import KeyWords from '@/components/KeyWords.vue'
 import TextEditorCategory from '@/components/texts/TextEditorCategory.vue'
 import NormReferences from '@/components/NormReferences.vue'
@@ -68,7 +68,6 @@ const aktenzeichen = computed({
   },
 })
 
-const noAktenzeichenElementId = 'noAktenzeichenID'
 const noAktenzeichen = computed({
   get: () => store.documentUnit!.noAktenzeichen,
   set: (newValue) => {
@@ -152,12 +151,12 @@ const dokumenttypZusatz = computed({
           ></ComboboxInput>
         </InputField>
         <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
-          <TextInput
+          <InputText
             id="documentTypeLongText"
             v-model="dokumenttypZusatz"
-            ariaLabel="Dokumenttyp Zusatz"
-            :has-error="false"
-            size="medium"
+            aria-label="Dokumenttyp Zusatz"
+            :invalid="false"
+            fluid
           />
         </InputField>
       </div>
@@ -208,17 +207,13 @@ const dokumenttypZusatz = computed({
         </div>
         <div class="flex flex-col pt-[30px] w-full">
           <InputField
-            :id="noAktenzeichenElementId"
-            label="kein Aktenzeichen"
-            label-class="ds-label-01-reg"
+            id="noAktenzeichenElementId"
+            label="Kein Aktenzeichen"
+            aria-label="Kein Aktenzeichen"
+            label-class="ris-label1-regular"
             :label-position="LabelPosition.RIGHT"
           >
-            <CheckboxInput
-              :id="noAktenzeichenElementId"
-              v-model="noAktenzeichen"
-              aria-label="Kein Aktenzeichen"
-              size="small"
-            />
+            <Checkbox v-model="noAktenzeichen" binary input-id="noAktenzeichenElementId" />
           </InputField>
         </div>
       </div>
