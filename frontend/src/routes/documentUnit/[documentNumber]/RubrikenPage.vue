@@ -156,6 +156,7 @@ const dokumenttypZusatz = computed({
             v-model="dokumenttypZusatz"
             aria-label="Dokumenttyp Zusatz"
             :invalid="false"
+            fluid
           />
         </InputField>
       </div>
