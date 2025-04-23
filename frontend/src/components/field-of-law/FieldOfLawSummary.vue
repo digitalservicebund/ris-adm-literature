@@ -28,7 +28,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
       <div
         v-for="fieldOfLaw in fieldsOfLaw"
         :key="fieldOfLaw.identifier"
-        class="field-of-law flex w-full flex-row items-center border-b-1 border-blue-300 py-16 first:mt-16 first:border-t-1"
+        class="field-of-law flex w-full flex-row items-center border-b-1 border-blue-300 py-16 first:mt-16 first:border-t-1 last:mb-16"
       >
         <div class="ris-label1-regular mr-8 flex-grow">
           <button
