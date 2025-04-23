@@ -16,6 +16,7 @@ import ActiveReferences from '@/components/ActiveReferences.vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import CourtSection from '@/components/norm-setting-authority/NormSettingAuthorityList.vue'
 
 const store = useDocumentUnitStore()
 
@@ -75,13 +76,6 @@ const noAktenzeichen = computed({
   },
 })
 
-const normgeber = computed({
-  get: () => store.documentUnit!.normgeber,
-  set: (newValue) => {
-    store.documentUnit!.normgeber = newValue
-  },
-})
-
 const dokumenttyp = computed({
   get: () => store.documentUnit!.dokumenttyp,
   set: (newValue) => {
@@ -102,6 +96,18 @@ const dokumenttypZusatz = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
+        <InputField id="langue" label="Amtl. Langüberschrift *">
+          <Textarea
+            id="langue"
+            class="w-full"
+            v-model="langueberschrift"
+            v-bind="{
+              autoResize: true,
+            }"
+          />
+        </InputField>
+      </div>
+      <div class="flex flex-row gap-24">
         <InputField
           id="zitierdatum"
           label="Zitierdatum *"
@@ -117,28 +123,12 @@ const dokumenttypZusatz = computed({
             @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
         </InputField>
-        <InputField id="courtInput" label="Normgeber *" class="w-full">
-          <ComboboxInput
-            id="courtInput"
-            v-model="normgeber"
-            aria-label="Normgeber"
-            clear-on-choosing-item
-            :has-error="false"
-            :item-service="ComboboxItemService.getCourts"
-          ></ComboboxInput>
-        </InputField>
       </div>
-      <div class="flex flex-row gap-24">
-        <InputField id="langue" label="Amtl. Langüberschrift *">
-          <Textarea
-            id="langue"
-            class="w-full"
-            v-model="langueberschrift"
-            v-bind="{
-              autoResize: true,
-            }"
-          />
-        </InputField>
+      <div class="border-b-1 border-b-gray-400"></div>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <CourtSection />
+        </div>
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24">

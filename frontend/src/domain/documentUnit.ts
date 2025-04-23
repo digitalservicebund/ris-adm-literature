@@ -4,6 +4,7 @@ import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
+import type { NormSettingAuthority } from './normSettingAuthority'
 
 export type DocumentType = {
   uuid?: string
@@ -40,4 +41,5 @@ export interface DocumentUnit {
   activeReferences?: ActiveReference[]
   normReferences?: NormReference[]
   note: string
+  normSettingAuthorities?: NormSettingAuthority[]
 }

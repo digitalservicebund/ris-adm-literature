@@ -11,6 +11,7 @@ import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
+import type { AuthorityRegion } from '@/domain/normSettingAuthority'
 
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
@@ -104,6 +105,7 @@ function fetchFromEndpoint(
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getRegions: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -139,6 +141,38 @@ const service: ComboboxItemService = {
     }
     const execute = async () => {
       return service.getCourts(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
+  getRegions: (filter: Ref<string | undefined>) => {
+    const deu = {
+      label: 'DEU',
+    } as AuthorityRegion
+    const deuItem: ComboboxItem = {
+      label: deu.label,
+      value: deu,
+    }
+    const eu = {
+      label: 'EU',
+    } as AuthorityRegion
+    const euItem: ComboboxItem = {
+      label: eu.label,
+      value: eu,
+    }
+    let items = ref([deuItem, euItem])
+    if (filter?.value?.startsWith('d')) {
+      items = ref([deuItem])
+    } else if (filter?.value?.startsWith('e')) {
+      items = ref([euItem])
+    }
+    const execute = async () => {
+      return service.getRegions(filter)
     }
     const result: ComboboxResult<ComboboxItem[]> = {
       data: items,

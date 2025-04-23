@@ -7,6 +7,7 @@ import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
+import type { LegalForceRegion } from '@/domain/legalForce'
 
 export enum InputType {
   TEXT = 'text',
@@ -115,6 +116,7 @@ export type ComboboxInputModelType =
   | DocumentType
   | CitationType
   | ActiveReferenceType
+  | LegalForceRegion
 
 export type ComboboxItem = {
   label: string
