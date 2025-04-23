@@ -36,7 +36,7 @@ describe('DateInput', () => {
     // InputMask evaluates cursor position on every keystroke, however, our browser vitest setup does not
     // implement any layout-related functionality, meaning the required functions for cursor offset
     // calculation are missing. When we deal with typing in date/ year / time inputs, we can mock it with
-    // TextInput, as we only need the string and do not need to test the actual mask behaviour.
+    // InputText, as we only need the string and do not need to test the actual mask behaviour.
     config.global.stubs = {
       InputMask: InputText,
     }

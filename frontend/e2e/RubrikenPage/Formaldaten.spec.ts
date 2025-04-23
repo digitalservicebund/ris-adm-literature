@@ -175,6 +175,11 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(ausserkrafttretedatumElement).toHaveCount(1)
 
       // when
+      await ausserkrafttretedatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(ausserkrafttretedatumElement).toHaveValue('__.__.____')
+
+      // when
       await ausserkrafttretedatumElement.fill('03.03.1970')
       await expect(ausserkrafttretedatumElement).toHaveValue('03.03.1970')
 
@@ -200,7 +205,13 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(inkrafttretedatumElement).toHaveCount(1)
 
       // when
+      await inkrafttretedatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(inkrafttretedatumElement).toHaveValue('__.__.____')
+
+      // when
       await inkrafttretedatumElement.fill('02.02.1970')
+      // then
       await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
       await expect(page.getByText('Datum des Ausserkrafttretens')).toHaveValue('')
 
@@ -224,6 +235,11 @@ test.describe('RubrikenPage - Formatdaten', () => {
 
       const zitierdatumElement = page.getByText('Zitierdatum')
       await expect(zitierdatumElement).toHaveCount(1)
+
+      // when
+      await zitierdatumElement.fill('thatshouldnotwork')
+      // then
+      await expect(zitierdatumElement).toHaveValue('__.__.____')
 
       // when
       await zitierdatumElement.fill('15.01.2025')
