@@ -69,7 +69,7 @@ async function submitSearch(page: number) {
     if (results.value?.[0]) {
       nodeOfInterest.value = results.value[0]
     }
-    showNorms.value = !!norm.value
+    showNorms.value = !!norm.value || showNorms.value
     isResetButtonVisible.value = true
   } else {
     currentPage.value = undefined

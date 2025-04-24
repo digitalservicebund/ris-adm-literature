@@ -360,11 +360,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       },
     )
 
-    // Skipping this test due to an existing race condition: which un-checks the Mit Normen
-    // checkbox after executing the search. With this rc in place this test is brittle and might
-    // fail from time to time.
-    // RISDEV-7584
-    test.skip(
+    test(
       'Search for a description and check the box for showing Norms - should show norms in tree',
       { tag: ['@RISDEV-6315'] },
       async ({ page }) => {
@@ -380,6 +376,25 @@ test.describe('RubrikenPage - Sachgebiete', () => {
 
         // then
         await expect(page.getByText('§ 99 PStG').first()).toBeVisible()
+      },
+    )
+
+    test(
+      'Activate show norms and search for a description - should show norms in tree',
+      { tag: ['@RISDEV-7584'] },
+      async ({ page }) => {
+        // given
+        await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+        // when
+        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByLabel('Sachgebietsuche auswählen').click()
+        await page.getByRole('checkbox', { name: 'Mit Normen' }).click()
+        await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
+        await page.keyboard.press('Enter')
+
+        // then
+        await expect(page.getByRole('checkbox', { name: 'Mit Normen' })).toBeChecked()
       },
     )
 
