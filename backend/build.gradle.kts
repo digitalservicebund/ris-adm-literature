@@ -4,7 +4,7 @@ import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
   java
-  id("org.springframework.boot") version "3.4.4"
+  id("org.springframework.boot") version "3.4.5"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "6.1.0.5360"
