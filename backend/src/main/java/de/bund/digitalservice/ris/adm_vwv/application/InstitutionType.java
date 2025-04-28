@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 public enum InstitutionType {
-
   /**
    * Institution, in German "organ".
    */
@@ -9,5 +8,5 @@ public enum InstitutionType {
   /**
    * Legal entity, in German "Juristische Person".
    */
-  LEGAL_ENTITY
+  LEGAL_ENTITY,
 }

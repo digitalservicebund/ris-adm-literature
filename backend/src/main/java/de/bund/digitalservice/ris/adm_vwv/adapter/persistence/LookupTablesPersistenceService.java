@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -182,7 +181,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
           .getRegions()
           .stream()
           .map(regionEntity -> new Region(regionEntity.getCode(), regionEntity.getLongText()))
-          .collect(Collectors.toSet())
+          .toList()
       )
     );
   }

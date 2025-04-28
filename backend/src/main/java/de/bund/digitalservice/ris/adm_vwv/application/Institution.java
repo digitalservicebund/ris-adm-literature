@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 import jakarta.annotation.Nonnull;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Institution business object
@@ -14,5 +14,5 @@ public record Institution(
   @Nonnull String name,
   String officialName,
   InstitutionType type,
-  Set<Region> regions
+  List<Region> regions
 ) {}
