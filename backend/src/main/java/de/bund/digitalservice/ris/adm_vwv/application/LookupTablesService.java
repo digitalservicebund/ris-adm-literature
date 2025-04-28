@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -38,12 +37,22 @@ public class LookupTablesService implements LookupTablesPort {
   }
 
   @Override
-  public Page<FieldOfLaw> findFieldsOfLaw(@NotNull FieldOfLawQuery query) {
+  public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     return lookupTablesPersistencePort.findFieldsOfLaw(query);
   }
 
   @Override
-  public Page<LegalPeriodical> findLegalPeriodicals(@NotNull LegalPeriodicalQuery query) {
+  public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
     return lookupTablesPersistencePort.findLegalPeriodicals(query);
+  }
+
+  @Override
+  public Page<Region> findRegions(@Nonnull RegionQuery regionQuery) {
+    return lookupTablesPersistencePort.findRegions(regionQuery);
+  }
+
+  @Override
+  public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
+    return lookupTablesPersistencePort.findInstitutions(query);
   }
 }

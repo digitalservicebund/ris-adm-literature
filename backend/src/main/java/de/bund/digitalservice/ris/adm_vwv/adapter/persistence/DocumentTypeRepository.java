@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-interface DocumentTypesRepository extends JpaRepository<DocumentTypeEntity, UUID> {
+interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity, UUID> {
   Page<DocumentTypeEntity> findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
     @Nonnull String abbreviation,
     @Nonnull String name,

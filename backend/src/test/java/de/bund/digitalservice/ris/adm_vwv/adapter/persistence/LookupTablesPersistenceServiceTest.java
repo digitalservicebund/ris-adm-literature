@@ -26,7 +26,7 @@ class LookupTablesPersistenceServiceTest {
   private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Mock
-  private DocumentTypesRepository documentTypesRepository;
+  private DocumentTypeRepository documentTypeRepository;
 
   @Mock
   private FieldOfLawRepository fieldOfLawRepository;
@@ -34,13 +34,19 @@ class LookupTablesPersistenceServiceTest {
   @Mock
   private LegalPeriodicalsRepository legalPeriodicalsRepository;
 
+  @Mock
+  private InstitutionRepository institutionRepository;
+
+  @Mock
+  private RegionRepository regionRepository;
+
   @Test
   void findDocumentTypes_all() {
     // given
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
-    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(
+    given(documentTypeRepository.findAll(any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(documentTypeEntity))
     );
 
@@ -60,7 +66,7 @@ class LookupTablesPersistenceServiceTest {
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
     given(
-      documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+      documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
         eq("something"),
         eq("something"),
         any(Pageable.class)
@@ -320,5 +326,86 @@ class LookupTablesPersistenceServiceTest {
     normEntity.setSingleNormDescription("§ 99");
     fieldOfLawEntity.getNorms().add(normEntity);
     return fieldOfLawEntity;
+  }
+
+  @Test
+  void findInstitutions_all() {
+    // given
+    InstitutionEntity institutionEntity = new InstitutionEntity();
+    institutionEntity.setName("Jurpn");
+    institutionEntity.setType("jurpn");
+    RegionEntity regionEntity = new RegionEntity();
+    regionEntity.setCode("AA");
+    institutionEntity.setRegions(Set.of(regionEntity));
+    given(institutionRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(institutionEntity))
+    );
+
+    // when
+    Page<Institution> institutions = lookupTablesPersistenceService.findInstitutions(
+      new InstitutionQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(institutions.getContent()).contains(
+      new Institution("Jurpn", null, InstitutionType.LEGAL_ENTITY, List.of(new Region("AA", null)))
+    );
+  }
+
+  @Test
+  void findInstitutions_something() {
+    // given
+    InstitutionEntity institutionEntity = new InstitutionEntity();
+    institutionEntity.setName("Organ");
+    institutionEntity.setType("organ");
+    given(
+      institutionRepository.findByNameContainingIgnoreCase(eq("something"), any(Pageable.class))
+    ).willReturn(new PageImpl<>(List.of(institutionEntity)));
+
+    // when
+    Page<Institution> institutions = lookupTablesPersistenceService.findInstitutions(
+      new InstitutionQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(institutions.getContent()).contains(
+      new Institution("Organ", null, InstitutionType.INSTITUTION, List.of())
+    );
+  }
+
+  @Test
+  void findRegions_all() {
+    // given
+    RegionEntity regionEntity = new RegionEntity();
+    regionEntity.setCode("AA");
+    given(regionRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(regionEntity))
+    );
+
+    // when
+    Page<Region> regions = lookupTablesPersistenceService.findRegions(
+      new RegionQuery(null, new QueryOptions(0, 10, "code", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(regions.getContent()).contains(new Region("AA", null));
+  }
+
+  @Test
+  void findRegions_something() {
+    // given
+    RegionEntity regionEntity = new RegionEntity();
+    regionEntity.setCode("AA");
+    given(
+      regionRepository.findByCodeContainingIgnoreCase(eq("something"), any(Pageable.class))
+    ).willReturn(new PageImpl<>(List.of(regionEntity)));
+
+    // when
+    Page<Region> regions = lookupTablesPersistenceService.findRegions(
+      new RegionQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(regions.getContent()).contains(new Region("AA", null));
   }
 }
