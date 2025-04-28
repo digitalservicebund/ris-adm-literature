@@ -17,8 +17,8 @@ const emit = defineEmits<{
   removeAuthority: [id: string]
 }>()
 
-const court = ref<Court>({...props.authority.court} as Court)
-const region = ref<AuthorityRegion>({...props.authority.region} as AuthorityRegion)
+const court = ref<Court>({ ...props.authority.court } as Court)
+const region = ref<AuthorityRegion>({ ...props.authority.region } as AuthorityRegion)
 const isEmpty = computed(() => !props.authority.court && !props.authority.region)
 const isEditMode = ref<boolean>(isEmpty.value)
 
@@ -31,7 +31,7 @@ const onExpandAccordion = () => {
 }
 
 const onClickSave = () => {
-  emit('updateAuthority', {...props.authority, court: court.value, region: region.value})
+  emit('updateAuthority', { ...props.authority, court: court.value, region: region.value })
   toggleEditMode()
 }
 
@@ -52,13 +52,19 @@ const onClickDelete = () => {
 }
 
 const label = computed(() =>
-  [props.authority.region?.label, props.authority.court?.label].filter(Boolean).join(', ').toString()
+  [props.authority.region?.label, props.authority.court?.label]
+    .filter(Boolean)
+    .join(', ')
+    .toString(),
 )
 
-watch(() => props.authority, (newVal) => {
-  court.value = { ...newVal?.court } as Court
-  region.value = { ...newVal?.region } as AuthorityRegion
-})
+watch(
+  () => props.authority,
+  (newVal) => {
+    court.value = { ...newVal?.court } as Court
+    region.value = { ...newVal?.region } as AuthorityRegion
+  },
+)
 </script>
 
 <template>

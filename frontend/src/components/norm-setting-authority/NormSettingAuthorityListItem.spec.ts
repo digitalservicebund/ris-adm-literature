@@ -7,20 +7,20 @@ import { nextTick } from 'vue'
 
 const mockAuthority: NormSettingAuthority = {
   id: 'id',
-  court: {label: 'court1'},
-  region: {label: 'DEU'},
+  court: { label: 'court1' },
+  region: { label: 'DEU' },
 }
 
 function renderComponent(authority: NormSettingAuthority) {
-    const user = userEvent.setup()
-  
-    return {
-      user,
-      ...render(NormSettingAuthorityListItem, {
-        props: { authority }},
-      ),
-    }
+  const user = userEvent.setup()
+
+  return {
+    user,
+    ...render(NormSettingAuthorityListItem, {
+      props: { authority },
+    }),
   }
+}
 
 describe('NormSettingAuthorityListItem', () => {
   it('renders norm setting authority label', async () => {
@@ -39,7 +39,7 @@ describe('NormSettingAuthorityListItem', () => {
     // then
     expect(screen.queryByLabelText('Normgeber Editieren')).not.toBeInTheDocument()
     expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', {name: 'Normgeber'})).toHaveValue('court1')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('court1')
   })
 
   it('leaves edit mode when clicking save/cancel', async () => {
@@ -60,6 +60,20 @@ describe('NormSettingAuthorityListItem', () => {
     expect(screen.getByText('DEU, court1')).toBeInTheDocument()
   })
 
+  it('should remove empty authority item from list when clicking cancel', async () => {
+    const { user, emitted } = renderComponent({
+      id: 'id',
+      court: undefined,
+      region: undefined,
+    })
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
+
+    // then
+    expect(emitted('removeAuthority')).toBeTruthy()
+  })
+
   it('updates court and region when authority prop changes', async () => {
     const { rerender } = renderComponent(mockAuthority)
 
@@ -67,8 +81,8 @@ describe('NormSettingAuthorityListItem', () => {
     await rerender({
       authority: {
         court: { label: 'Bundesverfassungsgericht' },
-        region: { label: 'Karlsruhe' }
-      }
+        region: { label: 'Karlsruhe' },
+      },
     })
     await nextTick()
 

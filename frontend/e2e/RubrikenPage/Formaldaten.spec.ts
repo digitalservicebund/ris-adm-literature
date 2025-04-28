@@ -104,10 +104,11 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const normgeberElement = page.getByText('Normgeber')
-      await expect(normgeberElement).toHaveCount(1)
+      await expect(page.getByRole('heading', { level: 2, name: 'Normgeber' })).toBeVisible()
 
       // when
+      await page.getByRole('button', { name: 'Normgeber hinzufügen', exact: true }).click()
+      const normgeberElement = page.getByRole('textbox', { name: 'Normgeber' })
       await normgeberElement.fill('AG')
       await expect(page.getByText('AG Aachen')).toHaveCount(1)
       await page.getByText('AG Aachen').click()
@@ -115,10 +116,11 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(normgeberElement).toHaveValue('AG Aachen')
 
       // when
+      await page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }).click()
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
-      await expect(normgeberElement).toHaveValue('AG Aachen')
+      await expect(page.getByRole('listitem').first()).toHaveText('AG Aachen')
     },
   )
 

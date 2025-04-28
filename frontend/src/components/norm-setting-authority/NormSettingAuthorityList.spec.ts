@@ -1,43 +1,45 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
-import { describe, expect, it} from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { type NormSettingAuthority } from '@/domain/normSettingAuthority'
 import NormSettingAuthorityList from './NormSettingAuthorityList.vue'
 import { createTestingPinia } from '@pinia/testing'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 
-const mockAuthorities: NormSettingAuthority[] = [{
-  id: 'id',
-  court: {label: 'court1'},
-  region: {label: 'DEU'},
-}]
+const mockAuthorities: NormSettingAuthority[] = [
+  {
+    id: 'id',
+    court: { label: 'court1' },
+    region: { label: 'DEU' },
+  },
+]
 
 function renderComponent(authorities?: NormSettingAuthority[]) {
-    const user = userEvent.setup()
-  
-    return {
-      user,
-      ...render(NormSettingAuthorityList, {
-        global: {
-          plugins: [
-            [
-              createTestingPinia({
-                initialState: {
-                  docunitStore: {
-                    documentUnit: <DocumentUnit>{
-                      documentNumber: '1234567891234',
-                      normSettingAuthorities: authorities ?? [],
-                    },
+  const user = userEvent.setup()
+
+  return {
+    user,
+    ...render(NormSettingAuthorityList, {
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: <DocumentUnit>{
+                    documentNumber: '1234567891234',
+                    normSettingAuthorities: authorities ?? [],
                   },
                 },
-              }),
-            ],
+              },
+            }),
           ],
-        },
-      }),
-    }
+        ],
+      },
+    }),
   }
+}
 
 describe('NormSettingAuthorityList', () => {
   it('render empty norm setting authorities list', async () => {
@@ -78,9 +80,11 @@ describe('NormSettingAuthorityList', () => {
 
     // when
     await user.click(screen.getByLabelText('Normgeber Editieren'))
-    await user.type(screen.getByRole('textbox', {name: 'Normgeber'}), 'Be')
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Be')
     await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[1]).toHaveTextContent('Berufsgericht für Architekten Bremen')
+      expect(screen.getAllByLabelText('dropdown-option')[1]).toHaveTextContent(
+        'Berufsgericht für Architekten Bremen',
+      )
     })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     await user.click(dropdownItems[1])
@@ -90,7 +94,9 @@ describe('NormSettingAuthorityList', () => {
     // leave edit mode and show previous entry
     expect(screen.getByText('DEU, court1')).toBeInTheDocument()
     // store is not updated
-    expect(store.documentUnit?.normSettingAuthorities?.[0].court?.label).not.toBe('Berufsgericht für Architekten Bremen')
+    expect(store.documentUnit?.normSettingAuthorities?.[0].court?.label).not.toBe(
+      'Berufsgericht für Architekten Bremen',
+    )
   })
 
   it('should update the existing authority on clicking update', async () => {
@@ -102,10 +108,10 @@ describe('NormSettingAuthorityList', () => {
 
     // then
     expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', {name: 'Normgeber'})).toHaveValue('court1')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('court1')
 
     // when
-    await user.type(screen.getByRole('textbox', {name: 'Normgeber'}), 'AG')
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'AG')
     await waitFor(() => {
       expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('AG Aachen')
     })

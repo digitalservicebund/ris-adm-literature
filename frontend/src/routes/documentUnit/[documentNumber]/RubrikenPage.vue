@@ -16,7 +16,7 @@ import ActiveReferences from '@/components/ActiveReferences.vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import CourtSection from '@/components/norm-setting-authority/NormSettingAuthorityList.vue'
+import NormSettingAuthorityList from '@/components/norm-setting-authority/NormSettingAuthorityList.vue'
 
 const store = useDocumentUnitStore()
 
@@ -127,7 +127,7 @@ const dokumenttypZusatz = computed({
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <CourtSection />
+          <NormSettingAuthorityList />
         </div>
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
