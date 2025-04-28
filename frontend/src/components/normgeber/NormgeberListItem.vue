@@ -6,20 +6,20 @@ import Button from 'primevue/button'
 import InputField from '../input/InputField.vue'
 import ComboboxInput from '../ComboboxInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService'
-import type { AuthorityRegion, NormSettingAuthority } from '@/domain/normSettingAuthority'
-import type { Court } from '@/domain/court'
+import { type NormgeberRegion, type Normgeber, type Organ, OrganType } from '@/domain/normgeber'
+import InputText from 'primevue/inputtext'
 
 const props = defineProps<{
-  authority: NormSettingAuthority
+  normgeber: Normgeber
 }>()
 const emit = defineEmits<{
-  updateAuthority: [authority: NormSettingAuthority]
-  removeAuthority: [id: string]
+  updateNormgeber: [normgeber: Normgeber]
+  removeNormgeber: [id: string]
 }>()
 
-const court = ref<Court>({ ...props.authority.court } as Court)
-const region = ref<AuthorityRegion>({ ...props.authority.region } as AuthorityRegion)
-const isEmpty = computed(() => !props.authority.court && !props.authority.region)
+const organ = ref<Organ>({ ...props.normgeber.organ } as Organ)
+const region = ref<NormgeberRegion>({ ...props.normgeber.region } as NormgeberRegion)
+const isEmpty = computed(() => !props.normgeber.organ && !props.normgeber.region)
 const isEditMode = ref<boolean>(isEmpty.value)
 
 const toggleEditMode = () => {
@@ -31,38 +31,38 @@ const onExpandAccordion = () => {
 }
 
 const onClickSave = () => {
-  emit('updateAuthority', { ...props.authority, court: court.value, region: region.value })
+  emit('updateNormgeber', { ...props.normgeber, organ: organ.value, region: region.value })
   toggleEditMode()
 }
 
 const onClickCancel = () => {
   // Reset local state
-  court.value = props.authority.court as Court
-  region.value = props.authority.region as AuthorityRegion
-  // Remove authority if empty
+  organ.value = props.normgeber.organ as Organ
+  region.value = props.normgeber.region as NormgeberRegion
+  // Remove normgeber if empty
   if (isEmpty.value) {
-    emit('removeAuthority', props.authority.id)
+    emit('removeNormgeber', props.normgeber.id)
   }
   toggleEditMode()
 }
 
 const onClickDelete = () => {
-  emit('removeAuthority', props.authority.id)
+  emit('removeNormgeber', props.normgeber.id)
   toggleEditMode()
 }
 
 const label = computed(() =>
-  [props.authority.region?.label, props.authority.court?.label]
+  [props.normgeber.region?.label, props.normgeber.organ?.label]
     .filter(Boolean)
     .join(', ')
     .toString(),
 )
 
 watch(
-  () => props.authority,
+  () => props.normgeber,
   (newVal) => {
-    court.value = { ...newVal?.court } as Court
-    region.value = { ...newVal?.region } as AuthorityRegion
+    organ.value = { ...newVal?.organ } as Organ
+    region.value = { ...newVal?.region } as NormgeberRegion
   },
 )
 </script>
@@ -74,22 +74,33 @@ watch(
         <InputField id="court" label="Normgeber *" class="w-full">
           <ComboboxInput
             id="court"
-            v-model="court"
+            v-model="organ"
             aria-label="Normgeber"
             clear-on-choosing-item
             :has-error="false"
-            :item-service="ComboboxItemService.getCourts"
+            :item-service="ComboboxItemService.getOrgans"
           ></ComboboxInput>
         </InputField>
         <InputField id="region" label="Region *" class="w-full">
           <ComboboxInput
+            v-if="organ?.type === OrganType.Institution"
             id="region"
             v-model="region"
-            aria-label="Region"
-            clear-on-choosing-item
             :has-error="false"
             :item-service="ComboboxItemService.getRegions"
+            aria-label="Region"
+            clear-on-choosing-item
           ></ComboboxInput>
+          <InputText
+            v-else
+            id="region"
+            :value="region.label"
+            placeholder="Keine Region zugeordnet"
+            aria-label="Region"
+            size="small"
+            fluid
+            readonly
+          />
         </InputField>
       </div>
       <div class="flex w-full gap-16 mt-16">

@@ -3,7 +3,7 @@ import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
-import type { NormSettingAuthority } from './normSettingAuthority'
+import type { Normgeber } from './normgeber'
 import type { Court } from './court'
 
 export type DocumentType = {
@@ -33,5 +33,5 @@ export interface DocumentUnit {
   activeReferences?: ActiveReference[]
   normReferences?: NormReference[]
   note: string
-  normSettingAuthorities?: NormSettingAuthority[]
+  normgebers?: Normgeber[]
 }

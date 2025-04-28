@@ -11,7 +11,7 @@ import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
-import type { AuthorityRegion } from '@/domain/normSettingAuthority'
+import { OrganType, type NormgeberRegion, type Organ } from '@/domain/normgeber'
 import type { Court } from '@/domain/court'
 
 enum Endpoint {
@@ -106,6 +106,7 @@ function fetchFromEndpoint(
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getOrgans: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getRegions: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -151,17 +152,51 @@ const service: ComboboxItemService = {
     }
     return result
   },
+  getOrgans: (filter: Ref<string | undefined>) => {
+    const senatVw = {
+      label: 'Senatsverwaltung für Integration, Arbeit und Soziales',
+      type: OrganType.Institution,
+    } as Organ
+    const senatVwItem: ComboboxItem = {
+      label: senatVw.label,
+      value: senatVw,
+    }
+    const bkk = {
+      label: 'Landesverbände der Betriebskrankenkassen',
+      type: OrganType.LegalEntity,
+    } as Organ
+    const bkkItem: ComboboxItem = {
+      label: bkk.label,
+      value: bkk,
+    }
+    let items = ref([senatVwItem, bkkItem])
+    if (filter?.value?.startsWith('s')) {
+      items = ref([senatVwItem])
+    } else if (filter?.value?.startsWith('b')) {
+      items = ref([bkkItem])
+    }
+    const execute = async () => {
+      return service.getOrgans(filter)
+    }
+    const result: ComboboxResult<ComboboxItem[]> = {
+      data: items,
+      execute: execute,
+      canAbort: computed(() => false),
+      abort: () => {},
+    }
+    return result
+  },
   getRegions: (filter: Ref<string | undefined>) => {
     const deu = {
       label: 'DEU',
-    } as AuthorityRegion
+    } as NormgeberRegion
     const deuItem: ComboboxItem = {
       label: deu.label,
       value: deu,
     }
     const eu = {
       label: 'EU',
-    } as AuthorityRegion
+    } as NormgeberRegion
     const euItem: ComboboxItem = {
       label: eu.label,
       value: eu,

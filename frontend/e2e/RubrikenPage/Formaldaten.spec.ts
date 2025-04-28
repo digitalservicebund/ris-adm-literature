@@ -109,18 +109,24 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // when
       await page.getByRole('button', { name: 'Normgeber hinzufügen', exact: true }).click()
       const normgeberElement = page.getByRole('textbox', { name: 'Normgeber' })
-      await normgeberElement.fill('AG')
-      await expect(page.getByText('AG Aachen')).toHaveCount(1)
-      await page.getByText('AG Aachen').click()
+      await normgeberElement.fill('Se')
+      await expect(
+        page.getByText('Senatsverwaltung für Integration, Arbeit und Soziales'),
+      ).toHaveCount(1)
+      await page.getByText('Senatsverwaltung für Integration, Arbeit und Soziales').click()
       // then
-      await expect(normgeberElement).toHaveValue('AG Aachen')
+      await expect(normgeberElement).toHaveValue(
+        'Senatsverwaltung für Integration, Arbeit und Soziales',
+      )
 
       // when
       await page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }).click()
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
-      await expect(page.getByRole('listitem').first()).toHaveText('AG Aachen')
+      await expect(page.getByRole('listitem').first()).toHaveText(
+        'Senatsverwaltung für Integration, Arbeit und Soziales',
+      )
     },
   )
 
