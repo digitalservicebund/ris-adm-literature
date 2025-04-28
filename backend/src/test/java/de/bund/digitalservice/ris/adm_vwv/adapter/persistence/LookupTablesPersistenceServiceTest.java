@@ -26,7 +26,7 @@ class LookupTablesPersistenceServiceTest {
   private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Mock
-  private DocumentTypesRepository documentTypesRepository;
+  private DocumentTypeRepository documentTypeRepository;
 
   @Mock
   private FieldOfLawRepository fieldOfLawRepository;
@@ -40,7 +40,7 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
-    given(documentTypesRepository.findAll(any(Pageable.class))).willReturn(
+    given(documentTypeRepository.findAll(any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(documentTypeEntity))
     );
 
@@ -60,7 +60,7 @@ class LookupTablesPersistenceServiceTest {
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
     given(
-      documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+      documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
         eq("something"),
         eq("something"),
         any(Pageable.class)

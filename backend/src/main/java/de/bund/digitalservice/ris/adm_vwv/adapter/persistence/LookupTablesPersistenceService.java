@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LookupTablesPersistenceService implements LookupTablesPersistencePort {
 
-  private final DocumentTypesRepository documentTypesRepository;
+  private final DocumentTypeRepository documentTypeRepository;
   private final FieldOfLawRepository fieldOfLawRepository;
   private final LegalPeriodicalsRepository legalPeriodicalsRepository;
+  private final RegionRepository regionRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -33,8 +35,8 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
     Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchTerm)
-      ? documentTypesRepository.findAll(pageable)
-      : documentTypesRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+      ? documentTypeRepository.findAll(pageable)
+      : documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
         searchTerm,
         searchTerm,
         pageable
@@ -138,6 +140,23 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         legalPeriodicalEntity.getSubtitle(),
         legalPeriodicalEntity.getCitationStyle()
       )
+    );
+  }
+
+  @Override
+  public Page<Region> findRegions(@NotNull RegionQuery query) {
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    Page<RegionEntity> regions = StringUtils.isBlank(searchTerm)
+      ? regionRepository.findAll(pageable)
+      : regionRepository.findByCodeContainingIgnoreCase(searchTerm, pageable);
+
+    return regions.map(regionEntity ->
+      new Region(regionEntity.getCode(), regionEntity.getLongText())
     );
   }
 

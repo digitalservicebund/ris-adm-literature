@@ -18,4 +18,6 @@ public interface LookupTablesPort {
   Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query);
 
   Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query);
+
+  Page<Region> findRegions(@Nonnull RegionQuery regionQuery);
 }
