@@ -1,5 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+/**
+ * Type of institution.
+ */
 public enum InstitutionType {
   /**
    * Institution, in German "organ".
