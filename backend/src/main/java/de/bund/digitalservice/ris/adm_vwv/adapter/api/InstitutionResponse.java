@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * Response with Institutions and pagination information
+ * Response with institutions and pagination information
  *
  * @param institutions List of institutions
  * @param paginatedInstitutions List of paginated institutions

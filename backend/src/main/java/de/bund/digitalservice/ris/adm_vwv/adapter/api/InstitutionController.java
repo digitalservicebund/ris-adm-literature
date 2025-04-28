@@ -28,7 +28,7 @@ public class InstitutionController {
    * @param sortDirection Sort ascending or descending?
    * @param usePagination Search with pagination?
    *
-   * @return Response object with list of Institutions and pagination information
+   * @return Response object with list of institutions and pagination information
    */
   @GetMapping("api/lookup-tables/institutions")
   public ResponseEntity<InstitutionResponse> getInstitutions(

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * Response with Regions and pagination information
+ * Response with regions and pagination information
  *
  * @param regions List of regions
  * @param paginatedRegions List of paginated regions

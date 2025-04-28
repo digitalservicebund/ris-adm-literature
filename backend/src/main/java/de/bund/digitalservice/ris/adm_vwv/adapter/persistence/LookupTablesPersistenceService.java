@@ -177,7 +177,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new Institution(
         institutionEntity.getName(),
         institutionEntity.getOfficialName(),
-        institutionEntity.getType(),
+        mapInstitutionType(institutionEntity.getType()),
         institutionEntity
           .getRegions()
           .stream()
@@ -185,6 +185,14 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
           .collect(Collectors.toSet())
       )
     );
+  }
+
+  private InstitutionType mapInstitutionType(String institutionType) {
+    return switch (institutionType) {
+      case "jurpn" -> InstitutionType.LEGAL_ENTITY;
+      case "organ" -> InstitutionType.INSTITUTION;
+      default -> null;
+    };
   }
 
   private List<String> splitSearchTerms(String searchStr) {

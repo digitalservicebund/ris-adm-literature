@@ -8,11 +8,11 @@ import java.util.Set;
  *
  * @param name The name of the institution
  * @param officialName The full / official name of the institution can be NULL
- * @param type Either "jurpn" for Juristische Personen and "organ" for Official Institutions
+ * @param type The type of institution
  */
 public record Institution(
   @Nonnull String name,
   String officialName,
-  String type,
+  InstitutionType type,
   Set<Region> regions
 ) {}

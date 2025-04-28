@@ -28,7 +28,7 @@ public class RegionController {
    * @param sortDirection Sort ascending or descending?
    * @param usePagination Search with pagination?
    *
-   * @return Response object with list of Regions and pagination information
+   * @return Response object with list of regions and pagination information
    */
   @GetMapping("api/lookup-tables/regions")
   public ResponseEntity<RegionResponse> getRegions(
