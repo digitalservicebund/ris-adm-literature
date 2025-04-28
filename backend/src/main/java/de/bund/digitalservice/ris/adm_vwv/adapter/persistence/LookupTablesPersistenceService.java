@@ -2,12 +2,12 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +24,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final FieldOfLawRepository fieldOfLawRepository;
   private final LegalPeriodicalsRepository legalPeriodicalsRepository;
   private final RegionRepository regionRepository;
+  private final InstitutionRepository institutionRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -144,7 +145,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Override
-  public Page<Region> findRegions(@NotNull RegionQuery query) {
+  public Page<Region> findRegions(@Nonnull RegionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
     String searchTerm = query.searchTerm();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
@@ -157,6 +158,32 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
     return regions.map(regionEntity ->
       new Region(regionEntity.getCode(), regionEntity.getLongText())
+    );
+  }
+
+  @Override
+  public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    Page<InstitutionEntity> institutions = StringUtils.isBlank(searchTerm)
+      ? institutionRepository.findAll(pageable)
+      : institutionRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+
+    return institutions.map(institutionEntity ->
+      new Institution(
+        institutionEntity.getName(),
+        institutionEntity.getOfficialName(),
+        institutionEntity.getType(),
+        institutionEntity
+          .getRegions()
+          .stream()
+          .map(regionEntity -> new Region(regionEntity.getCode(), regionEntity.getLongText()))
+          .collect(Collectors.toSet())
+      )
     );
   }
 

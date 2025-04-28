@@ -50,4 +50,9 @@ public class LookupTablesService implements LookupTablesPort {
   public Page<Region> findRegions(@Nonnull RegionQuery regionQuery) {
     return lookupTablesPersistencePort.findRegions(regionQuery);
   }
+
+  @Override
+  public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
+    return lookupTablesPersistencePort.findInstitutions(query);
+  }
 }
