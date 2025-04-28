@@ -7,7 +7,7 @@ import InputField from '../input/InputField.vue'
 import ComboboxInput from '../ComboboxInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService'
 import type { AuthorityRegion, NormSettingAuthority } from '@/domain/normSettingAuthority'
-import type { Court } from '@/domain/documentUnit'
+import type { Court } from '@/domain/court'
 
 const props = defineProps<{
   authority: NormSettingAuthority

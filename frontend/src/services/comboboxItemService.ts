@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { API_PREFIX } from './httpClient'
 import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
-import type { Court, DocumentType } from '@/domain/documentUnit'
+import type { DocumentType } from '@/domain/documentUnit'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { CitationType } from '@/domain/citationType'
 import { computed, ref } from 'vue'
@@ -12,6 +12,7 @@ import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.t
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
 import type { AuthorityRegion } from '@/domain/normSettingAuthority'
+import type { Court } from '@/domain/court'
 
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',

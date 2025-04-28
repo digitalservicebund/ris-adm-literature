@@ -1,4 +1,4 @@
-import type { Court } from './documentUnit'
+import type { Court } from './court'
 
 export interface AuthorityRegion {
   label: string

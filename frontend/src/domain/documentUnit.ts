@@ -1,23 +1,15 @@
-import type DocumentationOffice from './documentationOffice'
 import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
 import type { NormSettingAuthority } from './normSettingAuthority'
+import type { Court } from './court'
 
 export type DocumentType = {
   uuid?: string
   abbreviation: string
   name: string
-}
-
-export type Court = {
-  type?: string
-  location?: string
-  label: string
-  revoked?: string
-  responsibleDocOffice?: DocumentationOffice
 }
 
 export interface DocumentUnit {
