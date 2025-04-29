@@ -17,7 +17,7 @@ export interface InstitutionApiResponse {
   name: string
   officialName?: string
   type: OrganType
-  regions: Region[]
+  regions: RegionApiResponse[]
 }
 
 export interface Institution {

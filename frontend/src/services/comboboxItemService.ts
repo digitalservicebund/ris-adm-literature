@@ -63,7 +63,9 @@ function formatDropdownItems(
           label: item.name,
           officialName: item.officialName,
           type: item.type,
-          regions: item.regions,
+          regions: item.regions.map((r) => {
+            return { label: r.code, longText: r.longText }
+          }),
         },
         additionalInformation: item.officialName,
       }))

@@ -96,6 +96,25 @@ watch(
             clear-on-choosing-item
           ></ComboboxInput>
           <InputText
+            v-else-if="
+              institution?.type === OrganType.LegalEntity &&
+              institution?.regions &&
+              institution?.regions?.length > 0
+            "
+            id="region"
+            :value="
+              institution.regions
+                .map((r) => {
+                  return r.label
+                })
+                .join(', ')
+            "
+            aria-label="Region"
+            size="small"
+            fluid
+            readonly
+          />
+          <InputText
             v-else
             id="region"
             :value="region.label"
