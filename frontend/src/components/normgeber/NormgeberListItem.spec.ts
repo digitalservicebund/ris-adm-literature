@@ -177,8 +177,6 @@ describe('NormgeberListItem', () => {
     // when
     await user.click(screen.getByLabelText('Normgeber Editieren'))
 
-    screen.debug()
-
     // then
     expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()
     expect(screen.getByLabelText('Region *')).toBeInTheDocument()
