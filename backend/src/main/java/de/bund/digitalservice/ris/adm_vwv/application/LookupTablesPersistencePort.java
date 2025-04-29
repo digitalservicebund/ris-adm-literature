@@ -19,4 +19,8 @@ public interface LookupTablesPersistencePort {
   Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query);
 
   Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query);
+
+  Page<Region> findRegions(@Nonnull RegionQuery regionQuery);
+
+  Page<Institution> findInstitutions(@Nonnull InstitutionQuery query);
 }

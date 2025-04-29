@@ -221,4 +221,69 @@ INSERT INTO legal_periodical (id, abbreviation, title, subtitle, citation_style,
 (gen_random_uuid(), 'BKK', 'Die Betriebskrankenkasse', 'Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen', '1969, 138-140; BKK 2007, Sonderbeilage, 1-5', '9999'),
 (gen_random_uuid(), 'ABc', 'Die Beispieler', 'Zeitschrift des Beispiels', 'ab ab ab ab abc', '999');
 
+CREATE TABLE
+    IF NOT EXISTS
+    region
+(
+    id   UUID NOT NULL
+        CONSTRAINT region_pkey PRIMARY KEY,
+    code VARCHAR(255)
+        CONSTRAINT region_code_uc UNIQUE,
+    long_text TEXT,
+    applicability BOOLEAN
+);
+
+CREATE TABLE
+    IF NOT EXISTS
+    institution
+(
+    id              UUID         NOT NULL
+        CONSTRAINT institution_pkey PRIMARY KEY,
+    name            TEXT         NOT NULL,
+    official_name   TEXT,
+    foreign_country VARCHAR(10),
+    juris_id        VARCHAR(255) NOT NULL,
+    type            VARCHAR(10),
+    CONSTRAINT institution_juris_id_type_uc UNIQUE (juris_id, type)
+);
+
+CREATE INDEX
+    IF NOT EXISTS
+    institution_name_idx ON
+    institution (name);
+
+CREATE TABLE
+    IF NOT EXISTS
+    institution_region
+(
+    institution_id UUID NOT NULL
+        CONSTRAINT institution_fkey REFERENCES institution,
+    region_id      UUID NOT NULL
+        CONSTRAINT region_fkey REFERENCES region,
+    CONSTRAINT institution_region_pkey PRIMARY KEY (
+                                                    institution_id,
+                                                    region_id
+        )
+);
+
+CREATE INDEX
+    IF NOT EXISTS
+    institution_region_idx ON
+    institution_region (region_id);
+
+INSERT INTO region (id, code) VALUES
+           ('14af4110-fa58-4753-a949-6b6ba2dbcfe1', 'AA'),
+           ('01c63c40-74b4-486a-8914-083e7f03baef', 'BB'),
+           ('0e2b9b4d-4a8f-4124-a927-14eded513bee', 'CC');
+INSERT INTO institution (id, name, official_name, foreign_country, juris_id, type) VALUES
+           (gen_random_uuid(), 'Erstes Organ', 'Organ Eins', NULL, '1', 'organ'),
+           (gen_random_uuid(), 'Zweites Organ', NULL, NULL, '2', 'organ'),
+           ('bddafc08-4031-4960-9aad-0868d48323f7', 'Erste Jurpn', 'Jurpn Eins', 'Nein', '1', 'jurpn'),
+           (gen_random_uuid(), 'Zweite Jurpn', NULL, 'Ja', '2', 'jurpn');
+INSERT INTO institution_region (institution_id, region_id) VALUES
+        ('bddafc08-4031-4960-9aad-0868d48323f7', '14af4110-fa58-4753-a949-6b6ba2dbcfe1'),
+        ('bddafc08-4031-4960-9aad-0868d48323f7', '01c63c40-74b4-486a-8914-083e7f03baef');
+
+
+
 set role test;

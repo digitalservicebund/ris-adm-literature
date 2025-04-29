@@ -1,29 +1,31 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Data;
 import org.springframework.data.annotation.Immutable;
 
 /**
- * Document type JPA entity.
+ * Region JPA entity.
  * <p>
  *   This entity maps a database view. The view itself uses database schema {@code lookup_tables}
  *   (but same database) which is not owned by {@code ris-adm-vwv}.
  * </p>
  *
- * @see DocumentTypeRepository
+ * @see RegionRepository
  */
 @Entity
 @Data
-@Table(name = "document_type_view")
+@Table(name = "region_view")
 @Immutable
-public class DocumentTypeEntity {
+public class RegionEntity {
 
   @Id
   private UUID id;
 
-  private String abbreviation;
+  private String code;
 
-  private String name;
+  private String longText;
 }
