@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, it, beforeAll, afterAll } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
-import { OrganType, type Normgeber } from '@/domain/normgeber'
+import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import NormgeberListItem from './NormgeberListItem.vue'
 import { nextTick } from 'vue'
 
@@ -77,17 +77,17 @@ const server = setupServer(
 const mockInstitution: Normgeber = {
   institution: {
     label: 'court1',
-    type: OrganType.Institution,
+    type: InstitutionType.Institution,
   },
-  region: { label: 'DEU' },
+  regions: { label: 'DEU' },
 }
 
 const mockLegalEntity: Normgeber = {
   institution: {
     label: 'legalEntity',
-    type: OrganType.LegalEntity,
+    type: InstitutionType.LegalEntity,
   },
-  region: { label: 'DEU' },
+  regions: { label: 'DEU' },
 }
 
 function renderComponent(normgeber: Normgeber) {
@@ -144,7 +144,7 @@ describe('NormgeberListItem', () => {
   it('should remove empty normgeber item from list when clicking cancel', async () => {
     const { user, emitted } = renderComponent({
       institution: undefined,
-      region: undefined,
+      regions: undefined,
     })
 
     // when
@@ -160,7 +160,7 @@ describe('NormgeberListItem', () => {
     // when updating props
     await rerender({
       normgeber: {
-        organ: { label: 'Bundesverfassungsgericht', type: OrganType.Institution },
+        organ: { label: 'Bundesverfassungsgericht', type: InstitutionType.Institution },
         region: { label: 'Karlsruhe' },
       },
     })
@@ -170,12 +170,14 @@ describe('NormgeberListItem', () => {
     expect(screen.getByText('Karlsruhe, Bundesverfassungsgericht')).toBeInTheDocument()
   })
 
-  it('should render a read-only region for legal entity', async () => {
+  it.only('should render a read-only region for legal entity', async () => {
     const { user } = renderComponent(mockLegalEntity)
     expect(screen.getByText('DEU, legalEntity')).toBeInTheDocument()
 
     // when
     await user.click(screen.getByLabelText('Normgeber Editieren'))
+
+    screen.debug()
 
     // then
     expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()

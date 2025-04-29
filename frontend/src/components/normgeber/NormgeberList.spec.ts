@@ -1,7 +1,7 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { describe, expect, it, beforeAll, afterAll } from 'vitest'
-import { OrganType, type Normgeber } from '@/domain/normgeber'
+import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import NormgeberList from './NormgeberList.vue'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
@@ -78,8 +78,8 @@ const server = setupServer(
 
 const mockNormgebers: Normgeber[] = [
   {
-    institution: { label: 'new institution', type: OrganType.Institution },
-    region: { label: 'DEU' },
+    institution: { label: 'new institution', type: InstitutionType.Institution },
+    regions: { label: 'DEU' },
   },
 ]
 
@@ -194,5 +194,22 @@ describe('NormgeberList', () => {
     // then
     expect(screen.queryByText('DEU, new institution')).not.toBeInTheDocument()
     expect(store.documentUnit?.normgebers).toHaveLength(0)
+  })
+
+  it('When selecting a legal entity that has regions, then regions are joined comma separated in a read only input', async () => {
+    const { user } = renderComponent()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Normgeber hinzufügen' }))
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erste')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erste Jurpn')
+    })
+    const dropdownItems = screen.getAllByLabelText('dropdown-option')
+    await user.click(dropdownItems[0])
+
+    // then
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('BB, AA')
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('readonly')
   })
 })

@@ -10,22 +10,46 @@ const store = useDocumentUnitStore()
 
 const normgebers = computed({
   get: () => store.documentUnit!.normgebers ?? [],
-  set: (newValue) => (store.documentUnit!.normgebers = newValue),
+  set: (newValue) => {
+    console.log(newValue)
+    store.documentUnit!.normgebers = newValue
+  },
 })
 
 const onClickAddNormgeber = () => {
   normgebers.value = [...normgebers.value, createEmptyNormgeber()]
 }
 
-const onUpdateNormgeber = (updated: Normgeber | undefined) => {
-  if (updated) {
-    const index = normgebers.value.findIndex((a) => a.id === updated.id)
-    normgebers.value[index] = updated
+const onAddNormgeber = (normgeber: Normgeber | undefined) => {
+  if (
+    normgeber &&
+    normgeber.institution &&
+    // only add if not yet existing
+    !normgebers.value.find(
+      (n) => n.institution && n.institution.label === normgeber.institution!.label,
+    )
+  ) {
+    const index = normgebers.value.findIndex((normgeber) => !normgeber.institution)
+    normgebers.value[index] = normgeber
   }
 }
 
-const onRemoveNormgeber = (id: string) => {
-  normgebers.value = normgebers.value.filter((a) => a.id !== id)
+const onUpdateNormgeber = (normgeber: Normgeber | undefined) => {
+  console.log(normgeber)
+  if (normgeber) {
+    const index = normgebers.value.findIndex(
+      (n) => n.institution?.label === normgeber.institution?.label,
+    )
+    normgebers.value[index] = normgeber
+  }
+}
+
+const onRemoveNormgeber = (label: string) => {
+  normgebers.value = normgebers.value.filter((a) => a.institution?.label !== label)
+}
+
+const onRemoveEmptyNormgeber = () => {
+  normgebers.value = normgebers.value.filter((a) => a.institution && a.institution.label)
 }
 
 const buttonLabel = computed(() =>
@@ -39,13 +63,15 @@ const buttonLabel = computed(() =>
     <ol v-if="normgebers.length > 0">
       <li
         class="border-b-1 border-blue-300 py-16"
-        v-for="(normgeber, index) in normgebers"
-        :key="normgeber.id"
+        v-for="normgeber in normgebers"
+        :key="normgeber.institution?.label"
       >
         <NormgeberListItem
-          :normgeber="normgebers[index]"
+          :normgeber="normgeber"
+          @add-normgeber="onAddNormgeber"
           @update-normgeber="onUpdateNormgeber"
           @remove-normgeber="onRemoveNormgeber"
+          @remove-empty-normgeber="onRemoveEmptyNormgeber"
         />
       </li>
     </ol>

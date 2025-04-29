@@ -6,21 +6,25 @@ import Button from 'primevue/button'
 import InputField from '../input/InputField.vue'
 import ComboboxInput from '../ComboboxInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService'
-import { type Region, type Normgeber, type Institution, OrganType } from '@/domain/normgeber'
+import { type Region, type Normgeber, type Institution, InstitutionType } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 
 const props = defineProps<{
   normgeber: Normgeber
 }>()
 const emit = defineEmits<{
+  addNormgeber: [normgeber: Normgeber]
   updateNormgeber: [normgeber: Normgeber]
-  removeNormgeber: [id: string]
+  removeNormgeber: [label: string]
+  removeEmptyNormgeber: [void]
 }>()
 
-const institution = ref<Institution>({ ...props.normgeber.institution } as Institution)
-const region = ref<Region>({ ...props.normgeber.region } as Region)
-const isEmpty = computed(() => !props.normgeber.institution && !props.normgeber.region)
+const institution = ref<Institution>(props.normgeber.institution as Institution)
+const regions = ref<Region[]>(props.normgeber.regions as Region[])
+const selectedRegion = ref<Region>({} as Region)
+const isEmpty = computed(() => !props.normgeber.institution && !props.normgeber.regions)
 const isEditMode = ref<boolean>(isEmpty.value)
+const isNewItem = ref<boolean>(isEmpty.value)
 
 const toggleEditMode = () => {
   isEditMode.value = !isEditMode.value
@@ -31,44 +35,68 @@ const onExpandAccordion = () => {
 }
 
 const onClickSave = () => {
-  emit('updateNormgeber', {
-    ...props.normgeber,
+  const normgeber = {
     institution: institution.value,
-    region: region.value,
-  })
+    regions: regions.value,
+  } as Normgeber
+
+  // block when click save when both inputs are empty
+  if (isNewItem.value) emit('addNormgeber', normgeber)
+  else emit('updateNormgeber', normgeber)
+
   toggleEditMode()
 }
 
 const onClickCancel = () => {
   // Reset local state
   institution.value = props.normgeber.institution as Institution
-  region.value = props.normgeber.region as Region
+  regions.value = props.normgeber.regions as Region[]
   // Remove normgeber if empty
   if (isEmpty.value) {
-    emit('removeNormgeber', props.normgeber.id)
+    emit('removeEmptyNormgeber')
   }
   toggleEditMode()
 }
 
 const onClickDelete = () => {
-  emit('removeNormgeber', props.normgeber.id)
+  if (isEmpty.value) {
+    emit('removeEmptyNormgeber')
+  }
+  emit('removeNormgeber', props.normgeber.institution!.label)
   toggleEditMode()
 }
 
-const label = computed(() =>
-  [props.normgeber.region?.label, props.normgeber.institution?.label]
-    .filter(Boolean)
-    .join(', ')
-    .toString(),
-)
+const label = computed(() => {
+  let labelTmp = ''
+  console.log(regions.value)
+  if (regions.value && regions.value.length > 0)
+    labelTmp += regions.value.map((r) => r.label).join(' ')
+  if (institution.value) labelTmp += ', ' + institution.value.label
+  return labelTmp
+})
 
 watch(
   () => props.normgeber,
   (newVal) => {
-    institution.value = { ...newVal?.institution } as Institution
-    region.value = { ...newVal?.region } as Region
+    institution.value = newVal.institution as Institution
+    regions.value = newVal.regions as Region[]
   },
 )
+
+watch(institution, () => {
+  if (
+    institution.value &&
+    institution.value.type == InstitutionType.LegalEntity &&
+    institution.value.regions &&
+    institution.value.regions.length > 0
+  ) {
+    regions.value = institution.value.regions
+  }
+})
+
+watch(selectedRegion, (region) => {
+  regions.value = [region]
+})
 </script>
 
 <template>
@@ -86,18 +114,9 @@ watch(
           ></ComboboxInput>
         </InputField>
         <InputField id="region" label="Region *" class="w-full">
-          <ComboboxInput
-            v-if="institution?.type === OrganType.Institution"
-            id="region"
-            v-model="region"
-            :has-error="false"
-            :item-service="ComboboxItemService.getRegions"
-            aria-label="Region"
-            clear-on-choosing-item
-          ></ComboboxInput>
           <InputText
-            v-else-if="
-              institution?.type === OrganType.LegalEntity &&
+            v-if="
+              institution?.type === InstitutionType.LegalEntity &&
               institution?.regions &&
               institution?.regions?.length > 0
             "
@@ -114,16 +133,15 @@ watch(
             fluid
             readonly
           />
-          <InputText
+          <ComboboxInput
             v-else
             id="region"
-            :value="region.label"
-            placeholder="Keine Region zugeordnet"
+            v-model="selectedRegion"
+            :has-error="false"
+            :item-service="ComboboxItemService.getRegions"
             aria-label="Region"
-            size="small"
-            fluid
-            readonly
-          />
+            clear-on-choosing-item
+          ></ComboboxInput>
         </InputField>
       </div>
       <div class="flex w-full gap-16 mt-16">
