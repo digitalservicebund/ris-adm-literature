@@ -1,29 +1,40 @@
 export enum OrganType {
-  Institution = 'Institution',
-  LegalEntity = 'LegalEntity',
+  Institution = 'INSTITUTION',
+  LegalEntity = 'LEGAL_ENTITY',
 }
 
-export interface Organ {
-  id: string
+export interface RegionApiResponse {
+  code: string
+  longText?: string
+}
+
+export interface Region {
   label: string
+  longText?: string
+}
+
+export interface InstitutionApiResponse {
+  name: string
+  officialName?: string
   type: OrganType
+  regions: Region[]
 }
 
-export interface NormgeberRegion {
-  id: string
+export interface Institution {
   label: string
+  officialName?: string
+  type: OrganType
+  regions?: Region[]
 }
 
 export interface Normgeber {
-  id: string
-  organ?: Organ
-  region?: NormgeberRegion
+  institution?: Institution
+  region?: Region
 }
 
 export function createEmptyNormgeber(): Normgeber {
   return {
-    id: crypto.randomUUID(),
-    organ: undefined,
+    institution: undefined,
     region: undefined,
   }
 }

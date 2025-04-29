@@ -6,7 +6,7 @@ import Button from 'primevue/button'
 import InputField from '../input/InputField.vue'
 import ComboboxInput from '../ComboboxInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService'
-import { type NormgeberRegion, type Normgeber, type Organ, OrganType } from '@/domain/normgeber'
+import { type Region, type Normgeber, type Institution, OrganType } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 
 const props = defineProps<{
@@ -17,9 +17,9 @@ const emit = defineEmits<{
   removeNormgeber: [id: string]
 }>()
 
-const organ = ref<Organ>({ ...props.normgeber.organ } as Organ)
-const region = ref<NormgeberRegion>({ ...props.normgeber.region } as NormgeberRegion)
-const isEmpty = computed(() => !props.normgeber.organ && !props.normgeber.region)
+const institution = ref<Institution>({ ...props.normgeber.institution } as Institution)
+const region = ref<Region>({ ...props.normgeber.region } as Region)
+const isEmpty = computed(() => !props.normgeber.institution && !props.normgeber.region)
 const isEditMode = ref<boolean>(isEmpty.value)
 
 const toggleEditMode = () => {
@@ -31,14 +31,18 @@ const onExpandAccordion = () => {
 }
 
 const onClickSave = () => {
-  emit('updateNormgeber', { ...props.normgeber, organ: organ.value, region: region.value })
+  emit('updateNormgeber', {
+    ...props.normgeber,
+    institution: institution.value,
+    region: region.value,
+  })
   toggleEditMode()
 }
 
 const onClickCancel = () => {
   // Reset local state
-  organ.value = props.normgeber.organ as Organ
-  region.value = props.normgeber.region as NormgeberRegion
+  institution.value = props.normgeber.institution as Institution
+  region.value = props.normgeber.region as Region
   // Remove normgeber if empty
   if (isEmpty.value) {
     emit('removeNormgeber', props.normgeber.id)
@@ -52,7 +56,7 @@ const onClickDelete = () => {
 }
 
 const label = computed(() =>
-  [props.normgeber.region?.label, props.normgeber.organ?.label]
+  [props.normgeber.region?.label, props.normgeber.institution?.label]
     .filter(Boolean)
     .join(', ')
     .toString(),
@@ -61,8 +65,8 @@ const label = computed(() =>
 watch(
   () => props.normgeber,
   (newVal) => {
-    organ.value = { ...newVal?.organ } as Organ
-    region.value = { ...newVal?.region } as NormgeberRegion
+    institution.value = { ...newVal?.institution } as Institution
+    region.value = { ...newVal?.region } as Region
   },
 )
 </script>
@@ -71,19 +75,19 @@ watch(
   <div>
     <template v-if="isEditMode">
       <div class="flex flex-row gap-24">
-        <InputField id="court" label="Normgeber *" class="w-full">
+        <InputField id="institution" label="Normgeber *" class="w-full">
           <ComboboxInput
-            id="court"
-            v-model="organ"
+            id="institution"
+            v-model="institution"
             aria-label="Normgeber"
             clear-on-choosing-item
             :has-error="false"
-            :item-service="ComboboxItemService.getOrgans"
+            :item-service="ComboboxItemService.getInstitutions"
           ></ComboboxInput>
         </InputField>
         <InputField id="region" label="Region *" class="w-full">
           <ComboboxInput
-            v-if="organ?.type === OrganType.Institution"
+            v-if="institution?.type === OrganType.Institution"
             id="region"
             v-model="region"
             :has-error="false"

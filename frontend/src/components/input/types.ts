@@ -8,6 +8,7 @@ import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import type { Court } from '@/domain/court'
+import { type Institution, type Region } from '@/domain/normgeber'
 
 export enum InputType {
   TEXT = 'text',
@@ -116,6 +117,8 @@ export type ComboboxInputModelType =
   | DocumentType
   | CitationType
   | ActiveReferenceType
+  | Institution
+  | Region
 
 export type ComboboxItem = {
   label: string

@@ -10,20 +10,4 @@ describe('comboboxItemService', () => {
     // then
     expect(result.data.value?.length).toEqual(2)
   })
-
-  it('should return a list of dummy organs', async () => {
-    // when
-    const result = await service.getOrgans(ref(undefined))
-
-    // then
-    expect(result.data.value?.length).toEqual(2)
-  })
-
-  it('should return a list of dummy regions', async () => {
-    // when
-    const result = await service.getRegions(ref(undefined))
-
-    // then
-    expect(result.data.value?.length).toEqual(2)
-  })
 })

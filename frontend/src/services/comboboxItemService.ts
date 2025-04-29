@@ -11,13 +11,15 @@ import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
-import { OrganType, type NormgeberRegion, type Organ } from '@/domain/normgeber'
+import { type RegionApiResponse, type InstitutionApiResponse } from '@/domain/normgeber'
 import type { Court } from '@/domain/court'
 
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
   fieldsOfLaw = 'lookup-tables/fields-of-law',
   legalPeriodicals = 'lookup-tables/legal-periodicals',
+  institutions = 'lookup-tables/institutions',
+  regions = 'lookup-tables/regions',
 }
 
 function formatDropdownItems(
@@ -52,6 +54,27 @@ function formatDropdownItems(
           citationStyle: item.citationStyle,
         },
         additionalInformation: item.subtitle,
+      }))
+    }
+    case Endpoint.institutions: {
+      return (responseData as InstitutionApiResponse[]).map((item) => ({
+        label: item.name,
+        value: {
+          label: item.name,
+          officialName: item.officialName,
+          type: item.type,
+          regions: item.regions,
+        },
+        additionalInformation: item.officialName,
+      }))
+    }
+    case Endpoint.regions: {
+      return (responseData as RegionApiResponse[]).map((item) => ({
+        label: item.code,
+        value: {
+          label: item.code,
+          longText: item.longText,
+        },
       }))
     }
   }
@@ -90,6 +113,13 @@ function fetchFromEndpoint(
           break
         case Endpoint.legalPeriodicals:
           ctx.data = formatDropdownItems(ctx.data.legalPeriodicals, endpoint)
+          break
+        case Endpoint.institutions:
+          ctx.data = formatDropdownItems(ctx.data.institutions, endpoint)
+          break
+        case Endpoint.regions:
+          ctx.data = formatDropdownItems(ctx.data.regions, endpoint)
+          break
       }
       return ctx
     },
@@ -106,8 +136,8 @@ function fetchFromEndpoint(
 export type ComboboxItemService = {
   getLegalPeriodicals: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
-  getOrgans: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
-  getRegions: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
+  getInstitutions: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
+  getRegions: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -152,72 +182,10 @@ const service: ComboboxItemService = {
     }
     return result
   },
-  getOrgans: (filter: Ref<string | undefined>) => {
-    const senatVw = {
-      label: 'Senatsverwaltung für Integration, Arbeit und Soziales',
-      type: OrganType.Institution,
-    } as Organ
-    const senatVwItem: ComboboxItem = {
-      label: senatVw.label,
-      value: senatVw,
-    }
-    const bkk = {
-      label: 'Landesverbände der Betriebskrankenkassen',
-      type: OrganType.LegalEntity,
-    } as Organ
-    const bkkItem: ComboboxItem = {
-      label: bkk.label,
-      value: bkk,
-    }
-    let items = ref([senatVwItem, bkkItem])
-    if (filter?.value?.startsWith('s')) {
-      items = ref([senatVwItem])
-    } else if (filter?.value?.startsWith('b')) {
-      items = ref([bkkItem])
-    }
-    const execute = async () => {
-      return service.getOrgans(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
-  getRegions: (filter: Ref<string | undefined>) => {
-    const deu = {
-      label: 'DEU',
-    } as NormgeberRegion
-    const deuItem: ComboboxItem = {
-      label: deu.label,
-      value: deu,
-    }
-    const eu = {
-      label: 'EU',
-    } as NormgeberRegion
-    const euItem: ComboboxItem = {
-      label: eu.label,
-      value: eu,
-    }
-    let items = ref([deuItem, euItem])
-    if (filter?.value?.startsWith('d')) {
-      items = ref([deuItem])
-    } else if (filter?.value?.startsWith('e')) {
-      items = ref([euItem])
-    }
-    const execute = async () => {
-      return service.getRegions(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
+  getInstitutions: (filter: Ref<string | undefined>) =>
+    fetchFromEndpoint(Endpoint.institutions, filter, { usePagination: false }),
+  getRegions: (filter: Ref<string | undefined>) =>
+    fetchFromEndpoint(Endpoint.regions, filter, { usePagination: false }),
   getDocumentTypes: (filter: Ref<string | undefined>) =>
     fetchFromEndpoint(Endpoint.documentTypes, filter, { usePagination: false }),
   getRisAbbreviations: (filter: Ref<string | undefined>) => {
