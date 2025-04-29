@@ -11,7 +11,6 @@ const store = useDocumentUnitStore()
 const normgebers = computed({
   get: () => store.documentUnit!.normgebers ?? [],
   set: (newValue) => {
-    console.log(newValue)
     store.documentUnit!.normgebers = newValue
   },
 })
@@ -20,22 +19,22 @@ const onClickAddNormgeber = () => {
   normgebers.value = [...normgebers.value, createEmptyNormgeber()]
 }
 
-const onAddNormgeber = (normgeber: Normgeber | undefined) => {
+const onAddNormgeber = (newNormgeber: Normgeber | undefined) => {
   if (
-    normgeber &&
-    normgeber.institution &&
-    // only add if not yet existing
-    !normgebers.value.find(
-      (n) => n.institution && n.institution.label === normgeber.institution!.label,
-    )
+    newNormgeber &&
+    newNormgeber.institution &&
+    normgebers.value.find(
+      (existingNormgeber) =>
+        existingNormgeber.institution &&
+        existingNormgeber.institution.label === newNormgeber.institution!.label,
+    ) == undefined
   ) {
     const index = normgebers.value.findIndex((normgeber) => !normgeber.institution)
-    normgebers.value[index] = normgeber
+    normgebers.value[index] = newNormgeber
   }
 }
 
 const onUpdateNormgeber = (normgeber: Normgeber | undefined) => {
-  console.log(normgeber)
   if (normgeber) {
     const index = normgebers.value.findIndex(
       (n) => n.institution?.label === normgeber.institution?.label,

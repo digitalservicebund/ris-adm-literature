@@ -22,9 +22,33 @@ const emit = defineEmits<{
 const institution = ref<Institution>(props.normgeber.institution as Institution)
 const regions = ref<Region[]>(props.normgeber.regions as Region[])
 const selectedRegion = ref<Region>({} as Region)
+const regionsInputText = computed(() => {
+  if (institution.value && institution.value.regions) {
+    return institution.value.regions
+      .map((r) => {
+        return r.label
+      })
+      .join(', ')
+  } else {
+    return ''
+  }
+})
+const regionsIsReadonly = computed(() => {
+  return !institution.value || institution.value.type === InstitutionType.LegalEntity
+})
+const regionLabel = computed(() => {
+  if (regionsIsReadonly.value) return 'Region'
+  return 'Region *'
+})
 const isEmpty = computed(() => !props.normgeber.institution && !props.normgeber.regions)
 const isEditMode = ref<boolean>(isEmpty.value)
 const isNewItem = ref<boolean>(isEmpty.value)
+const label = computed(() => {
+  let labelTmp = ''
+  if (regions.value) labelTmp += regions.value.map((r) => r.label).join(' ') + ', '
+  if (institution.value) labelTmp += institution.value.label
+  return labelTmp
+})
 
 const toggleEditMode = () => {
   isEditMode.value = !isEditMode.value
@@ -35,6 +59,9 @@ const onExpandAccordion = () => {
 }
 
 const onClickSave = () => {
+  if (!institution.value) return
+  if (institution.value.type === InstitutionType.Institution && !regions.value) return
+
   const normgeber = {
     institution: institution.value,
     regions: regions.value,
@@ -65,15 +92,6 @@ const onClickDelete = () => {
   emit('removeNormgeber', props.normgeber.institution!.label)
   toggleEditMode()
 }
-
-const label = computed(() => {
-  let labelTmp = ''
-  console.log(regions.value)
-  if (regions.value && regions.value.length > 0)
-    labelTmp += regions.value.map((r) => r.label).join(' ')
-  if (institution.value) labelTmp += ', ' + institution.value.label
-  return labelTmp
-})
 
 watch(
   () => props.normgeber,
@@ -113,21 +131,11 @@ watch(selectedRegion, (region) => {
             :item-service="ComboboxItemService.getInstitutions"
           ></ComboboxInput>
         </InputField>
-        <InputField id="region" label="Region *" class="w-full">
+        <InputField id="region" :label="regionLabel" class="w-full">
           <InputText
-            v-if="
-              institution?.type === InstitutionType.LegalEntity &&
-              institution?.regions &&
-              institution?.regions?.length > 0
-            "
+            v-if="regionsIsReadonly"
             id="region"
-            :value="
-              institution.regions
-                .map((r) => {
-                  return r.label
-                })
-                .join(', ')
-            "
+            :value="regionsInputText"
             aria-label="Region"
             size="small"
             fluid
