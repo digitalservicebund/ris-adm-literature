@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
-import type { Court, DocumentType } from './documentUnit'
+import type { DocumentType } from './documentUnit'
+import type { Court } from './court'
 
 export default class RelatedDocumentation {
   public uuid?: string
