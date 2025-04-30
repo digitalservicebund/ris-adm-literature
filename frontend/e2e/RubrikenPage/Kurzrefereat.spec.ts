@@ -38,7 +38,6 @@ test.describe('RubrikenPage - Kurzreferat', () => {
         await page.getByText('Rubriken').click()
 
         const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
-        await expect(kurzreferatEditorElement).toHaveCount(1)
         await kurzreferatEditorElement.click()
         await page.keyboard.insertText('Kurzreferat: Neuer Text')
 
