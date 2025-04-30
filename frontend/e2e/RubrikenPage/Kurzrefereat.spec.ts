@@ -43,10 +43,10 @@ test.describe('RubrikenPage - Kurzreferat', () => {
         await page.keyboard.insertText('Kurzreferat: Neuer Text')
 
         // when
-        // const undoButton = page
-        //   .getByLabel('Kurzreferat Button Leiste')
-        //   .getByRole('button', { name: 'Rückgängig machen' })
-        // undoButton.click()
+        const undoButton = page
+          .getByLabel('Kurzreferat Button Leiste')
+          .getByRole('button', { name: 'Rückgängig machen' })
+        undoButton.click()
 
         // then
         await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(0)
