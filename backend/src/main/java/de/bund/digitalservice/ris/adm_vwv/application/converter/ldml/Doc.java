@@ -16,12 +16,12 @@ public class Doc {
   @XmlAttribute
   private String name = "offene-struktur";
 
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private Meta meta;
 
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private Preface preface;
 
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private MainBody mainBody;
 }

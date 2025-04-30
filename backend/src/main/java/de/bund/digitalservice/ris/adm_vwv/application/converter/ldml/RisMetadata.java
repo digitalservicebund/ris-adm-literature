@@ -14,48 +14,48 @@ import lombok.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RisMetadata {
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private List<RisNormgeber> normgeber;
 
-  @XmlElementWrapper(name = "fieldsOfLaw", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "fieldOfLaw", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "fieldsOfLaw", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "fieldOfLaw", namespace = XmlNamespace.RIS_NS)
   private List<RisFieldOfLaw> fieldsOfLaw;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String entryIntoEffectDate;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String expiryDate;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisDocumentType documentType;
 
-  @XmlElementWrapper(name = "tableOfContentEntries", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "tableOfContentEntry", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "tableOfContentEntries", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "tableOfContentEntry", namespace = XmlNamespace.RIS_NS)
   private List<String> tableOfContentEntries;
 
-  @XmlElementWrapper(name = "zuordnungen", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "zuordnung", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "zuordnungen", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "zuordnung", namespace = XmlNamespace.RIS_NS)
   private List<RisZuordnung> zuordnungen;
 
-  @XmlElementWrapper(name = "dateToQuoteList", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "dateToQuoteEntry", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "dateToQuoteList", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "dateToQuoteEntry", namespace = XmlNamespace.RIS_NS)
   private List<String> dateToQuoteList;
 
-  @XmlElementWrapper(name = "referenceNumbers", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "referenceNumber", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "referenceNumbers", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "referenceNumber", namespace = XmlNamespace.RIS_NS)
   private List<String> referenceNumbers;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private JaxbHtml historicAdministrativeData;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String region;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String historicAbbreviation;
 
-  @XmlElementWrapper(name = "activeReferences", namespace = AkomaNtoso.RIS_NS)
-  @XmlElement(name = "activeReference", namespace = AkomaNtoso.RIS_NS)
+  @XmlElementWrapper(name = "activeReferences", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "activeReference", namespace = XmlNamespace.RIS_NS)
   private List<RisActiveReference> activeReferences;
 }

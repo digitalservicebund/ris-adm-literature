@@ -19,9 +19,9 @@ public class ImplicitReference {
   @XmlAttribute
   private String showAs;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisNormReference normReference;
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisCaselawReference caselawReference;
 }

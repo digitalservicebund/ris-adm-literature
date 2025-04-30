@@ -13,36 +13,36 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FrbrElement {
 
-  @XmlElement(name = "FRBRthis", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRthis", namespace = XmlNamespace.AKN_NS)
   private FrbrThis frbrThis;
 
-  @XmlElement(name = "FRBRuri", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRuri", namespace = XmlNamespace.AKN_NS)
   private FrbrUri frbrUri;
 
-  @XmlElement(name = "FRBRalias", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRalias", namespace = XmlNamespace.AKN_NS)
   private List<FrbrAlias> frbrAlias;
 
-  @XmlElement(name = "FRBRdate", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRdate", namespace = XmlNamespace.AKN_NS)
   private FrbrDate frbrDate;
 
-  @XmlElement(name = "FRBRauthor", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRauthor", namespace = XmlNamespace.AKN_NS)
   private FrbrAuthor frbrAuthor;
 
-  @XmlElement(name = "FRBRcountry", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRcountry", namespace = XmlNamespace.AKN_NS)
   private FrbrCountry frbrCountry;
 
-  @XmlElement(name = "FRBRlanguage", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRlanguage", namespace = XmlNamespace.AKN_NS)
   private FrbrLanguage frbrLanguage;
 
-  @XmlElement(name = "FRBRformat", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRformat", namespace = XmlNamespace.AKN_NS)
   private FrbrFormat frbrFormat;
 
-  @XmlElement(name = "FRBRsubtype", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRsubtype", namespace = XmlNamespace.AKN_NS)
   private FrbrSubtype frbrSubtype;
 
-  @XmlElement(name = "FRBRnumber", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRnumber", namespace = XmlNamespace.AKN_NS)
   private FrbrNumber frbrNumber;
 
-  @XmlElement(name = "FRBRname", namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(name = "FRBRname", namespace = XmlNamespace.AKN_NS)
   private FrbrName frbrName;
 }

@@ -7,13 +7,10 @@ import lombok.Data;
  * Jaxb akomaNtoso root element.
  */
 @Data
-@XmlRootElement(name = "akomaNtoso", namespace = AkomaNtoso.AKN_NS)
+@XmlRootElement(name = "akomaNtoso", namespace = XmlNamespace.AKN_NS)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AkomaNtoso {
 
-  public static final String AKN_NS = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0";
-  public static final String RIS_NS = "http://ldml.neuris.de/metadata/";
-
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private Doc doc;
 }

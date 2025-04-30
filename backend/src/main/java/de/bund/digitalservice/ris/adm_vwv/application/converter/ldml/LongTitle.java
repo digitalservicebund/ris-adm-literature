@@ -12,6 +12,6 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class LongTitle {
 
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private JaxbHtml block;
 }

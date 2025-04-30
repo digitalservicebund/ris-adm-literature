@@ -12,6 +12,6 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Preface {
 
-  @XmlElement(namespace = AkomaNtoso.AKN_NS)
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
   private LongTitle longTitle;
 }

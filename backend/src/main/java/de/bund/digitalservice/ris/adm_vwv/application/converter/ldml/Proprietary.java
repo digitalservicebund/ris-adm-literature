@@ -16,6 +16,6 @@ public class Proprietary {
   @XmlAttribute
   private String source = "attributsemantik-noch-undefiniert";
 
-  @XmlElement(namespace = AkomaNtoso.RIS_NS)
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisMetadata metadata;
 }
