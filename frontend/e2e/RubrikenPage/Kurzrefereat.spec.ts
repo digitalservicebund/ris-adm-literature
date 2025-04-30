@@ -12,10 +12,10 @@ test.describe('RubrikenPage - Kurzreferat', () => {
 
       const kurzReferatTitleElement = page.getByText('Kurzreferat')
       await expect(kurzReferatTitleElement).toHaveCount(3)
-
-      // when
       const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
       await expect(kurzreferatEditorElement).toHaveCount(1)
+
+      // when
       await kurzreferatEditorElement.click()
       await page.keyboard.insertText('Kurzreferat Eintrag 123')
       // then
