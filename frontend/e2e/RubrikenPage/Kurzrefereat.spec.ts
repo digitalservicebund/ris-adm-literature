@@ -47,9 +47,12 @@ test.describe('RubrikenPage - Kurzreferat', () => {
           .getByLabel('Kurzreferat Button Leiste')
           .getByRole('button', { name: 'Rückgängig machen' })
         undoButton.click()
-
         // then
         await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(0)
+
+        // when
+        // then
+        await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(1)
       },
     )
 })
