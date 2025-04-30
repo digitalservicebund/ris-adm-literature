@@ -331,11 +331,14 @@ class LookupTablesPersistenceServiceTest {
   @Test
   void findInstitutions_all() {
     // given
+    UUID uuid = UUID.randomUUID();
     InstitutionEntity institutionEntity = new InstitutionEntity();
     institutionEntity.setName("Jurpn");
     institutionEntity.setType("jurpn");
+    institutionEntity.setId(uuid);
     RegionEntity regionEntity = new RegionEntity();
     regionEntity.setCode("AA");
+    regionEntity.setId(uuid);
     institutionEntity.setRegions(Set.of(regionEntity));
     given(institutionRepository.findAll(any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(institutionEntity))
@@ -348,16 +351,24 @@ class LookupTablesPersistenceServiceTest {
 
     // then
     assertThat(institutions.getContent()).contains(
-      new Institution("Jurpn", null, InstitutionType.LEGAL_ENTITY, List.of(new Region("AA", null)))
+      new Institution(
+        uuid,
+        "Jurpn",
+        null,
+        InstitutionType.LEGAL_ENTITY,
+        List.of(new Region(uuid, "AA", null))
+      )
     );
   }
 
   @Test
   void findInstitutions_something() {
     // given
+    UUID uuid = UUID.randomUUID();
     InstitutionEntity institutionEntity = new InstitutionEntity();
     institutionEntity.setName("Organ");
     institutionEntity.setType("organ");
+    institutionEntity.setId(uuid);
     given(
       institutionRepository.findByNameContainingIgnoreCase(eq("something"), any(Pageable.class))
     ).willReturn(new PageImpl<>(List.of(institutionEntity)));
@@ -369,15 +380,17 @@ class LookupTablesPersistenceServiceTest {
 
     // then
     assertThat(institutions.getContent()).contains(
-      new Institution("Organ", null, InstitutionType.INSTITUTION, List.of())
+      new Institution(uuid, "Organ", null, InstitutionType.INSTITUTION, List.of())
     );
   }
 
   @Test
   void findRegions_all() {
     // given
+    UUID uuid = UUID.randomUUID();
     RegionEntity regionEntity = new RegionEntity();
     regionEntity.setCode("AA");
+    regionEntity.setId(uuid);
     given(regionRepository.findAll(any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(regionEntity))
     );
@@ -388,14 +401,16 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(regions.getContent()).contains(new Region("AA", null));
+    assertThat(regions.getContent()).contains(new Region(uuid, "AA", null));
   }
 
   @Test
   void findRegions_something() {
     // given
+    UUID uuid = UUID.randomUUID();
     RegionEntity regionEntity = new RegionEntity();
     regionEntity.setCode("AA");
+    regionEntity.setId(uuid);
     given(
       regionRepository.findByCodeContainingIgnoreCase(eq("something"), any(Pageable.class))
     ).willReturn(new PageImpl<>(List.of(regionEntity)));
@@ -406,6 +421,6 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(regions.getContent()).contains(new Region("AA", null));
+    assertThat(regions.getContent()).contains(new Region(uuid, "AA", null));
   }
 }

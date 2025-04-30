@@ -156,7 +156,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       : regionRepository.findByCodeContainingIgnoreCase(searchTerm, pageable);
 
     return regions.map(regionEntity ->
-      new Region(regionEntity.getCode(), regionEntity.getLongText())
+      new Region(regionEntity.getId(), regionEntity.getCode(), regionEntity.getLongText())
     );
   }
 
@@ -174,13 +174,16 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
     return institutions.map(institutionEntity ->
       new Institution(
+        institutionEntity.getId(),
         institutionEntity.getName(),
         institutionEntity.getOfficialName(),
         mapInstitutionType(institutionEntity.getType()),
         institutionEntity
           .getRegions()
           .stream()
-          .map(regionEntity -> new Region(regionEntity.getCode(), regionEntity.getLongText()))
+          .map(regionEntity ->
+            new Region(regionEntity.getId(), regionEntity.getCode(), regionEntity.getLongText())
+          )
           .toList()
       )
     );

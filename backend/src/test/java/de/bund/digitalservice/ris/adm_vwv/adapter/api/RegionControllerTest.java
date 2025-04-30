@@ -10,6 +10,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import de.bund.digitalservice.ris.adm_vwv.application.RegionQuery;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,14 @@ class RegionControllerTest {
       lookupTablesPort.findRegions(
         new RegionQuery(null, new QueryOptions(0, 2, "code", Sort.Direction.ASC, true))
       )
-    ).willReturn(new PageImpl<>(List.of(new Region("AA", null), new Region("BB", null))));
+    ).willReturn(
+      new PageImpl<>(
+        List.of(
+          new Region(UUID.randomUUID(), "AA", null),
+          new Region(UUID.randomUUID(), "BB", null)
+        )
+      )
+    );
 
     // when
     mockMvc

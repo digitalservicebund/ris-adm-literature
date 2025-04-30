@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,22 @@ class InstitutionControllerTest {
       new PageImpl<>(
         List.of(
           new Institution(
+            UUID.randomUUID(),
             "Erste Jurpn",
             "Jurpn 1",
             InstitutionType.LEGAL_ENTITY,
-            List.of(new Region("AA", null), new Region("BB", null))
+            List.of(
+              new Region(UUID.randomUUID(), "AA", null),
+              new Region(UUID.randomUUID(), "BB", null)
+            )
           ),
-          new Institution("Zweite Jurpn", "Jurpn 2", InstitutionType.LEGAL_ENTITY, List.of())
+          new Institution(
+            UUID.randomUUID(),
+            "Zweite Jurpn",
+            "Jurpn 2",
+            InstitutionType.LEGAL_ENTITY,
+            List.of()
+          )
         )
       )
     );
