@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class XmlNamespace {
+
   public static final String AKN_NS = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0";
   public static final String RIS_NS = "http://ldml.neuris.de/metadata/";
 }
