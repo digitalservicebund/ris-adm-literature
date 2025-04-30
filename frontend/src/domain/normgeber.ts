@@ -1,26 +1,32 @@
+import type { UUID } from 'crypto'
+
 export enum InstitutionType {
   Institution = 'INSTITUTION',
   LegalEntity = 'LEGAL_ENTITY',
 }
 
 export interface RegionApiResponse {
+  id: string
   code: string
   longText?: string
 }
 
-export interface Region {
-  label: string
-  longText?: string
-}
-
 export interface InstitutionApiResponse {
+  id: string
   name: string
   officialName?: string
   type: InstitutionType
   regions: RegionApiResponse[]
 }
 
+export interface Region {
+  id: string
+  label: string
+  longText?: string
+}
+
 export interface Institution {
+  id: string
   label: string
   officialName?: string
   type: InstitutionType
@@ -28,13 +34,7 @@ export interface Institution {
 }
 
 export interface Normgeber {
-  institution?: Institution
-  regions?: Region[]
-}
-
-export function createEmptyNormgeber(): Normgeber {
-  return {
-    institution: undefined,
-    regions: undefined,
-  }
+  id: string
+  institution: Institution
+  regions: Region[]
 }

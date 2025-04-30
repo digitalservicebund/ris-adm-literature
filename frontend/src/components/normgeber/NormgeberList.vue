@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
-import { createEmptyNormgeber, type Normgeber } from '@/domain/normgeber'
+import { type Normgeber } from '@/domain/normgeber'
 import NormgeberListItem from './NormgeberListItem.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import NormgeberInput from './NormgeberInput.vue'
+import Button from 'primevue/button'
+import IconAdd from '~icons/material-symbols/add'
 
 const store = useDocumentUnitStore()
 
@@ -15,45 +16,21 @@ const normgebers = computed({
   },
 })
 
-const onClickAddNormgeber = () => {
-  normgebers.value = [...normgebers.value, createEmptyNormgeber()]
+const onAddNormgeber = (newNormgeber: Normgeber) => {
+  normgebers.value = [...normgebers.value, newNormgeber]
+  isCreationPanelOpened.value = false
 }
 
-const onAddNormgeber = (newNormgeber: Normgeber | undefined) => {
-  if (
-    newNormgeber &&
-    newNormgeber.institution &&
-    normgebers.value.find(
-      (existingNormgeber) =>
-        existingNormgeber.institution &&
-        existingNormgeber.institution.label === newNormgeber.institution!.label,
-    ) == undefined
-  ) {
-    const index = normgebers.value.findIndex((normgeber) => !normgeber.institution)
-    normgebers.value[index] = newNormgeber
-  }
+const onUpdateNormgeber = (normgeber: Normgeber) => {
+  const index = normgebers.value.findIndex((n) => n.id === normgeber.id)
+  normgebers.value[index] = normgeber
 }
 
-const onUpdateNormgeber = (normgeber: Normgeber | undefined) => {
-  if (normgeber) {
-    const index = normgebers.value.findIndex(
-      (n) => n.institution?.label === normgeber.institution?.label,
-    )
-    normgebers.value[index] = normgeber
-  }
+const onRemoveNormgeber = (id: string) => {
+  normgebers.value = normgebers.value.filter((n) => n.id !== id)
 }
 
-const onRemoveNormgeber = (label: string) => {
-  normgebers.value = normgebers.value.filter((a) => a.institution?.label !== label)
-}
-
-const onRemoveEmptyNormgeber = () => {
-  normgebers.value = normgebers.value.filter((a) => a.institution && a.institution.label)
-}
-
-const buttonLabel = computed(() =>
-  normgebers.value.length > 0 ? 'Weitere Angabe' : 'Normgeber hinzufügen',
-)
+const isCreationPanelOpened = ref(false)
 </script>
 
 <template>
@@ -63,24 +40,31 @@ const buttonLabel = computed(() =>
       <li
         class="border-b-1 border-blue-300 py-16"
         v-for="normgeber in normgebers"
-        :key="normgeber.institution?.label"
+        :key="normgeber.id"
       >
         <NormgeberListItem
           :normgeber="normgeber"
           @add-normgeber="onAddNormgeber"
           @update-normgeber="onUpdateNormgeber"
-          @remove-normgeber="onRemoveNormgeber"
-          @remove-empty-normgeber="onRemoveEmptyNormgeber"
+          @delete-normgeber="onRemoveNormgeber"
         />
       </li>
     </ol>
-    <Button
+    <NormgeberInput
+      v-if="isCreationPanelOpened || normgebers.length === 0"
       class="mt-16"
-      :aria-label="buttonLabel"
+      @update-normgeber="onAddNormgeber"
+      @cancel="isCreationPanelOpened = false"
+      :show-cancel-button="normgebers.length > 0"
+    />
+    <Button
+      v-else
+      class="mt-16"
+      aria-label="Normgeber hinzufügen"
       severity="secondary"
-      :label="buttonLabel"
+      label="Normgeber hinzufügen"
       size="small"
-      @click="onClickAddNormgeber"
+      @click="isCreationPanelOpened = true"
     >
       <template #icon><IconAdd /></template>
     </Button>
