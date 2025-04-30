@@ -51,6 +51,10 @@ test.describe('RubrikenPage - Kurzreferat', () => {
         await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(0)
 
         // when
+        const redoButton = page
+          .getByLabel('Kurzreferat Button Leiste')
+          .getByRole('button', { name: 'Wiederherstellen' })
+        redoButton.click()
         // then
         await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(1)
       },
