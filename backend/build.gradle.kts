@@ -35,8 +35,8 @@ repositories {
 
 val kubernetesConfigVersion = "3.2.1"
 val springdocVersion = "2.8.6"
-val sentryVersion = "8.9.0"
-val hypersistenceVersion = "3.9.9"
+val sentryVersion = "8.10.0"
+val hypersistenceVersion = "3.9.10"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
