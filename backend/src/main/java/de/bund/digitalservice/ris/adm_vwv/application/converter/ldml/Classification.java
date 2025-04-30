@@ -7,6 +7,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import java.util.List;
 import lombok.*;
 
+/**
+ * Jaxb classification element.
+ */
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Classification {
