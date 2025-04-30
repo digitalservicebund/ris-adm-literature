@@ -107,9 +107,6 @@
   "overrides": {
     "vite": {
       "esbuild": "0.25.0"
-    },
-    "@vue/eslint-config-typescript": {
-      "eslint-plugin-vue": "10.0.0"
     }
   }
 }
