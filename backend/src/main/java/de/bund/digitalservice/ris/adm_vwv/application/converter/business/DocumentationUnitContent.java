@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public record DocumentationUnitContent(
   String kurzreferat,
   List<String> aktenzeichen,
   Boolean noAktenzeichen,
-  DocumentTypeContent dokumenttyp,
+  DocumentType dokumenttyp,
   String dokumenttypZusatz,
   List<ActiveCitation> activeCitations,
   List<ActiveReference> activeReferences,

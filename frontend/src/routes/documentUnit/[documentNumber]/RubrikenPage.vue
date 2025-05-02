@@ -17,6 +17,7 @@ import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
+import type { DocumentType } from '@/domain/documentUnit.ts'
 
 const store = useDocumentUnitStore()
 
@@ -77,8 +78,15 @@ const noAktenzeichen = computed({
 })
 
 const dokumenttyp = computed({
-  get: () => store.documentUnit!.dokumenttyp,
-  set: (newValue) => {
+  get: () =>
+    store.documentUnit?.dokumenttyp
+      ? {
+          label: store.documentUnit.dokumenttyp.name,
+          value: store.documentUnit.dokumenttyp,
+          additionalInformation: store.documentUnit.dokumenttyp.abbreviation,
+        }
+      : undefined,
+  set: (newValue: DocumentType) => {
     store.documentUnit!.dokumenttyp = newValue
   },
 })

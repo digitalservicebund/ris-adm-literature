@@ -30,10 +30,7 @@ function formatDropdownItems(
     case Endpoint.documentTypes: {
       return (responseData as DocumentType[]).map((item) => ({
         label: item.name,
-        value: {
-          label: item.name,
-          abbreviation: item.abbreviation,
-        },
+        value: item,
         additionalInformation: item.abbreviation,
       }))
     }

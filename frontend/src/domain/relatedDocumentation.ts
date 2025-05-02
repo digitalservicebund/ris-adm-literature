@@ -35,7 +35,7 @@ export default class RelatedDocumentation {
       ...(this.court ? [`${this.court?.label}`] : []),
       ...(this.decisionDate ? [dayjs(this.decisionDate).format('DD.MM.YYYY')] : []),
       ...(this.fileNumber ? [this.fileNumber] : []),
-      ...(this.documentType?.label ? [this.documentType.label] : []),
+      ...(this.documentType?.name ? [this.documentType.name] : []),
     ].join(', ')
   }
 }

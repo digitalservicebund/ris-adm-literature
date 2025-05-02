@@ -159,7 +159,7 @@ const service: DocumentUnitService = {
             decisionDate: '2022-02-01',
             documentType: {
               abbreviation: 'VV',
-              label: 'Verwaltungsvorschrift',
+              name: 'Verwaltungsvorschrift',
             },
             fileNumber: 'test fileNumber1',
           }),

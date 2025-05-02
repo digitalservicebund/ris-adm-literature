@@ -31,7 +31,7 @@ export default class ActiveCitation extends RelatedDocumentation implements Edit
       ...(this.court ? [`${this.court?.label}`] : []),
       ...(this.decisionDate ? [dayjs(this.decisionDate).format('DD.MM.YYYY')] : []),
       ...(this.fileNumber ? [this.fileNumber] : []),
-      ...(this.documentType ? [this.documentType.label] : []),
+      ...(this.documentType ? [this.documentType.name] : []),
     ].join(', ')
   }
 
