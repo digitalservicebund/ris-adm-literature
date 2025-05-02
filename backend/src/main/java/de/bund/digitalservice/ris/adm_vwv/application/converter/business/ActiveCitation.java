@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import java.util.UUID;
 
 /**
@@ -21,6 +22,6 @@ public record ActiveCitation(
   Court court,
   String decisionDate,
   String fileNumber,
-  DocumentTypeContent documentType,
+  DocumentType documentType,
   CitationType citationType
 ) {}
