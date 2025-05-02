@@ -1,5 +1,3 @@
-import type { UUID } from 'crypto'
-
 export enum InstitutionType {
   Institution = 'INSTITUTION',
   LegalEntity = 'LEGAL_ENTITY',

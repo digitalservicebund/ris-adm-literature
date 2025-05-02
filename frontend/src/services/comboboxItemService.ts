@@ -60,6 +60,7 @@ function formatDropdownItems(
       return (responseData as InstitutionApiResponse[]).map((item) => ({
         label: item.name,
         value: {
+          id: item.id,
           label: item.name,
           officialName: item.officialName,
           type: item.type,
@@ -74,6 +75,7 @@ function formatDropdownItems(
       return (responseData as RegionApiResponse[]).map((item) => ({
         label: item.code,
         value: {
+          id: item.id,
           label: item.code,
           longText: item.longText,
         },

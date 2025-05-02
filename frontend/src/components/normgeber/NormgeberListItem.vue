@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import ToolTip from '@/components/ToolTip.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import { type Normgeber } from '@/domain/normgeber'
-import type { UUID } from 'crypto'
 import NormgeberInput from './NormgeberInput.vue'
 
 const props = defineProps<{
@@ -39,7 +38,7 @@ const onDeleteNormgeber = (normgeberId: string) => {
 }
 
 const label = computed(() =>
-  [...props.normgeber.regions?.map((r) => r.label), props.normgeber.institution?.label]
+  [...props.normgeber.regions.map((r) => r.label), props.normgeber.institution.label]
     .filter(Boolean)
     .join(', ')
     .toString(),

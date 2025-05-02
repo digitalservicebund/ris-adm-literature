@@ -6,12 +6,12 @@ import ComboboxItemService from '@/services/comboboxItemService'
 import { type Region, type Normgeber, type Institution, InstitutionType } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-import type { UUID } from 'crypto'
 
 const props = defineProps<{
   normgeber?: Normgeber
   showCancelButton: boolean
 }>()
+
 const emit = defineEmits<{
   updateNormgeber: [normgeber: Normgeber]
   deleteNormgeber: [id: string]
@@ -34,19 +34,11 @@ const regionsInputText = computed(() => {
   }
 })
 
-const regionIsReadonly = computed(() => {
-  return !institution.value || institution.value.type === InstitutionType.LegalEntity
-})
+const regionIsReadonly = computed(
+  () => !institution.value || institution.value.type === InstitutionType.LegalEntity,
+)
 
-const regionLabel = computed(() => {
-  if (regionIsReadonly.value) return 'Region'
-  return 'Region *'
-})
-
-const reset = () => {
-  institution.value = props.normgeber?.institution || undefined
-  selectedRegion.value = props.normgeber?.regions[0] || undefined
-}
+const regionLabel = computed(() => (regionIsReadonly.value ? 'Region' : 'Region *'))
 
 const onClickSave = () => {
   const normgeber = {
@@ -59,11 +51,11 @@ const onClickSave = () => {
   }
 
   emit('updateNormgeber', normgeber)
-  reset()
 }
 
 const onClickCancel = () => {
-  reset()
+  institution.value = props.normgeber?.institution || undefined
+  selectedRegion.value = props.normgeber?.regions[0] || undefined
   emit('cancel')
 }
 
@@ -74,7 +66,6 @@ const onClickDelete = () => {
 watch(institution, () => {
   if (!institution.value) {
     selectedRegion.value = undefined
-    return
   }
 })
 

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { type Normgeber } from '@/domain/normgeber'
 import NormgeberListItem from './NormgeberListItem.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import NormgeberInput from './NormgeberInput.vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
+import { useEditableList } from '@/composables/useEditableList'
 
 const store = useDocumentUnitStore()
 
@@ -16,21 +16,7 @@ const normgebers = computed({
   },
 })
 
-const onAddNormgeber = (newNormgeber: Normgeber) => {
-  normgebers.value = [...normgebers.value, newNormgeber]
-  isCreationPanelOpened.value = false
-}
-
-const onUpdateNormgeber = (normgeber: Normgeber) => {
-  const index = normgebers.value.findIndex((n) => n.id === normgeber.id)
-  normgebers.value[index] = normgeber
-}
-
-const onRemoveNormgeber = (id: string) => {
-  normgebers.value = normgebers.value.filter((n) => n.id !== id)
-}
-
-const isCreationPanelOpened = ref(false)
+const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } = useEditableList(normgebers)
 </script>
 
 <template>
@@ -44,16 +30,16 @@ const isCreationPanelOpened = ref(false)
       >
         <NormgeberListItem
           :normgeber="normgeber"
-          @add-normgeber="onAddNormgeber"
-          @update-normgeber="onUpdateNormgeber"
-          @delete-normgeber="onRemoveNormgeber"
+          @add-normgeber="onAddItem"
+          @update-normgeber="onUpdateItem"
+          @delete-normgeber="onRemoveItem"
         />
       </li>
     </ol>
     <NormgeberInput
       v-if="isCreationPanelOpened || normgebers.length === 0"
       class="mt-16"
-      @update-normgeber="onAddNormgeber"
+      @update-normgeber="onAddItem"
       @cancel="isCreationPanelOpened = false"
       :show-cancel-button="normgebers.length > 0"
     />
