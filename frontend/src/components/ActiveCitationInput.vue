@@ -14,6 +14,7 @@ import { type CitationType } from '@/domain/citationType'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
 import documentUnitService from '@/services/documentUnitService'
+import type { DocumentType } from '@/domain/documentUnit.ts'
 
 const props = defineProps<{
   modelValue?: ActiveCitation
@@ -52,6 +53,20 @@ const activeCitationType = computed({
     } else {
       activeCitation.value.citationType = undefined
     }
+  },
+})
+
+const activeCitationDocumentType = computed({
+  get: () =>
+    activeCitation?.value?.documentType
+      ? {
+          label: activeCitation.value.documentType.name,
+          value: activeCitation.value.documentType,
+          additionalInformation: activeCitation.value.documentType.abbreviation,
+        }
+      : undefined,
+  set: (newValue: DocumentType) => {
+    activeCitation.value.documentType = newValue
   },
 })
 
@@ -257,7 +272,7 @@ onMounted(() => {
         <InputField id="activeCitationDecisionDocumentType" label="Dokumenttyp">
           <ComboboxInput
             id="activeCitationDecisionDocumentType"
-            v-model="activeCitation.documentType"
+            v-model="activeCitationDocumentType"
             aria-label="Dokumenttyp Aktivzitierung"
             :item-service="ComboboxItemService.getDocumentTypes"
             :read-only="activeCitation.hasForeignSource"

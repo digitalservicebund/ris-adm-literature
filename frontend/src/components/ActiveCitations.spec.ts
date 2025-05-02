@@ -85,7 +85,7 @@ function generateActiveCitation(options?: {
     fileNumber: options?.fileNumber ?? 'test fileNumber',
     documentType: options?.documentType ?? {
       abbreviation: 'documentTypeShortcut1',
-      label: 'documentType1',
+      name: 'documentType1',
     },
     citationType: options?.citationStyle ?? {
       uuid: '123',

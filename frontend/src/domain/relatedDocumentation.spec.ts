@@ -12,8 +12,8 @@ describe('RelatedDocumentation', () => {
         fileNumber: 'fileNumber',
         decisionDate: '01.01.1998',
         documentType: {
-          label: 'Beschluss',
-          jurisShortcut: 'shortCut',
+          name: 'Beschluss',
+          abbreviation: 'shortCut',
         },
         status: {
           publicationStatus: PublicationState.UNPUBLISHED,
@@ -34,8 +34,8 @@ describe('RelatedDocumentation', () => {
         fileNumber: 'fileNumber',
         decisionDate: '01.01.1998',
         documentType: {
-          label: 'Beschluss',
-          jurisShortcut: 'shortCut',
+          name: 'Beschluss',
+          abbreviation: 'shortCut',
         },
         status: {
           publicationStatus: PublicationState.UNPUBLISHED,
@@ -56,8 +56,8 @@ describe('RelatedDocumentation', () => {
         fileNumber: 'fileNumber',
         decisionDate: '01.01.1998',
         documentType: {
-          label: 'Beschluss',
-          jurisShortcut: 'shortCut',
+          name: 'Beschluss',
+          abbreviation: 'shortCut',
         },
       },
     })
