@@ -9,11 +9,11 @@ public enum ImplicitReferenceType {
    */
   FUNDSTELLE,
   /**
-   * Reference type for an active norm ord adm reference (in German 'Aktivverweisung').
+   * Reference type for an active norm or ADM reference (in German 'Aktivverweisung').
    */
-  NORM,
+  ACTIVE_REFERENCE,
   /**
    * Reference type for active citation of caselaw documents (in German 'Aktivzitierung Rechtssprechung').
    */
-  CASELAW,
+  ACTIVE_CITATION,
 }

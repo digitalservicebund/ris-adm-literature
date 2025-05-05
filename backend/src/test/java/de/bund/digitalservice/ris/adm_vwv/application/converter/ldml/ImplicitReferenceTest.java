@@ -11,14 +11,14 @@ class ImplicitReferenceTest {
 
   private static Stream<Arguments> implicitReferences() {
     ImplicitReference fundstelle = new ImplicitReference();
-    ImplicitReference normReference = new ImplicitReference();
-    normReference.setNormReference(new RisNormReference());
-    ImplicitReference caselawReference = new ImplicitReference();
-    caselawReference.setCaselawReference(new RisCaselawReference());
+    ImplicitReference activeReference = new ImplicitReference();
+    activeReference.setNormReference(new RisNormReference());
+    ImplicitReference activeCitation = new ImplicitReference();
+    activeCitation.setCaselawReference(new RisCaselawReference());
     return Stream.of(
       Arguments.of(fundstelle, ImplicitReferenceType.FUNDSTELLE),
-      Arguments.of(normReference, ImplicitReferenceType.NORM),
-      Arguments.of(caselawReference, ImplicitReferenceType.CASELAW)
+      Arguments.of(activeReference, ImplicitReferenceType.ACTIVE_REFERENCE),
+      Arguments.of(activeCitation, ImplicitReferenceType.ACTIVE_CITATION)
     );
   }
 

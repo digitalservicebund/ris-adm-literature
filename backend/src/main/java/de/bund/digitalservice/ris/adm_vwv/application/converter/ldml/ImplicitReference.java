@@ -32,9 +32,9 @@ public class ImplicitReference {
   public ImplicitReferenceType getReferenceType() {
     ImplicitReferenceType referenceType = ImplicitReferenceType.FUNDSTELLE;
     if (normReference != null) {
-      referenceType = ImplicitReferenceType.NORM;
+      referenceType = ImplicitReferenceType.ACTIVE_REFERENCE;
     } else if (caselawReference != null) {
-      referenceType = ImplicitReferenceType.CASELAW;
+      referenceType = ImplicitReferenceType.ACTIVE_CITATION;
     }
     return referenceType;
   }
