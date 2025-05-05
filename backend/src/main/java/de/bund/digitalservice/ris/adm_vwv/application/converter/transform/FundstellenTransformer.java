@@ -19,8 +19,7 @@ public class FundstellenTransformer {
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of references.
-   * @return Reference list, or an empty list if the surrounding {@code <analysis>} element
-   * is {@code null}
+   * @return Reference list, or an empty list if the surrounding {@code <analysis>} element is {@code null}
    */
   public List<Reference> transform() {
     Analysis analysis = akomaNtoso.getDoc().getMeta().getAnalysis();
