@@ -63,12 +63,14 @@ const onClickDelete = () => {
   emit('deleteNormgeber', props.normgeber!.id)
 }
 
+// Reset the selected region on institution change
 watch(institution, () => {
   if (!institution.value) {
     selectedRegion.value = undefined
   }
 })
 
+// Initialize local state with fresh values on normgeber change
 watch(
   () => props.normgeber,
   (newVal) => {
