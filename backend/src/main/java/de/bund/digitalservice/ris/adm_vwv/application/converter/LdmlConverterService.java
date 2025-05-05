@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class LdmlConverterService {
       documentationUnit.documentNumber(),
       new FundstellenTransformer(akomaNtoso).transform(),
       List.of(),
-      null,
+      new LongTitleTransformer(akomaNtoso).transform(),
       List.of(),
       null,
       null,
