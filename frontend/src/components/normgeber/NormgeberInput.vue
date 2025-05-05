@@ -27,8 +27,13 @@ const isInvalid = computed(
 )
 
 const regionsInputText = computed(() => {
-  if (institution.value && institution.value.regions) {
-    return institution.value.regions.map((r) => r.label).join(', ')
+  const isLegalEntity = institution.value && institution.value.type === InstitutionType.LegalEntity
+  const hasRegions =
+    institution.value && institution.value.regions && institution.value.regions.length > 0
+  if (isLegalEntity && hasRegions) {
+    return institution.value?.regions?.map((r) => r.label).join(', ')
+  } else if (isLegalEntity && !hasRegions) {
+    return 'Keine Region zugeordnet'
   } else {
     return ''
   }
