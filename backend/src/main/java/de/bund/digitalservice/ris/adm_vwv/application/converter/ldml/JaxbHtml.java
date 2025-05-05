@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class JaxbHtml {
 
   @XmlAttribute
