@@ -252,7 +252,7 @@ export type InputModelProps =
 <template>
   <div ref="dropdownContainerRef" class="relative w-full">
     <div
-      class="space-between shadow-blue flex h-48 flex-row bg-white px-16 py-12 whitespace-nowrap"
+      class="space-between shadow-blue flex h-48 flex-row bg-white px-16 py-12 whitespace-nowrap hover:outline hover:outline-4 hover:-outline-offset-4 hover:outline-blue-800"
       :class="conditionalClasses"
     >
       <input
@@ -277,7 +277,7 @@ export type InputModelProps =
         <button
           v-if="inputText && !noClear"
           aria-label="Auswahl zurücksetzen"
-          class="flex items-center text-blue-800 focus:outline-none focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-blue-800"
+          class="flex items-center text-blue-800 focus:outline-none focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-blue-800 cursor-pointer"
           tabindex="0"
           @click="clearDropdown"
         >
@@ -286,7 +286,7 @@ export type InputModelProps =
 
         <button
           :aria-label="ariaLabelDropdownIcon"
-          class="input-expand-icon flex items-center text-blue-800"
+          class="input-expand-icon flex items-center text-blue-800 cursor-pointer"
           tabindex="-1"
           @click="toggleDropdown"
         >

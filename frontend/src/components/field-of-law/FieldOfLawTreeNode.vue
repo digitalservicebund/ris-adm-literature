@@ -124,7 +124,7 @@ watch(
             <button
               id="expand-button"
               :aria-label="node.text + ' aufklappen'"
-              class="w-icon rounded-full bg-blue-200 text-blue-800"
+              class="w-icon rounded-full bg-blue-200 text-blue-800 cursor-pointer"
               @click="toggleExpanded"
             >
               <IconArrowDown />

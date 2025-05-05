@@ -29,7 +29,7 @@ describe('FieldsOfLawExpandableContainer', () => {
   it('renders component with empty sachgebiet list', () => {
     renderComponent([])
 
-    expect(screen.getByRole('button', { name: 'Sachgebiete' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' })).toBeInTheDocument()
   })
 
   it('renders component with non empty sachgebiet list', () => {
@@ -42,12 +42,12 @@ describe('FieldsOfLawExpandableContainer', () => {
     const { emitted, user } = renderComponent([])
     const scrollIntoViewMock = vi.fn()
     window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     expect(screen.getByRole('button', { name: 'Fertig' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Fertig' }))
 
-    expect(screen.getByRole('button', { name: 'Sachgebiete' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' })).toBeInTheDocument()
 
     expect(emitted()['editingDone']).toBeTruthy()
     expect(scrollIntoViewMock).toHaveBeenCalledTimes(1)

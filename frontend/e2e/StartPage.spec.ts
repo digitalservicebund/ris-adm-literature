@@ -21,7 +21,8 @@ test.describe('StartPage', () => {
       await page.goto('/')
 
       // Assert
-      await expect(page.getByText('Rechtsinformationen des Bundes')).toBeVisible()
+      await expect(page.getByText('Rechtsinformationen')).toBeVisible()
+      await expect(page.getByText('des Bundes')).toBeVisible()
       // user icon
       await expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
       await expect(page.getByText('Vorname Nachname')).toBeVisible()
