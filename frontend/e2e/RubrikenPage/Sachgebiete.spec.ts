@@ -35,7 +35,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         // then
         await expect(page.getByText('Direkteingabe Sachgebiet')).toBeVisible()
       },
@@ -48,7 +48,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         // then
         await expect(page.getByLabel('Sachgebietskürzel')).toBeVisible()
@@ -66,7 +66,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Fertig' }).click()
 
@@ -82,7 +82,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page
           .getByRole('button', {
@@ -102,7 +102,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         // given
         await page.goto('/documentUnit/KSNR054920707/rubriken')
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page
           .getByRole('button', {
@@ -124,7 +124,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
@@ -145,7 +145,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
@@ -170,7 +170,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
@@ -192,7 +192,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
@@ -218,7 +218,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
         await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
@@ -245,7 +245,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
 
@@ -262,7 +262,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietskürzel').fill('xyz')
         await page.keyboard.press('Enter')
@@ -280,7 +280,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
         await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
@@ -301,7 +301,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('e')
         await page.getByRole('button', { name: 'Sachgebietssuche ausführen' }).click()
@@ -321,7 +321,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
         await page.keyboard.press('Enter')
@@ -345,7 +345,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
         await page.keyboard.press('Enter')
@@ -368,7 +368,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
         await page.keyboard.press('Enter')
@@ -387,7 +387,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByRole('checkbox', { name: 'Mit Normen' }).click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('phantasie')
@@ -406,7 +406,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
         await page.getByLabel('Sachgebietsnorm').fill('§ 99')
@@ -427,7 +427,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietskürzel').fill('PR')
         await page.getByLabel('Sachgebietsbezeichnung').fill('Phantasie')
@@ -449,7 +449,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
         await page.goto('/documentUnit/KSNR054920707/rubriken')
 
         // when
-        await page.getByRole('button', { name: 'Sachgebiete' }).click()
+        await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
         await page.getByLabel('Sachgebietsuche auswählen').click()
         await page.getByLabel('Sachgebietskürzel').fill('PR')
         await page.getByLabel('Sachgebietsbezeichnung').fill('arbeit')
@@ -475,7 +475,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       await page.goto('/documentUnit/KSNR054920707/rubriken')
 
       // when
-      await page.getByRole('button', { name: 'Sachgebiete' }).click()
+      await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
       await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('PR')
       await page.getByText('Beendigung').click()
 
@@ -497,7 +497,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     await page.getByText('Neue Dokumentationseinheit').click()
     await page.getByText('Rubriken').click()
 
-    await page.getByRole('button', { name: 'Sachgebiete' }).click()
+    await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
     await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 
     // when

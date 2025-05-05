@@ -26,7 +26,7 @@ const isExpanded = ref(false)
 const inputMethod = ref(InputMethod.DIRECT)
 
 const expandButtonLabel = computed(() => {
-  return props.fieldsOfLaw.length > 0 ? 'Weitere Angabe' : 'Sachgebiete'
+  return props.fieldsOfLaw.length > 0 ? 'Weitere Angabe' : 'Sachgebiete hinzufügen'
 })
 
 function removeNode(node: FieldOfLaw) {

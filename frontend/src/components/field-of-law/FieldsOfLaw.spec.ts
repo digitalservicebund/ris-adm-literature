@@ -350,7 +350,7 @@ describe('FieldsOfLaw', () => {
     renderComponent()
 
     // then
-    expect(screen.getByRole('button', { name: 'Sachgebiete' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' })).toBeInTheDocument()
   })
 
   it('Shows Radio group when clicking Sachgebiete button', async () => {
@@ -358,7 +358,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
 
     // then
     expect(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' })).toBeInTheDocument()
@@ -369,7 +369,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
 
@@ -382,7 +382,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -398,7 +398,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -418,7 +418,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'this triggers an error')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -438,7 +438,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -456,7 +456,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -480,7 +480,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -505,7 +505,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
@@ -534,7 +534,7 @@ describe('FieldsOfLaw', () => {
     const { user } = renderComponent()
 
     // when
-    await user.click(screen.getByRole('button', { name: 'Sachgebiete' }))
+    await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
