@@ -107,20 +107,31 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByRole('heading', { level: 2, name: 'Normgeber' })).toBeVisible()
 
       // when
-      await page.getByRole('button', { name: 'Normgeber hinzufügen', exact: true }).click()
       const normgeberElement = page.getByRole('textbox', { name: 'Normgeber' })
       await normgeberElement.fill('Erstes')
       await expect(page.getByText('Erstes Organ')).toHaveCount(1)
       await page.getByText('Erstes Organ').click()
       // then
       await expect(normgeberElement).toHaveValue('Erstes Organ')
+      await expect(
+        page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }),
+      ).toHaveAttribute('disabled')
+
+      // when
+      const regionElement = page.getByRole('textbox', { name: 'Region' })
+      await regionElement.fill('AA')
+      await expect(page.getByText('AA')).toHaveCount(1)
+      await page.getByText('AA').click()
+      // then
+      await expect(regionElement).toHaveValue('AA')
+      await expect(
+        page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }),
+      ).not.toHaveAttribute('disabled')
 
       // when
       await page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }).click()
-      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
-      await page.reload()
       // then
-      await expect(page.getByRole('listitem').first()).toHaveText('Erstes Organ')
+      await expect(page.getByRole('listitem').first()).toHaveText('AA, Erstes Organ')
     },
   )
 

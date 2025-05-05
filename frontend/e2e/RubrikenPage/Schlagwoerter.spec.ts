@@ -24,7 +24,9 @@ test.describe('RubrikenPage - Schlagwörter', () => {
     const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
     await schlagwoerterListEditElement.click()
     await schlagwoerterListEditElement.fill('Schlagwort 1')
-    const schlagwoerterUebernehmenElement = page.getByText('Übernehmen').first()
+    const schlagwoerterUebernehmenElement = page.getByRole('button', {
+      name: 'Schlagwörter übernehmen',
+    })
     await schlagwoerterUebernehmenElement.click()
     await expect(page.getByText('Schlagwort 1')).toHaveCount(1)
 
@@ -90,7 +92,9 @@ test.describe('RubrikenPage - Schlagwörter with persistence', () => {
       const schlagwoerterListEditElement = page.getByTestId('Schlagwörter_ListInputEdit')
       await schlagwoerterListEditElement.click()
       await schlagwoerterListEditElement.fill('BSG 1')
-      const schlagwoerterUebernehmenElement = page.getByText('Übernehmen').first()
+      const schlagwoerterUebernehmenElement = page.getByRole('button', {
+        name: 'Schlagwörter übernehmen',
+      })
       await schlagwoerterUebernehmenElement.click()
       await expect(page.getByText('BSG 1')).toHaveCount(1)
 

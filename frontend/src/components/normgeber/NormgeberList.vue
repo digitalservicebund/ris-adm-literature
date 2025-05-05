@@ -1,36 +1,22 @@
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
-import { createEmptyNormgeber, type Normgeber } from '@/domain/normgeber'
 import NormgeberListItem from './NormgeberListItem.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import { computed } from 'vue'
+import NormgeberInput from './NormgeberInput.vue'
+import Button from 'primevue/button'
+import IconAdd from '~icons/material-symbols/add'
+import { useEditableList } from '@/composables/useEditableList'
 
 const store = useDocumentUnitStore()
 
 const normgebers = computed({
   get: () => store.documentUnit!.normgebers ?? [],
-  set: (newValue) => (store.documentUnit!.normgebers = newValue),
+  set: (newValue) => {
+    store.documentUnit!.normgebers = newValue
+  },
 })
 
-const onClickAddNormgeber = () => {
-  normgebers.value = [...normgebers.value, createEmptyNormgeber()]
-}
-
-const onUpdateNormgeber = (updated: Normgeber | undefined) => {
-  if (updated) {
-    const index = normgebers.value.findIndex((a) => a.id === updated.id)
-    normgebers.value[index] = updated
-  }
-}
-
-const onRemoveNormgeber = (id: string) => {
-  normgebers.value = normgebers.value.filter((a) => a.id !== id)
-}
-
-const buttonLabel = computed(() =>
-  normgebers.value.length > 0 ? 'Weitere Angabe' : 'Normgeber hinzufügen',
-)
+const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } = useEditableList(normgebers)
 </script>
 
 <template>
@@ -39,23 +25,32 @@ const buttonLabel = computed(() =>
     <ol v-if="normgebers.length > 0">
       <li
         class="border-b-1 border-blue-300 py-16"
-        v-for="(normgeber, index) in normgebers"
+        v-for="normgeber in normgebers"
         :key="normgeber.id"
       >
         <NormgeberListItem
-          :normgeber="normgebers[index]"
-          @update-normgeber="onUpdateNormgeber"
-          @remove-normgeber="onRemoveNormgeber"
+          :normgeber="normgeber"
+          @add-normgeber="onAddItem"
+          @update-normgeber="onUpdateItem"
+          @delete-normgeber="onRemoveItem"
         />
       </li>
     </ol>
-    <Button
+    <NormgeberInput
+      v-if="isCreationPanelOpened || normgebers.length === 0"
       class="mt-16"
-      :aria-label="buttonLabel"
+      @update-normgeber="onAddItem"
+      @cancel="isCreationPanelOpened = false"
+      :show-cancel-button="normgebers.length > 0"
+    />
+    <Button
+      v-else
+      class="mt-16"
+      aria-label="Normgeber hinzufügen"
       severity="secondary"
-      :label="buttonLabel"
+      label="Normgeber hinzufügen"
       size="small"
-      @click="onClickAddNormgeber"
+      @click="isCreationPanelOpened = true"
     >
       <template #icon><IconAdd /></template>
     </Button>

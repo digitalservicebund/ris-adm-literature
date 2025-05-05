@@ -1,40 +1,38 @@
-export enum OrganType {
+export enum InstitutionType {
   Institution = 'INSTITUTION',
   LegalEntity = 'LEGAL_ENTITY',
 }
 
 export interface RegionApiResponse {
+  id: string
   code: string
   longText?: string
 }
 
+export interface InstitutionApiResponse {
+  id: string
+  name: string
+  officialName?: string
+  type: InstitutionType
+  regions: RegionApiResponse[]
+}
+
 export interface Region {
+  id: string
   label: string
   longText?: string
 }
 
-export interface InstitutionApiResponse {
-  name: string
-  officialName?: string
-  type: OrganType
-  regions: Region[]
-}
-
 export interface Institution {
+  id: string
   label: string
   officialName?: string
-  type: OrganType
+  type: InstitutionType
   regions?: Region[]
 }
 
 export interface Normgeber {
-  institution?: Institution
-  region?: Region
-}
-
-export function createEmptyNormgeber(): Normgeber {
-  return {
-    institution: undefined,
-    region: undefined,
-  }
+  id: string
+  institution: Institution
+  regions: Region[]
 }
