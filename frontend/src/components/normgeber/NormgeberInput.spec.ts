@@ -5,7 +5,6 @@ import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import NormgeberInput from './NormgeberInput.vue'
-import { nextTick } from 'vue'
 
 const regions = [
   {
@@ -286,19 +285,5 @@ describe('NormgeberInput', () => {
     const emittedVal = emitted('deleteNormgeber') as [string[]]
     const id = emittedVal?.[0][0]
     expect(id).toEqual(mockInstitutionNormgeber.id)
-  })
-
-  it('updates court and region when normgeber prop changes', async () => {
-    const { rerender } = renderComponent({
-      normgeber: mockInstitutionNormgeber,
-      showCancelButton: true,
-    })
-
-    // when updating props
-    await rerender({ normgeber: mockLegalEntityNormgeber })
-    await nextTick()
-
-    // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erste Jurpn')
   })
 })

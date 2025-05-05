@@ -69,17 +69,6 @@ watch(institution, () => {
     selectedRegion.value = undefined
   }
 })
-
-// Initialize local state with fresh values on normgeber change
-watch(
-  () => props.normgeber,
-  (newVal) => {
-    if (newVal) {
-      institution.value = newVal.institution as Institution
-      selectedRegion.value = newVal.regions[0]
-    }
-  },
-)
 </script>
 
 <template>

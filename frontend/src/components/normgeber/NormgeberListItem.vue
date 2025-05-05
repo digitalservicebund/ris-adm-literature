@@ -54,7 +54,7 @@ const label = computed(() =>
     @cancel="onClickCancel"
     show-cancel-button
   />
-  <div v-else class="flex w-full">
+  <div v-else class="flex w-full items-center">
     <div class="ris-label1-regular">
       {{ label }}
     </div>
