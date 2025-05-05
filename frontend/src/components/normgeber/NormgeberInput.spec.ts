@@ -170,7 +170,7 @@ describe('NormgeberInput', () => {
     renderComponent({ normgeber: mockLegalEntityNormgeber, showCancelButton: true })
     expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erste Jurpn')
     expect(screen.getByLabelText('Region')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('')
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('Keine Region zugeordnet')
     expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('readonly')
   })
 

@@ -22,7 +22,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } = useEdit
 <template>
   <div class="normgebers">
     <h2 class="ris-label1-bold mb-16">Normgeber</h2>
-    <ol v-if="normgebers.length > 0">
+    <ol v-if="normgebers.length > 0" aria-label="Normgeber Liste">
       <li
         class="border-b-1 border-blue-300 py-16"
         v-for="normgeber in normgebers"
