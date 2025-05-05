@@ -84,4 +84,42 @@ class LdmlConverterServiceTest {
       .extracting(Reference::citation, Reference::legalPeriodicalRawValue)
       .containsOnly(Assertions.tuple("2020, Seite 5", "BAnz"));
   }
+
+  @Test
+  void convertToBusinessModel_longTitle() {
+    // given
+    String xml =
+      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <akn:akomaNtoso
+        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+        xmlns:ris="http://ldml.neuris.de/metadata/">
+        <akn:doc name="offene-struktur">
+          <akn:meta></akn:meta>
+          <akn:preface>
+            <akn:longTitle>
+              <akn:block name="longTitle">Langer Titel</akn:block>
+            </akn:longTitle>
+          </akn:preface>
+        </akn:doc>
+      </akn:akomaNtoso>
+      """;
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::langueberschrift)
+      .isEqualTo("Langer Titel");
+  }
 }
