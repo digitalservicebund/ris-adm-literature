@@ -18,5 +18,5 @@ public class Analysis {
   private String source = "attributsemantik-noch-undefiniert";
 
   @XmlElement(namespace = XmlNamespace.AKN_NS)
-  private List<OtherReference> otherReferences;
+  private List<OtherReferences> otherReferences;
 }

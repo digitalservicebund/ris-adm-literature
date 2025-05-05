@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class LdmlConverterService {
     return new DocumentationUnitContent(
       documentationUnit.id(),
       documentationUnit.documentNumber(),
-      List.of(),
+      new FundstellenTransformer(akomaNtoso).transform(),
       List.of(),
       null,
       List.of(),

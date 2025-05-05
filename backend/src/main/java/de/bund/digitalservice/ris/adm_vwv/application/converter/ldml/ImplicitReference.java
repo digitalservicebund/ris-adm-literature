@@ -24,4 +24,14 @@ public class ImplicitReference {
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisCaselawReference caselawReference;
+
+  public ImplicitReferenceType getReferenceType() {
+    ImplicitReferenceType referenceType = ImplicitReferenceType.FUNDSTELLE;
+    if (normReference != null) {
+      referenceType = ImplicitReferenceType.NORM;
+    } else if (caselawReference != null) {
+      referenceType = ImplicitReferenceType.CASELAW;
+    }
+    return referenceType;
+  }
 }

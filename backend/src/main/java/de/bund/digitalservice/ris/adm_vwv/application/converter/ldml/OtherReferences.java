@@ -7,11 +7,11 @@ import jakarta.xml.bind.annotation.XmlElement;
 import lombok.Data;
 
 /**
- * Jaxb otherReference element.
+ * Jaxb otherReferences element.
  */
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OtherReference {
+public class OtherReferences {
 
   @XmlAttribute
   private String source = "attributsemantik-noch-undefiniert";
