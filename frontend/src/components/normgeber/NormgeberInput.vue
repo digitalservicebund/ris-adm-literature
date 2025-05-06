@@ -6,6 +6,8 @@ import ComboboxItemService from '@/services/comboboxItemService'
 import { type Region, type Normgeber, type Institution, InstitutionType } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
+import { useValidationStore } from '@/composables/useValidationStore'
+import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 
 const props = defineProps<{
   normgeber?: Normgeber
@@ -18,12 +20,15 @@ const emit = defineEmits<{
   cancel: [void]
 }>()
 
+const docUnitStore = useDocumentUnitStore()
+const validationStore = useValidationStore<['institution', 'region'][number]>()
+
 const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)
 const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined)
-const isInvalid = computed(
-  () =>
-    !institution.value ||
-    (institution.value.type === InstitutionType.Institution && !selectedRegion.value),
+
+const isInvalid = computed(() => !institution.value || !validationStore.isValid())
+const existingInstitutionIds = computed<string[]>(
+  () => docUnitStore.documentUnit?.normgebers?.map((n) => n.institution.id) || [],
 )
 
 const regionsInputText = computed(() => {
@@ -68,10 +73,37 @@ const onClickDelete = () => {
   emit('deleteNormgeber', props.normgeber!.id)
 }
 
+const validateInstitution = () => {
+  const institutionId = institution.value?.id
+  if (institutionId && existingInstitutionIds.value.includes(institutionId)) {
+    validationStore.add('Normgeber bereits eingegeben', 'institution')
+  } else {
+    validationStore.remove('institution')
+  }
+}
+
+const validateRegion = () => {
+  if (institution.value?.type === InstitutionType.Institution && !selectedRegion.value) {
+    validationStore.add('Bitte geben Sie eine Region ein', 'region')
+  } else {
+    validationStore.remove('region')
+  }
+}
+
 // Reset the selected region on institution change
-watch(institution, () => {
-  if (!institution.value) {
+// Triggers validation
+watch(institution, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
     selectedRegion.value = undefined
+    validateInstitution()
+    validateRegion()
+  }
+})
+
+// Triggers region validation
+watch(selectedRegion, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    validateRegion()
   }
 })
 </script>
@@ -79,17 +111,29 @@ watch(institution, () => {
 <template>
   <div>
     <div class="flex flex-row gap-24">
-      <InputField id="institution" label="Normgeber *" class="w-full">
+      <InputField
+        id="institution"
+        label="Normgeber *"
+        class="w-full"
+        :validation-error="validationStore.getByField('institution')"
+        v-slot="slotProps"
+      >
         <ComboboxInput
           id="institution"
           v-model="institution"
           aria-label="Normgeber"
           clear-on-choosing-item
-          :has-error="false"
+          :has-error="slotProps.hasError"
           :item-service="ComboboxItemService.getInstitutions"
         ></ComboboxInput>
       </InputField>
-      <InputField id="region" :label="regionLabel" class="w-full">
+      <InputField
+        id="region"
+        :label="regionLabel"
+        class="w-full"
+        :validation-error="validationStore.getByField('region')"
+        v-slot="slotProps"
+      >
         <InputText
           v-if="regionIsReadonly"
           id="region"
@@ -103,7 +147,7 @@ watch(institution, () => {
           v-else
           id="region"
           v-model="selectedRegion"
-          :has-error="false"
+          :has-error="slotProps.hasError"
           :item-service="ComboboxItemService.getRegions"
           aria-label="Region"
           clear-on-choosing-item

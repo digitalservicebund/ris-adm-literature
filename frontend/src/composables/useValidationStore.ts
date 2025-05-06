@@ -11,6 +11,23 @@ type ValidationStore<T> = {
   isValid: () => boolean
 }
 
+/**
+ * A composable for managing validation errors in a reactive store.
+ *
+ * This utility allows you to add, retrieve, remove, and reset validation errors
+ * associated with form fields or other identifiable instances.
+ *
+ * @template T - A string literal type representing the valid field identifiers.
+ *
+ * Exposed methods:
+ * - `getAll`: Returns all current validation errors.
+ * - `add`: Adds a new validation error for a specific instance, replacing any existing one for that instance.
+ * - `getByField`: Retrieves the validation error for a specific field/instance.
+ * - `getByMessage`: Returns all validation errors matching a specific message.
+ * - `remove`: Removes the validation error for a given field.
+ * - `isValid`: Returns true if there are no validation errors.
+ * - `reset`: Clears all validation errors.
+ */
 export function useValidationStore<T extends string>(): ValidationStore<T> {
   const validationErrors = ref<ValidationError[]>([])
 

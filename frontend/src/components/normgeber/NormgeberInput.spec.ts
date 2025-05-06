@@ -5,6 +5,7 @@ import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import NormgeberInput from './NormgeberInput.vue'
+import { createTestingPinia } from '@pinia/testing'
 
 const regions = [
   {
@@ -135,7 +136,29 @@ const mockLegalEntityNormgeber: Normgeber = {
 function renderComponent(props: { normgeber?: Normgeber; showCancelButton: boolean }) {
   const user = userEvent.setup()
 
-  return { user, ...render(NormgeberInput, { props }) }
+  return {
+    user,
+    ...render(NormgeberInput, {
+      props,
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: {
+                    id: '123',
+                    documentNumber: '1234567891234',
+                    normgebers: [],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
+      },
+    }),
+  }
 }
 
 describe('NormgeberInput', () => {
@@ -285,5 +308,54 @@ describe('NormgeberInput', () => {
     const emittedVal = emitted('deleteNormgeber') as [string[]]
     const id = emittedVal?.[0][0]
     expect(id).toEqual(mockInstitutionNormgeber.id)
+  })
+
+  it('should not allow to add a normgeber already present', async () => {
+    const user = userEvent.setup()
+    render(NormgeberInput, {
+      props: { showCancelButton: false },
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: {
+                    id: '123',
+                    documentNumber: '1234567891234',
+                    normgebers: [mockLegalEntityNormgeber],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
+      },
+    })
+
+    // when
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erste Jurpn')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erste Jurpn')
+    })
+    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    // then
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erste Jurpn')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'true')
+    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
+    expect(screen.getByText('Normgeber bereits eingegeben')).toBeInTheDocument()
+
+    // when
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erstes Organ')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erstes Organ')
+    })
+    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    // then
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'false')
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
+    expect(screen.getByText('Bitte geben Sie eine Region ein')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
   })
 })

@@ -190,4 +190,53 @@ test.describe('RubrikenPage - Normgeber', () => {
       await expect(normgeberList).toHaveCount(0)
     },
   )
+
+  test(
+    'Normgeber: an institution can be entered just once',
+    { tag: ['@RISDEV-7352'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+
+      // when adding twice the same institution
+      const normgeberElement = page.getByRole('textbox', { name: 'Normgeber' })
+      await normgeberElement.fill('Zweite Jurpn')
+      await page.getByText('Zweite Jurpn').click()
+      await page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }).click()
+      await page.getByRole('button', { name: 'Normgeber hinzufügen', exact: true }).click()
+      await normgeberElement.click()
+      await normgeberElement.fill('Zweite Jurpn')
+      await page.getByText('Zweite Jurpn').nth(1).click()
+      await normgeberElement.press('Tab')
+      // then
+      await expect(normgeberElement).toHaveAttribute('invalid', 'true')
+      await expect(page.getByText('Normgeber bereits eingegeben')).toBeVisible()
+    },
+  )
+
+  test(
+    'Normgeber: a region is for an institutional normgeber required',
+    { tag: ['@RISDEV-7352'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+
+      // when adding an institutional normgeber
+      const normgeberElement = page.getByRole('textbox', { name: 'Normgeber' })
+      await normgeberElement.fill('Erstes Organ')
+      await page.getByText('Erstes Organ').click()
+      // then
+      await expect(page.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
+      await expect(page.getByText('Bitte geben Sie eine Region ein')).toBeVisible()
+      await expect(
+        page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }),
+      ).toHaveAttribute('disabled')
+    },
+  )
 })
