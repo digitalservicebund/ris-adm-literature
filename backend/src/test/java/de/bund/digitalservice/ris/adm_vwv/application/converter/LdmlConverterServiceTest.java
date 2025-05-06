@@ -133,12 +133,13 @@ class LdmlConverterServiceTest {
         xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
         xmlns:ris="http://ldml.neuris.de/metadata/">
         <akn:doc name="offene-struktur">
-          <akn:meta></akn:meta>
-          <akn:proprietary source="attributsemantik-noch-undefiniert">
-            <ris:metadata>
-              <ris:entryIntoEffectDate>2025-01-01</ris:entryIntoEffectDate>
-            </ris:metadata>
-          </akn:proprietary>
+          <akn:meta>
+            <akn:proprietary source="attributsemantik-noch-undefiniert">
+              <ris:metadata>
+                <ris:entryIntoEffectDate>2025-01-01</ris:entryIntoEffectDate>
+              </ris:metadata>
+            </akn:proprietary>
+          </akn:meta>
         </akn:doc>
       </akn:akomaNtoso>
       """;
