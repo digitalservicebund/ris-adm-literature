@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import java.util.Optional;
+
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +16,19 @@ public class EntryIntoEffectDateTransformer {
   /**
    * Transforms the {@code EntryIntoEffectDate} object to a string.
    *
-   * @return The entryIntoEffectDate
+   * @return The entryIntoEffectDate or null if Meta or Proprietary or Metadata does not exist
    */
   public String transform() {
-    return akomaNtoso.getDoc().getMeta().getProprietary().getMetadata().getEntryIntoEffectDate();
+    var dateOptional = Optional.ofNullable(akomaNtoso.getDoc())
+      .map(d -> d.getMeta())
+      .map(m -> m.getProprietary())
+      .map(p -> p.getMetadata())
+      .map(m -> m.getEntryIntoEffectDate());
+
+    if (dateOptional.isPresent())
+      return dateOptional.get();
+
+    else
+      return null;
   }
 }
