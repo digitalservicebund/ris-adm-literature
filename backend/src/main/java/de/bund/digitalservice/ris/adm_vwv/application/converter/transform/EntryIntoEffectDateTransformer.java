@@ -22,7 +22,10 @@ public class EntryIntoEffectDateTransformer {
       .map(d -> d.getMeta())
       .map(m -> m.getProprietary())
       .map(p -> p.getMetadata())
-      .map(m -> m.getEntryIntoEffectDate());
+     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
+                .map(Proprietary::getMetadata)
+                .map(RisMetadata::getEntryIntoEffectDate)
+                .orElse(null);
 
     if (dateOptional.isPresent()) return dateOptional.get();
     else return null;
