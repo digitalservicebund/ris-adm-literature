@@ -1,12 +1,11 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
-import java.util.Optional;
-
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Long title transformer.
+ * EntryIntoEffectDate transformer.
  */
 @RequiredArgsConstructor
 public class EntryIntoEffectDateTransformer {
@@ -25,10 +24,7 @@ public class EntryIntoEffectDateTransformer {
       .map(p -> p.getMetadata())
       .map(m -> m.getEntryIntoEffectDate());
 
-    if (dateOptional.isPresent())
-      return dateOptional.get();
-
-    else
-      return null;
+    if (dateOptional.isPresent()) return dateOptional.get();
+    else return null;
   }
 }
