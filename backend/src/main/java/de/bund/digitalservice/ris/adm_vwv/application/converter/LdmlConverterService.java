@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.EntryIntoEffectDateTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
 import java.util.List;
@@ -39,7 +40,7 @@ public class LdmlConverterService {
       new LongTitleTransformer(akomaNtoso).transform(),
       List.of(),
       null,
-      null,
+      new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       null,
       null,
       null,
