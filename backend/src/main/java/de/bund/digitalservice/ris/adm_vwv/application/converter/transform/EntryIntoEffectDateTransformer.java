@@ -17,7 +17,7 @@ public class EntryIntoEffectDateTransformer {
   /**
    * Transforms the {@code EntryIntoEffectDate} object to a string.
    *
-   * @return The entryIntoEffectDate or null if Meta or Proprietary or Metadata does not exist
+   * @return The entryIntoEffectDate or null if Proprietary or Metadata does not exist
    */
   public String transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
