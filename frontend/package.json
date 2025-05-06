@@ -38,7 +38,7 @@
     "@tiptap/extension-bullet-list": "^2.11.9",
     "@tiptap/extension-color": "^2.11.9",
     "@tiptap/extension-document": "^2.11.9",
-    "@tiptap/extension-hard-break": "^2.11.9",
+    "@tiptap/extension-hard-break": "^2.12.0",
     "@tiptap/extension-history": "^2.11.9",
     "@tiptap/extension-image": "^2.11.9",
     "@tiptap/extension-italic": "^2.11.9",
