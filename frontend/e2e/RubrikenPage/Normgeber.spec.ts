@@ -218,7 +218,7 @@ test.describe('RubrikenPage - Normgeber', () => {
   )
 
   test(
-    'Normgeber: a region is for an institutional normgeber required',
+    'Normgeber: region is required for an institutional normgeber',
     { tag: ['@RISDEV-7352'] },
     async ({ page }) => {
       // given
