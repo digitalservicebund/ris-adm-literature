@@ -8,7 +8,11 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Documen
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.UUID;
+import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class LdmlConverterServiceTest {
@@ -148,5 +152,30 @@ class LdmlConverterServiceTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::ausserkrafttretedatum)
       .isEqualTo("2025-02-02");
+  }
+
+  @Test
+  void convertToBusinessModel_keywords() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    List<String> expectedKeywords = Stream.of("Schlag", "Wort", "Mehrere Wörter in einem Schlagwort").toList();
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::keywords)
+      .isEqualTo(expectedKeywords);
   }
 }
