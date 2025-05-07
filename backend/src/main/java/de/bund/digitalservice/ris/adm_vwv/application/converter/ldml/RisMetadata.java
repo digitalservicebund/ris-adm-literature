@@ -30,9 +30,9 @@ public class RisMetadata {
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisDocumentType documentType;
 
-  @XmlElementWrapper(name = "tableOfContentEntries", namespace = XmlNamespace.RIS_NS)
-  @XmlElement(name = "tableOfContentEntry", namespace = XmlNamespace.RIS_NS)
-  private List<String> tableOfContentEntries;
+  @XmlElementWrapper(name = "tableOfContentsEntries", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "tableOfContentsEntry", namespace = XmlNamespace.RIS_NS)
+  private List<String> tableOfContentsEntries;
 
   @XmlElementWrapper(name = "zuordnungen", namespace = XmlNamespace.RIS_NS)
   @XmlElement(name = "zuordnung", namespace = XmlNamespace.RIS_NS)
