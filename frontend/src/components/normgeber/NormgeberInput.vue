@@ -21,7 +21,7 @@ const emit = defineEmits<{
 }>()
 
 const docUnitStore = useDocumentUnitStore()
-const validationStore = useValidationStore<['institution', 'region'][number]>()
+const validationStore = useValidationStore<'institution' | 'region'>()
 
 const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)
 const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined)
@@ -93,7 +93,7 @@ const validateRegion = () => {
 // Reset the selected region on institution change
 // Triggers validation
 watch(institution, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
+  if (newVal?.id !== oldVal?.id) {
     selectedRegion.value = undefined
     validateInstitution()
     validateRegion()
@@ -102,7 +102,7 @@ watch(institution, (newVal, oldVal) => {
 
 // Triggers region validation
 watch(selectedRegion, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
+  if (newVal?.id !== oldVal?.id) {
     validateRegion()
   }
 })

@@ -258,6 +258,23 @@ describe('NormgeberInput', () => {
     expect(updatedEntity.regions[0].id).toEqual(regions[1].id)
   })
 
+  it('should create new entity', async () => {
+    const { user, emitted } = renderComponent({ showCancelButton: false })
+
+    // when
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Zweite Jurpn')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Zweite Jurpn')
+    })
+    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    await user.click(screen.getByRole('button', { name: 'Normgeber übernehmen' }))
+    // then
+    const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
+    const updatedEntity = emittedVal?.[0][0]
+    expect(updatedEntity.institution.id).toEqual(institutions[2].id)
+    expect(updatedEntity.regions.length).toEqual(0)
+  })
+
   it('should reset the region on institution change', async () => {
     const { user, emitted } = renderComponent({
       normgeber: mockInstitutionNormgeber,
@@ -265,13 +282,13 @@ describe('NormgeberInput', () => {
     })
 
     // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erste')
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Zweites Organ')
     await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[1]).toHaveTextContent('Erstes Organ')
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Zweites Organ')
     })
-    await user.click(screen.getAllByLabelText('dropdown-option')[1])
+    await user.click(screen.getAllByLabelText('dropdown-option')[0])
     // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Zweites Organ')
     expect(screen.getByLabelText('Region *')).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
@@ -292,11 +309,11 @@ describe('NormgeberInput', () => {
     const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
     const updatedEntity = emittedVal?.[0][0]
     expect(updatedEntity.id).toEqual(mockInstitutionNormgeber.id)
-    expect(updatedEntity.institution.id).toEqual(institutions[1].id)
+    expect(updatedEntity.institution.id).toEqual(institutions[3].id)
     expect(updatedEntity.regions[0].id).toEqual(regions[0].id)
   })
 
-  it('should delete existing normgeber', async () => {
+  it('should delete an existing normgeber', async () => {
     const { user, emitted } = renderComponent({
       normgeber: mockInstitutionNormgeber,
       showCancelButton: true,
@@ -308,6 +325,23 @@ describe('NormgeberInput', () => {
     const emittedVal = emitted('deleteNormgeber') as [string[]]
     const id = emittedVal?.[0][0]
     expect(id).toEqual(mockInstitutionNormgeber.id)
+  })
+
+  it('region is required for institutional normgeber', async () => {
+    const { user } = renderComponent({ showCancelButton: true })
+
+    // when
+    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erstes Organ')
+    await waitFor(() => {
+      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erstes Organ')
+    })
+    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    // then
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
+    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'false')
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
+    expect(screen.getByText('Bitte geben Sie eine Region ein')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
   })
 
   it('should not allow to add a normgeber already present', async () => {
@@ -344,18 +378,5 @@ describe('NormgeberInput', () => {
     expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'true')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
     expect(screen.getByText('Normgeber bereits eingegeben')).toBeInTheDocument()
-
-    // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erstes Organ')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erstes Organ')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
-    // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'false')
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
-    expect(screen.getByText('Bitte geben Sie eine Region ein')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
   })
 })
