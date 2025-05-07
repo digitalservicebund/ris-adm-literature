@@ -5,12 +5,7 @@ import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
 import type { Normgeber } from './normgeber'
 import type { Court } from './court'
-
-export type DocumentType = {
-  uuid?: string
-  abbreviation: string
-  name: string
-}
+import type { DocumentType } from './documentType'
 
 export interface DocumentUnit {
   readonly id: string

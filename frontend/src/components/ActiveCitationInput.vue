@@ -14,7 +14,7 @@ import { type CitationType } from '@/domain/citationType'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
 import documentUnitService from '@/services/documentUnitService'
-import type { DocumentType } from '@/domain/documentUnit.ts'
+import type { DocumentType } from '@/domain/documentType'
 
 const props = defineProps<{
   modelValue?: ActiveCitation

@@ -17,7 +17,7 @@ import ActiveCitations from '@/components/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
-import type { DocumentType } from '@/domain/documentUnit.ts'
+import type { DocumentType } from '@/domain/documentType'
 
 const store = useDocumentUnitStore()
 

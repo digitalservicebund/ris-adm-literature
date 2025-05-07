@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
-import { type DocumentType, type DocumentUnit } from '@/domain/documentUnit'
+import { type DocumentUnit } from '@/domain/documentUnit'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 import { createTestingPinia } from '@pinia/testing'
 import { http, HttpResponse } from 'msw'
@@ -12,6 +12,7 @@ import { setupServer } from 'msw/node'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import type { Court } from '@/domain/court'
+import type { DocumentType } from '@/domain/documentType'
 
 const server = setupServer(
   http.get('/api/lookup-tables/document-types', () =>
