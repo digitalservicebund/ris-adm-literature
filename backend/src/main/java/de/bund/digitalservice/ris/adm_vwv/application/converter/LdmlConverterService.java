@@ -9,7 +9,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.Fundst
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KurzreferatTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.TableOfContentsTransformer;
-
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;

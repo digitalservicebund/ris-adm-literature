@@ -7,7 +7,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -179,7 +178,7 @@ class LdmlConverterServiceTest {
   @Test
   void convertToBusinessModel_gliederung_nonexistent() {
     // given
-        String xml =
+    String xml =
       """
       <?xml version="1.0" encoding="UTF-8"?>
       <akn:akomaNtoso

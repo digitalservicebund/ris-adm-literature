@@ -2,10 +2,8 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 
 /**
