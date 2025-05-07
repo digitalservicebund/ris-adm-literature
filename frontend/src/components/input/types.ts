@@ -1,7 +1,6 @@
 import type { UseFetchReturn } from '@vueuse/core'
 import { LabelPosition } from '@/components/input/InputField.vue'
 import LegalPeriodical from '@/domain/legalPeriodical'
-import type { DocumentType } from '@/domain/documentUnit'
 import type { CitationType } from '@/domain/citationType'
 import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
@@ -9,6 +8,7 @@ import type { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import type { Court } from '@/domain/court'
 import { type Institution, type Region } from '@/domain/normgeber'
+import type { DocumentType } from '@/domain/documentType'
 
 export enum InputType {
   TEXT = 'text',
