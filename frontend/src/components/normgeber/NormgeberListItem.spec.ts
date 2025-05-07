@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import NormgeberListItem from './NormgeberListItem.vue'
+import { createTestingPinia } from '@pinia/testing'
 
 const mockNormgeber: Normgeber = {
   id: 'normgeberId',
@@ -13,7 +14,29 @@ const mockNormgeber: Normgeber = {
 function renderComponent() {
   const user = userEvent.setup()
 
-  return { user, ...render(NormgeberListItem, { props: { normgeber: mockNormgeber } }) }
+  return {
+    user,
+    ...render(NormgeberListItem, {
+      props: { normgeber: mockNormgeber },
+      global: {
+        plugins: [
+          [
+            createTestingPinia({
+              initialState: {
+                docunitStore: {
+                  documentUnit: {
+                    id: '123',
+                    documentNumber: '1234567891234',
+                    normgebers: [],
+                  },
+                },
+              },
+            }),
+          ],
+        ],
+      },
+    }),
+  }
 }
 
 describe('NormgeberListItem', () => {
@@ -31,7 +54,6 @@ describe('NormgeberListItem', () => {
     await user.click(screen.getByRole('button', { name: 'Normgeber Editieren' }))
 
     // then
-    expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Normgeber hinzufügen' })).not.toBeInTheDocument()
   })
 

@@ -260,6 +260,7 @@ export type InputModelProps =
         ref="inputFieldRef"
         v-model="inputText"
         :aria-label="ariaLabel"
+        :invalid="hasError"
         autocomplete="off"
         class="placeholder:font-font-family-sans w-full bg-transparent placeholder:text-gray-800 placeholder:not-italic focus:outline-none"
         :placeholder="placeholder"
