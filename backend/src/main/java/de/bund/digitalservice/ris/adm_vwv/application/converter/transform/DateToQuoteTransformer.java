@@ -26,6 +26,7 @@ public class DateToQuoteTransformer {
       return null;
     }
     return Optional.ofNullable(proprietary.getMetadata().getDateToQuoteList())
+      // For now, we only deliver the very first item. Handling of multiple waits for RISDEV-6451.
       .map(List::getFirst)
       .orElse(null);
   }
