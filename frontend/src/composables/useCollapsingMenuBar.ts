@@ -34,7 +34,7 @@ export function useCollapsingMenuBar(buttons: Ref<EditorButton[]>, maxBarEntries
       const menuButton = {
         type: 'menu',
         icon: activeButton ? activeButton.icon : buttonsOfGroup[0].icon,
-        ariaLabel: buttonsOfGroup[0].group || 'menu',
+        ariaLabel: buttonsOfGroup[0].group ?? 'menu',
         group: buttonsOfGroup[0].group,
         isCollapsable: false,
         childButtons: buttonsOfGroup,

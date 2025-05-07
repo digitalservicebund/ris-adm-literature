@@ -62,7 +62,7 @@ const setNodeIndentMarkup = (
   if (!node) return transaction
 
   const indent = clamp(
-    (node.attrs.indent || 0) + delta,
+    (node.attrs.indent ?? 0) + delta,
     options.minIndentLevel * options.indentRange,
     options.maxIndentLevel * options.indentRange,
   )
