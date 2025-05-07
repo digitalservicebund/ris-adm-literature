@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Documen
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
@@ -148,5 +149,28 @@ class LdmlConverterServiceTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::ausserkrafttretedatum)
       .isEqualTo("2025-02-02");
+  }
+
+  @Test
+  void convertToBusinessModel_gliederung() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::gliederung)
+      .isEqualTo(Stream.of("TOC entry 1", "TOC entry 2").toList());
   }
 }
