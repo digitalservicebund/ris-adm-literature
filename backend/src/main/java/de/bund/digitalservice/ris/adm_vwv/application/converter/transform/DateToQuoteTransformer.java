@@ -18,7 +18,7 @@ public class DateToQuoteTransformer {
    * Transforms the {@code AkomaNtoso} object to a date to quote string.
    *
    * @return The (first) date to quote, or {@code null} if the surrounding {@code <proprietary>}
-   * or {@code <dateToQuoteList>} elements are {@code null}
+   *         or {@code <dateToQuoteList>} elements are {@code null}
    */
   public String transform() {
     Proprietary proprietary = akomaNtoso.getDoc().getMeta().getProprietary();
