@@ -214,4 +214,27 @@ class LdmlConverterServiceTest {
       .extracting(DocumentationUnitContent::keywords)
       .isEqualTo(List.of());
   }
+
+  @Test
+  void convertToBusinessModel_dateToQuote() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::zitierdatum)
+      .isEqualTo("2025-05-05");
+  }
 }
