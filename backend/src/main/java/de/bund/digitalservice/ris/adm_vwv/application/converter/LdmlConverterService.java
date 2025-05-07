@@ -3,11 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.EntryIntoEffectDateTransformer;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.ExpiryDateTransformer;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KurzreferatTransformer;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +37,7 @@ public class LdmlConverterService {
       List.of(),
       new LongTitleTransformer(akomaNtoso).transform(),
       List.of(),
-      null,
+      new DateToQuoteTransformer(akomaNtoso).transform(),
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
       null,
