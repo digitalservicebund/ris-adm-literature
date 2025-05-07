@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.EntryIntoEffectDateTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.ExpiryDateTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KeywordsTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KurzreferatTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
 import java.util.List;
@@ -40,7 +41,7 @@ public class LdmlConverterService {
       new FundstellenTransformer(akomaNtoso).transform(),
       List.of(),
       new LongTitleTransformer(akomaNtoso).transform(),
-      List.of(),
+      new KeywordsTransformer(akomaNtoso).transform(),
       null,
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
