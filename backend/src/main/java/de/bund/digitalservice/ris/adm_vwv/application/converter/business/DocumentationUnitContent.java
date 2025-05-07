@@ -41,7 +41,7 @@ public record DocumentationUnitContent(
   List<String> gliederung,
   String kurzreferat,
   List<String> aktenzeichen,
-  Boolean noAktenzeichen,
+  boolean noAktenzeichen,
   DocumentType dokumenttyp,
   String dokumenttypZusatz,
   List<ActiveCitation> activeCitations,

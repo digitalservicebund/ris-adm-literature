@@ -45,6 +45,7 @@
           </ris:dateToQuoteList>
           <ris:referenceNumbers>
             <ris:referenceNumber>AX-Y12345</ris:referenceNumber>
+            <ris:referenceNumber>XX</ris:referenceNumber>
           </ris:referenceNumbers>
           <ris:activeReferences>
             <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 1a" position="Abs 1"/>

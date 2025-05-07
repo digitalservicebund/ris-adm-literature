@@ -31,6 +31,7 @@ public class LdmlConverterService {
   ) {
     AkomaNtoso akomaNtoso = xmlReader.readXml(documentationUnit.xml());
     log.debug("Read Akoma Ntoso from XML: {}.", akomaNtoso);
+    List<String> referenceNumbers = new ReferenceNumbersTransformer(akomaNtoso).transform();
     return new DocumentationUnitContent(
       documentationUnit.id(),
       documentationUnit.documentNumber(),
@@ -43,8 +44,8 @@ public class LdmlConverterService {
       new ExpiryDateTransformer(akomaNtoso).transform(),
       new TableOfContentsTransformer(akomaNtoso).transform(),
       new KurzreferatTransformer(akomaNtoso).transform(),
-      List.of(),
-      null,
+      referenceNumbers,
+      referenceNumbers.isEmpty(),
       null,
       null,
       List.of(),
