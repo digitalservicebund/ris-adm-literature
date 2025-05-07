@@ -65,6 +65,8 @@ npm run test:watch
 npm run test:coverage
 ```
 
+The reports (summaries as well as line-by-line details) can be found in `./frontend/coverage`.
+
 ### Run End-to-End Tests With [Playwright](https://playwright.dev)
 
 When running e2e tests locally you need to have the backend running already.
