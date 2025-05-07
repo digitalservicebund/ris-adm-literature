@@ -339,8 +339,6 @@ describe('NormgeberInput', () => {
     // then
     expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
     expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'false')
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
-    expect(screen.getByText('Bitte geben Sie eine Region ein')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
   })
 

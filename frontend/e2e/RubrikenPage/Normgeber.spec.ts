@@ -232,8 +232,6 @@ test.describe('RubrikenPage - Normgeber', () => {
       await normgeberElement.fill('Erstes Organ')
       await page.getByText('Erstes Organ').click()
       // then
-      await expect(page.getByRole('textbox', { name: 'Region' })).toHaveAttribute('invalid', 'true')
-      await expect(page.getByText('Bitte geben Sie eine Region ein')).toBeVisible()
       await expect(
         page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }),
       ).toHaveAttribute('disabled')

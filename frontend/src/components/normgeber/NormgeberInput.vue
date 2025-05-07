@@ -21,12 +21,17 @@ const emit = defineEmits<{
 }>()
 
 const docUnitStore = useDocumentUnitStore()
-const validationStore = useValidationStore<'institution' | 'region'>()
+const validationStore = useValidationStore<'institution'>()
 
 const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)
 const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined)
 
-const isInvalid = computed(() => !institution.value || !validationStore.isValid())
+const isInvalid = computed(
+  () =>
+    !institution.value ||
+    (institution.value.type === InstitutionType.Institution && !selectedRegion.value) ||
+    !validationStore.isValid(),
+)
 const existingInstitutionIds = computed<string[]>(
   () => docUnitStore.documentUnit?.normgebers?.map((n) => n.institution.id) || [],
 )
@@ -82,28 +87,12 @@ const validateInstitution = () => {
   }
 }
 
-const validateRegion = () => {
-  if (institution.value?.type === InstitutionType.Institution && !selectedRegion.value) {
-    validationStore.add('Bitte geben Sie eine Region ein', 'region')
-  } else {
-    validationStore.remove('region')
-  }
-}
-
 // Reset the selected region on institution change
 // Triggers validation
 watch(institution, (newVal, oldVal) => {
   if (newVal?.id !== oldVal?.id) {
     selectedRegion.value = undefined
     validateInstitution()
-    validateRegion()
-  }
-})
-
-// Triggers region validation
-watch(selectedRegion, (newVal, oldVal) => {
-  if (newVal?.id !== oldVal?.id) {
-    validateRegion()
   }
 })
 </script>
@@ -127,13 +116,7 @@ watch(selectedRegion, (newVal, oldVal) => {
           :item-service="ComboboxItemService.getInstitutions"
         ></ComboboxInput>
       </InputField>
-      <InputField
-        id="region"
-        :label="regionLabel"
-        class="w-full"
-        :validation-error="validationStore.getByField('region')"
-        v-slot="slotProps"
-      >
+      <InputField id="region" :label="regionLabel" class="w-full">
         <InputText
           v-if="regionIsReadonly"
           id="region"
@@ -147,7 +130,6 @@ watch(selectedRegion, (newVal, oldVal) => {
           v-else
           id="region"
           v-model="selectedRegion"
-          :has-error="slotProps.hasError"
           :item-service="ComboboxItemService.getRegions"
           aria-label="Region"
           clear-on-choosing-item
