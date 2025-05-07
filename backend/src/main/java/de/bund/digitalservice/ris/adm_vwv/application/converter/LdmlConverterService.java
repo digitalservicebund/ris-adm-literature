@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.TableOfContentsTransformer;
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class LdmlConverterService {
       new DateToQuoteTransformer(akomaNtoso).transform(),
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
-      null,
+      new TableOfContentsTransformer(akomaNtoso).transform(),
       new KurzreferatTransformer(akomaNtoso).transform(),
       List.of(),
       null,
