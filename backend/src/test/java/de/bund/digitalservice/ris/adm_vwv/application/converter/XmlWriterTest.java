@@ -49,6 +49,41 @@ class XmlWriterTest {
   }
 
   @Test
+  void writeXml_withoutXmlHeader() {
+    // given
+    AkomaNtoso akomaNtoso = new AkomaNtoso();
+    Doc doc = new Doc();
+    Preface preface = new Preface();
+    LongTitle longTitle = new LongTitle();
+    JaxbHtml block = new JaxbHtml();
+    block.setName("longTitle");
+    block.setHtml(List.of("Noch längerer Titel"));
+    longTitle.setBlock(block);
+    preface.setLongTitle(longTitle);
+    doc.setPreface(preface);
+    akomaNtoso.setDoc(doc);
+
+    // when
+    String xml = xmlWriter.writeXml(akomaNtoso, false);
+
+    // then
+    assertThat(xml)
+      .isNotNull()
+      .isEqualTo(
+        """
+        <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/metadata/">
+            <akn:doc name="offene-struktur">
+                <akn:preface>
+                    <akn:longTitle>
+                        <akn:block name="longTitle">Noch längerer Titel</akn:block>
+                    </akn:longTitle>
+                </akn:preface>
+            </akn:doc>
+        </akn:akomaNtoso>"""
+      );
+  }
+
+  @Test
   void writeXml_exceptionDueToNonRootElement() {
     // given
     Doc doc = new Doc();

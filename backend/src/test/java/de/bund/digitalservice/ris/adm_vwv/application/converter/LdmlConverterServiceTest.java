@@ -1,12 +1,13 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
+import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.UUID;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
@@ -17,18 +18,7 @@ class LdmlConverterServiceTest {
   @Test
   void convertToBusinessModel() {
     // given
-    String xml =
-      """
-      <?xml version="1.0" encoding="UTF-8"?>
-      <akn:akomaNtoso
-        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
-        <akn:doc name="offene-struktur">
-          <akn:meta>
-          </akn:meta>
-        </akn:doc>
-      </akn:akomaNtoso>
-      """;
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
     UUID uuid = UUID.randomUUID();
     DocumentationUnit documentationUnit = new DocumentationUnit("KSNR20250000001", uuid, null, xml);
 
@@ -47,23 +37,7 @@ class LdmlConverterServiceTest {
   @Test
   void convertToBusinessModel_fundstellen() {
     // given
-    String xml =
-      """
-      <?xml version="1.0" encoding="UTF-8"?>
-      <akn:akomaNtoso
-        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
-        <akn:doc name="offene-struktur">
-          <akn:meta>
-            <akn:analysis>
-              <akn:otherReferences>
-                  <akn:implicitReference showAs="2020, Seite 5" shortForm="BAnz" />
-              </akn:otherReferences>
-            </akn:analysis>
-          </akn:meta>
-        </akn:doc>
-      </akn:akomaNtoso>
-      """;
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -82,28 +56,13 @@ class LdmlConverterServiceTest {
       .extracting(DocumentationUnitContent::references)
       .asInstanceOf(InstanceOfAssertFactories.list(Reference.class))
       .extracting(Reference::citation, Reference::legalPeriodicalRawValue)
-      .containsOnly(Assertions.tuple("2020, Seite 5", "BAnz"));
+      .containsOnly(tuple("Das Periodikum 2021, Seite 15", "Das Periodikum"));
   }
 
   @Test
   void convertToBusinessModel_longTitle() {
     // given
-    String xml =
-      """
-      <?xml version="1.0" encoding="UTF-8"?>
-      <akn:akomaNtoso
-        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
-        <akn:doc name="offene-struktur">
-          <akn:meta></akn:meta>
-          <akn:preface>
-            <akn:longTitle>
-              <akn:block name="longTitle">Langer Titel</akn:block>
-            </akn:longTitle>
-          </akn:preface>
-        </akn:doc>
-      </akn:akomaNtoso>
-      """;
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -120,29 +79,35 @@ class LdmlConverterServiceTest {
     assertThat(documentationUnitContent)
       .isNotNull()
       .extracting(DocumentationUnitContent::langueberschrift)
-      .isEqualTo("Langer Titel");
+      .isEqualTo("1. Bekanntmachung zum XML-Testen in NeuRIS VwV");
+  }
+
+  @Test
+  void convertToBusinessModel_kurzreferat() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent.kurzreferat())
+      .isNotNull()
+      .containsSubsequence("<p>Kurzreferat Zeile 1</p>", "<p>Kurzreferat Zeile 2</p>");
   }
 
   @Test
   void convertToBusinessModel_entryIntoEffectDate() {
     // given
-    String xml =
-      """
-      <?xml version="1.0" encoding="UTF-8"?>
-      <akn:akomaNtoso
-        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
-        <akn:doc name="offene-struktur">
-          <akn:meta>
-            <akn:proprietary source="attributsemantik-noch-undefiniert">
-              <ris:metadata>
-                <ris:entryIntoEffectDate>2025-01-01</ris:entryIntoEffectDate>
-              </ris:metadata>
-            </akn:proprietary>
-          </akn:meta>
-        </akn:doc>
-      </akn:akomaNtoso>
-      """;
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -165,23 +130,7 @@ class LdmlConverterServiceTest {
   @Test
   void convertToBusinessModel_expirationDate() {
     // given
-    String xml =
-      """
-      <?xml version="1.0" encoding="UTF-8"?>
-      <akn:akomaNtoso
-        xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
-        <akn:doc name="offene-struktur">
-          <akn:meta>
-            <akn:proprietary source="attributsemantik-noch-undefiniert">
-              <ris:metadata>
-                <ris:expirationDate>2025-02-02</ris:expirationDate>
-              </ris:metadata>
-            </akn:proprietary>
-          </akn:meta>
-        </akn:doc>
-      </akn:akomaNtoso>
-      """;
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
