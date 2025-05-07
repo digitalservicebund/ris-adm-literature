@@ -8,6 +8,8 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.Expiry
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KurzreferatTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.TableOfContentsTransformer;
+
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class LdmlConverterService {
       null,
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
-      null,
+      new TableOfContentsTransformer(akomaNtoso).transform(),
       new KurzreferatTransformer(akomaNtoso).transform(),
       List.of(),
       null,
