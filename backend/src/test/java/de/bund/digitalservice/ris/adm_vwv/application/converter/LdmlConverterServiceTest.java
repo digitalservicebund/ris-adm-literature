@@ -7,12 +7,10 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import java.util.ArrayList;
-import java.util.List;
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class LdmlConverterServiceTest {
@@ -165,7 +163,11 @@ class LdmlConverterServiceTest {
       xml
     );
 
-    List<String> expectedKeywords = Stream.of("Schlag", "Wort", "Mehrere Wörter in einem Schlagwort").toList();
+    List<String> expectedKeywords = Stream.of(
+      "Schlag",
+      "Wort",
+      "Mehrere Wörter in einem Schlagwort"
+    ).toList();
 
     // when
     DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
