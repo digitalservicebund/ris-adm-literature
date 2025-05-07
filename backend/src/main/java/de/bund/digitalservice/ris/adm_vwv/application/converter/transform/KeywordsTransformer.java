@@ -1,8 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Classification;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Keyword;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -19,7 +21,10 @@ public class KeywordsTransformer {
    * @return The list of keyword values or an empty list
    */
   public List<String> transform() {
-    List<Keyword> keywords = akomaNtoso.getDoc().getMeta().getClassification().getKeyword();
-    return keywords.stream().map(Keyword::getValue).toList();
+    Optional<Classification> keywords = Optional.ofNullable(
+      akomaNtoso.getDoc().getMeta().getClassification());
+    
+    if (keywords.isEmpty()) return List.of();
+    else return keywords.get().getKeyword().stream().map(Keyword::getValue).toList();
   }
 }
