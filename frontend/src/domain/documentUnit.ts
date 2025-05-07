@@ -4,7 +4,6 @@ import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
 import type { Normgeber } from './normgeber'
-import type { Court } from './court'
 import type { DocumentType } from './documentType'
 
 export interface DocumentUnit {
@@ -21,7 +20,6 @@ export interface DocumentUnit {
   kurzreferat?: string
   aktenzeichen?: string[]
   noAktenzeichen?: boolean
-  normgeber?: Court
   dokumenttyp?: DocumentType
   dokumenttypZusatz?: string
   activeCitations?: ActiveCitation[]
