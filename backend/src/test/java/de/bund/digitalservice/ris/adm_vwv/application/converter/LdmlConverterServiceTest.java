@@ -128,7 +128,7 @@ class LdmlConverterServiceTest {
   }
 
   @Test
-  void convertToBusinessModel_expirationDate() {
+  void convertToBusinessModel_expiryDate() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
