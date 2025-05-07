@@ -22,8 +22,9 @@ public class KeywordsTransformer {
    */
   public List<String> transform() {
     Optional<Classification> keywords = Optional.ofNullable(
-      akomaNtoso.getDoc().getMeta().getClassification());
-    
+      akomaNtoso.getDoc().getMeta().getClassification()
+    );
+
     if (keywords.isEmpty()) return List.of();
     else return keywords.get().getKeyword().stream().map(Keyword::getValue).toList();
   }
