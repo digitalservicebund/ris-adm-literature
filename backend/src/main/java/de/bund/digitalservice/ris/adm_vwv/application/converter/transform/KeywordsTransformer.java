@@ -26,6 +26,8 @@ public class KeywordsTransformer {
     );
 
     if (keywords.isEmpty()) return List.of();
-    else return keywords.get().getKeyword().stream().map(Keyword::getValue).toList();
+    return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getClassification())
+      .map(classification -> classification.getKeyword().stream().map(Keyword::getValue).toList())
+      .orElse(List.of());
   }
 }
