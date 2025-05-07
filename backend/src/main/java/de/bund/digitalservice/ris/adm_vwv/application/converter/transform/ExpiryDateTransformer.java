@@ -7,22 +7,22 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * ExpirationDate transformer.
+ * Expiry date transformer.
  */
 @RequiredArgsConstructor
-public class ExpirationDateTransformer {
+public class ExpiryDateTransformer {
 
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code ExpirationDate} object to a string.
+   * Transforms the {@code ExpiryDate} object to a string.
    *
-   * @return The expirationDate or null if Proprietary or Metadata does not exist
+   * @return The expiryDate or null if Proprietary or Metadata does not exist
    */
   public String transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
       .map(Proprietary::getMetadata)
-      .map(RisMetadata::getExpirationDate)
+      .map(RisMetadata::getExpiryDate)
       .orElse(null);
   }
 }

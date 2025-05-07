@@ -4,8 +4,9 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.EntryIntoEffectDateTransformer;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.ExpirationDateTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.ExpiryDateTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.FundstellenTransformer;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.KurzreferatTransformer;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.LongTitleTransformer;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -42,9 +43,9 @@ public class LdmlConverterService {
       List.of(),
       null,
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
-      new ExpirationDateTransformer(akomaNtoso).transform(),
+      new ExpiryDateTransformer(akomaNtoso).transform(),
       null,
-      null,
+      new KurzreferatTransformer(akomaNtoso).transform(),
       List.of(),
       null,
       null,

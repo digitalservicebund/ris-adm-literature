@@ -25,7 +25,7 @@ public class RisMetadata {
   private String entryIntoEffectDate;
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
-  private String expirationDate;
+  private String expiryDate;
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisDocumentType documentType;
