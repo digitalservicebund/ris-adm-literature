@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
@@ -354,5 +355,30 @@ class LdmlConverterServiceTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::aktenzeichen, DocumentationUnitContent::noAktenzeichen)
       .containsExactly(List.of(), true);
+  }
+
+  @Test
+  void convertToBusinessModel_fieldsOfLaw() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    var fieldsOfLaw = documentationUnitContent.fieldsOfLaw();
+    var childrenNested = fieldsOfLaw.stream().map((FieldOfLaw f) -> f.children()).toList();
+    var flattenedChildren = childrenNested.stream().flatMap(list -> list.stream()).toList();
+    var texts = flattenedChildren.stream().map(c -> c.text()).toList();
+
+    // then
+    assertThat(texts).isEqualTo(List.of("PR-05-01", "XX-04-02"));
   }
 }
