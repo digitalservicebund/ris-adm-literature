@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -373,12 +374,15 @@ class LdmlConverterServiceTest {
       documentationUnit
     );
 
-    var fieldsOfLaw = documentationUnitContent.fieldsOfLaw();
-    var childrenNested = fieldsOfLaw.stream().map((FieldOfLaw f) -> f.children()).toList();
-    var flattenedChildren = childrenNested.stream().flatMap(list -> list.stream()).toList();
-    var texts = flattenedChildren.stream().map(c -> c.text()).toList();
-
     // then
-    assertThat(texts).isEqualTo(List.of("PR-05-01", "XX-04-02"));
+    assertThat(
+      documentationUnitContent
+        .fieldsOfLaw()
+        .stream()
+        .map(FieldOfLaw::children)
+        .flatMap(Collection::stream)
+        .map(c -> c.text())
+        .toList()
+    ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
   }
 }
