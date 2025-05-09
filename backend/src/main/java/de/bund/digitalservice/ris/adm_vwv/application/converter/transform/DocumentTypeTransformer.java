@@ -1,7 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import java.util.Optional;
+
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -19,6 +22,9 @@ public class DocumentTypeTransformer {
    *         or {@code <dateToQuoteList>} elements are {@code null}
    */
   public DocumentType transform() {
-    return new DocumentType(null, null);
+    return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary().getMetadata())
+    .map(RisMetadata::getDocumentType)
+    .map(risDocumentType -> new DocumentType(risDocumentType.getCategory(), risDocumentType.getLongTitle()))
+    .orElse(null);
   }
 }

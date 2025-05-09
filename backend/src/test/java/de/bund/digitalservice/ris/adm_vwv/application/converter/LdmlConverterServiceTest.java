@@ -380,4 +380,29 @@ class LdmlConverterServiceTest {
       .extracting(DocumentType::abbreviation, DocumentType::name)
       .containsExactly("VR", "Bekanntmachung");
   }
+  
+  @Test
+  void convertToBusinessModel_documentType() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::dokumenttyp)
+      .extracting(DocumentType::abbreviation, DocumentType::name)
+      .containsExactly("VR", "Bekanntmachung");
+  }
+
 }
