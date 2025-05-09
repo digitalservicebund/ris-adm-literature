@@ -379,8 +379,6 @@ class LdmlConverterServiceTest {
       documentationUnitContent
         .fieldsOfLaw()
         .stream()
-        .map(FieldOfLaw::children)
-        .flatMap(Collection::stream)
         .map(c -> c.text())
         .toList()
     ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
