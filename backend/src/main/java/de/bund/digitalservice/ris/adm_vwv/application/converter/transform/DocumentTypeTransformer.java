@@ -1,10 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
-import java.util.Optional;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -23,8 +22,10 @@ public class DocumentTypeTransformer {
    */
   public DocumentType transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary().getMetadata())
-    .map(RisMetadata::getDocumentType)
-    .map(risDocumentType -> new DocumentType(risDocumentType.getCategory(), risDocumentType.getLongTitle()))
-    .orElse(null);
+      .map(RisMetadata::getDocumentType)
+      .map(risDocumentType ->
+        new DocumentType(risDocumentType.getCategory(), risDocumentType.getLongTitle())
+      )
+      .orElse(null);
   }
 }

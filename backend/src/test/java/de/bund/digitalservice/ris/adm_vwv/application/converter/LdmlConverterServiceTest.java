@@ -380,7 +380,7 @@ class LdmlConverterServiceTest {
       .extracting(DocumentType::abbreviation, DocumentType::name)
       .containsExactly("VR", "Bekanntmachung");
   }
-  
+
   @Test
   void convertToBusinessModel_documentTypeZusatz() {
     // given
@@ -403,5 +403,4 @@ class LdmlConverterServiceTest {
       .extracting(DocumentationUnitContent::dokumenttypZusatz)
       .isEqualTo("Bekanntmachung");
   }
-
 }
