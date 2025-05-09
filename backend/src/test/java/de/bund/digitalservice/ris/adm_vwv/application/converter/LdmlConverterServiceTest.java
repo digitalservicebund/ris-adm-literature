@@ -358,7 +358,7 @@ class LdmlConverterServiceTest {
   }
 
   @Test
-  void convertToBusinessModel_documentTypeAndZusatz() {
+  void convertToBusinessModel_documentType() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
@@ -374,11 +374,6 @@ class LdmlConverterServiceTest {
     );
 
     // then
-    assertThat(documentationUnitContent)
-      .isNotNull()
-      .extracting(DocumentationUnitContent::dokumenttypZusatz)
-      .isEqualTo("Bekanntmachung");
-
     assertThat(documentationUnitContent)
       .isNotNull()
       .extracting(DocumentationUnitContent::dokumenttyp)
