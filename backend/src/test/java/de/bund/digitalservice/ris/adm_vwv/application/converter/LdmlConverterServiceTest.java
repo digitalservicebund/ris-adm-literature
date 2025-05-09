@@ -382,13 +382,7 @@ class LdmlConverterServiceTest {
     assertThat(documentationUnitContent)
       .isNotNull()
       .extracting(DocumentationUnitContent::dokumenttyp)
-      .extracting(DocumentType::abbreviation)
-      .isEqualTo("VR");
-
-    assertThat(documentationUnitContent)
-      .isNotNull()
-      .extracting(DocumentationUnitContent::dokumenttyp)
-      .extracting(DocumentType::name)
-      .isEqualTo("Bekanntmachung");
+      .extracting(DocumentType::abbreviation, DocumentType::name)
+      .containsExactly("VR", "Bekanntmachung");
   }
 }
