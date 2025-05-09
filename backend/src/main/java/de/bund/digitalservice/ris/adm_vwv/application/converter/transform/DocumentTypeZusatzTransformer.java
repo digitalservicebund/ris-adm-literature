@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisDocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
 import java.util.Optional;
@@ -21,7 +22,8 @@ public class DocumentTypeZusatzTransformer {
    *         or {@code <dateToQuoteList>} elements are {@code null}
    */
   public String transform() {
-    return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary().getMetadata())
+    return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
+      .map(Proprietary::getMetadata)
       .map(RisMetadata::getDocumentType)
       .map(RisDocumentType::getLongTitle)
       .orElse(null);
