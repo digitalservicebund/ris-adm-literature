@@ -4,11 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -376,11 +374,7 @@ class LdmlConverterServiceTest {
 
     // then
     assertThat(
-      documentationUnitContent
-        .fieldsOfLaw()
-        .stream()
-        .map(c -> c.text())
-        .toList()
+      documentationUnitContent.fieldsOfLaw().stream().map(c -> c.text()).toList()
     ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
   }
 }
