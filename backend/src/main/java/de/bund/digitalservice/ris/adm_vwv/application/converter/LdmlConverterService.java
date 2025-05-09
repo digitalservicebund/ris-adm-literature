@@ -4,7 +4,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.TableOfContentsTransformer;
 import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +45,7 @@ public class LdmlConverterService {
       new KurzreferatTransformer(akomaNtoso).transform(),
       referenceNumbers,
       referenceNumbers.isEmpty(),
-      null,
+      new DocumentTypeTransformer(akomaNtoso).transform(),
       null,
       List.of(),
       List.of(),
