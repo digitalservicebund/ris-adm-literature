@@ -35,7 +35,7 @@ public class LdmlConverterService {
       documentationUnit.id(),
       documentationUnit.documentNumber(),
       new FundstellenTransformer(akomaNtoso).transform(),
-      List.of(),
+      new FieldsOfLawTransformer(akomaNtoso).transform(),
       new LongTitleTransformer(akomaNtoso).transform(),
       new KeywordsTransformer(akomaNtoso).transform(),
       new DateToQuoteTransformer(akomaNtoso).transform(),
