@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Analysis;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.OtherReferences;
@@ -47,10 +48,17 @@ public class NormReferencesTransformer {
           new NormAbbreviation(
             null, // TODO: fill this in
             or.getImplicitReference().getShortForm(),
-            null // TODO: fill this in
+            or.getImplicitReference().getShowAs()
           ),
           or.getImplicitReference().getShortForm(),
-          List.of()
+          List.of(
+            new SingleNorm(
+              null, // TODO: fill this in
+              or.getImplicitReference().getNormReference().getSingleNorm(),
+              or.getImplicitReference().getNormReference().getDateOfVersion(),
+              or.getImplicitReference().getNormReference().getDateOfRelevance()
+            )
+          )
         )
       )
       .toList();

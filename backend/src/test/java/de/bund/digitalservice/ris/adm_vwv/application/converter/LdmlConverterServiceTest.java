@@ -430,7 +430,7 @@ class LdmlConverterServiceTest {
   }
 
   @Test
-  void convertToBusinessModel_norms() {
+  void convertToBusinessModel_normReference() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
@@ -442,16 +442,14 @@ class LdmlConverterServiceTest {
 
     List<NormReference> expectedReferences = List.of(
       new NormReference(
-        new NormAbbreviation(null, "PhanGB", "Phantasiegesetzbuch"), // TODO: where does this come from?
-        "PhanGB", // TODO: why having the appreviation again?
-        List.of(
-          new SingleNorm(
-            null,
-            "§ 1a Abs 1",
-            "1912-12-12", // TODO: where does this come from?
-            "1912"
-          ) // TODO where does this come from?
-        )
+        new NormAbbreviation(null, "PhanGB", "PhanGB § 1a Abs 1"), // TODO: where does this come from?
+        "PhanGB",
+        List.of(new SingleNorm(null, "§ 1a Abs 1", "2022-02-02", "2011"))
+      ),
+      new NormReference(
+        new NormAbbreviation(null, "PhanGB 5", "PhanGB 5 § 2 Abs 6"), // TODO: where does this come from?
+        "PhanGB 5",
+        List.of(new SingleNorm(null, "§ 2 Abs 6", "2022-02-02", "2011"))
       )
     );
 
