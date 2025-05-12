@@ -1,7 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Analysis;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.OtherReferences;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -16,19 +19,40 @@ public class NormReferencesTransformer {
   /**
    * Transforms the {@code AkomaNtoso} object to a date to quote string.
    *
-   * @return The (first) date to quote, or {@code null} if the surrounding {@code <proprietary>}
+   * @return The (first) date to quote, or {@code null} if the surrounding
+   *         {@code <proprietary>}
    *         or {@code <dateToQuoteList>} elements are {@code null}
    */
   public List<NormReference> transform() {
-    // Proprietary proprietary = akomaNtoso.getDoc().getMeta().getProprietary();
-    // if (proprietary == null) {
-    //   return null;
-    // }
-    // return Optional.ofNullable(proprietary.getMetadata().getDateToQuoteList())
-    //   // For now, we only deliver the very first item. Handling of multiple waits for RISDEV-6451.
-    //   .map(List::getFirst)
-    //   .orElse(null);
+    Analysis analysis = akomaNtoso.getDoc().getMeta().getAnalysis();
+    if (analysis == null) {
+      return List.of();
+    }
 
-    return List.of();
+    List<OtherReferences> otherReferences = analysis.getOtherReferences();
+    if (otherReferences == null) return List.of();
+
+    List<OtherReferences> otherReferencesWithImplicitAndNormReferences = otherReferences
+      .stream()
+      .filter(or -> or.getImplicitReference() != null)
+      .filter(or -> or.getImplicitReference().getNormReference() != null)
+      .toList();
+
+    if (otherReferencesWithImplicitAndNormReferences.isEmpty()) return List.of();
+
+    return otherReferencesWithImplicitAndNormReferences
+      .stream()
+      .map(or ->
+        new NormReference(
+          new NormAbbreviation(
+            null, // TODO: fill this in
+            or.getImplicitReference().getShortForm(),
+            null // TODO: fill this in
+          ),
+          or.getImplicitReference().getShortForm(),
+          List.of()
+        )
+      )
+      .toList();
   }
 }
