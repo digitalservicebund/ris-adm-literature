@@ -21,4 +21,7 @@ public class DocumentationUnitEntity {
 
   @Basic
   private String json;
+
+  @Basic
+  private String xml;
 }
