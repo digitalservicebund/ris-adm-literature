@@ -31,7 +31,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         new DocumentationUnit(
           documentNumber,
           documentationUnitEntity.getId(),
-          documentationUnitEntity.getJson()
+          documentationUnitEntity.getJson(),
+          documentationUnitEntity.getXml()
         )
       );
   }

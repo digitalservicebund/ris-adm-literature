@@ -23,4 +23,7 @@ public record DocumentationUnit(
   public DocumentationUnit(@Nonnull String documentNumber, @Nonnull UUID id, String json) {
     this(documentNumber, id, json, null);
   }
+  public DocumentationUnit(@Nonnull DocumentationUnit documentationUnit, @Nonnull String json) {
+    this(documentationUnit.documentNumber, documentationUnit.id, json, null);
+  }
 }
