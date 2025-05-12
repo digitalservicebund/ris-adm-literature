@@ -64,7 +64,7 @@
     "immer": "^10.1.1",
     "maska": "^3.1.1",
     "postcss": "^8.5.3",
-    "primevue": "^4.3.3",
+    "primevue": "^4.3.4",
     "unplugin-icons": "^22.1.0",
     "vite": "^6.3.5",
     "vite-plugin-vue-devtools": "^7.7.6",
