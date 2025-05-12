@@ -47,7 +47,7 @@ public class LdmlConverterService {
       referenceNumbers.isEmpty(),
       new DocumentTypeTransformer(akomaNtoso).transform(),
       new DocumentTypeZusatzTransformer(akomaNtoso).transform(),
-      List.of(),
+      new ActiveCitationsTransformer(akomaNtoso).transform(),
       List.of(),
       List.of(),
       null
