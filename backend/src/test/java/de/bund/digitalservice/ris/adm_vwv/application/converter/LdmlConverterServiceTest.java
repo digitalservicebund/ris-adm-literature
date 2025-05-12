@@ -5,9 +5,8 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
 import java.util.UUID;
@@ -376,7 +375,7 @@ class LdmlConverterServiceTest {
 
     // then
     assertThat(
-      documentationUnitContent.fieldsOfLaw().stream().map(c -> c.text()).toList()
+      documentationUnitContent.fieldsOfLaw().stream().map(FieldOfLaw::text).toList()
     ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
   }
 
@@ -460,5 +459,42 @@ class LdmlConverterServiceTest {
         ActiveCitation::documentNumber
       )
       .containsExactly("Vgl", "PhanGH", "2021-10-20", "C-01/02", "WBRE000001234");
+  }
+
+  @Test
+  void convertToBusinessModel_activeReferences() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(
+        DocumentationUnitContent::activeReferences,
+        InstanceOfAssertFactories.list(ActiveReference.class)
+      )
+      .hasSize(2)
+      .extracting(
+        ActiveReference::referenceDocumentType,
+        ActiveReference::normAbbreviationRawValue,
+        ActiveReference::referenceType,
+        activeReference ->
+          activeReference.singleNorms().stream().map(SingleNorm::singleNorm).toList()
+      )
+      .containsExactly(
+        tuple("administrative_regulation", "PhanGB", "rechtsgrundlage", List.of("§ 1a Abs 1")),
+        tuple("administrative_regulation", "PhanGB", "rechtsgrundlage", List.of("§ 2 Abs 6"))
+      );
   }
 }
