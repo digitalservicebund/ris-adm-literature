@@ -25,6 +25,12 @@
             <ris:normReference singleNorm="§ 2 Abs 6"/>
           </akn:implicitReference>
         </akn:otherReferences>
+        <akn:otherReferences source="attributsemantik-noch-undefiniert">
+          <akn:implicitReference shortForm="Vgl PhanGH C-01/02" showAs="Vgl PhanGH C-01/02 2021-10-20">
+            <ris:caselawReference abbreviation="Vgl" court="PhanGH" date="2021-10-20" referenceNumber="C-01/02"
+                                  documentNumber="WBRE000001234"/>
+          </akn:implicitReference>
+        </akn:otherReferences>
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
         <ris:metadata>

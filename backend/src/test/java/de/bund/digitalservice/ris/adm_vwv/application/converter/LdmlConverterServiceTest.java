@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
@@ -424,5 +425,40 @@ class LdmlConverterServiceTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::dokumenttypZusatz)
       .isEqualTo("Bekanntmachung");
+  }
+
+  @Test
+  void convertToBusinessModel_activeCitations() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(
+        DocumentationUnitContent::activeCitations,
+        InstanceOfAssertFactories.list(ActiveCitation.class)
+      )
+      .hasSize(1)
+      .first()
+      .extracting(
+        ac -> ac.citationType().jurisShortcut(),
+        ac -> ac.court().label(),
+        ActiveCitation::decisionDate,
+        ActiveCitation::fileNumber,
+        ActiveCitation::documentNumber
+      )
+      .containsExactly("Vgl", "PhanGH", "2021-10-20", "C-01/02", "WBRE000001234");
   }
 }
