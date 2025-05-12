@@ -7,8 +7,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
@@ -440,29 +438,27 @@ class LdmlConverterServiceTest {
       xml
     );
 
-    List<NormReference> expectedReferences = List.of(
-      new NormReference(
-        new NormAbbreviation(null, "PhanGB", "PhanGB § 1a Abs 1"), // TODO: where does this come from?
-        "PhanGB",
-        List.of(new SingleNorm(null, "§ 1a Abs 1", "2022-02-02", "2011"))
-      ),
-      new NormReference(
-        new NormAbbreviation(null, "PhanGB 5", "PhanGB 5 § 2 Abs 6"), // TODO: where does this come from?
-        "PhanGB 5",
-        List.of(new SingleNorm(null, "§ 2 Abs 6", "2022-02-02", "2011"))
-      )
-    );
-
     // when
     DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
       documentationUnit
     );
 
     // then
-    assertThat(documentationUnitContent)
-      .isNotNull()
-      .extracting(DocumentationUnitContent::normReferences)
-      .isEqualTo(expectedReferences);
+    assertThat(
+      documentationUnitContent.normReferences().get(0).normAbbreviation().abbreviation()
+    ).isEqualTo("PhanGB");
+    assertThat(
+      documentationUnitContent.normReferences().get(0).normAbbreviation().officialLongTitle()
+    ).isEqualTo("PhanGB § 1a Abs 1");
+    assertThat(
+      documentationUnitContent.normReferences().get(0).singleNorms().get(0).singleNorm()
+    ).isEqualTo("§ 1a Abs 1");
+    assertThat(
+      documentationUnitContent.normReferences().get(0).singleNorms().get(0).dateOfVersion()
+    ).isEqualTo("2022-02-02");
+    assertThat(
+      documentationUnitContent.normReferences().get(0).singleNorms().get(0).dateOfRelevance()
+    ).isEqualTo("2011");
   }
 
   @Test
