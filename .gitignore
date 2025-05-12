@@ -34,3 +34,4 @@ cves-with-libraries.txt
 pinned-deps.txt
 trivy-cves.txt
 trivy-image-results.sarif
+lefthook-local.yml
