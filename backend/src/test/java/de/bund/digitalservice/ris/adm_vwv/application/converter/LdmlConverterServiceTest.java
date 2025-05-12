@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
 import java.util.UUID;
