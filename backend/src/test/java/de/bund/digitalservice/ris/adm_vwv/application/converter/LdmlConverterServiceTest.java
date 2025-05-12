@@ -466,22 +466,4 @@ class LdmlConverterServiceTest {
       .extracting(DocumentationUnitContent::normReferences)
       .isEqualTo(expectedReferences);
   }
-  /*
-   * "normReferences": [
-   * {
-   * "normAbbreviation": {
-   * "abbreviation": "SGB 5",
-   * "officialLongTitle": "Sozialgesetzbuch (SGB) Fünftes Buch (V)"
-   * },
-   * "singleNorms": [
-   * {
-   * "singleNorm": "$12",
-   * "dateOfVersion": "1912-12-12",
-   * "dateOfRelevance": "1912"
-   * }
-   * ]
-   * }
-   * ],
-   */
-
 }
