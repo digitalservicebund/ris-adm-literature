@@ -84,4 +84,32 @@ test.describe('RubrikenPage - Gliederung', () => {
       await expect(text1).toBeInViewport()
     },
   )
+
+  test(
+    'Hide unprintable characters after clicking "Nicht-druckbare Zeichen"',
+    { tag: ['@RISDEV-7842]'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const gliederungEditorElement = page.getByTestId('Gliederung Editor')
+      await gliederungEditorElement.click()
+      await page.keyboard.type('Gliederung: Neuer Text 1')
+
+      // eslint-disable-next-line playwright/no-raw-locators
+      const linebreakIndicator = gliederungEditorElement.locator('br')
+      await expect(linebreakIndicator).toHaveCount(1)
+
+      // when
+      const expansionButton = page
+        .getByLabel('Gliederung Button Leiste')
+        .getByRole('button', { name: 'Nicht-druckbare Zeichen' })
+      expansionButton.click()
+
+      // then
+      await expect(linebreakIndicator).toHaveCount(0)
+    },
+  )
 })
