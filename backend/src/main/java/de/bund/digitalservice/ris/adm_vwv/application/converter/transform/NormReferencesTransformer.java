@@ -7,6 +7,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Analysis;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.OtherReferences;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -46,14 +47,14 @@ public class NormReferencesTransformer {
       .map(or ->
         new NormReference(
           new NormAbbreviation(
-            null, // TODO: fill this in
+            UUID.randomUUID(),
             or.getImplicitReference().getShortForm(),
             or.getImplicitReference().getShowAs()
           ),
           or.getImplicitReference().getShortForm(),
           List.of(
             new SingleNorm(
-              null, // TODO: fill this in
+              UUID.randomUUID(),
               or.getImplicitReference().getNormReference().getSingleNorm(),
               or.getImplicitReference().getNormReference().getDateOfVersion(),
               or.getImplicitReference().getNormReference().getDateOfRelevance()
