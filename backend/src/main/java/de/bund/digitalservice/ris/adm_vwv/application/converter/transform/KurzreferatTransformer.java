@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.XmlWriter;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.JaxbHtml;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.MainBody;
 import lombok.RequiredArgsConstructor;
 
@@ -22,12 +21,13 @@ public class KurzreferatTransformer {
    */
   public String transform() {
     MainBody mainBody = akomaNtoso.getDoc().getMainBody();
-    if (mainBody == null) {
+    if (mainBody == null || mainBody.getHcontainer() != null) {
+      // There are documents without a Kurzreferat. For pleasing LDML those documents do not contain a <div> tag,
+      // but a <hcontainer> tag.
       return null;
     }
-    JaxbHtml div = mainBody.getDiv();
     return xmlWriter
-      .writeXml(div, false)
+      .writeXml(mainBody.getDiv(), false)
       // Replace wrapper element completely
       .replaceAll("</?jaxbHtml.*>", "")
       // Remove akn prefix from tag names, e.g. <akn:p> is transformed to <p>
