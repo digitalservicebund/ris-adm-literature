@@ -86,4 +86,32 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       await expect(text1).toBeInViewport()
     },
   )
+
+  test(
+    'Stop showing unprintable characters after clicking "Nicht-druckbare Zeichen"',
+    { tag: ['@RISDEV-7667]'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
+      await kurzreferatEditorElement.click()
+      await page.keyboard.type('Kurzreferat: Neuer Text 1')
+
+      // eslint-disable-next-line playwright/no-raw-locators
+      const linebreakIndicator = kurzreferatEditorElement.locator('br')
+      await expect(linebreakIndicator).toHaveCount(1)
+
+      // when
+      const expansionButton = page
+        .getByLabel('Kurzreferat Button Leiste')
+        .getByRole('button', { name: 'Nicht-druckbare Zeichen' })
+      expansionButton.click()
+
+      // then
+      await expect(linebreakIndicator).toHaveCount(0)
+    },
+  )
 })
