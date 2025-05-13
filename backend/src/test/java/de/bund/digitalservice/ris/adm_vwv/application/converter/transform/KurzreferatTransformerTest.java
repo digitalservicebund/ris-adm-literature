@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import jakarta.xml.bind.JAXBElement;
 import java.util.List;
 import javax.xml.namespace.QName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class KurzreferatTransformerTest {
@@ -40,6 +41,28 @@ class KurzreferatTransformerTest {
     akomaNtoso.setDoc(doc);
     Meta meta = new Meta();
     doc.setMeta(meta);
+
+    // when
+    String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();
+
+    // then
+    assertThat(actualKurzreferat).isNull();
+  }
+
+  @Test
+  @Tag("RISDEV-7821")
+  void transform_mainBodyElementWithHContainer() {
+    // given
+    AkomaNtoso akomaNtoso = new AkomaNtoso();
+    Doc doc = new Doc();
+    akomaNtoso.setDoc(doc);
+    Meta meta = new Meta();
+    doc.setMeta(meta);
+    MainBody mainBody = new MainBody();
+    JaxbHtml hcontainer = new JaxbHtml();
+    hcontainer.setName("crossheading");
+    mainBody.setHcontainer(hcontainer);
+    doc.setMainBody(mainBody);
 
     // when
     String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class LdmlConverterServiceTest {
@@ -109,6 +110,27 @@ class LdmlConverterServiceTest {
     assertThat(documentationUnitContent.kurzreferat())
       .isNotNull()
       .containsSubsequence("<p>Kurzreferat Zeile 1</p>", "<p>Kurzreferat Zeile 2</p>");
+  }
+
+  @Test
+  @Tag("RISDEV-7821")
+  void convertToBusinessModel_noKurzreferat() {
+    // given
+    String xml = TestFile.readFileToString("ldml-no-kurzreferat.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent.kurzreferat()).isNull();
   }
 
   @Test

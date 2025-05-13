@@ -14,4 +14,7 @@ public class MainBody {
 
   @XmlElement(namespace = XmlNamespace.AKN_NS)
   private JaxbHtml div;
+
+  @XmlElement(namespace = XmlNamespace.AKN_NS)
+  private JaxbHtml hcontainer;
 }
