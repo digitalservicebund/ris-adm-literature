@@ -36,8 +36,8 @@ test.describe('RubrikenPage - Gliederung', () => {
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.getByText('Rubriken').click()
 
-      const kurzreferatEditorElement = page.getByTestId('Gliederung Editor')
-      await kurzreferatEditorElement.click()
+      const gliederungEditorElement = page.getByTestId('Gliederung Editor')
+      await gliederungEditorElement.click()
       await page.keyboard.insertText('Gliederung: Neuer Text')
 
       // when
@@ -55,6 +55,33 @@ test.describe('RubrikenPage - Gliederung', () => {
       redoButton.click()
       // then
       await expect(page.getByText('Gliederung: Neuer Text')).toHaveCount(1)
+    },
+  )
+
+  test(
+    'Text box can be expanded, shows line 1 again after expansion',
+    { tag: ['@RISDEV-7841]'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const gliederungEditorElement = page.getByTestId('Gliederung Editor')
+      await gliederungEditorElement.click()
+      await page.keyboard.type('Gliederung: Neuer Text 1\n Line 2\n Line 3\n Line 4\n Line 5')
+
+      const text1 = page.getByText('Text 1')
+      await expect(text1).not.toBeInViewport()
+
+      // when
+      const expansionButton = page
+        .getByLabel('Gliederung Button Leiste')
+        .getByRole('button', { name: 'Erweitern' })
+      expansionButton.click()
+
+      // then
+      await expect(text1).toBeInViewport()
     },
   )
 })
