@@ -88,7 +88,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
   )
 
   test(
-    'Stop showing unprintable characters after clicking "Nicht-druckbare Zeichen"',
+    'Hide unprintable characters after clicking "Nicht-druckbare Zeichen"',
     { tag: ['@RISDEV-7667]'] },
     async ({ page }) => {
       // given
