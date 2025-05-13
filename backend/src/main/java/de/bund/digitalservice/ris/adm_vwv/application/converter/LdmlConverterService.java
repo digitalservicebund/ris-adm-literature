@@ -49,7 +49,7 @@ public class LdmlConverterService {
       new DocumentTypeZusatzTransformer(akomaNtoso).transform(),
       new ActiveCitationsTransformer(akomaNtoso).transform(),
       new ActiveReferencesTransformer(akomaNtoso).transform(),
-      List.of(),
+      new NormReferencesTransformer(akomaNtoso).transform(),
       null
     );
   }

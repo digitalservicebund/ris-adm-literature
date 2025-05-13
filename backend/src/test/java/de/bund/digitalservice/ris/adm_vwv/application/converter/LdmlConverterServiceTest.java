@@ -6,7 +6,11 @@ import static org.assertj.core.api.Assertions.tuple;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveReference;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
 import java.util.UUID;
@@ -424,6 +428,36 @@ class LdmlConverterServiceTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::dokumenttypZusatz)
       .isEqualTo("Bekanntmachung");
+  }
+
+  @Test
+  void convertToBusinessModel_normReference() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent.normReferences())
+      .hasSize(2)
+      .first()
+      .extracting(
+        nr -> nr.normAbbreviation().abbreviation(),
+        nr -> nr.normAbbreviation().officialLongTitle(),
+        nr -> nr.singleNorms().getFirst().singleNorm(),
+        nr -> nr.singleNorms().getFirst().dateOfVersion(),
+        nr -> nr.singleNorms().getFirst().dateOfRelevance()
+      )
+      .containsExactly("PhanGB", "PhanGB § 1a Abs 1", "§ 1a Abs 1", "2022-02-02", "2011");
   }
 
   @Test

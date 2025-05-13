@@ -17,12 +17,12 @@
         </akn:otherReferences>
         <akn:otherReferences source="attributsemantik-noch-undefiniert">
           <akn:implicitReference shortForm="PhanGB" showAs="PhanGB § 1a Abs 1">
-            <ris:normReference singleNorm="§ 1a Abs 1"/>
+            <ris:normReference singleNorm="§ 1a Abs 1" dateOfRelevance="2011" dateOfVersion="2022-02-02"/>
           </akn:implicitReference>
         </akn:otherReferences>
         <akn:otherReferences source="attributsemantik-noch-undefiniert">
-          <akn:implicitReference shortForm="PhanGB" showAs="PhanGB 5 § 2 Abs 6">
-            <ris:normReference singleNorm="§ 2 Abs 6"/>
+          <akn:implicitReference shortForm="PhanGB 5" showAs="PhanGB 5 § 2 Abs 6">
+            <ris:normReference singleNorm="§ 2 Abs 6" dateOfRelevance="2011" dateOfVersion="2022-02-02"/>
           </akn:implicitReference>
         </akn:otherReferences>
         <akn:otherReferences source="attributsemantik-noch-undefiniert">
