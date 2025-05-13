@@ -59,4 +59,31 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       await expect(page.getByText('Kurzreferat: Neuer Text')).toHaveCount(1)
     },
   )
+
+  test(
+    'Text box can be expanded, shows line 1 again after expansion',
+    { tag: ['@RISDEV-7666]'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+
+      const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
+      await kurzreferatEditorElement.click()
+      await page.keyboard.type('Kurzreferat: Neuer Text 1\n Line 2\n Line 3\n Line 4\n Line 5')
+
+      const text1 = page.getByText('Text 1')
+      await expect(text1).not.toBeInViewport()
+
+      // when
+      const expansionButton = page
+        .getByLabel('Kurzreferat Button Leiste')
+        .getByRole('button', { name: 'Erweitern' })
+      expansionButton.click()
+
+      // then
+      await expect(text1).toBeInViewport()
+    },
+  )
 })
