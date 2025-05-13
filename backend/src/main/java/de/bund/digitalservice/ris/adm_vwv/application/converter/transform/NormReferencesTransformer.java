@@ -19,11 +19,9 @@ public class NormReferencesTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code AkomaNtoso} object to a date to quote string.
+   * Transforms the {@code AkomaNtoso} object to a list of norm references.
    *
-   * @return The (first) date to quote, or {@code null} if the surrounding
-   *         {@code <proprietary>}
-   *         or {@code <dateToQuoteList>} elements are {@code null}
+   * @return The list of {@code <NormReference>} elements.
    */
   public List<NormReference> transform() {
     Analysis analysis = akomaNtoso.getDoc().getMeta().getAnalysis();
