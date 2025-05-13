@@ -55,7 +55,7 @@
     "@tiptap/pm": "^2.12.0",
     "@tiptap/vue-3": "^2.12.0",
     "@tsconfig/node23": "^23.0.1",
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.1.0",
