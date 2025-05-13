@@ -100,6 +100,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       await kurzreferatEditorElement.click()
       await page.keyboard.type('Kurzreferat: Neuer Text 1')
 
+      // eslint-disable-next-line playwright/no-raw-locators
       const linebreakIndicator = kurzreferatEditorElement.locator('br')
       await expect(linebreakIndicator).toHaveCount(1)
 
