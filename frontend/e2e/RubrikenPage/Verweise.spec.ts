@@ -45,10 +45,7 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
       .getByRole('button', { name: 'dropdown-option' })
       .filter({ hasText: 'Anwendung' })
       .click()
-    await page
-      .getByTestId('activeReferences')
-      .getByRole('textbox', { name: 'RIS-Abkürzung' })
-      .click()
+    await page.getByTestId('aktivverweise').getByRole('textbox', { name: 'RIS-Abkürzung' }).click()
     await page
       .getByRole('button', { name: 'dropdown-option' })
       .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
