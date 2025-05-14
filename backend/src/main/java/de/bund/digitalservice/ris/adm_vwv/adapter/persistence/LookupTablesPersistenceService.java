@@ -46,9 +46,18 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         pageable
       );
 
-    return documentTypes.map(documentTypeEntity ->
-      new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName())
-    );
+    return documentTypes.map(mapDocumentTypeEntity());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<DocumentType> findDocumentTypeByAbbreviation(@Nonnull String abbreviation) {
+    return documentTypeRepository.findByAbbreviation(abbreviation).map(mapDocumentTypeEntity());
+  }
+
+  private Function<DocumentTypeEntity, DocumentType> mapDocumentTypeEntity() {
+    return documentTypeEntity ->
+      new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName());
   }
 
   @Override
@@ -122,6 +131,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
     QueryOptions queryOptions = query.queryOptions();
     String searchTerm = query.searchTerm();
@@ -151,6 +161,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<LegalPeriodical> findLegalPeriodicalsByAbbreviation(@Nonnull String abbreviation) {
     LegalPeriodicalEntity probe = new LegalPeriodicalEntity();
     probe.setAbbreviation(abbreviation);
@@ -162,6 +173,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<Region> findRegions(@Nonnull RegionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
     String searchTerm = query.searchTerm();
@@ -179,6 +191,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
     String searchTerm = query.searchTerm();

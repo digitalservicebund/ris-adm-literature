@@ -428,7 +428,7 @@ class LdmlConverterServiceIntegrationTest {
       .isNotNull()
       .extracting(DocumentationUnitContent::dokumenttyp)
       .extracting(DocumentType::abbreviation, DocumentType::name)
-      .containsExactly("VR", "Bekanntmachung");
+      .containsExactly("VR", "Verwaltungsregelung");
   }
 
   @Test

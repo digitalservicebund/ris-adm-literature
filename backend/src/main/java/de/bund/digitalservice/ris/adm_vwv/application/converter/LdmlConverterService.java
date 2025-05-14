@@ -20,6 +20,7 @@ public class LdmlConverterService {
 
   private final XmlReader xmlReader = new XmlReader();
   private final FundstellenTransformer fundstellenTransformer;
+  private final DocumentTypeTransformer documentTypeTransformer;
 
   /**
    * Converts the xml of the given documentation unit to business models.
@@ -46,7 +47,7 @@ public class LdmlConverterService {
       new KurzreferatTransformer(akomaNtoso).transform(),
       referenceNumbers,
       referenceNumbers.isEmpty(),
-      new DocumentTypeTransformer(akomaNtoso).transform(),
+      documentTypeTransformer.transform(akomaNtoso),
       new DocumentTypeZusatzTransformer(akomaNtoso).transform(),
       new ActiveCitationsTransformer(akomaNtoso).transform(),
       new ActiveReferencesTransformer(akomaNtoso).transform(),
