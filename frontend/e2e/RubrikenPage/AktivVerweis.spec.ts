@@ -66,11 +66,11 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await page.getByText('Rubriken').click()
       await expect(page.getByText('Rubriken')).toHaveCount(1)
       const referenceTypeElement = page
-        .getByTestId('activeReferences')
+        .getByTestId('aktivverweise')
         .getByRole('textbox', { name: 'Art der Verweisung' })
       await expect(referenceTypeElement).toHaveCount(1)
       const activeReferenceElement = page
-        .getByTestId('activeReferences')
+        .getByTestId('aktivverweise')
         .getByRole('textbox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
@@ -142,11 +142,11 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     const referenceTypeElement = page
-      .getByTestId('activeReferences')
+      .getByTestId('aktivverweise')
       .getByRole('textbox', { name: 'Art der Verweisung' })
     await expect(referenceTypeElement).toHaveCount(1)
     const activeReferenceElement = page
-      .getByTestId('activeReferences')
+      .getByTestId('aktivverweise')
       .getByRole('textbox', { name: 'RIS-Abkürzung' })
     await expect(activeReferenceElement).toHaveCount(1)
 
