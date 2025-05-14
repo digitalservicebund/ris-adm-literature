@@ -52,13 +52,6 @@ class FieldOfLawControllerTest {
       )
     );
 
-    var dummy = mockMvc
-      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "PR-01"))
-      // then
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andReturn();
-
     // when
     mockMvc
       .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "PR-01"))
