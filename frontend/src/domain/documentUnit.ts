@@ -28,3 +28,11 @@ export interface DocumentUnit {
   note: string
   normgebers?: Normgeber[]
 }
+
+export interface DocumentUnitListItem {
+  readonly id: string
+  readonly documentNumber: string
+  zitierdatum?: string
+  langueberschrift?: string
+  references?: Reference[]
+}
