@@ -264,7 +264,7 @@ const dokumenttypZusatz = computed({
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <ActiveReferences data-testid="activeReferences" />
+          <ActiveReferences data-testid="aktivverweise" />
         </div>
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
