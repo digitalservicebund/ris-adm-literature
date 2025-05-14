@@ -52,14 +52,21 @@ class FieldOfLawControllerTest {
       )
     );
 
+    var dummy = mockMvc
+      .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "PR-01"))
+      // then
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andReturn();
+
     // when
     mockMvc
       .perform(get("/api/lookup-tables/fields-of-law/{identifier}/children", "PR-01"))
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("PR-01-05"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht speziell"));
+      .andExpect(jsonPath("$.sachgebiete[0].identifier").value("PR-01-05"))
+      .andExpect(jsonPath("$.sachgebiete[0].text").value("Phantasierecht speziell"));
   }
 
   @Test
@@ -87,8 +94,8 @@ class FieldOfLawControllerTest {
       // then
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.fieldsOfLaw[0].identifier").value("AR"))
-      .andExpect(jsonPath("$.fieldsOfLaw[0].text").value("Phantasierecht"));
+      .andExpect(jsonPath("$.sachgebiete[0].identifier").value("AR"))
+      .andExpect(jsonPath("$.sachgebiete[0].text").value("Phantasierecht"));
   }
 
   @Test
