@@ -12,19 +12,19 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
     })
   })
 
-  test('Add an active reference, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
+  test('Add an Aktivverweis, edit and save', { tag: ['@RISDEV-6074'] }, async ({ page }) => {
     // given
     await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByText('Rubriken').click()
     await expect(page.getByText('Rubriken')).toHaveCount(1)
     const referenceTypeElement = page
-      .getByTestId('activeReferences')
+      .getByTestId('aktivverweise')
       .getByRole('textbox', { name: 'Art der Verweisung' })
     await expect(referenceTypeElement).toHaveCount(1)
-    const activeReferenceElement = page
-      .getByTestId('activeReferences')
+    const aktivverweis = page
+      .getByTestId('aktivverweise')
       .getByRole('textbox', { name: 'RIS-Abkürzung' })
-    await expect(activeReferenceElement).toHaveCount(1)
+    await expect(aktivverweis).toHaveCount(1)
 
     await expect(page.getByRole('radio', { name: 'Norm auswählen' })).toHaveCount(1)
     await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' })).toHaveCount(
@@ -35,7 +35,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
     await referenceTypeElement.click()
     await expect(page.getByText('Neuregelung')).toBeVisible()
     await page.getByText('Neuregelung').click()
-    await activeReferenceElement.click()
+    await aktivverweis.click()
     await expect(page.getByText('KVLG')).toBeVisible()
     await page.getByText('KVLG').click()
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
