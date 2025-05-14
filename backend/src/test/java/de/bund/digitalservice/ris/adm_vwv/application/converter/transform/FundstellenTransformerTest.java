@@ -78,7 +78,9 @@ class FundstellenTransformerTest {
   }
 
   @Test
-  @DisplayName("Transforms no legal periodical object if abbreviation is ambiguous")
+  @DisplayName(
+    "Transforms one fundstelle without legal periodical because abbreviation 'BRD' is ambiguous"
+  )
   void transform_ambiguousLegalPeriodical() {
     // given
     AkomaNtoso akomaNtoso = new AkomaNtoso();
