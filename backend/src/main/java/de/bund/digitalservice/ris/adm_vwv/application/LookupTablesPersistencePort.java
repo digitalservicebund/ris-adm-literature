@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
  */
 public interface LookupTablesPersistencePort {
   Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query);
+  Optional<DocumentType> findDocumentTypeByAbbreviation(@Nonnull String abbreviation);
 
   List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier);
   List<FieldOfLaw> findFieldsOfLawParents();

@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity, UUID>
     @Nonnull String name,
     @Nonnull Pageable pageable
   );
+
+  Optional<DocumentTypeEntity> findByAbbreviation(String abbreviation);
 }
