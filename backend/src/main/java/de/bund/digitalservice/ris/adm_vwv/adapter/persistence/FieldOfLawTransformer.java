@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.Norm;
 import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
-import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet.FieldOfLawBuilder;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet.SachgebietBuilder;
 import java.util.Collections;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -15,7 +15,7 @@ class FieldOfLawTransformer {
     boolean withChildren,
     boolean withNorms
   ) {
-    FieldOfLawBuilder builder = Sachgebiet.builder()
+    SachgebietBuilder builder = Sachgebiet.builder()
       .id(fieldOfLawEntity.getId())
       .identifier(fieldOfLawEntity.getIdentifier())
       .text(fieldOfLawEntity.getText());
