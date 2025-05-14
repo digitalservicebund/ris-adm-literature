@@ -13,10 +13,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
@@ -251,6 +248,19 @@ class LookupTablesPersistenceServiceTest {
     assertThat(result.getContent()).isEmpty();
   }
 
+  private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {
+    FieldOfLawEntity fieldOfLawEntity = new FieldOfLawEntity();
+    fieldOfLawEntity.setId(UUID.randomUUID());
+    fieldOfLawEntity.setIdentifier(identifier);
+    fieldOfLawEntity.setText(text);
+    FieldOfLawNormEntity normEntity = new FieldOfLawNormEntity();
+    normEntity.setId(UUID.randomUUID());
+    normEntity.setAbbreviation("PStG");
+    normEntity.setSingleNormDescription("§ 99");
+    fieldOfLawEntity.getNorms().add(normEntity);
+    return fieldOfLawEntity;
+  }
+
   @Test
   void findLegalPeriodicals_all() {
     // given
@@ -276,9 +286,15 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(legalPeriodicals.getContent()).contains(
-      new LegalPeriodical(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle)
-    );
+    assertThat(legalPeriodicals.getContent())
+      .singleElement()
+      .extracting(
+        LegalPeriodical::abbreviation,
+        LegalPeriodical::title,
+        LegalPeriodical::subtitle,
+        LegalPeriodical::citationStyle
+      )
+      .containsExactly(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle);
   }
 
   @Test
@@ -310,22 +326,49 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(legalPeriodicals.getContent()).contains(
-      new LegalPeriodical(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle)
-    );
+    assertThat(legalPeriodicals.getContent())
+      .singleElement()
+      .extracting(
+        LegalPeriodical::abbreviation,
+        LegalPeriodical::title,
+        LegalPeriodical::subtitle,
+        LegalPeriodical::citationStyle
+      )
+      .containsExactly(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle);
   }
 
-  private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {
-    FieldOfLawEntity fieldOfLawEntity = new FieldOfLawEntity();
-    fieldOfLawEntity.setId(UUID.randomUUID());
-    fieldOfLawEntity.setIdentifier(identifier);
-    fieldOfLawEntity.setText(text);
-    FieldOfLawNormEntity normEntity = new FieldOfLawNormEntity();
-    normEntity.setId(UUID.randomUUID());
-    normEntity.setAbbreviation("PStG");
-    normEntity.setSingleNormDescription("§ 99");
-    fieldOfLawEntity.getNorms().add(normEntity);
-    return fieldOfLawEntity;
+  @Test
+  void findLegalPeriodicalsByAbbreviation() {
+    // given
+    var lpAbbreviation = "BKK";
+    var lpTitle = "Die Betriebskrankenkasse";
+    var lpSubtitle = "Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen";
+    var lpCitationStyle = "1969, 138-140; BKK 2007, Sonderbeilage, 1-5";
+    LegalPeriodicalEntity legalPeriodicalEntity = new LegalPeriodicalEntity();
+    legalPeriodicalEntity.setAbbreviation(lpAbbreviation);
+    legalPeriodicalEntity.setTitle(lpTitle);
+    legalPeriodicalEntity.setSubtitle(lpSubtitle);
+    legalPeriodicalEntity.setCitationStyle(lpCitationStyle);
+    LegalPeriodicalEntity probe = new LegalPeriodicalEntity();
+    probe.setAbbreviation(lpAbbreviation);
+    given(legalPeriodicalsRepository.findAll(Example.of(probe))).willReturn(
+      List.of(legalPeriodicalEntity)
+    );
+
+    // when
+    List<LegalPeriodical> legalPeriodicals =
+      lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("BKK");
+
+    // then
+    assertThat(legalPeriodicals)
+      .singleElement()
+      .extracting(
+        LegalPeriodical::abbreviation,
+        LegalPeriodical::title,
+        LegalPeriodical::subtitle,
+        LegalPeriodical::citationStyle
+      )
+      .containsExactly(lpAbbreviation, lpTitle, lpSubtitle, lpCitationStyle);
   }
 
   @Test

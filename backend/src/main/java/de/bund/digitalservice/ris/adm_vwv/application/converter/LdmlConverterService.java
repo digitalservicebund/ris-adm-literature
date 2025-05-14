@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class LdmlConverterService {
 
   private final XmlReader xmlReader = new XmlReader();
+  private final FundstellenTransformer fundstellenTransformer;
 
   /**
    * Converts the xml of the given documentation unit to business models.
@@ -34,7 +35,7 @@ public class LdmlConverterService {
     return new DocumentationUnitContent(
       documentationUnit.id(),
       documentationUnit.documentNumber(),
-      new FundstellenTransformer(akomaNtoso).transform(),
+      fundstellenTransformer.transform(akomaNtoso),
       new FieldsOfLawTransformer(akomaNtoso).transform(),
       new LongTitleTransformer(akomaNtoso).transform(),
       new KeywordsTransformer(akomaNtoso).transform(),

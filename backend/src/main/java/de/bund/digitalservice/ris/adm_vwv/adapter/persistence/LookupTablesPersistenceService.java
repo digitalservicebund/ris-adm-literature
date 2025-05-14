@@ -1,7 +1,11 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -133,14 +137,28 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         pageable
       );
 
-    return legalPeriodicals.map(legalPeriodicalEntity ->
+    return legalPeriodicals.map(mapLegalPeriodicalEntity());
+  }
+
+  private Function<LegalPeriodicalEntity, LegalPeriodical> mapLegalPeriodicalEntity() {
+    return legalPeriodicalEntity ->
       new LegalPeriodical(
         legalPeriodicalEntity.getAbbreviation(),
         legalPeriodicalEntity.getTitle(),
         legalPeriodicalEntity.getSubtitle(),
         legalPeriodicalEntity.getCitationStyle()
-      )
-    );
+      );
+  }
+
+  @Override
+  public List<LegalPeriodical> findLegalPeriodicalsByAbbreviation(@Nonnull String abbreviation) {
+    LegalPeriodicalEntity probe = new LegalPeriodicalEntity();
+    probe.setAbbreviation(abbreviation);
+    return legalPeriodicalsRepository
+      .findAll(Example.of(probe))
+      .stream()
+      .map(mapLegalPeriodicalEntity())
+      .toList();
   }
 
   @Override

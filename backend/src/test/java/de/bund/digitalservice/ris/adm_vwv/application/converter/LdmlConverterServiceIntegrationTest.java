@@ -6,11 +6,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveReference;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
 import java.util.UUID;
@@ -18,10 +14,16 @@ import java.util.stream.Stream;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-class LdmlConverterServiceTest {
+@SpringBootTest
+@ActiveProfiles("test")
+class LdmlConverterServiceIntegrationTest {
 
-  private final LdmlConverterService ldmlConverterService = new LdmlConverterService();
+  @Autowired
+  private LdmlConverterService ldmlConverterService;
 
   @Test
   void convertToBusinessModel() {
