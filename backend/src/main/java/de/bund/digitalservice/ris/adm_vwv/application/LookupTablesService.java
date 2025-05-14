@@ -22,22 +22,22 @@ public class LookupTablesService implements LookupTablesPort {
   }
 
   @Override
-  public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
+  public List<Sachgebiet> findFieldsOfLawChildren(@Nonnull String identifier) {
     return lookupTablesPersistencePort.findFieldsOfLawChildren(identifier);
   }
 
   @Override
-  public List<FieldOfLaw> findFieldsOfLawParents() {
+  public List<Sachgebiet> findFieldsOfLawParents() {
     return lookupTablesPersistencePort.findFieldsOfLawParents();
   }
 
   @Override
-  public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
+  public Optional<Sachgebiet> findFieldOfLaw(@Nonnull String identifier) {
     return lookupTablesPersistencePort.findFieldOfLaw(identifier);
   }
 
   @Override
-  public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
+  public Page<Sachgebiet> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     return lookupTablesPersistencePort.findFieldsOfLaw(query);
   }
 

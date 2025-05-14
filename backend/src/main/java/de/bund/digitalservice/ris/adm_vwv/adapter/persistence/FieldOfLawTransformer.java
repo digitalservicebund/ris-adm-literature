@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw.FieldOfLawBuilder;
 import de.bund.digitalservice.ris.adm_vwv.application.Norm;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet.FieldOfLawBuilder;
 import java.util.Collections;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -10,12 +10,12 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class FieldOfLawTransformer {
 
-  public static FieldOfLaw transformToDomain(
+  public static Sachgebiet transformToDomain(
     FieldOfLawEntity fieldOfLawEntity,
     boolean withChildren,
     boolean withNorms
   ) {
-    FieldOfLawBuilder builder = FieldOfLaw.builder()
+    FieldOfLawBuilder builder = Sachgebiet.builder()
       .id(fieldOfLawEntity.getId())
       .identifier(fieldOfLawEntity.getIdentifier())
       .text(fieldOfLawEntity.getText());
@@ -24,7 +24,7 @@ class FieldOfLawTransformer {
     }
     builder.hasChildren(!fieldOfLawEntity.getChildren().isEmpty());
     if (withChildren) {
-      List<FieldOfLaw> children = fieldOfLawEntity
+      List<Sachgebiet> children = fieldOfLawEntity
         .getChildren()
         .stream()
         .map(fol -> FieldOfLawTransformer.transformToDomain(fol, false, withNorms))

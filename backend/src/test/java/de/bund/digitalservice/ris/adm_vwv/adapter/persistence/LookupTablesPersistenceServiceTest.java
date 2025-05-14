@@ -93,12 +93,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    List<FieldOfLaw> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren("AR");
+    List<Sachgebiet> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren("AR");
 
     // then
     assertThat(fieldsOfLaw)
       .hasSize(1)
-      .extracting(FieldOfLaw::text)
+      .extracting(Sachgebiet::text)
       .containsOnly("Phantasierecht allgemein");
   }
 
@@ -114,7 +114,7 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    List<FieldOfLaw> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren(
+    List<Sachgebiet> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren(
       "PR-01-05"
     );
 
@@ -128,7 +128,7 @@ class LookupTablesPersistenceServiceTest {
     given(fieldOfLawRepository.findByIdentifier("BR")).willReturn(Optional.empty());
 
     // when
-    List<FieldOfLaw> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren("BR");
+    List<Sachgebiet> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawChildren("BR");
 
     // then
     assertThat(fieldsOfLaw).isEmpty();
@@ -143,10 +143,10 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    List<FieldOfLaw> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawParents();
+    List<Sachgebiet> fieldsOfLaw = lookupTablesPersistenceService.findFieldsOfLawParents();
 
     // then
-    assertThat(fieldsOfLaw).hasSize(1).extracting(FieldOfLaw::text).containsOnly("Phantasierecht");
+    assertThat(fieldsOfLaw).hasSize(1).extracting(Sachgebiet::text).containsOnly("Phantasierecht");
   }
 
   @Test
@@ -156,7 +156,7 @@ class LookupTablesPersistenceServiceTest {
     given(fieldOfLawRepository.findByIdentifier("AR")).willReturn(Optional.of(fieldOfLawEntity));
 
     // when
-    Optional<FieldOfLaw> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("AR");
+    Optional<Sachgebiet> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("AR");
 
     // then
     assertThat(actualFieldOfLaw)
@@ -170,7 +170,7 @@ class LookupTablesPersistenceServiceTest {
     given(fieldOfLawRepository.findByIdentifier("BR")).willReturn(Optional.empty());
 
     // when
-    Optional<FieldOfLaw> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("BR");
+    Optional<Sachgebiet> actualFieldOfLaw = lookupTablesPersistenceService.findFieldOfLaw("BR");
 
     // then
     assertThat(actualFieldOfLaw).isEmpty();
@@ -197,12 +197,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    Page<Sachgebiet> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
     assertThat(result.getContent())
       .hasSize(2)
-      .extracting(FieldOfLaw::text)
+      .extracting(Sachgebiet::text)
       .containsOnly("Beendigung der Phantasieverhältnisse", "Bericht");
   }
 
@@ -222,12 +222,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    Page<Sachgebiet> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
     assertThat(result.getContent())
       .hasSize(1)
-      .extracting(FieldOfLaw::text)
+      .extracting(Sachgebiet::text)
       .containsOnly("Beendigung der Phantasieverhältnisse");
   }
 
@@ -245,7 +245,7 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of()));
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    Page<Sachgebiet> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
     assertThat(result.getContent()).isEmpty();

@@ -4,10 +4,10 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +39,7 @@ class FieldOfLawControllerTest {
     // given
     given(lookupTablesPort.findFieldsOfLawChildren("PR-01")).willReturn(
       List.of(
-        new FieldOfLaw(
+        new Sachgebiet(
           UUID.randomUUID(),
           false,
           "PR-01-05",
@@ -68,7 +68,7 @@ class FieldOfLawControllerTest {
     // given
     given(lookupTablesPort.findFieldsOfLawParents()).willReturn(
       List.of(
-        new FieldOfLaw(
+        new Sachgebiet(
           UUID.randomUUID(),
           false,
           "AR",
@@ -97,7 +97,7 @@ class FieldOfLawControllerTest {
     // given
     given(lookupTablesPort.findFieldOfLaw("AR")).willReturn(
       Optional.of(
-        new FieldOfLaw(
+        new Sachgebiet(
           UUID.randomUUID(),
           false,
           "AR",
@@ -146,7 +146,7 @@ class FieldOfLawControllerTest {
     given(lookupTablesPort.findFieldsOfLaw(query)).willReturn(
       new PageImpl<>(
         List.of(
-          new FieldOfLaw(
+          new Sachgebiet(
             UUID.randomUUID(),
             false,
             "PR-05",

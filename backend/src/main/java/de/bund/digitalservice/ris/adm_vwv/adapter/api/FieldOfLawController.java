@@ -1,9 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -29,8 +29,8 @@ public class FieldOfLawController {
    * @return List of fields of law without parents
    */
   @GetMapping("api/lookup-tables/fields-of-law/root/children")
-  public ResponseEntity<FieldOfLawResponse> getFieldsOfLawParents() {
-    return ResponseEntity.ok(new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawParents()));
+  public ResponseEntity<SachgebietResponse> getFieldsOfLawParents() {
+    return ResponseEntity.ok(new SachgebietResponse(lookupTablesPort.findFieldsOfLawParents()));
   }
 
   /**
@@ -40,11 +40,11 @@ public class FieldOfLawController {
    * @return Children of given parent
    */
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}/children")
-  public ResponseEntity<FieldOfLawResponse> getFieldsOfLawChildren(
+  public ResponseEntity<SachgebietResponse> getFieldsOfLawChildren(
     @PathVariable String identifier
   ) {
     return ResponseEntity.ok(
-      new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
+      new SachgebietResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
     );
   }
 
@@ -55,7 +55,7 @@ public class FieldOfLawController {
    * @return Found field of law, or HTTP status 404 if not found
    */
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}")
-  public ResponseEntity<FieldOfLaw> getTreeForFieldOfLaw(@PathVariable String identifier) {
+  public ResponseEntity<Sachgebiet> getTreeForFieldOfLaw(@PathVariable String identifier) {
     return lookupTablesPort
       .findFieldOfLaw(identifier)
       .map(ResponseEntity::ok)
@@ -63,16 +63,18 @@ public class FieldOfLawController {
   }
 
   /**
-   * Returns a query result for a field of law searched specified by the given parameters.
+   * Returns a query result for a field of law searched specified by the given
+   * parameters.
    *
-   * @param identifier The identifier to search for
-   * @param text The text term(s) to search for
-   * @param norm The norm term(s) to search for
-   * @param pageNumber The page number
-   * @param pageSize Size of page
-   * @param sortBy Attribute to sort by
+   * @param identifier    The identifier to search for
+   * @param text          The text term(s) to search for
+   * @param norm          The norm term(s) to search for
+   * @param pageNumber    The page number
+   * @param pageSize      Size of page
+   * @param sortBy        Attribute to sort by
    * @param sortDirection Sort direction
-   * @param usePagination {@code true} if the result have to be paginated, {@code false} otherwise
+   * @param usePagination {@code true} if the result have to be paginated,
+   *                      {@code false} otherwise
    * @return Query result
    */
   @GetMapping("api/lookup-tables/fields-of-law")
@@ -93,7 +95,7 @@ public class FieldOfLawController {
       sortDirection,
       usePagination
     );
-    Page<FieldOfLaw> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
+    Page<Sachgebiet> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),

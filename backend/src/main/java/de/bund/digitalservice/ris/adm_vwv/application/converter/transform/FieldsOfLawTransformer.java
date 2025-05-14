@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
@@ -21,7 +21,7 @@ public class FieldsOfLawTransformer {
    *
    * @return The expiryDate or null if Proprietary or Metadata does not exist
    */
-  public List<FieldOfLaw> transform() {
+  public List<Sachgebiet> transform() {
     var fieldsOfLaw = Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
       .map(Proprietary::getMetadata)
       .map(RisMetadata::getFieldsOfLaw)
@@ -30,7 +30,7 @@ public class FieldsOfLawTransformer {
     return fieldsOfLaw
       .stream()
       .map(risFieldOfLaw ->
-        new FieldOfLaw(
+        new Sachgebiet(
           null,
           false,
           null,

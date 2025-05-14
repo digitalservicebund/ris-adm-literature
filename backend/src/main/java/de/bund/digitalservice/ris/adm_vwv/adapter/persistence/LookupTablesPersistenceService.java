@@ -49,18 +49,18 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
   @Override
   @Transactional(readOnly = true)
-  public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
+  public List<Sachgebiet> findFieldsOfLawChildren(@Nonnull String identifier) {
     return fieldOfLawRepository
       .findByIdentifier(identifier)
       .map(fieldOfLawEntity -> FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, true, true)
       )
-      .map(FieldOfLaw::children)
+      .map(Sachgebiet::children)
       .orElse(List.of());
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<FieldOfLaw> findFieldsOfLawParents() {
+  public List<Sachgebiet> findFieldsOfLawParents() {
     return fieldOfLawRepository
       .findByParentIsNullAndNotationOrderByIdentifier("NEW")
       .stream()
@@ -72,7 +72,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
+  public Optional<Sachgebiet> findFieldOfLaw(@Nonnull String identifier) {
     return fieldOfLawRepository
       .findByIdentifier(identifier)
       .map(fieldOfLawEntity -> FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, true, true)
@@ -81,7 +81,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
   @Override
   @Transactional(readOnly = true)
-  public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
+  public Page<Sachgebiet> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
     Pageable pageable = queryOptions.usePagination()
@@ -97,7 +97,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       textTerms,
       normTerms
     );
-    Page<FieldOfLaw> searchResult = fieldOfLawRepository
+    Page<Sachgebiet> searchResult = fieldOfLawRepository
       .findAll(fieldOfLawSpecification, pageable)
       .map(fieldOfLawEntity ->
         FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
@@ -113,7 +113,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       "§(\\d+)",
       "§ $1"
     );
-    List<FieldOfLaw> orderedList = orderResults(textTerms, normParagraphsWithSpace, searchResult);
+    List<Sachgebiet> orderedList = orderResults(textTerms, normParagraphsWithSpace, searchResult);
     return new PageImpl<>(orderedList, searchResult.getPageable(), searchResult.getTotalElements());
   }
 
@@ -201,10 +201,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return searchStr != null ? List.of(searchStr.split("\\s+")) : List.of();
   }
 
-  private List<FieldOfLaw> orderResults(
+  private List<Sachgebiet> orderResults(
     List<String> textTerms,
     String normParagraphsWithSpace,
-    Page<FieldOfLaw> searchResult
+    Page<Sachgebiet> searchResult
   ) {
     // Calculate scores and sort the list based on the score and identifier
     List<ScoredFieldOfLaw> scores = calculateScore(
@@ -226,7 +226,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private List<ScoredFieldOfLaw> calculateScore(
     List<String> textTerms,
     String normParagraphsWithSpace,
-    List<FieldOfLaw> fieldsOfLaw
+    List<Sachgebiet> fieldsOfLaw
   ) {
     List<ScoredFieldOfLaw> scoredFieldsOfLaw = new ArrayList<>();
     fieldsOfLaw.forEach(fieldOfLaw -> {
@@ -242,7 +242,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return scoredFieldsOfLaw;
   }
 
-  private int calculateScoreByTextTerm(@Nonnull FieldOfLaw fieldOfLaw, @Nonnull String textTerm) {
+  private int calculateScoreByTextTerm(@Nonnull Sachgebiet fieldOfLaw, @Nonnull String textTerm) {
     int score = 0;
     textTerm = textTerm.toLowerCase();
     String text = fieldOfLaw.text().toLowerCase();
@@ -257,7 +257,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   }
 
   private int calculateScoreByNormWithParagraphs(
-    @Nonnull FieldOfLaw fieldOfLaw,
+    @Nonnull Sachgebiet fieldOfLaw,
     @Nonnull String normWithParagraphs
   ) {
     int score = 0;
@@ -274,5 +274,5 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return score;
   }
 
-  record ScoredFieldOfLaw(@Nonnull FieldOfLaw fieldOfLaw, @Nonnull Integer score) {}
+  record ScoredFieldOfLaw(@Nonnull Sachgebiet fieldOfLaw, @Nonnull Integer score) {}
 }

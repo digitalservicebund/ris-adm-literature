@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.Sachgebiet;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveReference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
@@ -401,7 +401,7 @@ class LdmlConverterServiceTest {
 
     // then
     assertThat(
-      documentationUnitContent.fieldsOfLaw().stream().map(FieldOfLaw::text).toList()
+      documentationUnitContent.fieldsOfLaw().stream().map(Sachgebiet::text).toList()
     ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
   }
 

@@ -11,11 +11,13 @@ import org.springframework.data.domain.Page;
 public interface LookupTablesPort {
   Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query);
 
-  List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier);
-  List<FieldOfLaw> findFieldsOfLawParents();
+  List<Sachgebiet> findFieldsOfLawChildren(@Nonnull String identifier);
 
-  Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier);
-  Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query);
+  List<Sachgebiet> findFieldsOfLawParents();
+
+  Optional<Sachgebiet> findFieldOfLaw(@Nonnull String identifier);
+
+  Page<Sachgebiet> findFieldsOfLaw(@Nonnull FieldOfLawQuery query);
 
   Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query);
 
