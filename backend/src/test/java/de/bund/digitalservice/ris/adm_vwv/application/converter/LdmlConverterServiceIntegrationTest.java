@@ -66,7 +66,7 @@ class LdmlConverterServiceIntegrationTest {
       .extracting(DocumentationUnitContent::references)
       .asInstanceOf(InstanceOfAssertFactories.list(Reference.class))
       .extracting(Reference::citation, Reference::legalPeriodicalRawValue)
-      .containsOnly(tuple("Das Periodikum 2021, Seite 15", "Das Periodikum"));
+      .containsOnly(tuple("2021, Seite 15", "Das Periodikum"));
   }
 
   @Test

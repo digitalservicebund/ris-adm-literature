@@ -12,6 +12,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,8 +43,9 @@ public class FundstellenTransformer {
       .map(ir -> {
         String abbreviation = ir.getShortForm();
         LegalPeriodical legalPeriodical = findLegalPeriodical(abbreviation);
+        String citation = StringUtils.substringAfter(ir.getShowAs(), abbreviation).trim();
         // In case the legal periodical is not unique or not existing, the raw value is set and displayed in the UI.
-        return new Reference(UUID.randomUUID(), ir.getShowAs(), legalPeriodical, abbreviation);
+        return new Reference(UUID.randomUUID(), citation, legalPeriodical, abbreviation);
       })
       .toList();
   }

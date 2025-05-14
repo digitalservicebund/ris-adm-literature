@@ -36,7 +36,7 @@ class FundstellenTransformerTest {
     Analysis analysis = new Analysis();
     meta.setAnalysis(analysis);
     analysis.setOtherReferences(
-      List.of(createOtherReference("BAnz", "Seite 5"), createOtherReference("DOK", "2021"))
+      List.of(createOtherReference("BAnz", "BAnz Seite 5"), createOtherReference("DOK", "DOK 2021"))
     );
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BAnz")).willReturn(
       List.of(new LegalPeriodical("BAnz", "Bundesanzeiger", null, "2025, Seite 2"))
@@ -90,7 +90,7 @@ class FundstellenTransformerTest {
     doc.setMeta(meta);
     Analysis analysis = new Analysis();
     meta.setAnalysis(analysis);
-    analysis.setOtherReferences(List.of(createOtherReference("BRD", "Seite 5")));
+    analysis.setOtherReferences(List.of(createOtherReference("BRD", "BRD Seite 5")));
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
       List.of(
         new LegalPeriodical("BRD", "Bericht aus Deutschland", null, "2025, Seite 2"),
