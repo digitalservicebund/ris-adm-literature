@@ -73,10 +73,8 @@ describe('DocumentUnitList', () => {
       firstRowIndex: 0,
       loading: false,
     })
-    const tbody = screen.getAllByRole('rowgroup').find((group) => group.tagName === 'TBODY')!
-    const bodyRows = within(tbody).getAllByRole('row')
-    const firstRow = bodyRows.find((row) => row.getAttribute('data-p-index') === '0')
-    const columns = within(firstRow!).getAllByRole('cell')
+    const firstRow = screen.getByTestId('row-0')
+    const columns = within(firstRow).getAllByRole('cell')
     expect(columns[0]).toHaveTextContent('dokumentNummer1')
     expect(columns[1]).toHaveTextContent('01.01.2025')
     expect(columns[2]).toHaveTextContent('Berücksichtigung von Sonderleistungen')
@@ -91,10 +89,8 @@ describe('DocumentUnitList', () => {
       firstRowIndex: 0,
       loading: false,
     })
-    const tbody = screen.getAllByRole('rowgroup').find((group) => group.tagName === 'TBODY')!
-    const bodyRows = within(tbody).getAllByRole('row')
-    const secondRow = bodyRows.find((row) => row.getAttribute('data-p-index') === '1')
-    const columns = within(secondRow!).getAllByRole('cell')
+    const firstRow = screen.getByTestId('row-1')
+    const columns = within(firstRow).getAllByRole('cell')
     expect(columns[3]).toHaveTextContent('--')
   })
 })

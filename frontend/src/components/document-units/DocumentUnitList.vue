@@ -27,13 +27,16 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
 
 <template>
   <DataTable
-    class="ris-label2-bold text-gray-900"
+    class="ris-label2-bold"
     :value="docUnits"
     :first="firstRowIndex"
     :rows="rowsPerPage"
     :total-records="totalRows"
     :loading="loading"
-    :pt="{ thead: { style: 'box-shadow: inset 0 -2px #DCE8EF;' } }"
+    :pt="{
+      thead: { style: 'box-shadow: inset 0 -2px #DCE8EF;', class: 'text-gray-900' },
+      bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),
+    }"
   >
     <Column field="dokumentNummer" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
