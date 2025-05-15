@@ -5,6 +5,15 @@ import type ActiveReference from '@/domain/activeReference.ts'
 import type NormReference from './normReference'
 import type { Normgeber } from './normgeber'
 import type { DocumentType } from './documentType'
+import type { Fundstelle } from './fundstelle'
+
+export interface DocumentUnitListItem {
+  readonly id: string
+  readonly dokumentNummer: string
+  zitierdatum?: string
+  langueberschrift?: string
+  fundstellen: Fundstelle[]
+}
 
 export interface DocumentUnit {
   readonly id: string

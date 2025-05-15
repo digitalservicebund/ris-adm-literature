@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
+import DocumentUnits from '@/components/document-units/DocumentUnits.vue'
 
 const router = useRouter()
 </script>
@@ -12,10 +13,7 @@ const router = useRouter()
       <h1 class="ris-heading2-regular">Übersicht Verwaltungsvorschriften</h1>
 
       <Button
-        :disabled="false"
         label="Neue Dokumentationseinheit"
-        :loading="false"
-        :text="false"
         @click="router.push({ path: '/documentUnit/new' })"
       >
         <template #icon>
@@ -23,5 +21,6 @@ const router = useRouter()
         </template>
       </Button>
     </div>
+    <DocumentUnits />
   </div>
 </template>
