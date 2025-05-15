@@ -54,7 +54,7 @@ dependencies {
     exclude("com.squareup.okio", "okio-jvm")
   }
 
-  implementation("com.google.protobuf:protobuf-java:4.30.2")
+  implementation("com.google.protobuf:protobuf-java:4.31.0")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.squareup.okio:okio-jvm:3.11.0")
   implementation("org.springframework.retry:spring-retry")
