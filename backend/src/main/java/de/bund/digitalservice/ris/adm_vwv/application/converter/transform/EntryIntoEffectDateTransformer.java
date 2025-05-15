@@ -15,7 +15,7 @@ public class EntryIntoEffectDateTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code EntryIntoEffectDate} object to a string.
+   * Transforms the {@code EntryIntoEffectDate} object to an entryIntoEffectDate string.
    *
    * @return The entryIntoEffectDate or null if Proprietary or Metadata does not exist
    */

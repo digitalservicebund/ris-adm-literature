@@ -15,7 +15,7 @@ public class ExpiryDateTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code ExpiryDate} object to a string.
+   * Transforms the {@code ExpiryDate} object to an expiryDate string.
    *
    * @return The expiryDate or null if Proprietary or Metadata does not exist
    */

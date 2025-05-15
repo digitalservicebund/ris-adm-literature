@@ -16,10 +16,9 @@ public class DocumentTypeZusatzTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code AkomaNtoso} object to a date to quote string.
+   * Transforms the {@code AkomaNtoso} object to a longtitle string.
    *
-   * @return The (first) date to quote, or {@code null} if the surrounding {@code <proprietary>}
-   *         or {@code <dateToQuoteList>} elements are {@code null}
+   * @return The longtitle, or {@code null} if it does not exist
    */
   public String transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())

@@ -17,9 +17,9 @@ public class FieldsOfLawTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code ExpiryDate} object to a string.
+   * Transforms the {@code ExpiryDate} object to a list of fields of law.
    *
-   * @return The expiryDate or null if Proprietary or Metadata does not exist
+   * @return The fields of law or empty list
    */
   public List<FieldOfLaw> transform() {
     var fieldsOfLaw = Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())

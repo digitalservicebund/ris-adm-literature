@@ -15,9 +15,9 @@ public class KeywordsTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code Keyword} object to a string.
+   * Transforms the {@code Keyword} object to a list of keywords
    *
-   * @return The list of keyword values or an empty list
+   * @return The list of keywords (empty if there are none)
    */
   public List<String> transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getClassification())

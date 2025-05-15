@@ -14,7 +14,7 @@ public class TableOfContentsTransformer {
   private final AkomaNtoso akomaNtoso;
 
   /**
-   * Transforms the {@code TableOfContents} object to a list of references.
+   * Transforms the {@code TableOfContents} object to a list of table of contents entries.
    *
    * @return List of table of contents entries or empty list
    */
