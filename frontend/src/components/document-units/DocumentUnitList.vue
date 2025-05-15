@@ -41,7 +41,7 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
     <Column field="dokumentNummer" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
       <template #body="{ data }">
-        {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '-' }}
+        {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '--' }}
       </template>
     </Column>
     <Column

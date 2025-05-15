@@ -36,7 +36,6 @@ const docUnitsMock: DocumentUnitListItem[] = [
   {
     id: 'docUnitId2',
     dokumentNummer: 'documentNummer2',
-    zitierdatum: '2025-01-01',
     langueberschrift:
       'Verwaltungsvorschrift zur Prüfung von Einmalzahlungen im Rahmen des § 6 Abs. 3 Satz 2 Sozialleistungsharmonisierungsgesetzes (SLHG)',
     fundstellen: [],
@@ -81,7 +80,7 @@ describe('DocumentUnitList', () => {
     expect(columns[3]).toHaveTextContent('ZentrBl §2.1, DokZ-S Kapitel 4')
   })
 
-  it('shows "--" as fundstelle if no fundstellen is present', () => {
+  it('shows placeholder "--" if no fundstellen or zitierdatum are present', () => {
     renderComponent({
       docUnits: docUnitsMock,
       rowsPerPage: 100,
@@ -91,6 +90,7 @@ describe('DocumentUnitList', () => {
     })
     const firstRow = screen.getByTestId('row-1')
     const columns = within(firstRow).getAllByRole('cell')
+    expect(columns[1]).toHaveTextContent('--')
     expect(columns[3]).toHaveTextContent('--')
   })
 })
