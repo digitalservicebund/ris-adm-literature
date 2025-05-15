@@ -111,7 +111,8 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(documentationUnitContent.kurzreferat())
       .isNotNull()
-      .containsSubsequence("<p>Kurzreferat Zeile 1</p>", "<p>Kurzreferat Zeile 2</p>");
+      .startsWith("<p>Kurzreferat Zeile 1</p>")
+      .endsWith("<p>Kurzreferat Zeile 2</p>");
   }
 
   @Test

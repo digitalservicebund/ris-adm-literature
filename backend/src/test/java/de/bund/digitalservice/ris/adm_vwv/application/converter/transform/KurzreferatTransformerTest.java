@@ -20,17 +20,17 @@ class KurzreferatTransformerTest {
     MainBody mainBody = new MainBody();
     doc.setMainBody(mainBody);
     JaxbHtml div = new JaxbHtml();
-    div.setHtml(List.of("Langer Titel"));
     mainBody.setDiv(div);
+    String textNode = "\n";
     JAXBElement<String> line1 = new JAXBElement<>(QName.valueOf("akn:p"), String.class, "Zeile 1");
     JAXBElement<String> line2 = new JAXBElement<>(QName.valueOf("akn:p"), String.class, "Zeile 2");
-    div.setHtml(List.of(line1, line2));
+    div.setHtml(List.of(textNode, line1, textNode, line2, textNode));
 
     // when
     String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();
 
     // then
-    assertThat(actualKurzreferat).containsSubsequence("<p>Zeile 1</p>", "<p>Zeile 2</p>");
+    assertThat(actualKurzreferat).startsWith("<p>Zeile 1</p>").endsWith("<p>Zeile 2</p>");
   }
 
   @Test
