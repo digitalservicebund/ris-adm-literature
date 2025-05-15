@@ -9,7 +9,7 @@ import type { Fundstelle } from './fundstelle'
 
 export interface DocumentUnitListItem {
   readonly id: string
-  readonly documentNumber: string
+  readonly dokumentNummer: string
   zitierdatum?: string
   langueberschrift?: string
   fundstellen: Fundstelle[]

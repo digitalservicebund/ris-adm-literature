@@ -7,7 +7,7 @@ import type { DocumentUnitListItem } from '@/domain/documentUnit'
 const docUnitsMock: DocumentUnitListItem[] = [
   {
     id: 'docUnitId1',
-    documentNumber: 'documentNumber1',
+    dokumentNummer: 'dokumentNummer1',
     zitierdatum: '2025-01-01',
     langueberschrift: 'Berücksichtigung von Sonderleistungen im Rahmen der Übergangsregelung',
     fundstellen: [
@@ -17,7 +17,7 @@ const docUnitsMock: DocumentUnitListItem[] = [
         periodika: [
           {
             id: 'periodicalId1',
-            abbreviation: 'Zentralblatt',
+            abbreviation: 'ZentrBl',
           },
         ],
       },
@@ -27,7 +27,7 @@ const docUnitsMock: DocumentUnitListItem[] = [
         periodika: [
           {
             id: 'periodicalId2',
-            abbreviation: 'Dokumentenzentrum Süd',
+            abbreviation: 'DokZ-S',
           },
         ],
       },
@@ -35,7 +35,7 @@ const docUnitsMock: DocumentUnitListItem[] = [
   },
   {
     id: 'docUnitId2',
-    documentNumber: 'documentNumber2',
+    dokumentNummer: 'documentNummer2',
     zitierdatum: '2025-01-01',
     langueberschrift:
       'Verwaltungsvorschrift zur Prüfung von Einmalzahlungen im Rahmen des § 6 Abs. 3 Satz 2 Sozialleistungsharmonisierungsgesetzes (SLHG)',
@@ -65,7 +65,7 @@ describe('DocumentUnitList', () => {
     expect(bodyRows).toHaveLength(2)
   })
 
-  it('renders the first row', () => {
+  it('shows the document number, zitierdatum, langueberschrift and fundstelle in the first row', () => {
     renderComponent({
       docUnits: docUnitsMock,
       rowsPerPage: 100,
@@ -77,13 +77,13 @@ describe('DocumentUnitList', () => {
     const bodyRows = within(tbody).getAllByRole('row')
     const firstRow = bodyRows.find((row) => row.getAttribute('data-p-index') === '0')
     const columns = within(firstRow!).getAllByRole('cell')
-    expect(columns[0]).toHaveTextContent('documentNumber1')
+    expect(columns[0]).toHaveTextContent('dokumentNummer1')
     expect(columns[1]).toHaveTextContent('01.01.2025')
     expect(columns[2]).toHaveTextContent('Berücksichtigung von Sonderleistungen')
-    expect(columns[3]).toHaveTextContent('Zentralblatt §2.1, Dokumentenzentrum Süd Kapitel 4')
+    expect(columns[3]).toHaveTextContent('ZentrBl §2.1, DokZ-S Kapitel 4')
   })
 
-  it('shows "--" if no sources', () => {
+  it('shows "--" as fundstelle if no fundstellen is present', () => {
     renderComponent({
       docUnits: docUnitsMock,
       rowsPerPage: 100,

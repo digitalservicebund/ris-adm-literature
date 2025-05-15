@@ -14,9 +14,9 @@ export interface DocumentUnitListProps {
 }
 defineProps<DocumentUnitListProps>()
 
-const fundstelleLabel = (sources: Fundstelle[]) =>
-  sources.length > 0
-    ? sources
+const fundstelleLabel = (fundstellen: Fundstelle[]) =>
+  fundstellen.length > 0
+    ? fundstellen
         .map((f: Fundstelle) => {
           const abbreviations = f.periodika.map((p: Periodikum) => p.abbreviation).join(' ')
           return `${abbreviations} ${f.zitatstelle}`
@@ -35,7 +35,7 @@ const fundstelleLabel = (sources: Fundstelle[]) =>
     :loading="loading"
     :pt="{ thead: { style: 'box-shadow: inset 0 -2px #DCE8EF;' } }"
   >
-    <Column field="documentNumber" header="Dokumentnummer"></Column>
+    <Column field="dokumentNummer" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
       <template #body="{ data }">
         {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '-' }}
