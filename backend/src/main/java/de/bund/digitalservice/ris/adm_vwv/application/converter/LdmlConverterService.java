@@ -43,7 +43,7 @@ public class LdmlConverterService {
       new DateToQuoteTransformer(akomaNtoso).transform(),
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
-      new TableOfContentsTransformer(akomaNtoso).transform(),
+      new TableOfContentsTransformer().transform(akomaNtoso),
       new KurzreferatTransformer(akomaNtoso).transform(),
       referenceNumbers,
       referenceNumbers.isEmpty(),

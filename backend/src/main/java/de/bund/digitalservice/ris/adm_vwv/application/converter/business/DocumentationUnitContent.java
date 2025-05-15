@@ -38,7 +38,7 @@ public record DocumentationUnitContent(
   String zitierdatum,
   String inkrafttretedatum,
   String ausserkrafttretedatum,
-  List<String> gliederung,
+  String gliederung,
   String kurzreferat,
   List<String> aktenzeichen,
   boolean noAktenzeichen,

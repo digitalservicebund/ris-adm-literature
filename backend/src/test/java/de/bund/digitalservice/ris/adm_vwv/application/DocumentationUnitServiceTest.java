@@ -136,7 +136,7 @@ class DocumentationUnitServiceTest {
       null,
       null,
       null,
-      List.of(),
+      null,
       null,
       List.of(),
       false,

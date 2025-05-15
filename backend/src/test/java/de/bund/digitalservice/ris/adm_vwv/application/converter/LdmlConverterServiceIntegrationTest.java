@@ -201,7 +201,11 @@ class LdmlConverterServiceIntegrationTest {
     assertThat(documentationUnitContent)
       .isNotNull()
       .extracting(DocumentationUnitContent::gliederung)
-      .isEqualTo(Stream.of("TOC entry 1", "TOC entry 2").toList());
+      .isEqualTo(
+        """
+        <p>TOC entry 1</p>
+        <p>TOC entry 2</p>"""
+      );
   }
 
   @Test
@@ -235,7 +239,7 @@ class LdmlConverterServiceIntegrationTest {
     assertThat(documentationUnitContent)
       .isNotNull()
       .extracting(DocumentationUnitContent::gliederung)
-      .isEqualTo(List.of());
+      .isNull();
   }
 
   @Test
