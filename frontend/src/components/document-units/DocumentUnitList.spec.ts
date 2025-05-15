@@ -52,7 +52,7 @@ function renderComponent(props: DocumentUnitListProps) {
 }
 
 describe('DocumentUnitList', () => {
-  it('renders a list of documents', () => {
+  it('renders a list of 2 documents as a table', () => {
     renderComponent({
       docUnits: docUnitsMock,
       rowsPerPage: 100,
