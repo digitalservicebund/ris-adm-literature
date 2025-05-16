@@ -111,6 +111,7 @@ class DocumentationUnitControllerIntegrationTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
+        // TODO: take these out where they don't add anything to the test
         .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
           jsonPath("$.paginatedDocumentUnitListElements.content[0].langueberschrift").value(
@@ -121,6 +122,20 @@ class DocumentationUnitControllerIntegrationTest {
           jsonPath("$.paginatedDocumentUnitListElements.content[1].langueberschrift").value(
             "Sample Document Title 2"
           )
+        );
+    }
+
+    @Test
+    @DisplayName("return array of Fundstellen")
+    void getListOfDocumentsWithFundstellen() throws Exception {
+      // given
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen").isNotEmpty()
         );
     }
   }
