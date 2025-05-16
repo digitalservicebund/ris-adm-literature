@@ -25,7 +25,7 @@ public class DocumentationUnitController {
   private final DocumentationUnitPort documentationUnitPort;
 
   /**
-   * TODO JavaDocs
+   * Returns information on all documentation units
    *
    * @return paginated list of document units
    */
