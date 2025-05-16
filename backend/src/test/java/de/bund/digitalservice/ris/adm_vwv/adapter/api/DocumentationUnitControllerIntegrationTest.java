@@ -83,5 +83,23 @@ class DocumentationUnitControllerIntegrationTest {
           )
         );
     }
+
+    @Test
+    @DisplayName("returns list of Zitierdaten ")
+    void getListOfDocumentsWithZitierdatum() throws Exception {
+      // given
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(jsonPath("$").isNotEmpty())
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[0].zitierdatum").value("2011-11-11")
+        )
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[1].zitierdatum").value("2011-11-11")
+        );
+    }
   }
 }
