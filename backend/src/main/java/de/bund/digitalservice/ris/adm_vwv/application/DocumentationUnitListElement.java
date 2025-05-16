@@ -16,7 +16,7 @@ public record DocumentationUnitListElement(
   // List<Region> regions
 
   @Nonnull UUID id,
-  @Nonnull String dokumentNummer,
+  @Nonnull String dokumentnummer,
   String zitierdatum
   // String langueberschrift,
   // List<Fundstelle> fundstellen

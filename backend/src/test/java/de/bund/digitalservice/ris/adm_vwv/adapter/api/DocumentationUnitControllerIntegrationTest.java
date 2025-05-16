@@ -73,12 +73,12 @@ class DocumentationUnitControllerIntegrationTest {
         // then
         .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentNummer").value(
+          jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentnummer").value(
             "sample dokumentnummer 1"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentNummer").value(
+          jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentnummer").value(
             "sample dokumentnummer 2"
           )
         );
