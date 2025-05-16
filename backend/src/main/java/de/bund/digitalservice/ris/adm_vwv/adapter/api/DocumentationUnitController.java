@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitListElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +35,15 @@ public class DocumentationUnitController {
         UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
         "sample dokumentnummer 1",
         "2011-11-11",
-        "Sample Document Title 1"
+        "Sample Document Title 1",
+        List.of(new Fundstelle())
       ),
       new DocumentationUnitListElement(
         UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
         "sample dokumentnummer 2",
         "2011-11-11",
-        "Sample Document Title 2"
+        "Sample Document Title 2",
+        List.of()
       )
     );
 

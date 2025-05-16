@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -9,15 +10,9 @@ import java.util.UUID;
  * @param id The uuid of the document unit
  */
 public record DocumentationUnitListElement(
-  // @Nonnull UUID id,
-  // @Nonnull String name,
-  // String officialName,
-  // InstitutionType type,
-  // List<Region> regions
-
   @Nonnull UUID id,
   @Nonnull String dokumentnummer,
   String zitierdatum,
-  String langueberschrift
-  // List<Fundstelle> fundstellen
+  String langueberschrift,
+  List<Fundstelle> fundstellen
 ) {}
