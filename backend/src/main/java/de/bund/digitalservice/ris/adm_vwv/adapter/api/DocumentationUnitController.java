@@ -36,7 +36,7 @@ public class DocumentationUnitController {
         "sample dokumentnummer 1",
         "2011-11-11",
         "Sample Document Title 1",
-        List.of(new Fundstelle())
+        List.of(new Fundstelle("fundstellen id 1"), new Fundstelle("fundstellen id 2"))
       ),
       new DocumentationUnitListElement(
         UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
