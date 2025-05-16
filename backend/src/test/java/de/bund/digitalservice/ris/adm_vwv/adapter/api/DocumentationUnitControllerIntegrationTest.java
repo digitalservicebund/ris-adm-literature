@@ -178,6 +178,22 @@ class DocumentationUnitControllerIntegrationTest {
             ).value("zitatstelle 2")
           );
       }
+
+      @Test
+      @DisplayName("return array of Periodika")
+      void getListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
+        // given
+
+        // when
+        mockMvc
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(
+            jsonPath(
+              "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika"
+            ).isNotEmpty()
+          );
+      }
     }
   }
 }
