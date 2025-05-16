@@ -38,7 +38,11 @@ public class DocumentationUnitController {
         "2011-11-11",
         "Sample Document Title 1",
         List.of(
-          new Fundstelle("fundstellen id 1", "zitatstelle 1", List.of(new Periodikum())),
+          new Fundstelle(
+            "fundstellen id 1",
+            "zitatstelle 1",
+            List.of(new Periodikum("periodikum id 1"), new Periodikum("periodikum id 2"))
+          ),
           new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
         )
       ),
