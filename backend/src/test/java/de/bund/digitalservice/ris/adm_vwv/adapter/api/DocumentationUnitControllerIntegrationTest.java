@@ -157,6 +157,27 @@ class DocumentationUnitControllerIntegrationTest {
             )
           );
       }
+
+      @Test
+      @DisplayName("return array of Fundstellen with zitatstelle")
+      void getListOfDocumentsWithFundstellenZitatstellen() throws Exception {
+        // given
+
+        // when
+        mockMvc
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(
+            jsonPath(
+              "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].zitatstelle"
+            ).value("zitatstelle 1")
+          )
+          .andExpect(
+            jsonPath(
+              "$.paginatedDocumentUnitListElements.content[0].fundstellen[1].zitatstelle"
+            ).value("zitatstelle 2")
+          );
+      }
     }
   }
 }
