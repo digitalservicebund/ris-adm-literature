@@ -17,7 +17,7 @@ public record DocumentationUnitListElement(
 
   @Nonnull UUID id,
   @Nonnull String dokumentnummer,
-  String zitierdatum
-  // String langueberschrift,
+  String zitierdatum,
+  String langueberschrift
   // List<Fundstelle> fundstellen
 ) {}

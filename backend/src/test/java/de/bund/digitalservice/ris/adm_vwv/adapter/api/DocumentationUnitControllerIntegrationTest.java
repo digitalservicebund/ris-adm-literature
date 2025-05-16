@@ -35,9 +35,9 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(status().isOk());
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(status().isOk());
     }
 
     @Test
@@ -47,19 +47,15 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].id").value(
-            "11111111-1657-4085-ae2a-993a04c27f6b"
-          )
-        )
-        .andExpect(
-          jsonPath(".paginatedDocumentUnitListElements.content[1].id").value(
-            "22222222-1657-4085-ae2a-993a04c27f6b"
-          )
-        );
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(jsonPath("$").isNotEmpty())
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[0].id").value(
+                  "11111111-1657-4085-ae2a-993a04c27f6b"))
+          .andExpect(
+              jsonPath(".paginatedDocumentUnitListElements.content[1].id").value(
+                  "22222222-1657-4085-ae2a-993a04c27f6b"));
     }
 
     @Test
@@ -69,19 +65,15 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentnummer").value(
-            "sample dokumentnummer 1"
-          )
-        )
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentnummer").value(
-            "sample dokumentnummer 2"
-          )
-        );
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(jsonPath("$").isNotEmpty())
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentnummer").value(
+                  "sample dokumentnummer 1"))
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentnummer").value(
+                  "sample dokumentnummer 2"));
     }
 
     @Test
@@ -91,15 +83,31 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(jsonPath("$").isNotEmpty())
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].zitierdatum").value("2011-11-11")
-        )
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].zitierdatum").value("2011-11-11")
-        );
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(jsonPath("$").isNotEmpty())
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[0].zitierdatum").value("2011-11-11"))
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[1].zitierdatum").value("2011-11-11"));
+    }
+
+    @Test
+    @DisplayName("returns list of Langüberschriften ")
+    void getListOfDocumentsWithLangueberschrift() throws Exception {
+      // given
+
+      // when
+      mockMvc
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(jsonPath("$").isNotEmpty())
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[0].langueberschrift").value(
+                  "Sample Document Title 1"))
+          .andExpect(
+              jsonPath("$.paginatedDocumentUnitListElements.content[1].langueberschrift").value(
+                  "Sample Document Title 2"));
     }
   }
 }
