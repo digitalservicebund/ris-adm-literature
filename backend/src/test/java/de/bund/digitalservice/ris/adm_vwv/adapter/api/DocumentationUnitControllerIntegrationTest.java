@@ -1,11 +1,13 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,15 +25,31 @@ class DocumentationUnitControllerIntegrationTest {
   @MockitoBean
   private DocumentationUnitPort documentationUnitPort;
 
-  @Test
-  @DisplayName("Request GET /api/documentation-units returns HTTP 200")
-  void find() throws Exception {
-    // given
+  @Nested
+  public class GetListOfDocumentUnits {
 
-    // when
-    mockMvc
-      .perform(get("/api/documentation-units"))
-      // then
-      .andExpect(status().isOk());
+    @Test
+    @DisplayName("returns HTTP 200")
+    void getListOfDocumentsSuccess() throws Exception {
+      // given
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("returns list of ")
+    void getListOfDocumentsWithContent() throws Exception {
+      // given
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(jsonPath("$").isNotEmpty());
+    }
   }
 }
