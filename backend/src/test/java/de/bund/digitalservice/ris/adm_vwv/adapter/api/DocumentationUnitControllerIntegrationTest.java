@@ -41,7 +41,7 @@ class DocumentationUnitControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("returns list of ")
+    @DisplayName("returns list of (uu)ids ")
     void getListOfDocumentsWithContent() throws Exception {
       // given
 
@@ -50,7 +50,8 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(jsonPath("$").isNotEmpty())
-        .andExpect(jsonPath("$[0].id").value("11111111-1657-4085-ae2a-993a04c27f6b"));
+        .andExpect(jsonPath("$[0].id").value("11111111-1657-4085-ae2a-993a04c27f6b"))
+        .andExpect(jsonPath("$[1].id").value("22222222-1657-4085-ae2a-993a04c27f6b"));
     }
   }
 }
