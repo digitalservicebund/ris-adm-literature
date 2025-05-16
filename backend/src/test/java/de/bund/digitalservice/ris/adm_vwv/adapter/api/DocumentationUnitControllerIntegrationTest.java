@@ -218,6 +218,69 @@ class DocumentationUnitControllerIntegrationTest {
               ).value("periodikum id 2")
             );
         }
+
+        @Test
+        @DisplayName("return periodika titles")
+        void getListOfDocumentsWithFundstellenAndPeriodikaTitles() throws Exception {
+          // given
+
+          // when
+          mockMvc
+            .perform(get("/api/documentation-units"))
+            // then
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].title"
+              ).value("periodikum title 1")
+            )
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].title"
+              ).value("periodikum title 2")
+            );
+        }
+
+        @Test
+        @DisplayName("return periodika subtitles")
+        void getListOfDocumentsWithFundstellenAndPeriodikaSubtitles() throws Exception {
+          // given
+
+          // when
+          mockMvc
+            .perform(get("/api/documentation-units"))
+            // then
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].subtitle"
+              ).value("periodikum subtitle 1")
+            )
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].subtitle"
+              ).value("periodikum subtitle 2")
+            );
+        }
+
+        @Test
+        @DisplayName("return periodika abbreviation")
+        void getListOfDocumentsWithFundstellenAndPeriodikaAbbreviation() throws Exception {
+          // given
+
+          // when
+          mockMvc
+            .perform(get("/api/documentation-units"))
+            // then
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].abbreviation"
+              ).value("periodikum abbreviation 1")
+            )
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].abbreviation"
+              ).value("periodikum abbreviation 2")
+            );
+        }
       }
     }
   }
