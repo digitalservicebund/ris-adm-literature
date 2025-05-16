@@ -7,6 +7,8 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +24,19 @@ public class DocumentationUnitController {
 
   /**
    * TODO
+   *
+   * @return paginated list of document units
    */
   @GetMapping("api/documentation-units")
-  public ResponseEntity<List<DocumentationUnitListElement>> getAll() {
+  public ResponseEntity<DocumentUnitListResponse> getAll() {
     List<DocumentationUnitListElement> list = List.of(
       new DocumentationUnitListElement(UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b")),
       new DocumentationUnitListElement(UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"))
     );
-    return ResponseEntity.ok(list);
+
+    Page<DocumentationUnitListElement> pagedList = new PageImpl<>(list);
+    DocumentUnitListResponse response = new DocumentUnitListResponse(pagedList);
+    return ResponseEntity.ok(response);
   }
 
   /**
