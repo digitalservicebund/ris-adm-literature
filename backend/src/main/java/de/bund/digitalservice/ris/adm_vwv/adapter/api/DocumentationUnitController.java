@@ -30,8 +30,14 @@ public class DocumentationUnitController {
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentUnitListResponse> getAll() {
     List<DocumentationUnitListElement> list = List.of(
-      new DocumentationUnitListElement(UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b")),
-      new DocumentationUnitListElement(UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"))
+      new DocumentationUnitListElement(
+        UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
+        "sample dokumentnummer 1"
+      ),
+      new DocumentationUnitListElement(
+        UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
+        "sample dokumentnummer 2"
+      )
     );
 
     Page<DocumentationUnitListElement> pagedList = new PageImpl<>(list);
