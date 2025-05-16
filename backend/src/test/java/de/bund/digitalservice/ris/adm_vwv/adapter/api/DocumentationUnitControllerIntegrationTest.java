@@ -35,9 +35,9 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(status().isOk());
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(status().isOk());
     }
 
     @Test
@@ -47,9 +47,10 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(jsonPath("$").isNotEmpty());
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(jsonPath("$").isNotEmpty())
+          .andExpect(jsonPath("$[0].id").value("id-sample-document-1"));
     }
   }
 }

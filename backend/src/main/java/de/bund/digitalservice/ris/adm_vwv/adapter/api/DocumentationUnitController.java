@@ -33,9 +33,9 @@ public class DocumentationUnitController {
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitPort
-        .findByDocumentNumber(documentNumber)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+      .findByDocumentNumber(documentNumber)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
   }
 
   /**
@@ -60,11 +60,12 @@ public class DocumentationUnitController {
    */
   @PutMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
-      @PathVariable String documentNumber,
-      @RequestBody JsonNode documentationUnit) {
+    @PathVariable String documentNumber,
+    @RequestBody JsonNode documentationUnit
+  ) {
     return documentationUnitPort
-        .update(documentNumber, documentationUnit.toString())
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+      .update(documentNumber, documentationUnit.toString())
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
   }
 }
