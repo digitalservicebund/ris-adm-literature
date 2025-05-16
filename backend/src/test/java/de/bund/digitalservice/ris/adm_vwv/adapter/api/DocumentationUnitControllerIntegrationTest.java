@@ -49,7 +49,6 @@ class DocumentationUnitControllerIntegrationTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
           jsonPath("$.paginatedDocumentUnitListElements.content[0].id").value(
             "11111111-1657-4085-ae2a-993a04c27f6b"
@@ -71,7 +70,6 @@ class DocumentationUnitControllerIntegrationTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
           jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentnummer").value(
             "sample dokumentnummer 1"
@@ -93,7 +91,6 @@ class DocumentationUnitControllerIntegrationTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
           jsonPath("$.paginatedDocumentUnitListElements.content[0].zitierdatum").value("2011-11-11")
         )
@@ -111,8 +108,6 @@ class DocumentationUnitControllerIntegrationTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        // TODO: take these out where they don't add anything to the test
-        .andExpect(jsonPath("$").isNotEmpty())
         .andExpect(
           jsonPath("$.paginatedDocumentUnitListElements.content[0].langueberschrift").value(
             "Sample Document Title 1"
