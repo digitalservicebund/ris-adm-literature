@@ -125,18 +125,43 @@ class DocumentationUnitControllerIntegrationTest {
         );
     }
 
-    @Test
-    @DisplayName("return array of Fundstellen")
-    void getListOfDocumentsWithFundstellen() throws Exception {
-      // given
+    @Nested
+    class fundstellen {
 
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen").isNotEmpty()
-        );
+      @Test
+      @DisplayName("return array of Fundstellen")
+      void getListOfDocumentsWithFundstellen() throws Exception {
+        // given
+
+        // when
+        mockMvc
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(
+            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen").isNotEmpty()
+          );
+      }
+
+      @Test
+      @DisplayName("return array of Fundstellen with ids")
+      void getListOfDocumentsWithFundstellenIds() throws Exception {
+        // given
+
+        // when
+        mockMvc
+          .perform(get("/api/documentation-units"))
+          // then
+          .andExpect(
+            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen[0].id").value(
+              "fundstellen id 1"
+            )
+          )
+          .andExpect(
+            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen[1].id").value(
+              "fundstellen id 2"
+            )
+          );
+      }
     }
   }
 }
