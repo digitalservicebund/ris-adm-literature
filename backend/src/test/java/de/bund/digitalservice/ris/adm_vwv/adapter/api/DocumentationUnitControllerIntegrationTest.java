@@ -42,7 +42,7 @@ class DocumentationUnitControllerIntegrationTest {
 
     @Test
     @DisplayName("returns list of (uu)ids ")
-    void getListOfDocumentsWithContent() throws Exception {
+    void getListOfDocumentsWithIds() throws Exception {
       // given
 
       // when
@@ -58,6 +58,28 @@ class DocumentationUnitControllerIntegrationTest {
         .andExpect(
           jsonPath(".paginatedDocumentUnitListElements.content[1].id").value(
             "22222222-1657-4085-ae2a-993a04c27f6b"
+          )
+        );
+    }
+
+    @Test
+    @DisplayName("returns list of Dokumentnummern ")
+    void getListOfDocumentsWithDokumentNummern() throws Exception {
+      // given
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(jsonPath("$").isNotEmpty())
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentNummer").value(
+            "sample dokumentnummer 1"
+          )
+        )
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentNummer").value(
+            "sample dokumentnummer 2"
           )
         );
     }
