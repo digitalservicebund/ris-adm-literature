@@ -26,7 +26,7 @@ class DocumentationUnitControllerIntegrationTest {
   private DocumentationUnitPort documentationUnitPort;
 
   @Nested
-  public class GetListOfDocumentUnits {
+  class GetListOfDocumentUnits {
 
     @Test
     @DisplayName("returns HTTP 200")
@@ -35,9 +35,9 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
-          .andExpect(status().isOk());
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(status().isOk());
     }
 
     @Test
@@ -47,10 +47,10 @@ class DocumentationUnitControllerIntegrationTest {
 
       // when
       mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
-          .andExpect(jsonPath("$").isNotEmpty())
-          .andExpect(jsonPath("$[0].id").value("id-sample-document-1"));
+        .perform(get("/api/documentation-units"))
+        // then
+        .andExpect(jsonPath("$").isNotEmpty())
+        .andExpect(jsonPath("$[0].id").value("11111111-1657-4085-ae2a-993a04c27f6b"));
     }
   }
 }
