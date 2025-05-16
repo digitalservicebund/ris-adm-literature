@@ -5,6 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitListElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
+import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,8 @@ public class DocumentationUnitController {
         "2011-11-11",
         "Sample Document Title 1",
         List.of(
-          new Fundstelle("fundstellen id 1", "zitatstelle 1"),
-          new Fundstelle("fundstellen id 2", "zitatstelle 2")
+          new Fundstelle("fundstellen id 1", "zitatstelle 1", List.of(new Periodikum())),
+          new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
         )
       ),
       new DocumentationUnitListElement(
