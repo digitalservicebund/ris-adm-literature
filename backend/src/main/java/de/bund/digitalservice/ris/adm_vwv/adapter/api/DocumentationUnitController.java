@@ -2,8 +2,10 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitListElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,16 @@ public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
 
+  /**
+   * TODO
+   */
   @GetMapping("api/documentation-units")
-  public ResponseEntity<List<String>> getAll() {
-    return ResponseEntity.ok(List.of("result"));
+  public ResponseEntity<List<DocumentationUnitListElement>> getAll() {
+    List<DocumentationUnitListElement> list = List.of(
+      new DocumentationUnitListElement(UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b")),
+      new DocumentationUnitListElement(UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"))
+    );
+    return ResponseEntity.ok(list);
   }
 
   /**
