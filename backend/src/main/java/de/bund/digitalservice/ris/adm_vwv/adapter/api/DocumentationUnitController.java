@@ -19,8 +19,8 @@ public class DocumentationUnitController {
   private final DocumentationUnitPort documentationUnitPort;
 
   @GetMapping("api/documentation-units")
-  public ResponseEntity<List<DocumentationUnit>> getAll() {
-    return ResponseEntity.ok(List.of());
+  public ResponseEntity<List<String>> getAll() {
+    return ResponseEntity.ok(List.of("result"));
   }
 
   /**
@@ -33,13 +33,14 @@ public class DocumentationUnitController {
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitPort
-      .findByDocumentNumber(documentNumber)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+        .findByDocumentNumber(documentNumber)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   /**
-   * Creates a new documentation unit with a new document number in database and returns it.
+   * Creates a new documentation unit with a new document number in database and
+   * returns it.
    *
    * @return Created documentation unit
    */
@@ -52,19 +53,18 @@ public class DocumentationUnitController {
   /**
    * Updates a documentation unit
    *
-   * @param documentNumber The document number of the document to update
+   * @param documentNumber    The document number of the document to update
    * @param documentationUnit The JSON of the documentation unit to update
    *
    * @return the updated documentation unit or HTTP 404 if not found
    */
   @PutMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
-    @PathVariable String documentNumber,
-    @RequestBody JsonNode documentationUnit
-  ) {
+      @PathVariable String documentNumber,
+      @RequestBody JsonNode documentationUnit) {
     return documentationUnitPort
-      .update(documentNumber, documentationUnit.toString())
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+        .update(documentNumber, documentationUnit.toString())
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 }
