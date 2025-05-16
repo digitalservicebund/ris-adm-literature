@@ -41,7 +41,20 @@ public class DocumentationUnitController {
           new Fundstelle(
             "fundstellen id 1",
             "zitatstelle 1",
-            List.of(new Periodikum("periodikum id 1"), new Periodikum("periodikum id 2"))
+            List.of(
+              new Periodikum(
+                "periodikum id 1",
+                "periodikum title 1",
+                "periodikum subtitle 1",
+                "p.abbrev.1"
+              ),
+              new Periodikum(
+                "periodikum id 2",
+                "periodikum title 2",
+                "periodikum subtitle 2",
+                "p.abbrev.2"
+              )
+            )
           ),
           new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
         )

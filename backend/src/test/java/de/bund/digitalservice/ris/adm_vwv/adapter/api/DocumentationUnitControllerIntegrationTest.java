@@ -273,12 +273,12 @@ class DocumentationUnitControllerIntegrationTest {
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].abbreviation"
-              ).value("periodikum abbreviation 1")
+              ).value("p.abbrev.1")
             )
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].abbreviation"
-              ).value("periodikum abbreviation 2")
+              ).value("p.abbrev.2")
             );
         }
       }
