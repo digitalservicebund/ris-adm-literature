@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
+
+  @GetMapping("api/documentation-units")
+  public ResponseEntity<List<DocumentationUnit>> getAll() {
+    return ResponseEntity.ok(List.of());
+  }
 
   /**
    * Returns a single documentation unit by its document number
