@@ -197,6 +197,27 @@ class DocumentationUnitControllerIntegrationTest {
               ).isNotEmpty()
             );
         }
+
+        @Test
+        @DisplayName("return periodika ids")
+        void getListOfDocumentsWithFundstellenAndPeriodikaIds() throws Exception {
+          // given
+
+          // when
+          mockMvc
+            .perform(get("/api/documentation-units"))
+            // then
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].id"
+              ).value("periodikum id 1")
+            )
+            .andExpect(
+              jsonPath(
+                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].id"
+              ).value("periodikum id 2")
+            );
+        }
       }
     }
   }
