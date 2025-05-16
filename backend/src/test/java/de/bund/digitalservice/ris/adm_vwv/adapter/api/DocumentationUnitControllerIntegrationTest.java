@@ -50,8 +50,16 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(jsonPath("$").isNotEmpty())
-        .andExpect(jsonPath("$[0].id").value("11111111-1657-4085-ae2a-993a04c27f6b"))
-        .andExpect(jsonPath("$[1].id").value("22222222-1657-4085-ae2a-993a04c27f6b"));
+        .andExpect(
+          jsonPath("$.paginatedDocumentUnitListElements.content[0].id").value(
+            "11111111-1657-4085-ae2a-993a04c27f6b"
+          )
+        )
+        .andExpect(
+          jsonPath(".paginatedDocumentUnitListElements.content[1].id").value(
+            "22222222-1657-4085-ae2a-993a04c27f6b"
+          )
+        );
     }
   }
 }
