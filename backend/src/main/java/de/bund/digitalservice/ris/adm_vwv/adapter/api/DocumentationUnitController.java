@@ -9,7 +9,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,46 +31,49 @@ public class DocumentationUnitController {
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
-    List<DocumentationUnitOverviewElement> list = List.of(
-      new DocumentationUnitOverviewElement(
-        UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
-        "sample dokumentnummer 1",
-        "2011-11-11",
-        "Sample Document Title 1",
-        List.of(
-          new Fundstelle(
-            "fundstellen id 1",
-            "zitatstelle 1",
-            List.of(
-              new Periodikum(
-                "periodikum id 1",
-                "periodikum title 1",
-                "periodikum subtitle 1",
-                "p.abbrev.1"
-              ),
-              new Periodikum(
-                "periodikum id 2",
-                "periodikum title 2",
-                "periodikum subtitle 2",
-                "p.abbrev.2"
+    DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
+      new DocumentationUnitsOverviewResponse(
+        new PageImpl<>(
+          List.of(
+            new DocumentationUnitOverviewElement(
+              UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
+              "sample dokumentnummer 1",
+              "2011-11-11",
+              "Sample Document Title 1",
+              List.of(
+                new Fundstelle(
+                  "fundstellen id 1",
+                  "zitatstelle 1",
+                  List.of(
+                    new Periodikum(
+                      "periodikum id 1",
+                      "periodikum title 1",
+                      "periodikum subtitle 1",
+                      "p.abbrev.1"
+                    ),
+                    new Periodikum(
+                      "periodikum id 2",
+                      "periodikum title 2",
+                      "periodikum subtitle 2",
+                      "p.abbrev.2"
+                    )
+                  )
+                ),
+                new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
               )
+            ),
+            new DocumentationUnitOverviewElement(
+              UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
+              "sample dokumentnummer 2",
+              "2011-11-11",
+              "Sample Document Title 2",
+              List.of()
             )
-          ),
-          new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
+          )
         )
-      ),
-      new DocumentationUnitOverviewElement(
-        UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
-        "sample dokumentnummer 2",
-        "2011-11-11",
-        "Sample Document Title 2",
-        List.of()
-      )
-    );
+      );
 
-    Page<DocumentationUnitOverviewElement> pagedList = new PageImpl<>(list);
-    DocumentationUnitsOverviewResponse response = new DocumentationUnitsOverviewResponse(pagedList);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(hardCodedResponseWithFakeDocumentOverview);
   }
 
   /**
