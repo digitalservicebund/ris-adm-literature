@@ -186,7 +186,7 @@ class DocumentationUnitControllerTest {
     class Fundstellen {
 
       @Test
-      @DisplayName("return array of Fundstellen")
+      @DisplayName("return array of Fundstellen with ids and Zitatstellen")
       void getListOfDocumentsWithFundstellen() throws Exception {
         // given
 
@@ -196,18 +196,7 @@ class DocumentationUnitControllerTest {
           // then
           .andExpect(
             jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen").isNotEmpty()
-          );
-      }
-
-      @Test
-      @DisplayName("return array of Fundstellen with ids")
-      void getListOfDocumentsWithFundstellenIds() throws Exception {
-        // given
-
-        // when
-        mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
+          )
           .andExpect(
             jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].id").value(
               "fundstellen id 1"
@@ -217,18 +206,7 @@ class DocumentationUnitControllerTest {
             jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].id").value(
               "fundstellen id 2"
             )
-          );
-      }
-
-      @Test
-      @DisplayName("return array of Fundstellen with zitatstelle")
-      void getListOfDocumentsWithFundstellenZitatstellen() throws Exception {
-        // given
-
-        // when
-        mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
+          )
           .andExpect(
             jsonPath(
               "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].zitatstelle"
