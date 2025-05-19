@@ -37,7 +37,7 @@ public class DocumentationUnitController {
           List.of(
             new DocumentationUnitOverviewElement(
               UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
-              "sample dokumentnummer 1",
+              "sample documentNumber 1",
               "2011-11-11",
               "Sample Document Title 1",
               List.of(
@@ -64,7 +64,7 @@ public class DocumentationUnitController {
             ),
             new DocumentationUnitOverviewElement(
               UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
-              "sample dokumentnummer 2",
+              "sample documentNumber 2",
               "2011-11-11",
               "Sample Document Title 2",
               List.of()
