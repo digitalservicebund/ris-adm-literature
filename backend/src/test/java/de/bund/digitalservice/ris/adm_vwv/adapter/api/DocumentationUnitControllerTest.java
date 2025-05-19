@@ -134,12 +134,11 @@ class DocumentationUnitControllerTest {
     void returnListOfDocumentsUnpaginated() throws Exception {
       // given
 
-      var dummy = mockMvc.perform(get("/api/documentation-units")).andReturn();
       // when
       mockMvc
         .perform(get("/api/documentation-units"))
+        // then
         .andExpect(jsonPath("$.documentationUnitsOverview").exists());
-      // then
     }
 
     @Nested
