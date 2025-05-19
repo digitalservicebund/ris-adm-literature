@@ -7,7 +7,8 @@ import org.springframework.data.domain.Page;
 /**
  * Response with document unit list elements and pagination information
  *
- * @param paginatedDocumentationUnitsOverview Paginated document units
+ * @param documentationUnitsOverview          List of document units' data
+ * @param paginatedDocumentationUnitsOverview Paginated document units' data
  */
 public record DocumentationUnitsOverviewResponse(
   List<DocumentationUnitOverviewElement> documentationUnitsOverview,
