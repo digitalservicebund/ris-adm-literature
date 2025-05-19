@@ -42,7 +42,7 @@ public class DocumentationUnitController {
               "Sample Document Title 1",
               List.of(
                 new Fundstelle(
-                  "fundstellen id 1",
+                  UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
                   "zitatstelle 1",
                   List.of(
                     new Periodikum(
@@ -59,7 +59,11 @@ public class DocumentationUnitController {
                     )
                   )
                 ),
-                new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
+                new Fundstelle(
+                  UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
+                  "zitatstelle 2",
+                  List.of()
+                )
               )
             ),
             new DocumentationUnitOverviewElement(
