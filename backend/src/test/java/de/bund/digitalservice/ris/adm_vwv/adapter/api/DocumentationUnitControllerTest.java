@@ -151,13 +151,13 @@ class DocumentationUnitControllerTest {
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].dokumentnummer").value(
-            "sample dokumentnummer 1"
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].documentNumber").value(
+            "sample documentNumber 1"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].dokumentnummer").value(
-            "sample dokumentnummer 2"
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].documentNumber").value(
+            "sample documentNumber 2"
           )
         )
         .andExpect(
