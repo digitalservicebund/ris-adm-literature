@@ -28,8 +28,10 @@ That approach that is
 
 We're gradually transforming our solution towards using German domain terms:
 
-- New domain terms will be introduced in German
-- Domain terms that already exist in our solution will be replaced over time whenever the current piece of work (story / task) benefits from the corresponding refactoring.
+- New domain terms should be introduced in German
+- Domain terms that already exist in our solution will be replaced over time whenever the current piece of work (story / task) benefits from the corresponding refactoring. 
+  - In our experience, Terms that are difficult to understand _in German_ benefit most from this treatment.
+  - Terms outside our app (e.g. data from lookup tables) may be blocked from adjustment.
 
 ## Consequences
 
