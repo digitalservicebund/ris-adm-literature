@@ -31,49 +31,46 @@ public class DocumentationUnitController {
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
-    DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
-      new DocumentationUnitsOverviewResponse(
-        List.of(),
-        new PageImpl<>(
-          List.of(
-            new DocumentationUnitOverviewElement(
-              UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
-              "sample documentNumber 1",
-              "2011-11-11",
-              "Sample Document Title 1",
-              List.of(
-                new Fundstelle(
-                  UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
-                  "zitatstelle 1",
-                  new Periodikum(
-                    "periodikum id 1",
-                    "periodikum title 1",
-                    "periodikum subtitle 1",
-                    "p.abbrev.1"
-                  )
-                ),
-                new Fundstelle(
-                  UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
-                  "zitatstelle 2",
-                  new Periodikum(
-                    "periodikum id 2",
-                    "periodikum title 2",
-                    "periodikum subtitle 2",
-                    "p.abbrev.2"
-                  )
-                )
-              )
-            ),
-            new DocumentationUnitOverviewElement(
-              UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
-              "sample documentNumber 2",
-              "2011-11-11",
-              "Sample Document Title 2",
-              List.of()
+    List<DocumentationUnitOverviewElement> hardCodedList = List.of(
+      new DocumentationUnitOverviewElement(
+        UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
+        "sample documentNumber 1",
+        "2011-11-11",
+        "Sample Document Title 1",
+        List.of(
+          new Fundstelle(
+            UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
+            "zitatstelle 1",
+            new Periodikum(
+              "periodikum id 1",
+              "periodikum title 1",
+              "periodikum subtitle 1",
+              "p.abbrev.1"
+            )
+          ),
+          new Fundstelle(
+            UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
+            "zitatstelle 2",
+            new Periodikum(
+              "periodikum id 2",
+              "periodikum title 2",
+              "periodikum subtitle 2",
+              "p.abbrev.2"
             )
           )
         )
-      );
+      ),
+      new DocumentationUnitOverviewElement(
+        UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
+        "sample documentNumber 2",
+        "2011-11-11",
+        "Sample Document Title 2",
+        List.of()
+      )
+    );
+
+    DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
+      new DocumentationUnitsOverviewResponse(hardCodedList, new PageImpl<>(hardCodedList));
 
     return ResponseEntity.ok(hardCodedResponseWithFakeDocumentOverview);
   }
