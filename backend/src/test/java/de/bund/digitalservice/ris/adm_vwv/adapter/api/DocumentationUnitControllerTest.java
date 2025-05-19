@@ -219,7 +219,7 @@ class DocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("return array of Periodika with ids, titles, subtitles and abbreviations")
+    @DisplayName("return Periodikum with id, title, subtitle and abbreviation")
     void getListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
       // given
 
@@ -229,52 +229,28 @@ class DocumentationUnitControllerTest {
         // then
         .andExpect(
           jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika"
-          ).isNotEmpty()
+            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum"
+          ).exists()
         )
-        // ids
         .andExpect(
           jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].id"
+            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.id"
           ).value("periodikum id 1")
         )
         .andExpect(
           jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].id"
-          ).value("periodikum id 2")
-        )
-        // titles
-        .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].title"
+            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.title"
           ).value("periodikum title 1")
         )
         .andExpect(
           jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].title"
-          ).value("periodikum title 2")
-        )
-        // subtitles
-        .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].subtitle"
+            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.subtitle"
           ).value("periodikum subtitle 1")
         )
         .andExpect(
           jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].subtitle"
-          ).value("periodikum subtitle 2")
-        )
-        // abbreviations
-        .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].abbreviation"
+            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.abbreviation"
           ).value("p.abbrev.1")
-        )
-        .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].abbreviation"
-          ).value("p.abbrev.2")
         );
     }
   }
