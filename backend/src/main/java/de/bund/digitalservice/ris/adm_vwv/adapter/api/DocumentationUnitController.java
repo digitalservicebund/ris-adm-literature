@@ -44,25 +44,22 @@ public class DocumentationUnitController {
                 new Fundstelle(
                   UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
                   "zitatstelle 1",
-                  List.of(
-                    new Periodikum(
-                      "periodikum id 1",
-                      "periodikum title 1",
-                      "periodikum subtitle 1",
-                      "p.abbrev.1"
-                    ),
-                    new Periodikum(
-                      "periodikum id 2",
-                      "periodikum title 2",
-                      "periodikum subtitle 2",
-                      "p.abbrev.2"
-                    )
+                  new Periodikum(
+                    "periodikum id 1",
+                    "periodikum title 1",
+                    "periodikum subtitle 1",
+                    "p.abbrev.1"
                   )
                 ),
                 new Fundstelle(
                   UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
                   "zitatstelle 2",
-                  List.of()
+                  new Periodikum(
+                    "periodikum id 2",
+                    "periodikum title 2",
+                    "periodikum subtitle 2",
+                    "p.abbrev.2"
+                  )
                 )
               )
             ),
