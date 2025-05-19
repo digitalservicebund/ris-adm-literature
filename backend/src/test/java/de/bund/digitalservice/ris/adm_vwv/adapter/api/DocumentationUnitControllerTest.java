@@ -197,12 +197,12 @@ class DocumentationUnitControllerTest {
         // ids
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].id").value(
-            "fundstellen id 1"
+            "11111111-1fd3-4fb8-bc1d-9751ad192665"
           )
         )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].id").value(
-            "fundstellen id 2"
+            "22222222-1fd3-4fb8-bc1d-9751ad192665"
           )
         )
         // Zitatstellen
