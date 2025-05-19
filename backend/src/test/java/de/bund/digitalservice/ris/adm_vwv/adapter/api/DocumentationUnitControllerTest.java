@@ -197,6 +197,7 @@ class DocumentationUnitControllerTest {
           .andExpect(
             jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen").isNotEmpty()
           )
+          // ids
           .andExpect(
             jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].id").value(
               "fundstellen id 1"
@@ -207,6 +208,7 @@ class DocumentationUnitControllerTest {
               "fundstellen id 2"
             )
           )
+          // Zitatstellen
           .andExpect(
             jsonPath(
               "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].zitatstelle"
@@ -223,7 +225,7 @@ class DocumentationUnitControllerTest {
       class Periodika {
 
         @Test
-        @DisplayName("return array of Periodika")
+        @DisplayName("return array of Periodika with ids, titles, subtitles and abbreviations")
         void getListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
           // given
 
@@ -235,18 +237,8 @@ class DocumentationUnitControllerTest {
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika"
               ).isNotEmpty()
-            );
-        }
-
-        @Test
-        @DisplayName("return periodika ids")
-        void getListOfDocumentsWithFundstellenAndPeriodikaIds() throws Exception {
-          // given
-
-          // when
-          mockMvc
-            .perform(get("/api/documentation-units"))
-            // then
+            )
+            // ids
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].id"
@@ -256,18 +248,8 @@ class DocumentationUnitControllerTest {
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].id"
               ).value("periodikum id 2")
-            );
-        }
-
-        @Test
-        @DisplayName("return periodika titles")
-        void getListOfDocumentsWithFundstellenAndPeriodikaTitles() throws Exception {
-          // given
-
-          // when
-          mockMvc
-            .perform(get("/api/documentation-units"))
-            // then
+            )
+            // titles
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].title"
@@ -277,18 +259,8 @@ class DocumentationUnitControllerTest {
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].title"
               ).value("periodikum title 2")
-            );
-        }
-
-        @Test
-        @DisplayName("return periodika subtitles")
-        void getListOfDocumentsWithFundstellenAndPeriodikaSubtitles() throws Exception {
-          // given
-
-          // when
-          mockMvc
-            .perform(get("/api/documentation-units"))
-            // then
+            )
+            // subtitles
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].subtitle"
@@ -298,18 +270,8 @@ class DocumentationUnitControllerTest {
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].subtitle"
               ).value("periodikum subtitle 2")
-            );
-        }
-
-        @Test
-        @DisplayName("return periodika abbreviation")
-        void getListOfDocumentsWithFundstellenAndPeriodikaAbbreviation() throws Exception {
-          // given
-
-          // when
-          mockMvc
-            .perform(get("/api/documentation-units"))
-            // then
+            )
+            // abbreviations
             .andExpect(
               jsonPath(
                 "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].abbreviation"
