@@ -33,6 +33,7 @@ public class DocumentationUnitController {
   public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
     DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
       new DocumentationUnitsOverviewResponse(
+        List.of(),
         new PageImpl<>(
           List.of(
             new DocumentationUnitOverviewElement(
