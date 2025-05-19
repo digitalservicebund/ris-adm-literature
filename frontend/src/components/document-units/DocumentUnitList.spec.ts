@@ -42,7 +42,12 @@ function renderComponent(props: DocumentUnitListProps) {
   const user = userEvent.setup()
   return {
     user,
-    ...render(DocumentUnitList, { props }),
+    ...render(DocumentUnitList, {
+      props,
+      global: {
+        stubs: { routerLink: { template: '<a><slot/></a>' } },
+      },
+    }),
   }
 }
 
@@ -58,7 +63,7 @@ describe('DocumentUnitList', () => {
     expect(screen.getAllByRole('row')).toHaveLength(3)
   })
 
-  it('shows the document number, zitierdatum, langueberschrift and fundstelle in the first row', () => {
+  it('shows the document number, zitierdatum, langueberschrift, fundstelle and an edit button in the first row', () => {
     renderComponent({
       docUnits: docUnitsMock,
       rowsPerPage: 100,
@@ -66,12 +71,17 @@ describe('DocumentUnitList', () => {
       firstRowIndex: 0,
       loading: false,
     })
+
     const firstRow = screen.getByTestId('row-0')
     const columns = within(firstRow).getAllByRole('cell')
     expect(columns[0]).toHaveTextContent('dokumentNummer1')
     expect(columns[1]).toHaveTextContent('01.01.2025')
     expect(columns[2]).toHaveTextContent('Berücksichtigung von Sonderleistungen')
     expect(columns[3]).toHaveTextContent('ZentrBl §2.1, DokZ-S Kapitel 4')
+    const editButton = within(columns[4]).getByRole('button', {
+      name: 'Dokument dokumentNummer1 editieren',
+    })
+    expect(editButton).toBeInTheDocument()
   })
 
   it('shows placeholder "--" if no fundstellen or zitierdatum are present', () => {
@@ -82,8 +92,9 @@ describe('DocumentUnitList', () => {
       firstRowIndex: 0,
       loading: false,
     })
-    const firstRow = screen.getByTestId('row-1')
-    const columns = within(firstRow).getAllByRole('cell')
+
+    const secondRow = screen.getByTestId('row-1')
+    const columns = within(secondRow).getAllByRole('cell')
     expect(columns[1]).toHaveTextContent('--')
     expect(columns[3]).toHaveTextContent('--')
   })
