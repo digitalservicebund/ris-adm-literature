@@ -131,7 +131,7 @@ class DocumentationUnitControllerTest {
   class GetListOfDocumentUnits {
 
     @Test
-    @DisplayName("returns HTTP 200")
+    @DisplayName("returns HTTP 200, uuids, Dokumentnummern, Zitierdaten, Langüberschriften")
     void getListOfDocumentsSuccess() throws Exception {
       // given
 
@@ -139,18 +139,7 @@ class DocumentationUnitControllerTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("returns list of (uu)ids ")
-    void getListOfDocumentsWithIds() throws Exception {
-      // given
-
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
+        .andExpect(status().isOk())
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].id").value(
             "11111111-1657-4085-ae2a-993a04c27f6b"
@@ -160,18 +149,7 @@ class DocumentationUnitControllerTest {
           jsonPath(".paginatedDocumentationUnitsOverview.content[1].id").value(
             "22222222-1657-4085-ae2a-993a04c27f6b"
           )
-        );
-    }
-
-    @Test
-    @DisplayName("returns list of Dokumentnummern ")
-    void getListOfDocumentsWithDokumentNummern() throws Exception {
-      // given
-
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
+        )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].dokumentnummer").value(
             "sample dokumentnummer 1"
@@ -181,18 +159,7 @@ class DocumentationUnitControllerTest {
           jsonPath("$.paginatedDocumentationUnitsOverview.content[1].dokumentnummer").value(
             "sample dokumentnummer 2"
           )
-        );
-    }
-
-    @Test
-    @DisplayName("returns list of Zitierdaten ")
-    void getListOfDocumentsWithZitierdatum() throws Exception {
-      // given
-
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
+        )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].zitierdatum").value(
             "2011-11-11"
@@ -202,18 +169,7 @@ class DocumentationUnitControllerTest {
           jsonPath("$.paginatedDocumentationUnitsOverview.content[1].zitierdatum").value(
             "2011-11-11"
           )
-        );
-    }
-
-    @Test
-    @DisplayName("returns list of Langüberschriften ")
-    void getListOfDocumentsWithLangueberschrift() throws Exception {
-      // given
-
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
+        )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].langueberschrift").value(
             "Sample Document Title 1"
