@@ -2,8 +2,14 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
+import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +22,58 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
+
+  /**
+   * Returns information on all documentation units as required by the
+   * documentation units overview
+   *
+   * @return paginated list of document units
+   */
+  @GetMapping("api/documentation-units")
+  public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
+    List<DocumentationUnitOverviewElement> hardCodedList = List.of(
+      new DocumentationUnitOverviewElement(
+        UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
+        "sample documentNumber 1",
+        "2011-11-11",
+        "Sample Document Title 1",
+        List.of(
+          new Fundstelle(
+            UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
+            "zitatstelle 1",
+            new Periodikum(
+              "periodikum id 1",
+              "periodikum title 1",
+              "periodikum subtitle 1",
+              "p.abbrev.1"
+            )
+          ),
+          new Fundstelle(
+            UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
+            "zitatstelle 2",
+            new Periodikum(
+              "periodikum id 2",
+              "periodikum title 2",
+              "periodikum subtitle 2",
+              "p.abbrev.2"
+            )
+          )
+        )
+      ),
+      new DocumentationUnitOverviewElement(
+        UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
+        "sample documentNumber 2",
+        "2011-11-11",
+        "Sample Document Title 2",
+        List.of()
+      )
+    );
+
+    DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
+      new DocumentationUnitsOverviewResponse(hardCodedList, new PageImpl<>(hardCodedList));
+
+    return ResponseEntity.ok(hardCodedResponseWithFakeDocumentOverview);
+  }
 
   /**
    * Returns a single documentation unit by its document number
@@ -33,7 +91,8 @@ public class DocumentationUnitController {
   }
 
   /**
-   * Creates a new documentation unit with a new document number in database and returns it.
+   * Creates a new documentation unit with a new document number in database and
+   * returns it.
    *
    * @return Created documentation unit
    */
@@ -46,7 +105,7 @@ public class DocumentationUnitController {
   /**
    * Updates a documentation unit
    *
-   * @param documentNumber The document number of the document to update
+   * @param documentNumber    The document number of the document to update
    * @param documentationUnit The JSON of the documentation unit to update
    *
    * @return the updated documentation unit or HTTP 404 if not found
