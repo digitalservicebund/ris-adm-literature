@@ -22,6 +22,7 @@ public class LdmlConverterService {
   private final FundstellenTransformer fundstellenTransformer;
   private final DocumentTypeTransformer documentTypeTransformer;
   private final NormgeberTransformer normgeberTransformer;
+  private final FieldsOfLawTransformer fieldsOfLawTransformer;
 
   /**
    * Converts the xml of the given documentation unit to business models.
@@ -38,7 +39,7 @@ public class LdmlConverterService {
       documentationUnit.id(),
       documentationUnit.documentNumber(),
       fundstellenTransformer.transform(akomaNtoso),
-      new FieldsOfLawTransformer(akomaNtoso).transform(),
+      fieldsOfLawTransformer.transform(akomaNtoso),
       new LongTitleTransformer(akomaNtoso).transform(),
       new KeywordsTransformer(akomaNtoso).transform(),
       new DateToQuoteTransformer(akomaNtoso).transform(),

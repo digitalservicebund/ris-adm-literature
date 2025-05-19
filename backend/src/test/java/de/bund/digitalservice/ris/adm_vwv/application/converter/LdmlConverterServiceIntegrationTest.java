@@ -405,9 +405,18 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // then
-    assertThat(
-      documentationUnitContent.fieldsOfLaw().stream().map(FieldOfLaw::text).toList()
-    ).isEqualTo(List.of("PR-05-01", "XX-04-02"));
+    assertThat(documentationUnitContent.fieldsOfLaw())
+      .hasSize(2)
+      .extracting(FieldOfLaw::identifier, FieldOfLaw::text)
+      .containsExactly(
+        tuple("PR-05-01", "Phantasie besonderer Art, Ansprüche anderer Art"),
+        tuple(
+          "XX-04-02",
+          """
+          Versicherter Personenkreis: Versicherungspflicht und Beitragspflicht; Beginn, Ende, Fortbestand \
+          der Mitgliedschaft siehe XX-05-07-04 bis -05"""
+        )
+      );
   }
 
   @Test
