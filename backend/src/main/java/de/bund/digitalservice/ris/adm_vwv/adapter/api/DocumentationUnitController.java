@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitListElement;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
@@ -25,14 +25,15 @@ public class DocumentationUnitController {
   private final DocumentationUnitPort documentationUnitPort;
 
   /**
-   * Returns information on all documentation units
+   * Returns information on all documentation units as required by the
+   * documentation units overview
    *
    * @return paginated list of document units
    */
   @GetMapping("api/documentation-units")
-  public ResponseEntity<DocumentUnitListResponse> getAll() {
-    List<DocumentationUnitListElement> list = List.of(
-      new DocumentationUnitListElement(
+  public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
+    List<DocumentationUnitOverviewElement> list = List.of(
+      new DocumentationUnitOverviewElement(
         UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
         "sample dokumentnummer 1",
         "2011-11-11",
@@ -59,7 +60,7 @@ public class DocumentationUnitController {
           new Fundstelle("fundstellen id 2", "zitatstelle 2", List.of())
         )
       ),
-      new DocumentationUnitListElement(
+      new DocumentationUnitOverviewElement(
         UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
         "sample dokumentnummer 2",
         "2011-11-11",
@@ -68,8 +69,8 @@ public class DocumentationUnitController {
       )
     );
 
-    Page<DocumentationUnitListElement> pagedList = new PageImpl<>(list);
-    DocumentUnitListResponse response = new DocumentUnitListResponse(pagedList);
+    Page<DocumentationUnitOverviewElement> pagedList = new PageImpl<>(list);
+    DocumentationUnitsOverviewResponse response = new DocumentationUnitsOverviewResponse(pagedList);
     return ResponseEntity.ok(response);
   }
 

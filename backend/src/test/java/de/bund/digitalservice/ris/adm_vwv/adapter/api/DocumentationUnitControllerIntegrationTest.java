@@ -50,12 +50,12 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].id").value(
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].id").value(
             "11111111-1657-4085-ae2a-993a04c27f6b"
           )
         )
         .andExpect(
-          jsonPath(".paginatedDocumentUnitListElements.content[1].id").value(
+          jsonPath(".paginatedDocumentationUnitsOverview.content[1].id").value(
             "22222222-1657-4085-ae2a-993a04c27f6b"
           )
         );
@@ -71,12 +71,12 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].dokumentnummer").value(
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].dokumentnummer").value(
             "sample dokumentnummer 1"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].dokumentnummer").value(
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].dokumentnummer").value(
             "sample dokumentnummer 2"
           )
         );
@@ -92,10 +92,14 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].zitierdatum").value("2011-11-11")
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].zitierdatum").value(
+            "2011-11-11"
+          )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].zitierdatum").value("2011-11-11")
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].zitierdatum").value(
+            "2011-11-11"
+          )
         );
     }
 
@@ -109,12 +113,12 @@ class DocumentationUnitControllerIntegrationTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[0].langueberschrift").value(
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].langueberschrift").value(
             "Sample Document Title 1"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentUnitListElements.content[1].langueberschrift").value(
+          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].langueberschrift").value(
             "Sample Document Title 2"
           )
         );
@@ -133,7 +137,7 @@ class DocumentationUnitControllerIntegrationTest {
           .perform(get("/api/documentation-units"))
           // then
           .andExpect(
-            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen").isNotEmpty()
+            jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen").isNotEmpty()
           );
       }
 
@@ -147,12 +151,12 @@ class DocumentationUnitControllerIntegrationTest {
           .perform(get("/api/documentation-units"))
           // then
           .andExpect(
-            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen[0].id").value(
+            jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].id").value(
               "fundstellen id 1"
             )
           )
           .andExpect(
-            jsonPath("$.paginatedDocumentUnitListElements.content[0].fundstellen[1].id").value(
+            jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].id").value(
               "fundstellen id 2"
             )
           );
@@ -169,12 +173,12 @@ class DocumentationUnitControllerIntegrationTest {
           // then
           .andExpect(
             jsonPath(
-              "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].zitatstelle"
+              "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].zitatstelle"
             ).value("zitatstelle 1")
           )
           .andExpect(
             jsonPath(
-              "$.paginatedDocumentUnitListElements.content[0].fundstellen[1].zitatstelle"
+              "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].zitatstelle"
             ).value("zitatstelle 2")
           );
       }
@@ -193,7 +197,7 @@ class DocumentationUnitControllerIntegrationTest {
             // then
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika"
               ).isNotEmpty()
             );
         }
@@ -209,12 +213,12 @@ class DocumentationUnitControllerIntegrationTest {
             // then
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].id"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].id"
               ).value("periodikum id 1")
             )
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].id"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].id"
               ).value("periodikum id 2")
             );
         }
@@ -230,12 +234,12 @@ class DocumentationUnitControllerIntegrationTest {
             // then
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].title"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].title"
               ).value("periodikum title 1")
             )
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].title"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].title"
               ).value("periodikum title 2")
             );
         }
@@ -251,12 +255,12 @@ class DocumentationUnitControllerIntegrationTest {
             // then
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].subtitle"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].subtitle"
               ).value("periodikum subtitle 1")
             )
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].subtitle"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].subtitle"
               ).value("periodikum subtitle 2")
             );
         }
@@ -272,12 +276,12 @@ class DocumentationUnitControllerIntegrationTest {
             // then
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[0].abbreviation"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[0].abbreviation"
               ).value("p.abbrev.1")
             )
             .andExpect(
               jsonPath(
-                "$.paginatedDocumentUnitListElements.content[0].fundstellen[0].periodika[1].abbreviation"
+                "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodika[1].abbreviation"
               ).value("p.abbrev.2")
             );
         }

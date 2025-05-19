@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * DocumentationUnitListElement
+ * Element in the documentation unit overview
  *
- * @param id               The uuid of the document unit
- * @param dokumentnummer   The public id of the document unit
+ * @param id               The uuid of the documentation unit
+ * @param dokumentnummer   The public id of the documentation unit
  * @param zitierdatum      The date to quote by
- * @param langueberschrift The unabbreviated title of the document unit
+ * @param langueberschrift The unabbreviated title of the documentation unit
  * @param fundstellen      The list of Fundstellen
  */
-public record DocumentationUnitListElement(
+public record DocumentationUnitOverviewElement(
   @Nonnull UUID id,
   @Nonnull String dokumentnummer,
   String zitierdatum,
