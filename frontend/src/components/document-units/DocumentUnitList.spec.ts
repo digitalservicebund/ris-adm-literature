@@ -7,35 +7,31 @@ import type { DocumentUnitListItem } from '@/domain/documentUnit'
 const docUnitsMock: DocumentUnitListItem[] = [
   {
     id: 'docUnitId1',
-    dokumentNummer: 'dokumentNummer1',
+    documentNumber: 'dokumentNummer1',
     zitierdatum: '2025-01-01',
     langueberschrift: 'Berücksichtigung von Sonderleistungen im Rahmen der Übergangsregelung',
     fundstellen: [
       {
         id: 'referenceId1',
         zitatstelle: '§2.1',
-        periodika: [
-          {
-            id: 'periodicalId1',
-            abbreviation: 'ZentrBl',
-          },
-        ],
+        periodikum: {
+          id: 'periodicalId1',
+          abbreviation: 'ZentrBl',
+        },
       },
       {
         id: 'referenceId2',
         zitatstelle: 'Kapitel 4',
-        periodika: [
-          {
-            id: 'periodicalId2',
-            abbreviation: 'DokZ-S',
-          },
-        ],
+        periodikum: {
+          id: 'periodicalId2',
+          abbreviation: 'DokZ-S',
+        },
       },
     ],
   },
   {
     id: 'docUnitId2',
-    dokumentNummer: 'documentNummer2',
+    documentNumber: 'documentNummer2',
     langueberschrift:
       'Verwaltungsvorschrift zur Prüfung von Einmalzahlungen im Rahmen des § 6 Abs. 3 Satz 2 Sozialleistungsharmonisierungsgesetzes (SLHG)',
     fundstellen: [],
@@ -59,9 +55,7 @@ describe('DocumentUnitList', () => {
       firstRowIndex: 0,
       loading: false,
     })
-    const tbody = screen.getAllByRole('rowgroup').find((group) => group.tagName === 'TBODY')!
-    const bodyRows = within(tbody).getAllByRole('row')
-    expect(bodyRows).toHaveLength(2)
+    expect(screen.getAllByRole('row')).toHaveLength(3)
   })
 
   it('shows the document number, zitierdatum, langueberschrift and fundstelle in the first row', () => {

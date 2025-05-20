@@ -8,5 +8,5 @@ export interface Periodikum {
 export interface Fundstelle {
   readonly id: string
   zitatstelle: string
-  periodika: Periodikum[]
+  periodikum: Periodikum
 }

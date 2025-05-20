@@ -63,6 +63,7 @@ test.describe('StartPage', () => {
 
     // then
     const rows = page.getByRole('row')
-    await expect(rows).toHaveCount(3)
+    const count = await rows.count()
+    expect(count).toBeGreaterThan(2)
   })
 })

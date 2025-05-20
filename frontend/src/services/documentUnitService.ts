@@ -1,6 +1,6 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { DocumentUnit, PaginatedDocumentUnitListResponse } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
@@ -27,7 +27,7 @@ interface DocumentUnitService {
     requestParams?: { [key: string]: string } | undefined,
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
 
-  getPaginatedDocumentUnitList(): Promise<PaginatedDocumentUnitListResponse>
+  getPaginatedDocumentUnitList(): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
 
 function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
