@@ -115,7 +115,7 @@ const mockInstitutionNormgeber: Normgeber = {
   id: 'institutionNormgeberId',
   institution: {
     id: institutions[1].id,
-    label: institutions[1].name,
+    name: institutions[1].name,
     type: InstitutionType.Institution,
     regions: [],
   },
@@ -126,7 +126,7 @@ const mockLegalEntityNormgeber: Normgeber = {
   id: 'legalEntityNormgeberId',
   institution: {
     id: institutions[0].id,
-    label: institutions[0].name,
+    name: institutions[0].name,
     type: InstitutionType.LegalEntity,
     regions: [],
   },

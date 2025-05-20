@@ -19,13 +19,13 @@ export interface InstitutionApiResponse {
 
 export interface Region {
   id: string
-  label: string
+  code: string
   longText?: string
 }
 
 export interface Institution {
   id: string
-  label: string
+  name: string
   officialName?: string
   type: InstitutionType
   regions?: Region[]
