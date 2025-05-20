@@ -7,6 +7,13 @@ import type { Normgeber } from './normgeber'
 import type { DocumentType } from './documentType'
 import type { Fundstelle } from './fundstelle'
 
+// TODO: extract into flat interfaces?
+export interface PaginatedDocumentUnitListResponse {
+  paginatedDocumentUnitsOverview: {
+    content: DocumentUnitListItem[]
+  }
+}
+
 export interface DocumentUnitListItem {
   readonly id: string
   readonly dokumentNummer: string

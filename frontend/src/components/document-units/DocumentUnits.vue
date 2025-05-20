@@ -9,6 +9,11 @@ const isLoading = ref(false)
 const firstRowIndex = ref<number>(0)
 const totalRows = ref<number>(0)
 const docUnits = ref<DocumentUnitListItem[]>([])
+
+onMounted(async () => {
+  const response = await getPaginatedDocumentUnitList()
+  docUnits.value = response.paginatedDocumentUnitsOverview.content
+})
 </script>
 
 <template>
