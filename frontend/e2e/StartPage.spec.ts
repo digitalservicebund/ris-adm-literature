@@ -55,4 +55,14 @@ test.describe('StartPage', () => {
       await expect(page).toHaveURL('/documentUnit/KSNR054920707/fundstellen')
     },
   )
+  test('renders list of 2 documentation units', { tag: ['@RISDEV-7787'] }, async ({ page }) => {
+    // given
+
+    // when
+    await page.goto('/')
+
+    // then
+    const rows = page.getByRole('row')
+    await expect(rows).toHaveCount(3)
+  })
 })
