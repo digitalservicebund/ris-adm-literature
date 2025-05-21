@@ -39,16 +39,8 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
         {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '--' }}
       </template>
     </Column>
-    <Column
-      class="truncate whitespace-nowrap overflow-hidden w-full max-w-0"
-      field="langueberschrift"
-      header="Amtl. Langueberschrift"
-    />
-    <Column
-      class="truncate whitespace-nowrap overflow-hidden w-full"
-      field="sources"
-      header="Fundstelle"
-    >
+    <Column field="langueberschrift" header="Amtl. Langueberschrift" />
+    <Column field="sources" header="Fundstelle">
       <template #body="{ data }">
         {{ fundstelleLabel(data.fundstellen) }}
       </template>
