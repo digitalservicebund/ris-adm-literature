@@ -3,30 +3,27 @@ import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
 import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { fetchInstitutions } from '@/services/institutionService.ts'
-import type { Institution } from '@/domain/normgeber.ts'
+import type { Region } from '@/domain/normgeber.ts'
+import { fetchRegions } from '@/services/regionService.ts'
 
-defineProps<{ isInvalid: boolean }>()
-const modelValue = defineModel<Institution | undefined>()
+defineProps<{ isInvalid?: boolean }>()
+const modelValue = defineModel<Region | undefined>()
 const emit = defineEmits<{
-  'update:modelValue': [value: Institution]
+  'update:modelValue': [value: Region]
 }>()
 
 type AutoCompleteSuggestion = { id: string; label: string; secondaryLabel?: string }
 const suggestions = ref<AutoCompleteSuggestion[]>([])
 
-const institutions = ref<Institution[]>([])
+const regions = ref<Region[]>([])
 
 const search = async (query?: string) => {
-  suggestions.value = institutions.value
-    .filter(
-      (institution: Institution) =>
-        !query || institution.name.toLowerCase().includes(query.toLowerCase()),
-    )
-    .map((institution: Institution) => ({
-      id: institution.id,
-      label: institution.name,
-      secondaryLabel: institution.officialName,
+  suggestions.value = regions.value
+    .filter((region: Region) => !query || region.code.toLowerCase().includes(query.toLowerCase()))
+    .map((region: Region) => ({
+      id: region.id,
+      label: region.code,
+      secondaryLabel: region.longText,
     }))
 }
 const searchDebounced = useDebounceFn(search, 250)
@@ -47,7 +44,7 @@ const onComplete = (event: AutoCompleteDropdownClickEvent | { query: undefined }
     searchDebounced(event.query)
   } else if (modelValue.value) {
     // user has already made a selection, use that as the prefix
-    searchDebounced(modelValue.value?.name)
+    searchDebounced(modelValue.value?.code)
   } else {
     // dropdown was opened without any text entered or value pre-selected
     // a copy of the default suggestions is required since the loading
@@ -72,33 +69,31 @@ const onItemSelect = () => {
 
 const autoComplete = ref<typeof RisAutoComplete | null>(null)
 
-const selectedInstitutionId = ref<string | undefined>(modelValue.value?.id)
+const selectedRegionId = ref<string | undefined>(modelValue.value?.id)
 
 function onModelValueChange(id: string | undefined) {
-  selectedInstitutionId.value = id
-  const selectedInstitution = institutions.value.filter(
-    (institution: Institution) => institution.id === id,
-  )[0]
-  emit('update:modelValue', selectedInstitution)
+  selectedRegionId.value = id
+  const selectedRegion = regions.value.filter((region: Region) => region.id === id)[0]
+  emit('update:modelValue', selectedRegion)
 }
 
 onMounted(async () => {
-  const response = await fetchInstitutions()
-  institutions.value = response.data.value.institutions
+  const response = await fetchRegions()
+  regions.value = response.data.value.regions
 })
 </script>
 
 <template>
   <RisAutoComplete
     ref="autoComplete"
-    :model-value="selectedInstitutionId"
+    :model-value="selectedRegionId"
     typeahead
     dropdown
     dropdown-mode="blank"
     :suggestions="suggestions"
     input-id="institutionDropDown"
     :invalid="isInvalid"
-    :initial-label="modelValue?.name"
+    :initial-label="modelValue?.code"
     append-to="self"
     @update:model-value="onModelValueChange"
     @complete="onComplete"

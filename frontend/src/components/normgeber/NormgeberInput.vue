@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import InputField from '../input/InputField.vue'
-import ComboboxInput from '../ComboboxInput.vue'
-import ComboboxItemService from '@/services/comboboxItemService'
 import { type Institution, InstitutionType, type Normgeber, type Region } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import InstitutionDropDown from '@/components/normgeber/InstitutionDropDown.vue'
+import RegionDropDown from '@/components/normgeber/RegionDropDown.vue'
 
 const props = defineProps<{
   normgeber?: Normgeber
@@ -133,14 +132,15 @@ watch(institution, (newVal, oldVal) => {
           fluid
           readonly
         />
-        <ComboboxInput
-          v-else
-          id="region"
-          v-model="selectedRegion"
-          :item-service="ComboboxItemService.getRegions"
-          aria-label="Region"
-          clear-on-choosing-item
-        ></ComboboxInput>
+        <!--        <ComboboxInput-->
+        <!--          v-else-->
+        <!--          id="region"-->
+        <!--          v-model="selectedRegion"-->
+        <!--          :item-service="ComboboxItemService.getRegions"-->
+        <!--          aria-label="Region"-->
+        <!--          clear-on-choosing-item-->
+        <!--        ></ComboboxInput>-->
+        <RegionDropDown v-else v-model="selectedRegion" aria-label="Region"> </RegionDropDown>
       </InputField>
     </div>
     <div class="flex w-full gap-16 mt-16">
