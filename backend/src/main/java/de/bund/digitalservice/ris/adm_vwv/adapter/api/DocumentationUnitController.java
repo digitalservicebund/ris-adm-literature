@@ -34,7 +34,7 @@ public class DocumentationUnitController {
     List<DocumentationUnitOverviewElement> hardCodedList = List.of(
       new DocumentationUnitOverviewElement(
         UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
-        "sample documentNumber 1",
+        "KSNR000004711",
         "2011-11-11",
         "Sample Document Title 1",
         List.of(
@@ -62,7 +62,7 @@ public class DocumentationUnitController {
       ),
       new DocumentationUnitOverviewElement(
         UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
-        "sample documentNumber 2",
+        "KSNR000004712",
         "2011-11-11",
         "Sample Document Title 2",
         List.of()
