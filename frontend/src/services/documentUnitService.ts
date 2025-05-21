@@ -1,6 +1,6 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { DocumentUnit, PaginatedDocumentUnitListResponse } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
@@ -10,6 +10,8 @@ import Reference from '@/domain/reference.ts'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
+
+const DOCUMENTATION_UNITS_URL = 'documentation-units'
 
 interface DocumentUnitService {
   getByDocumentNumber(documentNumber: string): Promise<ServiceResponse<DocumentUnitResponse>>
@@ -24,6 +26,8 @@ interface DocumentUnitService {
     query: RelatedDocumentation,
     requestParams?: { [key: string]: string } | undefined,
   ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
+
+  getPaginatedDocumentUnitList(): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
 
 function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
@@ -70,7 +74,7 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
 const service: DocumentUnitService = {
   async getByDocumentNumber(documentNumber: string) {
     const response = await httpClient.get<DocumentUnitResponse>(
-      `documentation-units/${documentNumber}`,
+      `${DOCUMENTATION_UNITS_URL}/${documentNumber}`,
     )
     if (response.status >= 300 || response.error) {
       response.data = undefined
@@ -87,7 +91,7 @@ const service: DocumentUnitService = {
   },
 
   async createNew() {
-    const response = await httpClient.post<unknown, DocumentUnitResponse>('documentation-units', {
+    const response = await httpClient.post<unknown, DocumentUnitResponse>(DOCUMENTATION_UNITS_URL, {
       headers: {
         Accept: 'application/json',
       },
@@ -109,7 +113,7 @@ const service: DocumentUnitService = {
       DocumentUnit,
       DocumentUnitResponse | FailedValidationServerResponse
     >(
-      `documentation-units/${documentUnit.documentNumber}`,
+      `${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`,
       {
         headers: {
           Accept: 'application/json',
@@ -172,6 +176,13 @@ const service: DocumentUnitService = {
         empty: false,
       },
     }
+  },
+
+  async getPaginatedDocumentUnitList() {
+    const response =
+      await httpClient.get<PaginatedDocumentUnitListResponse>(DOCUMENTATION_UNITS_URL)
+
+    return response
   },
 }
 
