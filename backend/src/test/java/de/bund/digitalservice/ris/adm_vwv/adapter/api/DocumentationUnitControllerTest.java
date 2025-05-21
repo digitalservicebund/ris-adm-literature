@@ -153,14 +153,10 @@ class DocumentationUnitControllerTest {
             )
           )
           .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].documentNumber").value(
-              "sample documentNumber 1"
-            )
+            jsonPath("$.documentationUnitsOverview[0].documentNumber").value("KSNR000004711")
           )
           .andExpect(
-            jsonPath("$.documentationUnitsOverview[1].documentNumber").value(
-              "sample documentNumber 2"
-            )
+            jsonPath("$.documentationUnitsOverview[1].documentNumber").value("KSNR000004712")
           )
           .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdatum").value("2011-11-11"))
           .andExpect(jsonPath("$.documentationUnitsOverview[1].zitierdatum").value("2011-11-11"))
@@ -269,12 +265,12 @@ class DocumentationUnitControllerTest {
         )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[0].documentNumber").value(
-            "sample documentNumber 1"
+            "KSNR000004711"
           )
         )
         .andExpect(
           jsonPath("$.paginatedDocumentationUnitsOverview.content[1].documentNumber").value(
-            "sample documentNumber 2"
+            "KSNR000004712"
           )
         )
         .andExpect(
