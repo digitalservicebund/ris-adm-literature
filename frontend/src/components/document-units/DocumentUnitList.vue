@@ -47,16 +47,16 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
         {{ fundstelleLabel(data.fundstellen) }}
       </template>
     </Column>
-    <Column field="dokumentNummer">
+    <Column field="documentNumber" class="flex justify-end">
       <template #body="{ data }">
         <router-link
           :to="{
             name: 'documentUnit-documentNumber',
-            params: { documentNumber: data.dokumentNummer },
+            params: { documentNumber: data.documentNumber },
           }"
         >
           <Button
-            :aria-label="`Dokument ${data.dokumentNummer} editieren`"
+            :aria-label="`Dokument ${data.documentNumber} editieren`"
             severity="secondary"
             size="small"
           >
