@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The query business object used for looking up document types

@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 import lombok.Builder;
 
 /**
