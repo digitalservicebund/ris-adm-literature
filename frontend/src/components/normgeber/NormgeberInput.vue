@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import InputField from '../input/InputField.vue'
 import ComboboxInput from '../ComboboxInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService'
-import { type Region, type Normgeber, type Institution, InstitutionType } from '@/domain/normgeber'
+import { type Institution, InstitutionType, type Normgeber, type Region } from '@/domain/normgeber'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { fetchInstitutions } from '@/services/institutionService.ts'
-import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
-import type { AutoCompleteCompleteEvent } from 'primevue'
+import InstitutionDropDown from '@/components/normgeber/InstitutionDropDown.vue'
 
 const props = defineProps<{
   normgeber?: Normgeber
@@ -28,18 +26,6 @@ const validationStore = useValidationStore<'institution'>()
 
 const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)
 const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined)
-const institutionOptions = ref<Institution[]>([])
-console.log('sug: ', institutionOptions.value)
-const institutionSuggestions = computed(() =>
-  institutionOptions.value.map((option) => ({
-    id: option.id,
-    label: option.name,
-    secondaryLabel: option.officialName,
-  })),
-)
-
-const selectedInstitutionId = ref<string>(props.normgeber?.institution?.id || '')
-const selectedInstitutionName = ref<string>(props.normgeber?.institution?.name || '')
 
 const isInvalid = computed(
   () =>
@@ -56,7 +42,7 @@ const regionsInputText = computed(() => {
   const hasRegions =
     institution.value && institution.value.regions && institution.value.regions.length > 0
   if (isLegalEntity && hasRegions) {
-    return institution.value?.regions?.map((r) => r.label).join(', ')
+    return institution.value?.regions?.map((r) => r.code).join(', ')
   } else if (isLegalEntity && !hasRegions) {
     return 'Keine Region zugeordnet'
   } else {
@@ -110,16 +96,6 @@ watch(institution, (newVal, oldVal) => {
     validateInstitution()
   }
 })
-
-onMounted(async () => {
-  const response = await fetchInstitutions()
-  institutionOptions.value = response.data.value
-})
-
-function search(event: AutoCompleteCompleteEvent) {
-  console.log(institutionOptions.value)
-  institutionOptions.value = institutionOptions.value.filter((o) => o.name.includes(event.query))
-}
 </script>
 
 <template>
@@ -140,16 +116,12 @@ function search(event: AutoCompleteCompleteEvent) {
         <!--          :has-error="slotProps.hasError"-->
         <!--          :item-service="ComboboxItemService.getInstitutions"-->
         <!--        ></ComboboxInput>-->
-        <RisAutoComplete
-          id="institution"
-          :suggestions="institutionSuggestions"
-          v-model="selectedInstitutionId"
-          :invalid="slotProps.hasError"
-          :initial-label="selectedInstitutionName"
+        <InstitutionDropDown
+          v-model="institution"
+          :is-invalid="slotProps.hasError"
           aria-label="Normgeber"
-          @complete="search"
         >
-        </RisAutoComplete>
+        </InstitutionDropDown>
       </InputField>
       <InputField id="region" :label="regionLabel" class="w-full">
         <InputText

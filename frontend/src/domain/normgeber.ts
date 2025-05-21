@@ -23,6 +23,10 @@ export interface Region {
   longText?: string
 }
 
+export interface InstitutionResponse {
+  institutions: Institution[]
+}
+
 export interface Institution {
   id: string
   name: string
