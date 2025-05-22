@@ -14,7 +14,7 @@ function renderComponent(options?: {
 }) {
   return render(Pagination, {
     props: {
-      modelValue: {
+      page: {
         size: 100,
         numberOfElements: options?.numberOfElements ?? 100,
         number: options?.currentPage ?? 0,

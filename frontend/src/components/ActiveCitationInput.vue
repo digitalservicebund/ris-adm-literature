@@ -33,7 +33,6 @@ const lastSavedModelValue = ref(new ActiveCitation({ ...props.modelValue }))
 const activeCitation = ref(new ActiveCitation({ ...props.modelValue }))
 
 const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>()
-const pageNumber = ref<number>(0)
 const itemsPerPage = ref<number>(15)
 const isLoading = ref(false)
 
@@ -70,18 +69,10 @@ const activeCitationDocumentType = computed({
   },
 })
 
-const searchResultsCurrentPage = ref<Page>({
-  first: false,
-  last: false,
-  number: 0,
-  numberOfElements: 0,
-  size: 0,
-  totalElements: 0,
-  empty: true,
-})
+const searchResultsCurrentPage = ref<Page>()
 const searchResults = ref<SearchResults<RelatedDocumentation>>()
 
-async function search() {
+async function search(pageNumber: number) {
   isLoading.value = true
   const activeCitationRef = new ActiveCitation({
     ...activeCitation.value,
@@ -93,7 +84,7 @@ async function search() {
     activeCitationRef.fileNumber != lastSearchInput.value.fileNumber ||
     activeCitationRef.documentType != lastSearchInput.value.documentType
   ) {
-    pageNumber.value = 0
+    pageNumber = 0
   }
 
   if (activeCitationRef.citationType) {
@@ -104,28 +95,26 @@ async function search() {
   const documentNumberToExclude = urlParams[urlParams.indexOf('documentUnit') + 1]
 
   const response = await documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
-    ...(pageNumber.value != undefined ? { pg: pageNumber.value.toString() } : {}),
+    ...(pageNumber != undefined ? { pg: pageNumber.toString() } : {}),
     ...(itemsPerPage.value != undefined ? { sz: itemsPerPage.value.toString() } : {}),
     ...(documentNumberToExclude != undefined
       ? { documentNumber: documentNumberToExclude.toString() }
       : {}),
   })
   if (response.data) {
-    searchResultsCurrentPage.value = { ...response.data.page }
+    searchResultsCurrentPage.value = response.data.page
     searchResults.value = response.data.activeCitations.map((searchResult) => {
       return {
         decision: new RelatedDocumentation({ ...searchResult }),
         isLinked: searchResult.isLinkedWith(props.modelValueList),
       }
     })
+  } else {
+    searchResultsCurrentPage.value = undefined
+    searchResults.value = undefined
   }
   lastSearchInput.value = activeCitationRef
   isLoading.value = false
-}
-
-async function updatePage(page: number) {
-  pageNumber.value = page
-  await search()
 }
 
 function validateRequiredInput() {
@@ -196,7 +185,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @keyup.ctrl.enter="search" class="flex flex-col gap-24">
+  <div @keyup.ctrl.enter="search(0)" class="flex flex-col gap-24">
     <InputField
       id="activeCitationPredicate"
       v-slot="slotProps"
@@ -291,7 +280,7 @@ onMounted(() => {
             aria-label="Nach Entscheidung suchen"
             label="Suchen"
             size="small"
-            @click="search"
+            @click="search(0)"
           />
           <Button
             :disabled="activeCitation.isEmpty"
@@ -321,11 +310,11 @@ onMounted(() => {
       />
     </div>
 
-    <div v-if="isLoading || searchResults" class="bg-blue-200">
+    <div v-if="searchResultsCurrentPage" class="bg-blue-200">
       <Pagination
         navigation-position="bottom"
-        :modelValue="searchResultsCurrentPage"
-        @update-page="updatePage"
+        :page="searchResultsCurrentPage"
+        @update-page="(page: number) => search(page)"
       >
         <SearchResultList
           :is-loading="isLoading"

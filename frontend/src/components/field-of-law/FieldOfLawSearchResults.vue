@@ -20,7 +20,7 @@ const emit = defineEmits<{
   <div v-if="currentPage" class="flex flex-1 flex-col">
     <Pagination
       navigation-position="bottom"
-      :modelValue="currentPage"
+      :page="currentPage"
       @update-page="(page: number) => emit('search', page)"
     >
       <FieldOfLawSearchResultsListItem
