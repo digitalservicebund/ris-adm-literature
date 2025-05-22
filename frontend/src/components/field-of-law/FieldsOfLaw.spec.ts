@@ -260,7 +260,7 @@ describe('FieldsOfLaw', () => {
     Promise.resolve({
       status: 200,
       data: {
-        content: [
+        fieldsOfLaw: [
           {
             hasChildren: true,
             identifier: 'PR-05',
@@ -310,12 +310,15 @@ describe('FieldsOfLaw', () => {
             },
           },
         ],
-        size: 2,
-        number: 0,
-        numberOfElements: 2,
-        first: true,
-        last: true,
-        empty: false,
+        page: {
+          size: 2,
+          number: 0,
+          numberOfElements: 2,
+          totalElements: 2,
+          first: true,
+          last: true,
+          empty: false,
+        },
       },
     })
   const searchForFieldsOfLawFail = () =>

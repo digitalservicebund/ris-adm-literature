@@ -8,9 +8,7 @@ import type { DocumentType } from './documentType'
 import type { Fundstelle } from './fundstelle'
 
 export interface PaginatedDocumentUnitListResponse {
-  paginatedDocumentationUnitsOverview: {
-    content: DocumentUnitListItem[]
-  }
+  documentationUnitsOverview: DocumentUnitListItem[]
 }
 
 export interface DocumentUnitListItem {

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -52,7 +51,7 @@ class LegalPeriodicalControllerTest {
           new QueryOptions(0, 2, "abbreviation", Sort.Direction.ASC, true)
         )
       )
-    ).willReturn(new PageImpl<>(List.of(lp1, lp2)));
+    ).willReturn(TestPage.create(List.of(lp1, lp2)));
 
     // when
     mockMvc

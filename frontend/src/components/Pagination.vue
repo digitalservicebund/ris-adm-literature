@@ -5,9 +5,9 @@ import FlexContainer from '@/components/FlexContainer.vue'
 import IconArrowBack from '~icons/ic/baseline-arrow-back'
 import IconArrowForward from '~icons/ic/baseline-arrow-forward'
 
+const model = defineModel<Page>({ required: true })
 const props = withDefaults(
   defineProps<{
-    page?: Page<any> // eslint-disable-line @typescript-eslint/no-explicit-any
     navigationPosition?: 'top' | 'bottom'
     isLoading?: boolean
   }>(),
@@ -17,21 +17,22 @@ const props = withDefaults(
 const emits = defineEmits<(e: 'updatePage', page: number) => void>()
 
 async function nextPage(): Promise<void> {
-  if (props.page && !props.page.last) {
-    emits('updatePage', props.page.number + 1)
+  if (model.value && !model.value.last) {
+    emits('updatePage', model.value.number + 1)
   }
 }
 
 async function previousPage(): Promise<void> {
-  if (props.page && !props.page?.first) {
-    emits('updatePage', props.page.number - 1)
+  if (model.value && !model.value?.first) {
+    emits('updatePage', model.value.number - 1)
   }
 }
+
+const page = model.value
 </script>
 
 <script lang="ts">
-export type Page<T> = {
-  content: T[]
+export type Page = {
   size: number
   number: number
   numberOfElements: number
@@ -45,7 +46,7 @@ export type Page<T> = {
 <template>
   <slot v-if="props.navigationPosition == 'bottom'"></slot>
   <FlexContainer
-    v-if="page?.content && !page?.empty && !isLoading"
+    v-if="!page?.empty && !isLoading"
     class="mb-24 mt-20 px-24"
     flex-direction="flex-row"
     justify-content="justify-between"

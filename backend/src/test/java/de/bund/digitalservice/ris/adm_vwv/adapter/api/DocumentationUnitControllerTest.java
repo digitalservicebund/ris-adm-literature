@@ -148,7 +148,7 @@ class DocumentationUnitControllerTest {
             )
           )
           .andExpect(
-            jsonPath(".documentationUnitsOverview[1].id").value(
+            jsonPath("$.documentationUnitsOverview[1].id").value(
               "22222222-1657-4085-ae2a-993a04c27f6b"
             )
           )
@@ -254,42 +254,30 @@ class DocumentationUnitControllerTest {
         // then
         .andExpect(status().isOk())
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].id").value(
+          jsonPath("$.documentationUnitsOverview[0].id").value(
             "11111111-1657-4085-ae2a-993a04c27f6b"
           )
         )
         .andExpect(
-          jsonPath(".paginatedDocumentationUnitsOverview.content[1].id").value(
+          jsonPath("$.documentationUnitsOverview[1].id").value(
             "22222222-1657-4085-ae2a-993a04c27f6b"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].documentNumber").value(
-            "KSNR000004711"
-          )
+          jsonPath("$.documentationUnitsOverview[0].documentNumber").value("KSNR000004711")
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].documentNumber").value(
-            "KSNR000004712"
-          )
+          jsonPath("$.documentationUnitsOverview[1].documentNumber").value("KSNR000004712")
         )
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdatum").value("2011-11-11"))
+        .andExpect(jsonPath("$.documentationUnitsOverview[1].zitierdatum").value("2011-11-11"))
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].zitierdatum").value(
-            "2011-11-11"
-          )
-        )
-        .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].zitierdatum").value(
-            "2011-11-11"
-          )
-        )
-        .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].langueberschrift").value(
+          jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(
             "Sample Document Title 1"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[1].langueberschrift").value(
+          jsonPath("$.documentationUnitsOverview[1].langueberschrift").value(
             "Sample Document Title 2"
           )
         );
@@ -304,30 +292,28 @@ class DocumentationUnitControllerTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
-        .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen").isNotEmpty()
-        )
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").isNotEmpty())
         // ids
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].id").value(
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].id").value(
             "11111111-1fd3-4fb8-bc1d-9751ad192665"
           )
         )
         .andExpect(
-          jsonPath("$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].id").value(
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[1].id").value(
             "22222222-1fd3-4fb8-bc1d-9751ad192665"
           )
         )
         // Zitatstellen
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].zitatstelle"
-          ).value("zitatstelle 1")
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].zitatstelle").value(
+            "zitatstelle 1"
+          )
         )
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[1].zitatstelle"
-          ).value("zitatstelle 2")
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[1].zitatstelle").value(
+            "zitatstelle 2"
+          )
         );
     }
 
@@ -340,30 +326,26 @@ class DocumentationUnitControllerTest {
       mockMvc
         .perform(get("/api/documentation-units"))
         // then
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum").exists())
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum"
-          ).exists()
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.id").value(
+            "periodikum id 1"
+          )
         )
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.id"
-          ).value("periodikum id 1")
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.title").value(
+            "periodikum title 1"
+          )
         )
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.title"
-          ).value("periodikum title 1")
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.subtitle").value(
+            "periodikum subtitle 1"
+          )
         )
         .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.subtitle"
-          ).value("periodikum subtitle 1")
-        )
-        .andExpect(
-          jsonPath(
-            "$.paginatedDocumentationUnitsOverview.content[0].fundstellen[0].periodikum.abbreviation"
-          ).value("p.abbrev.1")
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.abbreviation").value(
+            "p.abbrev.1"
+          )
         );
     }
   }

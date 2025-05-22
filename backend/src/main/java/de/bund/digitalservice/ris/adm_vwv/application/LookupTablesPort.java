@@ -3,7 +3,6 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
 
 /**
  * Input port for lookup tables.

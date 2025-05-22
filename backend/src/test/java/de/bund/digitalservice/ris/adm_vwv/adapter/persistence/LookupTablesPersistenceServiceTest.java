@@ -13,7 +13,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
@@ -48,12 +51,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
+    var documentTypes = lookupTablesPersistenceService.findDocumentTypes(
       new DocumentTypeQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.content()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 
   @Test
@@ -71,12 +74,12 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(documentTypeEntity)));
 
     // when
-    Page<DocumentType> documentTypes = lookupTablesPersistenceService.findDocumentTypes(
+    var documentTypes = lookupTablesPersistenceService.findDocumentTypes(
       new DocumentTypeQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(documentTypes.getContent()).contains(new DocumentType("VR", "Verwaltungsregelung"));
+    assertThat(documentTypes.content()).contains(new DocumentType("VR", "Verwaltungsregelung"));
   }
 
   @Test
@@ -194,10 +197,10 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    var result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
-    assertThat(result.getContent())
+    assertThat(result.content())
       .hasSize(2)
       .extracting(FieldOfLaw::text)
       .containsOnly("Beendigung der Phantasieverhältnisse", "Bericht");
@@ -219,10 +222,10 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    var result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
-    assertThat(result.getContent())
+    assertThat(result.content())
       .hasSize(1)
       .extracting(FieldOfLaw::text)
       .containsOnly("Beendigung der Phantasieverhältnisse");
@@ -242,10 +245,10 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of()));
 
     // when
-    Page<FieldOfLaw> result = lookupTablesPersistenceService.findFieldsOfLaw(query);
+    var result = lookupTablesPersistenceService.findFieldsOfLaw(query);
 
     // then
-    assertThat(result.getContent()).isEmpty();
+    assertThat(result.content()).isEmpty();
   }
 
   private FieldOfLawEntity createFieldOfLaw(String identifier, String text) {
@@ -278,7 +281,7 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<LegalPeriodical> legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
+    var legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
       new LegalPeriodicalQuery(
         null,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
@@ -286,7 +289,7 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(legalPeriodicals.getContent())
+    assertThat(legalPeriodicals.content())
       .singleElement()
       .extracting(
         LegalPeriodical::abbreviation,
@@ -318,7 +321,7 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(legalPeriodicalEntity)));
 
     // when
-    Page<LegalPeriodical> legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
+    var legalPeriodicals = lookupTablesPersistenceService.findLegalPeriodicals(
       new LegalPeriodicalQuery(
         "something",
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
@@ -326,7 +329,7 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // then
-    assertThat(legalPeriodicals.getContent())
+    assertThat(legalPeriodicals.content())
       .singleElement()
       .extracting(
         LegalPeriodical::abbreviation,
@@ -388,12 +391,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<Institution> institutions = lookupTablesPersistenceService.findInstitutions(
+    var institutions = lookupTablesPersistenceService.findInstitutions(
       new InstitutionQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(institutions.getContent()).contains(
+    assertThat(institutions.content()).contains(
       new Institution(
         uuid,
         "Jurpn",
@@ -417,12 +420,12 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(institutionEntity)));
 
     // when
-    Page<Institution> institutions = lookupTablesPersistenceService.findInstitutions(
+    var institutions = lookupTablesPersistenceService.findInstitutions(
       new InstitutionQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(institutions.getContent()).contains(
+    assertThat(institutions.content()).contains(
       new Institution(uuid, "Organ", null, InstitutionType.INSTITUTION, List.of())
     );
   }
@@ -439,12 +442,12 @@ class LookupTablesPersistenceServiceTest {
     );
 
     // when
-    Page<Region> regions = lookupTablesPersistenceService.findRegions(
+    var regions = lookupTablesPersistenceService.findRegions(
       new RegionQuery(null, new QueryOptions(0, 10, "code", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(regions.getContent()).contains(new Region(uuid, "AA", null));
+    assertThat(regions.content()).contains(new Region(uuid, "AA", null));
   }
 
   @Test
@@ -459,11 +462,11 @@ class LookupTablesPersistenceServiceTest {
     ).willReturn(new PageImpl<>(List.of(regionEntity)));
 
     // when
-    Page<Region> regions = lookupTablesPersistenceService.findRegions(
+    var regions = lookupTablesPersistenceService.findRegions(
       new RegionQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
-    assertThat(regions.getContent()).contains(new Region(uuid, "AA", null));
+    assertThat(regions.content()).contains(new Region(uuid, "AA", null));
   }
 }

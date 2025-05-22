@@ -70,7 +70,15 @@ const activeCitationDocumentType = computed({
   },
 })
 
-const searchResultsCurrentPage = ref<Page<RelatedDocumentation>>()
+const searchResultsCurrentPage = ref<Page>({
+  first: false,
+  last: false,
+  number: 0,
+  numberOfElements: 0,
+  size: 0,
+  totalElements: 0,
+  empty: true,
+})
 const searchResults = ref<SearchResults<RelatedDocumentation>>()
 
 async function search() {
@@ -103,13 +111,8 @@ async function search() {
       : {}),
   })
   if (response.data) {
-    searchResultsCurrentPage.value = {
-      ...response.data,
-      content: response.data.content.map(
-        (decision: Partial<RelatedDocumentation>) => new RelatedDocumentation({ ...decision }),
-      ),
-    }
-    searchResults.value = response.data.content.map((searchResult) => {
+    searchResultsCurrentPage.value = { ...response.data.page }
+    searchResults.value = response.data.activeCitations.map((searchResult) => {
       return {
         decision: new RelatedDocumentation({ ...searchResult }),
         isLinked: searchResult.isLinkedWith(props.modelValueList),
@@ -321,7 +324,7 @@ onMounted(() => {
     <div v-if="isLoading || searchResults" class="bg-blue-200">
       <Pagination
         navigation-position="bottom"
-        :page="searchResultsCurrentPage"
+        :modelValue="searchResultsCurrentPage"
         @update-page="updatePage"
       >
         <SearchResultList

@@ -2,15 +2,11 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
 import java.util.List;
-import org.springframework.data.domain.Page;
 
 /**
  * Response with institutions and pagination information
  *
  * @param institutions List of institutions
- * @param paginatedInstitutions List of paginated institutions
+ * @param page Pagination data
  */
-public record InstitutionResponse(
-  List<Institution> institutions,
-  Page<Institution> paginatedInstitutions
-) {}
+public record InstitutionResponse(List<Institution> institutions, PageResponse page) {}
