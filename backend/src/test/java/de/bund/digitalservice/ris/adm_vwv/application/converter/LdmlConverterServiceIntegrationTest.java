@@ -529,7 +529,14 @@ class LdmlConverterServiceIntegrationTest {
         ActiveCitation::fileNumber,
         ActiveCitation::documentNumber
       )
-      .containsExactly("Vgl", "Vgl", "PhanGH", "2021-10-20", "C-01/02", "WBRE000001234");
+      .containsExactly(
+        "Vgl",
+        "Vgl (fulltext not yet implemented)",
+        "PhanGH",
+        "2021-10-20",
+        "C-01/02",
+        "WBRE000001234"
+      );
   }
 
   @Test
