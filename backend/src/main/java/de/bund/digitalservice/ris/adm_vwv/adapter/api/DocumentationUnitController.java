@@ -9,7 +9,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +69,10 @@ public class DocumentationUnitController {
     );
 
     DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
-      new DocumentationUnitsOverviewResponse(hardCodedList, new PageImpl<>(hardCodedList));
+      new DocumentationUnitsOverviewResponse(
+        hardCodedList,
+        new PageResponse(2, 0, 2, 2, true, true, false)
+      );
 
     return ResponseEntity.ok(hardCodedResponseWithFakeDocumentOverview);
   }

@@ -5,7 +5,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,11 +48,14 @@ public class DocumentTypeController {
       sortDirection,
       usePagination
     );
-    Page<DocumentType> paginatedDocumentTypes = lookupTablesPort.findDocumentTypes(
+    var paginatedDocumentTypes = lookupTablesPort.findDocumentTypes(
       new DocumentTypeQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(
-      new DocumentTypeResponse(paginatedDocumentTypes.getContent(), paginatedDocumentTypes)
+      new DocumentTypeResponse(
+        paginatedDocumentTypes.content(),
+        new PageResponse(paginatedDocumentTypes)
+      )
     );
   }
 }

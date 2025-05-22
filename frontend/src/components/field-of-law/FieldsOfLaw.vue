@@ -25,7 +25,7 @@ const identifier = ref('')
 const norm = ref('')
 const searchErrorLabel = ref<string | undefined>(undefined)
 const results = ref<FieldOfLaw[]>()
-const currentPage = ref<Page<FieldOfLaw>>()
+const currentPage = ref<Page>()
 const itemsPerPage = 10
 
 const store = useDocumentUnitStore()
@@ -63,8 +63,8 @@ async function submitSearch(page: number) {
     norm.value,
   )
   if (response.data) {
-    currentPage.value = response.data
-    results.value = response.data.content
+    currentPage.value = response.data.page
+    results.value = response.data.fieldsOfLaw
 
     if (results.value?.[0]) {
       nodeOfInterest.value = results.value[0]

@@ -13,7 +13,7 @@ const docUnits = ref<DocumentUnitListItem[]>([])
 
 onMounted(async () => {
   const response = await documentUnitService.getPaginatedDocumentUnitList()
-  docUnits.value = response.data?.paginatedDocumentationUnitsOverview?.content || []
+  docUnits.value = response.data?.documentationUnitsOverview || []
 })
 </script>
 

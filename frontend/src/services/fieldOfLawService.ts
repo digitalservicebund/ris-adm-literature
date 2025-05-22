@@ -1,6 +1,6 @@
 import httpClient, { type ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import type { FieldOfLaw } from '@/domain/fieldOfLaw'
+import type { FieldOfLaw, FieldOfLawResponse } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
 
 interface FieldOfLawService {
@@ -12,7 +12,7 @@ interface FieldOfLawService {
     query?: string,
     identifier?: string,
     norm?: string,
-  ): Promise<ServiceResponse<Page<FieldOfLaw>>>
+  ): Promise<ServiceResponse<FieldOfLawResponse>>
 }
 
 const service: FieldOfLawService = {
@@ -52,7 +52,7 @@ const service: FieldOfLawService = {
     identifier?: string,
     norm?: string,
   ) {
-    const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page<FieldOfLaw> }>(
+    const response = await httpClient.get<{ fieldsOfLaw: FieldOfLaw[]; page: Page }>(
       `lookup-tables/fields-of-law?pageNumber=${page}&pageSize=${size}&identifier=${identifier}&text=${query}&norm=${norm}`,
     )
     if (response.status >= 300) {
@@ -64,7 +64,7 @@ const service: FieldOfLawService = {
 
     return {
       status: response.status,
-      data: response.data?.page,
+      data: response.data,
     }
   },
 }

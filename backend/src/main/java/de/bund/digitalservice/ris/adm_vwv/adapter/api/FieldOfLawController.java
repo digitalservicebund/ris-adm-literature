@@ -6,7 +6,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,7 +92,7 @@ public class FieldOfLawController {
       sortDirection,
       usePagination
     );
-    Page<FieldOfLaw> paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
+    var paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),
@@ -101,6 +100,9 @@ public class FieldOfLawController {
         queryOptions
       )
     );
-    return new FieldOfLawQueryResponse(paginatedFieldsOfLaw.getContent(), paginatedFieldsOfLaw);
+    return new FieldOfLawQueryResponse(
+      paginatedFieldsOfLaw.content(),
+      new PageResponse(paginatedFieldsOfLaw)
+    );
   }
 }

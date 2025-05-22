@@ -25,7 +25,7 @@ interface DocumentUnitService {
   searchByRelatedDocumentation(
     query: RelatedDocumentation,
     requestParams?: { [key: string]: string } | undefined,
-  ): Promise<ServiceResponse<Page<RelatedDocumentation>>>
+  ): Promise<ServiceResponse<{ activeCitations: RelatedDocumentation[]; page: Page }>>
 
   getPaginatedDocumentUnitList(): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
@@ -152,7 +152,7 @@ const service: DocumentUnitService = {
     return {
       status: 200,
       data: {
-        content: [
+        activeCitations: [
           new ActiveCitation({
             uuid: '123',
             court: {
@@ -168,12 +168,15 @@ const service: DocumentUnitService = {
             fileNumber: 'test fileNumber1',
           }),
         ],
-        size: 0,
-        number: 0,
-        numberOfElements: 20,
-        first: true,
-        last: false,
-        empty: false,
+        page: {
+          size: 1,
+          number: 0,
+          numberOfElements: 1,
+          totalElements: 20,
+          first: true,
+          last: false,
+          empty: false,
+        },
       },
     }
   },

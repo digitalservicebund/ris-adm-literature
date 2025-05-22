@@ -1,8 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
+import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodicalQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,11 +48,14 @@ public class LegalPeriodicalController {
       sortDirection,
       usePagination
     );
-    Page<LegalPeriodical> paginatedLegalPeriodicals = lookupTablesPort.findLegalPeriodicals(
+    var paginatedLegalPeriodicals = lookupTablesPort.findLegalPeriodicals(
       new LegalPeriodicalQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(
-      new LegalPeriodicalResponse(paginatedLegalPeriodicals.getContent(), paginatedLegalPeriodicals)
+      new LegalPeriodicalResponse(
+        paginatedLegalPeriodicals.content(),
+        new PageResponse(paginatedLegalPeriodicals)
+      )
     );
   }
 }

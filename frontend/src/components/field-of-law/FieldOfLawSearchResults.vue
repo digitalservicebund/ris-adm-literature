@@ -5,7 +5,7 @@ import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
 
 defineProps<{
-  currentPage?: Page<FieldOfLaw>
+  currentPage?: Page
   results?: FieldOfLaw[]
 }>()
 
@@ -20,7 +20,7 @@ const emit = defineEmits<{
   <div v-if="currentPage" class="flex flex-1 flex-col">
     <Pagination
       navigation-position="bottom"
-      :page="currentPage"
+      :modelValue="currentPage"
       @update-page="(page: number) => emit('search', page)"
     >
       <FieldOfLawSearchResultsListItem
@@ -31,7 +31,7 @@ const emit = defineEmits<{
         @node:add="emit('node:add', fieldOfLawNode)"
       />
     </Pagination>
-    <div v-if="!currentPage?.content || currentPage?.content?.length == 0">
+    <div v-if="currentPage?.empty">
       {{ errorMessages.SEARCH_RESULTS_NOT_FOUND.title }}
     </div>
   </div>
