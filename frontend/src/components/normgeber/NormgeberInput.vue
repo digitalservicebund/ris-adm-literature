@@ -107,10 +107,7 @@ watch(institution, (newVal, oldVal) => {
         :validation-error="validationStore.getByField('institution')"
         v-slot="slotProps"
       >
-        <InstitutionDropDown
-          v-model="institution"
-          :is-invalid="slotProps.hasError"
-        />
+        <InstitutionDropDown v-model="institution" :is-invalid="slotProps.hasError" />
       </InputField>
       <InputField id="region" :label="regionLabel" class="w-full">
         <InputText
@@ -122,7 +119,7 @@ watch(institution, (newVal, oldVal) => {
           fluid
           readonly
         />
-        <RegionDropDown v-else v-model="selectedRegion"/>
+        <RegionDropDown v-else v-model="selectedRegion" />
       </InputField>
     </div>
     <div class="flex w-full gap-16 mt-16">

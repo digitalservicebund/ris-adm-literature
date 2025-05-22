@@ -49,7 +49,7 @@ vi.mock('@/services/institutionService.ts', () => ({
             type: 'INSTITUTION',
             regions: [],
           },
-        ]
+        ],
       },
     },
   }),
@@ -57,9 +57,10 @@ vi.mock('@/services/institutionService.ts', () => ({
 
 vi.mock('@vueuse/core', async () => {
   const actual = await vi.importActual('@vueuse/core')
+
   return {
     ...actual,
-    useDebounceFn: (fn: any) => fn,
+    useDebounceFn: (fn: unknown) => fn,
   }
 })
 
@@ -156,7 +157,7 @@ describe('NormgeberInput', () => {
     await user.click(input)
     await user.type(input, 'Erste')
     // then
-    const option = await screen.getByRole('option', { name: 'Erste Jurpn' })
+    const option = screen.getByRole('option', { name: 'Erste Jurpn' })
     await user.click(option)
 
     // then

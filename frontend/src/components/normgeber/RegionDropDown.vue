@@ -15,9 +15,9 @@ const autoComplete = ref<typeof RisAutoComplete | null>(null)
 
 // Should we exported from ris-ui
 interface AutoCompleteSuggestion {
-    id: string;
-    label: string;
-    secondaryLabel?: string;
+  id: string
+  label: string
+  secondaryLabel?: string
 }
 const suggestions = ref<AutoCompleteSuggestion[]>([])
 

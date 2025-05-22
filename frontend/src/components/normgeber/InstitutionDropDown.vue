@@ -4,7 +4,7 @@ import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { fetchInstitutions } from '@/services/institutionService.ts'
-import { InstitutionType, type Institution } from '@/domain/normgeber.ts'
+import { type Institution } from '@/domain/normgeber.ts'
 
 defineProps<{ isInvalid: boolean }>()
 
@@ -17,10 +17,11 @@ const autoComplete = ref<typeof RisAutoComplete | null>(null)
 
 // Should be exported from ris-ui
 interface AutoCompleteSuggestion {
-    id: string;
-    label: string;
-    secondaryLabel?: string;
-}const suggestions = ref<AutoCompleteSuggestion[]>([])
+  id: string
+  label: string
+  secondaryLabel?: string
+}
+const suggestions = ref<AutoCompleteSuggestion[]>([])
 
 const institutions = ref<Institution[]>([])
 const selectedInstitutionId = ref<string | undefined>(modelValue.value?.id)
@@ -100,7 +101,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :invalid="isInvalid"
     :initial-label="modelValue?.name"
-    input-id="institution" 
+    input-id="institution"
     aria-label="Normgeber"
     append-to="self"
     typeahead
