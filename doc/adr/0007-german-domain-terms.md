@@ -1,10 +1,10 @@
 # 8. Using German Domain Terms
 
-❓❓ Date: 202x-xx-xx
+Date: 2025-05-21
 
 ## Status
 
-❓❓ Draft (should become accepted)
+Accepted
 
 ## Context
 
