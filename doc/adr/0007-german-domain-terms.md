@@ -19,7 +19,7 @@ However, it has lead to misunderstanding and additional work when translating (o
 
 Alternatively, we could keep domain specific terms in German. 
 
-That approach that is
+That approach is
 
 - recommended within DigitalService ("favor keeping domain-specific terms in German over 'language purity'", cf. [here](https://digitalservicebund.atlassian.net/wiki/x/BgD4WQ)) and
 - in line with the concept of a "ubiquitous language" (Domain Driven Design, cf. [here](https://martinfowler.com/bliki/UbiquitousLanguage.html)).
