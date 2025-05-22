@@ -6,16 +6,23 @@ import { useDebounceFn } from '@vueuse/core'
 import type { Region } from '@/domain/normgeber.ts'
 import { fetchRegions } from '@/services/regionService.ts'
 
-defineProps<{ isInvalid?: boolean }>()
 const modelValue = defineModel<Region | undefined>()
 const emit = defineEmits<{
   'update:modelValue': [value: Region]
 }>()
 
-type AutoCompleteSuggestion = { id: string; label: string; secondaryLabel?: string }
+const autoComplete = ref<typeof RisAutoComplete | null>(null)
+
+// Should we exported from ris-ui
+interface AutoCompleteSuggestion {
+    id: string;
+    label: string;
+    secondaryLabel?: string;
+}
 const suggestions = ref<AutoCompleteSuggestion[]>([])
 
 const regions = ref<Region[]>([])
+const selectedRegionId = ref<string | undefined>(modelValue.value?.id)
 
 const search = async (query?: string) => {
   suggestions.value = regions.value
@@ -67,10 +74,6 @@ const onItemSelect = () => {
   suggestions.value = []
 }
 
-const autoComplete = ref<typeof RisAutoComplete | null>(null)
-
-const selectedRegionId = ref<string | undefined>(modelValue.value?.id)
-
 function onModelValueChange(id: string | undefined) {
   selectedRegionId.value = id
   const selectedRegion = regions.value.filter((region: Region) => region.id === id)[0]
@@ -79,7 +82,7 @@ function onModelValueChange(id: string | undefined) {
 
 onMounted(async () => {
   const response = await fetchRegions()
-  regions.value = response.data.value.regions
+  regions.value = response.data.value?.regions || []
 })
 </script>
 
@@ -87,14 +90,14 @@ onMounted(async () => {
   <RisAutoComplete
     ref="autoComplete"
     :model-value="selectedRegionId"
+    :suggestions="suggestions"
+    input-id="region"
+    :initial-label="modelValue?.code"
+    aria-label="Region"
+    append-to="self"
     typeahead
     dropdown
     dropdown-mode="blank"
-    :suggestions="suggestions"
-    input-id="institutionDropDown"
-    :invalid="isInvalid"
-    :initial-label="modelValue?.code"
-    append-to="self"
     @update:model-value="onModelValueChange"
     @complete="onComplete"
     @dropdown-click="onDropdownClick"

@@ -107,20 +107,10 @@ watch(institution, (newVal, oldVal) => {
         :validation-error="validationStore.getByField('institution')"
         v-slot="slotProps"
       >
-        <!--        <ComboboxInput-->
-        <!--          id="institution"-->
-        <!--          v-model="institution"-->
-        <!--          aria-label="Normgeber"-->
-        <!--          clear-on-choosing-item-->
-        <!--          :has-error="slotProps.hasError"-->
-        <!--          :item-service="ComboboxItemService.getInstitutions"-->
-        <!--        ></ComboboxInput>-->
         <InstitutionDropDown
           v-model="institution"
           :is-invalid="slotProps.hasError"
-          aria-label="Normgeber"
-        >
-        </InstitutionDropDown>
+        />
       </InputField>
       <InputField id="region" :label="regionLabel" class="w-full">
         <InputText
@@ -132,15 +122,7 @@ watch(institution, (newVal, oldVal) => {
           fluid
           readonly
         />
-        <!--        <ComboboxInput-->
-        <!--          v-else-->
-        <!--          id="region"-->
-        <!--          v-model="selectedRegion"-->
-        <!--          :item-service="ComboboxItemService.getRegions"-->
-        <!--          aria-label="Region"-->
-        <!--          clear-on-choosing-item-->
-        <!--        ></ComboboxInput>-->
-        <RegionDropDown v-else v-model="selectedRegion" aria-label="Region"> </RegionDropDown>
+        <RegionDropDown v-else v-model="selectedRegion"/>
       </InputField>
     </div>
     <div class="flex w-full gap-16 mt-16">
