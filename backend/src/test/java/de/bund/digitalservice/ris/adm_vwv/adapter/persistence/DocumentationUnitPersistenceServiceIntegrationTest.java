@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
@@ -17,7 +18,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({ DocumentationUnitPersistenceService.class, DocumentationUnitCreationService.class })
+@Import(
+  {
+    DocumentationUnitPersistenceService.class,
+    DocumentationUnitCreationService.class,
+    ObjectMapper.class,
+  }
+)
 @ActiveProfiles("test")
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
