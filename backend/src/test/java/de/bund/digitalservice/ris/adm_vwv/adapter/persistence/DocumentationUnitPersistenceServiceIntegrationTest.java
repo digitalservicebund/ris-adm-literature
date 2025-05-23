@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
@@ -173,5 +174,32 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
           List.of("zitatstelle 2", "periodikum title 2")
         )
       );
+  }
+
+  @Test
+  void findDocumentationUnitOverviewElements_parsingJsonFails() {
+    // given
+    var documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s100001", Year.now()));
+    documentationUnitEntity.setJson(
+      """
+      {
+        "id": "11111111-1657-4085-ae2a-993a04c27f6b",
+        "documentNumber": "KSNR000004711",
+        [] ooops
+      }
+      """
+    );
+    entityManager.persistAndFlush(documentationUnitEntity);
+
+    // when
+    Exception exception = catchException(() ->
+      documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+      )
+    );
+
+    // then
+    assertThat(exception).isInstanceOf(IllegalStateException.class);
   }
 }
