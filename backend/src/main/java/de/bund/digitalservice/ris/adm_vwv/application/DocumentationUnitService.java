@@ -6,7 +6,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterSer
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 /**
@@ -59,8 +58,8 @@ public class DocumentationUnitService implements DocumentationUnitPort {
 
   @Override
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @NotNull QueryOptions queryOptions
+    @Nonnull QueryOptions queryOptions
   ) {
-    return null;
+    return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(queryOptions);
   }
 }

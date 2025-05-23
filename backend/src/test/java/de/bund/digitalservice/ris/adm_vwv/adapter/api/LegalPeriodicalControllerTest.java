@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,24 @@ class LegalPeriodicalControllerTest {
     var lp1Title = "Arbeitsrecht aktiv";
     var lp1Subtitle = "Arbeitsrecht optimal gestalten und erfolgreich anwenden";
     var lp1CitationStyle = "2009, 55-59; AA &amp;, 2015, 6-13 (Sonderausgabe)";
-    var lp1 = new LegalPeriodical(lp1Abbreviation, lp1Title, lp1Subtitle, lp1CitationStyle);
+    var lp1 = new LegalPeriodical(
+      UUID.randomUUID(),
+      lp1Abbreviation,
+      lp1Title,
+      lp1Subtitle,
+      lp1CitationStyle
+    );
     var lp2Abbreviation = "BKK";
     var lp2Title = "Die Betriebskrankenkasse";
     var lp2Subtitle = "Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen";
     var lp2CitationStyle = "1969, 138-140; BKK 2007, Sonderbeilage, 1-5";
-    var lp2 = new LegalPeriodical(lp2Abbreviation, lp2Title, lp2Subtitle, lp2CitationStyle);
+    var lp2 = new LegalPeriodical(
+      UUID.randomUUID(),
+      lp2Abbreviation,
+      lp2Title,
+      lp2Subtitle,
+      lp2CitationStyle
+    );
     String searchTerm = "a";
     given(
       lookupTablesPort.findLegalPeriodicals(

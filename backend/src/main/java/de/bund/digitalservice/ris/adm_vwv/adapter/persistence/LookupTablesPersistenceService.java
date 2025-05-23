@@ -155,6 +155,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private Function<LegalPeriodicalEntity, LegalPeriodical> mapLegalPeriodicalEntity() {
     return legalPeriodicalEntity ->
       new LegalPeriodical(
+        legalPeriodicalEntity.getId(),
         legalPeriodicalEntity.getAbbreviation(),
         legalPeriodicalEntity.getTitle(),
         legalPeriodicalEntity.getSubtitle(),

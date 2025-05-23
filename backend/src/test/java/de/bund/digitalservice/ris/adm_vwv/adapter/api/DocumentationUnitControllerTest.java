@@ -147,7 +147,7 @@ class DocumentationUnitControllerTest {
                   UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
                   "zitatstelle 1",
                   new Periodikum(
-                    "periodikum id 1",
+                    UUID.fromString("33333333-1657-4085-ae2a-993a04c27f6b"),
                     "periodikum title 1",
                     "periodikum subtitle 1",
                     "p.abbrev.1"
@@ -157,7 +157,7 @@ class DocumentationUnitControllerTest {
                   UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
                   "zitatstelle 2",
                   new Periodikum(
-                    "periodikum id 2",
+                    UUID.fromString("44444444-1657-4085-ae2a-993a04c27f6b"),
                     "periodikum title 2",
                     "periodikum subtitle 2",
                     "p.abbrev.2"
@@ -263,7 +263,7 @@ class DocumentationUnitControllerTest {
         .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum").exists())
         .andExpect(
           jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.id").value(
-            "periodikum id 1"
+            "33333333-1657-4085-ae2a-993a04c27f6b"
           )
         )
         .andExpect(

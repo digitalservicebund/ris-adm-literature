@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import java.util.UUID;
+
 /**
  * A legal Periodikum
  *
@@ -8,4 +10,4 @@ package de.bund.digitalservice.ris.adm_vwv.application;
  * @param subtitle     The subtitle of the Periodikum
  * @param abbreviation The abbreviated title of the Periodikum
  */
-public record Periodikum(String id, String title, String subtitle, String abbreviation) {}
+public record Periodikum(UUID id, String title, String subtitle, String abbreviation) {}
