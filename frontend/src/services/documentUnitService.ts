@@ -182,8 +182,9 @@ const service: DocumentUnitService = {
   },
 
   async getPaginatedDocumentUnitList() {
-    const response =
-      await httpClient.get<PaginatedDocumentUnitListResponse>(DOCUMENTATION_UNITS_URL)
+    const response = await httpClient.get<PaginatedDocumentUnitListResponse>(
+      `${DOCUMENTATION_UNITS_URL}?usePagination=false`,
+    )
 
     return response
   },
