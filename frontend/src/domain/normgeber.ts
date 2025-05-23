@@ -3,20 +3,6 @@ export enum InstitutionType {
   LegalEntity = 'LEGAL_ENTITY',
 }
 
-export interface RegionApiResponse {
-  id: string
-  code: string
-  longText?: string
-}
-
-export interface InstitutionApiResponse {
-  id: string
-  name: string
-  officialName?: string
-  type: InstitutionType
-  regions: RegionApiResponse[]
-}
-
 export interface Region {
   id: string
   code: string
