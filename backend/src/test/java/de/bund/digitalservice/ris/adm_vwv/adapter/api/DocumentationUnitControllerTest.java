@@ -1,15 +1,17 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -128,124 +130,56 @@ class DocumentationUnitControllerTest {
   }
 
   @Nested
-  class GetListOfDocumentUnits {
-
-    @Nested
-    class unpaginatedListOfDocumentUnits {
-
-      @Test
-      void returnListOfDocumentsUnpaginated() throws Exception {
-        // given
-
-        // when
-        mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
-          .andExpect(jsonPath("$.documentationUnitsOverview").exists())
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].id").value(
-              "11111111-1657-4085-ae2a-993a04c27f6b"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[1].id").value(
-              "22222222-1657-4085-ae2a-993a04c27f6b"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].documentNumber").value("KSNR000004711")
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[1].documentNumber").value("KSNR000004712")
-          )
-          .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdatum").value("2011-11-11"))
-          .andExpect(jsonPath("$.documentationUnitsOverview[1].zitierdatum").value("2011-11-11"))
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(
-              "Sample Document Title 1"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[1].langueberschrift").value(
-              "Sample Document Title 2"
-            )
-          );
-      }
-
-      @Test
-      @DisplayName("return array of Fundstellen with ids and Zitatstellen")
-      void getListOfDocumentsWithFundstellen() throws Exception {
-        // given
-
-        // when
-        mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
-          .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").isNotEmpty())
-          // ids
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[0].id").value(
-              "11111111-1fd3-4fb8-bc1d-9751ad192665"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[1].id").value(
-              "22222222-1fd3-4fb8-bc1d-9751ad192665"
-            )
-          )
-          // Zitatstellen
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[0].zitatstelle").value(
-              "zitatstelle 1"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[1].zitatstelle").value(
-              "zitatstelle 2"
-            )
-          );
-      }
-
-      @Test
-      @DisplayName("return Periodikum with id, title, subtitle and abbreviation")
-      void getListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
-        // given
-
-        // when
-        mockMvc
-          .perform(get("/api/documentation-units"))
-          // then
-          .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum").exists())
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.id").value(
-              "periodikum id 1"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.title").value(
-              "periodikum title 1"
-            )
-          )
-          .andExpect(
-            jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.subtitle").value(
-              "periodikum subtitle 1"
-            )
-          )
-          .andExpect(
-            jsonPath(
-              "$.documentationUnitsOverview[0].fundstellen[0].periodikum.abbreviation"
-            ).value("p.abbrev.1")
-          );
-      }
-    }
-  }
-
-  @Nested
   class PaginatedListOfDocumentUnits {
+
+    @BeforeEach
+    void beforeEach() {
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(any())).willReturn(
+        TestPage.create(
+          List.of(
+            new DocumentationUnitOverviewElement(
+              UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
+              "KSNR000004711",
+              "2011-11-11",
+              "Sample Document Title 1",
+              List.of(
+                new Fundstelle(
+                  UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
+                  "zitatstelle 1",
+                  new Periodikum(
+                    "periodikum id 1",
+                    "periodikum title 1",
+                    "periodikum subtitle 1",
+                    "p.abbrev.1"
+                  )
+                ),
+                new Fundstelle(
+                  UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
+                  "zitatstelle 2",
+                  new Periodikum(
+                    "periodikum id 2",
+                    "periodikum title 2",
+                    "periodikum subtitle 2",
+                    "p.abbrev.2"
+                  )
+                )
+              )
+            ),
+            new DocumentationUnitOverviewElement(
+              UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
+              "KSNR000004712",
+              "2011-11-11",
+              "Sample Document Title 2",
+              List.of()
+            )
+          )
+        )
+      );
+    }
 
     @Test
     @DisplayName("returns HTTP 200, uuids, Dokumentnummern, Zitierdaten, Langüberschriften")
-    void getListOfDocumentsSuccess() throws Exception {
+    void findListOfDocumentsSuccess() throws Exception {
       // given
 
       // when
@@ -285,7 +219,7 @@ class DocumentationUnitControllerTest {
 
     @Test
     @DisplayName("return array of Fundstellen with ids and Zitatstellen")
-    void getListOfDocumentsWithFundstellen() throws Exception {
+    void findListOfDocumentsWithFundstellen() throws Exception {
       // given
 
       // when
@@ -319,7 +253,7 @@ class DocumentationUnitControllerTest {
 
     @Test
     @DisplayName("return Periodikum with id, title, subtitle and abbreviation")
-    void getListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
+    void findListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
       // given
 
       // when
