@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
+import type { Institution, Region } from '@/domain/normgeber'
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
@@ -53,9 +54,6 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
     if (event.query) {
       // normal search for entered query
       searchDebounced(event.query)
-      // } else if (modelValue.value) {
-      // user has already made a selection, use that as the query
-      //searchDebounced(modelValue.value?.name)
     } else {
       // dropdown was opened without any text entered or value pre-selected
       // a copy of the default suggestions is required since the loading
@@ -83,5 +81,29 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
     onComplete,
     onDropdownClick,
     onItemSelect,
+  }
+}
+
+export function useInstitutionSearch(institutions: Ref<Institution[]>) {
+  return function searchFn(query?: string) {
+    return institutions.value
+      .filter((inst) => !query || inst.name.toLowerCase().includes(query.toLowerCase()))
+      .map((inst) => ({
+        id: inst.id,
+        label: inst.name,
+        secondaryLabel: inst.officialName,
+      }))
+  }
+}
+
+export function useRegionSearch(regions: Ref<Region[]>) {
+  return function searchFn(query?: string) {
+    return regions.value
+      .filter((region) => !query || region.code.toLowerCase().includes(query.toLowerCase()))
+      .map((region) => ({
+        id: region.id,
+        label: region.code,
+        secondaryLabel: region.longText,
+      }))
   }
 }

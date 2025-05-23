@@ -3,7 +3,7 @@ import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
 import { fetchInstitutions } from '@/services/institutionService.ts'
 import { type Institution } from '@/domain/normgeber.ts'
-import { useAutoComplete } from '@/composables/useAutoComplete'
+import { useAutoComplete, useInstitutionSearch } from '@/composables/useAutoComplete'
 
 defineProps<{ isInvalid: boolean }>()
 
@@ -16,15 +16,7 @@ const autoComplete = ref<typeof RisAutoComplete | null>(null)
 const institutions = ref<Institution[]>([])
 const selectedInstitutionId = ref<string | undefined>(modelValue.value?.id)
 
-const searchFn = (query?: string) => {
-  return institutions.value
-    .filter((inst) => !query || inst.name.toLowerCase().includes(query.toLowerCase()))
-    .map((inst) => ({
-      id: inst.id,
-      label: inst.name,
-      secondaryLabel: inst.officialName,
-    }))
-}
+const searchFn = useInstitutionSearch(institutions)
 
 const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComplete(searchFn)
 

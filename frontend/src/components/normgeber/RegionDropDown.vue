@@ -3,7 +3,7 @@ import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
 import type { Region } from '@/domain/normgeber.ts'
 import { fetchRegions } from '@/services/regionService.ts'
-import { useAutoComplete } from '@/composables/useAutoComplete'
+import { useAutoComplete, useRegionSearch } from '@/composables/useAutoComplete'
 
 const modelValue = defineModel<Region | undefined>()
 const emit = defineEmits<{
@@ -14,15 +14,7 @@ const autoComplete = ref<typeof RisAutoComplete | null>(null)
 const regions = ref<Region[]>([])
 const selectedRegionId = ref<string | undefined>(modelValue.value?.id)
 
-const searchFn = (query?: string) => {
-  return regions.value
-    .filter((region: Region) => !query || region.code.toLowerCase().includes(query.toLowerCase()))
-    .map((region: Region) => ({
-      id: region.id,
-      label: region.code,
-      secondaryLabel: region.longText,
-    }))
-}
+const searchFn = useRegionSearch(regions)
 
 const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComplete(searchFn)
 
