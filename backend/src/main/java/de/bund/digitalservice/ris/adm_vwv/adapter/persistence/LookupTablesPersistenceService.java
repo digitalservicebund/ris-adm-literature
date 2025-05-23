@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.*;
+
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.Page;
 import jakarta.annotation.Nonnull;
@@ -218,8 +220,13 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<Institution> findInstitutionByName(@Nonnull String name) {
-    return institutionRepository.findByName(name).map(mapInstitutionEntity());
+  public Optional<Institution> findInstitutionByNameAndType(
+    @Nonnull String name,
+    @Nonnull InstitutionType institutionType
+  ) {
+    return institutionRepository
+      .findByNameAndType(name, mapInstitutionType(institutionType))
+      .map(mapInstitutionEntity());
   }
 
   private Function<InstitutionEntity, Institution> mapInstitutionEntity() {
@@ -228,17 +235,9 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         institutionEntity.getId(),
         institutionEntity.getName(),
         institutionEntity.getOfficialName(),
-        mapInstitutionType(institutionEntity.getType()),
+        mapInstitutionTypeString(institutionEntity.getType()),
         institutionEntity.getRegions().stream().map(mapRegionEntity()).toList()
       );
-  }
-
-  private InstitutionType mapInstitutionType(String institutionType) {
-    return switch (institutionType) {
-      case "jurpn" -> InstitutionType.LEGAL_ENTITY;
-      case "organ" -> InstitutionType.INSTITUTION;
-      default -> null;
-    };
   }
 
   private List<String> splitSearchTerms(String searchStr) {

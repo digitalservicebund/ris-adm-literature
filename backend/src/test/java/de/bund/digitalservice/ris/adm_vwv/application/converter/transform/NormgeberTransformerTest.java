@@ -31,7 +31,6 @@ class NormgeberTransformerTest {
   @DisplayName("Transforms two normgeber, one legal entity and one institution with region")
   void transform() {
     // given
-
     AkomaNtoso akomaNtoso = new AkomaNtoso();
     Doc doc = new Doc();
     akomaNtoso.setDoc(doc);
@@ -47,11 +46,14 @@ class NormgeberTransformerTest {
         createRisNormgeber("BRD", "Ministerium für Digitales")
       )
     );
-    given(lookupTablesPersistencePort.findInstitutionByName("DS")).willReturn(
-      createInstitution("DS", InstitutionType.LEGAL_ENTITY)
-    );
     given(
-      lookupTablesPersistencePort.findInstitutionByName("Ministerium für Digitales")
+      lookupTablesPersistencePort.findInstitutionByNameAndType("DS", InstitutionType.LEGAL_ENTITY)
+    ).willReturn(createInstitution("DS", InstitutionType.LEGAL_ENTITY));
+    given(
+      lookupTablesPersistencePort.findInstitutionByNameAndType(
+        "Ministerium für Digitales",
+        InstitutionType.INSTITUTION
+      )
     ).willReturn(createInstitution("Ministerium für Digitales", InstitutionType.INSTITUTION));
     given(lookupTablesPersistencePort.findRegionByCode("BRD")).willReturn(createRegion());
 

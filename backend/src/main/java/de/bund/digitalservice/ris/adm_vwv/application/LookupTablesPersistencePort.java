@@ -25,5 +25,8 @@ public interface LookupTablesPersistencePort {
   Optional<Region> findRegionByCode(@Nonnull String code);
 
   Page<Institution> findInstitutions(@Nonnull InstitutionQuery query);
-  Optional<Institution> findInstitutionByName(@Nonnull String name);
+  Optional<Institution> findInstitutionByNameAndType(
+    @Nonnull String name,
+    @Nonnull InstitutionType type
+  );
 }
