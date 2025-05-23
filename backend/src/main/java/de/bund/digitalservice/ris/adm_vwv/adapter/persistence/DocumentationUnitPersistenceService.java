@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,26 +100,33 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
           documentationUnitEntity.getDocumentNumber(),
           documentationUnitContent.zitierdatum(),
           documentationUnitContent.langueberschrift(),
-          documentationUnitContent
-            .references()
-            .stream()
-            .map(reference ->
-              new Fundstelle(
-                reference.id(),
-                reference.citation(),
-                new Periodikum(
-                  reference.legalPeriodical().id(),
-                  reference.legalPeriodical().title(),
-                  reference.legalPeriodical().subtitle(),
-                  reference.legalPeriodical().abbreviation()
-                )
-              )
-            )
-            .toList()
+          mapFundstellen(documentationUnitContent)
         );
       } catch (JsonProcessingException e) {
         throw new IllegalStateException(e);
       }
     });
+  }
+
+  private List<Fundstelle> mapFundstellen(DocumentationUnitContent documentationUnitContent) {
+    if (documentationUnitContent.references() == null) {
+      return List.of();
+    }
+    return documentationUnitContent
+      .references()
+      .stream()
+      .map(reference ->
+        new Fundstelle(
+          reference.id(),
+          reference.citation(),
+          new Periodikum(
+            reference.legalPeriodical().id(),
+            reference.legalPeriodical().title(),
+            reference.legalPeriodical().subtitle(),
+            reference.legalPeriodical().abbreviation()
+          )
+        )
+      )
+      .toList();
   }
 }
