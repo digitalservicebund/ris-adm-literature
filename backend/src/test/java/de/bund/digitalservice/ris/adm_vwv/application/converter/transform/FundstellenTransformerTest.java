@@ -9,6 +9,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePor
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,10 +40,12 @@ class FundstellenTransformerTest {
       List.of(createOtherReference("BAnz", "BAnz Seite 5"), createOtherReference("DOK", "DOK 2021"))
     );
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BAnz")).willReturn(
-      List.of(new LegalPeriodical("BAnz", "Bundesanzeiger", null, "2025, Seite 2"))
+      List.of(
+        new LegalPeriodical(UUID.randomUUID(), "BAnz", "Bundesanzeiger", null, "2025, Seite 2")
+      )
     );
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("DOK")).willReturn(
-      List.of(new LegalPeriodical("DOK", "Dokument", null, "2020"))
+      List.of(new LegalPeriodical(UUID.randomUUID(), "DOK", "Dokument", null, "2020"))
     );
 
     // when
@@ -93,8 +96,20 @@ class FundstellenTransformerTest {
     analysis.setOtherReferences(List.of(createOtherReference("BRD", "BRD Seite 5")));
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
       List.of(
-        new LegalPeriodical("BRD", "Bericht aus Deutschland", null, "2025, Seite 2"),
-        new LegalPeriodical("BRD", "Bericht aus Deutschland alt", null, "1998, Seite 2")
+        new LegalPeriodical(
+          UUID.randomUUID(),
+          "BRD",
+          "Bericht aus Deutschland",
+          null,
+          "2025, Seite 2"
+        ),
+        new LegalPeriodical(
+          UUID.randomUUID(),
+          "BRD",
+          "Bericht aus Deutschland alt",
+          null,
+          "1998, Seite 2"
+        )
       )
     );
 

@@ -1,12 +1,18 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPersistencePort;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +27,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
+  private final ObjectMapper objectMapper;
 
   @Override
   @Transactional(readOnly = true)
@@ -70,5 +77,56 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
       })
       .orElse(null);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
+    @Nonnull QueryOptions queryOptions
+  ) {
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    var documentationUnits = documentationUnitRepository.findByJsonIsNotNull(pageable);
+    return PageTransformer.transform(documentationUnits, documentationUnitEntity -> {
+      try {
+        var documentationUnitContent = objectMapper.readValue(
+          documentationUnitEntity.getJson(),
+          DocumentationUnitContent.class
+        );
+        return new DocumentationUnitOverviewElement(
+          documentationUnitEntity.getId(),
+          documentationUnitEntity.getDocumentNumber(),
+          documentationUnitContent.zitierdatum(),
+          documentationUnitContent.langueberschrift(),
+          mapFundstellen(documentationUnitContent)
+        );
+      } catch (JsonProcessingException e) {
+        throw new IllegalStateException(e);
+      }
+    });
+  }
+
+  private List<Fundstelle> mapFundstellen(DocumentationUnitContent documentationUnitContent) {
+    if (documentationUnitContent.references() == null) {
+      return List.of();
+    }
+    return documentationUnitContent
+      .references()
+      .stream()
+      .map(reference ->
+        new Fundstelle(
+          reference.id(),
+          reference.citation(),
+          new Periodikum(
+            reference.legalPeriodical().id(),
+            reference.legalPeriodical().title(),
+            reference.legalPeriodical().subtitle(),
+            reference.legalPeriodical().abbreviation()
+          )
+        )
+      )
+      .toList();
   }
 }
