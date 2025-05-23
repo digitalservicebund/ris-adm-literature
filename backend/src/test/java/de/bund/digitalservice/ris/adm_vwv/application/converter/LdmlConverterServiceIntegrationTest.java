@@ -610,4 +610,40 @@ class LdmlConverterServiceIntegrationTest {
         tuple("Erstes Organ", InstitutionType.INSTITUTION, List.of("AA"))
       );
   }
+
+  @Test
+  @Tag("RISDEV-7936")
+  void convertToBusinessModel_normgeberEqualNameForLegalEntityAndOrgan() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example-normgeber.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(
+        DocumentationUnitContent::normgeberList,
+        InstanceOfAssertFactories.list(Normgeber.class)
+      )
+      .hasSize(2)
+      .extracting(
+        normgeber -> normgeber.institution().name(),
+        normgeber -> normgeber.institution().type(),
+        normgeber -> normgeber.regions().stream().map(Region::code).toList()
+      )
+      .containsExactly(
+        tuple("JurpnOrgan", InstitutionType.LEGAL_ENTITY, List.of()),
+        tuple("JurpnOrgan", InstitutionType.INSTITUTION, List.of("AA"))
+      );
+  }
 }

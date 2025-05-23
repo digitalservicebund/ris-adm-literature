@@ -12,5 +12,5 @@ interface InstitutionRepository extends JpaRepository<InstitutionEntity, UUID> {
     @Nonnull String name,
     @Nonnull Pageable pageable
   );
-  Optional<InstitutionEntity> findByName(@Nonnull String name);
+  Optional<InstitutionEntity> findByNameAndType(@Nonnull String name, @Nonnull String type);
 }

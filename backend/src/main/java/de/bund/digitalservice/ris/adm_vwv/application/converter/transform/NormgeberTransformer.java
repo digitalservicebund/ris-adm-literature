@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
+import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
@@ -41,14 +42,16 @@ public class NormgeberTransformer {
     return risNormgeberList
       .stream()
       .map(risNormgeber -> {
-        String institutionName = risNormgeber.getOrgan() != null
-          ? risNormgeber.getOrgan()
-          : risNormgeber.getStaat();
+        InstitutionType institutionType = InstitutionType.LEGAL_ENTITY;
+        String institutionName = risNormgeber.getStaat();
+        if (risNormgeber.getOrgan() != null) {
+          institutionType = InstitutionType.INSTITUTION;
+          institutionName = risNormgeber.getOrgan();
+        }
+        String summary = institutionName + " (" + institutionType + ")";
         Institution institution = lookupTablesPersistencePort
-          .findInstitutionByName(institutionName)
-          .orElseThrow(() ->
-            new IllegalArgumentException("Institution not found: " + institutionName)
-          );
+          .findInstitutionByNameAndType(institutionName, institutionType)
+          .orElseThrow(() -> new IllegalArgumentException("Institution not found: " + summary));
         List<Region> regions = new ArrayList<>();
         if (risNormgeber.getOrgan() != null) {
           regions.add(

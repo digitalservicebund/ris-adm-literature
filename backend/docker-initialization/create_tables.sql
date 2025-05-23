@@ -280,7 +280,9 @@ INSERT INTO institution (id, name, official_name, foreign_country, juris_id, typ
            (gen_random_uuid(), 'Zweites Organ', NULL, NULL, '2', 'organ'),
            ('bddafc08-4031-4960-9aad-0868d48323f7', 'Erste Jurpn', 'Jurpn Eins', 'Nein', '1', 'jurpn'),
            (gen_random_uuid(), 'Zweite Jurpn', NULL, 'Ja', '2', 'jurpn'),
-           ('32b0a3fd-e340-4f9b-bd39-7fe2dcff9a75', 'Dritte Jurpn', NULL, 'Nein', '3', 'jurpn');
+           ('32b0a3fd-e340-4f9b-bd39-7fe2dcff9a75', 'Dritte Jurpn', NULL, 'Nein', '3', 'jurpn'),
+           (gen_random_uuid(), 'JurpnOrgan', NULL, 'Nein', '4', 'jurpn'),
+           (gen_random_uuid(), 'JurpnOrgan', NULL, 'Nein', '5', 'organ');
 INSERT INTO institution_region (institution_id, region_id) VALUES
         ('bddafc08-4031-4960-9aad-0868d48323f7', '14af4110-fa58-4753-a949-6b6ba2dbcfe1'),
         ('bddafc08-4031-4960-9aad-0868d48323f7', '01c63c40-74b4-486a-8914-083e7f03baef'),
