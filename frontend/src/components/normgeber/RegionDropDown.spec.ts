@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RegionDropDown from '@/components/normgeber/RegionDropDown.vue'
-import { fetchRegions } from '@/services/regionService'
 import { type Region } from '@/domain/normgeber'
+import { useFetchRegions } from '@/services/regionService'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({
   RisAutoComplete: {
@@ -13,7 +13,7 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 vi.mock('@/services/regionService', () => ({
-  fetchRegions: vi.fn(),
+  useFetchRegions: vi.fn(),
 }))
 
 const mockRegions: Region[] = [
@@ -30,7 +30,7 @@ const mockRegions: Region[] = [
 describe('RegionDropDown', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(fetchRegions as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ;(useFetchRegions as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { value: { regions: mockRegions } },
     })
   })
@@ -45,7 +45,7 @@ describe('RegionDropDown', () => {
 
     const input = wrapper.find('[data-testid="autocomplete"]')
     expect(input.exists()).toBe(true)
-    expect(fetchRegions).toHaveBeenCalled()
+    expect(useFetchRegions).toHaveBeenCalled()
   })
 
   it('emits updated model value when selection changes', async () => {

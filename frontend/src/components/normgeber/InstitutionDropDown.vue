@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
-import { fetchInstitutions } from '@/services/institutionService.ts'
+import { useFetchInstitutions } from '@/services/institutionService.ts'
 import { type Institution } from '@/domain/normgeber.ts'
 import { useAutoComplete, useInstitutionSearch } from '@/composables/useAutoComplete'
 
@@ -29,8 +29,8 @@ function onModelValueChange(id: string | undefined) {
 }
 
 onMounted(async () => {
-  const response = await fetchInstitutions()
-  institutions.value = response.data.value?.institutions || []
+  const { data } = await useFetchInstitutions()
+  institutions.value = data.value?.institutions || []
 })
 </script>
 

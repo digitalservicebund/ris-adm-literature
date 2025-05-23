@@ -1,4 +1,4 @@
-import { fetchInstitutions } from '@/services/institutionService'
+import { useFetchInstitutions } from '@/services/institutionService'
 import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@vueuse/core', () => {
@@ -32,7 +32,7 @@ vi.mock('@vueuse/core', () => {
 
 describe('institution service', () => {
   it('calls useFetch with the correct URL and returns institutions', async () => {
-    const result = await fetchInstitutions()
+    const result = await useFetchInstitutions()
 
     expect(result.data.value?.institutions).toHaveLength(2)
     expect(result.data.value?.institutions?.[0].name).toBe('Erstes Organ')

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import InstitutionDropDown from '@/components/normgeber/InstitutionDropDown.vue'
-import { fetchInstitutions } from '@/services/institutionService'
+import { useFetchInstitutions } from '@/services/institutionService'
 import { InstitutionType, type Institution } from '@/domain/normgeber'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({
@@ -13,7 +13,7 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 vi.mock('@/services/institutionService', () => ({
-  fetchInstitutions: vi.fn(),
+  useFetchInstitutions: vi.fn(),
 }))
 
 const mockInstitutions: Institution[] = [
@@ -36,7 +36,7 @@ const mockInstitutions: Institution[] = [
 describe('InstitutionDropDown', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(fetchInstitutions as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ;(useFetchInstitutions as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { value: { institutions: mockInstitutions } },
     })
   })
@@ -51,7 +51,7 @@ describe('InstitutionDropDown', () => {
 
     const input = wrapper.find('[data-testid="autocomplete"]')
     expect(input.exists()).toBe(true)
-    expect(fetchInstitutions).toHaveBeenCalled()
+    expect(useFetchInstitutions).toHaveBeenCalled()
   })
 
   it('emits updated model value when selection changes', async () => {

@@ -4,7 +4,7 @@ import { API_PREFIX } from '@/services/httpClient.ts'
 
 const INSTITUTION_URL = `${API_PREFIX}lookup-tables/institutions`
 
-export function fetchInstitutions() {
+export function useFetchInstitutions() {
   return useFetch<{ institutions: Institution[] }>(
     `${INSTITUTION_URL}?usePagination=false`,
     {},

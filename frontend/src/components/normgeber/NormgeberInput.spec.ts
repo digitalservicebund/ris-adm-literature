@@ -6,7 +6,7 @@ import NormgeberInput from './NormgeberInput.vue'
 import { createTestingPinia } from '@pinia/testing'
 
 vi.mock('@/services/institutionService.ts', () => ({
-  fetchInstitutions: vi.fn().mockResolvedValue({
+  useFetchInstitutions: vi.fn().mockResolvedValue({
     data: {
       value: {
         institutions: [

@@ -2,7 +2,7 @@
 import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
 import { onMounted, ref } from 'vue'
 import type { Region } from '@/domain/normgeber.ts'
-import { fetchRegions } from '@/services/regionService.ts'
+import { useFetchRegions } from '@/services/regionService.ts'
 import { useAutoComplete, useRegionSearch } from '@/composables/useAutoComplete'
 
 const modelValue = defineModel<Region | undefined>()
@@ -27,8 +27,8 @@ function onModelValueChange(id: string | undefined) {
 }
 
 onMounted(async () => {
-  const response = await fetchRegions()
-  regions.value = response.data.value?.regions || []
+  const { data } = await useFetchRegions()
+  regions.value = data.value?.regions || []
 })
 </script>
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { fetchRegions } from './regionService'
+import { useFetchRegions } from './regionService'
 
 vi.mock('@vueuse/core', () => {
   return {
@@ -28,7 +28,7 @@ vi.mock('@vueuse/core', () => {
 
 describe('regions service', () => {
   it('calls useFetch with the correct URL and returns regions', async () => {
-    const result = await fetchRegions()
+    const result = await useFetchRegions()
 
     expect(result.data.value?.regions).toHaveLength(2)
     expect(result.data.value?.regions?.[0].code).toBe('AA')
