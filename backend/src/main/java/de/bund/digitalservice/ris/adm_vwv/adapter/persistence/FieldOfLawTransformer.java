@@ -18,6 +18,7 @@ class FieldOfLawTransformer {
     FieldOfLawBuilder builder = FieldOfLaw.builder()
       .id(fieldOfLawEntity.getId())
       .identifier(fieldOfLawEntity.getIdentifier())
+      .notation(fieldOfLawEntity.getNotation())
       .text(fieldOfLawEntity.getText());
     if (fieldOfLawEntity.getParent() != null) {
       builder.parent(transformToDomain(fieldOfLawEntity.getParent(), false, false));
