@@ -2,8 +2,10 @@
 import type { DocumentUnitListItem } from '@/domain/documentUnit'
 import type { Fundstelle } from '@/domain/fundstelle'
 import dayjs from 'dayjs'
+import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
+import IconEdit from '~icons/ic/outline-edit'
 
 export interface DocumentUnitListProps {
   docUnits: DocumentUnitListItem[]
@@ -43,6 +45,26 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
     <Column field="sources" header="Fundstelle">
       <template #body="{ data }">
         {{ fundstelleLabel(data.fundstellen) }}
+      </template>
+    </Column>
+    <Column field="documentNumber" class="flex justify-end">
+      <template #body="{ data }">
+        <router-link
+          :to="{
+            name: 'documentUnit-documentNumber',
+            params: { documentNumber: data.documentNumber },
+          }"
+        >
+          <Button
+            :aria-label="`Dokument ${data.documentNumber} editieren`"
+            severity="secondary"
+            size="small"
+          >
+            <template #icon>
+              <IconEdit />
+            </template>
+          </Button>
+        </router-link>
       </template>
     </Column>
   </DataTable>
