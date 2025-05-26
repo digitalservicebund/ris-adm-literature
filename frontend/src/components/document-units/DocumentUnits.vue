@@ -1,24 +1,28 @@
 <script lang="ts" setup>
 import type { DocumentUnitListItem } from '@/domain/documentUnit'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import documentUnitService from '@/services/documentUnitService'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
+import { usePagination } from '@/composables/usePagination'
+import type { PageState } from 'primevue'
 
-const ITEMS_PER_PAGE = 100
-
-const isLoading = ref(true)
-const firstRowIndex = ref<number>(0)
-const totalRows = ref<number>(0)
-const docUnits = ref<DocumentUnitListItem[]>([])
+const {
+  isLoading,
+  firstRowIndex,
+  totalRows,
+  items: docUnits,
+  ITEMS_PER_PAGE,
+  fetchPaginatedData,
+} = usePagination<DocumentUnitListItem>(documentUnitService.getPaginatedDocumentUnitList)
 
 onMounted(async () => {
-  const response = await documentUnitService.getPaginatedDocumentUnitList()
-  docUnits.value = response.data?.documentationUnitsOverview || []
-  totalRows.value = response.data?.page.numberOfElements || 0
-  firstRowIndex.value = response.data?.page.number || 0
-  isLoading.value = false
+  await fetchPaginatedData()
 })
+
+function handlePageUpdate(pageState: PageState) {
+  fetchPaginatedData(pageState.page)
+}
 </script>
 
 <template>
@@ -30,8 +34,10 @@ onMounted(async () => {
     :loading="isLoading"
   />
   <RisPaginator
+    v-if="docUnits.length > 0"
     :first="firstRowIndex"
     :rows="ITEMS_PER_PAGE"
     :total-records="totalRows"
+    @page="handlePageUpdate"
   />
 </template>

@@ -27,7 +27,10 @@ interface DocumentUnitService {
     requestParams?: { [key: string]: string } | undefined,
   ): Promise<ServiceResponse<{ activeCitations: RelatedDocumentation[]; page: Page }>>
 
-  getPaginatedDocumentUnitList(): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
+  getPaginatedDocumentUnitList(
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
 
 function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
@@ -181,9 +184,10 @@ const service: DocumentUnitService = {
     }
   },
 
-  async getPaginatedDocumentUnitList() {
+  async getPaginatedDocumentUnitList(pageNumber: number, pageSize: number) {
     const response = await httpClient.get<PaginatedDocumentUnitListResponse>(
-      `${DOCUMENTATION_UNITS_URL}?usePagination=false`,
+      `${DOCUMENTATION_UNITS_URL}`,
+      { params: { pageNumber: pageNumber.toString(), pageSize: pageSize.toString() } },
     )
 
     return response
