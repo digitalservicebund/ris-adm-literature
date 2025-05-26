@@ -26,7 +26,7 @@ public record FieldOfLaw(
   boolean hasChildren,
   @Nonnull String identifier,
   @Nonnull String text,
-  @Nonnull String notation,
+  String notation,
   @Nonnull List<String> linkedFields,
   @Nonnull List<Norm> norms,
   @Nonnull List<FieldOfLaw> children,

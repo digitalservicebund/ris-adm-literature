@@ -43,7 +43,7 @@ public class FieldsOfLawTransformer {
               false,
               risFieldOfLaw.getValue(),
               risFieldOfLaw.getValue(),
-              "OLD",
+              null,
               List.of(),
               List.of(),
               List.of(),
