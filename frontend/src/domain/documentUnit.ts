@@ -6,9 +6,11 @@ import type NormReference from './normReference'
 import type { Normgeber } from './normgeber'
 import type { DocumentType } from './documentType'
 import type { Fundstelle } from './fundstelle'
+import type { Page } from './pagination'
 
 export interface PaginatedDocumentUnitListResponse {
   documentationUnitsOverview: DocumentUnitListItem[]
+  page: Page
 }
 
 export interface DocumentUnitListItem {
