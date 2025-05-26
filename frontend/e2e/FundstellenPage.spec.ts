@@ -196,7 +196,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
   )
 })
 
-test.describe('FundstellenPageBestandsdaten', () => {
+test.describe('FundstellenPage - Bestandsdaten', () => {
   test(
     'Load test documentation unit and expect fundstellen',
     { tag: ['@RISDEV-7639'] },
@@ -210,6 +210,20 @@ test.describe('FundstellenPageBestandsdaten', () => {
 
       // then
       await expect(page.getByText('Das Periodikum 2021, Seite 15')).toHaveCount(1)
+    },
+  )
+
+  test(
+    'Load test documentation unit root and get redirected to fundstellen page',
+    { tag: ['@RISDEV-7089'] },
+    async ({ page }) => {
+      // given
+
+      // when
+      await page.goto('/documentUnit/KSNR999999999')
+
+      // then
+      expect(page.url().includes('/documentUnit/KSNR999999999/fundstellen')).toBeTruthy()
     },
   )
 })
