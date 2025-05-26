@@ -35,7 +35,7 @@ const router = createRouter({
       name: 'documentUnit-documentNumber',
       component: DocumentUnitWrapper,
       props: true,
-      redirect: { name: 'documentUnit-documentNumber-fundstellen'},
+      redirect: { name: 'documentUnit-documentNumber-fundstellen' },
       children: [
         {
           path: '/documentUnit/:documentNumber/fundstellen',
