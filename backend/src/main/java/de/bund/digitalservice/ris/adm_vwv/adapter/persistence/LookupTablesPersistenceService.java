@@ -1,6 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.*;
+
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.Page;
 import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Persistence service for lookup tables
+ * Persistence service for lookup tables.
  */
 @Service
 @Slf4j
@@ -38,15 +41,14 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    Page<DocumentTypeEntity> documentTypes = StringUtils.isBlank(searchTerm)
+    var documentTypes = StringUtils.isBlank(searchTerm)
       ? documentTypeRepository.findAll(pageable)
       : documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
         searchTerm,
         searchTerm,
         pageable
       );
-
-    return documentTypes.map(mapDocumentTypeEntity());
+    return PageTransformer.transform(documentTypes, mapDocumentTypeEntity());
   }
 
   @Override
@@ -110,7 +112,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       textTerms,
       normTerms
     );
-    Page<FieldOfLaw> searchResult = fieldOfLawRepository
+    var searchResult = fieldOfLawRepository
       .findAll(fieldOfLawSpecification, pageable)
       .map(fieldOfLawEntity ->
         FieldOfLawTransformer.transformToDomain(fieldOfLawEntity, false, true)
@@ -118,7 +120,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
 
     if (searchResult.isEmpty()) {
       // If no results found, do not re-sort result
-      return searchResult;
+      return PageTransformer.transform(searchResult);
     }
 
     String normParagraphsWithSpace = RegExUtils.replaceAll(
@@ -127,7 +129,9 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       "§ $1"
     );
     List<FieldOfLaw> orderedList = orderResults(textTerms, normParagraphsWithSpace, searchResult);
-    return new PageImpl<>(orderedList, searchResult.getPageable(), searchResult.getTotalElements());
+    return PageTransformer.transform(
+      new PageImpl<>(orderedList, searchResult.getPageable(), searchResult.getTotalElements())
+    );
   }
 
   @Override
@@ -139,7 +143,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    Page<LegalPeriodicalEntity> legalPeriodicals = StringUtils.isBlank(searchTerm)
+    var legalPeriodicals = StringUtils.isBlank(searchTerm)
       ? legalPeriodicalsRepository.findAll(pageable)
       : legalPeriodicalsRepository.findByAbbreviationContainingIgnoreCaseOrTitleContainingIgnoreCase(
         searchTerm,
@@ -147,12 +151,13 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         pageable
       );
 
-    return legalPeriodicals.map(mapLegalPeriodicalEntity());
+    return PageTransformer.transform(legalPeriodicals, mapLegalPeriodicalEntity());
   }
 
   private Function<LegalPeriodicalEntity, LegalPeriodical> mapLegalPeriodicalEntity() {
     return legalPeriodicalEntity ->
       new LegalPeriodical(
+        legalPeriodicalEntity.getId(),
         legalPeriodicalEntity.getAbbreviation(),
         legalPeriodicalEntity.getTitle(),
         legalPeriodicalEntity.getSubtitle(),
@@ -181,11 +186,11 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    Page<RegionEntity> regions = StringUtils.isBlank(searchTerm)
+    var regions = StringUtils.isBlank(searchTerm)
       ? regionRepository.findAll(pageable)
       : regionRepository.findByCodeContainingIgnoreCase(searchTerm, pageable);
 
-    return regions.map(mapRegionEntity());
+    return PageTransformer.transform(regions, mapRegionEntity());
   }
 
   @Override
@@ -208,16 +213,21 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    Page<InstitutionEntity> institutions = StringUtils.isBlank(searchTerm)
+    var institutions = StringUtils.isBlank(searchTerm)
       ? institutionRepository.findAll(pageable)
       : institutionRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
-    return institutions.map(mapInstitutionEntity());
+    return PageTransformer.transform(institutions, mapInstitutionEntity());
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<Institution> findInstitutionByName(@Nonnull String name) {
-    return institutionRepository.findByName(name).map(mapInstitutionEntity());
+  public Optional<Institution> findInstitutionByNameAndType(
+    @Nonnull String name,
+    @Nonnull InstitutionType institutionType
+  ) {
+    return institutionRepository
+      .findByNameAndType(name, mapInstitutionType(institutionType))
+      .map(mapInstitutionEntity());
   }
 
   private Function<InstitutionEntity, Institution> mapInstitutionEntity() {
@@ -226,17 +236,9 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
         institutionEntity.getId(),
         institutionEntity.getName(),
         institutionEntity.getOfficialName(),
-        mapInstitutionType(institutionEntity.getType()),
+        mapInstitutionTypeString(institutionEntity.getType()),
         institutionEntity.getRegions().stream().map(mapRegionEntity()).toList()
       );
-  }
-
-  private InstitutionType mapInstitutionType(String institutionType) {
-    return switch (institutionType) {
-      case "jurpn" -> InstitutionType.LEGAL_ENTITY;
-      case "organ" -> InstitutionType.INSTITUTION;
-      default -> null;
-    };
   }
 
   private List<String> splitSearchTerms(String searchStr) {
@@ -246,7 +248,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private List<FieldOfLaw> orderResults(
     List<String> textTerms,
     String normParagraphsWithSpace,
-    Page<FieldOfLaw> searchResult
+    org.springframework.data.domain.Page<FieldOfLaw> searchResult
   ) {
     // Calculate scores and sort the list based on the score and identifier
     List<ScoredFieldOfLaw> scores = calculateScore(

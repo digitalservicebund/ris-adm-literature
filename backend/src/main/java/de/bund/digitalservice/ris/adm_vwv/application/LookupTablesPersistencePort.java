@@ -1,9 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.springframework.data.domain.Page;
 
 /**
  * Output persistence port for lookup tables.
@@ -26,5 +25,8 @@ public interface LookupTablesPersistencePort {
   Optional<Region> findRegionByCode(@Nonnull String code);
 
   Page<Institution> findInstitutions(@Nonnull InstitutionQuery query);
-  Optional<Institution> findInstitutionByName(@Nonnull String name);
+  Optional<Institution> findInstitutionByNameAndType(
+    @Nonnull String name,
+    @Nonnull InstitutionType type
+  );
 }

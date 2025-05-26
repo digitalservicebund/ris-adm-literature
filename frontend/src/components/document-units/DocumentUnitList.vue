@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { DocumentUnitListItem } from '@/domain/documentUnit'
-import type { Fundstelle, Periodikum } from '@/domain/fundstelle'
+import type { Fundstelle } from '@/domain/fundstelle'
 import dayjs from 'dayjs'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
@@ -16,12 +16,7 @@ defineProps<DocumentUnitListProps>()
 
 const fundstelleLabel = (fundstellen: Fundstelle[]) =>
   fundstellen.length > 0
-    ? fundstellen
-        .map((f: Fundstelle) => {
-          const abbreviations = f.periodika.map((p: Periodikum) => p.abbreviation).join(' ')
-          return `${abbreviations} ${f.zitatstelle}`
-        })
-        .join(', ')
+    ? fundstellen.map((f: Fundstelle) => `${f.periodikum.abbreviation} ${f.zitatstelle}`).join(', ')
     : '--'
 </script>
 
@@ -38,22 +33,14 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
       bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),
     }"
   >
-    <Column field="dokumentNummer" header="Dokumentnummer"></Column>
+    <Column field="documentNumber" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
       <template #body="{ data }">
         {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '--' }}
       </template>
     </Column>
-    <Column
-      class="truncate whitespace-nowrap overflow-hidden w-full max-w-0"
-      field="langueberschrift"
-      header="Amtl. Langueberschrift"
-    />
-    <Column
-      class="truncate whitespace-nowrap overflow-hidden w-full"
-      field="sources"
-      header="Fundstelle"
-    >
+    <Column field="langueberschrift" header="Amtl. Langueberschrift" />
+    <Column field="sources" header="Fundstelle">
       <template #body="{ data }">
         {{ fundstelleLabel(data.fundstellen) }}
       </template>

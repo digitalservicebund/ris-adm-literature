@@ -19,4 +19,13 @@ public interface DocumentationUnitPort {
    *     with the given document number
    */
   Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json);
+
+  /**
+   * Returns paginated documentation units overview elements.
+   * @param queryOptions The query options
+   * @return Page object with documentation unit overview elements and pagination data
+   */
+  Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
+    @Nonnull QueryOptions queryOptions
+  );
 }

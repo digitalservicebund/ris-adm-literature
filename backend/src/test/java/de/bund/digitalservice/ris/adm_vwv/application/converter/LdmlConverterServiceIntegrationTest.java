@@ -523,12 +523,20 @@ class LdmlConverterServiceIntegrationTest {
       .first()
       .extracting(
         ac -> ac.citationType().jurisShortcut(),
+        ac -> ac.citationType().label(),
         ac -> ac.court().label(),
         ActiveCitation::decisionDate,
         ActiveCitation::fileNumber,
         ActiveCitation::documentNumber
       )
-      .containsExactly("Vgl", "PhanGH", "2021-10-20", "C-01/02", "WBRE000001234");
+      .containsExactly(
+        "Vgl",
+        "Vgl (fulltext not yet implemented)",
+        "PhanGH",
+        "2021-10-20",
+        "C-01/02",
+        "WBRE000001234"
+      );
   }
 
   @Test
@@ -600,6 +608,42 @@ class LdmlConverterServiceIntegrationTest {
       .containsExactly(
         tuple("Erste Jurpn", InstitutionType.LEGAL_ENTITY, List.of()),
         tuple("Erstes Organ", InstitutionType.INSTITUTION, List.of("AA"))
+      );
+  }
+
+  @Test
+  @Tag("RISDEV-7936")
+  void convertToBusinessModel_normgeberEqualNameForLegalEntityAndOrgan() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example-normgeber.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(
+        DocumentationUnitContent::normgeberList,
+        InstanceOfAssertFactories.list(Normgeber.class)
+      )
+      .hasSize(2)
+      .extracting(
+        normgeber -> normgeber.institution().name(),
+        normgeber -> normgeber.institution().type(),
+        normgeber -> normgeber.regions().stream().map(Region::code).toList()
+      )
+      .containsExactly(
+        tuple("JurpnOrgan", InstitutionType.LEGAL_ENTITY, List.of()),
+        tuple("JurpnOrgan", InstitutionType.INSTITUTION, List.of("AA"))
       );
   }
 }

@@ -1,3 +1,5 @@
+import type { Page } from '@/components/Pagination.vue'
+
 export type Norm = {
   abbreviation: string
   singleNormDescription: string
@@ -11,6 +13,11 @@ export type FieldOfLaw = {
   children: FieldOfLaw[]
   parent?: FieldOfLaw
   hasChildren: boolean
+}
+
+export type FieldOfLawResponse = {
+  fieldsOfLaw: FieldOfLaw[]
+  page: Page
 }
 
 export function buildRoot(): FieldOfLaw {

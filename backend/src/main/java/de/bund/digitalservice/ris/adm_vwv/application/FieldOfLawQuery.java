@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Field of law query.

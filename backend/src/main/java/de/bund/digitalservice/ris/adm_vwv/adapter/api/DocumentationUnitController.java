@@ -1,15 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
-import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
-import de.bund.digitalservice.ris.adm_vwv.application.Periodikum;
-import java.util.List;
-import java.util.UUID;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,52 +21,37 @@ public class DocumentationUnitController {
    * Returns information on all documentation units as required by the
    * documentation units overview
    *
+   * @param pageNumber Which page of pagination to return?
+   * @param pageSize How many elements per page in pagination?
+   * @param sortByProperty Sort by what property?
+   * @param sortDirection Sort ascending or descending?
+   * @param usePagination Search with pagination?
    * @return paginated list of document units
    */
   @GetMapping("api/documentation-units")
-  public ResponseEntity<DocumentationUnitsOverviewResponse> getAll() {
-    List<DocumentationUnitOverviewElement> hardCodedList = List.of(
-      new DocumentationUnitOverviewElement(
-        UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
-        "sample documentNumber 1",
-        "2011-11-11",
-        "Sample Document Title 1",
-        List.of(
-          new Fundstelle(
-            UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
-            "zitatstelle 1",
-            new Periodikum(
-              "periodikum id 1",
-              "periodikum title 1",
-              "periodikum subtitle 1",
-              "p.abbrev.1"
-            )
-          ),
-          new Fundstelle(
-            UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
-            "zitatstelle 2",
-            new Periodikum(
-              "periodikum id 2",
-              "periodikum title 2",
-              "periodikum subtitle 2",
-              "p.abbrev.2"
-            )
-          )
-        )
-      ),
-      new DocumentationUnitOverviewElement(
-        UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
-        "sample documentNumber 2",
-        "2011-11-11",
-        "Sample Document Title 2",
-        List.of()
+  public ResponseEntity<DocumentationUnitsOverviewResponse> find(
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "10") int pageSize,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "true") boolean usePagination
+  ) {
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      sortByProperty,
+      sortDirection,
+      usePagination
+    );
+    var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
+      queryOptions
+    );
+    return ResponseEntity.ok(
+      new DocumentationUnitsOverviewResponse(
+        paginatedDocumentationUnits.content(),
+        new PageResponse(paginatedDocumentationUnits)
       )
     );
-
-    DocumentationUnitsOverviewResponse hardCodedResponseWithFakeDocumentOverview =
-      new DocumentationUnitsOverviewResponse(hardCodedList, new PageImpl<>(hardCodedList));
-
-    return ResponseEntity.ok(hardCodedResponseWithFakeDocumentOverview);
   }
 
   /**

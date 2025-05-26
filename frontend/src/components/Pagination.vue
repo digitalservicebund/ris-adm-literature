@@ -7,7 +7,7 @@ import IconArrowForward from '~icons/ic/baseline-arrow-forward'
 
 const props = withDefaults(
   defineProps<{
-    page?: Page<any> // eslint-disable-line @typescript-eslint/no-explicit-any
+    page?: Page
     navigationPosition?: 'top' | 'bottom'
     isLoading?: boolean
   }>(),
@@ -30,8 +30,7 @@ async function previousPage(): Promise<void> {
 </script>
 
 <script lang="ts">
-export type Page<T> = {
-  content: T[]
+export type Page = {
   size: number
   number: number
   numberOfElements: number
@@ -45,7 +44,7 @@ export type Page<T> = {
 <template>
   <slot v-if="props.navigationPosition == 'bottom'"></slot>
   <FlexContainer
-    v-if="page?.content && !page?.empty && !isLoading"
+    v-if="!page?.empty && !isLoading"
     class="mb-24 mt-20 px-24"
     flex-direction="flex-row"
     justify-content="justify-between"

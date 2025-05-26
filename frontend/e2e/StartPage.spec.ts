@@ -55,4 +55,32 @@ test.describe('StartPage', () => {
       await expect(page).toHaveURL('/documentUnit/KSNR054920707/fundstellen')
     },
   )
+  test(
+    'Creates 2 documentation units and expects at least 2 on start page',
+    { tag: ['@RISDEV-7787'] },
+    async ({ page }) => {
+      // given
+
+      // when
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      const documentNumber1 = page
+        .url()
+        .split('/')
+        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      const documentNumber2 = page
+        .url()
+        .split('/')
+        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
+      await page.goto('/')
+
+      // then
+      await expect(page.getByText(documentNumber1)).toHaveCount(1)
+      await expect(page.getByText(documentNumber2)).toHaveCount(1)
+    },
+  )
 })

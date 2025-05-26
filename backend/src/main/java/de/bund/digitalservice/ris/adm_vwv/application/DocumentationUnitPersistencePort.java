@@ -12,4 +12,8 @@ public interface DocumentationUnitPersistencePort {
   DocumentationUnit create();
 
   DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json);
+
+  Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
+    @Nonnull QueryOptions queryOptions
+  );
 }

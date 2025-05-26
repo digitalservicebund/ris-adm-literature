@@ -55,4 +55,11 @@ public class DocumentationUnitService implements DocumentationUnitPort {
   public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {
     return Optional.ofNullable(documentationUnitPersistencePort.update(documentNumber, json));
   }
+
+  @Override
+  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
+    @Nonnull QueryOptions queryOptions
+  ) {
+    return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(queryOptions);
+  }
 }

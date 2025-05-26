@@ -9,7 +9,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Transformer for active citations (in German 'Aktivzitierung Rechtssprechung').
+ * Transformer for active citations (in German 'Aktivzitierung
+ * Rechtssprechung').
  */
 @RequiredArgsConstructor
 public class ActiveCitationsTransformer {
@@ -19,7 +20,8 @@ public class ActiveCitationsTransformer {
   /**
    * Transforms the {@code AkomaNtoso} object to a list of active citations.
    *
-   * @return Active citations list, or an empty list if the surrounding {@code <analysis>} element is {@code null}
+   * @return Active citations list, or an empty list if the surrounding
+   *         {@code <analysis>} element is {@code null}
    */
   public List<ActiveCitation> transform() {
     Analysis analysis = akomaNtoso.getDoc().getMeta().getAnalysis();
@@ -41,7 +43,11 @@ public class ActiveCitationsTransformer {
           cr.getDate(),
           cr.getReferenceNumber(),
           null,
-          new CitationType(null, cr.getAbbreviation(), null)
+          new CitationType(
+            null,
+            cr.getAbbreviation(),
+            cr.getAbbreviation() + " (fulltext not yet implemented)"
+          )
         )
       )
       .toList();
