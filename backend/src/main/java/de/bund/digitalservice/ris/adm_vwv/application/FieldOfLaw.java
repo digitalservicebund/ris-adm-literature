@@ -13,6 +13,7 @@ import lombok.Builder;
  *                     {@code false}
  * @param identifier   Identifier of field of law
  * @param text         Text
+ * @param notation     Either NEW or OLD depending on sachgdata
  * @param linkedFields List of field of law identifiers which are linked inside
  *                     {@code text}
  * @param norms        List of norms (can be empty)
