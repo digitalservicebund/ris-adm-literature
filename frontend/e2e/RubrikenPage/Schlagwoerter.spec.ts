@@ -119,8 +119,8 @@ test.describe('RubrikenPage - Schlagwörter - Bestandsdaten', () => {
       await page.goto('/documentUnit/KSNR999999999/rubriken')
 
       // then
-      await expect(page.getByText('Schlag')).toHaveCount(1)
-      await expect(page.getByText('Wort')).toHaveCount(1)
+      await expect(page.getByText('Schlag', { exact: true })).toHaveCount(1)
+      await expect(page.getByText('Wort', { exact: true })).toHaveCount(1)
       await expect(page.getByText('Mehrere Wörter in einem Schlagwort')).toHaveCount(1)
     },
   )
