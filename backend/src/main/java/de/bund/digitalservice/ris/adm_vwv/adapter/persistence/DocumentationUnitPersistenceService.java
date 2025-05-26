@@ -103,7 +103,10 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
           mapFundstellen(documentationUnitContent)
         );
       } catch (JsonProcessingException e) {
-        throw new IllegalStateException(e);
+        throw new IllegalStateException(
+          "Exception during transforming document number: " +
+          documentationUnitEntity.getDocumentNumber()
+        );
       }
     });
   }
