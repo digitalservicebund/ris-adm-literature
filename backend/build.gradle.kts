@@ -4,7 +4,7 @@ import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
   java
-  id("org.springframework.boot") version "3.4.5"
+  id("org.springframework.boot") version "3.5.0"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "6.2.0.5505"
@@ -31,9 +31,12 @@ configurations {
 
 repositories {
   mavenCentral()
+  // Needed for RC versions of Spring Cloud
+  maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-val kubernetesConfigVersion = "3.2.1"
+extra["springCloudVersion"] = "2025.0.0-RC1"
+
 val springdocVersion = "2.8.8"
 val sentryVersion = "8.12.0"
 val hypersistenceVersion = "3.9.10"
@@ -43,7 +46,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config:$kubernetesConfigVersion") {
+  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
     // CVE-2024-7254
     exclude("com.google.protobuf", "protobuf-java")
 
@@ -75,6 +78,12 @@ dependencies {
   testImplementation("org.testcontainers:postgresql")
   testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+  }
 }
 
 tasks.withType<Test> {
