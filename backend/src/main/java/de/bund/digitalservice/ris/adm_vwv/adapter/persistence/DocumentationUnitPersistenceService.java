@@ -105,7 +105,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       } catch (JsonProcessingException e) {
         throw new IllegalStateException(
           "Exception during transforming document number: " +
-          documentationUnitEntity.getDocumentNumber()
+          documentationUnitEntity.getDocumentNumber(),
+          e
         );
       }
     });
