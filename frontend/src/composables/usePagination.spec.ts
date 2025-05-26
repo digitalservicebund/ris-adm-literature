@@ -35,7 +35,7 @@ describe('usePagination', () => {
     expect(isLoading.value).toBe(false)
     expect(items.value).toEqual(mockData.data.documentationUnitsOverview)
     expect(totalRows.value).toBe(mockData.data.page.totalElements)
-    expect(firstRowIndex.value).toBe(mockData.data.page.number)
+    expect(firstRowIndex.value).toBe(mockData.data.page.number * 100)
     expect(mockFetchData).toHaveBeenCalledWith(0, 100)
   })
 
@@ -44,7 +44,8 @@ describe('usePagination', () => {
       return Promise.reject(new Error('Failed to fetch data'))
     })
 
-    const { isLoading, items, fetchPaginatedData } = usePagination(errorFetchData)
+    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData } =
+      usePagination(errorFetchData)
 
     expect(isLoading.value).toBe(true)
     expect(items.value).toEqual([])
@@ -53,5 +54,7 @@ describe('usePagination', () => {
 
     expect(isLoading.value).toBe(false)
     expect(items.value).toEqual([])
+    expect(totalRows.value).toEqual(0)
+    expect(firstRowIndex.value).toEqual(0)
   })
 })
