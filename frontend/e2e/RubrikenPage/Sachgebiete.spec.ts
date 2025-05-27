@@ -519,7 +519,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
 
 test.describe('RubrikenPage - Sachgebiete - Bestandsdaten', () => {
   test(
-    'Load test documentation unit and expect two Sachgebiete',
+    'Load test documentation unit and expect two old and two new Sachgebiete',
     { tag: ['@RISDEV-7639'] },
     async ({ page }) => {
       // given
@@ -528,8 +528,19 @@ test.describe('RubrikenPage - Sachgebiete - Bestandsdaten', () => {
       await page.goto('/documentUnit/KSNR999999999/rubriken')
 
       // then
-      await expect(page.getByText('PR-05-01')).toHaveCount(1)
-      await expect(page.getByText('XX-04-02')).toHaveCount(1)
+      // when notation is NEW then there are two buttons, one to remove the entry and one that links into the tree
+      await expect(page.getByRole('button', { name: 'PR-05-01' })).toHaveCount(2)
+      await expect(page.getByRole('button', { name: 'XX-04-02' })).toHaveCount(2)
+
+      // when notation is OLD then there is only one button to delete the entry and there is no link to the tree
+      await expect(page.getByRole('button', { name: '01-01-01-01' })).toHaveCount(1)
+      await expect(page.getByRole('button', { name: '02-02-02-02' })).toHaveCount(1)
+
+      // this old field of law has a match in the lookup table and therefore has a descriptive text
+      await expect(page.getByText('01-01-01-01Lorem ipsum dolor')).toHaveCount(1)
+
+      // this old field of law does not have a match and therefore shows only its identifier
+      await expect(page.getByText('02-02-02-02')).toHaveCount(2)
     },
   )
 })
