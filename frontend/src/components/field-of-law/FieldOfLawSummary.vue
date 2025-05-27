@@ -36,9 +36,7 @@ function isNotationNew(fieldOfLaw: FieldOfLaw) {
       >
         <div class="ris-label1-regular mr-8 flex-grow">
           <button
-            v-if="
-              isNotationNew(fieldOfLaw)
-            "
+            v-if="isNotationNew(fieldOfLaw)"
             :aria-label="
               fieldOfLaw.identifier + ' ' + fieldOfLaw.text + ' im Sachgebietsbaum anzeigen'
             "
