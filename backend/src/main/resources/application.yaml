@@ -20,7 +20,7 @@ springdoc:
 
 ---
 
-# For local setup, include a database initialization with after docker initialization and Flyway.
+# For local setup, include a database initialization which is executed after docker initialization and Flyway.
 spring:
   config:
     activate:
