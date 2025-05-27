@@ -7,10 +7,22 @@ function renderComponent(fieldsOfLaw: FieldOfLaw[]): RenderResult {
   return render(FieldOfLawSummary, { props: { fieldsOfLaw } })
 }
 
-function generateFieldOfLaw(): FieldOfLaw {
+function generateFieldOfLawOld(): FieldOfLaw {
+  return {
+    identifier: '01-',
+    text: 'Ganz altes Recht 1-2-3',
+    notation: 'OLD',
+    norms: [],
+    children: [],
+    hasChildren: false,
+  }
+}
+
+function generateFieldOfLawNew(): FieldOfLaw {
   return {
     identifier: 'ST-01-02-03',
     text: 'Steuerrecht 1-2-3',
+    notation: 'NEW',
     norms: [],
     children: [],
     hasChildren: false,
@@ -18,8 +30,21 @@ function generateFieldOfLaw(): FieldOfLaw {
 }
 
 describe('FieldOfLawSummary', () => {
-  it('render one entry', () => {
-    renderComponent([generateFieldOfLaw()])
+  it('render one old entry', () => {
+    renderComponent([generateFieldOfLawOld()])
+
+    expect(screen.getByText('01-')).toBeInTheDocument()
+    expect(screen.getByText('Ganz altes Recht 1-2-3')).toBeInTheDocument()
+    expect(
+      screen.queryByLabelText('01- Ganz altes Recht 1-2-3 im Sachgebietsbaum anzeigen'),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByLabelText('01- Ganz altes Recht 1-2-3 aus Liste entfernen'),
+    ).toBeInTheDocument()
+  })
+
+  it('render one new entry', () => {
+    renderComponent([generateFieldOfLawNew()])
 
     expect(screen.getByText('ST-01-02-03')).toBeInTheDocument()
     expect(screen.getByText('Steuerrecht 1-2-3')).toBeInTheDocument()
@@ -32,7 +57,7 @@ describe('FieldOfLawSummary', () => {
   })
 
   it("click on 'Löschen' emit 'node:remove'", async () => {
-    const { emitted } = renderComponent([generateFieldOfLaw()])
+    const { emitted } = renderComponent([generateFieldOfLawNew()])
 
     await fireEvent.click(
       screen.getByLabelText('ST-01-02-03 Steuerrecht 1-2-3 aus Liste entfernen'),
@@ -42,7 +67,7 @@ describe('FieldOfLawSummary', () => {
   })
 
   it("click on 'Auswahl im Sachgebietsbaum anzeigen' emit 'node:clicked", async () => {
-    const { emitted } = renderComponent([generateFieldOfLaw()])
+    const { emitted } = renderComponent([generateFieldOfLawNew()])
 
     await fireEvent.click(
       screen.getByLabelText('ST-01-02-03 Steuerrecht 1-2-3 im Sachgebietsbaum anzeigen'),

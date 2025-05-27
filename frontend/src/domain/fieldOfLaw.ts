@@ -10,6 +10,7 @@ export type FieldOfLaw = {
   text: string
   linkedFields?: string[]
   norms: Norm[]
+  notation: string
   children: FieldOfLaw[]
   parent?: FieldOfLaw
   hasChildren: boolean

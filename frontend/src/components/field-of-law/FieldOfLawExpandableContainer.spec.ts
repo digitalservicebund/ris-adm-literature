@@ -18,6 +18,7 @@ function generateFieldOfLaw(): FieldOfLaw {
   return {
     identifier: 'AB-01',
     text: 'Text for AB links to CD-01',
+    notation: 'NEW',
     linkedFields: ['CD-01'],
     norms: [],
     children: [],
