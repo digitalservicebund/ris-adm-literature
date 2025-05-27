@@ -22,7 +22,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
 }
 
 function isNotationNew(fieldOfLaw: FieldOfLaw) {
-  return fieldOfLaw.notation && (fieldOfLaw.notation == 'neu' || fieldOfLaw.notation == 'NEW')
+  return fieldOfLaw.notation && ['neu', 'NEW'].includes(fieldOfLaw.notation)
 }
 </script>
 
