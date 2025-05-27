@@ -89,6 +89,56 @@ class NormgeberTransformerTest {
 
   @Test
   @DisplayName(
+    "Transforms one normgeber, one institution with unknown region results into empty region array"
+  )
+  void transform_unknownRegion() {
+    // given
+    AkomaNtoso akomaNtoso = new AkomaNtoso();
+    Doc doc = new Doc();
+    akomaNtoso.setDoc(doc);
+    Meta meta = new Meta();
+    doc.setMeta(meta);
+    Proprietary proprietary = new Proprietary();
+    meta.setProprietary(proprietary);
+    RisMetadata risMetadata = new RisMetadata();
+    proprietary.setMetadata(risMetadata);
+    risMetadata.setNormgeber(List.of(createRisNormgeber("EU", "Europäische Kommission")));
+    given(
+      lookupTablesPersistencePort.findInstitutionByNameAndType(
+        "Europäische Kommission",
+        InstitutionType.INSTITUTION
+      )
+    ).willReturn(createInstitution("Europäische Kommission", InstitutionType.INSTITUTION));
+    given(lookupTablesPersistencePort.findRegionByCode("EU")).willReturn(Optional.empty());
+
+    // <akn:akomaNtoso>
+    //   <akn:doc name="offene-struktur">
+    //     <akn:meta>
+    //       <akn:proprietary>
+    //         <ris:metadata>
+    //           <ris:normgeber staat="EU" organ="Europäische Kommission" />
+    //         </ris:metadata>
+    //       </akn:proprietary>
+    //     </akn:meta>
+    //   </akn:doc>
+    // </akn:akomaNtoso>
+
+    // when
+    List<Normgeber> normgeberList = normgeberTransformer.transform(akomaNtoso);
+
+    // then
+    assertThat(normgeberList)
+      .singleElement()
+      .extracting(
+        normgeber -> normgeber.institution().name(),
+        normgeber -> normgeber.institution().type(),
+        normgeber -> normgeber.regions().stream().map(Region::code).toList()
+      )
+      .containsExactly("Europäische Kommission", InstitutionType.INSTITUTION, List.of());
+  }
+
+  @Test
+  @DisplayName(
     "Transform of normgeber institution which does not exists results into an runtime exception"
   )
   void transform_institutionNotFound() {

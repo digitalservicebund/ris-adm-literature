@@ -54,9 +54,7 @@ public class NormgeberTransformer {
           .orElseThrow(() -> new IllegalArgumentException("Institution not found: " + summary));
         List<Region> regions = new ArrayList<>();
         if (risNormgeber.getOrgan() != null) {
-          regions.add(
-            lookupTablesPersistencePort.findRegionByCode(risNormgeber.getStaat()).orElse(null)
-          );
+          lookupTablesPersistencePort.findRegionByCode(risNormgeber.getStaat()).map(regions::add);
         }
         return new Normgeber(UUID.randomUUID(), institution, regions);
       })
