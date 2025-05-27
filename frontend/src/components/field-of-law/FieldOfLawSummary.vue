@@ -32,6 +32,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
       >
         <div class="ris-label1-regular mr-8 flex-grow">
           <button
+            v-if="fieldOfLaw.notation && fieldOfLaw.notation == 'NEW'"
             :aria-label="
               fieldOfLaw.identifier + ' ' + fieldOfLaw.text + ' im Sachgebietsbaum anzeigen'
             "
@@ -40,7 +41,9 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
           >
             {{ fieldOfLaw.identifier }}
           </button>
-
+          <span v-else>
+            {{ fieldOfLaw.identifier }}
+          </span>
           <TokenizeText
             :keywords="fieldOfLaw.linkedFields ?? []"
             :text="fieldOfLaw.text"
