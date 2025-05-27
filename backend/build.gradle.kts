@@ -38,7 +38,7 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.8"
-val sentryVersion = "8.12.0"
+val sentryVersion = "8.13.1"
 val hypersistenceVersion = "3.9.10"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
