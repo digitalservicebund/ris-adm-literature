@@ -43,7 +43,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
           >
             {{ fieldOfLaw.identifier }}
           </button>
-          <span class="mr-8" v-else>
+          <span class="mr-8 font-bold" v-else>
             {{ fieldOfLaw.identifier }}
           </span>
           <TokenizeText
