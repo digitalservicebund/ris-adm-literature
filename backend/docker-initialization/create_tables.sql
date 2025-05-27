@@ -173,7 +173,11 @@ VALUES('14728419-119a-40f7-8f9a-47ec342c6286', '5eaf2263-2717-4375-8ce2-0c45fc10
 INSERT INTO lookup_tables.field_of_law
 (id, identifier, "text", juris_id, "notation")
 VALUES
-('dde83dfa-29c5-4ed8-b3b3-0207489aff42', '01-01-01-01', 'Lorem ipsum dolor sit amet ipsum proident dolore consectetur aute eiusmod dolor enim quis in, cillum pariatur consequat ex occaecat.', 7000, 'OLD');
+('3699e042-8982-4350-bfc6-08f45590900c', '09-09-09', 'Lorem ipsum dolor sit amet', 6000, 'OLD'),
+('dde83dfa-29c5-4ed8-b3b3-0207489aff42', '01-01-01-01', 'Lorem ipsum dolor sit amet ipsum proident dolore consectetur aute eiusmod dolor enim quis in. Siehe 09-09-09', 7000, 'OLD');
+INSERT INTO lookup_tables.field_of_law_field_of_law_text_reference
+(field_of_law_id, field_of_law_text_reference_id)
+VALUES('dde83dfa-29c5-4ed8-b3b3-0207489aff42', '3699e042-8982-4350-bfc6-08f45590900c');
 
 CREATE TABLE
   IF NOT EXISTS

@@ -20,6 +20,10 @@ function removeFieldOfLaw(fieldOfLaw: FieldOfLaw) {
 function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
   emit('node:clicked', fieldOfLaw)
 }
+
+function isNotationNew(fieldOfLaw: FieldOfLaw) {
+  return fieldOfLaw.notation && (fieldOfLaw.notation == 'neu' || fieldOfLaw.notation == 'NEW')
+}
 </script>
 
 <template>
@@ -33,7 +37,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
         <div class="ris-label1-regular mr-8 flex-grow">
           <button
             v-if="
-              fieldOfLaw.notation && (fieldOfLaw.notation == 'neu' || fieldOfLaw.notation == 'NEW')
+              isNotationNew(fieldOfLaw)
             "
             :aria-label="
               fieldOfLaw.identifier + ' ' + fieldOfLaw.text + ' im Sachgebietsbaum anzeigen'
@@ -47,7 +51,7 @@ function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
             {{ fieldOfLaw.identifier }}
           </span>
           <TokenizeText
-            :keywords="fieldOfLaw.linkedFields ?? []"
+            :keywords="isNotationNew(fieldOfLaw) ? (fieldOfLaw.linkedFields ?? []) : []"
             :text="fieldOfLaw.text"
             @linked-field:clicked="fieldOfLawClicked"
           />
