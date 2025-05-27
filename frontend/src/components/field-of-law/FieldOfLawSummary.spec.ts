@@ -11,7 +11,7 @@ function generateFieldOfLawOld(): FieldOfLaw {
   return {
     identifier: '01-',
     text: 'Ganz altes Recht 1-2-3',
-    notation: 'OLD',
+    notation: 'alt',
     norms: [],
     children: [],
     hasChildren: false,
@@ -22,7 +22,7 @@ function generateFieldOfLawNew(): FieldOfLaw {
   return {
     identifier: 'ST-01-02-03',
     text: 'Steuerrecht 1-2-3',
-    notation: 'NEW',
+    notation: 'neu',
     norms: [],
     children: [],
     hasChildren: false,

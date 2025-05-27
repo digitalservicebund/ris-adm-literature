@@ -256,7 +256,7 @@ class LookupTablesPersistenceServiceTest {
     fieldOfLawEntity.setId(UUID.randomUUID());
     fieldOfLawEntity.setIdentifier(identifier);
     fieldOfLawEntity.setText(text);
-    fieldOfLawEntity.setNotation("NEW");
+    fieldOfLawEntity.setNotation("neu");
     FieldOfLawNormEntity normEntity = new FieldOfLawNormEntity();
     normEntity.setId(UUID.randomUUID());
     normEntity.setAbbreviation("PStG");
