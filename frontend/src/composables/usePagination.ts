@@ -1,9 +1,8 @@
 import { computed, ref } from 'vue'
 
-const ITEMS_PER_PAGE = 100
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function usePagination<T>(fetchData: (page: number, itemsPerPage: number) => Promise<any>) {
+  const ITEMS_PER_PAGE = 100
   const isLoading = ref(true)
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)
