@@ -12,7 +12,6 @@ export interface DocumentUnitListProps {
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
-  loading: boolean
 }
 defineProps<DocumentUnitListProps>()
 
@@ -29,7 +28,6 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
     :first="firstRowIndex"
     :rows="rowsPerPage"
     :total-records="totalRows"
-    :loading="loading"
     :pt="{
       thead: { style: 'box-shadow: inset 0 -2px #DCE8EF;', class: 'text-gray-900' },
       bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),

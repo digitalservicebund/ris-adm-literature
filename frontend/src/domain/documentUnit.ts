@@ -8,6 +8,10 @@ import type { DocumentType } from './documentType'
 import type { Fundstelle } from './fundstelle'
 import type { Page } from './pagination'
 
+export interface DocumentUnitSearchParams {
+  documentNumber: string
+}
+
 export interface PaginatedDocumentUnitListResponse {
   documentationUnitsOverview: DocumentUnitListItem[]
   page: Page
