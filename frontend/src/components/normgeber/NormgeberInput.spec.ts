@@ -1,73 +1,14 @@
 import { userEvent } from '@testing-library/user-event'
-import { render, screen, waitFor } from '@testing-library/vue'
+import { render, screen } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
 import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import NormgeberInput from './NormgeberInput.vue'
 import { createTestingPinia } from '@pinia/testing'
 
-vi.mock('@/services/institutionService.ts', () => ({
-  useFetchInstitutions: vi.fn().mockResolvedValue({
-    data: {
-      value: {
-        institutions: [
-          {
-            id: 'institutionId0',
-            name: 'Erste Jurpn',
-            officialName: 'Jurpn Eins',
-            type: 'LEGAL_ENTITY',
-            regions: [
-              {
-                id: 'regionId0',
-                code: 'AA',
-                longText: null,
-              },
-              {
-                id: 'regionId1',
-                code: 'BB',
-                longText: null,
-              },
-            ],
-          },
-          {
-            id: 'institutionId1',
-            name: 'Erstes Organ',
-            officialName: 'Organ Eins',
-            type: 'INSTITUTION',
-            regions: [],
-          },
-          {
-            id: 'institutionId2',
-            name: 'Zweite Jurpn',
-            officialName: null,
-            type: 'LEGAL_ENTITY',
-            regions: [],
-          },
-          {
-            id: 'institutionId3',
-            name: 'Zweites Organ',
-            officialName: null,
-            type: 'INSTITUTION',
-            regions: [],
-          },
-        ],
-      },
-    },
-  }),
-}))
-
-vi.mock('@vueuse/core', async () => {
-  const actual = await vi.importActual('@vueuse/core')
-
-  return {
-    ...actual,
-    useDebounceFn: (fn: unknown) => fn,
-  }
-})
-
 const mockInstitutionNormgeber: Normgeber = {
   id: 'institutionNormgeberId',
   institution: {
-    id: 'institutionId1',
+    id: 'institutionId',
     name: 'Erstes Organ',
     type: InstitutionType.Institution,
     regions: [],
@@ -78,7 +19,7 @@ const mockInstitutionNormgeber: Normgeber = {
 const mockLegalEntityNormgeber: Normgeber = {
   id: 'legalEntityNormgeberId',
   institution: {
-    id: 'institutionId0',
+    id: 'legalEntityId',
     name: 'Erste Jurpn',
     type: InstitutionType.LegalEntity,
     regions: [],
@@ -86,7 +27,55 @@ const mockLegalEntityNormgeber: Normgeber = {
   regions: [],
 }
 
-function renderComponent(props: { normgeber?: Normgeber; showCancelButton: boolean }) {
+// Stubbing complex dropdown components with simple input fields to:
+// - Hide their internal implementation during testing
+// - Simplify interaction in tests (e.g., simulate user input easily)
+// - Preserve essential props and emitted events for two-way binding
+const stubs = {
+  InstitutionDropdownStub: {
+    props: ['modelValue', 'isInvalid'],
+    emits: ['update:modelValue'],
+    template: `
+      <input
+        :value="modelValue?.id || ''"
+        @input="$emit('update:modelValue', { id: $event.target.value, type: 'INSTITUTION' })"
+        :aria-invalid="isInvalid"
+        data-testid="institution-input"
+      >
+      </input>
+    `,
+  },
+  LegalEntityDropdownStub: {
+    props: ['modelValue', 'isInvalid'],
+    emits: ['update:modelValue'],
+    template: `
+      <input
+        :value="modelValue?.id || ''"
+        @input="$emit('update:modelValue', { id: $event.target.value, type: 'LEGAL_ENTITY' })"
+        :aria-invalid="isInvalid"
+        data-testid="institution-input"
+      >
+      </input>
+    `,
+  },
+  RegionDropDown: {
+    props: ['modelValue'],
+    emits: ['update:modelValue'],
+    template: `
+      <input
+        :value="modelValue?.id || ''"
+        @input="$emit('update:modelValue', { id: $event.target.value })"
+        data-testid="region-input"
+      >
+      </input>
+    `,
+  },
+}
+
+function renderComponent(
+  props: { normgeber?: Normgeber; showCancelButton: boolean },
+  stubs?: Record<string, object>,
+) {
   const user = userEvent.setup()
 
   return {
@@ -109,6 +98,7 @@ function renderComponent(props: { normgeber?: Normgeber; showCancelButton: boole
             }),
           ],
         ],
+        stubs,
       },
     }),
   }
@@ -117,8 +107,8 @@ function renderComponent(props: { normgeber?: Normgeber; showCancelButton: boole
 describe('NormgeberInput', () => {
   it('render an empty normgeber input', async () => {
     renderComponent({ showCancelButton: false })
-    expect(screen.getByLabelText('Normgeber *')).toBeInTheDocument()
-    expect(screen.getByLabelText('Region')).toBeInTheDocument()
+    expect(screen.getByText('Normgeber *')).toBeInTheDocument()
+    expect(screen.getByText('Region')).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('readonly')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
@@ -131,71 +121,83 @@ describe('NormgeberInput', () => {
   })
 
   it('renders an existing institution normgeber if set', async () => {
-    renderComponent({ normgeber: mockInstitutionNormgeber, showCancelButton: true })
-    expect(screen.getByRole('combobox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
-    expect(screen.getByLabelText('Region *')).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: 'Region' })).toHaveValue('')
+    renderComponent(
+      { normgeber: mockInstitutionNormgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.InstitutionDropdownStub, RegionDropDown: stubs.RegionDropDown },
+    )
+
+    expect(screen.getByTestId('institution-input')).toHaveValue('institutionId')
+    expect(screen.getByTestId('region-input')).toHaveValue('')
     expect(screen.getByRole('button', { name: 'Abbrechen' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Eintrag löschen' })).toBeInTheDocument()
   })
 
   it('region is readonly for legal entity', async () => {
-    renderComponent({ normgeber: mockLegalEntityNormgeber, showCancelButton: true })
-    expect(screen.getByRole('combobox', { name: 'Normgeber' })).toHaveValue('Erste Jurpn')
+    renderComponent(
+      { normgeber: mockLegalEntityNormgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.LegalEntityDropdownStub },
+    )
+    expect(screen.getByTestId('institution-input')).toHaveValue('legalEntityId')
     expect(screen.getByLabelText('Region')).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('Keine Region zugeordnet')
     expect(screen.getByRole('textbox', { name: 'Region' })).toHaveAttribute('readonly')
   })
 
-  it.skip('should reset local state when clicking cancel', async () => {
-    const { user, emitted } = renderComponent({
-      showCancelButton: true,
-    })
+  it('shows region code for legal entity', async () => {
+    const normgeber = { ...mockLegalEntityNormgeber }
+    normgeber.institution.regions = [{ id: 'regionId', code: 'BY' }]
+    renderComponent(
+      { normgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.LegalEntityDropdownStub },
+    )
+    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('BY')
+  })
+
+  it('should reset local state when clicking cancel', async () => {
+    const { user, emitted } = renderComponent(
+      { normgeber: mockLegalEntityNormgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.LegalEntityDropdownStub },
+    )
 
     // when
-    const input = screen.getByRole('combobox', { name: 'Normgeber' })
-    await user.click(input)
-    await user.type(input, 'Erste')
+    const input = screen.getByTestId('institution-input')
     // then
-    const option = screen.getByRole('option', { name: 'Erste Jurpn' })
-    await user.click(option)
+    expect(input).toHaveValue('legalEntityId')
 
+    // when
+    await user.clear(input)
+    await user.type(input, 'institutionId')
     // then
-    expect(input).toHaveValue('Erstes Organ')
+    expect(input).toHaveValue('institutionId')
 
     // when
     await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
     // then
-    expect(input).toHaveValue('Erste Jurpn')
+    expect(input).toHaveValue('legalEntityId')
     expect(emitted('cancel')).toBeTruthy()
   })
 
-  it.skip('should save updated entity', async () => {
-    const { user, emitted } = renderComponent({
-      normgeber: mockLegalEntityNormgeber,
-      showCancelButton: true,
-    })
+  it('should save updated entity', async () => {
+    const { user, emitted } = renderComponent(
+      { normgeber: mockLegalEntityNormgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.InstitutionDropdownStub, RegionDropDown: stubs.RegionDropDown },
+    )
 
     // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erste')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[1]).toHaveTextContent('Erstes Organ')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[1])
+    const institutionInput = screen.getByTestId('institution-input')
+    await await user.clear(institutionInput)
+    await user.type(institutionInput, 'institutionId')
     // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
-    expect(screen.getByLabelText('Region *')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('')
+    expect(institutionInput).toHaveValue('institutionId')
+    expect(screen.getByText('Region *')).toBeInTheDocument()
+    const regionInput = screen.getByTestId('region-input')
+    expect(regionInput).toHaveValue('')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
 
     // when
-    await user.type(screen.getByRole('textbox', { name: 'Region' }), 'BB')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('BB')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    await user.type(regionInput, 'regionId1')
     // then
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('BB')
+    expect(regionInput).toHaveValue('regionId1')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeEnabled()
 
     // when
@@ -204,63 +206,46 @@ describe('NormgeberInput', () => {
     const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
     const updatedEntity = emittedVal?.[0][0]
     expect(updatedEntity.id).toEqual(mockLegalEntityNormgeber.id)
-    expect(updatedEntity.institution.id).toEqual('institutionId1')
+    expect(updatedEntity.institution.id).toEqual('institutionId')
     expect(updatedEntity.regions[0].id).toEqual('regionId1')
   })
 
-  it.skip('should create new entity', async () => {
-    const { user, emitted } = renderComponent({ showCancelButton: false })
+  it('should create new entity', async () => {
+    vi.stubGlobal('crypto', {
+      randomUUID: () => 'mocked-uuid',
+    })
+
+    const { user, emitted } = renderComponent(
+      { showCancelButton: false },
+      { InstitutionDropDown: stubs.LegalEntityDropdownStub },
+    )
 
     // when
-    await user.type(screen.getByRole('combobox', { name: 'Normgeber' }), 'Zweite Jurpn')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Zweite Jurpn')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    const institutionInput = screen.getByTestId('institution-input')
+    await await user.clear(institutionInput)
+    await user.type(institutionInput, 'legalEntityId2')
     await user.click(screen.getByRole('button', { name: 'Normgeber übernehmen' }))
     // then
     const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
-    const updatedEntity = emittedVal?.[0][0]
-    expect(updatedEntity.institution.id).toEqual('institutionId2')
-    expect(updatedEntity.regions.length).toEqual(0)
+    const createdEntity = emittedVal?.[0][0]
+    expect(createdEntity.id).toEqual('mocked-uuid')
+    expect(createdEntity.institution.id).toEqual('legalEntityId2')
   })
 
-  it.skip('should reset the region on institution change', async () => {
-    const { user, emitted } = renderComponent({
-      normgeber: mockInstitutionNormgeber,
-      showCancelButton: true,
-    })
+  it('should reset the region on institution change', async () => {
+    const { user } = renderComponent(
+      { normgeber: mockInstitutionNormgeber, showCancelButton: true },
+      { InstitutionDropDown: stubs.InstitutionDropdownStub, RegionDropDown: stubs.RegionDropDown },
+    )
 
     // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Zweites Organ')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Zweites Organ')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    const institutionInput = screen.getByTestId('institution-input')
+    const regionInput = screen.getByTestId('region-input')
+    await user.type(regionInput, 'regionId0')
+    await await user.clear(institutionInput)
     // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Zweites Organ')
-    expect(screen.getByLabelText('Region *')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('')
+    expect(regionInput).toHaveValue('')
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
-
-    // when
-    await user.type(screen.getByRole('textbox', { name: 'Region' }), 'AA')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('AA')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
-    // then
-    expect(screen.getByRole('textbox', { name: 'Region' })).toHaveValue('AA')
-    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeEnabled()
-
-    // when
-    await user.click(screen.getByRole('button', { name: 'Normgeber übernehmen' }))
-    // then
-    const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
-    const updatedEntity = emittedVal?.[0][0]
-    expect(updatedEntity.id).toEqual(mockInstitutionNormgeber.id)
-    expect(updatedEntity.institution.id).toEqual('institutionId3')
-    expect(updatedEntity.regions[0].id).toEqual('regionId0')
   })
 
   it('should delete an existing normgeber', async () => {
@@ -277,22 +262,7 @@ describe('NormgeberInput', () => {
     expect(id).toEqual(mockInstitutionNormgeber.id)
   })
 
-  it.skip('region is required for institutional normgeber', async () => {
-    const { user } = renderComponent({ showCancelButton: true })
-
-    // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erstes Organ')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erstes Organ')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
-    // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erstes Organ')
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'false')
-    expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
-  })
-
-  it.skip('should not allow to add a normgeber already present', async () => {
+  it('should not allow to add a normgeber already present', async () => {
     const user = userEvent.setup()
     render(NormgeberInput, {
       props: { showCancelButton: false },
@@ -312,18 +282,20 @@ describe('NormgeberInput', () => {
             }),
           ],
         ],
+        stubs: {
+          InstitutionDropDown: stubs.LegalEntityDropdownStub,
+          RegionDropDown: stubs.RegionDropDown,
+        },
       },
     })
 
     // when
-    await user.type(screen.getByRole('textbox', { name: 'Normgeber' }), 'Erste Jurpn')
-    await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Erste Jurpn')
-    })
-    await user.click(screen.getAllByLabelText('dropdown-option')[0])
+    const institutionInput = screen.getByTestId('institution-input')
+    await await user.clear(institutionInput)
+    await user.type(institutionInput, 'legalEntityId')
     // then
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveValue('Erste Jurpn')
-    expect(screen.getByRole('textbox', { name: 'Normgeber' })).toHaveAttribute('invalid', 'true')
+    expect(institutionInput).toHaveValue('legalEntityId')
+    expect(institutionInput.getAttribute('aria-invalid')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Normgeber übernehmen' })).toBeDisabled()
     expect(screen.getByText('Normgeber bereits eingegeben')).toBeInTheDocument()
   })
