@@ -6,9 +6,9 @@ import documentUnitService from '@/services/documentUnitService'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import { usePagination } from '@/composables/usePagination'
 import type { PageState } from 'primevue'
+import SearchPanel from './SearchPanel.vue'
 
 const {
-  isLoading,
   firstRowIndex,
   totalRows,
   items: docUnits,
@@ -23,15 +23,19 @@ onMounted(async () => {
 function handlePageUpdate(pageState: PageState) {
   fetchPaginatedData(pageState.page)
 }
+
+function handleSearch() {
+  // fetch filtered results from BE
+}
 </script>
 
 <template>
+  <SearchPanel @search="handleSearch" />
   <DocumentUnitList
     :doc-units="docUnits"
     :first-row-index="firstRowIndex"
     :rows-per-page="ITEMS_PER_PAGE"
     :total-rows="totalRows"
-    :loading="isLoading"
   />
   <RisPaginator
     v-if="docUnits.length > 0"
