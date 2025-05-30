@@ -10,6 +10,7 @@ import type { Page } from './pagination'
 
 export interface DocumentUnitSearchParams {
   documentNumber: string
+  langueberschrift: string
 }
 
 export interface PaginatedDocumentUnitListResponse {

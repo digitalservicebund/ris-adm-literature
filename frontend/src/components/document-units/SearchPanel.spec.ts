@@ -17,6 +17,7 @@ describe('SearchPanel', () => {
     renderComponent()
 
     expect(screen.getByLabelText('Dokumentnummer')).toBeInTheDocument()
+    expect(screen.getByLabelText('Amtl. Langüberschrift')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Ergebnisse zeigen' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
   })

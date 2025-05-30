@@ -9,6 +9,7 @@ const emit = defineEmits<{
 
 const searchParams = ref<DocumentUnitSearchParams>({
   documentNumber: '',
+  langueberschrift: '',
 })
 
 const isSearchEmpty = computed(() =>
@@ -22,6 +23,7 @@ function onClickSearch() {
 function onClickReset() {
   searchParams.value = {
     documentNumber: '',
+    langueberschrift: '',
   }
 }
 </script>
@@ -32,6 +34,8 @@ function onClickReset() {
     <div class="mb-32 grid grid-cols-[1fr_3fr_1fr_3fr] items-center gap-x-44 gap-y-24">
       <label class="ris-label2-regular" for="documentNumber">Dokumentnummer</label>
       <InputText id="documentNumber" v-model="searchParams.documentNumber" />
+      <label class="ris-label2-regular" for="langueberschrift">Amtl. Langüberschrift</label>
+      <InputText id="langueberschrift" v-model="searchParams.langueberschrift" />
     </div>
     <div class="flex gap-24">
       <Button label="Ergebnisse zeigen" @click="onClickSearch" />
