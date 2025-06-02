@@ -134,6 +134,7 @@ class DocumentationUnitServiceTest {
       null,
       List.of(),
       null,
+      List.of(),
       null,
       null,
       null,

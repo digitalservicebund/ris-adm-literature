@@ -8,26 +8,28 @@ import java.util.UUID;
 /**
  * Documentation unit content record.
  *
- * @param id The uuid
- * @param documentNumber The document number
- * @param references List of references ("Fundstellen")
- * @param fieldsOfLaw List of fields of law
- * @param langueberschrift Long title
- * @param keywords List of keywords
- * @param zitierdatum Date of quote
- * @param inkrafttretedatum Date of entry into effect
+ * @param id                    The uuid
+ * @param documentNumber        The document number
+ * @param references            List of references ("Fundstellen")
+ * @param fieldsOfLaw           List of fields of law
+ * @param langueberschrift      Long title
+ * @param keywords              List of keywords
+ * @param zitierdatum           Date of quote
+ * @param zitierdaten           List of Date of quotes
+ * @param inkrafttretedatum     Date of entry into effect
  * @param ausserkrafttretedatum Date of expiration
- * @param gliederung Table of contents
- * @param kurzreferat Preface
- * @param aktenzeichen List of reference numbers
- * @param noAktenzeichen {@code true} if no reference number is set, {@code false} otherwise
- * @param dokumenttyp The document type
- * @param dokumenttypZusatz Document type description
- * @param activeCitations List of active citations
- * @param activeReferences List of active references
- * @param normReferences List of norm references
- * @param note The note
- * @param normgeberList List of normgeber
+ * @param gliederung            Table of contents
+ * @param kurzreferat           Preface
+ * @param aktenzeichen          List of reference numbers
+ * @param noAktenzeichen        {@code true} if no reference number is set,
+ *                              {@code false} otherwise
+ * @param dokumenttyp           The document type
+ * @param dokumenttypZusatz     Document type description
+ * @param activeCitations       List of active citations
+ * @param activeReferences      List of active references
+ * @param normReferences        List of norm references
+ * @param note                  The note
+ * @param normgeberList         List of normgeber
  */
 public record DocumentationUnitContent(
   UUID id,
@@ -37,6 +39,7 @@ public record DocumentationUnitContent(
   String langueberschrift,
   List<String> keywords,
   String zitierdatum,
+  List<String> zitierdaten,
   String inkrafttretedatum,
   String ausserkrafttretedatum,
   String gliederung,
