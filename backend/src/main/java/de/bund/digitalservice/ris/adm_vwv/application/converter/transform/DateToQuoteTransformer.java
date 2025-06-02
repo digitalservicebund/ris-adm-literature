@@ -43,7 +43,7 @@ public class DateToQuoteTransformer {
   public List<String> transformList() {
     Proprietary proprietary = akomaNtoso.getDoc().getMeta().getProprietary();
     if (proprietary == null) {
-      return null;
+      return List.of();
     }
     return Optional.ofNullable(proprietary.getMetadata().getDateToQuoteList()).orElse(null);
   }
