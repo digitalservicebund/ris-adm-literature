@@ -53,7 +53,7 @@ dependencies {
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
   }
-
+// libcrypto is not part of our spring setup, must be in the file system
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.springframework.retry:spring-retry")
