@@ -52,14 +52,10 @@ dependencies {
 
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
-
-    // CVE-2023-3635
-    exclude("com.squareup.okio", "okio-jvm")
   }
 
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.squareup.okio:okio-jvm:3.12.0")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
