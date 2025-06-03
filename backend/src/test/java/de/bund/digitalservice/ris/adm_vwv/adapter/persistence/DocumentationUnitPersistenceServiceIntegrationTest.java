@@ -3,8 +3,8 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.test.*;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
 import java.util.List;
@@ -13,22 +13,24 @@ import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(
-  {
-    DocumentationUnitPersistenceService.class,
-    DocumentationUnitCreationService.class,
-    ObjectMapper.class,
-  }
-)
+// @DataJpaTest
+// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+// @Import({
+//     DocumentationUnitPersistenceService.class,
+//     DocumentationUnitCreationService.class,
+//     ObjectMapper.class,
+//     LdmlConverterService.class
+// })
+@SpringBootTest
+@Transactional
+@AutoConfigureTestEntityManager
 @ActiveProfiles("test")
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
@@ -237,5 +239,29 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
     // then
     assertThat(exception).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void indexByDocumentationUnit() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR9999999999");
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      documentationUnitEntity.getDocumentNumber(),
+      documentationUnitEntity.getId(),
+      null,
+      xml
+    );
+
+    // when
+    documentationUnitPersistenceService.index(documentationUnit);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery("from DocumentationUnitIndexEntity", DocumentationUnitIndexEntity.class);
+    assertThat(query.getResultList()).isNotEmpty();
   }
 }

@@ -3,10 +3,12 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +29,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
+  private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
   private final ObjectMapper objectMapper;
+  private final LdmlConverterService ldmlConverterService;
 
   @Override
   @Transactional(readOnly = true)
@@ -46,13 +50,18 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   @Override
   public DocumentationUnit create() {
-    // Issue for the very first documentation unit of a new year: If for this year there is no
-    // document number stored, then concurrent threads can lead to an DataIntegrityViolationException due to
+    // Issue for the very first documentation unit of a new year: If for this year
+    // there is no
+    // document number stored, then concurrent threads can lead to an
+    // DataIntegrityViolationException due to
     // unique constraint violation (try to persist same document number twice).
-    // In that case the creation process is retried. Note, that even though the exception is handled, there will
+    // In that case the creation process is retried. Note, that even though the
+    // exception is handled, there will
     // be a warn and an error message logged by Hibernate, which cannot be avoided.
-    // The used retry template can only handle a database exception if the underlying transaction completes
-    // with a commit; therefore a secondary bean (DocumentationUnitCreationService) is used to encapsulate
+    // The used retry template can only handle a database exception if the
+    // underlying transaction completes
+    // with a commit; therefore a secondary bean (DocumentationUnitCreationService)
+    // is used to encapsulate
     // the transaction. This method must not have a @Transactional annotation.
     RetryTemplate retryTemplate = RetryTemplate.builder()
       .retryOn(DataIntegrityViolationException.class)
@@ -132,5 +141,37 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         )
       )
       .toList();
+  }
+
+  @Transactional
+  public void index(@Nonnull DocumentationUnit documentationUnit) {
+    if (documentationUnit.json() == null && documentationUnit.xml() != null) {
+      // published data
+      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+      var documentationUnitIndexEntity = documentationUnitIndexRepository
+        .findByDocumentationUnitId(documentationUnit.id())
+        .orElseGet(() -> {
+          var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
+          var documentationUnitEntity = documentationUnitRepository.getReferenceById(
+            documentationUnit.id()
+          );
+          documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
+          return documentationUnitIndexEntityNew;
+        });
+      documentationUnitIndexEntity.setLangueberschrift(documentationUnitContent.langueberschrift());
+      documentationUnitIndexEntity.setFundstellen(
+        documentationUnitContent
+          .references()
+          .stream()
+          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
+          .collect(Collectors.joining(" "))
+      );
+      documentationUnitIndexEntity.setZitierdaten(
+        documentationUnitContent.zitierdaten().stream().collect(Collectors.joining(" "))
+      );
+      documentationUnitIndexRepository.save(documentationUnitIndexEntity);
+    } else if (documentationUnit.json() != null) {
+      // document in editing
+    }
   }
 }
