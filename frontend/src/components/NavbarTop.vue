@@ -8,10 +8,10 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
 <template>
   <nav class="flex items-center justify-between border-y border-gray-400 px-16 py-16 print:hidden">
     <div class="flex items-center gap-44">
-      <div class="flex flex-col">
+      <a class="flex flex-col" href="/">
         <span class="ris-body1-bold">Rechtsinformationen</span>
         <span class="leading-none text-gray-900">des Bundes</span>
-      </div>
+      </a>
     </div>
     <div class="flex items-center gap-10">
       <IconPermIdentity data-testid="iconPermIdentity" />
