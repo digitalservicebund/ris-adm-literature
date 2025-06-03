@@ -6,4 +6,3 @@ While RIS-ADM-VwV is Free and Open Source, it is part of a larger project called
 Internal staff and stakeholders can access the RIS-ADM-VwV diagrams here:
 * [RIS-VwV Container Diagram](https://ris-reports.prod.ds4g.net/about/c4_diagramme/#vwvplanpng)
 * [RIS-VwV as part of NeuRIS](https://ris-reports.prod.ds4g.net/about/c4_diagramme/#architectureintro06png)
-# not found
