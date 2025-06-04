@@ -99,7 +99,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       : Pageable.unpaged(sort);
     var documentationUnits = documentationUnitRepository.findByJsonIsNotNull(pageable);
     return PageTransformer.transform(documentationUnits, documentationUnitEntity -> {
-      DocumentationUnitContent documentationUnitContent = transformJson(documentationUnitEntity);
+      DocumentationUnitContent documentationUnitContent = transformJson(
+        documentationUnitEntity.getJson()
+      );
       return new DocumentationUnitOverviewElement(
         documentationUnitEntity.getId(),
         documentationUnitEntity.getDocumentNumber(),
@@ -110,20 +112,11 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     });
   }
 
-  private DocumentationUnitContent transformJson(
-    @Nonnull DocumentationUnitEntity documentationUnitEntity
-  ) {
+  private DocumentationUnitContent transformJson(@Nonnull String json) {
     try {
-      return objectMapper.readValue(
-        documentationUnitEntity.getJson(),
-        DocumentationUnitContent.class
-      );
+      return objectMapper.readValue(json, DocumentationUnitContent.class);
     } catch (JsonProcessingException e) {
-      throw new IllegalStateException(
-        "Exception during transforming document number: " +
-        documentationUnitEntity.getDocumentNumber(),
-        e
-      );
+      throw new IllegalStateException("Exception during transforming json: " + json, e);
     }
   }
 
@@ -176,9 +169,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
     } else if (documentationUnit.json() != null) {
       // Draft documentation unit, there is json
-      DocumentationUnitContent documentationUnitContent = transformJson(
-        documentationUnitIndexEntity.getDocumentationUnit()
-      );
+      DocumentationUnitContent documentationUnitContent = transformJson(documentationUnit.json());
       updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
     }
     documentationUnitIndexRepository.save(documentationUnitIndexEntity);
