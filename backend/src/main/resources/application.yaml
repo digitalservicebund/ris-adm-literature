@@ -18,6 +18,8 @@ springdoc:
   api-docs:
     path: /api/swagger-ui/v3/api-docs
 
+cronjob.DocumentationUnitIndexJob: "0 0 5 * * Mon-Fri"
+
 ---
 
 # For local setup, include a database initialization which is executed after docker initialization and Flyway.

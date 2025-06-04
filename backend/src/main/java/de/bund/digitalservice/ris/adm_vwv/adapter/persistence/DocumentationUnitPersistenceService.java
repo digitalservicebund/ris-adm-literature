@@ -143,33 +143,41 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   }
 
   /**
-   * Executes indexing of the given documentation unit.
-   *
-   * @param documentationUnit The documentation unit to index
+   * Execute indexing of all documentation units without documentation unit index.
    */
   @Transactional
-  public void index(@Nonnull DocumentationUnit documentationUnit) {
-    if (documentationUnit.isEmpty()) {
+  public void indexAll() {
+    documentationUnitRepository.findByDocumentationUnitIndexIsNull().forEach(this::index);
+  }
+
+  private void index(@Nonnull DocumentationUnitEntity documentationUnitEntity) {
+    if (documentationUnitEntity.isEmpty()) {
       // No action needed. Content fields can never be set to null on update.
       return;
     }
     var documentationUnitIndexEntity = documentationUnitIndexRepository
-      .findByDocumentationUnitId(documentationUnit.id())
+      .findByDocumentationUnitId(documentationUnitEntity.getId())
       .orElseGet(() -> {
         var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
-        var documentationUnitEntity = documentationUnitRepository.getReferenceById(
-          documentationUnit.id()
-        );
         documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
         return documentationUnitIndexEntityNew;
       });
-    if (documentationUnit.json() == null && documentationUnit.xml() != null) {
+    if (documentationUnitEntity.getJson() == null && documentationUnitEntity.getXml() != null) {
       // Published documentation unit, there is only xml
-      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+        new DocumentationUnit(
+          documentationUnitEntity.getDocumentNumber(),
+          documentationUnitEntity.getId(),
+          null,
+          documentationUnitEntity.getXml()
+        )
+      );
       updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
-    } else if (documentationUnit.json() != null) {
+    } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
-      DocumentationUnitContent documentationUnitContent = transformJson(documentationUnit.json());
+      DocumentationUnitContent documentationUnitContent = transformJson(
+        documentationUnitEntity.getJson()
+      );
       updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
     }
     documentationUnitIndexRepository.save(documentationUnitIndexEntity);
