@@ -167,7 +167,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
           .collect(Collectors.joining(" "))
       );
       documentationUnitIndexEntity.setZitierdaten(
-        documentationUnitContent.zitierdaten().stream().collect(Collectors.joining(" "))
+        String.join(" ", documentationUnitContent.zitierdaten())
       );
       documentationUnitIndexRepository.save(documentationUnitIndexEntity);
     } else if (documentationUnit.json() != null) {
