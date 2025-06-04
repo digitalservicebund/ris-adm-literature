@@ -10,7 +10,7 @@ const docUnitsMock: DocumentUnitListItem[] = [
     documentNumber: 'dokumentNummer1',
     zitierdatum: '2025-01-01',
     langueberschrift: 'Berücksichtigung von Sonderleistungen im Rahmen der Übergangsregelung',
-    fundstellen: [ 'ZentrBl §2.1', 'DokZ-S Kapitel 4' ]
+    fundstellen: ['ZentrBl §2.1', 'DokZ-S Kapitel 4'],
   },
   {
     id: 'docUnitId2',

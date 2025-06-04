@@ -16,9 +16,7 @@ export interface DocumentUnitListProps {
 defineProps<DocumentUnitListProps>()
 
 const fundstelleLabel = (fundstellen: Fundstelle[]) =>
-  fundstellen.length > 0
-    ? fundstellen.join(', ')
-    : '--'
+  fundstellen.length > 0 ? fundstellen.join(', ') : '--'
 </script>
 
 <template>
