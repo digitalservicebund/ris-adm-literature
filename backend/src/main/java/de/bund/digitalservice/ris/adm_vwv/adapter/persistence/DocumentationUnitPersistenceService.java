@@ -83,6 +83,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .findByDocumentNumber(documentNumber)
       .map(documentationUnitEntity -> {
         documentationUnitEntity.setJson(json);
+        index(documentationUnitEntity);
         return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
       })
       .orElse(null);
@@ -188,15 +189,19 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     DocumentationUnitContent documentationUnitContent
   ) {
     documentationUnitIndexEntity.setLangueberschrift(documentationUnitContent.langueberschrift());
-    documentationUnitIndexEntity.setFundstellen(
-      documentationUnitContent
-        .references()
-        .stream()
-        .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
-        .collect(Collectors.joining(" "))
-    );
-    documentationUnitIndexEntity.setZitierdaten(
-      String.join(" ", documentationUnitContent.zitierdaten())
-    );
+    if (documentationUnitContent.references() != null) {
+      documentationUnitIndexEntity.setFundstellen(
+        documentationUnitContent
+          .references()
+          .stream()
+          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
+          .collect(Collectors.joining(" "))
+      );
+    }
+    if (documentationUnitContent.zitierdaten() != null) {
+      documentationUnitIndexEntity.setZitierdaten(
+        String.join(" ", documentationUnitContent.zitierdaten())
+      );
+    }
   }
 }

@@ -80,13 +80,52 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     documentationUnitPersistenceService.update(
       documentationUnitEntity.getDocumentNumber(),
-      "{\"test\":\"content\""
+      "{\"test\":\"content\"}"
     );
 
     // then
     assertThat(entityManager.find(DocumentationUnitEntity.class, id))
       .extracting(DocumentationUnitEntity::getJson)
-      .isEqualTo("{\"test\":\"content\"");
+      .isEqualTo("{\"test\":\"content\"}");
+  }
+
+  @Test
+  void update_reindex() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR111111111");
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
+    documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
+    documentationUnitIndexEntity.setLangueberschrift("Lang");
+    documentationUnitIndexEntity.setFundstellen("Fund");
+    documentationUnitIndexEntity.setZitierdaten("2012-12-12");
+    entityManager.persistAndFlush(documentationUnitIndexEntity);
+    String json = TestFile.readFileToString("json-example.json");
+
+    // when
+    documentationUnitPersistenceService.update(documentationUnitEntity.getDocumentNumber(), json);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
+        DocumentationUnitIndexEntity.class
+      );
+    query.setParameter("documentationUnit", documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
+      );
   }
 
   @Test
