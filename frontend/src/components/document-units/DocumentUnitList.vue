@@ -17,7 +17,7 @@ defineProps<DocumentUnitListProps>()
 
 const fundstelleLabel = (fundstellen: Fundstelle[]) =>
   fundstellen.length > 0
-    ? fundstellen.map((f: Fundstelle) => `${f.periodikum.abbreviation} ${f.zitatstelle}`).join(', ')
+    ? fundstellen.join(', ')
     : '--'
 </script>
 

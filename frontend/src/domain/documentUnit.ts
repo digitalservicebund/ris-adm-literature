@@ -24,7 +24,7 @@ export interface DocumentUnitListItem {
   readonly documentNumber: string
   zitierdatum?: string
   langueberschrift?: string
-  fundstellen: Fundstelle[]
+  fundstellen: string[]
 }
 
 export interface DocumentUnit {
