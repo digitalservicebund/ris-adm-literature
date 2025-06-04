@@ -21,37 +21,36 @@ public class DocumentationUnitController {
    * Returns information on all documentation units as required by the
    * documentation units overview
    *
-   * @param pageNumber Which page of pagination to return?
-   * @param pageSize How many elements per page in pagination?
+   * @param pageNumber     Which page of pagination to return?
+   * @param pageSize       How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
-   * @param sortDirection Sort ascending or descending?
-   * @param usePagination Search with pagination?
+   * @param sortDirection  Sort ascending or descending?
+   * @param usePagination  Search with pagination?
    * @return paginated list of document units
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
-    @RequestParam(defaultValue = "0") int pageNumber,
-    @RequestParam(defaultValue = "10") int pageSize,
-    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
-    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
-    @RequestParam(defaultValue = "true") boolean usePagination
-  ) {
+      @RequestParam(defaultValue = "0") int pageNumber,
+      @RequestParam(defaultValue = "10") int pageSize,
+      @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+      @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
+      @RequestParam(defaultValue = "true") boolean usePagination) {
     QueryOptions queryOptions = new QueryOptions(
-      pageNumber,
-      pageSize,
-      sortByProperty,
-      sortDirection,
-      usePagination
-    );
+        pageNumber,
+        pageSize,
+        sortByProperty,
+        sortDirection,
+        usePagination);
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
-      queryOptions
-    );
-    return ResponseEntity.ok(
-      new DocumentationUnitsOverviewResponse(
-        paginatedDocumentationUnits.content(),
-        new PageResponse(paginatedDocumentationUnits)
-      )
-    );
+        queryOptions);
+    // return ResponseEntity.ok(
+    // new DocumentationUnitsOverviewResponse(
+    // paginatedDocumentationUnits.content(),
+    // new PageResponse(paginatedDocumentationUnits)
+    // )
+    // );
+
+    return new ResponseEntity<DocumentationUnitsOverviewResponse>(HttpStatus.UNAUTHORIZED);
   }
 
   /**
@@ -64,9 +63,9 @@ public class DocumentationUnitController {
   @GetMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitPort
-      .findByDocumentNumber(documentNumber)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+        .findByDocumentNumber(documentNumber)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   /**
@@ -91,12 +90,11 @@ public class DocumentationUnitController {
    */
   @PutMapping("api/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
-    @PathVariable String documentNumber,
-    @RequestBody JsonNode documentationUnit
-  ) {
+      @PathVariable String documentNumber,
+      @RequestBody JsonNode documentationUnit) {
     return documentationUnitPort
-      .update(documentNumber, documentationUnit.toString())
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+        .update(documentNumber, documentationUnit.toString())
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 }
