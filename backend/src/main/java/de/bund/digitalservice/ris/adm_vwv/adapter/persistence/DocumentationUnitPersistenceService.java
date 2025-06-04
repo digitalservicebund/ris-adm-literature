@@ -99,25 +99,14 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       : Pageable.unpaged(sort);
     var documentationUnits = documentationUnitRepository.findByJsonIsNotNull(pageable);
     return PageTransformer.transform(documentationUnits, documentationUnitEntity -> {
-      try {
-        var documentationUnitContent = objectMapper.readValue(
-          documentationUnitEntity.getJson(),
-          DocumentationUnitContent.class
-        );
-        return new DocumentationUnitOverviewElement(
-          documentationUnitEntity.getId(),
-          documentationUnitEntity.getDocumentNumber(),
-          documentationUnitContent.zitierdatum(),
-          documentationUnitContent.langueberschrift(),
-          mapFundstellen(documentationUnitContent)
-        );
-      } catch (JsonProcessingException e) {
-        throw new IllegalStateException(
-          "Exception during transforming document number: " +
-          documentationUnitEntity.getDocumentNumber(),
-          e
-        );
-      }
+      DocumentationUnitContent documentationUnitContent = transformJson(documentationUnitEntity);
+      return new DocumentationUnitOverviewElement(
+        documentationUnitEntity.getId(),
+        documentationUnitEntity.getDocumentNumber(),
+        documentationUnitContent.zitierdatum(),
+        documentationUnitContent.langueberschrift(),
+        mapFundstellen(documentationUnitContent)
+      );
     });
   }
 
