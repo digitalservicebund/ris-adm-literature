@@ -247,15 +247,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setDocumentNumber("KSNR9999999999");
     documentationUnitEntity.setXml(xml);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      documentationUnitEntity.getDocumentNumber(),
-      documentationUnitEntity.getId(),
-      null,
-      xml
-    );
 
     // when
-    documentationUnitPersistenceService.index(documentationUnit);
+    documentationUnitPersistenceService.indexAll();
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = entityManager
@@ -287,15 +281,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setDocumentNumber("KSNR777777777");
     documentationUnitEntity.setJson(json);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      documentationUnitEntity.getDocumentNumber(),
-      documentationUnitEntity.getId(),
-      json,
-      null
-    );
 
     // when
-    documentationUnitPersistenceService.index(documentationUnit);
+    documentationUnitPersistenceService.indexAll();
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = entityManager
@@ -329,15 +317,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setJson(json);
     documentationUnitEntity.setXml(xml);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      documentationUnitEntity.getDocumentNumber(),
-      documentationUnitEntity.getId(),
-      json,
-      xml
-    );
 
     // when
-    documentationUnitPersistenceService.index(documentationUnit);
+    documentationUnitPersistenceService.indexAll();
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = entityManager
@@ -367,15 +349,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR333333333");
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      documentationUnitEntity.getDocumentNumber(),
-      documentationUnitEntity.getId(),
-      null,
-      null
-    );
 
     // when
-    documentationUnitPersistenceService.index(documentationUnit);
+    documentationUnitPersistenceService.indexAll();
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = entityManager

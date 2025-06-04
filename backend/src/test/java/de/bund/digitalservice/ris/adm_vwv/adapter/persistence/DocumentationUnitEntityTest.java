@@ -1,16 +1,15 @@
-package de.bund.digitalservice.ris.adm_vwv.application;
+package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class DocumentationUnitTest {
+class DocumentationUnitEntityTest {
 
-  private static Stream<Arguments> documentationUnits() {
+  private static Stream<Arguments> documentationUnitEntities() {
     return Stream.of(
       Arguments.of("{}", "<xml/>", false),
       Arguments.of(null, "<xml/>", false),
@@ -20,18 +19,15 @@ class DocumentationUnitTest {
   }
 
   @ParameterizedTest
-  @MethodSource("documentationUnits")
+  @MethodSource("documentationUnitEntities")
   void isEmpty(String json, String xml, boolean expected) {
     // given
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR",
-      UUID.randomUUID(),
-      json,
-      xml
-    );
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setXml(xml);
 
     // when
-    boolean actualEmpty = documentationUnit.isEmpty();
+    boolean actualEmpty = documentationUnitEntity.isEmpty();
 
     // then
     assertThat(actualEmpty).isEqualTo(expected);

@@ -1,0 +1,28 @@
+package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
+/**
+ * Cron job for executing indexing of documentation units.
+ */
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class DocumentationUnitIndexJob {
+
+  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
+
+  /**
+   * Execute indexing of all documentation units without documentation unit index.
+   */
+  @Scheduled(cron = "${cronjob.DocumentationUnitIndexJob:-}", zone = "Europe/Berlin")
+  public void indexAll() {
+    StopWatch stopWatch = new StopWatch();
+    documentationUnitPersistenceService.indexAll();
+    log.info("Indexing all documentation units in {} ms", stopWatch.getTotalTimeMillis());
+  }
+}

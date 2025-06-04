@@ -26,13 +26,4 @@ public record DocumentationUnit(
   public DocumentationUnit(@Nonnull DocumentationUnit documentationUnit, @Nonnull String json) {
     this(documentationUnit.documentNumber, documentationUnit.id, json, null);
   }
-
-  /**
-   * Returns {@code true} if this documentation unit has no content, json and xml are set to {@code null}.
-   *
-   * @return {@code true} if this documentation unit is empty, {@code false} otherwise
-   */
-  public boolean isEmpty() {
-    return json == null && xml == null;
-  }
 }
