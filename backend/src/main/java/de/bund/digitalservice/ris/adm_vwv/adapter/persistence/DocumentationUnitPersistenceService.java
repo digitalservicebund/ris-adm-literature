@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class DocumentationUnitPersistenceService implements DocumentationUnitPersistencePort {
+
+  static final String ENTRY_SEPARATOR = "$µµµµµ$";
 
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
@@ -98,49 +101,21 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    var documentationUnits = documentationUnitRepository.findByJsonIsNotNull(pageable);
-    return PageTransformer.transform(documentationUnits, documentationUnitEntity -> {
-      DocumentationUnitContent documentationUnitContent = transformJson(
-        documentationUnitEntity.getJson()
-      );
-      return new DocumentationUnitOverviewElement(
-        documentationUnitEntity.getId(),
-        documentationUnitEntity.getDocumentNumber(),
-        documentationUnitContent.zitierdatum(),
-        documentationUnitContent.langueberschrift(),
-        mapFundstellen(documentationUnitContent)
-      );
-    });
-  }
-
-  private DocumentationUnitContent transformJson(@Nonnull String json) {
-    try {
-      return objectMapper.readValue(json, DocumentationUnitContent.class);
-    } catch (JsonProcessingException e) {
-      throw new IllegalStateException("Exception during transforming json: " + json, e);
-    }
-  }
-
-  private List<Fundstelle> mapFundstellen(DocumentationUnitContent documentationUnitContent) {
-    if (documentationUnitContent.references() == null) {
-      return List.of();
-    }
-    return documentationUnitContent
-      .references()
-      .stream()
-      .map(reference ->
-        new Fundstelle(
-          reference.id(),
-          reference.citation(),
-          new Periodikum(
-            reference.legalPeriodical().id(),
-            reference.legalPeriodical().title(),
-            reference.legalPeriodical().subtitle(),
-            reference.legalPeriodical().abbreviation()
-          )
-        )
+    var documentationUnitIndices = documentationUnitIndexRepository.findAll(pageable);
+    return PageTransformer.transform(documentationUnitIndices, documentationUnitIndexEntity ->
+      new DocumentationUnitOverviewElement(
+        documentationUnitIndexEntity.getDocumentationUnit().getId(),
+        documentationUnitIndexEntity.getDocumentationUnit().getDocumentNumber(),
+        splitBySeparator(documentationUnitIndexEntity.getZitierdaten()),
+        documentationUnitIndexEntity.getLangueberschrift(),
+        splitBySeparator(documentationUnitIndexEntity.getFundstellen())
       )
-      .toList();
+    );
+  }
+
+  private List<String> splitBySeparator(String value) {
+    String[] separatedValues = StringUtils.splitByWholeSeparator(value, ENTRY_SEPARATOR);
+    return separatedValues != null ? List.of(separatedValues) : List.of();
   }
 
   /**
@@ -184,6 +159,14 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     documentationUnitIndexRepository.save(documentationUnitIndexEntity);
   }
 
+  private DocumentationUnitContent transformJson(@Nonnull String json) {
+    try {
+      return objectMapper.readValue(json, DocumentationUnitContent.class);
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException("Exception during transforming json: " + json, e);
+    }
+  }
+
   private void updateDocumentationUnitIndexEntity(
     DocumentationUnitIndexEntity documentationUnitIndexEntity,
     DocumentationUnitContent documentationUnitContent
@@ -195,12 +178,12 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
           .references()
           .stream()
           .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
-          .collect(Collectors.joining(" "))
+          .collect(Collectors.joining(ENTRY_SEPARATOR))
       );
     }
     if (documentationUnitContent.zitierdaten() != null) {
       documentationUnitIndexEntity.setZitierdaten(
-        String.join(" ", documentationUnitContent.zitierdaten())
+        String.join(ENTRY_SEPARATOR, documentationUnitContent.zitierdaten())
       );
     }
   }

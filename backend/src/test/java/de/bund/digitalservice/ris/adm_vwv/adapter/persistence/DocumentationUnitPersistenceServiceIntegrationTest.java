@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchException;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
@@ -40,7 +40,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     Year thisYear = Year.now();
-    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
+    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000002", thisYear));
     documentationUnitEntity.setJson("{\"test\":\"content\"");
     entityManager.persistAndFlush(documentationUnitEntity);
 
@@ -124,7 +124,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
       );
   }
 
@@ -155,7 +155,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       {
         "id": "11111111-1657-4085-ae2a-993a04c27f6b",
         "documentNumber": "KSNR000004711",
-        "zitierdatum": "2011-11-11",
+        "zitierdaten": [ "2011-11-11" ],
         "langueberschrift": "Sample Document Title 1",
         "references": [
           {
@@ -182,7 +182,15 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       }
       """
     );
-    entityManager.persistAndFlush(documentationUnitEntity);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
+    documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
+    documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
+    documentationUnitIndexEntity.setFundstellen(
+      "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
+    );
+    documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
     var documentationUnitOverviewElements =
@@ -196,22 +204,14 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
       .singleElement()
       .extracting(
-        DocumentationUnitOverviewElement::zitierdatum,
+        DocumentationUnitOverviewElement::zitierdaten,
         DocumentationUnitOverviewElement::langueberschrift,
-        documentationUnitOverviewElement ->
-          documentationUnitOverviewElement
-            .fundstellen()
-            .stream()
-            .map(fundstelle -> List.of(fundstelle.zitatstelle(), fundstelle.periodikum().title()))
-            .toList()
+        DocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(
-        "2011-11-11",
+        List.of("2011-11-11"),
         "Sample Document Title 1",
-        List.of(
-          List.of("zitatstelle 1", "periodikum title 1"),
-          List.of("zitatstelle 2", "periodikum title 2")
-        )
+        List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2")
       );
   }
 
@@ -230,7 +230,12 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       }
       """
     );
-    entityManager.persistAndFlush(documentationUnitEntity);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
+    documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
+    documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
+    documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
     var documentationUnitOverviewElements =
@@ -244,38 +249,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
       .singleElement()
       .extracting(
-        DocumentationUnitOverviewElement::zitierdatum,
+        DocumentationUnitOverviewElement::zitierdaten,
         DocumentationUnitOverviewElement::langueberschrift,
         DocumentationUnitOverviewElement::fundstellen
       )
-      .containsExactly("2011-11-11", "Sample Document Title 1", List.of());
-  }
-
-  @Test
-  void findDocumentationUnitOverviewElements_parsingJsonFails() {
-    // given
-    var documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s100003", Year.now()));
-    documentationUnitEntity.setJson(
-      """
-      {
-        "id": "11111111-1657-4085-ae2a-993a04c27f6b",
-        "documentNumber": "KSNR000004711",
-        [] ooops
-      }
-      """
-    );
-    entityManager.persistAndFlush(documentationUnitEntity);
-
-    // when
-    Exception exception = catchException(() ->
-      documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
-      )
-    );
-
-    // then
-    assertThat(exception).isInstanceOf(IllegalStateException.class);
+      .containsExactly(List.of("2011-11-11"), "Sample Document Title 1", List.of());
   }
 
   @Test
@@ -308,7 +286,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
       );
   }
 
@@ -342,7 +320,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
       );
   }
 
@@ -378,7 +356,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
       );
   }
 
