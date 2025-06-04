@@ -18,7 +18,8 @@ springdoc:
   api-docs:
     path: /api/swagger-ui/v3/api-docs
 
-cronjob.DocumentationUnitIndexJob: "0 0 5 * * Mon-Fri"
+# Every day from Monday to Friday at 5 am
+cronjob.DocumentationUnitIndexJob: "0 0 8 * * Mon-Fri"
 
 ---
 

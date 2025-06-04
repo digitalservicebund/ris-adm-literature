@@ -83,7 +83,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .findByDocumentNumber(documentNumber)
       .map(documentationUnitEntity -> {
         documentationUnitEntity.setJson(json);
+        log.info("Updated documentation unit with document number: {}.", documentNumber);
         index(documentationUnitEntity);
+        log.info("Re-indexed documentation unit with document number: {}.", documentNumber);
         return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
       })
       .orElse(null);
@@ -148,7 +150,10 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
    */
   @Transactional
   public void indexAll() {
-    documentationUnitRepository.findByDocumentationUnitIndexIsNull().forEach(this::index);
+    List<DocumentationUnitEntity> documentationUnitEntities =
+      documentationUnitRepository.findByDocumentationUnitIndexIsNull();
+    log.info("Found {} documentation units for indexing.", documentationUnitEntities.size());
+    documentationUnitEntities.forEach(this::index);
   }
 
   private void index(@Nonnull DocumentationUnitEntity documentationUnitEntity) {
