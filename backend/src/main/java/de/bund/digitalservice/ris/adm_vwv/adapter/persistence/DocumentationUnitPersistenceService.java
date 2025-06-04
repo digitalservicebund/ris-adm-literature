@@ -121,6 +121,23 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     });
   }
 
+  private DocumentationUnitContent transformJson(
+    @Nonnull DocumentationUnitEntity documentationUnitEntity
+  ) {
+    try {
+      return objectMapper.readValue(
+        documentationUnitEntity.getJson(),
+        DocumentationUnitContent.class
+      );
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException(
+        "Exception during transforming document number: " +
+        documentationUnitEntity.getDocumentNumber(),
+        e
+      );
+    }
+  }
+
   private List<Fundstelle> mapFundstellen(DocumentationUnitContent documentationUnitContent) {
     if (documentationUnitContent.references() == null) {
       return List.of();
@@ -143,35 +160,55 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .toList();
   }
 
+  /**
+   * Executes indexing of the given documentation unit.
+   *
+   * @param documentationUnit The documentation unit to index
+   */
   @Transactional
   public void index(@Nonnull DocumentationUnit documentationUnit) {
-    if (documentationUnit.json() == null && documentationUnit.xml() != null) {
-      // published data
-      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
-      var documentationUnitIndexEntity = documentationUnitIndexRepository
-        .findByDocumentationUnitId(documentationUnit.id())
-        .orElseGet(() -> {
-          var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
-          var documentationUnitEntity = documentationUnitRepository.getReferenceById(
-            documentationUnit.id()
-          );
-          documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
-          return documentationUnitIndexEntityNew;
-        });
-      documentationUnitIndexEntity.setLangueberschrift(documentationUnitContent.langueberschrift());
-      documentationUnitIndexEntity.setFundstellen(
-        documentationUnitContent
-          .references()
-          .stream()
-          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
-          .collect(Collectors.joining(" "))
-      );
-      documentationUnitIndexEntity.setZitierdaten(
-        String.join(" ", documentationUnitContent.zitierdaten())
-      );
-      documentationUnitIndexRepository.save(documentationUnitIndexEntity);
-    } else if (documentationUnit.json() != null) {
-      // document in editing
+    if (documentationUnit.isEmpty()) {
+      // No action needed. Content fields can never be set to null on update.
+      return;
     }
+    var documentationUnitIndexEntity = documentationUnitIndexRepository
+      .findByDocumentationUnitId(documentationUnit.id())
+      .orElseGet(() -> {
+        var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
+        var documentationUnitEntity = documentationUnitRepository.getReferenceById(
+          documentationUnit.id()
+        );
+        documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
+        return documentationUnitIndexEntityNew;
+      });
+    if (documentationUnit.json() == null && documentationUnit.xml() != null) {
+      // Published documentation unit, there is only xml
+      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+      updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
+    } else if (documentationUnit.json() != null) {
+      // Draft documentation unit, there is json
+      DocumentationUnitContent documentationUnitContent = transformJson(
+        documentationUnitIndexEntity.getDocumentationUnit()
+      );
+      updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
+    }
+    documentationUnitIndexRepository.save(documentationUnitIndexEntity);
+  }
+
+  private void updateDocumentationUnitIndexEntity(
+    DocumentationUnitIndexEntity documentationUnitIndexEntity,
+    DocumentationUnitContent documentationUnitContent
+  ) {
+    documentationUnitIndexEntity.setLangueberschrift(documentationUnitContent.langueberschrift());
+    documentationUnitIndexEntity.setFundstellen(
+      documentationUnitContent
+        .references()
+        .stream()
+        .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
+        .collect(Collectors.joining(" "))
+    );
+    documentationUnitIndexEntity.setZitierdaten(
+      String.join(" ", documentationUnitContent.zitierdaten())
+    );
   }
 }

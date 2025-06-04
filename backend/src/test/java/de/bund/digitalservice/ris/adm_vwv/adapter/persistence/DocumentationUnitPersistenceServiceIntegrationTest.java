@@ -3,8 +3,11 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
-import de.bund.digitalservice.ris.adm_vwv.application.*;
-import de.bund.digitalservice.ris.adm_vwv.test.*;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_vwv.application.Page;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
 import java.util.List;
@@ -20,14 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-// @DataJpaTest
-// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-// @Import({
-//     DocumentationUnitPersistenceService.class,
-//     DocumentationUnitCreationService.class,
-//     ObjectMapper.class,
-//     LdmlConverterService.class
-// })
 @SpringBootTest
 @Transactional
 @AutoConfigureTestEntityManager
@@ -104,7 +99,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // then
     TypedQuery<DocumentationUnitEntity> query = entityManager
       .getEntityManager()
-      .createQuery("from DocumentationUnitEntity", DocumentationUnitEntity.class);
+      .createQuery(
+        "from DocumentationUnitEntity where documentNumber = 'gibtsnicht'",
+        DocumentationUnitEntity.class
+      );
     assertThat(query.getResultList()).isEmpty();
   }
 
