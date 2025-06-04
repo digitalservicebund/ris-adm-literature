@@ -3,8 +3,11 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_vwv.application.Page;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
 import java.util.List;
@@ -13,22 +16,16 @@ import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(
-  {
-    DocumentationUnitPersistenceService.class,
-    DocumentationUnitCreationService.class,
-    ObjectMapper.class,
-  }
-)
+@SpringBootTest
+@Transactional
+@AutoConfigureTestEntityManager
 @ActiveProfiles("test")
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
@@ -102,7 +99,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // then
     TypedQuery<DocumentationUnitEntity> query = entityManager
       .getEntityManager()
-      .createQuery("from DocumentationUnitEntity", DocumentationUnitEntity.class);
+      .createQuery(
+        "from DocumentationUnitEntity where documentNumber = 'gibtsnicht'",
+        DocumentationUnitEntity.class
+      );
     assertThat(query.getResultList()).isEmpty();
   }
 
@@ -237,5 +237,154 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
     // then
     assertThat(exception).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void indexByDocumentationUnit_xml() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR9999999999");
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      documentationUnitEntity.getDocumentNumber(),
+      documentationUnitEntity.getId(),
+      null,
+      xml
+    );
+
+    // when
+    documentationUnitPersistenceService.index(documentationUnit);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
+        DocumentationUnitIndexEntity.class
+      );
+    query.setParameter("documentationUnit", documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
+      );
+  }
+
+  @Test
+  void indexByDocumentationUnit_json() {
+    // given
+    String json = TestFile.readFileToString("json-example.json");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR777777777");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      documentationUnitEntity.getDocumentNumber(),
+      documentationUnitEntity.getId(),
+      json,
+      null
+    );
+
+    // when
+    documentationUnitPersistenceService.index(documentationUnit);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
+        DocumentationUnitIndexEntity.class
+      );
+    query.setParameter("documentationUnit", documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
+      );
+  }
+
+  @Test
+  void indexByDocumentationUnit_jsonAndXml() {
+    // given
+    String json = TestFile.readFileToString("json-example.json");
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR555555555");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      documentationUnitEntity.getDocumentNumber(),
+      documentationUnitEntity.getId(),
+      json,
+      xml
+    );
+
+    // when
+    documentationUnitPersistenceService.index(documentationUnit);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
+        DocumentationUnitIndexEntity.class
+      );
+    query.setParameter("documentationUnit", documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
+      );
+  }
+
+  @Test
+  void indexByDocumentationUnit_jsonAndXmlAreNull() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR333333333");
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      documentationUnitEntity.getDocumentNumber(),
+      documentationUnitEntity.getId(),
+      null,
+      null
+    );
+
+    // when
+    documentationUnitPersistenceService.index(documentationUnit);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
+        DocumentationUnitIndexEntity.class
+      );
+    query.setParameter("documentationUnit", documentationUnitEntity);
+    assertThat(query.getResultList()).isEmpty();
   }
 }

@@ -49,6 +49,7 @@
           <ris:documentType category="VR" longTitle="Bekanntmachung">VR Bekanntmachung</ris:documentType>
           <ris:dateToQuoteList>
             <ris:dateToQuoteEntry>2025-05-05</ris:dateToQuoteEntry>
+            <ris:dateToQuoteEntry>2025-06-01</ris:dateToQuoteEntry>
           </ris:dateToQuoteList>
           <ris:referenceNumbers>
             <ris:referenceNumber>AX-Y12345</ris:referenceNumber>
