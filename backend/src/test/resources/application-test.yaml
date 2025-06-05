@@ -6,3 +6,5 @@ spring:
       stop:
         arguments: -v
         command: down
+
+cronjob.DocumentationUnitIndexJob: "-"

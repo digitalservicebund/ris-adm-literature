@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,8 +22,14 @@ public class DocumentationUnitIndexJob {
    */
   @Scheduled(cron = "${cronjob.DocumentationUnitIndexJob:-}", zone = "Europe/Berlin")
   public void indexAll() {
-    StopWatch stopWatch = new StopWatch();
-    documentationUnitPersistenceService.indexAll();
-    log.info("Indexing all documentation units in {} ms", stopWatch.getTotalTimeMillis());
+    StopWatch stopWatch = new StopWatch("Index documentation units");
+    stopWatch.start();
+    long totalNumberOfElements = documentationUnitPersistenceService.indexAll();
+    stopWatch.stop();
+    log.info(
+      "Indexing {} documentation units finished. \n{}",
+      totalNumberOfElements,
+      stopWatch.prettyPrint(TimeUnit.SECONDS)
+    );
   }
 }

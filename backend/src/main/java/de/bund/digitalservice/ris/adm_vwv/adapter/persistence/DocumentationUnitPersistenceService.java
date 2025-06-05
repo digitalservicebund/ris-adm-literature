@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentationUnitPersistenceService implements DocumentationUnitPersistencePort {
 
   static final String ENTRY_SEPARATOR = "$µµµµµ$";
+
+  private static final int INDEX_BATCH_SIZE = 500;
 
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
@@ -122,18 +125,48 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   /**
    * Execute indexing of all documentation units without documentation unit index.
+   *
+   * @return Number of indexed documents
    */
   @Transactional
-  public void indexAll() {
-    List<DocumentationUnitEntity> documentationUnitEntities =
-      documentationUnitRepository.findByDocumentationUnitIndexIsNull();
-    log.info("Found {} documentation units for indexing.", documentationUnitEntities.size());
-    documentationUnitEntities.forEach(this::index);
+  public long indexAll() {
+    PageRequest pageable = PageRequest.of(0, INDEX_BATCH_SIZE);
+    long totalNumberOfElements = 0;
+    Slice<DocumentationUnitEntity> documentationUnitEntities;
+    do {
+      documentationUnitEntities = documentationUnitRepository.findByDocumentationUnitIndexIsNull(
+        pageable
+      );
+      log.info(
+        "Found {} documentation units for indexing, page {}.",
+        documentationUnitEntities.getSize(),
+        documentationUnitEntities.getNumber()
+      );
+      documentationUnitEntities.stream().parallel().forEach(this::indexSafely);
+      totalNumberOfElements += documentationUnitEntities.getNumberOfElements();
+    } while (documentationUnitEntities.hasNext());
+    return totalNumberOfElements;
+  }
+
+  private void indexSafely(DocumentationUnitEntity documentationUnitEntity) {
+    try {
+      index(documentationUnitEntity);
+    } catch (Exception e) {
+      log.warn(
+        "Could not index documentation unit {}. Reason: {}.",
+        documentationUnitEntity.getDocumentNumber(),
+        e.getMessage()
+      );
+      log.debug("Stacktrace:", e);
+      // We save an empty entry so the document still appears on overview page
+      saveDocumentationUnitIndex(documentationUnitEntity);
+    }
   }
 
   private void index(@Nonnull DocumentationUnitEntity documentationUnitEntity) {
     if (documentationUnitEntity.isEmpty()) {
-      // No action needed. Content fields can never be set to null on update.
+      // We save an empty entry so the document still appears on overview page
+      saveDocumentationUnitIndex(documentationUnitEntity);
       return;
     }
     var documentationUnitIndexEntity = documentationUnitIndexRepository
@@ -170,6 +203,17 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("Exception during transforming json: " + json, e);
     }
+  }
+
+  private void saveDocumentationUnitIndex(DocumentationUnitEntity documentationUnitEntity) {
+    var documentationUnitIndexEntity = documentationUnitIndexRepository
+      .findByDocumentationUnitId(documentationUnitEntity.getId())
+      .orElseGet(() -> {
+        var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
+        documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
+        return documentationUnitIndexEntityNew;
+      });
+    documentationUnitIndexRepository.save(documentationUnitIndexEntity);
   }
 
   private void updateDocumentationUnitIndexEntity(
