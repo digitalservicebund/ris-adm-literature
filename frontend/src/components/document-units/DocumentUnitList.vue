@@ -15,7 +15,9 @@ export interface DocumentUnitListProps {
 defineProps<DocumentUnitListProps>()
 
 const zitierdatenLabel = (zitierdaten: string[]) =>
-  zitierdaten.length > 0 ? zitierdaten.map(zitierdatum => dayjs(zitierdatum).format('DD.MM.YYYY')).join(', ') : '--'
+  zitierdaten.length > 0
+    ? zitierdaten.map((zitierdatum) => dayjs(zitierdatum).format('DD.MM.YYYY')).join(', ')
+    : '--'
 </script>
 
 <template>
@@ -33,7 +35,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
     <Column field="documentNumber" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
       <template #body="{ data }">
-        {{ zitierdatenLabel(data.zitierdaten)  }}
+        {{ zitierdatenLabel(data.zitierdaten) }}
       </template>
     </Column>
     <Column field="langueberschrift" header="Amtl. Langueberschrift" />
@@ -42,9 +44,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
         <ul v-for="(fundstelle, index) in data.fundstellen" :key="index">
           <li>{{ fundstelle }}</li>
         </ul>
-        <template v-if="data.fundstellen.length === 0">
-          --
-        </template>
+        <template v-if="data.fundstellen.length === 0"> -- </template>
       </template>
     </Column>
     <Column field="documentNumber" class="flex justify-end">
