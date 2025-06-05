@@ -21,7 +21,7 @@ export interface PaginatedDocumentUnitListResponse {
 export interface DocumentUnitListItem {
   readonly id: string
   readonly documentNumber: string
-  zitierdatum?: string
+  zitierdaten: string[]
   langueberschrift?: string
   fundstellen: string[]
 }

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { DocumentUnitListItem } from '@/domain/documentUnit'
-import type { Fundstelle } from '@/domain/fundstelle'
 import dayjs from 'dayjs'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
@@ -15,8 +14,8 @@ export interface DocumentUnitListProps {
 }
 defineProps<DocumentUnitListProps>()
 
-const fundstelleLabel = (fundstellen: Fundstelle[]) =>
-  fundstellen.length > 0 ? fundstellen.join(', ') : '--'
+const zitierdatenLabel = (zitierdaten: string[]) =>
+  zitierdaten.length > 0 ? zitierdaten.map(zitierdatum => dayjs(zitierdatum).format('DD.MM.YYYY')).join(', ') : '--'
 </script>
 
 <template>
@@ -34,13 +33,18 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
     <Column field="documentNumber" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
       <template #body="{ data }">
-        {{ data.zitierdatum ? dayjs(data.zitierdatum).format('DD.MM.YYYY') : '--' }}
+        {{ zitierdatenLabel(data.zitierdaten)  }}
       </template>
     </Column>
     <Column field="langueberschrift" header="Amtl. Langueberschrift" />
     <Column field="sources" header="Fundstelle">
       <template #body="{ data }">
-        {{ fundstelleLabel(data.fundstellen) }}
+        <ul v-for="(fundstelle, index) in data.fundstellen" :key="index">
+          <li>{{ fundstelle }}</li>
+        </ul>
+        <template v-if="data.fundstellen.length === 0">
+          --
+        </template>
       </template>
     </Column>
     <Column field="documentNumber" class="flex justify-end">
