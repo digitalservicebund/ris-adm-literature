@@ -28,9 +28,14 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
     :rows="rowsPerPage"
     :total-records="totalRows"
     :pt="{
-      thead: { style: 'box-shadow: inset 0 -2px #DCE8EF;', class: 'text-gray-900' },
+      thead: {
+        style: 'box-shadow: inset 0 -2px #DCE8EF;',
+        class: 'sticky top-0 z-1 bg-white text-gray-900',
+      },
       bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),
     }"
+    scrollable
+    scroll-height="400px"
   >
     <Column field="documentNumber" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
