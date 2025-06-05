@@ -18,14 +18,23 @@ const mockFetchData = vi.fn(() => {
   return Promise.resolve(mockData)
 })
 
+const addToastMock = vi.fn()
+vi.mock('primevue', () => ({
+  useToast: vi.fn(() => ({
+    add: addToastMock,
+  })),
+}))
+
 describe('usePagination', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('should fetch paginated data and update state', async () => {
-    const { isLoading, firstRowIndex, totalRows, items, fetchPaginatedData } =
-      usePagination(mockFetchData)
+    const { isLoading, firstRowIndex, totalRows, items, fetchPaginatedData } = usePagination(
+      mockFetchData,
+      'documentationUnitsOverview',
+    )
 
     expect(isLoading.value).toBe(true)
     expect(items.value).toEqual([])
@@ -39,22 +48,46 @@ describe('usePagination', () => {
     expect(mockFetchData).toHaveBeenCalledWith(0, 100)
   })
 
-  it('should handle errors gracefully', async () => {
-    const errorFetchData = vi.fn(() => {
-      return Promise.reject(new Error('Failed to fetch data'))
-    })
+  it('should show an error toast when there is a fetching error', async () => {
+    const fetchDataMock = vi.fn().mockRejectedValue(new Error('Fetch failed'))
 
-    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData } =
-      usePagination(errorFetchData)
+    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData } = usePagination(
+      fetchDataMock,
+      'documentationUnitsOverview',
+    )
 
+    // Assert initial test
     expect(isLoading.value).toBe(true)
     expect(items.value).toEqual([])
 
-    await expect(fetchPaginatedData()).rejects.toThrow('Failed to fetch data')
+    // When
+    await fetchPaginatedData()
 
+    // Then
     expect(isLoading.value).toBe(false)
     expect(items.value).toEqual([])
     expect(totalRows.value).toEqual(0)
     expect(firstRowIndex.value).toEqual(0)
+    expect(addToastMock).toHaveBeenCalledWith({
+      severity: 'error',
+      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
+    })
+  })
+
+  it('should show an error toast when the BE returns an error', async () => {
+    const fetchDataMock = vi.fn().mockResolvedValue({
+      error: 'Error from server',
+    })
+
+    const { fetchPaginatedData } = usePagination(fetchDataMock, 'documentationUnitsOverview')
+
+    // When
+    await fetchPaginatedData()
+
+    // Then
+    expect(addToastMock).toHaveBeenCalledWith({
+      severity: 'error',
+      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
+    })
   })
 })

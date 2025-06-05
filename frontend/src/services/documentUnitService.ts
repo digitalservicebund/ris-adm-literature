@@ -190,6 +190,12 @@ const service: DocumentUnitService = {
       { params: { pageNumber: pageNumber.toString(), pageSize: pageSize.toString() } },
     )
 
+    if (response.status >= 300) {
+      response.error = {
+        title: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
+      }
+    }
+
     return response
   },
 }

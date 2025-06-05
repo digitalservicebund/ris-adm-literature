@@ -23,6 +23,7 @@ describe('documentUnitService', () => {
       // this line does not make sense for the test, but otherwise the mapping of the response data does not get test coverage
       // (it does, actually, in an e2e test, but our tooling does not get it)
       normReferences: [new NormReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 7' })] })],
+      note: '',
     }
     vi.spyOn(HttpClient, 'get').mockResolvedValue({
       status: 200,
@@ -112,6 +113,7 @@ describe('documentUnitService', () => {
       id: 'uuid',
       documentNumber: 'KSNR000000003',
       references: [],
+      note: '',
     }
     const httpMock = vi.spyOn(HttpClient, 'put').mockResolvedValue({
       status: 200,
@@ -149,6 +151,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR000000003',
       fieldsOfLaw: [],
       references: [],
+      note: '',
     }
 
     // when
@@ -171,6 +174,7 @@ describe('documentUnitService', () => {
       references: [],
       activeCitations: [],
       activeReferences: [],
+      note: '',
     }
 
     // when
@@ -193,6 +197,7 @@ describe('documentUnitService', () => {
       references: [],
       activeCitations: [],
       activeReferences: [],
+      note: '',
     }
 
     // when
@@ -215,6 +220,7 @@ describe('documentUnitService', () => {
       references: [],
       activeCitations: [],
       activeReferences: [],
+      note: '',
     }
 
     // when
@@ -227,5 +233,33 @@ describe('documentUnitService', () => {
   it('searchByRelatedDocumentation', async () => {
     const result = await service.searchByRelatedDocumentation(new RelatedDocumentation())
     expect(result.status).toEqual(200)
+  })
+
+  it('returns a list of doc units', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 200,
+      data: 'foo',
+    })
+
+    // when
+    const response = await service.getPaginatedDocumentUnitList(0, 1)
+
+    // then
+    expect(response.data).toBeTruthy()
+  })
+
+  it('populates the retured error on status code error', async () => {
+    // given
+    vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 401,
+      data: 'foo',
+    })
+
+    // when
+    const response = await service.getPaginatedDocumentUnitList(0, 1)
+
+    // then
+    expect(response.error).toBeTruthy()
   })
 })

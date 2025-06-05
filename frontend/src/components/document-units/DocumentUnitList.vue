@@ -45,7 +45,7 @@ const fundstelleLabel = (fundstellen: Fundstelle[]) =>
         {{ fundstelleLabel(data.fundstellen) }}
       </template>
     </Column>
-    <Column field="documentNumber" class="flex justify-end">
+    <Column field="documentNumber" class="flex items-center justify-end">
       <template #body="{ data }">
         <router-link
           :to="{

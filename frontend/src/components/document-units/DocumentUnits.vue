@@ -14,7 +14,10 @@ const {
   items: docUnits,
   ITEMS_PER_PAGE,
   fetchPaginatedData,
-} = usePagination<DocumentUnitListItem>(documentUnitService.getPaginatedDocumentUnitList)
+} = usePagination<DocumentUnitListItem>(
+  documentUnitService.getPaginatedDocumentUnitList,
+  'documentationUnitsOverview',
+)
 
 onMounted(async () => {
   await fetchPaginatedData()
