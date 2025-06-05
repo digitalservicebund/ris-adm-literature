@@ -54,7 +54,7 @@ public class ActiveReferencesTransformer {
 
   private String transformReferenceDocumentType(RisActiveReference risActiveReference) {
     // Implementation needed, to be defined in RISDEV-7812
-    log.info(
+    log.debug(
       "Implementation missing for determining reference document type for {}. " +
       "Set to 'administrative_regulation'.",
       risActiveReference
@@ -68,7 +68,7 @@ public class ActiveReferencesTransformer {
       case "31" -> "neuregelung";
       case "82" -> "rechtsgrundlage";
       default -> {
-        log.warn("Unhandled type number: {}", typeNumber);
+        log.debug("Unhandled type number: {}", typeNumber);
         yield typeNumber;
       }
     };
