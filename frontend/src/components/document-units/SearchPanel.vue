@@ -27,6 +27,7 @@ function onClickReset() {
     langueberschrift: '',
     fundstelle: '',
   }
+  emit('search', searchParams.value)
 }
 </script>
 

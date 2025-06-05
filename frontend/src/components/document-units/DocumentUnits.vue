@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { DocumentUnitListItem } from '@/domain/documentUnit'
-import { onMounted } from 'vue'
+import type { DocumentUnitListItem, DocumentUnitSearchParams } from '@/domain/documentUnit'
+import { onMounted, ref } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import documentUnitService from '@/services/documentUnitService'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
@@ -19,23 +19,54 @@ const {
   'documentationUnitsOverview',
 )
 
+const filteredDocUnits = ref<DocumentUnitListItem[]>([])
+
 onMounted(async () => {
   await fetchPaginatedData()
+  filteredDocUnits.value = docUnits.value
 })
 
 function handlePageUpdate(pageState: PageState) {
   fetchPaginatedData(pageState.page)
+  filteredDocUnits.value = docUnits.value
 }
 
-function handleSearch() {
-  // fetch filtered results from BE
+/**
+ * Temporary Frontend solution. Will be replaced with a backend search once BE is ready.
+ */
+function handleSearch(search: DocumentUnitSearchParams) {
+  let results = docUnits.value
+
+  const hasSearchTerm = Object.values(search).some(
+    (term) => term && typeof term === 'string' && term.trim() !== '',
+  )
+  if (hasSearchTerm) {
+    results = docUnits.value.filter((doc) => {
+      return (Object.keys(search) as Array<keyof DocumentUnitSearchParams>).every((key) => {
+        const searchTerm = search[key]?.toLowerCase()
+        if (!searchTerm) {
+          return true
+        }
+        switch (key) {
+          case 'documentNumber':
+          case 'langueberschrift':
+            return (doc[key] ?? '').toLowerCase().includes(searchTerm)
+          case 'fundstelle':
+            return doc.fundstellen?.some((item) => (item ?? '').toLowerCase().includes(searchTerm))
+          default:
+            return true
+        }
+      })
+    })
+  }
+  filteredDocUnits.value = results
 }
 </script>
 
 <template>
   <SearchPanel @search="handleSearch" />
   <DocumentUnitList
-    :doc-units="docUnits"
+    :doc-units="filteredDocUnits"
     :first-row-index="firstRowIndex"
     :rows-per-page="ITEMS_PER_PAGE"
     :total-rows="totalRows"
