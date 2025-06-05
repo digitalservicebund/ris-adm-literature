@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchException;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
@@ -108,13 +107,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.update(documentationUnitEntity.getDocumentNumber(), json);
 
     // then
-    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
-      .getEntityManager()
-      .createQuery(
-        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
-        DocumentationUnitIndexEntity.class
-      );
-    query.setParameter("documentationUnit", documentationUnitEntity);
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
       .extracting(
@@ -270,13 +263,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.indexAll();
 
     // then
-    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
-      .getEntityManager()
-      .createQuery(
-        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
-        DocumentationUnitIndexEntity.class
-      );
-    query.setParameter("documentationUnit", documentationUnitEntity);
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
       .extracting(
@@ -304,13 +291,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.indexAll();
 
     // then
-    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
-      .getEntityManager()
-      .createQuery(
-        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
-        DocumentationUnitIndexEntity.class
-      );
-    query.setParameter("documentationUnit", documentationUnitEntity);
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
       .extracting(
@@ -339,13 +320,21 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       }
       """
     );
-    entityManager.persistAndFlush(documentationUnitEntity);
+    documentationUnitEntity = entityManager.persistAndFlush(documentationUnitEntity);
 
     // when
-    Exception exception = catchException(() -> documentationUnitPersistenceService.indexAll());
+    documentationUnitPersistenceService.indexAll();
 
     // then
-    assertThat(exception).isInstanceOf(IllegalStateException.class);
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(null, null, null);
   }
 
   @Test
@@ -363,13 +352,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.indexAll();
 
     // then
-    TypedQuery<DocumentationUnitIndexEntity> query = entityManager
-      .getEntityManager()
-      .createQuery(
-        "from DocumentationUnitIndexEntity where documentationUnit = :documentationUnit",
-        DocumentationUnitIndexEntity.class
-      );
-    query.setParameter("documentationUnit", documentationUnitEntity);
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
       .extracting(
@@ -395,6 +378,20 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitPersistenceService.indexAll();
 
     // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getLangueberschrift,
+        DocumentationUnitIndexEntity::getFundstellen,
+        DocumentationUnitIndexEntity::getZitierdaten
+      )
+      .containsExactly(null, null, null);
+  }
+
+  private TypedQuery<DocumentationUnitIndexEntity> createTypedQuery(
+    DocumentationUnitEntity documentationUnitEntity
+  ) {
     TypedQuery<DocumentationUnitIndexEntity> query = entityManager
       .getEntityManager()
       .createQuery(
@@ -402,6 +399,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
         DocumentationUnitIndexEntity.class
       );
     query.setParameter("documentationUnit", documentationUnitEntity);
-    assertThat(query.getResultList()).isEmpty();
+    return query;
   }
 }
