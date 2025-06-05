@@ -7,6 +7,7 @@ import App from './App.vue'
 import * as Sentry from '@sentry/vue'
 import '@/styles/global.css'
 import router from '@/router.ts'
+import { ToastService } from 'primevue'
 
 const app = createApp(App)
 
@@ -30,4 +31,5 @@ app
     locale: RisUiLocale.deDE,
   })
   .use(router)
+  .use(ToastService)
   .mount('#app')
