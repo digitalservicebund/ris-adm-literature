@@ -20,7 +20,7 @@ springdoc:
 
 # Every day from Monday to Friday at 5 am
 #cronjob.DocumentationUnitIndexJob: "0 0 8 * * Mon-Fri"
-cronjob.DocumentationUnitIndexJob: "0 0/15 8-17 * * Mon-Fri"
+cronjob.DocumentationUnitIndexJob: "-"
 
 ---
 
