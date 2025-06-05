@@ -140,35 +140,14 @@ class DocumentationUnitControllerTest {
             new DocumentationUnitOverviewElement(
               UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
               "KSNR000004711",
-              "2011-11-11",
+              List.of("2011-11-11"),
               "Sample Document Title 1",
-              List.of(
-                new Fundstelle(
-                  UUID.fromString("11111111-1fd3-4fb8-bc1d-9751ad192665"),
-                  "zitatstelle 1",
-                  new Periodikum(
-                    UUID.fromString("33333333-1657-4085-ae2a-993a04c27f6b"),
-                    "periodikum title 1",
-                    "periodikum subtitle 1",
-                    "p.abbrev.1"
-                  )
-                ),
-                new Fundstelle(
-                  UUID.fromString("22222222-1fd3-4fb8-bc1d-9751ad192665"),
-                  "zitatstelle 2",
-                  new Periodikum(
-                    UUID.fromString("44444444-1657-4085-ae2a-993a04c27f6b"),
-                    "periodikum title 2",
-                    "periodikum subtitle 2",
-                    "p.abbrev.2"
-                  )
-                )
-              )
+              List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2")
             ),
             new DocumentationUnitOverviewElement(
               UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
               "KSNR000004712",
-              "2011-11-11",
+              List.of("2011-11-11"),
               "Sample Document Title 2",
               List.of()
             )
@@ -203,8 +182,8 @@ class DocumentationUnitControllerTest {
         .andExpect(
           jsonPath("$.documentationUnitsOverview[1].documentNumber").value("KSNR000004712")
         )
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdatum").value("2011-11-11"))
-        .andExpect(jsonPath("$.documentationUnitsOverview[1].zitierdatum").value("2011-11-11"))
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdaten[0]").value("2011-11-11"))
+        .andExpect(jsonPath("$.documentationUnitsOverview[1].zitierdaten[0]").value("2011-11-11"))
         .andExpect(
           jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(
             "Sample Document Title 1"
@@ -218,7 +197,7 @@ class DocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("return array of Fundstellen with ids and Zitatstellen")
+    @DisplayName("return array of Fundstellen")
     void findListOfDocumentsWithFundstellen() throws Exception {
       // given
 
@@ -227,58 +206,14 @@ class DocumentationUnitControllerTest {
         .perform(get("/api/documentation-units"))
         // then
         .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").isNotEmpty())
-        // ids
         .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].id").value(
-            "11111111-1fd3-4fb8-bc1d-9751ad192665"
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[0]").value(
+            "p.abbrev.1 zitatstelle 1"
           )
         )
         .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[1].id").value(
-            "22222222-1fd3-4fb8-bc1d-9751ad192665"
-          )
-        )
-        // Zitatstellen
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].zitatstelle").value(
-            "zitatstelle 1"
-          )
-        )
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[1].zitatstelle").value(
-            "zitatstelle 2"
-          )
-        );
-    }
-
-    @Test
-    @DisplayName("return Periodikum with id, title, subtitle and abbreviation")
-    void findListOfDocumentsWithFundstellenAndPeriodika() throws Exception {
-      // given
-
-      // when
-      mockMvc
-        .perform(get("/api/documentation-units"))
-        // then
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum").exists())
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.id").value(
-            "33333333-1657-4085-ae2a-993a04c27f6b"
-          )
-        )
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.title").value(
-            "periodikum title 1"
-          )
-        )
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.subtitle").value(
-            "periodikum subtitle 1"
-          )
-        )
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].fundstellen[0].periodikum.abbreviation").value(
-            "p.abbrev.1"
+          jsonPath("$.documentationUnitsOverview[0].fundstellen[1]").value(
+            "p.abbrev.2 zitatstelle 2"
           )
         );
     }

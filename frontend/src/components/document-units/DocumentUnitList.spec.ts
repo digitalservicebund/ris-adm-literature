@@ -8,30 +8,14 @@ const docUnitsMock: DocumentUnitListItem[] = [
   {
     id: 'docUnitId1',
     documentNumber: 'dokumentNummer1',
-    zitierdatum: '2025-01-01',
+    zitierdaten: ['2025-01-01'],
     langueberschrift: 'Berücksichtigung von Sonderleistungen im Rahmen der Übergangsregelung',
-    fundstellen: [
-      {
-        id: 'referenceId1',
-        zitatstelle: '§2.1',
-        periodikum: {
-          id: 'periodicalId1',
-          abbreviation: 'ZentrBl',
-        },
-      },
-      {
-        id: 'referenceId2',
-        zitatstelle: 'Kapitel 4',
-        periodikum: {
-          id: 'periodicalId2',
-          abbreviation: 'DokZ-S',
-        },
-      },
-    ],
+    fundstellen: ['ZentrBl §2.1', 'DokZ-S Kapitel 4'],
   },
   {
     id: 'docUnitId2',
     documentNumber: 'documentNummer2',
+    zitierdaten: [],
     langueberschrift:
       'Verwaltungsvorschrift zur Prüfung von Einmalzahlungen im Rahmen des § 6 Abs. 3 Satz 2 Sozialleistungsharmonisierungsgesetzes (SLHG)',
     fundstellen: [],
@@ -77,7 +61,8 @@ describe('DocumentUnitList', () => {
     expect(columns[0]).toHaveTextContent('dokumentNummer1')
     expect(columns[1]).toHaveTextContent('01.01.2025')
     expect(columns[2]).toHaveTextContent('Berücksichtigung von Sonderleistungen')
-    expect(columns[3]).toHaveTextContent('ZentrBl §2.1, DokZ-S Kapitel 4')
+    expect(columns[3]).toHaveTextContent('ZentrBl §2.1')
+    expect(columns[3]).toHaveTextContent('DokZ-S Kapitel 4')
     const editButton = within(columns[4]).getByRole('button', {
       name: 'Dokument dokumentNummer1 editieren',
     })

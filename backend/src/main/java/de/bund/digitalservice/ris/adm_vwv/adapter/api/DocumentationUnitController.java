@@ -32,7 +32,7 @@ public class DocumentationUnitController {
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "10") int pageSize,
-    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "documentationUnit.documentNumber") String sortByProperty,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
