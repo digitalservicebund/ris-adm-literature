@@ -320,7 +320,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       }
       """
     );
-    documentationUnitEntity = entityManager.persistAndFlush(documentationUnitEntity);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
     documentationUnitPersistenceService.indexAll();
