@@ -1,19 +1,23 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.JaxbHtml;
 import jakarta.annotation.Nonnull;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import java.io.StringWriter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * Xml writer.
  */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class XmlWriter {
+
+  private final JAXBContext jaxbContext;
 
   /**
    * Transforms a JAXb element into a string. The output contains an XML header node.
@@ -33,8 +37,6 @@ public class XmlWriter {
    */
   public String writeXml(@Nonnull Object jaxbElement, boolean includeHeader) {
     try {
-      // Create JAXB instance with all possible root elements
-      JAXBContext jaxbContext = JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class);
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
       marshaller.setProperty(Marshaller.JAXB_FRAGMENT, !includeHeader);
