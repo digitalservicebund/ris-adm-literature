@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.JaxbHtml;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * Jaxb configuration to hold a singleton jaxb context bean.
  */
 @Configuration
+@Slf4j
 public class JaxbConfiguration {
 
   /**
@@ -21,6 +23,8 @@ public class JaxbConfiguration {
   @Bean
   public JAXBContext jaxbContext() throws JAXBException {
     // Create JAXB instance with all possible root elements
-    return JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class);
+    JAXBContext jaxbContext = JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class);
+    log.info("JAXB context created.");
+    return jaxbContext;
   }
 }
