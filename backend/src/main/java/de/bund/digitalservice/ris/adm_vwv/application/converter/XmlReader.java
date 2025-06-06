@@ -6,13 +6,19 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.StringReader;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * Xml reader.
  */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class XmlReader {
+
+  private final JAXBContext jaxbContext;
 
   /**
    * Transforms a plain string of XML into Java.
@@ -21,7 +27,6 @@ public class XmlReader {
    */
   public AkomaNtoso readXml(@Nonnull String xml) {
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(AkomaNtoso.class);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
       return (AkomaNtoso) unmarshaller.unmarshal(new StringReader(xml));
     } catch (JAXBException e) {

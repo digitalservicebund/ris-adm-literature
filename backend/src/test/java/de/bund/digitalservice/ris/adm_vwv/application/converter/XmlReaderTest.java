@@ -3,12 +3,23 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import static org.assertj.core.api.Assertions.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.JaxbHtml;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig
 class XmlReaderTest {
 
-  private final XmlReader xmlReader = new XmlReader();
+  private XmlReader xmlReader;
+
+  @BeforeEach
+  void beforeEach() throws JAXBException {
+    xmlReader = new XmlReader(JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class));
+  }
 
   @Test
   void readXml() {

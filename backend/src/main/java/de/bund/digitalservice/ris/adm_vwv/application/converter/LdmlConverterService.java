@@ -18,11 +18,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LdmlConverterService {
 
-  private final XmlReader xmlReader = new XmlReader();
+  private final XmlReader xmlReader;
   private final FundstellenTransformer fundstellenTransformer;
   private final DocumentTypeTransformer documentTypeTransformer;
   private final NormgeberTransformer normgeberTransformer;
   private final FieldsOfLawTransformer fieldsOfLawTransformer;
+  private final KurzreferatTransformer kurzreferatTransformer;
 
   /**
    * Converts the xml of the given documentation unit to business models.
@@ -47,7 +48,7 @@ public class LdmlConverterService {
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
       new TableOfContentsTransformer().transform(akomaNtoso),
-      new KurzreferatTransformer(akomaNtoso).transform(),
+      kurzreferatTransformer.transform(akomaNtoso),
       referenceNumbers,
       referenceNumbers.isEmpty(),
       documentTypeTransformer.transform(akomaNtoso),

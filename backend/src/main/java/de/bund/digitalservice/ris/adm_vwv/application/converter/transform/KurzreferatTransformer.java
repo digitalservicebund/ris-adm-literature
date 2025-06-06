@@ -6,22 +6,24 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.JaxbHtml;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.MainBody;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * Kurzreferat transformer.
  */
+@Component
 @RequiredArgsConstructor
 public class KurzreferatTransformer {
 
-  private final AkomaNtoso akomaNtoso;
-  private final XmlWriter xmlWriter = new XmlWriter();
+  private final XmlWriter xmlWriter;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a 'Kurzreferat' HTML string.
    *
+   * @param akomaNtoso The Akoma Ntoso XML object to transform
    * @return The 'Kurzreferat' HTML, or {@code null} if the surrounding {@code <mainBody>} element is {@code null}.
    */
-  public String transform() {
+  public String transform(AkomaNtoso akomaNtoso) {
     MainBody mainBody = akomaNtoso.getDoc().getMainBody();
     if (mainBody == null || mainBody.getHcontainer() != null) {
       // There are documents without a Kurzreferat. For pleasing LDML those documents do not contain a <div> tag,
