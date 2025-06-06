@@ -32,7 +32,7 @@ function onClickReset() {
 </script>
 
 <template>
-  <form class="p-32 bg-blue-200" @submit.prevent="handleSearch">
+  <form class="p-32 bg-blue-200" @submit.prevent="handleSearch" aria-label="Schnellsuche">
     <h2 class="ris-subhead-bold mb-32">Schnellsuche</h2>
     <div class="mb-32 grid grid-cols-[1fr_3fr_1fr_3fr] items-center gap-x-44 gap-y-24">
       <label class="ris-label2-regular" for="documentNumber">Dokumentnummer</label>
