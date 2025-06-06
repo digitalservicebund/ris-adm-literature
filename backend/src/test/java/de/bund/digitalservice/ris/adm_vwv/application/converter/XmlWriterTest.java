@@ -4,12 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig
 class XmlWriterTest {
 
-  private final XmlWriter xmlWriter = new XmlWriter();
+  private XmlWriter xmlWriter;
+
+  @BeforeEach
+  void beforeEach() throws JAXBException {
+    xmlWriter = new XmlWriter(JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class));
+  }
 
   @Test
   void writeXml() {

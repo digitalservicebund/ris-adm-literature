@@ -2,14 +2,29 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.bund.digitalservice.ris.adm_vwv.application.converter.XmlWriter;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
+import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 import java.util.List;
 import javax.xml.namespace.QName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig
 class KurzreferatTransformerTest {
+
+  private KurzreferatTransformer kurzreferatTransformer;
+
+  @BeforeEach
+  void beforeEach() throws JAXBException {
+    kurzreferatTransformer = new KurzreferatTransformer(
+      new XmlWriter(JAXBContext.newInstance(AkomaNtoso.class, JaxbHtml.class))
+    );
+  }
 
   @Test
   void transform() {
@@ -27,7 +42,7 @@ class KurzreferatTransformerTest {
     div.setHtml(List.of(textNode, line1, textNode, line2, textNode));
 
     // when
-    String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();
+    String actualKurzreferat = kurzreferatTransformer.transform(akomaNtoso);
 
     // then
     assertThat(actualKurzreferat).startsWith("<p>Zeile 1</p>").endsWith("<p>Zeile 2</p>");
@@ -43,7 +58,7 @@ class KurzreferatTransformerTest {
     doc.setMeta(meta);
 
     // when
-    String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();
+    String actualKurzreferat = kurzreferatTransformer.transform(akomaNtoso);
 
     // then
     assertThat(actualKurzreferat).isNull();
@@ -65,7 +80,7 @@ class KurzreferatTransformerTest {
     doc.setMainBody(mainBody);
 
     // when
-    String actualKurzreferat = new KurzreferatTransformer(akomaNtoso).transform();
+    String actualKurzreferat = kurzreferatTransformer.transform(akomaNtoso);
 
     // then
     assertThat(actualKurzreferat).isNull();
