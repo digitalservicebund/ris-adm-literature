@@ -42,7 +42,7 @@ function onClickReset() {
       <InputText id="fundstelle" v-model="searchParams.fundstelle" />
     </div>
     <div class="flex gap-24">
-      <Button label="Ergebnisse zeigen" type="submit" />
+      <Button label="Ergebnisse zeigen" disabled type="submit" />
       <Button label="Zurücksetzen" text :disabled="isSearchEmpty" @click="onClickReset" />
     </div>
   </form>

@@ -33,7 +33,8 @@ describe('SearchPanel', () => {
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
   })
 
-  it('should emit search params on click search', async () => {
+  // Skipped until implementation of search
+  it.skip('should emit search params on click search', async () => {
     const { emitted, user } = renderComponent()
 
     await user.type(screen.getByLabelText('Dokumentnummer'), 'KSNR')
