@@ -35,7 +35,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
       bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),
     }"
     scrollable
-    scroll-height="400px"
+    scroll-height="50vh"
   >
     <Column field="documentNumber" header="Dokumentnummer"></Column>
     <Column field="zitierdatum" header="Zitierdatum">
