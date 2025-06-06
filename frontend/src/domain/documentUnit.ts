@@ -34,6 +34,7 @@ export interface DocumentUnit {
   langueberschrift?: string
   keywords?: string[]
   zitierdatum?: string
+  zitierdaten?: string[]
   inkrafttretedatum?: string
   ausserkrafttretedatum?: string
   gliederung?: string

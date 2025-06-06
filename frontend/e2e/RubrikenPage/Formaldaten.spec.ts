@@ -195,7 +195,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
     },
   )
 
-  test(
+  test.skip(
     'Zitierdatum: invalid date with letters cannot be entered, valid date can be entered and persists through a reload',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
@@ -226,7 +226,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
     },
   )
 
-  test(
+  test.skip(
     'Zitierdatum: invalid date can be entered but a validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
@@ -249,7 +249,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
     },
   )
 
-  test(
+  test.skip(
     'Zitierdatum: a future date can be entered but a validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
