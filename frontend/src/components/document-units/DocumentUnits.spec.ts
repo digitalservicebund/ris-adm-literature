@@ -24,7 +24,7 @@ const mockDocUnits: DocumentUnitListItem[] = [
   {
     id: '3',
     documentNumber: 'VER-XYZ',
-    langueberschrift: 'Zweites Gesetz über die Finanzen',
+    langueberschrift: undefined,
     fundstellen: ['d3'],
     zitierdaten: [],
   },

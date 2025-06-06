@@ -52,7 +52,7 @@ function handleSearch(search: DocumentUnitSearchParams) {
           case 'langueberschrift':
             return (doc[key] ?? '').toLowerCase().includes(searchTerm)
           case 'fundstelle':
-            return doc.fundstellen?.some((item) => (item ?? '').toLowerCase().includes(searchTerm))
+            return doc.fundstellen?.some((item) => item.toLowerCase().includes(searchTerm))
           default:
             return true
         }
