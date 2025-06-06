@@ -19,6 +19,7 @@ import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
+import dayjs from 'dayjs'
 
 const store = useDocumentUnitStore()
 
@@ -30,9 +31,11 @@ const langueberschrift = computed({
 })
 
 const zitierdaten = computed({
-  get: () => store.documentUnit!.zitierdaten || [],
-  set: (newValue) => {
-    store.documentUnit!.zitierdaten = newValue
+  get: () => store.documentUnit!.zitierdaten?.map((d) => dayjs(d).format('DD.MM.YYYY')) || [],
+  set: (newValue: string[]) => {
+    store.documentUnit!.zitierdaten = newValue.map((d) =>
+      dayjs(d, 'DD.MM.YYYY').format('YYYY-MM-DD'),
+    )
   },
 })
 
