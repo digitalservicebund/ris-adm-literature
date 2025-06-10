@@ -143,7 +143,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void findDocumentationUnitOverviewElements() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s100001", Year.now()));
+    documentationUnitEntity.setDocumentNumber("KSNR2025100001");
     documentationUnitEntity.setJson(
       """
       {
@@ -196,6 +196,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
+      .filteredOn(documentationUnitOverviewElement -> documentationUnitOverviewElement.documentNumber().equals("KSNR2025100001"))
       .singleElement()
       .extracting(
         DocumentationUnitOverviewElement::zitierdaten,
@@ -213,12 +214,12 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void findDocumentationUnitOverviewElements_withoutFundstellen() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
-    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s100002", Year.now()));
+    documentationUnitEntity.setDocumentNumber("KSNR2025100002");
     documentationUnitEntity.setJson(
       """
       {
         "id": "11111111-1657-4085-ae2a-993a04c27f6b",
-        "documentNumber": "KSNR000004711",
+        "documentNumber": "KSNR2025100002",
         "zitierdatum": "2011-11-11",
         "langueberschrift": "Sample Document Title 1"
       }
@@ -241,6 +242,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
+      .filteredOn(documentationUnitOverviewElement -> documentationUnitOverviewElement.documentNumber().equals("KSNR2025100002"))
       .singleElement()
       .extracting(
         DocumentationUnitOverviewElement::zitierdaten,
