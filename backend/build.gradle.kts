@@ -39,7 +39,7 @@ extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.8"
 val sentryVersion = "8.13.2"
-val hypersistenceVersion = "3.9.11"
+val hypersistenceVersion = "3.10.0"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
