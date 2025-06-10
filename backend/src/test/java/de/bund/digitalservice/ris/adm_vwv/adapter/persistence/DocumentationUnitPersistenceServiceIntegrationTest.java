@@ -196,7 +196,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
-      .filteredOn(documentationUnitOverviewElement -> documentationUnitOverviewElement.documentNumber().equals("KSNR2025100001"))
+      .filteredOn(documentationUnitOverviewElement ->
+        documentationUnitOverviewElement.documentNumber().equals("KSNR2025100001")
+      )
       .singleElement()
       .extracting(
         DocumentationUnitOverviewElement::zitierdaten,
@@ -242,7 +244,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
-      .filteredOn(documentationUnitOverviewElement -> documentationUnitOverviewElement.documentNumber().equals("KSNR2025100002"))
+      .filteredOn(documentationUnitOverviewElement ->
+        documentationUnitOverviewElement.documentNumber().equals("KSNR2025100002")
+      )
       .singleElement()
       .extracting(
         DocumentationUnitOverviewElement::zitierdaten,
