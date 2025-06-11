@@ -55,6 +55,7 @@ test.describe('StartPage', () => {
       await expect(page).toHaveURL('/documentUnit/KSNR054920707/fundstellen')
     },
   )
+
   test(
     'Creates 2 documentation units and expects at least 2 on start page',
     { tag: ['@RISDEV-7787'] },
@@ -81,6 +82,39 @@ test.describe('StartPage', () => {
       // then
       await expect(page.getByText(documentNumber1)).toHaveCount(1)
       await expect(page.getByText(documentNumber2)).toHaveCount(1)
+    },
+  )
+
+  test(
+    'Counts 100 entries in the list of documentation units.',
+    { tag: ['@RISDEV-7601'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      // when
+      // then
+      await expect(page.getByText('KSNR')).toHaveCount(100)
+    },
+  )
+
+  test(
+    'Switches over to the second page of search entries, finds at least one other entry and switches back.',
+    { tag: ['@RISDEV-7601'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+
+      // when
+      await page.getByRole('button', { name: 'Weiter', exact: true }).click()
+
+      // then
+      expect(await page.getByText('KSNR').count()).toBeGreaterThanOrEqual(1)
+
+      // when
+      await page.getByRole('button', { name: 'Zurück', exact: true }).click()
+
+      // then
+      await expect(page.getByRole('button', { name: 'Zurück', exact: true })).toHaveCount(0)
     },
   )
 })
