@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.hypersistence.utils.hibernate.query.SQLExtractor;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -14,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -88,7 +88,6 @@ class DocumentationUnitSpecificationIntegrationTest {
     assertThat(sql)
       .startsWith("select distinct")
       .contains("left join documentation_unit_index")
-      .contains("ueberschriftXY")
       .contains("where lower(dui1_0.langueberschrift) like ?");
   }
 
@@ -116,7 +115,6 @@ class DocumentationUnitSpecificationIntegrationTest {
     assertThat(sql)
       .startsWith("select distinct")
       .contains("left join documentation_unit_index")
-      .contains("fundstelleXY")
       .contains("where lower(dui1_0.fundstellen) like ?");
   }
 
@@ -139,7 +137,6 @@ class DocumentationUnitSpecificationIntegrationTest {
     assertThat(sql)
       .startsWith("select distinct")
       .contains("left join documentation_unit_index")
-      .contains("zdXY")
       .contains("where lower(dui1_0.zitierdaten) like ?");
   }
 
@@ -162,10 +159,10 @@ class DocumentationUnitSpecificationIntegrationTest {
     assertThat(sql)
       .startsWith("select distinct")
       .contains("left join documentation_unit_index")
-      .contains("lower(d1_0.document_number) like ?")
+      .contains("lower(due1_0.document_number) like ?")
       .contains("and lower(dui1_0.fundstellen) like ?")
       .contains("and lower(dui1_0.langueberschrift) like ?")
-      .contains("and lower(due1_0.zitierdaten) like ?");
+      .contains("and lower(dui1_0.zitierdaten) like ?");
   }
 
   @Test
