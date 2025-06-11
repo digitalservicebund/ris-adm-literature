@@ -2,11 +2,10 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
-
-import java.util.ArrayList;
 
 /**
  * JPA specification for querying documentation units by documentNumber, langueberschrift and fundstellen.
@@ -14,12 +13,10 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class DocumentUnitSpecification implements Specification<DocumentationUnitEntity> {
 
-
   private final String documentNumber;
   private final String langueberschrift;
   private final String fundstellen;
   private final String zitierdaten;
-
 
   @Override
   public Predicate toPredicate(
@@ -29,28 +26,46 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
     if (StringUtils.hasText(documentNumber)) {
-      predicates.add(criteriaBuilder.like(
-        criteriaBuilder.lower(root.get("documentNumber")),
-        "%" + documentNumber.toLowerCase() + "%"
-      ));
+      predicates.add(
+        criteriaBuilder.like(
+          criteriaBuilder.lower(root.get("documentNumber")),
+          "%" + documentNumber.toLowerCase() + "%"
+        )
+      );
     }
-    if (StringUtils.hasText(fundstellen) || StringUtils.hasText(langueberschrift) || StringUtils.hasText(zitierdaten)) {
-      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join("documentationUnitIndex", JoinType.LEFT);
+    if (
+      StringUtils.hasText(fundstellen) ||
+      StringUtils.hasText(langueberschrift) ||
+      StringUtils.hasText(zitierdaten)
+    ) {
+      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
+        "documentationUnitIndex",
+        JoinType.LEFT
+      );
 
       if (StringUtils.hasText(fundstellen)) {
-        predicates.add(criteriaBuilder.like(criteriaBuilder.lower(indexJoin.get("fundstellen")), "%" + fundstellen.toLowerCase() + "%"));
+        predicates.add(
+          criteriaBuilder.like(
+            criteriaBuilder.lower(indexJoin.get("fundstellen")),
+            "%" + fundstellen.toLowerCase() + "%"
+          )
+        );
       }
       if (StringUtils.hasText(langueberschrift)) {
-        predicates.add(criteriaBuilder.like(
-          criteriaBuilder.lower(indexJoin.get("langueberschrift")),
-          "%" + langueberschrift.toLowerCase() + "%"
-        ));
+        predicates.add(
+          criteriaBuilder.like(
+            criteriaBuilder.lower(indexJoin.get("langueberschrift")),
+            "%" + langueberschrift.toLowerCase() + "%"
+          )
+        );
       }
       if (StringUtils.hasText(zitierdaten)) {
-        predicates.add(criteriaBuilder.like(
-          criteriaBuilder.lower(indexJoin.get("zitierdaten")),
-          "%" + zitierdaten.toLowerCase() + "%"
-        ));
+        predicates.add(
+          criteriaBuilder.like(
+            criteriaBuilder.lower(indexJoin.get("zitierdaten")),
+            "%" + zitierdaten.toLowerCase() + "%"
+          )
+        );
       }
     }
     query.distinct(true);

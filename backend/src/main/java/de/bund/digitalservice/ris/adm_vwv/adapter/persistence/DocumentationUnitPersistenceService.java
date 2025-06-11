@@ -109,31 +109,36 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
 
-      DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(query.documentNumber(), query.langueberschrift(), query.fundstellen(), query.zitierdaten());
-      org.springframework.data.domain.Page<DocumentationUnitEntity> documentationUnitsPage = documentationUnitRepository.findAll(documentUnitSpecification, pageable);
-      return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
-        DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
+      query.documentNumber(),
+      query.langueberschrift(),
+      query.fundstellen(),
+      query.zitierdaten()
+    );
+    org.springframework.data.domain.Page<DocumentationUnitEntity> documentationUnitsPage =
+      documentationUnitRepository.findAll(documentUnitSpecification, pageable);
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
-        if (index == null) {
-          return new DocumentationUnitOverviewElement(
-            documentationUnit.getId(),
-            documentationUnit.getDocumentNumber(),
-            null,
-            null,
-            null
-          );
-        }
-
+      if (index == null) {
         return new DocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
-          splitBySeparator(index.getZitierdaten()),
-          index.getLangueberschrift(),
-          splitBySeparator(index.getFundstellen())
+          null,
+          null,
+          null
         );
-      });
+      }
 
-/*    } else {
+      return new DocumentationUnitOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        splitBySeparator(index.getZitierdaten()),
+        index.getLangueberschrift(),
+        splitBySeparator(index.getFundstellen())
+      );
+    });
+    /*    } else {
       var documentationUnitIndices = documentationUnitIndexRepository.findAll(pageable);
       return PageTransformer.transform(documentationUnitIndices, documentationUnitIndexEntity ->
         new DocumentationUnitOverviewElement(

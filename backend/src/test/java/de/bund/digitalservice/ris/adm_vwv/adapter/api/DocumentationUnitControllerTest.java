@@ -229,7 +229,13 @@ class DocumentationUnitControllerTest {
       String fundstellen = "p.abbrev.1";
       String zitierdaten = "2011-11-11";
 
-      QueryOptions queryOptions = new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true);
+      QueryOptions queryOptions = new QueryOptions(
+        0,
+        10,
+        "documentNumber",
+        Sort.Direction.ASC,
+        true
+      );
       DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
         documentNumber,
         langueberschrift,
@@ -238,20 +244,19 @@ class DocumentationUnitControllerTest {
         queryOptions
       );
 
-      given(documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery))
-        .willReturn(
-          TestPage.create(
-            List.of(
-              new DocumentationUnitOverviewElement(
-                UUID.randomUUID(),
-                documentNumber,
-                List.of(zitierdaten),
-                langueberschrift,
-                List.of(fundstellen)
-              )
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery)).willReturn(
+        TestPage.create(
+          List.of(
+            new DocumentationUnitOverviewElement(
+              UUID.randomUUID(),
+              documentNumber,
+              List.of(zitierdaten),
+              langueberschrift,
+              List.of(fundstellen)
             )
           )
-        );
+        )
+      );
 
       // when
       mockMvc
@@ -262,13 +267,14 @@ class DocumentationUnitControllerTest {
             .param("fundstellen", fundstellen)
             .param("zitierdaten", zitierdaten)
         )
-
         // then
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.documentationUnitsOverview[0].documentNumber").value(documentNumber))
         .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdaten").value(zitierdaten))
         .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").value(fundstellen))
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift));
+        .andExpect(
+          jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
+        );
     }
   }
 }

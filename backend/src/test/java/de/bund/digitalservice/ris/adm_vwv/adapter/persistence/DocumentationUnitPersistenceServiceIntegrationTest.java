@@ -187,7 +187,13 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(null, null, null, null, new QueryOptions(0, 10, "id", Sort.Direction.ASC, false))
+        new DocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        )
       );
 
     // then
@@ -235,7 +241,13 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(null, null, null, null, new QueryOptions(0, 10, "id", Sort.Direction.ASC, false))
+        new DocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        )
       );
 
     // then
