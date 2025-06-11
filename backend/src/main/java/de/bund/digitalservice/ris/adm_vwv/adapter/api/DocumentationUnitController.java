@@ -1,7 +1,10 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
@@ -22,6 +25,10 @@ public class DocumentationUnitController {
    * Returns information on all documentation units as required by the
    * documentation units overview
    *
+   * @param documentNumber Filter by documentNumber.
+   * @param langueberschrift Filter by langueberschrift.
+   * @param fundstellen Filter by fundstellen.
+   * @param zitierdaten Filter by zitierdaten.
    * @param pageNumber Which page of pagination to return?
    * @param pageSize How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
