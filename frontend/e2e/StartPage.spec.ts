@@ -137,4 +137,46 @@ test.describe('StartPage', () => {
       await expect(page.getByRole('button', { name: 'Speichern', exact: true })).toHaveCount(1)
     },
   )
+
+  test(
+    'Add a document, check if is indexed, change it, check if re-indexed.',
+    { tag: ['@RISDEV-7601'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+
+      // when
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      const documentNumber = page
+        .url()
+        .split('/')
+        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
+      await page.getByText('Rubriken').click()
+      const langue = page.getByRole('textbox', { name: 'Amtl. Langüberschrift' })
+      const text1 = 'reindextest' + Date.now().toString()
+      await langue.fill(text1)
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.goto('/')
+
+      // then
+      await expect(page.getByText(text1)).toHaveCount(1)
+
+      // when
+      await page
+        .getByRole('button', {
+          name: 'Dokument ' + documentNumber + ' editieren',
+        })
+        .click()
+      await page.getByText('Rubriken').click()
+      const text2 = 'reindextest' + Date.now().toString()
+      await langue.fill(text2)
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.goto('/')
+
+      // then
+      await expect(page.getByText(text2)).toHaveCount(1)
+    },
+  )
 })
