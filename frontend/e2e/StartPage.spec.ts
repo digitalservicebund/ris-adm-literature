@@ -117,4 +117,24 @@ test.describe('StartPage', () => {
       await expect(page.getByRole('button', { name: 'Zurück', exact: true })).toHaveCount(0)
     },
   )
+
+  test(
+    'Start editing documentation unit from the search results',
+    { tag: ['@RISDEV-7601'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+
+      // when
+      await page
+        .getByRole('button', {
+          name: /Dokument KSNR\d+ editieren/i,
+        })
+        .first()
+        .click()
+
+      // then
+      await expect(page.getByRole('button', { name: 'Speichern', exact: true })).toHaveCount(1)
+    },
+  )
 })
