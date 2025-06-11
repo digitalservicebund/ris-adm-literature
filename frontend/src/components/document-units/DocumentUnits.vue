@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { DocumentUnitListItem } from '@/domain/documentUnit'
+import type { DocumentUnitListItem, DocumentUnitSearchParams } from '@/domain/documentUnit'
 import { onMounted } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import documentUnitService from '@/services/documentUnitService'
@@ -14,7 +14,7 @@ const {
   items: docUnits,
   ITEMS_PER_PAGE,
   fetchPaginatedData,
-} = usePagination<DocumentUnitListItem>(
+} = usePagination<DocumentUnitListItem, DocumentUnitSearchParams>(
   documentUnitService.getPaginatedDocumentUnitList,
   'documentationUnitsOverview',
 )
@@ -27,8 +27,9 @@ function handlePageUpdate(pageState: PageState) {
   fetchPaginatedData(pageState.page)
 }
 
-function handleSearch() {
-  // fetch filtered results from BE
+function handleSearch(search: DocumentUnitSearchParams) {
+  console.log(search)
+  fetchPaginatedData(0, search)
 }
 </script>
 

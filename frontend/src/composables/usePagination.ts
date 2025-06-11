@@ -38,9 +38,9 @@ import errorMessages from '@/i18n/errors.json'
  *   error?: unknown
  * }
  */
-export function usePagination<T>(
+export function usePagination<T, S>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchData: (page: number, itemsPerPage: number) => Promise<any>,
+  fetchData: (page: number, itemsPerPage: number, searchParams?: S) => Promise<any>,
   paginatedResponseKey: string,
 ) {
   const ITEMS_PER_PAGE = 100
@@ -48,13 +48,19 @@ export function usePagination<T>(
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)
   const items = ref<T[]>([])
+  const searchParams = ref<S | undefined>()
   const firstRowIndex = computed<number>(() => pageNumber.value * ITEMS_PER_PAGE)
   const toast = useToast()
-
-  const fetchPaginatedData = async (page: number = 0) => {
+  const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
     isLoading.value = true
+
+    if (newSearch !== undefined) {
+      searchParams.value = newSearch
+      page = 0
+    }
+
     try {
-      const { data, error } = await fetchData(page, ITEMS_PER_PAGE)
+      const { data, error } = await fetchData(page, ITEMS_PER_PAGE, searchParams.value)
 
       if (error) {
         // Showing server error

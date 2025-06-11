@@ -1,18 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_vwv.application.Page;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import jakarta.persistence.TypedQuery;
-import java.time.Year;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Year;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -189,7 +187,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        new DocumentationUnitQuery(null, null, null, null, new QueryOptions(0, 10, "id", Sort.Direction.ASC, false))
       );
 
     // then
@@ -237,7 +235,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        new DocumentationUnitQuery(null, null, null, null, new QueryOptions(0, 10, "id", Sort.Direction.ASC, false))
       );
 
     // then

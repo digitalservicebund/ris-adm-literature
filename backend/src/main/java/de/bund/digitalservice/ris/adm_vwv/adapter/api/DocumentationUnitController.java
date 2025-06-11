@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,13 @@ public class DocumentationUnitController {
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
+    @RequestParam(value = "documentNumber", required = false) String documentNumber,
+    @RequestParam(value = "langueberschrift", required = false) String langueberschrift,
+    @RequestParam(value = "fundstellen", required = false) String fundstellen,
+    @RequestParam(value = "zitierdaten", required = false) String zitierdaten,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "10") int pageSize,
-    @RequestParam(defaultValue = "documentationUnit.documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
@@ -44,7 +49,13 @@ public class DocumentationUnitController {
       usePagination
     );
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
-      queryOptions
+      new DocumentationUnitQuery(
+        StringUtils.trimToNull(documentNumber),
+        StringUtils.trimToNull(langueberschrift),
+        StringUtils.trimToNull(fundstellen),
+        StringUtils.trimToNull(zitierdaten),
+        queryOptions
+      )
     );
     return ResponseEntity.ok(
       new DocumentationUnitsOverviewResponse(

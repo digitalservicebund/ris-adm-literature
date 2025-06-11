@@ -1,20 +1,21 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.BDDMockito.given;
-
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
-import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.BDDMockito.given;
 
 @SpringJUnitConfig
 class FundstellenTransformerTest {
@@ -82,7 +83,7 @@ class FundstellenTransformerTest {
 
   @Test
   @DisplayName(
-    "Transforms one fundstelle without legal periodical because abbreviation 'BRD' is ambiguous"
+    "Transforms one fundstellen without legal periodical because abbreviation 'BRD' is ambiguous"
   )
   void transform_ambiguousLegalPeriodical() {
     // given

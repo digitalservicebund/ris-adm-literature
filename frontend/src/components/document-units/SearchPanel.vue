@@ -10,7 +10,8 @@ const emit = defineEmits<{
 const searchParams = ref<DocumentUnitSearchParams>({
   documentNumber: '',
   langueberschrift: '',
-  fundstelle: '',
+  fundstellen: '',
+  zitierdaten: '',
 })
 
 const isSearchEmpty = computed(() =>
@@ -25,8 +26,10 @@ function onClickReset() {
   searchParams.value = {
     documentNumber: '',
     langueberschrift: '',
-    fundstelle: '',
+    fundstellen: '',
+    zitierdaten: '',
   }
+  emit('search', searchParams.value)
 }
 </script>
 
@@ -39,10 +42,12 @@ function onClickReset() {
       <label class="ris-label2-regular" for="langueberschrift">Amtl. Langüberschrift</label>
       <InputText id="langueberschrift" v-model="searchParams.langueberschrift" />
       <label class="ris-label2-regular" for="fundstelle">Fundstelle</label>
-      <InputText id="fundstelle" v-model="searchParams.fundstelle" />
+      <InputText id="fundstelle" v-model="searchParams.fundstellen" />
+      <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
+      <InputText id="zitierdatum" v-model="searchParams.zitierdaten" />
     </div>
     <div class="flex gap-24">
-      <Button label="Ergebnisse zeigen" disabled type="submit" />
+      <Button label="Ergebnisse zeigen" type="submit" />
       <Button label="Zurücksetzen" text :disabled="isSearchEmpty" @click="onClickReset" />
     </div>
   </form>
