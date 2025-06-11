@@ -28,7 +28,6 @@ function handlePageUpdate(pageState: PageState) {
 }
 
 function handleSearch(search: DocumentUnitSearchParams) {
-  console.log(search)
   fetchPaginatedData(0, search)
 }
 </script>

@@ -11,7 +11,6 @@ export interface DocumentUnitListProps {
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
-  loading: boolean
 }
 defineProps<DocumentUnitListProps>()
 
