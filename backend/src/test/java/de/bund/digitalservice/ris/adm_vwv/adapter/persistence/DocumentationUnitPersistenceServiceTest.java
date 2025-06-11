@@ -1,14 +1,27 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import java.util.Optional;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
 
 @SpringJUnitConfig
 class DocumentationUnitPersistenceServiceTest {
@@ -53,4 +66,56 @@ class DocumentationUnitPersistenceServiceTest {
     // then
     assertThat(documentationUnit).isEmpty();
   }
+
+  @Test
+  void findDocumentationUnitOverviewElements() {
+    // given
+    DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
+    entityWithIndex.setId(UUID.randomUUID());
+    entityWithIndex.setDocumentNumber("DOC-001");
+    DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setLangueberschrift("Title 1");
+    index.setZitierdaten("2023-01-01");
+    index.setFundstellen("Citation 1");
+    entityWithIndex.setDocumentationUnitIndex(index);
+
+    DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
+    entityWithoutIndex.setId(UUID.randomUUID());
+    entityWithoutIndex.setDocumentNumber("DOC-002");
+    entityWithoutIndex.setDocumentationUnitIndex(null);
+
+    Page<DocumentationUnitEntity> pageOfEntities = new PageImpl<>(
+      List.of(entityWithIndex, entityWithoutIndex)
+    );
+
+    // Mock the new repository method
+    given(documentationUnitRepository.findAll(any(Specification.class), any(Pageable.class)))
+      .willReturn(pageOfEntities);
+
+    // when
+    de.bund.digitalservice.ris.adm_vwv.application.Page<DocumentationUnitOverviewElement> result =
+      documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+        new DocumentationUnitQuery(null, null, null, null, new QueryOptions(0, 10, "id", Sort.Direction.ASC, true))
+      );
+
+    // then
+    assertThat(result.size()).isEqualTo(2);
+
+    // Assert transformation for the entity WITH an index
+    DocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    assertThat(elementWithIndex.id()).isEqualTo(entityWithIndex.getId());
+    assertThat(elementWithIndex.documentNumber()).isEqualTo("DOC-001");
+    assertThat(elementWithIndex.langueberschrift()).isEqualTo("Title 1");
+    assertThat(elementWithIndex.zitierdaten()).containsExactly("2023-01-01");
+    assertThat(elementWithIndex.fundstellen()).containsExactly("Citation 1");
+
+    // Assert transformation for the entity WITHOUT an index
+    DocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    assertThat(elementWithoutIndex.id()).isEqualTo(entityWithoutIndex.getId());
+    assertThat(elementWithoutIndex.documentNumber()).isEqualTo("DOC-002");
+    assertThat(elementWithoutIndex.langueberschrift()).isNull();
+    assertThat(elementWithoutIndex.zitierdaten()).isNull();
+    assertThat(elementWithoutIndex.fundstellen()).isNull();
+  }
+
 }
