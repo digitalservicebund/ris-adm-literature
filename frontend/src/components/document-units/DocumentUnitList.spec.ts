@@ -47,6 +47,17 @@ describe('DocumentUnitList', () => {
     expect(screen.getAllByRole('row')).toHaveLength(3)
   })
 
+  it('renders no result msg if there are no search results', () => {
+    renderComponent({
+      docUnits: [],
+      rowsPerPage: 100,
+      totalRows: 0,
+      firstRowIndex: 0,
+      loading: false,
+    })
+    expect(screen.getByText('Keine Suchergebnisse gefunden.')).toBeInTheDocument()
+  })
+
   it('shows the document number, zitierdatum, langueberschrift, fundstelle and an edit button in the first row', () => {
     renderComponent({
       docUnits: docUnitsMock,

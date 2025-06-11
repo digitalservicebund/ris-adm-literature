@@ -11,6 +11,7 @@ export interface DocumentUnitListProps {
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
+  loading: boolean
 }
 defineProps<DocumentUnitListProps>()
 
@@ -72,5 +73,8 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
         </router-link>
       </template>
     </Column>
+    <template #empty>
+      <div>Keine Suchergebnisse gefunden.</div>
+    </template>
   </DataTable>
 </template>
