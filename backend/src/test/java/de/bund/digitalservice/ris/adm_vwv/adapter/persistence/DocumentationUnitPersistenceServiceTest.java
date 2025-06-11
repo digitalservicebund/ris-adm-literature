@@ -1,16 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +12,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @SpringJUnitConfig
 class DocumentationUnitPersistenceServiceTest {
@@ -85,7 +86,6 @@ class DocumentationUnitPersistenceServiceTest {
       List.of(entityWithIndex, entityWithoutIndex)
     );
 
-    // Mock the new repository method
     given(
       documentationUnitRepository.findAll(any(DocumentUnitSpecification.class), any(Pageable.class))
     ).willReturn(pageOfEntities);
