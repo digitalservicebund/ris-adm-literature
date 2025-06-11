@@ -305,7 +305,7 @@ class LdmlConverterServiceIntegrationTest {
   }
 
   @Test
-  void convertToBusinessModel_dateToQuote() {
+  void convertToBusinessModel_datesToQuote() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
@@ -323,8 +323,9 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(documentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::zitierdatum)
-      .isEqualTo("2025-05-05");
+      .extracting(DocumentationUnitContent::zitierdaten)
+      .asInstanceOf(InstanceOfAssertFactories.list(String.class))
+      .containsExactly("2025-05-05", "2025-06-01");
   }
 
   @Test

@@ -37,10 +37,10 @@ class DateToQuoteTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    String actualDateToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
+    List<String> actualDatesToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
 
     // then
-    assertThat(actualDateToQuote).isEqualTo("2021-12-12");
+    assertThat(actualDatesToQuote).containsExactly("2021-12-12", "2021-12-31");
   }
 
   @Test
@@ -59,10 +59,10 @@ class DateToQuoteTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    String actualDateToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
+    List<String> actualDatesToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
 
     // then
-    assertThat(actualDateToQuote).isNull();
+    assertThat(actualDatesToQuote).isEmpty();
   }
 
   @Test
@@ -89,9 +89,9 @@ class DateToQuoteTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    String actualDateToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
+    List<String> actualDatesToQuote = new DateToQuoteTransformer(akomaNtoso).transform();
 
     // then
-    assertThat(actualDateToQuote).isNull();
+    assertThat(actualDatesToQuote).isEmpty();
   }
 }

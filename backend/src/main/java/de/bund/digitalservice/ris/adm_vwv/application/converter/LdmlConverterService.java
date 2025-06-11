@@ -44,7 +44,6 @@ public class LdmlConverterService {
       new LongTitleTransformer(akomaNtoso).transform(),
       new KeywordsTransformer(akomaNtoso).transform(),
       new DateToQuoteTransformer(akomaNtoso).transform(),
-      new DateToQuoteTransformer(akomaNtoso).transformList(),
       new EntryIntoEffectDateTransformer(akomaNtoso).transform(),
       new ExpiryDateTransformer(akomaNtoso).transform(),
       new TableOfContentsTransformer().transform(akomaNtoso),

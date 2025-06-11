@@ -14,7 +14,6 @@ import java.util.UUID;
  * @param fieldsOfLaw           List of fields of law
  * @param langueberschrift      Long title
  * @param keywords              List of keywords
- * @param zitierdatum           Date of quote
  * @param zitierdaten           List of Date of quotes
  * @param inkrafttretedatum     Date of entry into effect
  * @param ausserkrafttretedatum Date of expiration
@@ -38,7 +37,6 @@ public record DocumentationUnitContent(
   List<FieldOfLaw> fieldsOfLaw,
   String langueberschrift,
   List<String> keywords,
-  String zitierdatum,
   List<String> zitierdaten,
   String inkrafttretedatum,
   String ausserkrafttretedatum,

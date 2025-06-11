@@ -133,7 +133,6 @@ class DocumentationUnitServiceTest {
       List.of(),
       null,
       List.of(),
-      null,
       List.of(),
       null,
       null,
