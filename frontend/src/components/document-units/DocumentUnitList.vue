@@ -5,6 +5,7 @@ import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import IconEdit from '~icons/ic/outline-edit'
+import messages from '@/i18n/messages.json'
 
 export interface DocumentUnitListProps {
   docUnits: DocumentUnitListItem[]
@@ -73,7 +74,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
       </template>
     </Column>
     <template #empty>
-      <div>Keine Suchergebnisse gefunden.</div>
+      <div>{{ messages.NO_SEARCH_RESULTS.message }}</div>
     </template>
   </DataTable>
 </template>
