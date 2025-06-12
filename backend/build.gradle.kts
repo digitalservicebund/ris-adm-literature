@@ -137,7 +137,7 @@ tasks.bootBuildImage {
   imageName.set(containerImageRef)
   builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
   publish.set(false)
-  runImage.set("cgr.dev/chainguard/jre@sha256:6207f817070fae80779cdcf5ab3d24880e8c4fe19a31af24b3b5e850eda3d80e")
+  runImage.set("cgr.dev/chainguard/jre@sha256:7261e3000570451fb2b80d7517b7ccd5d80dc5dbe8ca0b34e0cee51430f22890")
 
   docker {
     publishRegistry {
