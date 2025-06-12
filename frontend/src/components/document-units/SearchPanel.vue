@@ -19,19 +19,10 @@ const searchParams = ref<DocumentUnitSearchParams>({
   zitierdaten: '',
 })
 
-const isLoading = ref(false)
-
 const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
 
 async function handleSearch() {
-  isLoading.value = true
-  try {
-    emit('search', searchParams.value)
-  } catch (error) {
-    console.error('Search failed:', error)
-  } finally {
-    isLoading.value = false
-  }
+  emit('search', searchParams.value)
 }
 
 function onClickReset() {

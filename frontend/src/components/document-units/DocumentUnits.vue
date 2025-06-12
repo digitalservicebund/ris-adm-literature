@@ -21,33 +21,26 @@ const {
 
 const isLoading = ref(false)
 
-onMounted(async () => {
+async function fetchData(page: number = 0, search?: DocumentUnitSearchParams) {
   isLoading.value = true
-  try {
-    await fetchPaginatedData()
-  } finally {
-    isLoading.value = false
-  }
-})
-
-async function handlePageUpdate(pageState: PageState) {
   docUnits.value = []
-  isLoading.value = true
   try {
-    await fetchPaginatedData(pageState.page)
+    await fetchPaginatedData(page, search)
   } finally {
     isLoading.value = false
   }
 }
 
+onMounted(() => {
+  fetchData()
+})
+
+async function handlePageUpdate(pageState: PageState) {
+  await fetchData(pageState.page)
+}
+
 async function handleSearch(search: DocumentUnitSearchParams) {
-  docUnits.value = []
-  isLoading.value = true
-  try {
-    await fetchPaginatedData(0, search)
-  } finally {
-    isLoading.value = false
-  }
+  await fetchData(0, search)
 }
 </script>
 
