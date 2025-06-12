@@ -115,12 +115,19 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   check-code-quality-with-sonarqube-backend:
+    needs: [test-backend]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download backend test report from job 'test-backend'
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-test-report
+          path: tmp/backend-test-report
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
