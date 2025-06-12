@@ -114,7 +114,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.getByName("sonar") {
-  dependsOn("jacocoTestReport")
+  // dependsOn("jacocoTestReport")
 }
 
 sonar {
