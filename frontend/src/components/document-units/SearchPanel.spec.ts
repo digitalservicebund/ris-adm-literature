@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/vue'
+import { fireEvent, render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import SearchPanel from './SearchPanel.vue'
 import userEvent from '@testing-library/user-event'
@@ -30,7 +30,9 @@ describe('SearchPanel', () => {
     await user.type(screen.getByLabelText('Dokumentnummer'), 'KSNR')
     await user.type(screen.getByLabelText('Amtl. Langüberschrift'), 'text')
     await user.type(screen.getByLabelText('Fundstelle'), 'text')
-    await user.type(screen.getByLabelText('Zitierdatum'), 'text')
+    const zitierdatumInput = screen.getByLabelText('Zitierdatum')
+    await fireEvent.update(zitierdatumInput, '01.01.2000')
+    expect(screen.getByLabelText('Zitierdatum')).toHaveValue('01.01.2000')
 
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
     await user.click(screen.getByRole('button', { name: 'Zurücksetzen' }))

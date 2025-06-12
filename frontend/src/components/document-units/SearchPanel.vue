@@ -15,9 +15,7 @@ const searchParams = ref<DocumentUnitSearchParams>({
   zitierdaten: '',
 })
 
-const isSearchEmpty = computed(() =>
-  Object.values(searchParams.value).every((params) => params === ''),
-)
+const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
 
 function handleSearch() {
   emit('search', searchParams.value)
