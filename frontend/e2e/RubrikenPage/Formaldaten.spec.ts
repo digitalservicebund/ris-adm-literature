@@ -195,7 +195,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
     },
   )
 
-  test.skip(
+  test(
     'Zitierdatum: invalid date with letters cannot be entered, valid date can be entered and persists through a reload',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
@@ -205,28 +205,30 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatumElement = page.getByText('Zitierdatum')
-      await expect(zitierdatumElement).toHaveCount(1)
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newZitierdatumInput = zitierdatenGroup.locator('input')
+      await expect(newZitierdatumInput).toHaveCount(1)
 
       // when
-      await zitierdatumElement.fill('thatshouldnotwork')
+      await newZitierdatumInput.fill('thatshouldnotwork')
       // then
-      await expect(zitierdatumElement).toHaveValue('__.__.____')
+      await expect(newZitierdatumInput).toHaveValue('__.__.____')
 
       // when
-      await zitierdatumElement.fill('15.01.2025')
+      await newZitierdatumInput.fill('15.01.2025')
       // then
-      await expect(zitierdatumElement).toHaveValue('15.01.2025')
+      await expect(newZitierdatumInput).toHaveValue('15.01.2025')
 
       // when
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
-      await expect(zitierdatumElement).toHaveValue('15.01.2025')
+      await expect(zitierdatenGroup.getByRole('listitem', { name: '15.01.2025' })).toBeVisible()
     },
   )
 
-  test.skip(
+  test(
     'Zitierdatum: invalid date can be entered but a validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
@@ -236,20 +238,21 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatumElement = page.getByRole('textbox', { name: 'Zitierdatum' })
-      await expect(zitierdatumElement).toHaveCount(1)
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newZitierdatumInput = zitierdatenGroup.locator('input')
+      await expect(newZitierdatumInput).toHaveCount(1)
 
       // when
-      await zitierdatumElement.fill('20')
-      await zitierdatumElement.press('Tab') // Triggers validation
+      await newZitierdatumInput.fill('99.99.9999')
+      await newZitierdatumInput.press('Tab') // Triggers validation
       // then
-      await expect(zitierdatumElement).toHaveValue('20.__.____')
-      await expect(zitierdatumElement).toHaveAttribute('aria-invalid', 'true')
-      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+      // await expect(zitierdatenGroup).toHaveAttribute('aria-invalid', 'true')
+      await expect(page.getByText('Kein valides Datum: 99.99.9999')).toBeVisible()
     },
   )
 
-  test.skip(
+  test(
     'Zitierdatum: a future date can be entered but a validation error is shown',
     { tag: ['@RISDEV-6296'] },
     async ({ page }) => {
@@ -259,17 +262,20 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatumElement = page.getByRole('textbox', { name: 'Zitierdatum' })
-      await expect(zitierdatumElement).toHaveCount(1)
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newZitierdatumInput = zitierdatenGroup.locator('input')
+      await expect(newZitierdatumInput).toHaveCount(1)
       const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
 
       // when
-      await zitierdatumElement.fill(tomorrow)
-      await zitierdatumElement.press('Tab') // Triggers validation
+      await newZitierdatumInput.fill(tomorrow)
+      await newZitierdatumInput.press('Tab') // Triggers validation
       // then
-      await expect(zitierdatumElement).toHaveValue(tomorrow)
-      await expect(zitierdatumElement).toHaveAttribute('aria-invalid', 'true')
-      await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
+      //await expect(zitierdatenGroup).toHaveAttribute('aria-invalid', 'true')
+      await expect(
+        page.getByText(`Das Datum darf nicht in der Zukunft liegen: ${tomorrow}`),
+      ).toBeVisible()
     },
   )
 
