@@ -46,7 +46,7 @@ export function usePagination<T, S>(
   fetchData: (page: number, itemsPerPage: number, searchParams?: S) => Promise<any>,
   paginatedResponseKey: string,
 ) {
-  const ITEMS_PER_PAGE = 1
+  const ITEMS_PER_PAGE = 100
   const isLoading = ref(true)
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)
