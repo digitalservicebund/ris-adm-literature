@@ -2,6 +2,7 @@
 import type { DocumentUnitSearchParams } from '@/domain/documentUnit'
 import { Button, InputText } from 'primevue'
 import { computed, ref } from 'vue'
+import DateInput from '@/components/input/DateInput.vue'
 
 const emit = defineEmits<{
   search: [value: DocumentUnitSearchParams]
@@ -44,7 +45,13 @@ function onClickReset() {
       <label class="ris-label2-regular" for="fundstelle">Fundstelle</label>
       <InputText id="fundstelle" v-model="searchParams.fundstellen" />
       <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
-      <InputText id="zitierdatum" v-model="searchParams.zitierdaten" />
+      <DateInput
+        id="zitierdaten"
+        v-model="searchParams.zitierdaten"
+        ariaLabel="Zitierdatum"
+        mask="99.99.9999"
+        placeholder="TT.MM.JJJJ"
+      />
     </div>
     <div class="flex gap-24">
       <Button label="Ergebnisse zeigen" type="submit" />
