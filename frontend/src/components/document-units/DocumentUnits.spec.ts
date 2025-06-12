@@ -44,6 +44,14 @@ describe('DocumentUnits', () => {
     expect(container).toBeTruthy()
   })
 
+  it('calls fetchPaginatedData on mount to load initial data', () => {
+    // when
+    renderComponent()
+    // then
+    expect(fetchPaginatedDataMock).toHaveBeenCalled()
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith()
+  })
+
   it('calls fetchPaginatedData on page update', async () => {
     renderComponent()
 

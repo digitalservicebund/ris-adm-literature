@@ -9,9 +9,11 @@ import errorMessages from '@/i18n/errors.json'
  * Manages pagination state, triggers loading indicators, and displays toast notifications on error.
  *
  * @template T - The type of the data items being paginated.
+ * @template S - The type of the search parameters object used for filtering.
  *
- * @param {function(page: number, itemsPerPage: number): Promise<any>} fetchData
+ * @param {(page: number, itemsPerPage: number, searchParams?: S) => Promise<any>} fetchData
  *   Async function to fetch paginated data.
+ *   It receives the page number, items per page, and the current search parameters.
  *   Must return a Promise that resolves with an object containing either `data` or `error`.
  *
  * @param {string} paginatedResponseKey
@@ -22,6 +24,7 @@ import errorMessages from '@/i18n/errors.json'
  *   firstRowIndex: ComputedRef<number>,
  *   totalRows: Ref<number>,
  *   items: Ref<T[]>,
+ *   searchParams = ref<S | undefined>(),
  *   ITEMS_PER_PAGE: number,
  *   fetchPaginatedData: (page?: number) => Promise<void>
  * }}
@@ -43,7 +46,7 @@ export function usePagination<T, S>(
   fetchData: (page: number, itemsPerPage: number, searchParams?: S) => Promise<any>,
   paginatedResponseKey: string,
 ) {
-  const ITEMS_PER_PAGE = 100
+  const ITEMS_PER_PAGE = 1
   const isLoading = ref(true)
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)

@@ -4,6 +4,10 @@ import { Button, InputText } from 'primevue'
 import { computed, ref } from 'vue'
 import DateInput from '@/components/input/DateInput.vue'
 
+const props = defineProps<{
+  loading: boolean
+}>()
+
 const emit = defineEmits<{
   search: [value: DocumentUnitSearchParams]
 }>()
@@ -15,10 +19,19 @@ const searchParams = ref<DocumentUnitSearchParams>({
   zitierdaten: '',
 })
 
+const isLoading = ref(false)
+
 const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
 
-function handleSearch() {
-  emit('search', searchParams.value)
+async function handleSearch() {
+  isLoading.value = true
+  try {
+    emit('search', searchParams.value)
+  } catch (error) {
+    console.error('Search failed:', error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 function onClickReset() {
@@ -52,7 +65,7 @@ function onClickReset() {
       />
     </div>
     <div class="flex gap-24">
-      <Button label="Ergebnisse zeigen" type="submit" />
+      <Button label="Ergebnisse zeigen" :disabled="props.loading" type="submit" />
       <Button label="Zurücksetzen" text :disabled="isSearchEmpty" @click="onClickReset" />
     </div>
   </form>

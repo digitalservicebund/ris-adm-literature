@@ -3,12 +3,16 @@ import { describe, expect, it } from 'vitest'
 import SearchPanel from './SearchPanel.vue'
 import userEvent from '@testing-library/user-event'
 
-function renderComponent(props = {}) {
+function renderComponent(props: { loading?: boolean } = {}) {
   const user = userEvent.setup()
+
+  const defaultProps = {
+    loading: false,
+  }
 
   return {
     user,
-    ...render(SearchPanel, { props }),
+    ...render(SearchPanel, { props: { ...defaultProps, ...props } }),
   }
 }
 
@@ -49,5 +53,12 @@ describe('SearchPanel', () => {
     await user.type(screen.getByLabelText('Dokumentnummer'), 'KSNR')
     await user.click(screen.getByRole('button', { name: 'Ergebnisse zeigen' }))
     expect(emitted()['search'].length).toBe(1)
+  })
+
+  it('disables the search button when the loading prop is true', () => {
+    renderComponent({ loading: true })
+
+    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    expect(searchButton).toBeDisabled()
   })
 })

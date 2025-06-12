@@ -12,6 +12,7 @@ export interface DocumentUnitListProps {
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
+  loading: boolean
 }
 defineProps<DocumentUnitListProps>()
 
@@ -28,6 +29,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
     :first="firstRowIndex"
     :rows="rowsPerPage"
     :total-records="totalRows"
+    :loading="loading"
     :pt="{
       thead: {
         style: 'box-shadow: inset 0 -2px #DCE8EF;',
@@ -74,7 +76,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
       </template>
     </Column>
     <template #empty>
-      <div>{{ messages.NO_SEARCH_RESULTS.message }}</div>
+      <div>{{ loading ? '' : messages.NO_SEARCH_RESULTS.message }}</div>
     </template>
   </DataTable>
 </template>
