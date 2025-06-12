@@ -19,6 +19,7 @@ describe('SearchPanel', () => {
     expect(screen.getByLabelText('Dokumentnummer')).toBeInTheDocument()
     expect(screen.getByLabelText('Amtl. Langüberschrift')).toBeInTheDocument()
     expect(screen.getByLabelText('Fundstelle')).toBeInTheDocument()
+    expect(screen.getByLabelText('Zitierdatum')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Ergebnisse zeigen' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
   })
@@ -27,9 +28,16 @@ describe('SearchPanel', () => {
     const { user } = renderComponent()
 
     await user.type(screen.getByLabelText('Dokumentnummer'), 'KSNR')
+    await user.type(screen.getByLabelText('Amtl. Langüberschrift'), 'text')
+    await user.type(screen.getByLabelText('Fundstelle'), 'text')
+    await user.type(screen.getByLabelText('Zitierdatum'), 'text')
+
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
     await user.click(screen.getByRole('button', { name: 'Zurücksetzen' }))
     expect(screen.getByLabelText('Dokumentnummer')).toHaveValue('')
+    expect(screen.getByLabelText('Amtl. Langüberschrift')).toHaveValue('')
+    expect(screen.getByLabelText('Fundstelle')).toHaveValue('')
+    expect(screen.getByLabelText('Zitierdatum')).toHaveValue('')
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
   })
 
