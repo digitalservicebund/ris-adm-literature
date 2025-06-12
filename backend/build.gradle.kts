@@ -40,6 +40,7 @@ extra["springCloudVersion"] = "2025.0.0-RC1"
 val springdocVersion = "2.8.9"
 val sentryVersion = "8.13.2"
 val hypersistenceVersion = "3.10.0"
+val postgresVersion = "42.7.7"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -66,7 +67,8 @@ dependencies {
   implementation("io.sentry:sentry-logback:$sentryVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
-  runtimeOnly("org.postgresql:postgresql")
+  // CVE-2025-49146
+  runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
