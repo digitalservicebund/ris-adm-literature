@@ -18,7 +18,7 @@ import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
-import Zitierdaten from '@/components/ZitierDaten.vue'
+import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 
 const store = useDocumentUnitStore()
 
@@ -110,7 +110,7 @@ const dokumenttypZusatz = computed({
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <Zitierdaten />
+        <ZitierdatenInput />
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
