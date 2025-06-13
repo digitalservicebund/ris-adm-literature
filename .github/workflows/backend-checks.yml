@@ -70,15 +70,27 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
-      - name: Run tests
-        run: ./gradlew test
+      # - name: Run tests
+      #   run: ./gradlew test
+      #   working-directory: ./backend
+      - name: Run jacocoTestReport
+        run: ./gradlew jacocoTestReport
         working-directory: ./backend
+
       - name: Upload test report artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-report
           path: backend/build/reports/tests/test
           if-no-files-found: warn
+
+      - name: Upload jacoco coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jacoco-report
+          path: backend/build/reports/jacoco/test
+          if-no-files-found: warn
+
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
