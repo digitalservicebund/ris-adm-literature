@@ -140,6 +140,12 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+      - name: Download artifact backend jacoco report
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jacoco-report
+          path: tmp/backend-jacoco-report/
+
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
