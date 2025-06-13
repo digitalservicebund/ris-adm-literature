@@ -58,9 +58,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql)
-      .contains("where lower(due1_0.document_number) like ?")
-      .doesNotContain("join");
+    assertThat(sql).contains("where lower(due1_0.document_number) like ?").doesNotContain("join");
   }
 
   @Test
