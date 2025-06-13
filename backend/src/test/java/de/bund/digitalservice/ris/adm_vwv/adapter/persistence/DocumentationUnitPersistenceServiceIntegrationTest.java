@@ -3,10 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_vwv.application.Page;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
@@ -34,6 +31,25 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired
   private DocumentationUnitPersistenceService documentationUnitPersistenceService;
+
+  private void createTestUnit(
+    String documentNumber,
+    String langueberschrift,
+    String fundstellen,
+    String zitierdaten
+  ) {
+    var unit = new DocumentationUnitEntity();
+    unit.setDocumentNumber(documentNumber);
+    entityManager.persist(unit);
+
+    var index = new DocumentationUnitIndexEntity();
+    index.setDocumentationUnit(unit);
+    unit.setDocumentationUnitIndex(index);
+    index.setLangueberschrift(langueberschrift);
+    index.setFundstellen(fundstellen);
+    index.setZitierdaten(zitierdaten);
+    entityManager.persistAndFlush(index);
+  }
 
   @Test
   void findByDocumentNumber() {
@@ -179,6 +195,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
     DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
+    documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
+
     documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
     documentationUnitIndexEntity.setFundstellen(
       "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
@@ -189,7 +207,13 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        new DocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        )
       );
 
     // then
@@ -232,12 +256,19 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
     documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        new DocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
+        )
       );
 
     // then
@@ -254,6 +285,102 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
         DocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(List.of("2011-11-11"), "Sample Document Title 1", List.of());
+  }
+
+  @Test
+  void findDocumentationUnitOverviewElements_byDocumentNumber() {
+    // given
+    createTestUnit("KSNR00001", "Title A", "Fundstelle A", "2025-01-01");
+    createTestUnit("KSNR00002", "Title B", "Fundstelle B", "2025-01-02");
+
+    // when
+    var query = new DocumentationUnitQuery(
+      "KSNR00001",
+      null,
+      null,
+      null,
+      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    );
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result.content())
+      .hasSize(1)
+      .singleElement()
+      .extracting(DocumentationUnitOverviewElement::documentNumber)
+      .isEqualTo("KSNR00001");
+  }
+
+  @Test
+  void findDocumentationUnitOverviewElements_byLangueberschrift() {
+    // given
+    createTestUnit("KSNR00003", "A very specific title", "Fundstelle C", "2025-01-03");
+    createTestUnit("KSNR00004", "Another title", "Fundstelle D", "2025-01-04");
+
+    // when
+    var query = new DocumentationUnitQuery(
+      null,
+      "specific",
+      null,
+      null,
+      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    );
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result.content())
+      .hasSize(1)
+      .singleElement()
+      .extracting(DocumentationUnitOverviewElement::langueberschrift)
+      .isEqualTo("A very specific title");
+  }
+
+  @Test
+  void findDocumentationUnitOverviewElements_byFundstellen() {
+    // given
+    createTestUnit("KSNR00005", "Title E", "Fundstelle Alpha", "2025-01-05");
+    createTestUnit("KSNR00006", "Title F", "Fundstelle Beta", "2025-01-06");
+
+    // when
+    var query = new DocumentationUnitQuery(
+      null,
+      null,
+      "lph",
+      null,
+      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    );
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result.content())
+      .hasSize(1)
+      .singleElement()
+      .extracting(DocumentationUnitOverviewElement::fundstellen)
+      .isEqualTo(List.of("Fundstelle Alpha"));
+  }
+
+  @Test
+  void findDocumentationUnitOverviewElements_byZitierdaten() {
+    // given
+    createTestUnit("KSNR00007", "Title G", "Fundstelle G", "2025-01-07");
+    createTestUnit("KSNR00008", "Title H", "Fundstelle H", "2025-01-08");
+
+    // when
+    var query = new DocumentationUnitQuery(
+      null,
+      null,
+      null,
+      "2025-01-07",
+      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    );
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result.content())
+      .hasSize(1)
+      .singleElement()
+      .extracting(DocumentationUnitOverviewElement::zitierdaten)
+      .isEqualTo(List.of("2025-01-07"));
   }
 
   @Test

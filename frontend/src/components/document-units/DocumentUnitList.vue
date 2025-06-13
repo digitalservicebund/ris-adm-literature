@@ -5,17 +5,19 @@ import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import IconEdit from '~icons/ic/outline-edit'
+import messages from '@/i18n/messages.json'
 
 export interface DocumentUnitListProps {
   docUnits: DocumentUnitListItem[]
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
+  loading: boolean
 }
 defineProps<DocumentUnitListProps>()
 
 const zitierdatenLabel = (zitierdaten: string[]) =>
-  zitierdaten.length > 0
+  zitierdaten?.length > 0
     ? zitierdaten.map((zitierdatum) => dayjs(zitierdatum).format('DD.MM.YYYY')).join(', ')
     : '--'
 </script>
@@ -27,6 +29,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
     :first="firstRowIndex"
     :rows="rowsPerPage"
     :total-records="totalRows"
+    :loading="loading"
     :pt="{
       thead: {
         style: 'box-shadow: inset 0 -2px #DCE8EF;',
@@ -49,7 +52,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
         <ul v-for="(fundstelle, index) in data.fundstellen" :key="index">
           <li>{{ fundstelle }}</li>
         </ul>
-        <template v-if="data.fundstellen.length === 0"> -- </template>
+        <template v-if="!data.fundstellen || data.fundstellen?.length === 0"> -- </template>
       </template>
     </Column>
     <Column field="documentNumber" class="flex items-center justify-end">
@@ -72,5 +75,8 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
         </router-link>
       </template>
     </Column>
+    <template #empty>
+      <div>{{ loading ? '' : messages.NO_SEARCH_RESULTS.message }}</div>
+    </template>
   </DataTable>
 </template>

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import DocumentUnitList, { type DocumentUnitListProps } from './DocumentUnitList.vue'
 import userEvent from '@testing-library/user-event'
 import type { DocumentUnitListItem } from '@/domain/documentUnit'
+import messages from '@/i18n/messages.json'
 
 const docUnitsMock: DocumentUnitListItem[] = [
   {
@@ -45,6 +46,17 @@ describe('DocumentUnitList', () => {
       loading: false,
     })
     expect(screen.getAllByRole('row')).toHaveLength(3)
+  })
+
+  it('renders no result msg if there are no search results', () => {
+    renderComponent({
+      docUnits: [],
+      rowsPerPage: 100,
+      totalRows: 0,
+      firstRowIndex: 0,
+      loading: false,
+    })
+    expect(screen.getByText(messages.NO_SEARCH_RESULTS.message)).toBeInTheDocument()
   })
 
   it('shows the document number, zitierdatum, langueberschrift, fundstelle and an edit button in the first row', () => {

@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,22 +101,45 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   @Override
   @Transactional(readOnly = true)
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull QueryOptions queryOptions
+    @Nonnull DocumentationUnitQuery query
   ) {
+    QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    var documentationUnitIndices = documentationUnitIndexRepository.findAll(pageable);
-    return PageTransformer.transform(documentationUnitIndices, documentationUnitIndexEntity ->
-      new DocumentationUnitOverviewElement(
-        documentationUnitIndexEntity.getDocumentationUnit().getId(),
-        documentationUnitIndexEntity.getDocumentationUnit().getDocumentNumber(),
-        splitBySeparator(documentationUnitIndexEntity.getZitierdaten()),
-        documentationUnitIndexEntity.getLangueberschrift(),
-        splitBySeparator(documentationUnitIndexEntity.getFundstellen())
-      )
+
+    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
+      query.documentNumber(),
+      query.langueberschrift(),
+      query.fundstellen(),
+      query.zitierdaten()
     );
+    var documentationUnitsPage = documentationUnitRepository.findAll(
+      documentUnitSpecification,
+      pageable
+    );
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+
+      if (index == null) {
+        return new DocumentationUnitOverviewElement(
+          documentationUnit.getId(),
+          documentationUnit.getDocumentNumber(),
+          Collections.emptyList(),
+          null,
+          Collections.emptyList()
+        );
+      }
+
+      return new DocumentationUnitOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        splitBySeparator(index.getZitierdaten()),
+        index.getLangueberschrift(),
+        splitBySeparator(index.getFundstellen())
+      );
+    });
   }
 
   private List<String> splitBySeparator(String value) {

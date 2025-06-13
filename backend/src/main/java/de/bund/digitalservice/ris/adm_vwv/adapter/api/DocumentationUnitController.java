@@ -1,8 +1,12 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,10 @@ public class DocumentationUnitController {
    * Returns information on all documentation units as required by the
    * documentation units overview
    *
+   * @param documentNumber Filter by documentNumber.
+   * @param langueberschrift Filter by langueberschrift.
+   * @param fundstellen Filter by fundstellen.
+   * @param zitierdaten Filter by zitierdaten.
    * @param pageNumber Which page of pagination to return?
    * @param pageSize How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
@@ -30,9 +38,13 @@ public class DocumentationUnitController {
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
+    @RequestParam(value = "documentNumber", required = false) String documentNumber,
+    @RequestParam(value = "langueberschrift", required = false) String langueberschrift,
+    @RequestParam(value = "fundstellen", required = false) String fundstellen,
+    @RequestParam(value = "zitierdaten", required = false) String zitierdaten,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "10") int pageSize,
-    @RequestParam(defaultValue = "documentationUnit.documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
@@ -44,7 +56,13 @@ public class DocumentationUnitController {
       usePagination
     );
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
-      queryOptions
+      new DocumentationUnitQuery(
+        StringUtils.trimToNull(documentNumber),
+        StringUtils.trimToNull(langueberschrift),
+        StringUtils.trimToNull(fundstellen),
+        StringUtils.trimToNull(zitierdaten),
+        queryOptions
+      )
     );
     return ResponseEntity.ok(
       new DocumentationUnitsOverviewResponse(

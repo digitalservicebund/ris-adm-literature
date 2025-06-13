@@ -7,8 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-interface DocumentationUnitRepository extends JpaRepository<DocumentationUnitEntity, UUID> {
+interface DocumentationUnitRepository
+  extends
+    JpaRepository<DocumentationUnitEntity, UUID>,
+    JpaSpecificationExecutor<DocumentationUnitEntity> {
   Optional<DocumentationUnitEntity> findByDocumentNumber(@Nonnull String documentNumber);
 
   @EntityGraph(attributePaths = "documentationUnitIndex")
