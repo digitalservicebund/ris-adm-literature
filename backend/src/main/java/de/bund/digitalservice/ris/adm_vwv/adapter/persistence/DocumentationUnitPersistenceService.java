@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,8 +115,10 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       query.fundstellen(),
       query.zitierdaten()
     );
-    org.springframework.data.domain.Page<DocumentationUnitEntity> documentationUnitsPage =
-      documentationUnitRepository.findAll(documentUnitSpecification, pageable);
+    var documentationUnitsPage = documentationUnitRepository.findAll(
+      documentUnitSpecification,
+      pageable
+    );
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
@@ -123,9 +126,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         return new DocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
+          Collections.emptyList(),
           null,
-          null,
-          null
+          Collections.emptyList()
         );
       }
 

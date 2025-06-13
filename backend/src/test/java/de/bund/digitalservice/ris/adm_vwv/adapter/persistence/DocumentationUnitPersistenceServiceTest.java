@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -11,6 +12,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -102,7 +104,18 @@ class DocumentationUnitPersistenceServiceTest {
       );
 
     // then
-    assertThat(result.size()).isEqualTo(2);
+    assertThat(result.content())
+      .hasSize(2)
+      .extracting(
+        DocumentationUnitOverviewElement::documentNumber,
+        DocumentationUnitOverviewElement::langueberschrift,
+        DocumentationUnitOverviewElement::zitierdaten,
+        DocumentationUnitOverviewElement::fundstellen
+      )
+      .containsExactly(
+        Tuple.tuple("DOC-001", "Title 1", List.of("2023-01-01"), List.of("Citation 1")),
+        Tuple.tuple("DOC-002", null, emptyList(), emptyList())
+      );
 
     // Assert transformation for the entity WITH an index
     DocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
@@ -117,7 +130,7 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithoutIndex.id()).isEqualTo(entityWithoutIndex.getId());
     assertThat(elementWithoutIndex.documentNumber()).isEqualTo("DOC-002");
     assertThat(elementWithoutIndex.langueberschrift()).isNull();
-    assertThat(elementWithoutIndex.zitierdaten()).isNull();
-    assertThat(elementWithoutIndex.fundstellen()).isNull();
+    assertThat(elementWithoutIndex.zitierdaten()).isEmpty();
+    assertThat(elementWithoutIndex.fundstellen()).isEmpty();
   }
 }

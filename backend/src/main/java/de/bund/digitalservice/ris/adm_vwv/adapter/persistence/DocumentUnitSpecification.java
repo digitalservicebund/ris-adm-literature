@@ -29,7 +29,7 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
       predicates.add(
         criteriaBuilder.like(
           criteriaBuilder.lower(root.get("documentNumber")),
-          "%" + documentNumber.toLowerCase() + "%"
+          sqlContains(documentNumber)
         )
       );
     }
@@ -47,7 +47,7 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
         predicates.add(
           criteriaBuilder.like(
             criteriaBuilder.lower(indexJoin.get("fundstellen")),
-            "%" + fundstellen.toLowerCase() + "%"
+            sqlContains(fundstellen)
           )
         );
       }
@@ -55,7 +55,7 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
         predicates.add(
           criteriaBuilder.like(
             criteriaBuilder.lower(indexJoin.get("langueberschrift")),
-            "%" + langueberschrift.toLowerCase() + "%"
+            sqlContains(langueberschrift)
           )
         );
       }
@@ -63,13 +63,16 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
         predicates.add(
           criteriaBuilder.like(
             criteriaBuilder.lower(indexJoin.get("zitierdaten")),
-            "%" + zitierdaten.toLowerCase() + "%"
+            sqlContains(zitierdaten)
           )
         );
       }
     }
-    query.distinct(true);
 
     return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+  }
+
+  private String sqlContains(String term) {
+    return "%" + term.toLowerCase() + "%";
   }
 }
