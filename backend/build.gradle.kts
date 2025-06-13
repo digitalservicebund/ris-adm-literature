@@ -94,8 +94,6 @@ jacoco {
 }
 
 tasks.jacocoTestReport {
-  //    dependsOn(tasks.test)
-
   // Jacoco hooks into all tasks of type: Test automatically, but results for each of these
   // tasks are kept separately and are not combined out of the box. we want to gather
   // coverage of our unit and integration tests as a single report!
@@ -114,7 +112,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.getByName("sonar") {
-  dependsOn("jacocoTestReport")
+  // dependsOn("jacocoTestReport")
 }
 
 sonar {
