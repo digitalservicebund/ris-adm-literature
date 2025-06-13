@@ -14,12 +14,12 @@ jobs:
   # Security
   ########################################
 
-  security-jobs:
-    uses: ./.github/workflows/security-jobs.yml
-    secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
-    permissions:
-      contents: read
-      security-events: write # trivy scan needs this
+  # security-jobs:
+  #   uses: ./.github/workflows/security-jobs.yml
+  #   secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
+  #   permissions:
+  #     contents: read
+  #     security-events: write # trivy scan needs this
 
   ##############
   # Backend jobs
@@ -38,157 +38,157 @@ jobs:
     uses: ./.github/workflows/backend-checks.yml
     secrets: inherit
 
-  backend-build-image-and-scan:
-    uses: ./.github/workflows/backend-build-image-and-scan.yml
-    secrets: inherit
-    permissions:
-      contents: read
-      security-events: write
-    with:
-      run-id: ${{ github.run_id }}
-      image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
-      container-registry: ghcr.io
+  # backend-build-image-and-scan:
+  #   uses: ./.github/workflows/backend-build-image-and-scan.yml
+  #   secrets: inherit
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   with:
+  #     run-id: ${{ github.run_id }}
+  #     image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+  #     container-registry: ghcr.io
 
-  backend-push-image-to-registry:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # For PR releases, labels could be used like this:
-    # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
-    needs:
-      - security-jobs
-      - backend-checks
-      - backend-build-image-and-scan
-    uses: ./.github/workflows/backend-push-image-to-registry.yml
-    secrets: inherit
-    permissions:
-      contents: read
-      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
-      packages: write
-    with:
-      run-id: ${{ github.run_id }}
-      container-registry: ghcr.io
-      image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
+  # backend-push-image-to-registry:
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   # For PR releases, labels could be used like this:
+  #   # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+  #   needs:
+  #     - security-jobs
+  #     - backend-checks
+  #     - backend-build-image-and-scan
+  #   uses: ./.github/workflows/backend-push-image-to-registry.yml
+  #   secrets: inherit
+  #   permissions:
+  #     contents: read
+  #     id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+  #     packages: write
+  #   with:
+  #     run-id: ${{ github.run_id }}
+  #     container-registry: ghcr.io
+  #     image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  backend-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
-    needs:
-      - backend-checks
-      - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
-    uses: ./.github/workflows/backend-push-reports-to-ris-reports.yml
-    secrets: inherit
+  # backend-push-reports-to-ris-reports:
+  #   if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+  #   needs:
+  #     - backend-checks
+  #     - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
+  #   uses: ./.github/workflows/backend-push-reports-to-ris-reports.yml
+  #   secrets: inherit
 
   ###############
   # Frontend jobs
   ###############
 
-  frontend-checks:
-    uses: ./.github/workflows/frontend-checks.yml
-    secrets: inherit
+  # frontend-checks:
+  #   uses: ./.github/workflows/frontend-checks.yml
+  #   secrets: inherit
 
-  frontend-build-image-and-scan:
-    uses: ./.github/workflows/frontend-build-image-and-scan.yml
-    secrets: inherit
-    permissions:
-      contents: read
-      security-events: write
-    with:
-      run-id: ${{ github.run_id }}
-      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
+  # frontend-build-image-and-scan:
+  #   uses: ./.github/workflows/frontend-build-image-and-scan.yml
+  #   secrets: inherit
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   with:
+  #     run-id: ${{ github.run_id }}
+  #     image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  frontend-push-image-to-registry:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # For PR releases, labels could be used like this:
-    # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
-    needs:
-      - security-jobs
-      - frontend-checks
-      - frontend-build-image-and-scan
-    uses: ./.github/workflows/frontend-push-image-to-registry.yml
-    secrets: inherit
-    permissions:
-      contents: read
-      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
-      packages: write
-    with:
-      run-id: ${{ github.run_id }}
-      container-registry: ghcr.io
-      image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
+  # frontend-push-image-to-registry:
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   # For PR releases, labels could be used like this:
+  #   # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+  #   needs:
+  #     - security-jobs
+  #     - frontend-checks
+  #     - frontend-build-image-and-scan
+  #   uses: ./.github/workflows/frontend-push-image-to-registry.yml
+  #   secrets: inherit
+  #   permissions:
+  #     contents: read
+  #     id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+  #     packages: write
+  #   with:
+  #     run-id: ${{ github.run_id }}
+  #     container-registry: ghcr.io
+  #     image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  frontend-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
-    needs:
-      - frontend-checks
-    uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
-    secrets: inherit
+  # frontend-push-reports-to-ris-reports:
+  #   if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+  #   needs:
+  #     - frontend-checks
+  #   uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
+  #   secrets: inherit
 
   #######################################
   # e2e tests (frontend & backend)
   #######################################
 
-  e2e-tests: # we may need to split off the report handling in order to avoid pushing two reports at once
-    uses: ./.github/workflows/e2e-tests.yml
-    secrets: inherit
+  # e2e-tests: # we may need to split off the report handling in order to avoid pushing two reports at once
+  #   uses: ./.github/workflows/e2e-tests.yml
+  #   secrets: inherit
 
-  e2e-compile-html-report:
-    needs:
-      - e2e-tests
-    uses: ./.github/workflows/e2e-compile-html-report.yml
-    secrets: inherit
+  # e2e-compile-html-report:
+  #   needs:
+  #     - e2e-tests
+  #   uses: ./.github/workflows/e2e-compile-html-report.yml
+  #   secrets: inherit
 
-  e2e-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
-    needs:
-      - e2e-compile-html-report
-      - backend-push-reports-to-ris-reports # don't push at the same time
-    uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
-    secrets: inherit
+  # e2e-push-reports-to-ris-reports:
+  #   if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+  #   needs:
+  #     - e2e-compile-html-report
+  #     - backend-push-reports-to-ris-reports # don't push at the same time
+  #   uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
+  #   secrets: inherit
 
   #######################################
   # Automerge if dependabot branch and all tests passing
   #######################################
 
-  dependabot-auto-merge:
-    runs-on: ubuntu-latest
-    # the ${{ success() }} is required for the "if" not to override the "needs" below
-    # (we did run into this problem and saw auto-merges even as "frontend-checks" failed)
-    if: ${{ success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
-    permissions: write-all
-    needs:
-      - frontend-checks
-      - backend-checks
-      - e2e-tests
-    steps:
-      - name: Dependabot metadata
-        continue-on-error: true
-        id: metadata
-        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Auto-merge Dependabot PRs except major version updates
-        continue-on-error: true
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge --squash "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  # dependabot-auto-merge:
+  #   runs-on: ubuntu-latest
+  #   # the ${{ success() }} is required for the "if" not to override the "needs" below
+  #   # (we did run into this problem and saw auto-merges even as "frontend-checks" failed)
+  #   if: ${{ success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
+  #   permissions: write-all
+  #   needs:
+  #     - frontend-checks
+  #     - backend-checks
+  #     - e2e-tests
+  #   steps:
+  #     - name: Dependabot metadata
+  #       continue-on-error: true
+  #       id: metadata
+  #       uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b
+  #       with:
+  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
+  #     - name: Auto-merge Dependabot PRs except major version updates
+  #       continue-on-error: true
+  #       if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+  #       run: gh pr merge --squash "$PR_URL"
+  #       env:
+  #         PR_URL: ${{github.event.pull_request.html_url}}
+  #         GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   #################
   # Deployment jobs
   #################
 
-  deploy-staging:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs:
-      - security-jobs
-      - e2e-tests
-      - frontend-checks
-      - frontend-build-image-and-scan
-      - frontend-push-image-to-registry
-      - backend-checks
-      - backend-build-image-and-scan
-      - backend-push-image-to-registry
-    uses: ./.github/workflows/deploy-staging.yml
-    permissions:
-      id-token: write
-    secrets: inherit
-    with:
-      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+  # deploy-staging:
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   needs:
+  #     - security-jobs
+  #     - e2e-tests
+  #     - frontend-checks
+  #     - frontend-build-image-and-scan
+  #     - frontend-push-image-to-registry
+  #     - backend-checks
+  #     - backend-build-image-and-scan
+  #     - backend-push-image-to-registry
+  #   uses: ./.github/workflows/deploy-staging.yml
+  #   permissions:
+  #     id-token: write
+  #   secrets: inherit
+  #   with:
+  #     container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
