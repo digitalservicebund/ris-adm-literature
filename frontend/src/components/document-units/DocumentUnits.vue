@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { DocumentUnitListItem, DocumentUnitSearchParams } from '@/domain/documentUnit'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import documentUnitService from '@/services/documentUnitService'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
@@ -14,21 +14,15 @@ const {
   items: docUnits,
   ITEMS_PER_PAGE,
   fetchPaginatedData,
+  isLoading,
 } = usePagination<DocumentUnitListItem, DocumentUnitSearchParams>(
   documentUnitService.getPaginatedDocumentUnitList,
   'documentationUnitsOverview',
 )
 
-const isLoading = ref(false)
-
 async function fetchData(page: number = 0, search?: DocumentUnitSearchParams) {
-  isLoading.value = true
   docUnits.value = []
-  try {
-    await fetchPaginatedData(page, search)
-  } finally {
-    isLoading.value = false
-  }
+  await fetchPaginatedData(page, search)
 }
 
 onMounted(() => {
