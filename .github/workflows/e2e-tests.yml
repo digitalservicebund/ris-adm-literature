@@ -57,9 +57,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-${{ matrix.playwright-project.name }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-${{ matrix.playwright-project.name }}-
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       # browsers that don't need system packages (cf. matrix)
       # note that msedge still installs some
       - name: Install Playwright Browser
