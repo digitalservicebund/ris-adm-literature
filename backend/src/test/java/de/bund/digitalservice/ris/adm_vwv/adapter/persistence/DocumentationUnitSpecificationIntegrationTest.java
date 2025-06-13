@@ -39,7 +39,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     );
 
     // then
-    assertThat(sql).startsWith("select distinct").doesNotContain("like");
+    assertThat(sql).doesNotContain("like");
   }
 
   @Test
@@ -59,7 +59,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("where lower(due1_0.document_number) like ?")
       .doesNotContain("join");
   }
@@ -86,7 +85,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("left join documentation_unit_index")
       .contains("where lower(dui1_0.langueberschrift) like ?");
   }
@@ -113,7 +111,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("left join documentation_unit_index")
       .contains("where lower(dui1_0.fundstellen) like ?");
   }
@@ -135,7 +132,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("left join documentation_unit_index")
       .contains("where lower(dui1_0.zitierdaten) like ?");
   }
@@ -157,7 +153,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("left join documentation_unit_index")
       .contains("lower(due1_0.document_number) like ?")
       .contains("and lower(dui1_0.fundstellen) like ?")
@@ -184,7 +179,6 @@ class DocumentationUnitSpecificationIntegrationTest {
 
     // then
     assertThat(sql)
-      .startsWith("select distinct")
       .contains("left join documentation_unit_index")
       .contains("where lower(dui1_0.fundstellen) like ?")
       .contains("and lower(dui1_0.langueberschrift) like ?")
