@@ -57,7 +57,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-${{ matrix.playwright-project.name }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-${{ matrix.playwright-project.name }}-
       # browsers that don't need system packages (cf. matrix)
       # note that msedge still installs some
       - name: Install Playwright Browser
@@ -72,8 +74,8 @@ jobs:
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
-          until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do  
-            echo "Waiting for backend to be fully up..."  
+          until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do
+            echo "Waiting for backend to be fully up..."
             sleep 0.1
           done
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
