@@ -85,7 +85,7 @@ describe('SearchPanel', () => {
   it('should not emit "search" when the form is submitted with an invalid date', async () => {
     const { emitted } = renderComponent()
     const dateInput = screen.getByLabelText('Zitierdatum')
-    const form = dateInput.closest('form')
+    const form = screen.getByTestId('search-form')
 
     expect(form).toBeInTheDocument()
     await fireEvent.update(dateInput, '50.50.5000')
