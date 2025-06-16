@@ -15,6 +15,7 @@ export default defineConfig({
   fullyParallel: true, // ignored in CI, as workers are 1, there
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
+  globalSetup: './e2e/global-setup.ts',
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -39,7 +40,7 @@ export default defineConfig({
     viewport: { width: 1280, height: 720 },
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 5 * 1000,
-    /* Base URL to use in actions like `await page.goto('/')`. 
+    /* Base URL to use in actions like `await page.goto('/')`.
     needs to be in sync with "webserver" config below*/
     // baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
     baseURL: 'http://localhost:5173',
