@@ -8,8 +8,8 @@ const __dirname = dirname(__filename)
 
 async function waitForDocumentByTitle(apiContext: APIRequestContext, title: string) {
   console.log(`\nPolling for document with title: "${title}"...`)
-  const maxRetries = 20
-  const retryDelay = 1000
+  const maxRetries = 10
+  const retryDelay = 500
 
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -23,18 +23,19 @@ async function waitForDocumentByTitle(apiContext: APIRequestContext, title: stri
 
         if (
           Array.isArray(documents) &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           documents.some((doc: any) => doc.langueberschrift === title)
         ) {
-          console.log(`  SUCCESS: Document with title "${title}" is indexed and found.`)
+          console.log(`Document with title "${title}" is indexed and found.`)
           return
         }
       } else {
-        console.error(`  ERROR: API responded with status ${response.status()}`)
+        console.error(`ERROR: ${response.status()}`)
         const responseBody = await response.text()
-        console.error(`  Response Body: ${responseBody}`)
+        console.error(`Response Body: ${responseBody}`)
       }
     } catch (error) {
-      console.error(`  FATAL: An error occurred during the API request or JSON parsing:`, error)
+      console.error(`ERROR: ${error}`)
     }
     await new Promise((resolve) => setTimeout(resolve, retryDelay))
   }
