@@ -1,6 +1,10 @@
 import type { FailedValidationServerResponse, ServiceResponse } from './httpClient'
 import type { Page } from '@/components/Pagination.vue'
-import type { DocumentUnit, PaginatedDocumentUnitListResponse } from '@/domain/documentUnit'
+import type {
+  DocumentUnit,
+  DocumentUnitSearchParams,
+  PaginatedDocumentUnitListResponse,
+} from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import errorMessages from '@/i18n/errors.json'
@@ -30,6 +34,7 @@ interface DocumentUnitService {
   getPaginatedDocumentUnitList(
     pageNumber: number,
     pageSize: number,
+    searchParams?: DocumentUnitSearchParams,
   ): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
 
@@ -184,10 +189,23 @@ const service: DocumentUnitService = {
     }
   },
 
-  async getPaginatedDocumentUnitList(pageNumber: number, pageSize: number) {
+  async getPaginatedDocumentUnitList(
+    pageNumber: number,
+    pageSize: number,
+    search: DocumentUnitSearchParams,
+  ) {
     const response = await httpClient.get<PaginatedDocumentUnitListResponse>(
       `${DOCUMENTATION_UNITS_URL}`,
-      { params: { pageNumber: pageNumber.toString(), pageSize: pageSize.toString() } },
+      {
+        params: {
+          pageNumber: pageNumber.toString(),
+          pageSize: pageSize.toString(),
+          documentNumber: search?.documentNumber?.toString(),
+          fundstellen: search?.fundstellen?.toString(),
+          langueberschrift: search?.langueberschrift?.toString(),
+          zitierdaten: search?.zitierdaten?.toString(),
+        },
+      },
     )
 
     if (response.status >= 300) {

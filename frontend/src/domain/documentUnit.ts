@@ -10,7 +10,8 @@ import type { Page } from './pagination'
 export interface DocumentUnitSearchParams {
   documentNumber: string
   langueberschrift: string
-  fundstelle: string
+  fundstellen: string
+  zitierdaten: string
 }
 
 export interface PaginatedDocumentUnitListResponse {

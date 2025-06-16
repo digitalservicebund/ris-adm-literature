@@ -58,7 +58,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
 
   @Override
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull QueryOptions queryOptions
+    @Nonnull DocumentationUnitQuery queryOptions
   ) {
     return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(queryOptions);
   }

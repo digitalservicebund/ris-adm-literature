@@ -9,9 +9,11 @@ import errorMessages from '@/i18n/errors.json'
  * Manages pagination state, triggers loading indicators, and displays toast notifications on error.
  *
  * @template T - The type of the data items being paginated.
+ * @template S - The type of the search parameters object used for filtering.
  *
- * @param {function(page: number, itemsPerPage: number): Promise<any>} fetchData
+ * @param {(page: number, itemsPerPage: number, searchParams?: S) => Promise<any>} fetchData
  *   Async function to fetch paginated data.
+ *   It receives the page number, items per page, and the current search parameters.
  *   Must return a Promise that resolves with an object containing either `data` or `error`.
  *
  * @param {string} paginatedResponseKey
@@ -22,6 +24,7 @@ import errorMessages from '@/i18n/errors.json'
  *   firstRowIndex: ComputedRef<number>,
  *   totalRows: Ref<number>,
  *   items: Ref<T[]>,
+ *   searchParams = ref<S | undefined>(),
  *   ITEMS_PER_PAGE: number,
  *   fetchPaginatedData: (page?: number) => Promise<void>
  * }}
@@ -38,9 +41,9 @@ import errorMessages from '@/i18n/errors.json'
  *   error?: unknown
  * }
  */
-export function usePagination<T>(
+export function usePagination<T, S>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchData: (page: number, itemsPerPage: number) => Promise<any>,
+  fetchData: (page: number, itemsPerPage: number, searchParams?: S) => Promise<any>,
   paginatedResponseKey: string,
 ) {
   const ITEMS_PER_PAGE = 100
@@ -48,13 +51,19 @@ export function usePagination<T>(
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)
   const items = ref<T[]>([])
+  const searchParams = ref<S | undefined>()
   const firstRowIndex = computed<number>(() => pageNumber.value * ITEMS_PER_PAGE)
   const toast = useToast()
-
-  const fetchPaginatedData = async (page: number = 0) => {
+  const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
     isLoading.value = true
+
+    if (newSearch !== undefined) {
+      searchParams.value = newSearch
+      page = 0
+    }
+
     try {
-      const { data, error } = await fetchData(page, ITEMS_PER_PAGE)
+      const { data, error } = await fetchData(page, ITEMS_PER_PAGE, searchParams.value)
 
       if (error) {
         // Showing server error

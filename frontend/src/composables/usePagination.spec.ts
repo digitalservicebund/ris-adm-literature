@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePagination } from './usePagination'
 
 const mockData = {
@@ -45,7 +45,16 @@ describe('usePagination', () => {
     expect(items.value).toEqual(mockData.data.documentationUnitsOverview)
     expect(totalRows.value).toBe(mockData.data.page.totalElements)
     expect(firstRowIndex.value).toBe(mockData.data.page.number * 100)
-    expect(mockFetchData).toHaveBeenCalledWith(0, 100)
+    expect(mockFetchData).toHaveBeenCalledWith(0, 100, undefined)
+  })
+
+  it('should reset to page 0 and fetch with new search parameters', async () => {
+    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+    const searchParams = { documentNumber: '12345', langueberschrift: 'Test Title' }
+
+    await fetchPaginatedData(5, searchParams)
+
+    expect(mockFetchData).toHaveBeenCalledWith(0, 100, searchParams)
   })
 
   it('should show an error toast when there is a fetching error', async () => {

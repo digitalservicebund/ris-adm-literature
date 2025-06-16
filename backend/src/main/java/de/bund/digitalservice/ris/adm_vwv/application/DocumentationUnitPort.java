@@ -22,10 +22,10 @@ public interface DocumentationUnitPort {
 
   /**
    * Returns paginated documentation units overview elements.
-   * @param queryOptions The query options
+   * @param query The query
    * @return Page object with documentation unit overview elements and pagination data
    */
   Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull QueryOptions queryOptions
+    @Nonnull DocumentationUnitQuery query
   );
 }

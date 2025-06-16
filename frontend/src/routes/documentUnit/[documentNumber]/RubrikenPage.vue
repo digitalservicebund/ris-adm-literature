@@ -18,8 +18,7 @@ import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
-import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
-import dayjs from 'dayjs'
+import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 
 const store = useDocumentUnitStore()
 
@@ -27,15 +26,6 @@ const langueberschrift = computed({
   get: () => store.documentUnit!.langueberschrift,
   set: (newValue) => {
     store.documentUnit!.langueberschrift = newValue
-  },
-})
-
-const zitierdaten = computed({
-  get: () => store.documentUnit!.zitierdaten?.map((d) => dayjs(d).format('DD.MM.YYYY')) || [],
-  set: (newValue: string[]) => {
-    store.documentUnit!.zitierdaten = newValue.map((d) =>
-      dayjs(d, 'DD.MM.YYYY').format('YYYY-MM-DD'),
-    )
   },
 })
 
@@ -120,20 +110,7 @@ const dokumenttypZusatz = computed({
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <InputField
-          id="zitierdaten"
-          label="Zitierdaten *"
-          class="w-full min-w-0"
-          v-slot="slotProps"
-        >
-          <RisChipsInput
-            id="zitierdaten"
-            v-model="zitierdaten"
-            mask="99.99.9999"
-            placeholder="TT.MM.JJJJ"
-            :has-error="slotProps.hasError"
-          />
-        </InputField>
+        <ZitierdatenInput />
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">

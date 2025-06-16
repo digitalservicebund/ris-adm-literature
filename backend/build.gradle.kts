@@ -38,8 +38,9 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.9"
-val sentryVersion = "8.13.2"
+val sentryVersion = "8.13.3"
 val hypersistenceVersion = "3.10.0"
+val postgresVersion = "42.7.7"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -66,7 +67,8 @@ dependencies {
   implementation("io.sentry:sentry-logback:$sentryVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
-  runtimeOnly("org.postgresql:postgresql")
+  // CVE-2025-49146
+  runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -135,7 +137,7 @@ tasks.bootBuildImage {
   imageName.set(containerImageRef)
   builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
   publish.set(false)
-  runImage.set("cgr.dev/chainguard/jre@sha256:6207f817070fae80779cdcf5ab3d24880e8c4fe19a31af24b3b5e850eda3d80e")
+  runImage.set("cgr.dev/chainguard/jre@sha256:40baab93abc011b4fd78161e6c4a6c922b14d5f8e831c67f312e5ca065100964")
 
   docker {
     publishRegistry {

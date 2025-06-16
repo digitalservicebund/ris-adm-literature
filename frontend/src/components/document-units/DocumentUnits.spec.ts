@@ -31,6 +31,10 @@ function renderComponent(props = {}) {
             template:
               '<div data-testid="ris-paginator" @page="$emit(\'page\', { page: 1 })"></div>',
           },
+          SearchPanel: {
+            template:
+              '<div data-testid="search-form" @search="$emit(\'search\', $event.detail)"></div>',
+          },
         },
       },
     }),
@@ -44,6 +48,14 @@ describe('DocumentUnits', () => {
     expect(container).toBeTruthy()
   })
 
+  it('calls fetchPaginatedData on mount to load initial data', () => {
+    // when
+    renderComponent()
+    // then
+    expect(fetchPaginatedDataMock).toHaveBeenCalled()
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, undefined)
+  })
+
   it('calls fetchPaginatedData on page update', async () => {
     renderComponent()
 
@@ -51,6 +63,20 @@ describe('DocumentUnits', () => {
     // when
     await fireEvent(risPaginator, new CustomEvent('page', { detail: { page: 1 } }))
     // then
-    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(1)
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(1, undefined)
+  })
+
+  it('clears items and calls fetchPaginatedData with new search parameters on search', async () => {
+    renderComponent()
+    fetchPaginatedDataMock.mockClear()
+
+    const searchForm = screen.getByTestId('search-form')
+    const searchParams = { langueberschrift: 'test' }
+
+    await fireEvent(searchForm, new CustomEvent('search', { detail: searchParams }))
+
+    expect(fetchPaginatedDataMock).toHaveBeenCalled()
+
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, searchParams)
   })
 })

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -197,7 +198,7 @@ class DocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("return array of Fundstellen")
+    @DisplayName("returns array of Fundstellen")
     void findListOfDocumentsWithFundstellen() throws Exception {
       // given
 
@@ -215,6 +216,63 @@ class DocumentationUnitControllerTest {
           jsonPath("$.documentationUnitsOverview[0].fundstellen[1]").value(
             "p.abbrev.2 zitatstelle 2"
           )
+        );
+    }
+
+    @Test
+    @DisplayName("sends search parameters to the application layer")
+    void findListOfDocumentsWithSearchParamsSuccess() throws Exception {
+      // given
+      String documentNumber = "KSNR000004711";
+      String langueberschrift = "Sample Document";
+      String fundstellen = "p.abbrev.1";
+      String zitierdaten = "2011-11-11";
+
+      QueryOptions queryOptions = new QueryOptions(
+        0,
+        10,
+        "documentNumber",
+        Sort.Direction.ASC,
+        true
+      );
+      DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
+        documentNumber,
+        langueberschrift,
+        fundstellen,
+        zitierdaten,
+        queryOptions
+      );
+
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery)).willReturn(
+        TestPage.create(
+          List.of(
+            new DocumentationUnitOverviewElement(
+              UUID.randomUUID(),
+              documentNumber,
+              List.of(zitierdaten),
+              langueberschrift,
+              List.of(fundstellen)
+            )
+          )
+        )
+      );
+
+      // when
+      mockMvc
+        .perform(
+          get("/api/documentation-units")
+            .param("documentNumber", documentNumber)
+            .param("langueberschrift", langueberschrift)
+            .param("fundstellen", fundstellen)
+            .param("zitierdaten", zitierdaten)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].documentNumber").value(documentNumber))
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdaten").value(zitierdaten))
+        .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").value(fundstellen))
+        .andExpect(
+          jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
         );
     }
   }

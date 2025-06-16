@@ -2,6 +2,11 @@
 import type { DocumentUnitSearchParams } from '@/domain/documentUnit'
 import { Button, InputText } from 'primevue'
 import { computed, ref } from 'vue'
+import DateInput from '@/components/input/DateInput.vue'
+
+const props = defineProps<{
+  loading: boolean
+}>()
 
 const emit = defineEmits<{
   search: [value: DocumentUnitSearchParams]
@@ -10,14 +15,13 @@ const emit = defineEmits<{
 const searchParams = ref<DocumentUnitSearchParams>({
   documentNumber: '',
   langueberschrift: '',
-  fundstelle: '',
+  fundstellen: '',
+  zitierdaten: '',
 })
 
-const isSearchEmpty = computed(() =>
-  Object.values(searchParams.value).every((params) => params === ''),
-)
+const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
 
-function handleSearch() {
+async function handleSearch() {
   emit('search', searchParams.value)
 }
 
@@ -25,8 +29,10 @@ function onClickReset() {
   searchParams.value = {
     documentNumber: '',
     langueberschrift: '',
-    fundstelle: '',
+    fundstellen: '',
+    zitierdaten: '',
   }
+  emit('search', searchParams.value)
 }
 </script>
 
@@ -39,10 +45,18 @@ function onClickReset() {
       <label class="ris-label2-regular" for="langueberschrift">Amtl. Langüberschrift</label>
       <InputText id="langueberschrift" v-model="searchParams.langueberschrift" />
       <label class="ris-label2-regular" for="fundstelle">Fundstelle</label>
-      <InputText id="fundstelle" v-model="searchParams.fundstelle" />
+      <InputText id="fundstelle" v-model="searchParams.fundstellen" />
+      <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
+      <DateInput
+        id="zitierdaten"
+        v-model="searchParams.zitierdaten"
+        ariaLabel="Zitierdatum"
+        mask="99.99.9999"
+        placeholder="TT.MM.JJJJ"
+      />
     </div>
     <div class="flex gap-24">
-      <Button label="Ergebnisse zeigen" disabled type="submit" />
+      <Button label="Ergebnisse zeigen" :disabled="props.loading" type="submit" />
       <Button label="Zurücksetzen" text :disabled="isSearchEmpty" @click="onClickReset" />
     </div>
   </form>
