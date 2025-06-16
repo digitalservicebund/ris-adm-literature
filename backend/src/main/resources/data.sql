@@ -86,3 +86,7 @@ SELECT
 FROM
     generate_series(999999999, 999999899, -1) AS s(running_number)
 ON conflict do nothing;
+
+INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+SELECT gen_random_uuid(), id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01' FROM documentation_unit
+ON conflict do nothing;
