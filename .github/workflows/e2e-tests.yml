@@ -7,10 +7,10 @@ jobs:
       matrix:
         playwright-project:
           [
-            { name: "chromium" },
-            { name: "firefox" },
-            { name: "webkit", requiresInstallWithDeps: true },
-            { name: "msedge" },
+            { name: "chromium", install: "chromium" },
+            { name: "firefox", install: "firefox" },
+            { name: "webkit", install: "webkit", requiresInstallWithDeps: true },
+            { name: "msedge", install: "msedge chromium" },
           ]
     runs-on: ubuntu-latest
     # container:
@@ -63,17 +63,17 @@ jobs:
       - name: Install Playwright Browser
         if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
-        run: npx playwright install ${{ matrix.playwright-project.name }}
+        run: npx playwright install ${{ matrix.playwright-project.install }}
       # browser (webkit) that need system packages (cf. matrix)
       - name: Install Playwright Browser --with-deps
         if: matrix.playwright-project.requiresInstallWithDeps
         working-directory: ./frontend
-        run: npx playwright install --with-deps ${{ matrix.playwright-project.name }}
+        run: npx playwright install --with-deps ${{ matrix.playwright-project.install }}
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
-          until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do  
-            echo "Waiting for backend to be fully up..."  
+          until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do
+            echo "Waiting for backend to be fully up..."
             sleep 0.1
           done
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
