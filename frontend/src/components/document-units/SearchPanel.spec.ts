@@ -81,4 +81,17 @@ describe('SearchPanel', () => {
     const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
     expect(searchButton).toBeDisabled()
   })
+
+  it('should not emit "search" when the form is submitted with an invalid date', async () => {
+    const { emitted } = renderComponent()
+    const dateInput = screen.getByLabelText('Zitierdatum')
+    const form = dateInput.closest('form')
+
+    expect(form).toBeInTheDocument()
+    await fireEvent.update(dateInput, '50.50.5000')
+
+    await fireEvent.submit(form!)
+
+    expect(emitted().search).toBeUndefined()
+  })
 })
