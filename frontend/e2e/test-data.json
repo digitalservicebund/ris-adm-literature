@@ -15,10 +15,6 @@
       "citation": "456"
     }
   ],
-  "doc1Zitierdaten": [
-    "2024-06-17"
-  ],
-  "doc2Zitierdaten": [
-    "2024-06-18"
-  ]
+  "doc1Zitierdaten": ["2024-06-17"],
+  "doc2Zitierdaten": ["2024-06-18"]
 }
