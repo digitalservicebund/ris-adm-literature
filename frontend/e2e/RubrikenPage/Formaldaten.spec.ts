@@ -205,7 +205,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator('input')
       await expect(newZitierdatumInput).toHaveCount(1)
@@ -238,7 +238,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator('input')
       await expect(newZitierdatumInput).toHaveCount(1)
@@ -262,7 +262,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdaten' })
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator('input')
       await expect(newZitierdatumInput).toHaveCount(1)

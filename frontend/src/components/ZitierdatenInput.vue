@@ -41,7 +41,7 @@ function validate(dates: string[]): boolean {
 <template>
   <InputField
     id="zitierdaten"
-    label="Zitierdaten *"
+    label="Zitierdatum *"
     class="w-full min-w-0"
     :validation-error="validationStore.getByField('zitierdaten')"
     v-slot="slotProps"
@@ -50,7 +50,7 @@ function validate(dates: string[]): boolean {
       id="zitierdaten"
       :model-value="zitierdaten"
       @update:model-value="onUpdate"
-      aria-label="Zitierdaten"
+      aria-label="Zitierdatum"
       mask="99.99.9999"
       placeholder="TT.MM.JJJJ"
       :has-error="slotProps.hasError"
