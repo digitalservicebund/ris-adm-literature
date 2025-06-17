@@ -46,7 +46,10 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("org.springframework.boot:spring-boot-starter-web") {
+    // CVE-2025-48988
+    exclude("org.apache.tomcat.embed", "tomcat-embed-core")
+  }
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
     // CVE-2024-7254
     exclude("com.google.protobuf", "protobuf-java")
@@ -55,6 +58,7 @@ dependencies {
     exclude("org.bitbucket.b_c", "jose4j")
   }
 
+  implementation("org.apache.tomcat.embed:tomcat-embed-core:10.1.42")
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.springframework.retry:spring-retry")
