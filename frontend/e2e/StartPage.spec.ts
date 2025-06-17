@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
+import testData from './test-data.json' with { type: 'json' }
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
+
 test.describe('StartPage', () => {
   test(
     'Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data',
@@ -179,4 +181,73 @@ test.describe('StartPage', () => {
       await expect(page.getByText(text2)).toHaveCount(1)
     },
   )
+})
+
+test.describe('Search documentation units', () => {
+  test(
+    'should filter results by its "Dokumentnummer"',
+    { tag: ['@RISDEV-7600'] },
+    async ({ page }) => {
+      await page.goto('/')
+
+      // Action
+      await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
+      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+
+      // Assert
+      await expect(page.getByText(testData.docNumber1)).toBeVisible()
+      await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    },
+  )
+
+  test('should filter by "Amtl. Langüberschrift"', { tag: ['@RISDEV-7948'] }, async ({ page }) => {
+    await page.goto('/')
+
+    // Action
+    await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc2Title)
+    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+
+    // Assert
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+  })
+
+  test('should filter by "Zitierdatum"', { tag: ['@RISDEV-7949'] }, async ({ page }) => {
+    await page.goto('/')
+
+    // Action
+    await page.getByLabel('Zitierdatum').fill('18.06.2024')
+    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+
+    // Assert
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+  })
+
+  test('should filter by "Fundstelle"', { tag: ['@RISDEV-7950'] }, async ({ page }) => {
+    await page.goto('/')
+
+    // Action
+    await page.getByLabel('Fundstelle').fill('BGB 123')
+    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+
+    // Assert
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+  })
+
+  test('should filter by a combination of all fields', async ({ page }) => {
+    await page.goto('/')
+
+    // Action
+    await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
+    await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc1Title)
+    await page.getByLabel('Fundstelle').fill('BGB 123')
+    await page.getByLabel('Zitierdatum').fill('17.06.2024')
+    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+
+    // Assert
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+  })
 })

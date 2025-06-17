@@ -1,0 +1,20 @@
+{
+  "docNumber1": "KSNR2025000021",
+  "docNumber2": "KSNR2025000022",
+  "doc1Title": "Alpha Global Setup Document",
+  "doc2Title": "Beta Global Setup Document",
+  "doc1References": [
+    {
+      "legalPeriodicalRawValue": "BGB",
+      "citation": "123"
+    }
+  ],
+  "doc2References": [
+    {
+      "legalPeriodicalRawValue": "BGB",
+      "citation": "456"
+    }
+  ],
+  "doc1Zitierdaten": ["2024-06-17"],
+  "doc2Zitierdaten": ["2024-06-18"]
+}
