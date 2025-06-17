@@ -94,7 +94,7 @@ test.describe('Search documentation units', () => {
     async ({ page }) => {
       await page.goto('/')
 
-      // Action: Use data from the imported JSON
+      // Action
       await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
       await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
 
@@ -107,7 +107,7 @@ test.describe('Search documentation units', () => {
   test('should filter by "Amtl. Langüberschrift"', { tag: ['@RISDEV-7948'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action: Use data from the imported JSON
+    // Action
     await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc2Title)
     await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
 
@@ -119,7 +119,7 @@ test.describe('Search documentation units', () => {
   test('should filter by "Zitierdatum"', { tag: ['@RISDEV-7949'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action: Use data that corresponds to doc2
+    // Action
     await page.getByLabel('Zitierdatum').fill('18.06.2024')
     await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
 
@@ -131,7 +131,7 @@ test.describe('Search documentation units', () => {
   test('should filter by "Fundstelle"', { tag: ['@RISDEV-7950'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action: Use data that corresponds to doc1
+    // Action
     await page.getByLabel('Fundstelle').fill('BGB 123')
     await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
 
@@ -143,7 +143,7 @@ test.describe('Search documentation units', () => {
   test('should filter by a combination of all fields', async ({ page }) => {
     await page.goto('/')
 
-    // Action: Use data from the imported JSON
+    // Action
     await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
     await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc1Title)
     await page.getByLabel('Fundstelle').fill('BGB 123')
