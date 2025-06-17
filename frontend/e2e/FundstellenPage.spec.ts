@@ -117,6 +117,40 @@ test.describe('FundstellenPage', () => {
       await expect(page.getByText('BKK 2001, Seite 21')).toHaveCount(1)
     },
   )
+
+  test(
+    'Periodikum and Zitatstelle are mandatory fields',
+    { tag: ['@RISDEV-7978'] },
+    async ({ page }) => {
+      // Arrange
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
+
+      // When
+      await page.getByRole('textbox', { name: 'Periodikum' }).click()
+      await page.getByText('ABc | Die Beispieler').click()
+      await page.getByRole('button', { name: 'Fundstelle speichern' }).click()
+
+      // Then
+      await expect(page.getByRole('textbox', { name: 'Zitatstelle' })).toHaveAttribute(
+        'aria-invalid',
+        'true',
+      )
+      await expect(page.getByText('Pflichtfeld nicht befüllt')).toBeVisible()
+
+      // When
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
+      await page.getByRole('button', { name: 'Auswahl zurücksetzen' }).click()
+      await page.keyboard.press('Tab')
+      await page.getByRole('button', { name: 'Fundstelle speichern' }).click()
+
+      // Then
+      await expect(page.getByRole('textbox', { name: 'Periodikum' })).toHaveAttribute(
+        'invalid',
+        'true',
+      )
+      await expect(page.getByText('Pflichtfeld nicht befüllt')).toBeVisible()
+    },
+  )
 })
 
 test.describe('FundstellenPageSaveAndLoad', () => {

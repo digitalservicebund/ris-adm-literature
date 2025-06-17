@@ -61,4 +61,37 @@ describe('SearchPanel', () => {
     const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
     expect(searchButton).toBeDisabled()
   })
+
+  it('disables the search button when the date input is incorrect', async () => {
+    renderComponent({ loading: true })
+    const zitierdatumInput = screen.getByLabelText('Zitierdatum')
+    await fireEvent.update(zitierdatumInput, '50.50.5000')
+    expect(screen.getByLabelText('Zitierdatum')).toHaveValue('50.50.5000')
+
+    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    expect(searchButton).toBeDisabled()
+  })
+
+  it('disables the search button when the input is in the future', async () => {
+    renderComponent({ loading: true })
+    const zitierdatumInput = screen.getByLabelText('Zitierdatum')
+    await fireEvent.update(zitierdatumInput, '01.01.2300')
+    expect(screen.getByLabelText('Zitierdatum')).toHaveValue('01.01.2300')
+
+    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    expect(searchButton).toBeDisabled()
+  })
+
+  it('should not emit "search" when the form is submitted with an invalid date', async () => {
+    const { emitted } = renderComponent()
+    const dateInput = screen.getByLabelText('Zitierdatum')
+    const form = screen.getByTestId('search-form')
+
+    expect(form).toBeInTheDocument()
+    await fireEvent.update(dateInput, '50.50.5000')
+
+    await fireEvent.submit(form!)
+
+    expect(emitted().search).toBeUndefined()
+  })
 })
