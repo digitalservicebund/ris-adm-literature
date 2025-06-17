@@ -1,6 +1,6 @@
 {
-  "docNumber1": "KSNR2025000021",
-  "docNumber2": "KSNR2025000022",
+  "docNumber1": "KSNR2025000227",
+  "docNumber2": "KSNR2025000228",
   "doc1Title": "Alpha Global Setup Document",
   "doc2Title": "Beta Global Setup Document",
   "doc1References": [
@@ -15,6 +15,10 @@
       "citation": "456"
     }
   ],
-  "doc1Zitierdaten": ["2024-06-17"],
-  "doc2Zitierdaten": ["2024-06-18"]
+  "doc1Zitierdaten": [
+    "2024-06-17"
+  ],
+  "doc2Zitierdaten": [
+    "2024-06-18"
+  ]
 }

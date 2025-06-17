@@ -67,6 +67,7 @@ test.describe('StartPage', () => {
       // when
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
+
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       const documentNumber1 = page
         .url()
@@ -82,7 +83,12 @@ test.describe('StartPage', () => {
       await page.goto('/')
 
       // then
+      await page.getByLabel('Dokumentnummer').fill(documentNumber1)
+      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
       await expect(page.getByText(documentNumber1)).toHaveCount(1)
+
+      await page.getByLabel('Dokumentnummer').fill(documentNumber2)
+      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
       await expect(page.getByText(documentNumber2)).toHaveCount(1)
     },
   )
