@@ -441,7 +441,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  @Ignore
+  @Ignore("See Ticket RISDEV-8239")
   void indexByDocumentationUnit_jsonNotValid() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
