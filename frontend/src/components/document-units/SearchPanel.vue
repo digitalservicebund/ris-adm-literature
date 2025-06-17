@@ -3,6 +3,7 @@ import type { DocumentUnitSearchParams } from '@/domain/documentUnit'
 import { Button, InputText } from 'primevue'
 import { computed, ref } from 'vue'
 import DateInput from '@/components/input/DateInput.vue'
+import InputField from '@/components/input/InputField.vue'
 import type { ValidationError } from '@/components/input/types.ts'
 
 const props = defineProps<{
@@ -13,8 +14,6 @@ const emit = defineEmits<{
   search: [value: DocumentUnitSearchParams]
 }>()
 
-const dateValidationError = ref<ValidationError | undefined>()
-
 const searchParams = ref<DocumentUnitSearchParams>({
   documentNumber: '',
   langueberschrift: '',
@@ -22,17 +21,19 @@ const searchParams = ref<DocumentUnitSearchParams>({
   zitierdaten: '',
 })
 
-const isFormInvalid = computed(() => {
-  return !!dateValidationError.value
-})
+const zitierdatumKey = ref<number>(0)
 
 const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
-
+const hasValidationError = ref<boolean>(false)
 async function handleSearch() {
-  if (isFormInvalid.value) {
+  if (hasValidationError.value) {
     return
   }
   emit('search', searchParams.value)
+}
+
+function onValidationError(ve: ValidationError | undefined) {
+  hasValidationError.value = !!ve
 }
 
 function onClickReset() {
@@ -42,7 +43,7 @@ function onClickReset() {
     fundstellen: '',
     zitierdaten: '',
   }
-  dateValidationError.value = undefined
+  zitierdatumKey.value++
   emit('search', searchParams.value)
 }
 </script>
@@ -58,18 +59,25 @@ function onClickReset() {
       <label class="ris-label2-regular" for="fundstelle">Fundstelle</label>
       <InputText id="fundstelle" v-model="searchParams.fundstellen" />
       <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
-      <DateInput
-        id="zitierdaten"
-        v-model="searchParams.zitierdaten"
-        ariaLabel="Zitierdatum"
-        :has-error="isFormInvalid"
-        mask="99.99.9999"
-        placeholder="TT.MM.JJJJ"
-        @update:validation-error="dateValidationError = $event"
-      />
+      <InputField id="zitierdatum" v-slot="slotProps" @update:validation-error="onValidationError">
+        <DateInput
+          :key="zitierdatumKey"
+          id="zitierdaten"
+          v-model="searchParams.zitierdaten"
+          ariaLabel="Zitierdatum"
+          mask="99.99.9999"
+          placeholder="TT.MM.JJJJ"
+          :has-error="slotProps.hasError"
+          @update:validation-error="slotProps.updateValidationError"
+        />
+      </InputField>
     </div>
     <div class="flex gap-24">
-      <Button label="Ergebnisse zeigen" :disabled="props.loading || isFormInvalid" type="submit" />
+      <Button
+        label="Ergebnisse zeigen"
+        :disabled="props.loading || hasValidationError"
+        type="submit"
+      />
       <Button label="Zurücksetzen" text :disabled="isSearchEmpty" @click="onClickReset" />
     </div>
   </form>

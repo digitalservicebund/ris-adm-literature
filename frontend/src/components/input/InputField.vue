@@ -7,7 +7,7 @@ import type { ValidationError } from '@/components/input/types.ts'
 
 export interface Props {
   id: string
-  label: string | string[]
+  label?: string | string[]
   required?: boolean
   labelPosition?: LabelPosition
   labelClass?: string
