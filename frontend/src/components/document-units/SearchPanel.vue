@@ -51,14 +51,14 @@ function onClickReset() {
 <template>
   <form data-testid="search-form" class="p-32 bg-blue-200" @submit.prevent="handleSearch">
     <h2 class="ris-subhead-bold mb-32">Schnellsuche</h2>
-    <div class="mb-32 grid grid-cols-[1fr_3fr_1fr_3fr] items-center gap-x-44 gap-y-24">
-      <label class="ris-label2-regular" for="documentNumber">Dokumentnummer</label>
+    <div class="mb-32 grid grid-cols-[1fr_3fr_1fr_3fr] gap-x-44 gap-y-24">
+      <label class="ris-label2-regular mt-14" for="documentNumber">Dokumentnummer</label>
       <InputText id="documentNumber" v-model="searchParams.documentNumber" />
-      <label class="ris-label2-regular" for="langueberschrift">Amtl. Langüberschrift</label>
+      <label class="ris-label2-regular mt-14" for="langueberschrift">Amtl. Langüberschrift</label>
       <InputText id="langueberschrift" v-model="searchParams.langueberschrift" />
-      <label class="ris-label2-regular" for="fundstelle">Fundstelle</label>
+      <label class="ris-label2-regular mt-14" for="fundstelle">Fundstelle</label>
       <InputText id="fundstelle" v-model="searchParams.fundstellen" />
-      <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
+      <label class="ris-label2-regular mt-14" for="zitierdatum">Zitierdatum</label>
       <InputField id="zitierdatum" v-slot="slotProps" @update:validation-error="onValidationError">
         <DateInput
           :key="zitierdatumKey"

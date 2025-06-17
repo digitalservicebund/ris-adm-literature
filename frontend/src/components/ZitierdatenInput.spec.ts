@@ -37,10 +37,10 @@ function renderComponent() {
   }
 }
 
-describe('Zitierdaten', () => {
+describe('Zitierdatum', () => {
   it('renders correctly', async () => {
     renderComponent()
-    expect(screen.getByText('Zitierdaten *')).toBeInTheDocument()
+    expect(screen.getByText('Zitierdatum *')).toBeInTheDocument()
   })
 
   it('adds a new zitierdatum', async () => {
