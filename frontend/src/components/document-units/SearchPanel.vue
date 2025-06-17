@@ -21,6 +21,8 @@ const searchParams = ref<DocumentUnitSearchParams>({
   zitierdaten: '',
 })
 
+const zitierdatumKey = ref<number>(0)
+
 const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
 const hasValidationError = ref<boolean>(false)
 async function handleSearch() {
@@ -41,6 +43,7 @@ function onClickReset() {
     fundstellen: '',
     zitierdaten: '',
   }
+  zitierdatumKey.value++
   emit('search', searchParams.value)
 }
 </script>
@@ -58,6 +61,7 @@ function onClickReset() {
       <label class="ris-label2-regular" for="zitierdatum">Zitierdatum</label>
       <InputField id="zitierdatum" v-slot="slotProps" @update:validation-error="onValidationError">
         <DateInput
+          :key="zitierdatumKey"
           id="zitierdaten"
           v-model="searchParams.zitierdaten"
           ariaLabel="Zitierdatum"
