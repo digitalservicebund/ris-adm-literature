@@ -49,6 +49,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web") {
     // CVE-2025-48988
     exclude("org.apache.tomcat.embed", "tomcat-embed-core")
+
+    // CVE-2025-41234
+    exclude("org.springframework", "spring-web")
   }
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
     // CVE-2024-7254
@@ -57,7 +60,7 @@ dependencies {
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
   }
-
+  implementation("org.springframework:spring-web:6.2.8")
   implementation("org.apache.tomcat.embed:tomcat-embed-core:10.1.42")
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
