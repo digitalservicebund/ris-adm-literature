@@ -1,7 +1,10 @@
 -- Insert a test documentation unit xml. This file is only used in Spring Boot Profile "default".
-insert into documentation_unit (id, document_number, xml)
-values (gen_random_uuid(), 'KSNR999999999',
-        '<?xml version="1.0" encoding="UTF-8"?>
+-- This inserts 100 documentation units for e2e tests to check on the search pagination
+INSERT INTO documentation_unit (id, document_number, xml)
+SELECT
+    gen_random_uuid(),
+    'KSNR' || s.running_number::text,
+    '<?xml version="1.0" encoding="UTF-8"?>
         <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
           xmlns:ris="http://ldml.neuris.de/metadata/">
           <akn:doc name="offene-struktur">
@@ -79,5 +82,11 @@ values (gen_random_uuid(), 'KSNR999999999',
               </akn:div>
             </akn:mainBody>
           </akn:doc>
-        </akn:akomaNtoso>
-        ') on conflict do nothing;
+        </akn:akomaNtoso>'
+FROM
+    generate_series(999999999, 999999899, -1) AS s(running_number)
+ON conflict do nothing;
+
+INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+SELECT gen_random_uuid(), id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01' FROM documentation_unit
+ON conflict do nothing;
