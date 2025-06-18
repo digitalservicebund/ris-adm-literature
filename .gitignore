@@ -35,3 +35,4 @@ pinned-deps.txt
 trivy-cves.txt
 trivy-image-results.sarif
 lefthook-local.yml
+frontend/e2e/test-data.json
