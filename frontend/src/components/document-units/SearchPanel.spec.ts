@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import SearchPanel from './SearchPanel.vue'
 import userEvent from '@testing-library/user-event'
+import messages from '@/i18n/messages.json'
 
 function renderComponent(props: { loading?: boolean } = {}) {
   const user = userEvent.setup()
@@ -24,7 +25,9 @@ describe('SearchPanel', () => {
     expect(screen.getByLabelText('Amtl. Langüberschrift')).toBeInTheDocument()
     expect(screen.getByLabelText('Fundstelle')).toBeInTheDocument()
     expect(screen.getByLabelText('Zitierdatum')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Ergebnisse zeigen' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
   })
 
@@ -51,14 +54,16 @@ describe('SearchPanel', () => {
     const { emitted, user } = renderComponent()
 
     await user.type(screen.getByLabelText('Dokumentnummer'), 'KSNR')
-    await user.click(screen.getByRole('button', { name: 'Ergebnisse zeigen' }))
+    await user.click(screen.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }))
     expect(emitted()['search'].length).toBe(1)
   })
 
   it('disables the search button when the loading prop is true', () => {
     renderComponent({ loading: true })
 
-    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    const searchButton = screen.getByRole('button', {
+      name: messages.BTN_SHOW_SEARCH_RESULTS.message,
+    })
     expect(searchButton).toBeDisabled()
   })
 
@@ -68,7 +73,9 @@ describe('SearchPanel', () => {
     await fireEvent.update(zitierdatumInput, '50.50.5000')
     expect(screen.getByLabelText('Zitierdatum')).toHaveValue('50.50.5000')
 
-    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    const searchButton = screen.getByRole('button', {
+      name: messages.BTN_SHOW_SEARCH_RESULTS.message,
+    })
     expect(searchButton).toBeDisabled()
   })
 
@@ -78,7 +85,9 @@ describe('SearchPanel', () => {
     await fireEvent.update(zitierdatumInput, '01.01.2300')
     expect(screen.getByLabelText('Zitierdatum')).toHaveValue('01.01.2300')
 
-    const searchButton = screen.getByRole('button', { name: 'Ergebnisse zeigen' })
+    const searchButton = screen.getByRole('button', {
+      name: messages.BTN_SHOW_SEARCH_RESULTS.message,
+    })
     expect(searchButton).toBeDisabled()
   })
 
