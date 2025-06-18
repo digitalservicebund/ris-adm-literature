@@ -13,6 +13,7 @@ interface DocumentationUnitRepository
   extends
     JpaRepository<DocumentationUnitEntity, UUID>,
     JpaSpecificationExecutor<DocumentationUnitEntity> {
+  @EntityGraph(attributePaths = "documentationUnitIndex")
   Optional<DocumentationUnitEntity> findByDocumentNumber(@Nonnull String documentNumber);
 
   @EntityGraph(attributePaths = "documentationUnitIndex")

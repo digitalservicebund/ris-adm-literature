@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -91,7 +93,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .map(documentationUnitEntity -> {
         documentationUnitEntity.setJson(json);
         log.info("Updated documentation unit with document number: {}.", documentNumber);
-        index(documentationUnitEntity);
+        documentationUnitIndexRepository.save(
+          mapDocumentationUnitIndex(createIndex(documentationUnitEntity))
+        );
         log.info("Re-indexed documentation unit with document number: {}.", documentNumber);
         return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
       })
@@ -149,6 +153,16 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   /**
    * Execute indexing of all documentation units without documentation unit index.
+   * <p>
+   *   The method selects all documentation units which are unindexed in batches and extracts
+   *   the needed data for the index in parallel. Exceptions during the extraction
+   *   are ignored. After extraction a new instance of {@link DocumentationUnitIndexEntity} is
+   *   created and saved.
+   * </p>
+   * <p>
+   *   <b>NOTE:</b>This method guarantees that an index is created for each documentation unit
+   *   without an index before calling this method.
+   * </p>
    *
    * @return Number of indexed documents
    */
@@ -158,6 +172,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     long totalNumberOfElements = 0;
     Slice<DocumentationUnitEntity> documentationUnitEntities;
     do {
+      // Note that we always select the first page (0) because the algorithm is changing the selection result
+      // and breaks linear paging.
       documentationUnitEntities = documentationUnitRepository.findByDocumentationUnitIndexIsNull(
         pageable
       );
@@ -166,15 +182,41 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         documentationUnitEntities.getSize(),
         documentationUnitEntities.getNumber()
       );
-      documentationUnitEntities.stream().parallel().forEach(this::indexSafely);
+      List<DocumentationUnitIndexEntity> documentationUnitIndexEntities = documentationUnitEntities
+        .stream()
+        .parallel()
+        .map(this::createIndexSafely)
+        .map(this::mapDocumentationUnitIndex)
+        .toList();
+      documentationUnitIndexRepository.saveAll(documentationUnitIndexEntities);
       totalNumberOfElements += documentationUnitEntities.getNumberOfElements();
     } while (documentationUnitEntities.hasNext());
     return totalNumberOfElements;
   }
 
-  private void indexSafely(DocumentationUnitEntity documentationUnitEntity) {
+  private DocumentationUnitIndexEntity mapDocumentationUnitIndex(
+    DocumentationUnitIndex documentationUnitIndex
+  ) {
+    DocumentationUnitIndexEntity documentationUnitIndexEntity =
+      documentationUnitIndex.documentationUnitEntity.getDocumentationUnitIndex();
+    if (documentationUnitIndexEntity == null) {
+      // New entry for created or imported documents
+      documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
+      documentationUnitIndexEntity.setDocumentationUnit(
+        documentationUnitIndex.documentationUnitEntity
+      );
+    }
+    documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
+    documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
+    documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
+    return documentationUnitIndexEntity;
+  }
+
+  private DocumentationUnitIndex createIndexSafely(
+    DocumentationUnitEntity documentationUnitEntity
+  ) {
     try {
-      index(documentationUnitEntity);
+      return createIndex(documentationUnitEntity);
     } catch (Exception e) {
       log.warn(
         "Could not index documentation unit {}. Reason: {}.",
@@ -182,24 +224,21 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         e.getMessage()
       );
       log.debug("Stacktrace:", e);
-      // We save an empty entry so the document still appears on overview page
-      saveDocumentationUnitIndex(documentationUnitEntity);
     }
+    // We save an empty entry so the document still appears on overview page
+    return new DocumentationUnitIndex(documentationUnitEntity);
   }
 
-  private void index(@Nonnull DocumentationUnitEntity documentationUnitEntity) {
+  private DocumentationUnitIndex createIndex(
+    @Nonnull DocumentationUnitEntity documentationUnitEntity
+  ) {
+    DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
+      documentationUnitEntity
+    );
     if (documentationUnitEntity.isEmpty()) {
       // We save an empty entry so the document still appears on overview page
-      saveDocumentationUnitIndex(documentationUnitEntity);
-      return;
+      return documentationUnitIndex;
     }
-    var documentationUnitIndexEntity = documentationUnitIndexRepository
-      .findByDocumentationUnitId(documentationUnitEntity.getId())
-      .orElseGet(() -> {
-        var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
-        documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
-        return documentationUnitIndexEntityNew;
-      });
     if (documentationUnitEntity.getJson() == null && documentationUnitEntity.getXml() != null) {
       // Published documentation unit, there is only xml
       var documentationUnitContent = ldmlConverterService.convertToBusinessModel(
@@ -210,15 +249,46 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
           documentationUnitEntity.getXml()
         )
       );
-      updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
+      documentationUnitIndex = createDocumentationUnitIndex(
+        documentationUnitEntity,
+        documentationUnitContent
+      );
     } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
       DocumentationUnitContent documentationUnitContent = transformJson(
         documentationUnitEntity.getJson()
       );
-      updateDocumentationUnitIndexEntity(documentationUnitIndexEntity, documentationUnitContent);
+      documentationUnitIndex = createDocumentationUnitIndex(
+        documentationUnitEntity,
+        documentationUnitContent
+      );
     }
-    documentationUnitIndexRepository.save(documentationUnitIndexEntity);
+    return documentationUnitIndex;
+  }
+
+  private DocumentationUnitIndex createDocumentationUnitIndex(
+    DocumentationUnitEntity documentationUnitEntity,
+    DocumentationUnitContent documentationUnitContent
+  ) {
+    DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
+      documentationUnitEntity
+    );
+    documentationUnitIndex.setLangueberschrift(documentationUnitContent.langueberschrift());
+    if (documentationUnitContent.references() != null) {
+      documentationUnitIndex.setFundstellen(
+        documentationUnitContent
+          .references()
+          .stream()
+          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
+          .collect(Collectors.joining(ENTRY_SEPARATOR))
+      );
+    }
+    if (documentationUnitContent.zitierdaten() != null) {
+      documentationUnitIndex.setZitierdaten(
+        String.join(ENTRY_SEPARATOR, documentationUnitContent.zitierdaten())
+      );
+    }
+    return documentationUnitIndex;
   }
 
   private DocumentationUnitContent transformJson(@Nonnull String json) {
@@ -229,35 +299,14 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     }
   }
 
-  private void saveDocumentationUnitIndex(DocumentationUnitEntity documentationUnitEntity) {
-    var documentationUnitIndexEntity = documentationUnitIndexRepository
-      .findByDocumentationUnitId(documentationUnitEntity.getId())
-      .orElseGet(() -> {
-        var documentationUnitIndexEntityNew = new DocumentationUnitIndexEntity();
-        documentationUnitIndexEntityNew.setDocumentationUnit(documentationUnitEntity);
-        return documentationUnitIndexEntityNew;
-      });
-    documentationUnitIndexRepository.save(documentationUnitIndexEntity);
-  }
+  @Data
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  private static class DocumentationUnitIndex {
 
-  private void updateDocumentationUnitIndexEntity(
-    DocumentationUnitIndexEntity documentationUnitIndexEntity,
-    DocumentationUnitContent documentationUnitContent
-  ) {
-    documentationUnitIndexEntity.setLangueberschrift(documentationUnitContent.langueberschrift());
-    if (documentationUnitContent.references() != null) {
-      documentationUnitIndexEntity.setFundstellen(
-        documentationUnitContent
-          .references()
-          .stream()
-          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
-          .collect(Collectors.joining(ENTRY_SEPARATOR))
-      );
-    }
-    if (documentationUnitContent.zitierdaten() != null) {
-      documentationUnitIndexEntity.setZitierdaten(
-        String.join(ENTRY_SEPARATOR, documentationUnitContent.zitierdaten())
-      );
-    }
+    private final DocumentationUnitEntity documentationUnitEntity;
+    private String langueberschrift;
+    private String fundstellen;
+    private String zitierdaten;
   }
 }
