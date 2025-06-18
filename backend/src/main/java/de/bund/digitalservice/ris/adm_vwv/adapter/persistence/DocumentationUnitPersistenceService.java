@@ -153,6 +153,16 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   /**
    * Execute indexing of all documentation units without documentation unit index.
+   * <p>
+   *   The method selects all documentation units which are unindexed in batches and extracts
+   *   the needed data for the index in parallel. Exceptions during the extraction
+   *   are ignored. After extraction a new instance of {@link DocumentationUnitIndexEntity} is
+   *   created and saved.
+   * </p>
+   * <p>
+   *   <b>NOTE:</b>This method guarantees that an index is created for each documentation unit
+   *   without an index before calling this method.
+   * </p>
    *
    * @return Number of indexed documents
    */
@@ -162,6 +172,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     long totalNumberOfElements = 0;
     Slice<DocumentationUnitEntity> documentationUnitEntities;
     do {
+      // Note that we always select the first page (0) because the algorithm is changing the selection result
+      // and breaks linear paging.
       documentationUnitEntities = documentationUnitRepository.findByDocumentationUnitIndexIsNull(
         pageable
       );
