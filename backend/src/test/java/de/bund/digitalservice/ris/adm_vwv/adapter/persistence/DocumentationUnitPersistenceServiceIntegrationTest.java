@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -90,8 +89,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   void update() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
-    Year thisYear = Year.now();
-    documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000001", thisYear));
+    documentationUnitEntity.setDocumentNumber("KSNR2025000001");
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
@@ -117,7 +115,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setLangueberschrift("Lang");
     documentationUnitIndexEntity.setFundstellen("Fund");
     documentationUnitIndexEntity.setZitierdaten("2012-12-12");
-    entityManager.persistAndFlush(documentationUnitIndexEntity);
+    documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
+    documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
+    documentationUnitEntity = entityManager.merge(documentationUnitEntity);
     String json = TestFile.readFileToString("json-example.json");
 
     // when
@@ -441,7 +441,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  @Disabled("See Ticket RISDEV-8239")
   void indexByDocumentationUnit_jsonNotValid() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
