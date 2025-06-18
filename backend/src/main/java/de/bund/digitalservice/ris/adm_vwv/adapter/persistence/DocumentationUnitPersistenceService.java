@@ -188,7 +188,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     DocumentationUnitIndexEntity documentationUnitIndexEntity =
       documentationUnitIndex.documentationUnitEntity.getDocumentationUnitIndex();
     if (documentationUnitIndexEntity == null) {
-      // New entry for created documents
+      // New entry for created or imported documents
       documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
       documentationUnitIndexEntity.setDocumentationUnit(
         documentationUnitIndex.documentationUnitEntity
@@ -198,17 +198,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
     documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
     return documentationUnitIndexEntity;
-  }
-
-  @Data
-  @AllArgsConstructor
-  @RequiredArgsConstructor
-  private static class DocumentationUnitIndex {
-
-    private final DocumentationUnitEntity documentationUnitEntity;
-    private String langueberschrift;
-    private String fundstellen;
-    private String zitierdaten;
   }
 
   private DocumentationUnitIndex createIndexSafely(
@@ -223,8 +212,8 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
         e.getMessage()
       );
       log.debug("Stacktrace:", e);
-      // We save an empty entry so the document still appears on overview page
     }
+    // We save an empty entry so the document still appears on overview page
     return new DocumentationUnitIndex(documentationUnitEntity);
   }
 
@@ -296,5 +285,16 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("Exception during transforming json: " + json, e);
     }
+  }
+
+  @Data
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  private static class DocumentationUnitIndex {
+
+    private final DocumentationUnitEntity documentationUnitEntity;
+    private String langueberschrift;
+    private String fundstellen;
+    private String zitierdaten;
   }
 }
