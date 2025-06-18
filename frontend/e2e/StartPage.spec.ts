@@ -410,7 +410,9 @@ test.describe('Search documentation units', () => {
     // Test future date
     await page.getByLabel('Zitierdatum').fill('31.12.2099')
     await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Ergebnisse azeigen' })).toBeDisabled()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeDisabled()
   })
 
   test('should filter by "Fundstelle"', { tag: ['@RISDEV-7950'] }, async ({ page }) => {
