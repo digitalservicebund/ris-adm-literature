@@ -61,7 +61,7 @@ dependencies {
     exclude("org.bitbucket.b_c", "jose4j")
   }
   implementation("org.springframework:spring-web:6.2.8")
-  implementation("org.apache.tomcat.embed:tomcat-embed-core:10.1.42")
+  implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.8")
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.springframework.retry:spring-retry")
