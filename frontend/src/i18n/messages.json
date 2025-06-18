@@ -1,5 +1,8 @@
 {
   "NO_SEARCH_RESULTS": {
     "message": "Keine Suchergebnisse gefunden."
+  },
+  "BTN_SHOW_SEARCH_RESULTS": {
+    "message": "Ergebnisse anzeigen"
   }
 }

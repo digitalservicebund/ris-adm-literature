@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import testData from './test-data.json' with { type: 'json' }
+import messages from '../src/i18n/messages.json' with { type: 'json' }
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
@@ -84,11 +85,11 @@ test.describe('StartPage', () => {
 
       // then
       await page.getByLabel('Dokumentnummer').fill(documentNumber1)
-      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
       await expect(page.getByText(documentNumber1)).toHaveCount(1)
 
       await page.getByLabel('Dokumentnummer').fill(documentNumber2)
-      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
       await expect(page.getByText(documentNumber2)).toHaveCount(1)
     },
   )
@@ -196,50 +197,286 @@ test.describe('Search documentation units', () => {
     async ({ page }) => {
       await page.goto('/')
 
-      // Action
-      await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
-      await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+      // AC 1 initial state
+      await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+      await expect(
+        page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+      ).toBeVisible()
 
-      // Assert
+      // AC 2 full match search
+      await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert whole documentNumber
       await expect(page.getByText(testData.docNumber1)).toBeVisible()
       await expect(page.getByText(testData.docNumber2)).toBeHidden()
+
+      // AC 4 reset search
+      await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
+      await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+      // Assert
+      await expect(page.getByLabel('Dokumentnummer')).toBeEmpty()
+      await expect(page.getByText(testData.docNumber1)).toBeVisible()
+      await expect(page.getByText(testData.docNumber2)).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+
+      // AC 2 partial match search
+      const partialDocNumberLeft = testData.docNumber1.substring(2)
+
+      await page.getByLabel('Dokumentnummer').fill(partialDocNumberLeft)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert partial number remove chars right
+      await expect(page.getByText(testData.docNumber1)).toBeVisible()
+      await expect(page.getByText(testData.docNumber2)).toBeHidden()
+      await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+      const partialDocNumberRight = testData.docNumber1.substring(0, testData.docNumber1.length - 2)
+      await page.getByLabel('Dokumentnummer').fill(partialDocNumberRight)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert partial number remove chars left
+      await expect(page.getByText(testData.docNumber1)).toBeVisible()
+      await expect(page.getByText(testData.docNumber2)).toBeVisible()
+      await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+      // AC 3 combined search
+      // Action matching combination
+      await page.getByLabel('Dokumentnummer').fill(testData.docNumber2)
+      await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc2Title)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert matching combination
+      await expect(page.getByText(testData.docNumber2)).toBeVisible()
+      await expect(page.getByText(testData.docNumber1)).toBeHidden()
+
+      // Action non-matching combination
+      await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc1Title)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert non-matching combination
+      await expect(page.getByText(testData.docNumber1)).toBeHidden()
+      await expect(page.getByText(testData.docNumber2)).toBeHidden()
+      await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+      // AC 5 no results msg
+      // Action
+      await page.getByLabel('Dokumentnummer').fill('DUMMY-WERT-12345-ABCDE')
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // Assert
+      await expect(page.getByText(testData.docNumber1)).toBeHidden()
+      await expect(page.getByText(testData.docNumber2)).toBeHidden()
+      await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
     },
   )
 
   test('should filter by "Amtl. Langüberschrift"', { tag: ['@RISDEV-7948'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action
-    await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc2Title)
-    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+    // AC 1 initial state
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeVisible()
 
-    // Assert
+    // AC 2 search full match
+    await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc1Title)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert whole title
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+
+    // AC 4 reset search
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // Assert reset
+    await expect(page.getByLabel('Amtl. Langüberschrift')).toBeEmpty()
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+
+    // AC 2 test partial match
+    const partialTitle = 'Global Setup'
+    await page.getByLabel('Amtl. Langüberschrift').fill(partialTitle)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert partial match
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC 3 combined search
+    await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc2Title)
+    await page.getByLabel('Dokumentnummer').fill(testData.docNumber2)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert matching combination
     await expect(page.getByText(testData.docNumber2)).toBeVisible()
     await expect(page.getByText(testData.docNumber1)).toBeHidden()
+
+    // Action non-matching combination
+    await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert non-matching combination
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC 5 no result msg
+    await page.getByLabel('Amtl. Langüberschrift').fill('DUMMY-TITLE-XYZ-123')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert no results found message
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
   })
 
   test('should filter by "Zitierdatum"', { tag: ['@RISDEV-7949'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action
+    // AC 1 initial state
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeVisible()
+
+    // AC 2 search full match
     await page.getByLabel('Zitierdatum').fill('18.06.2024')
-    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
     // Assert
     await expect(page.getByText(testData.docNumber2)).toBeVisible()
     await expect(page.getByText(testData.docNumber1)).toBeHidden()
+
+    // AC 4 reset search
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // Assert reset
+    await expect(page.getByLabel('Zitierdatum')).toBeEmpty()
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+
+    // AC 3 combined search
+    await page.getByLabel('Zitierdatum').fill('17.06.2024')
+    await page.getByLabel('Dokumentnummer').fill(testData.docNumber1)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert matching combination
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+
+    // Action non-matching combination
+    await page.getByLabel('Zitierdatum').fill('18.06.2024')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert non-matching combination
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC 5 no result msg
+    await page.getByLabel('Zitierdatum').fill('01.01.1999')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert no results found message
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+
+    // AC 6 invalid date
+    // Test incomplete date
+    await page.getByLabel('Zitierdatum').fill('12.12.')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+    await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeDisabled()
+
+    // Test invalid date
+    await page.getByLabel('Zitierdatum').fill('99.99.2023')
+    await expect(page.getByText('Kein valides Datum')).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeDisabled()
+
+    // Test future date
+    await page.getByLabel('Zitierdatum').fill('31.12.2099')
+    await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeDisabled()
   })
 
   test('should filter by "Fundstelle"', { tag: ['@RISDEV-7950'] }, async ({ page }) => {
     await page.goto('/')
 
-    // Action
-    await page.getByLabel('Fundstelle').fill('BGB 123')
-    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+    // AC 1 initial state
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+    await expect(
+      page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }),
+    ).toBeVisible()
 
-    // Assert
+    // AC 2 search full match
+    await page.getByLabel('Fundstelle').fill('BGB 123')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert full match
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeHidden()
+
+    // AC 4 reset search
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // Assert reset
+    await expect(page.getByLabel('Fundstelle')).toBeEmpty()
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
+
+    // AC 2 partial match search
+    await page.getByLabel('Fundstelle').fill('BGB') // Should match both
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert partial match
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC 3: Filter by matching combination
+    await page.getByLabel('Fundstelle').fill('BGB 456')
+    await page.getByLabel('Dokumentnummer').fill(testData.docNumber2)
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert matching combination
+    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+
+    // Action non-matching combination
+    await page.getByLabel('Fundstelle').fill('BGB 123')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert non-matching combination
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC 5 no result msg
+    await page.getByLabel('Fundstelle').fill('NON-EXISTENT-REF-42')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert no results found message
+    await expect(page.getByText(testData.docNumber1)).toBeHidden()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await expect(page.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
   })
 
   test('should filter by a combination of all fields', async ({ page }) => {
@@ -250,7 +487,7 @@ test.describe('Search documentation units', () => {
     await page.getByLabel('Amtl. Langüberschrift').fill(testData.doc1Title)
     await page.getByLabel('Fundstelle').fill('BGB 123')
     await page.getByLabel('Zitierdatum').fill('17.06.2024')
-    await page.getByRole('button', { name: 'Ergebnisse zeigen' }).click()
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
     // Assert
     await expect(page.getByText(testData.docNumber1)).toBeVisible()

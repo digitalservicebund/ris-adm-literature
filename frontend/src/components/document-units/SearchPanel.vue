@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import DateInput from '@/components/input/DateInput.vue'
 import InputField from '@/components/input/InputField.vue'
 import type { ValidationError } from '@/components/input/types.ts'
+import messages from '@/i18n/messages.json'
 
 const props = defineProps<{
   loading: boolean
@@ -74,7 +75,7 @@ function onClickReset() {
     </div>
     <div class="flex gap-24">
       <Button
-        label="Ergebnisse zeigen"
+        :label="messages.BTN_SHOW_SEARCH_RESULTS.message"
         :disabled="props.loading || hasValidationError"
         type="submit"
       />
