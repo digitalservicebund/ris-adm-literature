@@ -122,22 +122,22 @@ describe('ExtraContentSidePanel', () => {
   })
 
   test('toggle panel open and closed', async () => {
-    renderComponent()
+    const { user } = renderComponent()
     expect(await screen.findByLabelText('Seitenpanel öffnen')).toBeVisible()
 
     // Opening side panel
-    screen.getByLabelText('Seitenpanel öffnen').click()
+    await user.click(screen.getByLabelText('Seitenpanel öffnen'))
     expect(await screen.findByLabelText('Seitenpanel schließen')).toBeVisible()
 
     // Closing side panel
-    screen.getByLabelText('Seitenpanel schließen').click()
+    await user.click(screen.getByLabelText('Seitenpanel schließen'))
     expect(await screen.findByLabelText('Seitenpanel öffnen')).toBeVisible()
   })
 
   describe('Select panel content', () => {
     test('initially open note without note', async () => {
-      renderComponent()
-      screen.getByLabelText('Seitenpanel öffnen').click()
+      const { user } = renderComponent()
+      await user.click(screen.getByLabelText('Seitenpanel öffnen'))
 
       expect(await screen.findByLabelText('Notiz Eingabefeld')).toBeVisible()
     })
