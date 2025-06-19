@@ -54,9 +54,12 @@ async function globalSetup() {
 
   const doc1Title = 'Alpha Global Setup Document'
   const doc2Title = 'Beta Global Setup Document'
-  const doc1References = [{ legalPeriodicalRawValue: 'BGB', citation: '123' }]
+  const doc1References = [
+    { legalPeriodicalRawValue: 'BGB', citation: '123' },
+    { legalPeriodicalRawValue: 'VWV', citation: 'xyz' },
+  ]
   const doc2References = [{ legalPeriodicalRawValue: 'BGB', citation: '456' }]
-  const doc1Zitierdaten = ['2024-06-17']
+  const doc1Zitierdaten = ['2024-06-17', '1950-01-01']
   const doc2Zitierdaten = ['2024-06-18']
 
   const createResponse1 = await apiContext.post('api/documentation-units')
