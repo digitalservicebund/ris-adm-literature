@@ -28,7 +28,7 @@
     "@digitalservicebund/ris-ui": "^3.10.0",
     "@guardian/prosemirror-invisibles": "^3.1.1",
     "@iconify-json/ic": "^1.2.2",
-    "@iconify-json/material-symbols": "^1.2.25",
+    "@iconify-json/material-symbols": "^1.2.27",
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^3.5.0",
     "@sentry/vue": "^9.30.0",
