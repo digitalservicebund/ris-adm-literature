@@ -471,7 +471,6 @@ test.describe('Search documentation units', () => {
     await page.getByLabel('Fundstelle').fill('VWV xyz')
     await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
-    // Assert partial match - right
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeHidden()
     await page.getByRole('button', { name: 'Zurücksetzen' }).click()
