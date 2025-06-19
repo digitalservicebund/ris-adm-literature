@@ -451,18 +451,18 @@ test.describe('Search documentation units', () => {
     await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
 
     // AC 2 partial match search
+    // Assert partial match - left
     await page.getByLabel('Fundstelle').fill('BGB') // Should match both
     await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
-    // Assert partial match - left
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeVisible()
     await page.getByRole('button', { name: 'Zurücksetzen' }).click()
 
+    // Assert partial match - right
     await page.getByLabel('Fundstelle').fill('123')
     await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
-    // Assert partial match - right
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeHidden()
     await page.getByRole('button', { name: 'Zurücksetzen' }).click()
