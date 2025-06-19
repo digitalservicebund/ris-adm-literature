@@ -354,6 +354,14 @@ test.describe('Search documentation units', () => {
     await expect(page.getByText(testData.docNumber2)).toBeVisible()
     await expect(page.getByText(testData.docNumber1)).toBeHidden()
 
+    // AC search second zitierdatum
+    await page.getByLabel('Zitierdatum').fill('01.01.1950')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+
     // AC 4 reset search
     await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeEnabled()
     await page.getByRole('button', { name: 'Zurücksetzen' }).click()
@@ -446,9 +454,26 @@ test.describe('Search documentation units', () => {
     await page.getByLabel('Fundstelle').fill('BGB') // Should match both
     await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
-    // Assert partial match
+    // Assert partial match - left
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    await page.getByLabel('Fundstelle').fill('123')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert partial match - right
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
+    await page.getByRole('button', { name: 'Zurücksetzen' }).click()
+
+    // AC find second (not primary) fundstelle
+    await page.getByLabel('Fundstelle').fill('VWV xyz')
+    await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+    // Assert partial match - right
+    await expect(page.getByText(testData.docNumber1)).toBeVisible()
+    await expect(page.getByText(testData.docNumber2)).toBeHidden()
     await page.getByRole('button', { name: 'Zurücksetzen' }).click()
 
     // AC 3: Filter by matching combination
