@@ -190,6 +190,64 @@ test.describe('StartPage', () => {
   )
 })
 
+test.describe('List of documents', () => {
+  test(
+    'shows dokumentnummer, zitierdatum, langueberschrift, fundstelle for a newly created document',
+    { tag: ['@RISDEV-8315', '@RISDEV-7599'] },
+    async ({ page }) => {
+      // given
+      const zitierdatum1 = '01.01.2000'
+      const zitierdatum2 = '01.01.2001'
+      const langueberschrift = 'langueberschrift'
+      const fundstelle = 'ABc 2024, Seite 24'
+
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+
+      const documentNumber = page
+        .url()
+        .split('/')
+        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
+
+      await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
+      await page.getByText('ABc | Die Beispieler').click()
+      await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
+      await page.getByText('Übernehmen').click()
+      await page.getByText('Rubriken').click()
+      await page.getByText('Amtl. Langüberschrift').fill(langueberschrift)
+      const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newZitierdatumInput = zitierdatenGroup.locator('input')
+      await newZitierdatumInput.fill(zitierdatum1)
+      await page.keyboard.press('Enter')
+      await newZitierdatumInput.fill(zitierdatum2)
+      await page.keyboard.press('Enter')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+
+      // when
+      await page.goto('/')
+      await page.getByLabel('Dokumentnummer').fill(documentNumber)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
+
+      // then
+      const firstRow = page.getByTestId('row-0')
+      const columns = firstRow.getByRole('cell')
+      expect(columns.nth(0)).toHaveText(documentNumber)
+      expect(columns.nth(1)).toHaveText(`${zitierdatum1}, ${zitierdatum2}`)
+      expect(columns.nth(2)).toHaveText(langueberschrift)
+      expect(columns.nth(3)).toHaveText(fundstelle)
+    }
+  )
+
+  test(
+    'shows the documents sorted by ascending document number',
+    { tag: ['@RISDEV-8315'] },
+    async ({ page }) => {
+
+    }
+  )
+})
+
 test.describe('Search documentation units', () => {
   test(
     'should filter results by its "Dokumentnummer"',
