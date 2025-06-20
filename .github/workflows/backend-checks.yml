@@ -128,8 +128,8 @@ jobs:
           distribution: "temurin"
           cache: gradle
           cache-dependency-path: | # optional
-            sub-project/*.gradle*
-            sub-project/**/gradle-wrapper.properties
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
