@@ -95,18 +95,6 @@ test.describe('StartPage', () => {
   )
 
   test(
-    'Counts 100 entries in the list of documentation units.',
-    { tag: ['@RISDEV-7601'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/')
-      // when
-      // then
-      await expect(page.getByText('KSNR')).toHaveCount(100)
-    },
-  )
-
-  test(
     'Switches over to the second page of search entries, finds at least one other entry and switches back.',
     { tag: ['@RISDEV-7601'] },
     async ({ page }) => {
@@ -117,6 +105,7 @@ test.describe('StartPage', () => {
       await page.getByRole('button', { name: 'Weiter', exact: true }).click()
 
       // then
+      await page.waitForTimeout(200)
       expect(await page.getByText('KSNR').count()).toBeGreaterThanOrEqual(1)
 
       // when
@@ -168,6 +157,8 @@ test.describe('StartPage', () => {
       await langue.fill(text1)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.goto('/')
+      await page.getByLabel('Dokumentnummer').fill(documentNumber)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
       // then
       await expect(page.getByText(text1)).toHaveCount(1)
@@ -183,6 +174,8 @@ test.describe('StartPage', () => {
       await langue.fill(text2)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.goto('/')
+      await page.getByLabel('Dokumentnummer').fill(documentNumber)
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
       // then
       await expect(page.getByText(text2)).toHaveCount(1)
@@ -191,6 +184,32 @@ test.describe('StartPage', () => {
 })
 
 test.describe('List of documents', () => {
+  test(
+    'has 100 entries sorted by ascending document number',
+    { tag: ['@RISDEV-7601'] },
+    async ({ page }) => {
+      // when
+      await page.goto('/')
+      const rows = page.getByRole('row')
+
+      // then
+      await expect(rows).toHaveCount(101) // 100 rows and 1 header
+
+      const docNumbers = []
+      for (let i = 1; i < 101; i++) {
+        const row = rows.nth(i)
+        const idCell = row.getByRole('cell').first()
+        const text = await idCell.textContent()
+        const docNumber = parseInt(text?.trim() || '', 10)
+        docNumbers.push(docNumber)
+      }
+
+      // Assert ascending order
+      const sorted = [...docNumbers].sort((a, b) => a - b)
+      expect(docNumbers).toEqual(sorted)
+    },
+  )
+
   test(
     'shows dokumentnummer, zitierdatum, langueberschrift, fundstelle for a newly created document',
     { tag: ['@RISDEV-8315', '@RISDEV-7599'] },
@@ -203,12 +222,6 @@ test.describe('List of documents', () => {
 
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-
-      const documentNumber = page
-        .url()
-        .split('/')
-        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
-
       await page.getByRole('button', { name: 'Dropdown öffnen' }).click()
       await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
@@ -223,6 +236,10 @@ test.describe('List of documents', () => {
       await newZitierdatumInput.fill(zitierdatum2)
       await page.keyboard.press('Enter')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      const documentNumber = page
+        .url()
+        .split('/')
+        .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
 
       // when
       await page.goto('/')
@@ -232,19 +249,30 @@ test.describe('List of documents', () => {
       // then
       const firstRow = page.getByTestId('row-0')
       const columns = firstRow.getByRole('cell')
-      expect(columns.nth(0)).toHaveText(documentNumber)
-      expect(columns.nth(1)).toHaveText(`${zitierdatum1}, ${zitierdatum2}`)
-      expect(columns.nth(2)).toHaveText(langueberschrift)
-      expect(columns.nth(3)).toHaveText(fundstelle)
-    }
+      await expect(columns.nth(0)).toHaveText(documentNumber)
+      await expect(columns.nth(1)).toHaveText(`${zitierdatum1}, ${zitierdatum2}`)
+      await expect(columns.nth(2)).toHaveText(langueberschrift)
+      await expect(columns.nth(3)).toHaveText(fundstelle)
+    },
   )
 
   test(
-    'shows the documents sorted by ascending document number',
-    { tag: ['@RISDEV-8315'] },
+    'shows dokumentnummer, zitierdatum, langueberschrift, fundstelle for an existing document',
+    { tag: ['@RISDEV-8315', '@RISDEV-7601'] },
     async ({ page }) => {
+      // when
+      await page.goto('/')
+      await page.getByLabel('Dokumentnummer').fill('KSNR999999999')
+      await page.getByRole('button', { name: messages.BTN_SHOW_SEARCH_RESULTS.message }).click()
 
-    }
+      // then
+      const firstRow = page.getByTestId('row-0')
+      const columns = firstRow.getByRole('cell')
+      await expect(columns.nth(0)).toHaveText('KSNR999999999')
+      await expect(columns.nth(1)).toHaveText('05.05.2025, 01.06.2025')
+      await expect(columns.nth(2)).toHaveText('1. Bekanntmachung zum XML-Testen in NeuRIS VwV')
+      await expect(columns.nth(3)).toHaveText('Das Periodikum 2021, Seite 15')
+    },
   )
 })
 
