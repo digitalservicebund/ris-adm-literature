@@ -21,6 +21,9 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+          cache-dependency-path: | # optional
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Run spotlessCheck
         working-directory: ./backend
         run: ./gradlew spotlessCheck
@@ -44,6 +47,9 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+          cache-dependency-path: | # optional
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Run checkstyleMain
         working-directory: ./backend
         run: ./gradlew checkstyleMain
@@ -182,6 +188,9 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+          cache-dependency-path: | # optional
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Check licenses
         working-directory: ./backend
         run: ./gradlew checkLicense
@@ -207,6 +216,9 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+          cache-dependency-path: | # optional
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
       - name: Generate javadocs
         working-directory: ./backend
         run: ./gradlew javadoc
