@@ -120,7 +120,7 @@ jobs:
   #       with:
   #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  build-test-quality:
+  build-test-qualityCheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
