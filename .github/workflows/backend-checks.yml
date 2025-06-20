@@ -127,6 +127,9 @@ jobs:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
+          cache-dependency-path: | # optional
+            sub-project/*.gradle*
+            sub-project/**/gradle-wrapper.properties
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -147,7 +150,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
       #
       # Upload reports as pipeline artifacts
-      #    
+      #
       - name: Upload build performance report
         uses: actions/upload-artifact@v4
         with:
@@ -159,7 +162,6 @@ jobs:
           name: backend-test-report
           path: backend/build/reports/tests/test
           if-no-files-found: warn
-
       #
       # Let the team know on failure on `main`
       #
