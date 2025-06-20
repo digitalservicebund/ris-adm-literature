@@ -105,7 +105,6 @@ test.describe('StartPage', () => {
       await page.getByRole('button', { name: 'Weiter', exact: true }).click()
 
       // then
-      await page.waitForTimeout(200)
       expect(await page.getByText('KSNR').count()).toBeGreaterThanOrEqual(1)
 
       // when
