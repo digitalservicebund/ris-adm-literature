@@ -35,7 +35,7 @@
     "@tailwindcss/postcss": "^4.1.10",
     "@tiptap/extension-blockquote": "^2.22.3",
     "@tiptap/extension-bold": "^2.22.3",
-    "@tiptap/extension-bullet-list": "^2.22.0",
+    "@tiptap/extension-bullet-list": "^2.22.3",
     "@tiptap/extension-color": "^2.14.0",
     "@tiptap/extension-document": "^2.14.0",
     "@tiptap/extension-hard-break": "^2.22.3",
