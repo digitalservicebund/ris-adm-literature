@@ -96,7 +96,7 @@ test.describe('StartPage', () => {
 
   test(
     'Switches over to the second page of search entries, finds at least one other entry and switches back.',
-    { tag: ['@RISDEV-7601'] },
+    { tag: ['@RISDEV-7601', '@RISDEV-7599'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -117,7 +117,7 @@ test.describe('StartPage', () => {
 
   test(
     'Start editing documentation unit from the search results',
-    { tag: ['@RISDEV-7601'] },
+    { tag: ['@RISDEV-7601', '@RISDEV-7599'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -137,7 +137,7 @@ test.describe('StartPage', () => {
 
   test(
     'Add a document, check if is indexed, change it, check if re-indexed.',
-    { tag: ['@RISDEV-7601'] },
+    { tag: ['@RISDEV-7601', '@RISDEV-7599'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -185,7 +185,7 @@ test.describe('StartPage', () => {
 test.describe('List of documents', () => {
   test(
     'has 100 entries sorted by ascending document number',
-    { tag: ['@RISDEV-7601'] },
+    { tag: ['@RISDEV-7601', '@RISDEV-7599'] },
     async ({ page }) => {
       // when
       await page.goto('/')
