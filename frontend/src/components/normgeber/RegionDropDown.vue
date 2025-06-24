@@ -5,6 +5,10 @@ import type { Region } from '@/domain/normgeber.ts'
 import { useFetchRegions } from '@/services/regionService.ts'
 import { useAutoComplete, useRegionSearch } from '@/composables/useAutoComplete'
 
+defineProps<{
+  inputId: string
+}>()
+
 const modelValue = defineModel<Region | undefined>()
 const emit = defineEmits<{
   'update:modelValue': [value: Region]
@@ -37,7 +41,7 @@ onMounted(async () => {
     ref="autoComplete"
     :model-value="selectedRegionId"
     :suggestions="suggestions"
-    input-id="region"
+    :input-id="inputId"
     :initial-label="modelValue?.code"
     aria-label="Region"
     append-to="self"
