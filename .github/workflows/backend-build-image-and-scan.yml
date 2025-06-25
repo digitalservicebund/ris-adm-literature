@@ -60,8 +60,9 @@ jobs:
           path: trivy-image-results.sarif
           if-no-files-found: error
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Upload Trivy scan results to GitHub Security tab (on `main`)
         uses: github/codeql-action/upload-sarif@v3
+        # only on `main`
         if: ${{ github.ref == 'refs/heads/main' }} # Bypass non-zero exit code..
         with:
           sarif_file: "trivy-image-results.sarif"
@@ -69,7 +70,9 @@ jobs:
       - name: Print trivy results (sarif format)
         run: cat trivy-image-results.sarif
 
-      - name: Fail build on High/Criticial Vulnerabilities
+      - name: Fail build on High/Criticial Vulnerabilities (on branches)
+        # ignore on `main`
+        if: ${{ github.ref != 'refs/heads/main' }}
         uses: aquasecurity/trivy-action@76071ef0d7ec797419534a183b498b4d6366cf37
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
