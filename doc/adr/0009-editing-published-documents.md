@@ -59,6 +59,6 @@ The question is: how do we map these requirements to our backend architecture?
 
   - keeping the benefits of the existing architecture (cf. [doc/0004-data-persistence-and-exchange](./0004-data-persistence-and-exchange.md))
   - keeping refactoring low wrt. the existing solution
-  - keeping the requirement in place that any XML in our database is valid wrt. our schema
+  - keeping the requirement in place that all XML in our database is valid wrt. our schema
 
 - The use case of "un-publishing" or "retracting" documents is not covered, yet, as it's no requirement so far.
