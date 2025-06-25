@@ -8,8 +8,7 @@ pre-commit:
 pre-push:
   commands:
     lintAndFormatCheckOnFrontendChange:
-      exclude:
-        - e2e/test-data.json
+      exclude: "e2e/test-data.json"
       # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'
       root: frontend
