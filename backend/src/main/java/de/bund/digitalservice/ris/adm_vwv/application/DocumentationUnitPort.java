@@ -24,6 +24,7 @@ public interface DocumentationUnitPort {
   /**
    * Returns paginated documentation units overview elements.
    * @param query The query
+   * @param pageable The pageable
    * @return Page object with documentation unit overview elements and pagination data
    */
   Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
