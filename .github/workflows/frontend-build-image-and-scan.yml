@@ -18,7 +18,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Run Trivy vulnerability image scanner
-        # Note: This scan is what is shown in the GitHub Security tab
+        # Note: Results are shown in the GitHub Security tab
         #       cf. step "Upload Trivy scan results to GitHub Security tab"
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
