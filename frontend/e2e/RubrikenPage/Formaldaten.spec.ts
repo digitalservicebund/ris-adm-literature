@@ -14,21 +14,37 @@ test.describe('RubrikenPage - Formatdaten', () => {
       })
     })
 
-    test('Filling in Formaldaten', { tag: ['@RISDEV-6043'] }, async ({ page }) => {
+    test('Filling in Amtl. Langüberschrift', { tag: ['@RISDEV-6043'] }, async ({ page }) => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
       await page.getByText('Rubriken').click()
       await expect(page.getByText('Rubriken')).toHaveCount(1)
 
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
+      // when
       await page.getByText('Amtl. Langüberschrift').fill('my long title')
+      // then
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
+    })
 
-      await expect(page.getByText('Aktenzeichen')).toHaveCount(2)
-      await page.getByText('Aktenzeichen').first().fill('Az1')
-      await page.getByText('Aktenzeichen').first().press('Enter')
-      await page.getByText('Aktenzeichen').first().fill('Az2')
-      await page.getByText('Aktenzeichen').first().press('Enter')
+    test('Filling in Aktenzeichen', { tag: ['@RISDEV-7680'] }, async ({ page }) => {
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
+      await page.getByText('Rubriken').click()
+      await expect(page.getByText('Rubriken')).toHaveCount(1)
+
+      const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newAktenzeichenInput = aktenzeichenGroup.locator('input')
+
+      await expect(newAktenzeichenInput).toHaveCount(1)
+      await expect(aktenzeichenGroup.getByRole('listitem')).toHaveCount(0)
+      // when
+      await newAktenzeichenInput.fill('Az1')
+      await newAktenzeichenInput.press('Enter')
+      await newAktenzeichenInput.fill('Az2')
+      await newAktenzeichenInput.press('Enter')
+      // then
       // Created elements are list elements (<li>) so we need to select them explicitly
+      await expect(aktenzeichenGroup.getByRole('listitem')).toHaveCount(2)
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
     })
@@ -91,8 +107,8 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Aktenzeichen: Can be entered persist through a reload',
-    { tag: ['@RISDEV-6303'] },
+    'Aktenzeichen: Can be entered, persist through a reload, can be edited',
+    { tag: ['@RISDEV-6303, @RISDEV-7680'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -100,14 +116,16 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const aktenzeichenElement = page.getByText('Aktenzeichen')
-      await expect(aktenzeichenElement).toHaveCount(2)
+      const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
+      // eslint-disable-next-line playwright/no-raw-locators
+      const newAktenzeichenInput = aktenzeichenGroup.locator('input')
 
       // when
-      await aktenzeichenElement.first().fill('Az1')
-      await aktenzeichenElement.first().press('Enter')
-      await aktenzeichenElement.first().fill('Az2')
-      await aktenzeichenElement.first().press('Enter')
+      await expect(newAktenzeichenInput).toHaveCount(1)
+      await newAktenzeichenInput.fill('Az1')
+      await newAktenzeichenInput.press('Enter')
+      await newAktenzeichenInput.fill('Az2')
+      await newAktenzeichenInput.press('Enter')
       // then
       // Created elements are list elements (<li>) so we need to select them explicitly
       await expect(page.getByText('Az1')).toHaveCount(1)
@@ -119,6 +137,18 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // then
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
+
+      // when
+      const listItem = aktenzeichenGroup.getByRole('listitem', { name: 'Az1' })
+      await expect(listItem).toHaveCount(1)
+      await listItem.dblclick()
+      await listItem.getByRole('textbox').fill('Az3')
+      await page.keyboard.press('Enter')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(aktenzeichenGroup.getByRole('listitem')).toHaveCount(2)
+      await expect(aktenzeichenGroup.getByRole('listitem', { name: 'Az3' })).toHaveCount(1)
     },
   )
 
