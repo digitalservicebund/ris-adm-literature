@@ -41,7 +41,6 @@ export interface DocumentUnit {
   gliederung?: string
   kurzreferat?: string
   aktenzeichen?: string[]
-  noAktenzeichen?: boolean
   dokumenttyp?: DocumentType
   dokumenttypZusatz?: string
   activeCitations?: ActiveCitation[]

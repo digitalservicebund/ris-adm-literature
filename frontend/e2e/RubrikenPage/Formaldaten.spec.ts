@@ -23,18 +23,14 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.getByText('Amtl. Langüberschrift').fill('my long title')
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue('my long title')
 
-      await expect(page.getByText('Aktenzeichen *')).toHaveCount(2)
-      await page.getByText('Aktenzeichen *').first().fill('Az1')
-      await page.getByText('Aktenzeichen *').first().press('Enter')
-      await page.getByText('Aktenzeichen *').first().fill('Az2')
-      await page.getByText('Aktenzeichen *').first().press('Enter')
+      await expect(page.getByText('Aktenzeichen')).toHaveCount(2)
+      await page.getByText('Aktenzeichen').first().fill('Az1')
+      await page.getByText('Aktenzeichen').first().press('Enter')
+      await page.getByText('Aktenzeichen').first().fill('Az2')
+      await page.getByText('Aktenzeichen').first().press('Enter')
       // Created elements are list elements (<li>) so we need to select them explicitly
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
-
-      await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
-      await page.getByText('Kein Aktenzeichen').check()
-      await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     })
   })
 
@@ -95,7 +91,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Aktenzeichen: Can be entered, checkbox checked and both persist through a reload',
+    'Aktenzeichen: Can be entered persist through a reload',
     { tag: ['@RISDEV-6303'] },
     async ({ page }) => {
       // given
@@ -104,7 +100,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const aktenzeichenElement = page.getByText('Aktenzeichen *')
+      const aktenzeichenElement = page.getByText('Aktenzeichen')
       await expect(aktenzeichenElement).toHaveCount(2)
 
       // when
@@ -117,19 +113,12 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
 
-      await expect(page.getByText('Kein Aktenzeichen')).toHaveCount(1)
-      // when
-      await page.getByText('Kein Aktenzeichen').check()
-      // then
-      await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
-
       // when
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
       await expect(page.getByText('Az1')).toHaveCount(1)
       await expect(page.getByText('Az2')).toHaveCount(1)
-      await expect(page.getByText('Kein Aktenzeichen')).toBeChecked()
     },
   )
 
