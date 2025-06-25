@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -208,13 +208,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
-        )
+        new DocumentationUnitQuery(null, null, null, null),
+        PageRequest.of(0, 10)
       );
 
     // then
@@ -263,13 +258,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // when
     var documentationUnitOverviewElements =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "id", Sort.Direction.ASC, false)
-        )
+        new DocumentationUnitQuery(null, null, null, null),
+        PageRequest.of(0, 10)
       );
 
     // then
@@ -295,14 +285,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     createTestUnit("KSNR00002", "Title B", "Fundstelle B", "2025-01-02");
 
     // when
-    var query = new DocumentationUnitQuery(
-      "KSNR00001",
-      null,
-      null,
-      null,
-      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    var query = new DocumentationUnitQuery("KSNR00001", null, null, null);
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+      query,
+      PageRequest.of(0, 10)
     );
-    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
 
     // then
     assertThat(result.content())
@@ -319,14 +306,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     createTestUnit("KSNR00004", "Another title", "Fundstelle D", "2025-01-04");
 
     // when
-    var query = new DocumentationUnitQuery(
-      null,
-      "specific",
-      null,
-      null,
-      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    var query = new DocumentationUnitQuery(null, "specific", null, null);
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+      query,
+      PageRequest.of(0, 10)
     );
-    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
 
     // then
     assertThat(result.content())
@@ -343,14 +327,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     createTestUnit("KSNR00006", "Title F", "Fundstelle Beta", "2025-01-06");
 
     // when
-    var query = new DocumentationUnitQuery(
-      null,
-      null,
-      "lph",
-      null,
-      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    var query = new DocumentationUnitQuery(null, null, "lph", null);
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+      query,
+      PageRequest.of(0, 10)
     );
-    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
 
     // then
     assertThat(result.content())
@@ -367,14 +348,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     createTestUnit("KSNR00008", "Title H", "Fundstelle H", "2025-01-08");
 
     // when
-    var query = new DocumentationUnitQuery(
-      null,
-      null,
-      null,
-      "2025-01-07",
-      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    var query = new DocumentationUnitQuery(null, null, null, "2025-01-07");
+    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
+      query,
+      PageRequest.of(0, 10)
     );
-    var result = documentationUnitPersistenceService.findDocumentationUnitOverviewElements(query);
 
     // then
     assertThat(result.content())

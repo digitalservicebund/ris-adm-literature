@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterSer
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -58,8 +59,12 @@ public class DocumentationUnitService implements DocumentationUnitPort {
 
   @Override
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery queryOptions
+    @Nonnull DocumentationUnitQuery queryOptions,
+    @Nonnull Pageable pageable
   ) {
-    return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(queryOptions);
+    return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(
+      queryOptions,
+      pageable
+    );
   }
 }

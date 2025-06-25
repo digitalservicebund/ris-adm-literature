@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,21 +50,41 @@ public class DocumentationUnitController {
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
-    QueryOptions queryOptions = new QueryOptions(
-      pageNumber,
-      pageSize,
-      sortByProperty,
-      sortDirection,
-      usePagination
+    Map<String, String> propertyAliases = Map.of(
+      "langueberschrift",
+      "documentationUnitIndex.langueberschrift",
+      "fundstellen",
+      "documentationUnitIndex.fundstellen",
+      "zitierdaten",
+      "documentationUnitIndex.zitierdaten"
     );
+
+    String resolvedSortByProperty = propertyAliases.getOrDefault(sortByProperty, sortByProperty);
+
+    Sort sort;
+    if ("documentationUnitIndex.zitierdaten".equals(resolvedSortByProperty)) {
+      Sort.Order zitierdatumOrder = new Sort.Order(
+        sortDirection,
+        resolvedSortByProperty,
+        Sort.NullHandling.NULLS_FIRST
+      );
+      sort = Sort.by(zitierdatumOrder);
+    } else {
+      sort = Sort.by(sortDirection, resolvedSortByProperty);
+    }
+
+    Pageable pageable = usePagination
+      ? PageRequest.of(pageNumber, pageSize, sort)
+      : Pageable.unpaged();
+
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
       new DocumentationUnitQuery(
         StringUtils.trimToNull(documentNumber),
         StringUtils.trimToNull(langueberschrift),
         StringUtils.trimToNull(fundstellen),
-        StringUtils.trimToNull(zitierdaten),
-        queryOptions
-      )
+        StringUtils.trimToNull(zitierdaten)
+      ),
+      pageable
     );
     return ResponseEntity.ok(
       new DocumentationUnitsOverviewResponse(

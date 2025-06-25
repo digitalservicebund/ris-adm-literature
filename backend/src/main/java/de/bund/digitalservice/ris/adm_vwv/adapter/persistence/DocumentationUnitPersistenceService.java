@@ -19,7 +19,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,14 +104,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   @Override
   @Transactional(readOnly = true)
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery query
+    @Nonnull DocumentationUnitQuery query,
+    @Nonnull Pageable pageable
   ) {
-    QueryOptions queryOptions = query.queryOptions();
-    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
-    Pageable pageable = queryOptions.usePagination()
-      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
-      : Pageable.unpaged(sort);
-
     DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
       query.documentNumber(),
       query.langueberschrift(),

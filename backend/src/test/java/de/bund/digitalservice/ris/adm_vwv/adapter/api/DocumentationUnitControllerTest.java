@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -135,7 +137,7 @@ class DocumentationUnitControllerTest {
 
     @BeforeEach
     void beforeEach() {
-      given(documentationUnitPort.findDocumentationUnitOverviewElements(any())).willReturn(
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(any(), any())).willReturn(
         TestPage.create(
           List.of(
             new DocumentationUnitOverviewElement(
@@ -228,22 +230,17 @@ class DocumentationUnitControllerTest {
       String fundstellen = "p.abbrev.1";
       String zitierdaten = "2011-11-11";
 
-      QueryOptions queryOptions = new QueryOptions(
-        0,
-        10,
-        "documentNumber",
-        Sort.Direction.ASC,
-        true
-      );
+      Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "documentNumber"));
       DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
         documentNumber,
         langueberschrift,
         fundstellen,
-        zitierdaten,
-        queryOptions
+        zitierdaten
       );
 
-      given(documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery)).willReturn(
+      given(
+        documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery, pageable)
+      ).willReturn(
         TestPage.create(
           List.of(
             new DocumentationUnitOverviewElement(

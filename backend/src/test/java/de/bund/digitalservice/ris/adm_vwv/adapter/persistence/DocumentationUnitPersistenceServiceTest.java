@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,10 +15,7 @@ import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
@@ -94,13 +90,8 @@ class DocumentationUnitPersistenceServiceTest {
     // when
     de.bund.digitalservice.ris.adm_vwv.application.Page<DocumentationUnitOverviewElement> result =
       documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
-        )
+        new DocumentationUnitQuery(null, null, null, null),
+        PageRequest.of(0, 10)
       );
 
     // then
