@@ -20,10 +20,9 @@ Here's the mental model our application should support with respect to editing p
 
 Another constraint is more technical in nature:
 
-- We currenty store frontend state as JSON
-- We currently store published document state as XML
+- We currenty store frontend state as JSON, published document state as XML
 - The XML contains data that the JSON does not.
-  - Translating from XML to JSON looses data.
+- Therefore translating from XML to JSON looses data.
 
 The question is: how do we map these requirements to our backend architecture?
 
@@ -34,22 +33,19 @@ The question is: how do we map these requirements to our backend architecture?
 - We stay with the current architecture:
   - JSON for frontend state,
   - XML for published document state.
-- We do not allow the JSON and XML to diverge (where they overlap)
+
 - We stay with the requirement that all stored XML is always valid wrt. our schema.
 
 - We do not allow the JSON and XML to diverge (where they overlap) and here's how we do it:
-  - When a document is not published
+  - If a document is not published, then
     - there's only the JSON
     - if it's edited in the frontend and saved, the JSON gets updated
-  - When a document is published
-    - we have both, the JSON and the XML
-      - the shared data between those is in sync
-    - if it's edited in the frontend and the user tries to re-publish, we validate the data and
-      - if it's invalid wrt. our schema
-        - we reject the re-publishing
-        - neither JSON nor XML are changed
-      - if it's valid wrt. our schema
-        - we update both the JSON andthe XML
+  - If a document is published, then
+    - we have both, the JSON and the XML and they are in sync (where they share data)
+    - if it's edited in the frontend and the user tries to re-publish, 
+      - we validate the data and
+      - if it's invalid wrt. our schema, we reject the re-publishing and neither JSON nor XML are changed
+      - if it's valid wrt. our schema, we update both the JSON andthe XML
 
 ## Consequences
 
