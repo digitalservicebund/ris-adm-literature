@@ -9,7 +9,7 @@ jobs:
       reports-repo: digitalservicebund/ris-reports
     steps:
       # This step needs to happen before any "add-ris-report" action
-      # (otherwise the folder is not git repository and does not support git commands)
+      # (otherwise the folder is no git repository and does not support git commands)
       - name: Checkout ris-reports
         uses: actions/checkout@v4
         with:
@@ -17,9 +17,23 @@ jobs:
           ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
       ########################################################################
-      # Downloading and adding test reports
+      # Fetching reports and adding for push
       # Note: actually pushing the reports is a separate step after all these
       ########################################################################
+
+      ## ADRs
+      - name: Download ADRs
+        uses: actions/download-artifact@v4
+        with:
+          name: adr-list
+          path: tmp/adr-source
+      - name: Add ADRs to report
+        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+        with:
+          filePath: tmp/adr-source
+          destinationDir: adr/ris-adm-vwv
+          reportIsDirectory: true
+          keepAllVersions: false # don't need the timestamped snapshots of the whole folder
 
       ## Backend unit test report
       - name: Download artifact backend test report

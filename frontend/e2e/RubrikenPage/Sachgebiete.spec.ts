@@ -515,6 +515,37 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     // then
     await expect(page.getByText('PRPhantasierecht')).toHaveCount(1)
   })
+
+  test(
+    'Should not be able to enter the same sachgebiet twice',
+    { tag: ['@RISDEV-8222'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.getByText('Rubriken').click()
+      await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
+      await page.getByRole('radio', { name: 'Direkteingabe' }).check()
+
+      // when
+      await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('PR')
+      await page.keyboard.press('Enter')
+
+      // then
+      await expect(
+        page.getByRole('button', { name: 'PR Phantasierecht im Sachgebietsbaum anzeigen' }),
+      ).toHaveCount(1)
+
+      // when
+      await page.getByLabel('Direkteingabe-Sachgebietssuche eingeben').fill('PR')
+      await page.keyboard.press('Enter')
+
+      // then
+      await expect(
+        page.getByRole('button', { name: 'PR Phantasierecht im Sachgebietsbaum anzeigen' }),
+      ).toHaveCount(1)
+    },
+  )
 })
 
 test.describe('RubrikenPage - Sachgebiete - Bestandsdaten', () => {

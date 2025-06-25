@@ -182,7 +182,7 @@ describe('NormReferenceEntry', () => {
   })
 
   it('does not add norm with invalid single norm input', async () => {
-    renderComponent({
+    const { user } = renderComponent({
       modelValue: {
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
@@ -197,7 +197,7 @@ describe('NormReferenceEntry', () => {
     expect(singleNormInput).toHaveValue('2021, Seite 21')
 
     await screen.findByText(/Inhalt nicht valide/)
-    screen.getByLabelText('Norm speichern').click()
+    await user.click(screen.getByLabelText('Norm speichern'))
     expect(singleNormInput).toBeVisible()
   })
 
@@ -214,7 +214,7 @@ describe('NormReferenceEntry', () => {
     await user.type(dateInput, '00.00.0231')
 
     await screen.findByText(/Kein valides Datum/)
-    screen.getByLabelText('Norm speichern').click()
+    await user.click(screen.getByLabelText('Norm speichern'))
     expect(dateInput).toBeVisible()
   })
 
@@ -232,7 +232,7 @@ describe('NormReferenceEntry', () => {
     await user.tab()
 
     await screen.findByText(/Unvollständiges Datum/)
-    screen.getByLabelText('Norm speichern').click()
+    await user.click(screen.getByLabelText('Norm speichern'))
     expect(dateInput).toBeVisible()
   })
 
@@ -250,7 +250,7 @@ describe('NormReferenceEntry', () => {
     await user.tab()
 
     await screen.findByText(/Kein valides Jahr/)
-    screen.getByLabelText('Norm speichern').click()
+    await user.click(screen.getByLabelText('Norm speichern'))
     expect(yearInput).toBeVisible()
   })
 

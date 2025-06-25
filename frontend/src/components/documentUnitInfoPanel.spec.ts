@@ -4,6 +4,7 @@ import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
 import { setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
+import userEvent from '@testing-library/user-event'
 
 function mockDocumentUnitStore(callback = vi.fn()) {
   const documentUnitStore = useDocumentUnitStore()
@@ -32,24 +33,28 @@ describe('documentUnit InfoPanel', () => {
   })
 
   it('click on save renders last saved information', async () => {
+    const user = userEvent.setup()
+
     // given
     mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200 }))
     renderComponent()
 
     // when
-    screen.getByRole('button', { name: 'Speichern' }).click()
+    await user.click(screen.getByRole('button', { name: 'Speichern' }))
 
     // then
     expect(await screen.findByText('Zuletzt', { exact: false })).toBeInTheDocument()
   })
 
   it('click on save renders error information', async () => {
+    const user = userEvent.setup()
+
     // given
     mockDocumentUnitStore()
     renderComponent()
 
     // when
-    screen.getByRole('button', { name: 'Speichern' }).click()
+    await user.click(screen.getByRole('button', { name: 'Speichern' }))
 
     // then
     expect(

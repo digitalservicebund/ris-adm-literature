@@ -194,7 +194,7 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('does not add norm with invalid single norm input', async () => {
-    renderComponent({
+    const { user } = renderComponent({
       modelValue: {
         referenceType: ActiveReferenceType.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
@@ -210,7 +210,7 @@ describe('ActiveReferenceInput', () => {
     expect(singleNormInput).toHaveValue('2021, Seite 21')
 
     await screen.findByText(/Inhalt nicht valide/)
-    screen.getByLabelText('Verweis speichern').click()
+    await user.click(screen.getByLabelText('Verweis speichern'))
     expect(singleNormInput).toBeVisible()
   })
 
@@ -228,7 +228,7 @@ describe('ActiveReferenceInput', () => {
     await user.type(dateInput, '00.00.0231')
 
     await screen.findByText(/Kein valides Datum/)
-    screen.getByLabelText('Verweis speichern').click()
+    await user.click(screen.getByLabelText('Verweis speichern'))
     expect(dateInput).toBeVisible()
   })
 
@@ -247,7 +247,7 @@ describe('ActiveReferenceInput', () => {
     await user.tab()
 
     await screen.findByText(/Unvollständiges Datum/)
-    screen.getByLabelText('Verweis speichern').click()
+    await user.click(screen.getByLabelText('Verweis speichern'))
     expect(dateInput).toBeVisible()
   })
 
@@ -266,7 +266,7 @@ describe('ActiveReferenceInput', () => {
     await user.tab()
 
     await screen.findByText(/Kein valides Jahr/)
-    screen.getByLabelText('Verweis speichern').click()
+    await user.click(screen.getByLabelText('Verweis speichern'))
     expect(yearInput).toBeVisible()
   })
 

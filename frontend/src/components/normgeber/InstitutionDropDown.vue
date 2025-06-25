@@ -5,7 +5,10 @@ import { useFetchInstitutions } from '@/services/institutionService.ts'
 import { type Institution } from '@/domain/normgeber.ts'
 import { useAutoComplete, useInstitutionSearch } from '@/composables/useAutoComplete'
 
-defineProps<{ isInvalid: boolean }>()
+defineProps<{
+  inputId: string
+  isInvalid: boolean
+}>()
 
 const modelValue = defineModel<Institution | undefined>()
 const emit = defineEmits<{
@@ -41,7 +44,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :invalid="isInvalid"
     :initial-label="modelValue?.name"
-    input-id="institution"
+    :input-id="inputId"
     aria-label="Normgeber"
     append-to="self"
     typeahead
