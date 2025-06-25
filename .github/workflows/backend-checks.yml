@@ -149,7 +149,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  create-ADR-artifact:
+  create-ADR-list-artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -162,7 +162,7 @@ jobs:
       - name: Upload ADRs
         uses: actions/upload-artifact@v4
         with:
-          name: backend-adr
+          name: adr-list
           retention-days: 3
           path: tmp/adr-source
       - name: Send status to Slack

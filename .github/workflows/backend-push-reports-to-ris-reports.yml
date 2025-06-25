@@ -22,10 +22,10 @@ jobs:
       ########################################################################
 
       ## ADRs
-      - name: Download backend ADRs
+      - name: Download ADRs
         uses: actions/download-artifact@v4
         with:
-          name: backend-adr
+          name: adr-list
           path: tmp/adr-source
       - name: Add ADRs to report
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
