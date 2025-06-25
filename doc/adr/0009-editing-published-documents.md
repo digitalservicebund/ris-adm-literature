@@ -31,6 +31,7 @@ The question is: how do we map these requirements to our backend architecture?
 🚧 The change that we're proposing or have agreed to implement.
 
 - We stay with the current architecture:
+
   - JSON for frontend state,
   - XML for published document state.
 
@@ -42,7 +43,7 @@ The question is: how do we map these requirements to our backend architecture?
     - if it's edited in the frontend and saved, the JSON gets updated
   - If a document is published, then
     - we have both, the JSON and the XML and they are in sync (where they share data)
-    - if it's edited in the frontend and the user tries to re-publish, 
+    - if it's edited in the frontend and the user tries to re-publish,
       - we validate the data and
       - if it's invalid wrt. our schema, we reject the re-publishing and neither JSON nor XML are changed
       - if it's valid wrt. our schema, we update both the JSON andthe XML
@@ -52,13 +53,17 @@ The question is: how do we map these requirements to our backend architecture?
 🚧 What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
 - We accept
-  - the duplication of data between JSON and XML
+
+  - the duplication of data between JSON and XML and
   - the inherently higher complexity in code
 
 - in favor of
 
-  - keeping the benefits of the existing architecture (cf. [doc/0004-data-persistence-and-exchange](./0004-data-persistence-and-exchange.md))
-  - keeping refactoring low wrt. the existing solution
-  - keeping the requirement in place that all XML in our database is valid wrt. our schema
+  - keeping the benefits of the existing architecture (cf. [doc/0004-data-persistence-and-exchange](./0004-data-persistence-and-exchange.md)),
+  - keeping refactoring low wrt. the existing solution and
+  - keeping the requirement in place that all XML in our database is valid wrt. our schema.
 
 - The use case of "un-publishing" or "retracting" documents is not covered, yet, as it's no requirement so far.
+
+  - Therefore, the existence of XML is equivalent to the document being published. 
+  - This means that there is no separate discriminator like an "isPublished" field.
