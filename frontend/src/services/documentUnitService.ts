@@ -35,6 +35,8 @@ interface DocumentUnitService {
     pageNumber: number,
     pageSize: number,
     searchParams?: DocumentUnitSearchParams,
+    sortByProperty?: string,
+    sortDirection?: string,
   ): Promise<ServiceResponse<PaginatedDocumentUnitListResponse>>
 }
 
@@ -204,6 +206,8 @@ const service: DocumentUnitService = {
           fundstellen: search?.fundstellen?.toString(),
           langueberschrift: search?.langueberschrift?.toString(),
           zitierdaten: search?.zitierdaten?.toString(),
+          sortByProperty: 'documentNumber',
+          sortDirection: 'DESC',
         },
       },
     )
