@@ -61,17 +61,7 @@ public class DocumentationUnitController {
 
     String resolvedSortByProperty = propertyAliases.getOrDefault(sortByProperty, sortByProperty);
 
-    Sort sort;
-    if ("documentationUnitIndex.zitierdaten".equals(resolvedSortByProperty)) {
-      Sort.Order zitierdatumOrder = new Sort.Order(
-        sortDirection,
-        resolvedSortByProperty,
-        Sort.NullHandling.NULLS_FIRST
-      );
-      sort = Sort.by(zitierdatumOrder);
-    } else {
-      sort = Sort.by(sortDirection, resolvedSortByProperty);
-    }
+    Sort sort = Sort.by(sortDirection, resolvedSortByProperty);
 
     Pageable pageable = usePagination
       ? PageRequest.of(pageNumber, pageSize, sort)
