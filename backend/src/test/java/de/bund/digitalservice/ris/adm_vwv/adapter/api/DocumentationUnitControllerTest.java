@@ -297,7 +297,6 @@ class DocumentationUnitControllerTest {
       Sort sort = capturedPageable.getSort();
       Sort.Order sortOrder = sort.getOrderFor("documentationUnitIndex.langueberschrift");
 
-
       assertThat(sortOrder).isNotNull();
       assertThat(sortOrder.getDirection()).isEqualTo(Sort.Direction.DESC);
     }
@@ -306,10 +305,7 @@ class DocumentationUnitControllerTest {
     @DisplayName("should use unpaged when usePagination is false")
     void sortingWithPaginationDisabled() throws Exception {
       // when
-      mockMvc.perform(
-        get("/api/documentation-units")
-          .param("usePagination", "false")
-      );
+      mockMvc.perform(get("/api/documentation-units").param("usePagination", "false"));
 
       // then
       ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
