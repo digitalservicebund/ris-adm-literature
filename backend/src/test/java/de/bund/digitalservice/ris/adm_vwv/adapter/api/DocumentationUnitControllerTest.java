@@ -1,7 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -271,6 +274,53 @@ class DocumentationUnitControllerTest {
         .andExpect(
           jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
         );
+    }
+
+    @Test
+    @DisplayName("should apply property aliasing")
+    void sortingWithPropertyAliasing() throws Exception {
+      // when
+      mockMvc.perform(
+        get("/api/documentation-units")
+          .param("sortByProperty", "langueberschrift")
+          .param("sortDirection", "DESC")
+      );
+
+      // then
+      ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+      verify(documentationUnitPort).findDocumentationUnitOverviewElements(
+        any(DocumentationUnitQuery.class),
+        pageableCaptor.capture()
+      );
+
+      Pageable capturedPageable = pageableCaptor.getValue();
+      Sort sort = capturedPageable.getSort();
+      Sort.Order sortOrder = sort.getOrderFor("documentationUnitIndex.langueberschrift");
+
+
+      assertThat(sortOrder).isNotNull();
+      assertThat(sortOrder.getDirection()).isEqualTo(Sort.Direction.DESC);
+    }
+
+    @Test
+    @DisplayName("should use unpaged when usePagination is false")
+    void sortingWithPaginationDisabled() throws Exception {
+      // when
+      mockMvc.perform(
+        get("/api/documentation-units")
+          .param("usePagination", "false")
+      );
+
+      // then
+      ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+      verify(documentationUnitPort).findDocumentationUnitOverviewElements(
+        any(DocumentationUnitQuery.class),
+        pageableCaptor.capture()
+      );
+
+      Pageable capturedPageable = pageableCaptor.getValue();
+      assertThat(capturedPageable.isPaged()).isFalse();
+      assertThat(capturedPageable).isEqualTo(Pageable.unpaged());
     }
   }
 }
