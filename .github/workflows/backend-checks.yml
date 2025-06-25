@@ -149,6 +149,28 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+  create-ADR-list-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy ADRs
+        run: |
+          pwd
+          mkdir -p tmp/adr-source
+          find doc/adr/ -type f ! -name '0000-template.md' -exec cp {} tmp/adr-source/ \;
+          ls -l tmp/adr-source
+      - name: Upload ADRs
+        uses: actions/upload-artifact@v4
+        with:
+          name: adr-list
+          retention-days: 3
+          path: tmp/adr-source
+      - name: Send status to Slack
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+        if: ${{ failure() && github.ref == 'refs/heads/main'}}
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   generate-backend-code-documentation:
     runs-on: ubuntu-latest
     steps:
