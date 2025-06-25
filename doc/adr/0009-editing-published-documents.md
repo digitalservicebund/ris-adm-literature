@@ -24,7 +24,9 @@ Another constraint is more technical in nature:
 - The XML contains data that the JSON does not.
 - Therefore translating from XML to JSON looses data.
 
-The question is: how do we map these requirements to our backend architecture?
+So how do we map these requirements to our backend architecture?
+
+Also, given the chosen architecture: how to determine (from the database) if a document is published or not?
 
 ## Decision
 
