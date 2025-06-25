@@ -24,8 +24,9 @@ jobs:
       ## ADRs
       - name: Copy ADRs
         run: |
+          pwd
           mkdir -p tmp/adr-source
-          find ris-adm-vwv/doc/adr/ -type f ! -name '0000-template.md' -exec cp {} tmp/adr-source/ \;
+          find doc/adr/ -type f ! -name '0000-template.md' -exec cp {} tmp/adr-source/ \;
           ls -l tmp/adr-source
       - name: Add ADRs to report
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
