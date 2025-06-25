@@ -302,8 +302,8 @@ test.describe('Search documentation units', () => {
 
       // Assert
       await expect(page.getByLabel('Dokumentnummer')).toBeEmpty()
-      await expect(page.getByText(testData.docNumber1)).toBeVisible()
-      await expect(page.getByText(testData.docNumber2)).toBeVisible()
+      const rows = page.getByRole('row')
+      await expect(rows).toHaveCount(101)
       await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
 
       // AC 2 partial match search
@@ -380,8 +380,8 @@ test.describe('Search documentation units', () => {
 
     // Assert reset
     await expect(page.getByLabel('Amtl. Langüberschrift')).toBeEmpty()
-    await expect(page.getByText(testData.docNumber1)).toBeVisible()
-    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    const rows = page.getByRole('row')
+    await expect(rows).toHaveCount(101)
     await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
 
     // AC 2 test partial match
@@ -453,8 +453,8 @@ test.describe('Search documentation units', () => {
 
     // Assert reset
     await expect(page.getByLabel('Zitierdatum')).toBeEmpty()
-    await expect(page.getByText(testData.docNumber1)).toBeVisible()
-    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    const rows = page.getByRole('row')
+    await expect(rows).toHaveCount(101)
     await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
 
     // AC 3 combined search
@@ -531,8 +531,8 @@ test.describe('Search documentation units', () => {
 
     // Assert reset
     await expect(page.getByLabel('Fundstelle')).toBeEmpty()
-    await expect(page.getByText(testData.docNumber1)).toBeVisible()
-    await expect(page.getByText(testData.docNumber2)).toBeVisible()
+    const rows = page.getByRole('row')
+    await expect(rows).toHaveCount(101)
     await expect(page.getByRole('button', { name: 'Zurücksetzen' })).toBeDisabled()
 
     // AC 2 partial match search
