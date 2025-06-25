@@ -12,7 +12,7 @@ pre-push:
       # also: set the working directory for the command in 'run'
       root: frontend
       exclude: 'e2e/test-data.json'
-      run: ../.lefthook/lint-format-frontend.sh
+      run: ../.lefthook/lint-format-frontend.sh {staged_files}
     spotlessCheckOnBackendChange:
       # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'
