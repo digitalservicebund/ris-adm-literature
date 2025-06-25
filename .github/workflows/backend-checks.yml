@@ -149,7 +149,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  create-adr-summary:
+  create-ADR-artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
