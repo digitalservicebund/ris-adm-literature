@@ -184,7 +184,7 @@ test.describe('StartPage', () => {
 
 test.describe('List of documents', () => {
   test(
-    'has 100 entries sorted by ascending document number',
+    'has 100 entries sorted by descending document number',
     { tag: ['@RISDEV-7601', '@RISDEV-7599'] },
     async ({ page }) => {
       // when
@@ -199,12 +199,12 @@ test.describe('List of documents', () => {
         const row = rows.nth(i)
         const idCell = row.getByRole('cell').first()
         const text = await idCell.textContent()
-        const docNumber = parseInt(text?.trim() || '', 10)
+        const docNumber = parseInt(text?.substring(4) || '', 10)
         docNumbers.push(docNumber)
       }
 
-      // Assert ascending order
-      const sorted = [...docNumbers].sort((a, b) => a - b)
+      // Assert descending order
+      const sorted = [...docNumbers].sort((a, b) => b - a)
       expect(docNumbers).toEqual(sorted)
     },
   )
