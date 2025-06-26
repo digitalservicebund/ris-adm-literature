@@ -13,10 +13,14 @@ import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -279,44 +283,41 @@ class DocumentationUnitControllerTest {
         );
     }
 
-    @Test
-    @DisplayName("should map property for sorting")
-    void mapsLangueberschriftToSortIndex() throws Exception {
-      String documentNumber = "KSNR000004711";
-      String langueberschrift = "Sample Document";
-      String fundstellen = "p.abbrev.1";
-      String zitierdaten = "2011-11-11";
-
+    @ParameterizedTest
+    @MethodSource("sortPropertyMappingProvider")
+    @DisplayName("should correctly map all sort properties")
+    void shouldCorrectlyMapSortByProperty(String requestSortProperty, String expectedSortProperty)
+      throws Exception {
       // given
-      given(documentationUnitPort.findDocumentationUnitOverviewElements(any(DocumentationUnitQuery.class)))
-        .willReturn(        TestPage.create(
-          List.of(
-            new DocumentationUnitOverviewElement(
-              UUID.randomUUID(),
-              documentNumber,
-              List.of(zitierdaten),
-              langueberschrift,
-              List.of(fundstellen)
-            )
-          )
-        ));
-
-      String requestSortProperty = "langueberschrift";
-      String expectedSortProperty = "documentationUnitIndex.langueberschrift";
+      given(
+        documentationUnitPort.findDocumentationUnitOverviewElements(
+          any(DocumentationUnitQuery.class)
+        )
+      ).willReturn(TestPage.create(List.of()));
 
       // when
-      mockMvc.perform(
-        get("/api/documentation-units")
-          .param("sortByProperty", requestSortProperty)
-      ).andExpect(status().isOk());
+      mockMvc
+        .perform(get("/api/documentation-units").param("sortByProperty", requestSortProperty))
+        .andExpect(status().isOk());
 
       // then
-      ArgumentCaptor<DocumentationUnitQuery> queryCaptor =
-        ArgumentCaptor.forClass(DocumentationUnitQuery.class);
+      ArgumentCaptor<DocumentationUnitQuery> queryCaptor = ArgumentCaptor.forClass(
+        DocumentationUnitQuery.class
+      );
       verify(documentationUnitPort).findDocumentationUnitOverviewElements(queryCaptor.capture());
 
-      assertThat(queryCaptor.getValue().queryOptions().sortByProperty()).isEqualTo(expectedSortProperty);
+      DocumentationUnitQuery capturedQuery = queryCaptor.getValue();
+      assertThat(capturedQuery.queryOptions().sortByProperty()).isEqualTo(expectedSortProperty);
     }
 
+    private static Stream<Arguments> sortPropertyMappingProvider() {
+      return Stream.of(
+        Arguments.of("langueberschrift", "documentationUnitIndex.langueberschrift"),
+        Arguments.of("fundstellen", "documentationUnitIndex.fundstellen"),
+        Arguments.of("zitierdaten", "documentationUnitIndex.zitierdaten"),
+        Arguments.of("documentNumber", "documentNumber"),
+        Arguments.of(null, "documentNumber")
+      );
+    }
   }
 }
