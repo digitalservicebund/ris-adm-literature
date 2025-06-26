@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
-import java.util.Map;
+import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
+  private static final Set<String> indexAliases = Set.of(
+    "langueberschrift",
+    "fundstellen",
+    "zitierdaten"
+  );
 
   /**
    * Returns information on all documentation units as required by the
@@ -47,34 +51,29 @@ public class DocumentationUnitController {
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "10") int pageSize,
     @RequestParam(defaultValue = "documentNumber") String sortByProperty,
-    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
-    Map<String, String> propertyAliases = Map.of(
-      "langueberschrift",
-      "documentationUnitIndex.langueberschrift",
-      "fundstellen",
-      "documentationUnitIndex.fundstellen",
-      "zitierdaten",
-      "documentationUnitIndex.zitierdaten"
+    String resolvedSortByProperty = indexAliases.contains(sortByProperty)
+      ? "documentationUnitIndex." + sortByProperty
+      : sortByProperty;
+
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      resolvedSortByProperty,
+      sortDirection,
+      usePagination
     );
-
-    String resolvedSortByProperty = propertyAliases.getOrDefault(sortByProperty, sortByProperty);
-
-    Sort sort = Sort.by(sortDirection, resolvedSortByProperty);
-
-    Pageable pageable = usePagination
-      ? PageRequest.of(pageNumber, pageSize, sort)
-      : Pageable.unpaged();
 
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
       new DocumentationUnitQuery(
         StringUtils.trimToNull(documentNumber),
         StringUtils.trimToNull(langueberschrift),
         StringUtils.trimToNull(fundstellen),
-        StringUtils.trimToNull(zitierdaten)
-      ),
-      pageable
+        StringUtils.trimToNull(zitierdaten),
+        queryOptions
+      )
     );
     return ResponseEntity.ok(
       new DocumentationUnitsOverviewResponse(

@@ -1,9 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,13 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -140,7 +134,7 @@ class DocumentationUnitControllerTest {
 
     @BeforeEach
     void beforeEach() {
-      given(documentationUnitPort.findDocumentationUnitOverviewElements(any(), any())).willReturn(
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(any())).willReturn(
         TestPage.create(
           List.of(
             new DocumentationUnitOverviewElement(
@@ -203,7 +197,7 @@ class DocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("returns array of Fundstellen")
+    @DisplayName("return array of Fundstellen")
     void findListOfDocumentsWithFundstellen() throws Exception {
       // given
 
@@ -222,101 +216,6 @@ class DocumentationUnitControllerTest {
             "p.abbrev.2 zitatstelle 2"
           )
         );
-    }
-
-    @Test
-    @DisplayName("sends search parameters to the application layer")
-    void findListOfDocumentsWithSearchParamsSuccess() throws Exception {
-      // given
-      String documentNumber = "KSNR000004711";
-      String langueberschrift = "Sample Document";
-      String fundstellen = "p.abbrev.1";
-      String zitierdaten = "2011-11-11";
-
-      Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "documentNumber"));
-      DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
-        documentNumber,
-        langueberschrift,
-        fundstellen,
-        zitierdaten
-      );
-
-      given(
-        documentationUnitPort.findDocumentationUnitOverviewElements(expectedQuery, pageable)
-      ).willReturn(
-        TestPage.create(
-          List.of(
-            new DocumentationUnitOverviewElement(
-              UUID.randomUUID(),
-              documentNumber,
-              List.of(zitierdaten),
-              langueberschrift,
-              List.of(fundstellen)
-            )
-          )
-        )
-      );
-
-      // when
-      mockMvc
-        .perform(
-          get("/api/documentation-units")
-            .param("documentNumber", documentNumber)
-            .param("langueberschrift", langueberschrift)
-            .param("fundstellen", fundstellen)
-            .param("zitierdaten", zitierdaten)
-        )
-        // then
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].documentNumber").value(documentNumber))
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].zitierdaten").value(zitierdaten))
-        .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").value(fundstellen))
-        .andExpect(
-          jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
-        );
-    }
-
-    @Test
-    @DisplayName("should apply property aliasing")
-    void sortingWithPropertyAliasing() throws Exception {
-      // when
-      mockMvc.perform(
-        get("/api/documentation-units")
-          .param("sortByProperty", "langueberschrift")
-          .param("sortDirection", "DESC")
-      );
-
-      // then
-      ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-      verify(documentationUnitPort).findDocumentationUnitOverviewElements(
-        any(DocumentationUnitQuery.class),
-        pageableCaptor.capture()
-      );
-
-      Pageable capturedPageable = pageableCaptor.getValue();
-      Sort sort = capturedPageable.getSort();
-      Sort.Order sortOrder = sort.getOrderFor("documentationUnitIndex.langueberschrift");
-
-      assertThat(sortOrder).isNotNull();
-      assertThat(sortOrder.getDirection()).isEqualTo(Sort.Direction.DESC);
-    }
-
-    @Test
-    @DisplayName("should use unpaged when usePagination is false")
-    void sortingWithPaginationDisabled() throws Exception {
-      // when
-      mockMvc.perform(get("/api/documentation-units").param("usePagination", "false"));
-
-      // then
-      ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-      verify(documentationUnitPort).findDocumentationUnitOverviewElements(
-        any(DocumentationUnitQuery.class),
-        pageableCaptor.capture()
-      );
-
-      Pageable capturedPageable = pageableCaptor.getValue();
-      assertThat(capturedPageable.isPaged()).isFalse();
-      assertThat(capturedPageable).isEqualTo(Pageable.unpaged());
     }
   }
 }

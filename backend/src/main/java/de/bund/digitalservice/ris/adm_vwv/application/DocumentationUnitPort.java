@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Input port for CRUD operations on documentation units.
@@ -24,11 +23,9 @@ public interface DocumentationUnitPort {
   /**
    * Returns paginated documentation units overview elements.
    * @param query The query
-   * @param pageable The pageable
    * @return Page object with documentation unit overview elements and pagination data
    */
   Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery query,
-    @Nonnull Pageable pageable
+    @Nonnull DocumentationUnitQuery query
   );
 }
