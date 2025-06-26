@@ -193,7 +193,6 @@ test.describe('List of documents', () => {
 
       // then
       await expect(rows).toHaveCount(101) // 100 rows and 1 header
-
       const docNumbers = []
       for (let i = 1; i < 101; i++) {
         const row = rows.nth(i)
