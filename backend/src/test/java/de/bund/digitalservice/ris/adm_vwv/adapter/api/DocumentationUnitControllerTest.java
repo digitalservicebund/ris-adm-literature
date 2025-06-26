@@ -1,7 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -275,5 +278,45 @@ class DocumentationUnitControllerTest {
           jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
         );
     }
+
+    @Test
+    @DisplayName("should map property for sorting")
+    void mapsLangueberschriftToSortIndex() throws Exception {
+      String documentNumber = "KSNR000004711";
+      String langueberschrift = "Sample Document";
+      String fundstellen = "p.abbrev.1";
+      String zitierdaten = "2011-11-11";
+
+      // given
+      given(documentationUnitPort.findDocumentationUnitOverviewElements(any(DocumentationUnitQuery.class)))
+        .willReturn(        TestPage.create(
+          List.of(
+            new DocumentationUnitOverviewElement(
+              UUID.randomUUID(),
+              documentNumber,
+              List.of(zitierdaten),
+              langueberschrift,
+              List.of(fundstellen)
+            )
+          )
+        ));
+
+      String requestSortProperty = "langueberschrift";
+      String expectedSortProperty = "documentationUnitIndex.langueberschrift";
+
+      // when
+      mockMvc.perform(
+        get("/api/documentation-units")
+          .param("sortByProperty", requestSortProperty)
+      ).andExpect(status().isOk());
+
+      // then
+      ArgumentCaptor<DocumentationUnitQuery> queryCaptor =
+        ArgumentCaptor.forClass(DocumentationUnitQuery.class);
+      verify(documentationUnitPort).findDocumentationUnitOverviewElements(queryCaptor.capture());
+
+      assertThat(queryCaptor.getValue().queryOptions().sortByProperty()).isEqualTo(expectedSortProperty);
+    }
+
   }
 }
