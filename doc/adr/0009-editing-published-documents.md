@@ -8,7 +8,6 @@ Accepted
 
 ## Context
 
-🚧 The issue motivating this decision, and any context that influences or constrains the decision.
 
 Here's the mental model our application should support with respect to editing published documents:
 
