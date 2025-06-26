@@ -48,7 +48,7 @@ Also, given the chosen architecture: how to determine (from the database) if a d
     - if it's edited in the frontend and the user tries to re-publish,
       - we validate the data and
       - if it's invalid wrt. our schema, we reject the re-publishing and neither JSON nor XML are changed
-      - if it's valid wrt. our schema, we update both the JSON andthe XML
+      - if it's valid wrt. our schema, we update both the JSON and the XML
 
 ## Consequences
 
