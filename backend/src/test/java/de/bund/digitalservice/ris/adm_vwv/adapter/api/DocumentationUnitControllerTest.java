@@ -232,7 +232,7 @@ class DocumentationUnitControllerTest {
         0,
         10,
         "documentNumber",
-        Sort.Direction.ASC,
+        Sort.Direction.DESC,
         true
       );
       DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
