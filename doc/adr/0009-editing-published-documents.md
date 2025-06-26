@@ -50,7 +50,6 @@ Also, given the chosen architecture: how to determine (from the database) if a d
 
 ## Consequences
 
-🚧 What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
 - We accept
 
