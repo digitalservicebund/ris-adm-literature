@@ -2,13 +2,11 @@
 import { computed } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
-import InputField, { LabelPosition } from '@/components/input/InputField.vue'
+import InputField from '@/components/input/InputField.vue'
 import DateInput from '@/components/input/DateInput.vue'
 import ComboboxItemService from '@/services/comboboxItemService.ts'
 import Textarea from 'primevue/textarea'
 import InputText from 'primevue/inputtext'
-import ChipsInput from '@/components/input/ChipsInput.vue'
-import Checkbox from 'primevue/checkbox'
 import KeyWords from '@/components/KeyWords.vue'
 import TextEditorCategory from '@/components/texts/TextEditorCategory.vue'
 import NormReferences from '@/components/NormReferences.vue'
@@ -19,6 +17,7 @@ import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
 import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
+import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 
 const store = useDocumentUnitStore()
 
@@ -58,16 +57,9 @@ const kurzreferat = computed({
 })
 
 const aktenzeichen = computed({
-  get: () => store.documentUnit!.aktenzeichen,
+  get: () => store.documentUnit!.aktenzeichen || [],
   set: (newValue) => {
     store.documentUnit!.aktenzeichen = newValue
-  },
-})
-
-const noAktenzeichen = computed({
-  get: () => store.documentUnit!.noAktenzeichen,
-  set: (newValue) => {
-    store.documentUnit!.noAktenzeichen = newValue
   },
 })
 
@@ -175,23 +167,12 @@ const dokumenttypZusatz = computed({
 
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <InputField id="aktenzeichen" label="Aktenzeichen *">
-            <ChipsInput
+          <InputField id="aktenzeichen" label="Aktenzeichen">
+            <RisChipsInput
               id="aktenzeichen"
               v-model="aktenzeichen"
               aria-label="Aktenzeichen"
-            ></ChipsInput>
-          </InputField>
-        </div>
-        <div class="flex flex-col pt-[30px] w-full">
-          <InputField
-            id="noAktenzeichenElementId"
-            label="Kein Aktenzeichen"
-            aria-label="Kein Aktenzeichen"
-            label-class="ris-label1-regular"
-            :label-position="LabelPosition.RIGHT"
-          >
-            <Checkbox v-model="noAktenzeichen" binary input-id="noAktenzeichenElementId" />
+            ></RisChipsInput>
           </InputField>
         </div>
       </div>

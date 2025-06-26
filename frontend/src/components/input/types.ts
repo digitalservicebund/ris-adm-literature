@@ -17,8 +17,6 @@ export enum InputType {
   DATE = 'date',
   CHECKBOX = 'checkbox',
   RADIO = 'radio',
-  CHIPS = 'chips',
-  DATECHIPS = 'datechips',
   NESTED = 'nested',
   COMBOBOX = 'combobox',
   TEXTAREA = 'textarea',
@@ -41,24 +39,6 @@ export interface BaseInputField {
   label: string
   required?: boolean
   inputAttributes: BaseInputAttributes
-}
-
-//CHIPS
-export type ChipsInputModelType = string[]
-
-export interface ChipsInputAttributes extends BaseInputAttributes {
-  placeholder?: string
-  readOnly?: boolean
-}
-
-export interface ChipsInputField extends BaseInputField {
-  type: InputType.CHIPS
-  inputAttributes: ChipsInputAttributes
-}
-
-export interface DateChipsInputField extends BaseInputField {
-  type: InputType.DATECHIPS
-  inputAttributes: ChipsInputAttributes
 }
 
 //NESTED INPUT
@@ -159,26 +139,18 @@ export interface TextAreaInputField extends BaseInputField {
 export type InputField =
   | DropdownInputField
   | DateInputField
-  | ChipsInputField
-  | DateChipsInputField
   | NestedInputField
   | ComboboxInputField
   | TextAreaInputField
 
 export type InputAttributes =
   | DropdownAttributes
-  | ChipsInputAttributes
   | NestedInputAttributes
   | DateAttributes
   | ComboboxAttributes
   | TextAreaInputAttributes
 
-export type ModelType =
-  | string
-  | DateInputModelType
-  | ChipsInputModelType
-  | NestedInputModelType
-  | ComboboxInputModelType
+export type ModelType = string | DateInputModelType | NestedInputModelType | ComboboxInputModelType
 
 export type ValidationError = {
   code?: string
