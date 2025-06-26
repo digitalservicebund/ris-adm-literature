@@ -1,6 +1,6 @@
 # 9. Editing Published Documents
 
-🚧 Date: 202x-xx-xx
+Date: 2025-06-26
 
 ## Status
 
