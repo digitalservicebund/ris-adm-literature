@@ -29,7 +29,6 @@ Also, given the chosen architecture: how to determine (from the database) if a d
 
 ## Decision
 
-🚧 The change that we're proposing or have agreed to implement.
 
 - We stay with the current architecture:
 
