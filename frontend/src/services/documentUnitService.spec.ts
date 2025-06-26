@@ -262,4 +262,25 @@ describe('documentUnitService', () => {
     // then
     expect(response.error).toBeTruthy()
   })
+
+  it('getPaginatedDocumentUnitList calls HttpClient with correct parameters', async () => {
+    // given
+    const httpMock = vi.spyOn(HttpClient, 'get').mockResolvedValue({
+      status: 200,
+      data: 'foo',
+    })
+
+    // when
+    await service.getPaginatedDocumentUnitList(2, 50, undefined)
+
+    // then
+    expect(httpMock).toHaveBeenCalledWith('documentation-units', {
+      params: {
+        pageNumber: '2',
+        pageSize: '50',
+        sortByProperty: 'documentNumber',
+        sortDirection: 'DESC',
+      },
+    })
+  })
 })

@@ -112,7 +112,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-
     DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
       query.documentNumber(),
       query.langueberschrift(),

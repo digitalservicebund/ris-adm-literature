@@ -8,11 +8,10 @@ pre-commit:
 pre-push:
   commands:
     lintAndFormatCheckOnFrontendChange:
-      exclude: "frontend/e2e/test-data.json"
-      # run only on changes in the backend folder
+      # run only on changes in the frontend folder
       # also: set the working directory for the command in 'run'
       root: frontend
-      run: ../.lefthook/lint-format-frontend.sh
+      run: ../.lefthook/lint-format-frontend.sh {staged_files}
     spotlessCheckOnBackendChange:
       # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'

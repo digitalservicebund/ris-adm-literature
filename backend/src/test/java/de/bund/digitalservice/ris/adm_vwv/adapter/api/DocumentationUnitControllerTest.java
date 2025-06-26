@@ -1,7 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,10 +13,15 @@ import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -198,7 +205,7 @@ class DocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("returns array of Fundstellen")
+    @DisplayName("return array of Fundstellen")
     void findListOfDocumentsWithFundstellen() throws Exception {
       // given
 
@@ -232,7 +239,7 @@ class DocumentationUnitControllerTest {
         0,
         10,
         "documentNumber",
-        Sort.Direction.ASC,
+        Sort.Direction.DESC,
         true
       );
       DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
@@ -274,6 +281,43 @@ class DocumentationUnitControllerTest {
         .andExpect(
           jsonPath("$.documentationUnitsOverview[0].langueberschrift").value(langueberschrift)
         );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sortPropertyMappingProvider")
+    @DisplayName("should correctly map all sort properties")
+    void shouldCorrectlyMapSortByProperty(String requestSortProperty, String expectedSortProperty)
+      throws Exception {
+      // given
+      given(
+        documentationUnitPort.findDocumentationUnitOverviewElements(
+          any(DocumentationUnitQuery.class)
+        )
+      ).willReturn(TestPage.create(List.of()));
+
+      // when
+      mockMvc
+        .perform(get("/api/documentation-units").param("sortByProperty", requestSortProperty))
+        .andExpect(status().isOk());
+
+      // then
+      ArgumentCaptor<DocumentationUnitQuery> queryCaptor = ArgumentCaptor.forClass(
+        DocumentationUnitQuery.class
+      );
+      verify(documentationUnitPort).findDocumentationUnitOverviewElements(queryCaptor.capture());
+
+      DocumentationUnitQuery capturedQuery = queryCaptor.getValue();
+      assertThat(capturedQuery.queryOptions().sortByProperty()).isEqualTo(expectedSortProperty);
+    }
+
+    private static Stream<Arguments> sortPropertyMappingProvider() {
+      return Stream.of(
+        Arguments.of("langueberschrift", "documentationUnitIndex.langueberschrift"),
+        Arguments.of("fundstellen", "documentationUnitIndex.fundstellen"),
+        Arguments.of("zitierdaten", "documentationUnitIndex.zitierdaten"),
+        Arguments.of("documentNumber", "documentNumber"),
+        Arguments.of(null, "documentNumber")
+      );
     }
   }
 }

@@ -5,6 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentationUnitController {
 
   private final DocumentationUnitPort documentationUnitPort;
+  private static final Set<String> indexAliases = Set.of(
+    "langueberschrift",
+    "fundstellen",
+    "zitierdaten"
+  );
 
   /**
    * Returns information on all documentation units as required by the
@@ -45,16 +51,21 @@ public class DocumentationUnitController {
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "10") int pageSize,
     @RequestParam(defaultValue = "documentNumber") String sortByProperty,
-    @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {
+    String resolvedSortByProperty = indexAliases.contains(sortByProperty)
+      ? "documentationUnitIndex." + sortByProperty
+      : sortByProperty;
+
     QueryOptions queryOptions = new QueryOptions(
       pageNumber,
       pageSize,
-      sortByProperty,
+      resolvedSortByProperty,
       sortDirection,
       usePagination
     );
+
     var paginatedDocumentationUnits = documentationUnitPort.findDocumentationUnitOverviewElements(
       new DocumentationUnitQuery(
         StringUtils.trimToNull(documentNumber),
