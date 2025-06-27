@@ -55,6 +55,7 @@ jobs:
   e2e-tests:
     needs: setup
     strategy:
+      fail-fast: false
       matrix:
         playwright-project:
           [
@@ -104,16 +105,13 @@ jobs:
         working-directory: ./frontend
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
-      - name: Rename ${{ matrix.playwright-project.name }} test report blob
-        working-directory: ./frontend
-        run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
           retention-days: 1
-          path: frontend/frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
+          path: frontend/frontend-e2e-test-report.blob
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
