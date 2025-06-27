@@ -33,7 +33,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'frontend-e2e-test-report-html' }],
     ['json', { outputFile: 'frontend-e2e-test-report.json' }],
-    ['blob'],
+    ['blob', { outputFile: 'frontend-e2e-test-report.blob' }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
