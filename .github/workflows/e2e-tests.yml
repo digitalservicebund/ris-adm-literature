@@ -35,7 +35,7 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      - name: Install Playwright Browsers to prime the cache
+      - name: Install Playwright Browsers
         working-directory: ./frontend
         # installs all browsers at once
         run: npx playwright install --with-deps
@@ -67,11 +67,19 @@ jobs:
         shardIndex: [ 1, 2, 3, 4 ]
         shardTotal: [ 4 ]
     runs-on: ubuntu-latest
+    # This doesn't come with node 23 and would need to be updated every time playwright version changes
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
     #   options: --user 1001
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          # same version as the 'setup' job
+          java-version: "23.0"
+          distribution: "temurin"
 
         # download deps
       - name: Download backend JAR
