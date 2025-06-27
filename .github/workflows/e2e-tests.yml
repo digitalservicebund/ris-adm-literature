@@ -83,19 +83,15 @@ jobs:
           done
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
+        env:
+          BLOB_REPORT_PATH: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}.blob
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
       - name: Check what reports were generated
         if: always()
         run: |
-          echo "Listing files in frontend/playwright-report:"
-          ls -R frontend/playwright-report
-
-
-      - name: Rename blob report for unique naming
-        if: always()
-        run: |
-          mv frontend/frontend-e2e-test-report.blob frontend/blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}.blob
+          echo "Listing files in frontend/:"
+          ls -lR frontend/
 
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
