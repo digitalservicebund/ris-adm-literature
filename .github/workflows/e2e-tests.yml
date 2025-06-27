@@ -2,7 +2,58 @@ on:
   workflow_call:
 
 jobs:
+  # Build the backend once
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "23.0"
+          distribution: "temurin"
+          cache: gradle
+      - name: Build backend JAR
+        working-directory: ./backend
+        run: ./gradlew bootJar
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./frontend/.node-version
+          cache: npm
+          cache-dependency-path: ./frontend/package-lock.json
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Get Playwright version
+        working-directory: ./frontend
+        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+      - name: Cache browser binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers to prime the cache
+        working-directory: ./frontend
+        # installs all browsers at once
+        run: npx playwright install --with-deps
+
+      # upload artifacts
+      - name: Upload backend JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/build/libs/*.jar
+      - name: Upload frontend node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-deps
+          path: frontend/node_modules
+
   e2e-tests:
+    needs: setup
     strategy:
       matrix:
         playwright-project:
@@ -20,60 +71,28 @@ jobs:
     #   options: --user 1001
     steps:
       - uses: actions/checkout@v4
-      # setup backend
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+
+        # download deps
+      - name: Download backend JAR
+        uses: actions/download-artifact@v4
         with:
-          java-version: "23.0"
-          distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
-      - name: Setup and validate Gradle
-        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96
-      - name: Start backend
-        working-directory: ./backend
-        run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
-      # setup frontend
-      - name: Setup Node
-        uses: actions/setup-node@v4
+          name: backend-jar
+      - name: Download frontend dependencies
+        uses: actions/download-artifact@v4
         with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+          name: frontend-deps
+          path: frontend/node_modules
       - name: Get Playwright version
         working-directory: ./frontend
         run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
-      - name: Cache browser binaries
-        id: cache-browser-binaries
+      - name: Restore browser binaries from cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      # browsers that don't need system packages (cf. matrix)
-      # note that msedge still installs some
-      - name: Install Playwright Browser
-        if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
-        working-directory: ./frontend
-        run: npx playwright install ${{ matrix.playwright-project.install }}
-      # browser (webkit) that need system packages (cf. matrix)
-      - name: Install Playwright Browser --with-deps
-        if: matrix.playwright-project.requiresInstallWithDeps
-        working-directory: ./frontend
-        run: npx playwright install --with-deps ${{ matrix.playwright-project.install }}
+      - name: Start backend from JAR
+        run: java -jar *.jar &
+
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
