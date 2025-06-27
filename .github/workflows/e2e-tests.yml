@@ -67,6 +67,21 @@ jobs:
         shardIndex: [ 1, 2, 3, 4 ]
         shardTotal: [ 4 ]
     runs-on: ubuntu-latest
+    services:
+      # Label for the service
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: ris_adm_vwv
+        # Health check to wait until the database is ready
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     # This doesn't come with node 23 and would need to be updated every time playwright version changes
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
@@ -100,6 +115,10 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Start backend from JAR
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: ris_adm_vwv
         run: java -jar *.jar &
 
       - name: Wait for backend to serve the health Actuator (max 5min)
