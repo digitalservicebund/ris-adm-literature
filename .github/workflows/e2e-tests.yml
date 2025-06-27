@@ -85,6 +85,12 @@ jobs:
         working-directory: ./frontend
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
+      - name: Check what reports were generated
+        if: always()
+        run: |
+          echo "Listing files in frontend/playwright-report:"
+          ls -R frontend/playwright-report
+
 
       - name: Rename blob report for unique naming
         if: always()
