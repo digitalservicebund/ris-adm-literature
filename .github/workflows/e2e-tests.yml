@@ -105,39 +105,3 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  merge-reports:
-    needs: e2e-tests
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ./frontend/.node-version
-      - name: Install dependencies to get Playwright CLI
-        run: npm ci
-        working-directory: ./frontend
-
-      - name: Download all sharded blob reports
-        uses: actions/download-artifact@v4
-        with:
-          pattern: blob-report-*
-          path: all-blob-reports
-          merge-multiple: true
-
-      - name: List downloaded files for debugging
-        run: ls -R all-blob-reports
-
-      - name: Merge the blob reports
-        working-directory: ./frontend
-        run: |
-          npx playwright merge-reports --reporter html ../all-blob-reports
-
-      - name: Upload final merged HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-merged
-          path: playwright-report/
-          retention-days: 3
