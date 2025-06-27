@@ -20,7 +20,7 @@ jobs:
         with:
           pattern: blob-report-* # Matches all the new sharded artifacts
           path: all-blob-reports
-          merge-multiple: true
+          # merge-multiple: true
 
       - name: List downloaded files for debugging
         run: ls -R all-blob-reports
