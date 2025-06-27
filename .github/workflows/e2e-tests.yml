@@ -12,6 +12,8 @@ jobs:
             { name: "webkit", install: "webkit", requiresInstallWithDeps: true },
             { name: "msedge", install: "msedge chromium" },
           ]
+        shardIndex: [ 1, 2, 3, 4 ]
+        shardTotal: [ 4 ]
     runs-on: ubuntu-latest
     # container:
     #   image: mcr.microsoft.com/playwright:v1.50.0-noble
@@ -82,7 +84,7 @@ jobs:
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }}
+          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend
         run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
@@ -90,8 +92,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}
-          retention-days: 3
+          name: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
+          retention-days: 1
           path: frontend/frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.zip
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
@@ -100,3 +102,35 @@ jobs:
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  merge-reports:
+    needs: e2e-tests
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./frontend/.node-version
+      - name: Install dependencies to get Playwright CLI
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: Download all sharded blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+
+      - name: Merge the blob reports
+        working-directory: ./frontend
+        run: |
+          npx playwright merge-reports --reporter html ../all-blob-reports
+
+      - name: Upload final merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-merged
+          path: playwright-report/
+          retention-days: 30
