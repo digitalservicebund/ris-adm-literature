@@ -87,11 +87,6 @@ jobs:
           BLOB_REPORT_PATH: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}.blob
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
-      - name: Check what reports were generated
-        if: always()
-        run: |
-          echo "Listing files in frontend/:"
-          ls -lR frontend/
 
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
