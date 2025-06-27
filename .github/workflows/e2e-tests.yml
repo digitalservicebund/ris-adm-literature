@@ -60,6 +60,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # we need java to start the backend
+      - name: Install Java (JRE)
+        run: |
+          apt-get update
+          apt-get install -y openjdk-17-jre-headless --no-install-recommends
+
       - name: Download backend JAR
         uses: actions/download-artifact@v4
         with:
