@@ -133,4 +133,4 @@ jobs:
         with:
           name: playwright-report-merged
           path: playwright-report/
-          retention-days: 30
+          retention-days: 3
