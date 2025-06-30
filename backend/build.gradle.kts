@@ -47,11 +47,6 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-web") {
-    // CVE-2025-48988
-    exclude("org.apache.tomcat.embed", "tomcat-embed-core")
-
-    // CVE-2025-41234
-    exclude("org.springframework", "spring-web")
   }
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
     // CVE-2024-7254
@@ -60,8 +55,7 @@ dependencies {
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
   }
-  implementation("org.springframework:spring-web:6.2.8")
-  implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.8")
+
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.springframework.retry:spring-retry")
@@ -74,7 +68,7 @@ dependencies {
   implementation("io.sentry:sentry-logback:$sentryVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
-  // CVE-2025-49146
+
   runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
