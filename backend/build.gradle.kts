@@ -69,6 +69,7 @@ dependencies {
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
+  // no-auto-pin-removal CVE-2025-49146
   runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
