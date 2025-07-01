@@ -105,7 +105,8 @@ test.describe('StartPage', () => {
       await page.getByRole('button', { name: 'Weiter', exact: true }).click()
 
       // then
-      expect(await page.getByText('KSNR').count()).toBeGreaterThanOrEqual(1)
+      const rows = page.getByRole('row')
+      await expect(rows).toHaveCount(101)
 
       // when
       await page.getByRole('button', { name: 'Zurück', exact: true }).click()
