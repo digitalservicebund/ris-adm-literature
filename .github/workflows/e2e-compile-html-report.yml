@@ -19,7 +19,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: blob-report-* # Matches all the new sharded artifacts
-          path: all-blob-reports
+          path: tmp/all-blob-reports
           merge-multiple: true
 
       - name: List downloaded files for debugging
@@ -28,7 +28,7 @@ jobs:
       - name: Merge the blob reports
         working-directory: ./frontend
         run: |
-          npx playwright merge-reports --reporter html ../all-blob-reports
+          npx playwright merge-reports --reporter html ../tmp/all-blob-reports
 
       - name: Upload final merged HTML report
         uses: actions/upload-artifact@v4
