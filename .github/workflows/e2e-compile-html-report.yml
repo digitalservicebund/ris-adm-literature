@@ -22,9 +22,6 @@ jobs:
           path: tmp/all-blob-reports
           merge-multiple: true
 
-      - name: List downloaded files for debugging
-        run: ls -R all-blob-reports
-
       - name: Merge the blob reports
         working-directory: ./frontend
         run: |
