@@ -81,9 +81,9 @@ jobs:
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         env:
-          BLOB_REPORT_PATH: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}.blob
+          BLOB_REPORT_PATH: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
         run: |
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/4
+          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
