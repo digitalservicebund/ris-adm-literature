@@ -83,7 +83,7 @@ jobs:
         env:
           BLOB_REPORT_PATH: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
         run: |
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/{{ matrix.shardTotal }}
 
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
@@ -91,7 +91,7 @@ jobs:
         with:
           name: blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
           retention-days: 1
-          path: frontend/blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}.blob
+          path: frontend/blob-report-${{ matrix.playwright-project.name }}-${{ matrix.shardIndex }}
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
