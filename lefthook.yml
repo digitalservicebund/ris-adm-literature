@@ -4,16 +4,17 @@ pre-commit:
     "trivy-secrets.sh":
       runner: sh
       tags: security
-
-pre-push:
   commands:
-    lintAndFormatCheckOnFrontendChange:
-      # run only on changes in the frontend folder
+    lintAndFormatOnFrontendChanges:
+      # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'
       root: frontend
       run: ../.lefthook/lint-format-frontend.sh {staged_files}
-    spotlessCheckOnBackendChange:
+      stage_fixed: true
+    spotlessOnBackendChanges:
       # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'
       root: backend
       run: ../.lefthook/spotless-check.sh
+      stage_fixed: true
+
