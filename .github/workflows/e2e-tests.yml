@@ -79,6 +79,8 @@ jobs:
             echo "Waiting for backend to be fully up..."
             sleep 0.1
           done
+      - name: Build Application
+        run: npm run build
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
