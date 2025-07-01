@@ -45,11 +45,15 @@ jobs:
       #   with:
       #     name: frontend-e2e-test-report.blob.msedge
       #     path: tmp/e2e-test-report
-      - name: Download all e2e test report blobs
+
+        
+      - name: Download blob reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: frontend-e2e-test-report.blob*
-          path: tmp/e2e-test-report
+            path: tmp/e2e-test-report
+            pattern: frontend-e2e-test-report.blob*
+            merge-multiple: true
+
       # end of downloads
       - name: Generate HTML report out of all the blobs
         working-directory: ./frontend
