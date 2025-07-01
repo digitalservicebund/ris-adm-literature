@@ -6,7 +6,7 @@ pre-commit:
       tags: security
   commands:
     lintAndFormatOnFrontendChanges:
-      # run only on changes in the backend folder
+      # run only on changes in the frontend folder
       # also: set the working directory for the command in 'run'
       root: frontend
       run: ../.lefthook/lint-format-frontend.sh {staged_files}
