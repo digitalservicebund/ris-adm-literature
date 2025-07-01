@@ -25,25 +25,30 @@ jobs:
           npm ci
         working-directory: ./frontend
       # download reports from project/browser matrix
-      - name: Download e2e chromium test report blob
+      # - name: Download e2e chromium test report blob
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: frontend-e2e-test-report.blob.chromium
+      #     path: tmp/e2e-test-report
+      # - name: Download e2e firefox test report blob
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: frontend-e2e-test-report.blob.firefox
+      #     path: tmp/e2e-test-report
+      # - name: Download e2e webkit test report blob
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: frontend-e2e-test-report.blob.webkit
+      #     path: tmp/e2e-test-report
+      # - name: Download e2e msedge test report blob
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: frontend-e2e-test-report.blob.msedge
+      #     path: tmp/e2e-test-report
+      - name: Download all e2e test report blobs
         uses: actions/download-artifact@v4
         with:
-          name: frontend-e2e-test-report.blob.chromium
-          path: tmp/e2e-test-report
-      - name: Download e2e firefox test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.firefox
-          path: tmp/e2e-test-report
-      - name: Download e2e webkit test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.webkit
-          path: tmp/e2e-test-report
-      - name: Download e2e msedge test report blob
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-e2e-test-report.blob.msedge
+          name: frontend-e2e-test-report.blob*
           path: tmp/e2e-test-report
       # end of downloads
       - name: Generate HTML report out of all the blobs
