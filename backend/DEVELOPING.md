@@ -15,10 +15,9 @@
 
 Create a Spring Boot run configuration with these settings:
 
-```
-Main class: de.bund.digitalservice.ris.adm_vwv.Application
-Working directory: $PROJECT_DIR$/backend
-```
+- **Main class**: `de.bund.digitalservice.ris.adm_vwv.Application`
+- **Working directory**: `$PROJECT_DIR$/backend`
+- **Use classpath of module**: `de.bund.digitalservice.ris-adm-vwv-backend.main`
 
 ## Test
 
