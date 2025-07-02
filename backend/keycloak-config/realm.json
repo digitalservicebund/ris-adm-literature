@@ -1,0 +1,30 @@
+{
+  "realm": "ris",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "ris-frontend",
+      "secret": "SflKxwRJSMeKKF2QT4fwpMeJf36POk6y",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["+"],
+      "defaultRoles": ["USER"],
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER", "ADMIN"]
+    }
+  ]
+}
