@@ -57,10 +57,10 @@ describe('usePagination', () => {
     expect(mockFetchData).toHaveBeenCalledWith(0, 100, searchParams)
   })
 
-  it('should show an error toast when there is a fetching error', async () => {
+  it('should update error state on fetching error', async () => {
     const fetchDataMock = vi.fn().mockRejectedValue(new Error('Fetch failed'))
 
-    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData } = usePagination(
+    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData, error } = usePagination(
       fetchDataMock,
       'documentationUnitsOverview',
     )
@@ -77,26 +77,20 @@ describe('usePagination', () => {
     expect(items.value).toEqual([])
     expect(totalRows.value).toEqual(0)
     expect(firstRowIndex.value).toEqual(0)
-    expect(addToastMock).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
-    })
+    expect(error.value).toBeTruthy()
   })
 
-  it('should show an error toast when the BE returns an error', async () => {
+  it('should update error state when the BE returns an error', async () => {
     const fetchDataMock = vi.fn().mockResolvedValue({
       error: 'Error from server',
     })
 
-    const { fetchPaginatedData } = usePagination(fetchDataMock, 'documentationUnitsOverview')
+    const { fetchPaginatedData, error } = usePagination(fetchDataMock, 'documentationUnitsOverview')
 
     // When
     await fetchPaginatedData()
 
     // Then
-    expect(addToastMock).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
-    })
+    expect(error.value).toBeTruthy()
   })
 })
