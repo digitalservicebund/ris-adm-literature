@@ -1,30 +1,79 @@
 {
+  "id": "ris",
   "realm": "ris",
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "accessTokenLifespan": 1800,
+  "sslRequired": "none",
+  "ssoSessionIdleTimeout": 432000,
+  "ssoSessionMaxLifespan": 7776000,
   "enabled": true,
+  "eventsEnabled": true,
+  "eventsExpiration": 900,
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true,
+  "attributes": {
+    "adminEventsExpiration": "900"
+  },
   "clients": [
     {
-      "clientId": "ris-frontend",
-      "secret": "SflKxwRJSMeKKF2QT4fwpMeJf36POk6y",
-      "publicClient": true,
+      "id": "ris-vwv-local",
+      "clientId": "ris-vwv-local",
+      "name": "ris-vwv-local",
+      "enabled": true,
       "directAccessGrantsEnabled": true,
-      "redirectUris": ["http://localhost:5173/*"],
-      "webOrigins": ["+"],
-      "defaultRoles": ["USER"],
-      "protocol": "openid-connect"
+      "publicClient": true,
+      "rootUrl": "http://localhost:8080",
+      "baseUrl": "http://localhost:8080",
+      "redirectUris": [
+        "http://localhost:8080/*",
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8080",
+        "http://localhost:5173"
+      ],
+      "clientAuthenticatorType": "client-secret",
+      "protocolMappers": [
+        {
+          "id": "c4b86c90-3076-49df-9343-0928b135733a",
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "true",
+            "introspection.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "lightweight.claim": "false",
+            "access.token.claim": "true",
+            "claim.name": "groups"
+          }
+        }
+      ]
     }
   ],
   "users": [
     {
-      "username": "testuser",
+      "id": "test",
+      "email": "test@example.com",
+      "username": "test",
+      "firstName": "test",
+      "lastName": "test",
       "enabled": true,
+      "emailVerified": true,
       "credentials": [
         {
+          "temporary": false,
           "type": "password",
-          "value": "test",
-          "temporary": false
+          "value": "test"
         }
       ],
-      "realmRoles": ["USER", "ADMIN"]
+      "realmRoles": [
+        "vwv_user"
+      ]
     }
   ]
 }
