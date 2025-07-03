@@ -33,10 +33,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
+  /**
+   * Configures the CORS policy for the application.
+   *
+   * @return The configured {@link CorsConfigurationSource} for Spring Security.
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    // Define the allowed origins (your frontend's URL)
     configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
@@ -47,6 +51,13 @@ public class SecurityConfiguration {
     return source;
   }
 
+  /**
+   * Configures security settings for specific HTTP requests.
+   *
+   * @param http The {@link HttpSecurity} object to configure security settings.
+   * @return A {@link SecurityFilterChain} configured with security settings.
+   * @throws Exception If an exception occurs during security configuration.
+   */
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -84,6 +95,22 @@ public class SecurityConfiguration {
     return http.build();
   }
 
+  /**
+   * A custom {@link JwtAuthenticationConverter} that extracts user roles from the Keycloak JWT.
+   * <p>
+   * By default, Keycloak includes user roles inside the "roles" array within the "realm_access" claim.
+   * This converter retrieves those roles and transforms them into a list of {@link SimpleGrantedAuthority}
+   * instances, prefixing each role with "ROLE_" to comply with Spring Security's expectations when using
+   * the {@code .hasRole()} method.
+   * </p>
+   * <p>
+   * The method suppresses unchecked warnings because Keycloak consistently provides the "realm_access" claim
+   * as a {@code Map<String, Object>} containing a {@code List<String>} for roles. Since the format is well-defined
+   * and predictable in Keycloak, the unchecked cast is safe in this specific context.
+   * </p>
+   *
+   * @return a configured instance of {@link JwtAuthenticationConverter} that maps Keycloak roles to Spring Security authorities
+   */
   @Bean
   @SuppressWarnings("unchecked")
   public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
