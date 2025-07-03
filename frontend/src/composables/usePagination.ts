@@ -1,12 +1,10 @@
-import { useToast } from 'primevue'
 import { computed, ref } from 'vue'
-import errorMessages from '@/i18n/errors.json'
 
 /**
  * usePagination
  *
  * A composable for handling server-side paginated data fetching.
- * Manages pagination state, triggers loading indicators, and displays toast notifications on error.
+ * Manages pagination state, error state and triggers loading indicators.
  *
  * @template T - The type of the data items being paginated.
  * @template S - The type of the search parameters object used for filtering.
@@ -26,7 +24,8 @@ import errorMessages from '@/i18n/errors.json'
  *   items: Ref<T[]>,
  *   searchParams = ref<S | undefined>(),
  *   ITEMS_PER_PAGE: number,
- *   fetchPaginatedData: (page?: number) => Promise<void>
+ *   fetchPaginatedData: (page?: number) => Promise<void>,
+ *   error: Ref<Error | null>,
  * }}
  *
  * Example response format expected from fetchData:
@@ -48,14 +47,16 @@ export function usePagination<T, S>(
 ) {
   const ITEMS_PER_PAGE = 100
   const isLoading = ref(true)
+  const error = ref<Error | null>(null)
   const pageNumber = ref<number>(0)
   const totalRows = ref<number>(0)
   const items = ref<T[]>([])
   const searchParams = ref<S | undefined>()
   const firstRowIndex = computed<number>(() => pageNumber.value * ITEMS_PER_PAGE)
-  const toast = useToast()
+
   const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
     isLoading.value = true
+    error.value = null
 
     if (newSearch !== undefined) {
       searchParams.value = newSearch
@@ -63,27 +64,17 @@ export function usePagination<T, S>(
     }
 
     try {
-      const { data, error } = await fetchData(page, ITEMS_PER_PAGE, searchParams.value)
+      const { data, error: serverError } = await fetchData(page, ITEMS_PER_PAGE, searchParams.value)
 
-      if (error) {
-        // Showing server error
-        console.error(error)
-        toast.add({
-          severity: 'error',
-          summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
-        })
+      if (serverError) {
+        error.value = serverError
       } else if (data) {
         items.value = data[paginatedResponseKey]
         totalRows.value = data.page.totalElements
         pageNumber.value = data.page.number
       }
-    } catch (error) {
-      // Showing promise/network error
-      console.error(error)
-      toast.add({
-        severity: 'error',
-        summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
-      })
+    } catch (err) {
+      error.value = err as Error
     } finally {
       isLoading.value = false
     }
@@ -96,5 +87,6 @@ export function usePagination<T, S>(
     items,
     ITEMS_PER_PAGE,
     fetchPaginatedData,
+    error,
   }
 }
