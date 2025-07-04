@@ -25,6 +25,11 @@ const router = createRouter({
       name: 'StartPage',
       component: StartPage,
     },
+    /*    {
+      path: '/callback',
+      name: 'callback',
+      component: CallbackPage,
+    },*/
     {
       path: '/documentUnit/new',
       name: 'documentUnit-new',

@@ -8,6 +8,8 @@ import * as Sentry from '@sentry/vue'
 import '@/styles/global.css'
 import router from '@/router.ts'
 import { ToastService } from 'primevue'
+import keycloak from '@/services/keycloak.ts'
+import { setupAxiosInterceptors } from '@/services/httpClient.ts'
 
 const app = createApp(App)
 
@@ -23,13 +25,35 @@ if (import.meta.env.PROD) {
   })
 }
 
-app
-  .use(createPinia())
-  .use(PrimeVue, {
-    unstyled: true,
-    pt: RisUiTheme,
-    locale: RisUiLocale.deDE,
+keycloak
+  .init({
+    onLoad: 'login-required',
   })
-  .use(router)
-  .use(ToastService)
-  .mount('#app')
+  .then((authenticated) => {
+    if (authenticated) {
+      console.log('Authenticated successfully!')
+      setupAxiosInterceptors()
+      const app = createApp(App)
+      app
+        .use(createPinia())
+        .use(PrimeVue, {
+          unstyled: true,
+          pt: RisUiTheme,
+          locale: RisUiLocale.deDE,
+        })
+        .use(router)
+        .use(ToastService)
+        .mount('#app')
+
+      // clear keycloak info from pathname
+      router.isReady().then(() => {
+        window.history.replaceState(null, '', window.location.pathname)
+      })
+    } else {
+      console.warn('Not authenticated!')
+    }
+  })
+  .catch((error) => {
+    console.error('Keycloak initialization failed:', error)
+    document.getElementById('app').innerHTML = 'Failed to initialize authentication.'
+  })

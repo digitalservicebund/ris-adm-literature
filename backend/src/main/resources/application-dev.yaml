@@ -1,2 +1,7 @@
 oauth2:
   issuer-uri: http://localhost:8443/realms/ris
+
+spring:
+  sql:
+    init:
+      mode: always
