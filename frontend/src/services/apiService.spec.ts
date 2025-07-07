@@ -25,7 +25,7 @@ describe('useApiFetch', () => {
 
     await vi.waitFor(() =>
       expect(fetchSpy).toHaveBeenCalledWith(
-        '/api/v1/foo/bar',
+        '/api/foo/bar',
         expect.objectContaining({
           headers: {
             Accept: 'application/json',
@@ -53,7 +53,7 @@ describe('useApiFetch', () => {
 
     await vi.waitFor(() =>
       expect(fetchSpy).toHaveBeenCalledWith(
-        '/api/v1/foo/bar',
+        '/api/foo/bar',
         expect.objectContaining({
           headers: {
             Accept: 'text/html',
@@ -113,7 +113,7 @@ describe('useApiFetch', () => {
 
     await vi.waitFor(() =>
       expect(fetchSpy).toHaveBeenCalledWith(
-        '/api/v1/foo/bar',
+        '/api/foo/bar',
         expect.objectContaining({
           headers: expect.not.objectContaining({
             Authorization: 'Bearer 1234',

@@ -44,6 +44,7 @@ describe('InstitutionDropDown', () => {
   it('renders the component and fetches institutions', async () => {
     const wrapper = mount(InstitutionDropDown, {
       props: {
+        inputId: 'foo',
         isInvalid: false,
         modelValue: undefined,
       },
@@ -57,6 +58,7 @@ describe('InstitutionDropDown', () => {
   it('emits updated model value when selection changes', async () => {
     const wrapper = mount(InstitutionDropDown, {
       props: {
+        inputId: 'foo',
         isInvalid: false,
         modelValue: undefined,
       },

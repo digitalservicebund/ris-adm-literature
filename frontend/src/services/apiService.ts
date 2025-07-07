@@ -1,4 +1,3 @@
-import { useAuthentication } from '@/services/auth'
 import type { UseFetchReturn } from '@vueuse/core'
 import { createFetch } from '@vueuse/core'
 
@@ -27,7 +26,7 @@ export type SimpleUseFetchReturn<T> = Omit<
 
 /** Fetch data from the backend api using useFetch. */
 export const useApiFetch = createFetch({
-  baseUrl: '/api/v1',
+  baseUrl: '/api',
 
   options: {
     async beforeFetch({ options, url, cancel }) {
@@ -54,16 +53,6 @@ export const useApiFetch = createFetch({
           ...options.headers,
         }
       }
-
-      // Authorize requests
-      /** Set the auth headers once we have keycloak in place       
-      const { addAuthorizationHeader, tryRefresh } = useAuthentication()
-
-      const hasValidSession = await tryRefresh()
-      if (!hasValidSession) cancel()
-
-      options.headers = addAuthorizationHeader(options.headers)
-      */
 
       return { options }
     },
