@@ -50,7 +50,7 @@
     "@tiptap/extension-superscript": "^2.23.0",
     "@tiptap/extension-text": "^2.22.3",
     "@tiptap/extension-text-align": "^2.23.0",
-    "@tiptap/extension-text-style": "^2.23.0",
+    "@tiptap/extension-text-style": "^2.25.0",
     "@tiptap/extension-underline": "^2.23.0",
     "@tiptap/pm": "^2.22.3",
     "@tiptap/vue-3": "^2.23.0",
