@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import type { DocumentUnitListItem, DocumentUnitSearchParams } from '@/domain/documentUnit'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import documentUnitService from '@/services/documentUnitService'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import { usePagination } from '@/composables/usePagination'
-import type { PageState } from 'primevue'
+import { useToast, type PageState } from 'primevue'
 import SearchPanel from './SearchPanel.vue'
+import errorMessages from '@/i18n/errors.json'
+
+const toast = useToast()
 
 const {
   firstRowIndex,
@@ -15,10 +18,20 @@ const {
   ITEMS_PER_PAGE,
   fetchPaginatedData,
   isLoading,
+  error,
 } = usePagination<DocumentUnitListItem, DocumentUnitSearchParams>(
   documentUnitService.getPaginatedDocumentUnitList,
   'documentationUnitsOverview',
 )
+
+watch(error, (err) => {
+  if (err) {
+    toast.add({
+      severity: 'error',
+      summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
+    })
+  }
+})
 
 async function fetchData(page: number = 0, search?: DocumentUnitSearchParams) {
   docUnits.value = []

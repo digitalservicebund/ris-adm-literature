@@ -1,6 +1,5 @@
-import { useFetch, type UseFetchReturn } from '@vueuse/core'
+import type { UseFetchReturn } from '@vueuse/core'
 import type { Ref } from 'vue'
-import { API_PREFIX } from './httpClient'
 import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
@@ -12,6 +11,7 @@ import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
 import type { Court } from '@/domain/court'
 import type { DocumentType } from '@/domain/documentType'
+import { useApiFetch } from './apiService'
 
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
@@ -72,10 +72,10 @@ function fetchFromEndpoint(
     if (endpoint == Endpoint.fieldsOfLaw) {
       queryParams = queryParams.replace('searchTerm', 'identifier')
     }
-    return `${API_PREFIX}${endpoint}?${queryParams}`
+    return `${endpoint}?${queryParams}`
   })
 
-  return useFetch<ComboboxItem[]>(url, {
+  return useApiFetch<ComboboxItem[]>(url, {
     afterFetch: (ctx) => {
       switch (endpoint) {
         case Endpoint.documentTypes:

@@ -9,7 +9,7 @@ plugins {
   id("jacoco")
   id("org.sonarqube") version "6.2.0.5505"
   id("com.github.jk1.dependency-license-report") version "2.9"
-  id("com.diffplug.spotless") version "7.0.4"
+  id("com.diffplug.spotless") version "7.1.0"
   id("checkstyle")
   id("io.franzbecker.gradle-lombok") version "5.0.0"
 }
@@ -39,7 +39,7 @@ extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.9"
 val sentryVersion = "8.16.0"
-val hypersistenceVersion = "3.10.1"
+val hypersistenceVersion = "3.10.2"
 val postgresVersion = "42.7.7"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
