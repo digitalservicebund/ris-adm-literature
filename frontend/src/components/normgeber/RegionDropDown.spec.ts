@@ -38,6 +38,7 @@ describe('RegionDropDown', () => {
   it('renders the component and fetches regions', async () => {
     const wrapper = mount(RegionDropDown, {
       props: {
+        inputId: 'foo',
         isInvalid: false,
         modelValue: undefined,
       },
@@ -51,6 +52,7 @@ describe('RegionDropDown', () => {
   it('emits updated model value when selection changes', async () => {
     const wrapper = mount(RegionDropDown, {
       props: {
+        inputId: 'foo',
         isInvalid: false,
         modelValue: undefined,
       },

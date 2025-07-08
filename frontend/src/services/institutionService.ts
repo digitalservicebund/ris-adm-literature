@@ -1,12 +1,9 @@
-import { useFetch } from '@vueuse/core'
 import type { Institution } from '@/domain/normgeber.ts'
-import { API_PREFIX } from '@/services/httpClient.ts'
+import { useApiFetch } from '@/services/apiService'
+import type { UseFetchReturn } from '@vueuse/core'
 
-const INSTITUTION_URL = `${API_PREFIX}lookup-tables/institutions`
+const INSTITUTION_URL = `/lookup-tables/institutions`
 
-export function useFetchInstitutions() {
-  return useFetch<{ institutions: Institution[] }>(
-    `${INSTITUTION_URL}?usePagination=false`,
-    {},
-  ).json()
+export function useFetchInstitutions(): UseFetchReturn<{ institutions: Institution[] }> {
+  return useApiFetch(`${INSTITUTION_URL}?usePagination=false`, {}).json()
 }
