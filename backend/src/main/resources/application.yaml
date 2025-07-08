@@ -9,7 +9,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${oauth2.issuer-uri:http://localhost:8443/realms/ris}
+          issuer-uri: ${oauth2.issuer-uri}
 
 management:
   endpoint:

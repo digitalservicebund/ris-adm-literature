@@ -33,6 +33,7 @@
         "http://localhost:8080",
         "http://localhost:5173"
       ],
+      "clientAuthenticatorType": "client-secret",
       "protocolMappers": [
         {
           "id": "c4b86c90-3076-49df-9343-0928b135733a",
@@ -71,14 +72,8 @@
         }
       ],
       "realmRoles": [
-        "vwv_user", "USER", "ADMIN"
-      ],
-      "clientRoles": {
-        "account": [
-          "manage-account",
-          "view-profile"
-        ]
-      }
+        "vwv_user"
+      ]
     }
   ]
 }

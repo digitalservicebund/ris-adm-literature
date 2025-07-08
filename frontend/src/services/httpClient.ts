@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import type { ValidationError } from '@/components/input/types'
 import errorMessages from '@/i18n/errors.json'
-import keycloak from '@/services/keycloak.ts'
 
 type RequestOptions = {
   headers?: {
@@ -31,53 +30,13 @@ interface HttpClient {
     data?: TRequest,
   ): Promise<ServiceResponse<TResponse>>
 }
-export const axiosInstance = axios.create()
-export const API_PREFIX = `/api/`
-
-export function setupAxiosInterceptors() {
-  axiosInstance.interceptors.request.use(
-    async (config) => {
-      if (keycloak.authenticated) {
-        try {
-          await keycloak.updateToken(30)
-          config.headers.Authorization = `Bearer ${keycloak.token}`
-        } catch (error) {
-          console.error('Failed to refresh token:', error)
-          return Promise.reject(error)
-        }
-      }
-      return config
-    },
-    (error) => {
-      return Promise.reject(error)
-    },
-  )
-}
-
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    if (keycloak.authenticated) {
-      try {
-        await keycloak.updateToken(30)
-        console.log(keycloak.token)
-        config.headers.Authorization = `Bearer ${keycloak.token}`
-      } catch (error) {
-        console.error('Failed to refresh token:', error)
-        return Promise.reject(error)
-      }
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  },
-)
 
 async function baseHttp<T>(url: string, method: string, options?: RequestOptions, data?: T) {
   try {
     const response = await axiosInstance.request({
       method: method,
       url: `${API_PREFIX}${url}`,
+      validateStatus: () => true,
       data,
       ...options,
     })
@@ -136,4 +95,6 @@ export type ServiceResponse<T> = {
     }
 )
 
+export const axiosInstance = axios.create()
 export default httpClient
+export const API_PREFIX = `/api/`
