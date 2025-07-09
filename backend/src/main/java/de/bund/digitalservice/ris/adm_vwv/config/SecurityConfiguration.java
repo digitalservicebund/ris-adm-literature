@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,35 +20,13 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Security Configuration
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfiguration {
-
-  /**
-   * Configures the CORS policy for the application.
-   *
-   * @return The configured {@link CorsConfigurationSource} for Spring Security.
-   */
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
-    configuration.setAllowCredentials(true);
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
 
   /**
    * Configures security settings for specific HTTP requests.
@@ -64,16 +41,16 @@ public class SecurityConfiguration {
       .authorizeHttpRequests(authorize ->
         authorize
           // --- PUBLIC ENDPOINTS ---
+          // TODO: check which ones should be public
           .requestMatchers(
             "/.well-known/security.txt",
-            "/actuator/health/**",
-            "/actuator/prometheus"
+            "/actuator/**",
+            "/api/swagger-ui/index.html"
           )
           .permitAll()
           // --- SECURED ENDPOINTS ---
           .requestMatchers("/api/**") // Secure all API paths
           .hasRole("vwv_user")
-          // .hasRole("VWN_ROLE") // Require the single role
           // --- DENY ALL OTHERS ---
           .anyRequest()
           .denyAll()
@@ -84,9 +61,7 @@ public class SecurityConfiguration {
           PathPatternRequestMatcher.withDefaults().matcher("/api/**")
         )
       )
-      .oauth2ResourceServer(oauth2 ->
-        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverterForKeycloak()))
-      )
+      .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
       .csrf(AbstractHttpConfigurer::disable)
       .cors(Customizer.withDefaults())
       .sessionManagement(sessionManagement ->
