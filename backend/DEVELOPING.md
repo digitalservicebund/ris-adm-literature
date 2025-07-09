@@ -8,7 +8,7 @@
 ## Run / Start
 
 ```bash
-./gradlew bootRun --args='--spring.profiles.active=dev'
+./gradlew bootRun --args='--spring.profiles.active=local'
 ```
 
 ### IntelliJ Run Configuration
