@@ -41,7 +41,6 @@ public class SecurityConfiguration {
       .authorizeHttpRequests(authorize ->
         authorize
           // --- PUBLIC ENDPOINTS ---
-          // TODO: check which ones should be public
           .requestMatchers(
             "/.well-known/security.txt",
             "/actuator/**",
