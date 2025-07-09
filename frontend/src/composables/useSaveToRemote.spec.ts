@@ -87,14 +87,16 @@ describe('useSaveToRemote', () => {
     expect(saveIsInProgress.value).toBe(false)
   })
 
-  it('sets the response error if callback returns one', async () => {
-    const callback = vi.fn().mockResolvedValue({ status: 400, error: { title: 'error' } })
+  it('sets the response error if update failed', async () => {
+    const callback = vi.fn().mockResolvedValue(false)
     mockDocumentUnitStore(callback)
     const { triggerSave, lastSaveError } = useSaveToRemote()
 
     await triggerSave()
 
-    expect(lastSaveError.value).toEqual({ title: 'error' })
+    expect(lastSaveError.value).toEqual({
+      title: 'Dokumentationseinheit konnte nicht aktualisiert werden.',
+    })
   })
 
   it('sets connection error if callback throws exception one', async () => {
@@ -113,13 +115,13 @@ describe('useSaveToRemote', () => {
 
     expect(lastSaveError.value).toBeUndefined()
 
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 400, error: { title: 'error' } }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false))
 
     await triggerSave()
 
     expect(lastSaveError.value).toBeDefined()
 
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200, data: undefined }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(true))
     await triggerSave()
 
     expect(lastSaveError.value).toBeUndefined()
@@ -132,20 +134,20 @@ describe('useSaveToRemote', () => {
     expect(formattedLastSavedOn.value).toBeUndefined()
 
     vi.setSystemTime(60_000)
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200, data: undefined }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(true))
     await triggerSave()
 
     const firstLastSavedOn = formattedLastSavedOn.value
     expect(firstLastSavedOn).toBeDefined()
 
     vi.setSystemTime(120_000)
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 400, error: { title: 'error' } }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false))
     await triggerSave()
 
     expect(formattedLastSavedOn.value).toBe(firstLastSavedOn)
 
     vi.setSystemTime(180_000)
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200, data: undefined }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(true))
     await triggerSave()
 
     expect(formattedLastSavedOn.value).not.toBe(firstLastSavedOn)
@@ -155,21 +157,20 @@ describe('useSaveToRemote', () => {
     mockDocumentUnitStore()
     const { triggerSave, formattedLastSavedOn, lastSaveError } = useSaveToRemote()
 
-    mockDocumentUnitStore(
-      vi
-        .fn()
-        .mockResolvedValueOnce({ status: 400, error: { title: 'error' } })
-        .mockResolvedValueOnce({ status: 304, data: undefined }),
-    )
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(false))
 
     // first save attempt with error response
     await triggerSave()
     expect(formattedLastSavedOn.value).toBeUndefined()
-    expect(lastSaveError.value).toEqual({ title: 'error' })
+    expect(lastSaveError.value).toEqual({
+      title: 'Dokumentationseinheit konnte nicht aktualisiert werden.',
+    })
 
     // second save attepmpt, nothing changed
     await triggerSave()
     expect(formattedLastSavedOn.value).toBeUndefined()
-    expect(lastSaveError.value).toEqual({ title: 'error' })
+    expect(lastSaveError.value).toEqual({
+      title: 'Dokumentationseinheit konnte nicht aktualisiert werden.',
+    })
   })
 })

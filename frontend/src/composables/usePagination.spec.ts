@@ -8,7 +8,7 @@ const mockData = {
     { id: 2, title: 'Doc 2' },
   ],
   page: {
-    totalElements: 2,
+    totalElements: 42,
     number: 0,
   },
 }
@@ -28,7 +28,7 @@ describe('usePagination', () => {
     )
 
     expect(items.value.length).toBe(2)
-    expect(totalRows.value).toBe(2)
+    expect(totalRows.value).toBe(42)
     expect(firstRowIndex.value).toBe(0)
     expect(ITEMS_PER_PAGE).toBe(100)
   })
@@ -62,7 +62,7 @@ describe('usePagination', () => {
 
     const newSearch = { documentNumber: 'abc' }
 
-    await fetchPaginatedData(5, newSearch)
+    await fetchPaginatedData(42, newSearch)
 
     // Because new search resets page to 0
     expect(mockFetchData).toHaveBeenCalledWith(expect.anything(), 100, expect.anything())
@@ -85,6 +85,26 @@ describe('usePagination', () => {
     await fetchPaginatedData()
 
     expect(error.value).toBe(mockError)
+    expect(executeSpy).toHaveBeenCalled()
+  })
+
+  it('returns [] and 0 when data is undefined', async () => {
+    const mockData = ref(undefined)
+    const executeSpy = vi.fn().mockResolvedValue(undefined)
+
+    const mockFetchData = vi.fn().mockReturnValue({
+      data: mockData,
+      error: ref(null),
+      isFetching: ref(false),
+      execute: executeSpy,
+    })
+
+    const { items, totalRows, fetchPaginatedData } = usePagination(mockFetchData, 'results')
+
+    await fetchPaginatedData()
+
+    expect(items.value).toEqual([])
+    expect(totalRows.value).toBe(0)
     expect(executeSpy).toHaveBeenCalled()
   })
 })

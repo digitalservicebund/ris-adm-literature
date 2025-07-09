@@ -30,11 +30,12 @@ export function useGetDocUnit(documentNumber: string): UseFetchReturn<DocumentUn
         data: mapResponseDataToDocumentUnit(data),
       }
     },
+    immediate: false,
   }).json()
 }
 
 export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<DocumentUnit> {
-  return useApiFetch(`/${DOCUMENTATION_UNITS_URL}s/${documentUnit.documentNumber}`, {
+  return useApiFetch(`/${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
     afterFetch: ({ data }) => {
       if (!data) return { data }
 
@@ -42,6 +43,7 @@ export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<Docume
         data: mapResponseDataToDocumentUnit(data),
       }
     },
+    immediate: false,
   })
     .json()
     .put(documentUnit)

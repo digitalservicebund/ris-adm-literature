@@ -36,7 +36,7 @@ describe('documentUnit InfoPanel', () => {
     const user = userEvent.setup()
 
     // given
-    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce({ status: 200 }))
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(true))
     renderComponent()
 
     // when
@@ -50,7 +50,7 @@ describe('documentUnit InfoPanel', () => {
     const user = userEvent.setup()
 
     // given
-    mockDocumentUnitStore()
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false))
     renderComponent()
 
     // when
@@ -58,7 +58,9 @@ describe('documentUnit InfoPanel', () => {
 
     // then
     expect(
-      await screen.findByText('Fehler beim Speichern: Verbindung fehlgeschlagen'),
+      await screen.findByText(
+        'Fehler beim Speichern: Dokumentationseinheit konnte nicht aktualisiert werden.',
+      ),
     ).toBeInTheDocument()
   })
 })
