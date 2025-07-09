@@ -1,26 +1,29 @@
 <script lang="ts" setup>
-import { ref, type Ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, type Ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
-import ErrorPage from '@/components/PageError.vue'
 import SideToggle from '@/components/SideToggle.vue'
-import { type ResponseError } from '@/services/httpClient'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
+import { useToast } from 'primevue'
+import errorMessages from '@/i18n/errors.json'
 
 const props = defineProps<{
   documentNumber: string
 }>()
 
+const toast = useToast()
+
 const store = useDocumentUnitStore()
 
-const { documentUnit } = storeToRefs(store) as {
+const { documentUnit, error } = storeToRefs(store) as {
   documentUnit: Ref<DocumentUnit>
+  error: Ref<Error | null>
 }
 
 const route = useRoute()
@@ -32,21 +35,21 @@ function toggleNavigationPanel(expand?: boolean) {
   showNavigationPanelRef.value = expand === undefined ? !showNavigationPanelRef.value : expand
 }
 
-const responseError = ref<ResponseError>()
-async function requestDocumentUnitFromServer() {
-  const response = await store.loadDocumentUnit(props.documentNumber)
-
-  if (!response.data) {
-    responseError.value = response.error.value
-  }
-}
-
 onBeforeUnmount(async () => {
   await store.unloadDocumentUnit()
 })
 
 onMounted(async () => {
-  await requestDocumentUnitFromServer()
+  await store.loadDocumentUnit(props.documentNumber)
+})
+
+watch(error, (err) => {
+  if (err) {
+    toast.add({
+      severity: 'error',
+      summary: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
+    })
+  }
 })
 </script>
 
@@ -86,6 +89,5 @@ onMounted(async () => {
         </FlexContainer>
       </div>
     </div>
-    <ErrorPage v-if="responseError" :error="responseError" :title="responseError?.title" />
   </div>
 </template>

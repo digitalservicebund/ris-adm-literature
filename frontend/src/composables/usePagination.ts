@@ -46,6 +46,7 @@ export function usePagination<T, S>(
     page: Ref<number>,
     itemsPerPage: number,
     searchParams: Ref<S | undefined>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => UseFetchReturn<any>,
   paginatedResponseKey: string,
 ) {

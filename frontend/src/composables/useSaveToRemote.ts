@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { type ResponseError } from '@/services/httpClient'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import errorMessages from '@/i18n/errors.json'
 
 function getCurrentTime(dateSaved: Date) {
   const fullHour = ('0' + dateSaved.getHours()).slice(-2)
@@ -22,17 +23,17 @@ export function useSaveToRemote() {
     if (saveIsInProgress.value) return
 
     saveIsInProgress.value = true
+    lastSaveError.value = undefined
 
     try {
-      const response = await store.updateDocumentUnit()
+      const success = await store.updateDocumentUnit()
 
-      if (response.status != 304) {
-        lastSaveError.value = response.error
-      }
-
-      if (lastSaveError.value == undefined) {
+      if (!success) {
+        lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title }
+      } else {
         lastSavedOn.value = new Date()
       }
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       lastSaveError.value = { title: 'Verbindung fehlgeschlagen' }
