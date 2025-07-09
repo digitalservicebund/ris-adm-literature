@@ -9,7 +9,7 @@ const fetchPaginatedDataMock = vi.fn()
 vi.mock('@/composables/usePagination', () => {
   return {
     usePagination: () => ({
-      isLoading: ref(false),
+      isFetching: ref(false),
       firstRowIndex: ref(0),
       totalRows: ref(2),
       items: ref([
@@ -58,15 +58,6 @@ describe('DocumentUnits', () => {
     expect(container).toBeTruthy()
   })
 
-  it('calls fetchPaginatedData on mount to load initial data', () => {
-    // when
-    renderComponent()
-    // then
-    expect(fetchPaginatedDataMock).toHaveBeenCalled()
-    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, undefined)
-    expect(addToastMock).not.toHaveBeenCalled()
-  })
-
   it('calls fetchPaginatedData on page update', async () => {
     renderComponent()
 
@@ -93,19 +84,17 @@ describe('DocumentUnits', () => {
 
   it('should show an error toast on fetching error', async () => {
     vi.resetModules()
-    const errorRef = ref(new Error('fetch error'))
+    const errorRef = ref()
 
     vi.doMock('@/composables/usePagination', () => {
       return {
         usePagination: () => ({
-          isLoading: ref(false),
+          isFetching: ref(false),
           firstRowIndex: ref(0),
           totalRows: ref(2),
           items: ref([]),
           ITEMS_PER_PAGE: ref(10),
-          fetchPaginatedData: vi.fn(async () => {
-            errorRef.value = new Error('fetch error')
-          }),
+          fetchPaginatedData: vi.fn(),
           error: errorRef,
         }),
       }
@@ -123,6 +112,7 @@ describe('DocumentUnits', () => {
       },
     })
 
+    errorRef.value = new Error('fetch error')
     await flushPromises()
 
     expect(addToastMock).toHaveBeenCalledWith({

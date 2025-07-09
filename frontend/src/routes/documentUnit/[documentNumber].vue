@@ -37,7 +37,7 @@ async function requestDocumentUnitFromServer() {
   const response = await store.loadDocumentUnit(props.documentNumber)
 
   if (!response.data) {
-    responseError.value = response.error
+    responseError.value = response.error.value
   }
 }
 

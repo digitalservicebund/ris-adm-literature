@@ -1,20 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { type DocumentUnit } from '@/domain/documentUnit'
-import documentUnitService from '@/services/documentUnitService'
+import documentUnitService, { useGetDocUnit } from '@/services/documentUnitService'
 import type { FailedValidationServerResponse, ServiceResponse } from '@/services/httpClient'
 import errorMessages from '@/i18n/errors.json'
 import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
+import type { UseFetchReturn } from '@vueuse/core'
 
 export const useDocumentUnitStore = defineStore('docunitStore', () => {
   const documentUnit = ref<DocumentUnit | undefined>(undefined)
 
-  async function loadDocumentUnit(
-    documentNumber: string,
-  ): Promise<ServiceResponse<DocumentUnitResponse>> {
-    const response = await documentUnitService.getByDocumentNumber(documentNumber)
-    if (response.data) {
-      documentUnit.value = response.data.json
+  async function loadDocumentUnit(documentNumber: string): Promise<UseFetchReturn<DocumentUnit>> {
+    const response = await useGetDocUnit(documentNumber)
+
+    if (response.data?.value) {
+      documentUnit.value = response.data.value
     } else {
       documentUnit.value = undefined
     }
