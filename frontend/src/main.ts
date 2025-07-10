@@ -28,9 +28,9 @@ if (import.meta.env.PROD) {
 const auth = useAuthentication()
 // TODO: use env to decide the vars
 await auth.configure({
-  url: import.meta.env.VITE_AUTH_URL || 'http://localhost:8443',
-  clientId: import.meta.env.VITE_AUTH_CLIENT_ID || 'ris-vwv-local',
-  realm: import.meta.env.VITE_AUTH_REALM || 'ris',
+  url: import.meta.env.AUTH_URL || 'http://localhost:8443',
+  clientId: import.meta.env.AUTH_CLIENT_ID || 'ris-vwv-local',
+  realm: import.meta.env.AUTH_REALM || 'ris',
 })
 app
   .use(createPinia())
