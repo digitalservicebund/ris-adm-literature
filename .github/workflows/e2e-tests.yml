@@ -32,7 +32,7 @@ jobs:
         uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96
       - name: Start backend
         working-directory: ./backend
-        run: ./gradlew bootRun --args='--spring.profiles.active=local' # we'll wait for the backend to respond right before running the tests
+        run: ./gradlew bootRun --args='--spring.profiles.active=local' & # we'll wait for the backend to respond right before running the tests
       # setup frontend
       - name: Setup Node
         uses: actions/setup-node@v4
