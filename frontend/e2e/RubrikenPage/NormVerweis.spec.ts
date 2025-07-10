@@ -151,6 +151,12 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await expect(page.getByText('Kein valides Datum')).toBeVisible()
 
         // when
+        await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('20.12.20')
+        await page.keyboard.press('Tab')
+        // then
+        await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+
+        // when
         const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
         await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill(`${tomorrow}{Tab}`)
         // then
