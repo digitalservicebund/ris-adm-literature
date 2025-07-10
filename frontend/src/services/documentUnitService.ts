@@ -49,7 +49,7 @@ export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<Docume
     .put(documentUnit)
 }
 
-export function usePostDocUnit(documentUnit: DocumentUnit): UseFetchReturn<DocumentUnit> {
+export function usePostDocUnit(): UseFetchReturn<DocumentUnit> {
   return useApiFetch(`/${DOCUMENTATION_UNITS_URL}`, {
     afterFetch: ({ data }) => {
       if (!data) return { data }
@@ -60,7 +60,7 @@ export function usePostDocUnit(documentUnit: DocumentUnit): UseFetchReturn<Docum
     },
   })
     .json()
-    .post(documentUnit)
+    .post()
 }
 
 export function useGetPaginatedDocUnits(
