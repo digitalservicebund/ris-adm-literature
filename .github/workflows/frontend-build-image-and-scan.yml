@@ -17,9 +17,9 @@ jobs:
         run: |
           docker build --tag ${{ inputs.image-ref }} \
             --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN \
-            --build-arg VITE_AUTH_URL=${{ secrets.VITE_AUTH_URL }} \
-            --build-arg VITE_AUTH_CLIENT_ID=${{ secrets.VITE_AUTH_CLIENT_ID }} \
-            --build-arg VITE_AUTH_REALM=${{ secrets.VITE_AUTH_REALM }} \
+            --build-arg VITE_AUTH_URL=${{ vars.VITE_AUTH_URL }} \
+            --build-arg VITE_AUTH_CLIENT_ID=${{ vars.VITE_AUTH_CLIENT_ID }} \
+            --build-arg VITE_AUTH_REALM=${{ vars.VITE_AUTH_REALM }} \
             -f prod.Dockerfile .
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
