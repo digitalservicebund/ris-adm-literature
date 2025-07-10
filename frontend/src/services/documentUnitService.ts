@@ -1,8 +1,5 @@
-import type { ServiceResponse } from './httpClient'
-import type { Page } from '@/components/Pagination.vue'
 import type { DocumentUnit, DocumentUnitSearchParams } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
-import RelatedDocumentation from '@/domain/relatedDocumentation'
 import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
 import Reference from '@/domain/reference.ts'
 import ActiveReference from '@/domain/activeReference.ts'
@@ -108,52 +105,3 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
   documentUnit.note = documentUnit.note || ''
   return documentUnit
 }
-
-interface DocumentUnitService {
-  searchByRelatedDocumentation(
-    query: RelatedDocumentation,
-    requestParams?: { [key: string]: string } | undefined,
-  ): Promise<ServiceResponse<{ activeCitations: RelatedDocumentation[]; page: Page }>>
-}
-
-const service: DocumentUnitService = {
-  async searchByRelatedDocumentation(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    query: RelatedDocumentation = new RelatedDocumentation(),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    requestParams: { string?: string } = {},
-  ) {
-    return {
-      status: 200,
-      data: {
-        activeCitations: [
-          new ActiveCitation({
-            uuid: '123',
-            court: {
-              type: 'type1',
-              location: 'location1',
-              label: 'label1',
-            },
-            decisionDate: '2022-02-01',
-            documentType: {
-              abbreviation: 'VV',
-              name: 'Verwaltungsvorschrift',
-            },
-            fileNumber: 'test fileNumber1',
-          }),
-        ],
-        page: {
-          size: 1,
-          number: 0,
-          numberOfElements: 1,
-          totalElements: 20,
-          first: true,
-          last: false,
-          empty: false,
-        },
-      },
-    }
-  },
-}
-
-export default service

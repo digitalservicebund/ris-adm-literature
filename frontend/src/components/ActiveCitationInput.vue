@@ -13,7 +13,6 @@ import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
-import documentUnitService from '@/services/documentUnitService'
 import type { DocumentType } from '@/domain/documentType'
 
 const props = defineProps<{
@@ -33,7 +32,6 @@ const lastSavedModelValue = ref(new ActiveCitation({ ...props.modelValue }))
 const activeCitation = ref(new ActiveCitation({ ...props.modelValue }))
 
 const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>()
-const itemsPerPage = ref<number>(15)
 const isLoading = ref(false)
 
 const activeCitationType = computed({
@@ -72,35 +70,46 @@ const activeCitationDocumentType = computed({
 const searchResultsCurrentPage = ref<Page>()
 const searchResults = ref<SearchResults<RelatedDocumentation>>()
 
-async function search(pageNumber: number) {
+async function search() {
   isLoading.value = true
   const activeCitationRef = new ActiveCitation({
     ...activeCitation.value,
   })
 
-  if (
-    activeCitationRef.court != lastSearchInput.value.court ||
-    activeCitationRef.decisionDate != lastSearchInput.value.decisionDate ||
-    activeCitationRef.fileNumber != lastSearchInput.value.fileNumber ||
-    activeCitationRef.documentType != lastSearchInput.value.documentType
-  ) {
-    pageNumber = 0
-  }
-
   if (activeCitationRef.citationType) {
     delete activeCitationRef['citationType']
   }
 
-  const urlParams = window.location.pathname.split('/')
-  const documentNumberToExclude = urlParams[urlParams.indexOf('documentUnit') + 1]
-
-  const response = await documentUnitService.searchByRelatedDocumentation(activeCitationRef, {
-    ...(pageNumber != undefined ? { pg: pageNumber.toString() } : {}),
-    ...(itemsPerPage.value != undefined ? { sz: itemsPerPage.value.toString() } : {}),
-    ...(documentNumberToExclude != undefined
-      ? { documentNumber: documentNumberToExclude.toString() }
-      : {}),
-  })
+  const response = {
+    status: 200,
+    data: {
+      activeCitations: [
+        new ActiveCitation({
+          uuid: '123',
+          court: {
+            type: 'type1',
+            location: 'location1',
+            label: 'label1',
+          },
+          decisionDate: '2022-02-01',
+          documentType: {
+            abbreviation: 'VV',
+            name: 'Verwaltungsvorschrift',
+          },
+          fileNumber: 'test fileNumber1',
+        }),
+      ],
+      page: {
+        size: 1,
+        number: 0,
+        numberOfElements: 1,
+        totalElements: 20,
+        first: true,
+        last: false,
+        empty: false,
+      },
+    },
+  }
   if (response.data) {
     searchResultsCurrentPage.value = response.data.page
     searchResults.value = response.data.activeCitations.map((searchResult) => {
@@ -185,7 +194,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div @keyup.ctrl.enter="search(0)" class="flex flex-col gap-24">
+  <div @keyup.ctrl.enter="search" class="flex flex-col gap-24">
     <InputField
       id="activeCitationPredicate"
       v-slot="slotProps"
@@ -280,7 +289,7 @@ onMounted(() => {
             aria-label="Nach Entscheidung suchen"
             label="Suchen"
             size="small"
-            @click="search(0)"
+            @click="search"
           />
           <Button
             :disabled="activeCitation.isEmpty"
@@ -314,7 +323,7 @@ onMounted(() => {
       <Pagination
         navigation-position="bottom"
         :page="searchResultsCurrentPage"
-        @update-page="(page: number) => search(page)"
+        @update-page="(page: number) => search"
       >
         <SearchResultList
           :is-loading="isLoading"
