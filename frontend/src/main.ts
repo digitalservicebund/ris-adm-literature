@@ -28,9 +28,9 @@ if (import.meta.env.PROD) {
 const auth = useAuthentication()
 // TODO: use env to decide the vars
 await auth.configure({
-  url: import.meta.env.VITE_AUTH_URL || 'https://neuris.login.bare.id/auth',
-  clientId: import.meta.env.VITE_AUTH_CLIENT_ID || 'neuris-vwv-staging',
-  realm: import.meta.env.VITE_AUTH_REALM || 'development',
+  url: import.meta.env.VITE_AUTH_URL || 'http://localhost:8443',
+  clientId: import.meta.env.VITE_AUTH_CLIENT_ID || 'ris-vwv-local',
+  realm: import.meta.env.VITE_AUTH_REALM || 'ris',
 })
 app
   .use(createPinia())
