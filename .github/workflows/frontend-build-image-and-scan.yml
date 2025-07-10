@@ -10,6 +10,7 @@ on:
 
 jobs:
   frontend-build-image-and-scan:
+    environment: staging
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
