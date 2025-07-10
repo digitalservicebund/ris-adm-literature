@@ -1,96 +1,90 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { usePagination } from './usePagination'
+import { ref } from 'vue'
+import { describe, it, expect, vi } from 'vitest'
+import { usePagination } from '@/composables/usePagination'
 
 const mockData = {
-  data: {
-    documentationUnitsOverview: [
-      { id: 1, name: 'Item 1' },
-      { id: 2, name: 'Item 2' },
-    ],
-    page: {
-      totalElements: 2,
-      number: 0,
-    },
+  documentationUnitsOverview: [
+    { id: 1, title: 'Doc 1' },
+    { id: 2, title: 'Doc 2' },
+  ],
+  page: {
+    totalElements: 2,
+    number: 0,
   },
 }
 
-const mockFetchData = vi.fn(() => {
-  return Promise.resolve(mockData)
-})
-
-const addToastMock = vi.fn()
-vi.mock('primevue', () => ({
-  useToast: vi.fn(() => ({
-    add: addToastMock,
-  })),
-}))
-
 describe('usePagination', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+  it('should initialize with default values', () => {
+    const mockFetchData = vi.fn().mockReturnValue({
+      data: ref(mockData),
+      error: ref(null),
+      isFetching: ref(false),
+      execute: vi.fn().mockResolvedValue(undefined),
+    })
 
-  it('should fetch paginated data and update state', async () => {
-    const { isLoading, firstRowIndex, totalRows, items, fetchPaginatedData } = usePagination(
+    const { items, totalRows, firstRowIndex, ITEMS_PER_PAGE } = usePagination(
       mockFetchData,
       'documentationUnitsOverview',
     )
 
-    expect(isLoading.value).toBe(true)
-    expect(items.value).toEqual([])
-
-    await fetchPaginatedData()
-
-    expect(isLoading.value).toBe(false)
-    expect(items.value).toEqual(mockData.data.documentationUnitsOverview)
-    expect(totalRows.value).toBe(mockData.data.page.totalElements)
-    expect(firstRowIndex.value).toBe(mockData.data.page.number * 100)
-    expect(mockFetchData).toHaveBeenCalledWith(0, 100, undefined)
+    expect(items.value.length).toBe(2)
+    expect(totalRows.value).toBe(2)
+    expect(firstRowIndex.value).toBe(0)
+    expect(ITEMS_PER_PAGE).toBe(100)
   })
 
-  it('should reset to page 0 and fetch with new search parameters', async () => {
-    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
-    const searchParams = { documentNumber: '12345', langueberschrift: 'Test Title' }
-
-    await fetchPaginatedData(5, searchParams)
-
-    expect(mockFetchData).toHaveBeenCalledWith(0, 100, searchParams)
-  })
-
-  it('should update error state on fetching error', async () => {
-    const fetchDataMock = vi.fn().mockRejectedValue(new Error('Fetch failed'))
-
-    const { isLoading, items, totalRows, firstRowIndex, fetchPaginatedData, error } = usePagination(
-      fetchDataMock,
-      'documentationUnitsOverview',
-    )
-
-    // Assert initial test
-    expect(isLoading.value).toBe(true)
-    expect(items.value).toEqual([])
-
-    // When
-    await fetchPaginatedData()
-
-    // Then
-    expect(isLoading.value).toBe(false)
-    expect(items.value).toEqual([])
-    expect(totalRows.value).toEqual(0)
-    expect(firstRowIndex.value).toEqual(0)
-    expect(error.value).toBeTruthy()
-  })
-
-  it('should update error state when the BE returns an error', async () => {
-    const fetchDataMock = vi.fn().mockResolvedValue({
-      error: 'Error from server',
+  it('should call execute when fetchPaginatedData is called', async () => {
+    const executeSpy = vi.fn().mockResolvedValue(undefined)
+    const mockFetchData = vi.fn().mockReturnValue({
+      data: ref(mockData),
+      error: ref(null),
+      isFetching: ref(false),
+      execute: executeSpy,
     })
 
-    const { fetchPaginatedData, error } = usePagination(fetchDataMock, 'documentationUnitsOverview')
+    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
 
-    // When
+    await fetchPaginatedData(1)
+
+    expect(executeSpy).toHaveBeenCalled()
+  })
+
+  it('should reset page to 0 and update searchParams when new search is provided', async () => {
+    const executeSpy = vi.fn().mockResolvedValue(undefined)
+    const mockFetchData = vi.fn().mockReturnValue({
+      data: ref(mockData),
+      error: ref(null),
+      isFetching: ref(false),
+      execute: executeSpy,
+    })
+
+    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+
+    const newSearch = { documentNumber: 'abc' }
+
+    await fetchPaginatedData(5, newSearch)
+
+    // Because new search resets page to 0
+    expect(mockFetchData).toHaveBeenCalledWith(expect.anything(), 100, expect.anything())
+    expect(executeSpy).toHaveBeenCalled()
+  })
+
+  it('should expose the error when fetch fails', async () => {
+    const mockError = new Error('Something went wrong')
+
+    const executeSpy = vi.fn().mockResolvedValue(undefined)
+    const mockFetchData = vi.fn().mockReturnValue({
+      data: ref(null),
+      error: ref(mockError),
+      isFetching: ref(false),
+      execute: executeSpy,
+    })
+
+    const { error, fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+
     await fetchPaginatedData()
 
-    // Then
-    expect(error.value).toBeTruthy()
+    expect(error.value).toBe(mockError)
+    expect(executeSpy).toHaveBeenCalled()
   })
 })

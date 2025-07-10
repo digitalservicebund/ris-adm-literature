@@ -1,4 +1,5 @@
-import { computed, ref } from 'vue'
+import type { UseFetchReturn } from '@vueuse/core'
+import { computed, ref, type Ref } from 'vue'
 
 /**
  * usePagination
@@ -9,16 +10,16 @@ import { computed, ref } from 'vue'
  * @template T - The type of the data items being paginated.
  * @template S - The type of the search parameters object used for filtering.
  *
- * @param {(page: number, itemsPerPage: number, searchParams?: S) => Promise<any>} fetchData
- *   Async function to fetch paginated data.
+ * @param {(page: Ref<number>, itemsPerPage: number, searchParams?: Ref<S>) => UseFetchReturn<any>} fetchData
+ *   Function to fetch paginated data.
  *   It receives the page number, items per page, and the current search parameters.
- *   Must return a Promise that resolves with an object containing either `data` or `error`.
+ *   Must return a UseFetchReturn object with `data` and `error` refs.
  *
  * @param {string} paginatedResponseKey
  *   The key in the response `data` object that contains the array of items (e.g., 'documents').
  *
  * @returns {{
- *   isLoading: Ref<boolean>,
+ *   isFetching: Ref<boolean>,
  *   firstRowIndex: ComputedRef<number>,
  *   totalRows: Ref<number>,
  *   items: Ref<T[]>,
@@ -41,47 +42,37 @@ import { computed, ref } from 'vue'
  * }
  */
 export function usePagination<T, S>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchData: (page: number, itemsPerPage: number, searchParams?: S) => Promise<any>,
+  fetchData: (
+    page: Ref<number>,
+    itemsPerPage: number,
+    searchParams: Ref<S | undefined>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => UseFetchReturn<any>,
   paginatedResponseKey: string,
 ) {
   const ITEMS_PER_PAGE = 100
-  const isLoading = ref(true)
-  const error = ref<Error | null>(null)
   const pageNumber = ref<number>(0)
-  const totalRows = ref<number>(0)
-  const items = ref<T[]>([])
   const searchParams = ref<S | undefined>()
+
+  const { data, error, isFetching, execute } = fetchData(pageNumber, ITEMS_PER_PAGE, searchParams)
+
+  const items = computed<T[]>(() => data.value?.[paginatedResponseKey] || [])
+  const totalRows = computed<number>(() => data.value?.page?.totalElements ?? 0)
   const firstRowIndex = computed<number>(() => pageNumber.value * ITEMS_PER_PAGE)
 
   const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
-    isLoading.value = true
-    error.value = null
-
     if (newSearch !== undefined) {
       searchParams.value = newSearch
       page = 0
+    } else {
+      pageNumber.value = page
     }
 
-    try {
-      const { data, error: serverError } = await fetchData(page, ITEMS_PER_PAGE, searchParams.value)
-
-      if (serverError) {
-        error.value = serverError
-      } else if (data) {
-        items.value = data[paginatedResponseKey]
-        totalRows.value = data.page.totalElements
-        pageNumber.value = data.page.number
-      }
-    } catch (err) {
-      error.value = err as Error
-    } finally {
-      isLoading.value = false
-    }
+    await execute()
   }
 
   return {
-    isLoading,
+    isFetching,
     firstRowIndex,
     totalRows,
     items,

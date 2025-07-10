@@ -1,194 +1,150 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { type DocumentUnit } from '@/domain/documentUnit'
-import errorMessages from '@/i18n/errors.json'
-import documentUnitService from '@/services/documentUnitService'
-import { type ServiceResponse } from '@/services/httpClient'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
-
-vi.mock('@/services/documentUnitService')
+import { ref } from 'vue'
 
 describe('useDocumentUnitStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-  })
-  afterEach(() => {
-    vi.resetAllMocks()
+    vi.resetModules()
   })
 
-  describe('loadDocumentUnit', () => {
-    it('loads a document unit successfully', async () => {
-      // given
-      const documentUnit: DocumentUnit = {
-        id: '123',
-        documentNumber: 'KSNR054920707',
-        references: [],
-        fieldsOfLaw: [],
-      }
-      const mockDocumentUnitResponse: DocumentUnitResponse = {
-        id: '123',
-        documentNumber: 'KSNR054920707',
-        json: documentUnit,
-      }
-
-      const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
-        status: 200,
-        data: mockDocumentUnitResponse,
-        error: undefined,
-      }
-
-      const documentUnitServiceMock = vi
-        .spyOn(documentUnitService, 'getByDocumentNumber')
-        .mockResolvedValueOnce(serviceResponse)
-
-      const store = useDocumentUnitStore()
-
-      // when
-      const response = await store.loadDocumentUnit('123')
-
-      // then
-      expect(documentUnitServiceMock).toHaveBeenCalledOnce()
-      expect(response).toEqual(serviceResponse)
-      expect(store.documentUnit).toEqual(documentUnit)
-    })
-
-    it('handles failure to load a document unit', async () => {
-      // given
-      const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
-        status: 400,
-        error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
-      }
-
-      const documentUnitServiceMock = vi
-        .spyOn(documentUnitService, 'getByDocumentNumber')
-        .mockResolvedValueOnce(serviceResponse)
-
-      const store = useDocumentUnitStore()
-
-      // when
-      const response = await store.loadDocumentUnit('123')
-
-      // then
-      expect(documentUnitServiceMock).toHaveBeenCalledOnce()
-      expect(response).toEqual(serviceResponse)
-      expect(store.documentUnit).toBeUndefined()
-    })
-  })
-
-  it('updates a document unit successfully', async () => {
+  it('loads a document unit successfully', async () => {
     // given
-    const documentUnitForResponse: DocumentUnit = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      references: [],
-      fieldsOfLaw: [],
-    }
-    const mockDocumentUnitResponse: DocumentUnitResponse = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      json: documentUnitForResponse,
-    }
-    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
-      status: 200,
-      data: mockDocumentUnitResponse,
-      error: undefined,
-    }
-    vi.spyOn(documentUnitService, 'getByDocumentNumber').mockResolvedValueOnce(serviceResponse)
+    const mockData = { documentNumber: '123', title: 'Sample Doc' }
+    const execute = vi.fn().mockResolvedValue(undefined)
+
+    vi.doMock('@/services/documentUnitService', () => ({
+      useGetDocUnit: vi.fn().mockReturnValue({
+        data: ref(mockData),
+        error: ref(null),
+        execute,
+      }),
+    }))
+
+    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const store = useDocumentUnitStore()
+
+    // when
+    await store.loadDocumentUnit('123')
+
+    // then
+    expect(store.documentUnit).toEqual(mockData)
+    expect(store.error).toBeNull()
+    expect(store.isLoading).toBe(false)
+    expect(execute).toHaveBeenCalled()
+  })
+
+  it('sets error when loading fails', async () => {
+    // given
+    const fetchError = new Error('Failed to fetch')
+    const execute = vi.fn().mockResolvedValue(undefined)
+
+    vi.doMock('@/services/documentUnitService', () => ({
+      useGetDocUnit: vi.fn().mockReturnValue({
+        data: ref(null),
+        error: ref(fetchError),
+        execute,
+      }),
+    }))
+
+    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const store = useDocumentUnitStore()
+
+    // when
+    await store.loadDocumentUnit('wrong-id')
+
+    // then
+    expect(store.documentUnit).toBeNull()
+    expect(store.error).toEqual(fetchError)
+    expect(store.isLoading).toBe(false)
+  })
+
+  it('updates document unit successfully', async () => {
+    // given
+    const originalDoc = { documentNumber: '123', title: 'Original' }
+    const updatedDoc = { documentNumber: '123', title: 'Updated' }
+    const execute = vi.fn().mockResolvedValue(undefined)
+
+    vi.doMock('@/services/documentUnitService', () => ({
+      useGetDocUnit: vi.fn().mockReturnValue({
+        data: ref(originalDoc),
+        error: ref(null),
+        execute: vi.fn().mockResolvedValue(undefined),
+      }),
+      usePutDocUnit: vi.fn().mockReturnValue({
+        data: ref(updatedDoc),
+        error: ref(null),
+        statusCode: ref(200),
+        execute,
+      }),
+    }))
+
+    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
     const store = useDocumentUnitStore()
     await store.loadDocumentUnit('123')
-    const documentUnitServiceMock = vi
-      .spyOn(documentUnitService, 'update')
-      .mockResolvedValueOnce(serviceResponse)
 
     // when
-    const response = await store.updateDocumentUnit()
+    const success = await store.updateDocumentUnit()
 
     // then
-    expect(documentUnitServiceMock).toHaveBeenCalledOnce()
-    expect(response).toEqual(serviceResponse)
-    expect(store.documentUnit).toEqual(documentUnitForResponse)
+    expect(success).toBe(true)
+    expect(store.documentUnit).toEqual(updatedDoc)
+    expect(store.error).toBeNull()
+    expect(store.isLoading).toBe(false)
   })
 
-  it('updates a document unit fails', async () => {
+  it('handles update error', async () => {
     // given
-    const documentUnit: DocumentUnit = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      references: [],
-      fieldsOfLaw: [],
-    }
-    const mockDocumentUnitResponse: DocumentUnitResponse = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      json: documentUnit,
-    }
-    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
-      status: 200,
-      data: mockDocumentUnitResponse,
-      error: undefined,
-    }
-    vi.spyOn(documentUnitService, 'getByDocumentNumber').mockResolvedValueOnce(serviceResponse)
+    const originalDoc = { documentNumber: '123', title: 'Original' }
+    const putError = new Error('PUT failed')
+    const execute = vi.fn().mockResolvedValue(undefined)
+
+    vi.doMock('@/services/documentUnitService', () => ({
+      useGetDocUnit: vi.fn().mockReturnValue({
+        data: ref(originalDoc),
+        error: ref(null),
+        execute: vi.fn().mockResolvedValue(undefined),
+      }),
+      usePutDocUnit: vi.fn().mockReturnValue({
+        data: ref(null),
+        error: ref(putError),
+        statusCode: ref(200),
+        execute,
+      }),
+    }))
+
+    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
     const store = useDocumentUnitStore()
     await store.loadDocumentUnit('123')
-    const documentUnitServiceMock = vi.spyOn(documentUnitService, 'update').mockResolvedValueOnce({
-      status: 400,
-      data: undefined,
-      error: { title: 'Error' },
-    })
 
     // when
-    const response = await store.updateDocumentUnit()
+    const success = await store.updateDocumentUnit()
 
     // then
-    expect(documentUnitServiceMock).toHaveBeenCalledOnce()
-    expect(response.error?.title).toEqual('Dokumentationseinheit konnte nicht aktualisiert werden.')
+    expect(success).toBe(false)
+    expect(store.documentUnit).toEqual(originalDoc)
+    expect(store.error).toEqual(putError)
+    expect(store.isLoading).toBe(false)
   })
 
-  it('updates a document unit fails because access not allowed', async () => {
+  it('clears document unit on unload', async () => {
     // given
-    const documentUnit: DocumentUnit = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      references: [],
-      fieldsOfLaw: [],
-    }
-    const mockDocumentUnitResponse: DocumentUnitResponse = {
-      id: '123',
-      documentNumber: 'KSNR054920707',
-      json: documentUnit,
-    }
-    const serviceResponse: ServiceResponse<DocumentUnitResponse> = {
-      status: 200,
-      data: mockDocumentUnitResponse,
-      error: undefined,
-    }
-    vi.spyOn(documentUnitService, 'getByDocumentNumber').mockResolvedValueOnce(serviceResponse)
+    vi.doMock('@/services/documentUnitService', () => ({
+      useGetDocUnit: vi.fn().mockReturnValue({
+        data: ref({ documentNumber: 'abc' }),
+        error: ref(null),
+        execute: vi.fn().mockResolvedValue(undefined),
+      }),
+    }))
+
+    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
     const store = useDocumentUnitStore()
-    await store.loadDocumentUnit('123')
-    const documentUnitServiceMock = vi.spyOn(documentUnitService, 'update').mockResolvedValueOnce({
-      status: 403,
-      data: undefined,
-      error: { title: 'Forbidden' },
-    })
+    await store.loadDocumentUnit('abc')
 
     // when
-    const response = await store.updateDocumentUnit()
+    store.unloadDocumentUnit()
 
     // then
-    expect(documentUnitServiceMock).toHaveBeenCalledOnce()
-    expect(response.error?.title).toEqual('Keine Berechtigung')
-  })
-
-  it('updates a document unit fails due to empty store', async () => {
-    // given
-    const store = useDocumentUnitStore()
-
-    // when
-    const response = await store.updateDocumentUnit()
-
-    // then
-    expect(response.error?.title).toBe('Dokumentationseinheit konnte nicht geladen werden.')
-    expect(store.documentUnit).toBeUndefined()
+    expect(store.documentUnit).toBeNull()
   })
 })
