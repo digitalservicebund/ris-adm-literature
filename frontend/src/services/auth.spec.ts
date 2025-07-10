@@ -41,6 +41,7 @@ describe('auth', () => {
   it('replaces an existing instance when configuring again', async () => {
     const { useAuthentication } = await import('./auth.ts')
     const { configure } = useAuthentication()
+    console.log('AUTH URL:' + import.meta.env.VITE_AUTH_URL)
 
     await configure({
       clientId: 'test-client-1',

@@ -32,7 +32,6 @@ await auth.configure({
   clientId: import.meta.env.VITE_AUTH_CLIENT_ID || 'ris-vwv-local',
   realm: import.meta.env.VITE_AUTH_REALM || 'ris',
 })
-console.log(import.meta.env.VITE_AUTH_URL)
 app
   .use(createPinia())
   .use(PrimeVue, {
