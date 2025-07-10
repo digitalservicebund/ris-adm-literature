@@ -61,11 +61,10 @@ export function usePagination<T, S>(
   const firstRowIndex = computed<number>(() => pageNumber.value * ITEMS_PER_PAGE)
 
   const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
+    pageNumber.value = page
+
     if (newSearch !== undefined) {
       searchParams.value = newSearch
-      page = 0
-    } else {
-      pageNumber.value = page
     }
 
     await execute()

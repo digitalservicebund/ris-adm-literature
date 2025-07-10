@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartPage from './routes/StartPage.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
-import DocumentUnitNew from './routes/documentUnit/new.vue'
 import DocumentUnitWrapper from './routes/documentUnit/[documentNumber].vue'
 import AbgabePage from './routes/documentUnit/[documentNumber]/AbgabePage.vue'
 import RubrikenPage from './routes/documentUnit/[documentNumber]/RubrikenPage.vue'
 import FundstellenPage from '@/routes/documentUnit/[documentNumber]/FundstellenPage.vue'
+import New from '@/routes/documentUnit/new.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -28,7 +28,7 @@ const router = createRouter({
     {
       path: '/documentUnit/new',
       name: 'documentUnit-new',
-      component: DocumentUnitNew,
+      component: New,
     },
     {
       path: '/documentUnit/:documentNumber',
