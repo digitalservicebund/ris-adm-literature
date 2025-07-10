@@ -13,9 +13,9 @@ RUN npm install
 COPY /frontend/. .
 
 # build app for production with minification
-RUN AUTH_URL=AUTH_URL \
-    AUTH_CLIENT_ID=AUTH_CLIENT_ID \
-    AUTH_REALM=AUTH_REALM \
+RUN VITE_AUTH_URL=VITE_AUTH_URL \
+    VITE_AUTH_CLIENT_ID=VITE_AUTH_CLIENT_ID \
+    VITE_AUTH_REALM=VITE_AUTH_REALM \
     npm run build
 
 EXPOSE 5173
