@@ -1,5 +1,9 @@
 FROM node:23.11.0
 
+ARG VITE_AUTH_URL
+ARG VITE_AUTH_CLIENT_ID
+ARG VITE_AUTH_REALM
+
 # make the 'app' folder the current working directory
 WORKDIR /frontend
 
@@ -19,4 +23,11 @@ RUN VITE_AUTH_URL=$VITE_AUTH_URL \
     npm run build
 
 EXPOSE 5173
-CMD [ "npm", "run", "dev", "--", "--host" ]
+
+FROM nginx:1.27-alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
