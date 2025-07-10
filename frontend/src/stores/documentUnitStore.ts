@@ -1,62 +1,60 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { type DocumentUnit } from '@/domain/documentUnit'
-import documentUnitService from '@/services/documentUnitService'
-import type { FailedValidationServerResponse, ServiceResponse } from '@/services/httpClient'
-import errorMessages from '@/i18n/errors.json'
-import { type DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
+import type { DocumentUnit } from '@/domain/documentUnit'
+import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
 
 export const useDocumentUnitStore = defineStore('docunitStore', () => {
-  const documentUnit = ref<DocumentUnit | undefined>(undefined)
+  const documentUnit = ref<DocumentUnit | null>(null)
+  const isLoading = ref(false)
+  const error = ref<Error | null>(null)
 
-  async function loadDocumentUnit(
-    documentNumber: string,
-  ): Promise<ServiceResponse<DocumentUnitResponse>> {
-    const response = await documentUnitService.getByDocumentNumber(documentNumber)
-    if (response.data) {
-      documentUnit.value = response.data.json
+  async function loadDocumentUnit(documentNumber: string): Promise<void> {
+    isLoading.value = true
+    error.value = null
+
+    const { data, error: fetchError, execute } = useGetDocUnit(documentNumber)
+    await execute()
+
+    if (fetchError.value) {
+      error.value = fetchError.value
+      documentUnit.value = null
     } else {
-      documentUnit.value = undefined
+      documentUnit.value = data.value ?? null
     }
-    return response
+
+    isLoading.value = false
   }
 
-  async function unloadDocumentUnit(): Promise<void> {
-    documentUnit.value = undefined
+  async function updateDocumentUnit(): Promise<boolean> {
+    if (!documentUnit.value) return false
+
+    isLoading.value = true
+    error.value = null
+
+    const { data, error: putError, statusCode, execute } = usePutDocUnit(documentUnit.value)
+    await execute()
+
+    if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
+      documentUnit.value = data.value
+      isLoading.value = false
+      return true
+    }
+
+    error.value = putError.value || new Error('Update failed')
+    isLoading.value = false
+    return false
   }
 
-  async function updateDocumentUnit(): Promise<
-    ServiceResponse<DocumentUnitResponse | FailedValidationServerResponse>
-  > {
-    if (!documentUnit.value) {
-      return {
-        status: 404,
-        data: undefined,
-        error: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED,
-      }
-    }
-
-    const response = await documentUnitService.update(documentUnit.value)
-
-    if (response.status === 200) {
-      documentUnit.value = (response.data as DocumentUnitResponse).json
-    } else {
-      return {
-        status: response.status,
-        data: undefined,
-        error:
-          response.status === 403
-            ? errorMessages.NOT_ALLOWED
-            : errorMessages.DOCUMENT_UNIT_UPDATE_FAILED,
-      }
-    }
-    return response
+  function unloadDocumentUnit() {
+    documentUnit.value = null
   }
 
   return {
     documentUnit,
+    isLoading,
+    error,
     loadDocumentUnit,
-    unloadDocumentUnit,
     updateDocumentUnit,
+    unloadDocumentUnit,
   }
 })
