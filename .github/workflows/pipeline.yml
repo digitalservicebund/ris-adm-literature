@@ -85,6 +85,7 @@ jobs:
     secrets: inherit
 
   frontend-build-image-and-scan:
+    environment: staging
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
     secrets: inherit
     permissions:
