@@ -76,9 +76,19 @@ jobs:
         timeout-minutes: 5
         run: |
           until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do
-            echo "Waiting for backend to be fully up..."
-            sleep 0.1
+            echo "Waiting for backend..."
+            sleep 1
           done
+        continue-on-error: true
+      - name: Show backend logs on failure 🪵
+        if: steps.wait-for-backend.outcome == 'failure'
+        working-directory: ./backend
+        run: |
+          echo "Backend failed to start. Displaying logs:"
+          cat backend.log
+      - name: Fail workflow if backend did not start
+        if: steps.wait-for-backend.outcome == 'failure'
+        run: exit 1
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
