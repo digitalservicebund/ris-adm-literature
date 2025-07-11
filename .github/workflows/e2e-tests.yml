@@ -79,9 +79,14 @@ jobs:
             echo "Waiting for backend to be fully up..."
             sleep 0.1
           done
+      - name: Run authentication setup
+        working-directory: ./frontend
+        run: npx playwright test --project setup
+      - name: Create test data file
+        working-directory: ./frontend
+        run: npx playwright test --project "seed data"
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
-        continue-on-error: true
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
