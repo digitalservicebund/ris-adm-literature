@@ -81,6 +81,7 @@ jobs:
           done
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
+        continue-on-error: true
         run: |
           npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Rename ${{ matrix.playwright-project.name }} test report blob

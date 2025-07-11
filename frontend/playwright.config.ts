@@ -1,6 +1,8 @@
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
+const authFile = './e2e/storageState.json'
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -9,7 +11,6 @@ export default defineConfig({
   fullyParallel: true, // ignored in CI, as workers are 1, there
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
-  globalSetup: './e2e/global-setup.ts',
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -31,6 +32,7 @@ export default defineConfig({
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    storageState: authFile,
     viewport: { width: 1280, height: 720 },
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 5 * 1000,
@@ -47,24 +49,37 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'setup',
+      testMatch: 'auth-setup.ts',
+    },
+    {
+      dependencies: ['setup'],
+      name: 'seed data',
+      testMatch: 'seed-data.ts',
+    },
+    {
+      dependencies: ['setup', 'seed data'],
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
       },
     },
     {
+      dependencies: ['setup', 'seed data'],
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
       },
     },
     {
+      dependencies: ['setup', 'seed data'],
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
       },
     },
     {
+      dependencies: ['setup', 'seed data'],
       name: 'msedge', // is also using the Chromium engine, but may behave differently still
       use: {
         ...devices['Desktop Edge'],
