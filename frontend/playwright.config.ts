@@ -32,7 +32,6 @@ export default defineConfig({
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    storageState: authFile,
     viewport: { width: 1280, height: 720 },
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 5 * 1000,
@@ -51,20 +50,21 @@ export default defineConfig({
     {
       name: 'setup',
       testMatch: 'auth-setup.ts',
-      use: {
-        storageState: undefined,
-      },
     },
     {
       dependencies: ['setup'],
       name: 'seed data',
       testMatch: 'seed-data.ts',
+      use: {
+        storageState: authFile,
+      },
     },
     {
       dependencies: ['setup', 'seed data'],
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: authFile,
       },
     },
     {
@@ -72,6 +72,7 @@ export default defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
+        storageState: authFile,
       },
     },
     {
@@ -79,6 +80,7 @@ export default defineConfig({
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
+        storageState: authFile,
       },
     },
     {
@@ -86,6 +88,7 @@ export default defineConfig({
       name: 'msedge', // is also using the Chromium engine, but may behave differently still
       use: {
         ...devices['Desktop Edge'],
+        storageState: authFile,
       },
     },
   ],
