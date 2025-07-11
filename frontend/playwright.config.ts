@@ -75,14 +75,17 @@ export default defineConfig({
         storageState: authFile,
       },
     },
-    {
+    // Deactivated since storageState doesn't work with Safari:
+    // https://github.com/microsoft/playwright/issues/20301
+    // https://github.com/microsoft/playwright/issues/35712
+    /*    {
       dependencies: ['setup', 'seed data'],
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
         storageState: authFile,
       },
-    },
+    },*/
     {
       dependencies: ['setup', 'seed data'],
       name: 'msedge', // is also using the Chromium engine, but may behave differently still
