@@ -257,7 +257,7 @@ test.describe('FundstellenPage - Bestandsdaten', () => {
       await page.goto('/documentUnit/KSNR999999999')
 
       // then
-      expect(page.url().includes('/documentUnit/KSNR999999999/fundstellen')).toBeTruthy()
+      await expect(page).toHaveURL(/\/documentUnit\/KSNR999999999\/fundstellen/)
     },
   )
 })
