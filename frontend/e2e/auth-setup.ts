@@ -6,15 +6,12 @@ const baseURL = 'http://localhost:5173'
 async function performLogin(page: Page) {
   await page.goto(baseURL)
 
-  const loginForm = page.getByLabel('Username or email')
-  const mainPageElement = page.getByText('Neue Dokumentationseinheit')
+  const loginFormLocator = page.getByLabel('Username or email')
+  const mainPageLocator = page.getByText('Neue Dokumentationseinheit')
 
-  await Promise.race([
-    loginForm.waitFor({ state: 'visible' }),
-    mainPageElement.waitFor({ state: 'visible' }),
-  ])
+  await expect(mainPageLocator.or(loginFormLocator)).toBeVisible()
 
-  if (await loginForm.isVisible()) {
+  if (await loginFormLocator.isVisible()) {
     console.log('Login form detected. Performing UI login...')
     await page.getByRole('textbox', { name: 'Username or email' }).fill('test')
     await page.getByRole('textbox', { name: 'Password' }).fill('test')
@@ -23,7 +20,7 @@ async function performLogin(page: Page) {
     console.log('Already logged in. Skipping UI login.')
   }
 
-  await expect(mainPageElement).toBeVisible({ timeout: 15000 })
+  await expect(mainPageLocator).toBeVisible()
 }
 
 setup('authenticate', async ({ page }) => {
