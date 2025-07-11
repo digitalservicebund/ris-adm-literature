@@ -91,80 +91,38 @@ SELECT gen_random_uuid(), created.created_documentation_unit_id, '1. Bekanntmach
 ON conflict do nothing;
 
 -- Insert specific documentation units for filtering tests
-WITH created_doc1 AS (
-    INSERT INTO documentation_unit (id, document_number, xml)
-        VALUES (
-                   gen_random_uuid(),
-                   'KSNR000000001',
-                   '<?xml version="1.0" encoding="UTF-8"?>
-                   <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/metadata/">
-                     <akn:doc name="alpha-doc">
-                       <akn:meta>
-                         <akn:proprietary>
-                           <ris:metadata>
-                             <ris:dateToQuoteList>
-                               <ris:dateToQuoteEntry>2024-06-17</ris:dateToQuoteEntry>
-                               <ris:dateToQuoteEntry>1950-01-01</ris:dateToQuoteEntry>
-                             </ris:dateToQuoteList>
-                           </ris:metadata>
-                         </akn:proprietary>
-                         <akn:analysis>
-                           <akn:otherReferences>
-                             <akn:implicitReference shortForm="BGB" showAs="BGB 123" />
-                             <akn:implicitReference shortForm="VWV" showAs="VWV xyz" />
-                           </akn:otherReferences>
-                         </akn:analysis>
-                       </akn:meta>
-                       <akn:preface>
-                         <akn:longTitle>
-                           <akn:block name="longTitle">Alpha Global Setup Document</akn:block>
-                         </akn:longTitle>
-                       </akn:preface>
-                     </akn:doc>
-                   </akn:akomaNtoso>'
-               )
-        ON CONFLICT (document_number) DO NOTHING
-        RETURNING id
-)
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT gen_random_uuid(), created_doc1.id, 'Alpha Global Setup Document', 'BGB 123$µµµµµ$VWV xyz', '2024-06-17$µµµµµ$1950-01-01'
-FROM created_doc1
-ON CONFLICT (documentation_unit_id) DO NOTHING;
 
-WITH created_doc2 AS (
-    INSERT INTO documentation_unit (id, document_number, xml)
-        VALUES (
-                   gen_random_uuid(),
-                   'KSNR000000002',
-                   '<?xml version="1.0" encoding="UTF-8"?>
-                   <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/metadata/">
-                     <akn:doc name="beta-doc">
-                       <akn:meta>
-                         <akn:proprietary>
-                           <ris:metadata>
-                             <ris:dateToQuoteList>
-                               <ris:dateToQuoteEntry>2024-06-18</ris:dateToQuoteEntry>
-                             </ris:dateToQuoteList>
-                           </ris:metadata>
-                         </akn:proprietary>
-                         <akn:analysis>
-                           <akn:otherReferences>
-                             <akn:implicitReference shortForm="BGB" showAs="BGB 456" />
-                           </akn:otherReferences>
-                         </akn:analysis>
-                       </akn:meta>
-                       <akn:preface>
-                         <akn:longTitle>
-                           <akn:block name="longTitle">Beta Global Setup Document</akn:block>
-                         </akn:longTitle>
-                       </akn:preface>
-                     </akn:doc>
-                   </akn:akomaNtoso>'
-               )
-        ON CONFLICT (document_number) DO NOTHING
-        RETURNING id
-)
+INSERT INTO documentation_unit (id, document_number, xml)
+SELECT gen_random_uuid(), 'KSNR000000001', ''
+WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000001');
+
 INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT gen_random_uuid(), created_doc2.id, 'Beta Global Setup Document', 'BGB 456', '2024-06-18'
-FROM created_doc2
-ON CONFLICT (documentation_unit_id) DO NOTHING;
+SELECT
+    gen_random_uuid(),
+    du.id,
+    'Alpha Global Setup Document',
+    'BGB 123$µµµµµ$VWV xyz',
+    '2024-06-17$µµµµµ$1950-01-01'
+FROM documentation_unit du
+WHERE du.document_number = 'KSNR000000001'
+  AND NOT EXISTS (
+    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
+);
+
+
+INSERT INTO documentation_unit (id, document_number, xml)
+SELECT gen_random_uuid(), 'KSNR000000002', ''
+WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000002');
+
+INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+SELECT
+    gen_random_uuid(),
+    du.id,
+    'Beta Global Setup Document',
+    'BGB 456',
+    '2024-06-18'
+FROM documentation_unit du
+WHERE du.document_number = 'KSNR000000002'
+  AND NOT EXISTS (
+    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
+);
