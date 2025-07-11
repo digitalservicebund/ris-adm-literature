@@ -73,6 +73,9 @@ jobs:
             echo "Waiting for backend to be fully up..."
             sleep 0.1
           done
+      - name: Run Playwright setup and seed data
+        working-directory: ./frontend
+        run: npx playwright test --project=setup --project="seed data"
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
