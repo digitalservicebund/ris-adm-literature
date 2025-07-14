@@ -220,15 +220,9 @@ describe('FieldOfLawTree', () => {
 
   it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated)', async () => {
     vi.spyOn(window, 'fetch')
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(childrenAnParentFixture), { status: 200 })),
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(rootFixture), { status: 200 })),
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(pr0501Fixture), { status: 200 })),
-      )
+      .mockResolvedValueOnce(new Response(JSON.stringify(childrenAnParentFixture), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify(rootFixture), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify(pr0501Fixture), { status: 200 }))
 
     renderComponent({
       nodeOfInterest: {
@@ -257,15 +251,9 @@ describe('FieldOfLawTree', () => {
 
   it('Node of interest is set and corresponding nodes are opened in the tree (other nodes truncated) - when root child node is collapsed all other root children shall be loaded', async () => {
     vi.spyOn(window, 'fetch')
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(childrenAnParentFixture), { status: 200 })),
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(rootFixture), { status: 200 })),
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(pr0501Fixture), { status: 200 })),
-      )
+      .mockResolvedValueOnce(new Response(JSON.stringify(childrenAnParentFixture), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify(rootFixture), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify(pr0501Fixture), { status: 200 }))
 
     // given
     const { rerender, user } = renderComponent({

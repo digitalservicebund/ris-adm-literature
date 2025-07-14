@@ -133,9 +133,9 @@ describe('FieldsOfLaw', () => {
   })
 
   it('Lists search results', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(
-      new Response(JSON.stringify(searchResultsFixture), { status: 200 }),
-    )
+    const fetchSpy = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify(searchResultsFixture), { status: 200 }))
 
     // given
     const { user } = renderComponent()
@@ -144,11 +144,22 @@ describe('FieldsOfLaw', () => {
     await user.click(screen.getByRole('button', { name: 'Sachgebiete hinzufügen' }))
     await user.click(screen.getByRole('radio', { name: 'Sachgebietsuche auswählen' }))
     await user.type(screen.getByLabelText('Sachgebietskürzel'), 'PR-05')
+    await user.type(
+      screen.getByLabelText('Sachgebietsbezeichnung'),
+      'Beendigung der Phantasieverhältnisse',
+    )
+    await user.type(screen.getByLabelText('Sachgebietsnorm'), '§ 99')
     await user.click(screen.getByRole('button', { name: 'Sachgebietssuche ausführen' }))
 
     // then
     await waitFor(() => {
       expect(screen.getByText('Beendigung der Phantasieverhältnisse')).toBeInTheDocument()
+    })
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledWith(
+        '/api/lookup-tables/fields-of-law?pageNumber=0&pageSize=10&identifier=PR-05&text=Beendigung+der+Phantasieverh%C3%A4ltnisse&norm=%C2%A7+99',
+        expect.anything(),
+      )
     })
   })
 
