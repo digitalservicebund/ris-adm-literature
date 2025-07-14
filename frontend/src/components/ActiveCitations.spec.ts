@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeAll, afterAll } from 'vitest'
+import { describe, expect, it, beforeAll, afterAll, beforeEach, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/ActiveCitations.vue'
@@ -7,29 +7,10 @@ import { type CitationType } from '@/domain/citationType'
 import { type DocumentUnit } from '@/domain/documentUnit'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 import { createTestingPinia } from '@pinia/testing'
-import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import type { Court } from '@/domain/court'
 import type { DocumentType } from '@/domain/documentType'
-
-const server = setupServer(
-  http.get('/api/lookup-tables/document-types', () =>
-    HttpResponse.json({
-      documentTypes: [
-        {
-          abbreviation: 'VE',
-          name: 'Verwaltungsvereinbarung',
-        },
-      ],
-    }),
-  ),
-)
-
-const serverError = setupServer(
-  http.get('/api/lookup-tables/document-types', () => HttpResponse.error()),
-)
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
@@ -98,15 +79,29 @@ function generateActiveCitation(options?: {
 
 describe('active citations', () => {
   beforeAll(() => {
-    server.listen()
     config.global.stubs = {
       InputMask: InputText,
     }
   })
 
   afterAll(() => {
-    server.close()
     config.global.stubs = {}
+  })
+
+  beforeEach(() => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          documentTypes: [
+            {
+              abbreviation: 'VE',
+              name: 'Verwaltungsvereinbarung',
+            },
+          ],
+        }),
+        { status: 200 },
+      ),
+    )
   })
 
   it('renders empty active citation in edit mode, when no activeCitations in list', async () => {
@@ -436,26 +431,23 @@ describe('active citations', () => {
     expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
   })
 
-  describe('keyboard navigation', () => {
-    it('should copy text of active citation summary', async () => {
-      const { user } = renderComponent([generateActiveCitation()])
-      const copyButton = screen.getByTestId('copy-summary')
-      await fireEvent.focus(copyButton)
-      await user.type(copyButton, '{enter}')
+  it('should copy text of active citation summary', async () => {
+    const { user } = renderComponent([generateActiveCitation()])
+    const copyButton = screen.getByTestId('copy-summary')
+    await fireEvent.focus(copyButton)
+    await user.type(copyButton, '{enter}')
 
-      // Read from the stub clipboard
-      const clipboardText = await navigator.clipboard.readText()
+    // Read from the stub clipboard
+    const clipboardText = await navigator.clipboard.readText()
 
-      expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
-    })
+    expect(clipboardText).toBe('Änderung, label1, 01.02.2022, test fileNumber, documentType1')
   })
 })
 
 describe('active citations errors', () => {
-  beforeAll(() => serverError.listen())
-  afterAll(() => serverError.close())
-
   it('do not show error messages when endpoint for document-type has http error', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch error'))
+
     const { user } = renderComponent([generateActiveCitation()])
 
     const itemHeader = screen.getByTestId('list-entry-0')

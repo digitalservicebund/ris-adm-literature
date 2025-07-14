@@ -1,10 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import Reference from '@/domain/reference.ts'
-import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
 import { userEvent } from '@testing-library/user-event'
 
 const items = [
@@ -37,24 +35,6 @@ const paginatedLegalPeriodicals = {
   empty: false,
 }
 
-const server = setupServer(
-  http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
-    const searchTerm = new URL(request.url).searchParams.get('searchTerm')
-    const filteredItems = searchTerm
-      ? items.filter(
-          (item) =>
-            item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
-      : items
-
-    return HttpResponse.json({
-      legalPeriodicals: filteredItems,
-      paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: filteredItems },
-    })
-  }),
-)
-
 function renderComponent(
   options: {
     modelValue?: Reference
@@ -73,12 +53,22 @@ function renderComponent(
 const debounceTimeout = 200
 
 describe('DocumentUnitReferenceInput', () => {
-  beforeAll(() => server.listen())
-  afterAll(() => server.close())
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-  beforeEach(() => vi.useFakeTimers())
+
+  beforeEach(() => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          legalPeriodicals: items,
+          paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: items },
+        }),
+        { status: 200 },
+      ),
+    )
+    vi.useFakeTimers()
+  })
+
   afterEach(() => {
-    server.resetHandlers()
     vi.runOnlyPendingTimers()
     vi.useRealTimers()
   })
