@@ -4,6 +4,12 @@ ARG VITE_AUTH_URL
 ARG VITE_AUTH_CLIENT_ID
 ARG VITE_AUTH_REALM
 
+ENV VITE_AUTH_URL=${VITE_AUTH_URL}
+ENV VITE_AUTH_CLIENT_ID=${VITE_AUTH_CLIENT_ID}
+ENV VITE_AUTH_REALM=${VITE_AUTH_REALM}
+
+RUN echo "VITE_AUTH_URL is: $VITE_AUTH_URL"
+
 # make the 'app' folder the current working directory
 WORKDIR /frontend
 
@@ -17,10 +23,7 @@ RUN npm install
 COPY /frontend/. .
 
 # build app for production with minification
-RUN VITE_AUTH_URL=$VITE_AUTH_URL \
-    VITE_AUTH_CLIENT_ID=$VITE_AUTH_CLIENT_ID \
-    VITE_AUTH_REALM=$VITE_AUTH_REALM \
-    npm run build
+RUN npm run build
 
 EXPOSE 5173
 CMD [ "npm", "run", "dev", "--", "--host" ]

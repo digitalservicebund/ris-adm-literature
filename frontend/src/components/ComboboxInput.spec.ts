@@ -121,6 +121,8 @@ describe('Combobox Element', () => {
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
 
   it('is closed', () => {
+    console.log('VITE_AUTH_URL:', import.meta.env.VITE_AUTH_URL)
+
     renderComponent()
 
     expect(screen.queryByDisplayValue('Bundesanzeiger')).not.toBeInTheDocument()
