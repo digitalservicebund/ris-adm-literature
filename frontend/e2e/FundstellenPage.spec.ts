@@ -221,7 +221,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       })
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.goto('/')
-      await page.reload()
+      await expect(page.getByText('Neue Dokumentationseinheit')).toBeVisible()
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
 
       // Assert
