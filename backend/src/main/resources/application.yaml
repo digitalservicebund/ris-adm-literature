@@ -30,6 +30,12 @@ logging:
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
+frontend:
+  auth:
+    url: ${oauth2.frontend-url:http://localhost:8443}
+    realm: ${oauth2.realm:ris}
+    clientId: ${oauth2.client-id:ris-vwv-local}
+
 ---
 
 spring:
@@ -40,8 +46,4 @@ spring:
     init:
       mode: always
 
-frontend:
-  auth:
-    url: http://localhost:8443
-    realm: ris
-    clientId: ris-vwv-local
+
