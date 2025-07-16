@@ -39,3 +39,9 @@ spring:
   sql:
     init:
       mode: always
+
+frontend:
+  auth:
+    url: http://localhost:8443
+    realm: ris
+    clientId: ris-vwv-local

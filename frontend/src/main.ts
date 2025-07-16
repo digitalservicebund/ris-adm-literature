@@ -9,6 +9,7 @@ import '@/styles/global.css'
 import router from '@/router.ts'
 import { ToastService } from 'primevue'
 import { useAuthentication } from '@/services/auth.ts'
+import { getEnv } from '@/services/envService.ts'
 
 const app = createApp(App)
 
@@ -24,13 +25,15 @@ if (import.meta.env.PROD) {
   })
 }
 
+// Fetch environment configuration
+const env = await getEnv()
+
 // Configure authentication
 const auth = useAuthentication()
-// TODO: use env to decide the vars
 await auth.configure({
-  url: import.meta.env.VITE_AUTH_URL || 'http://localhost:8443',
-  clientId: import.meta.env.VITE_AUTH_CLIENT_ID || 'ris-vwv-local',
-  realm: import.meta.env.VITE_AUTH_REALM || 'ris',
+  url: env.authUrl,
+  clientId: env.authClientId,
+  realm: env.authRealm,
 })
 app
   .use(createPinia())

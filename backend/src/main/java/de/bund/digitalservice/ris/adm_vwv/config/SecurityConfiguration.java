@@ -44,7 +44,8 @@ public class SecurityConfiguration {
           .requestMatchers(
             "/.well-known/security.txt",
             "/actuator/**",
-            "/api/swagger-ui/index.html"
+            "/api/swagger-ui/index.html",
+            "/environment"
           )
           .permitAll()
           // --- SECURED ENDPOINTS ---
