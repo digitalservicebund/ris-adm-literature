@@ -93,7 +93,6 @@
     "eslint-plugin-vue": "^10.3.0",
     "jsdom": "^26.1.0",
     "license-checker-rseidelsohn": "^4.4.2",
-    "msw": "^2.10.3",
     "pinia": "^3.0.3",
     "prettier": "^3.6.2",
     "resize-observer-polyfill": "^1.5.1",

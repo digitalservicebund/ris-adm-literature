@@ -8,13 +8,11 @@ import EditableList from '@/components/EditableList.vue'
 import type EditableListItem from '@/domain/editableListItem'
 import DummyInputGroupVue from '@/kitchensink/components/DummyInputGroup.vue'
 import DummyListItem from '@/kitchensink/domain/dummyListItem'
-import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import Reference from '@/domain/reference.ts'
 import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
 import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
 import LegalPeriodical from '@/domain/legalPeriodical.ts'
-import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
 
 const items = [
   {
@@ -45,24 +43,6 @@ const paginatedLegalPeriodicals = {
   numberOfElements: 2,
   empty: false,
 }
-
-const server = setupServer(
-  http.get('/api/lookup-tables/legal-periodicals', ({ request }) => {
-    const searchTerm = new URL(request.url).searchParams.get('searchTerm')
-    const filteredItems = searchTerm
-      ? items.filter(
-          (item) =>
-            item.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
-      : items
-
-    return HttpResponse.json({
-      legalPeriodicals: filteredItems,
-      paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: filteredItems },
-    })
-  }),
-)
 
 const listWithEntries = ref<DummyListItem[]>([
   new DummyListItem({ text: 'foo', uuid: '123' }),
@@ -103,9 +83,6 @@ async function renderComponent<T>(options?: {
 }
 
 describe('EditableList', () => {
-  afterEach(() => {
-    server.resetHandlers()
-  })
   it('renders a summary per model entry on initial render with entries', async () => {
     await renderComponent()
 
@@ -220,6 +197,18 @@ describe('EditableList', () => {
   })
 
   describe('Scrolling behavior', () => {
+    beforeEach(() => {
+      vi.spyOn(window, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            legalPeriodicals: items,
+            paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: items },
+          }),
+          { status: 200 },
+        ),
+      )
+    })
+
     it('scrolls to the item being edited after cancel', async () => {
       // Arrange
       const { user } = await renderComponent()
@@ -270,8 +259,18 @@ describe('EditableList', () => {
   })
 
   describe('EditableList with DocumentUnitInputReference', () => {
-    beforeAll(() => server.listen())
-    afterAll(() => server.close())
+    beforeEach(() => {
+      vi.spyOn(window, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            legalPeriodicals: items,
+            paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: items },
+          }),
+          { status: 200 },
+        ),
+      )
+    })
+
     it('add reference', async () => {
       // Arrange
       await renderComponent({
