@@ -17,12 +17,15 @@ jobs:
         run: |
           docker build --tag ${{ inputs.image-ref }} \
             --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN \
-            --build-arg VITE_AUTH_URL=${{ vars.VITE_AUTH_URL }} \
-            --build-arg VITE_AUTH_CLIENT_ID=${{ vars.VITE_AUTH_CLIENT_ID }} \
-            --build-arg VITE_AUTH_REALM=${{ vars.VITE_AUTH_REALM }} \
+            --build-arg VITE_AUTH_URL=$VITE_AUTH_URL \
+            --build-arg VITE_AUTH_CLIENT_ID=$VITE_AUTH_CLIENT_ID \
+            --build-arg VITE_AUTH_REALM=$VITE_AUTH_REALM \
             -f prod.Dockerfile .
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
+          VITE_AUTH_CLIENT_ID: ${{ vars.VITE_AUTH_CLIENT_ID }}
+          VITE_AUTH_REALM: ${{ vars.VITE_AUTH_REALM }}
       - name: Run Trivy vulnerability image scanner
         # Note: Results are shown in the GitHub Security tab
         #       cf. step "Upload Trivy scan results to GitHub Security tab"
