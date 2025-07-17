@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": ">=23.11.1"
+    "node": "24.4.0"
   },
   "type": "module",
   "scripts": {
@@ -76,6 +76,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
     "@testing-library/vue": "^8.1.0",
+    "@tsconfig/node24": "^24.0.1",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^24.0.12",
     "@vitest/coverage-istanbul": "^3.2.4",
