@@ -4,13 +4,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SecurelessControllerTest(EnvironmentController.class)
+@Import(SecurityConfiguration.class)
+@WebMvcTest(EnvironmentController.class)
 @TestPropertySource(
   properties = {
     "frontend.auth.clientId=test-client",
