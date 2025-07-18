@@ -31,7 +31,7 @@ jobs:
           registry: ${{ inputs.container-registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish backend container image
+      - name: Publish frontend container image
         run: docker push ${{ inputs.image-ref }}
       - name: Install cosign
         # Third-party action, pin to commit SHA!
