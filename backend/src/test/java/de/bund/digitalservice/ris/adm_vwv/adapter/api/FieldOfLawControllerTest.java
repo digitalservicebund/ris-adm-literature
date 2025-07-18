@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = FieldOfLawController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "vwv_user")
+@WithMockUser(roles = "adm_vwv_user")
 class FieldOfLawControllerTest {
 
   @Autowired

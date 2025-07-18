@@ -32,7 +32,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = DocumentationUnitController.class)
-@WithMockUser(roles = "vwv_user")
+@WithMockUser(roles = "adm_vwv_user")
 @Import(SecurityConfiguration.class)
 class DocumentationUnitControllerTest {
 

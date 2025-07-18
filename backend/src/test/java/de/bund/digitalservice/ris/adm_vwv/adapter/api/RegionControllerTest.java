@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = RegionController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "vwv_user")
+@WithMockUser(roles = "adm_vwv_user")
 class RegionControllerTest {
 
   @Autowired

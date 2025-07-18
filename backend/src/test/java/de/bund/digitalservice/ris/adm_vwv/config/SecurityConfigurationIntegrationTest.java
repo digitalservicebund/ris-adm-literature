@@ -63,7 +63,7 @@ class SecurityConfigurationIntegrationTest {
   void whenRequestingSecuredApiEndpointWithCorrectRole_thenOk() throws Exception {
     mockMvc
       .perform(
-        get("/api/test").with(jwt().authorities(new SimpleGrantedAuthority("ROLE_vwv_user")))
+        get("/api/test").with(jwt().authorities(new SimpleGrantedAuthority("ROLE_adm_vwv_user")))
       )
       .andExpect(status().isOk());
   }
@@ -74,7 +74,9 @@ class SecurityConfigurationIntegrationTest {
   void whenRequestingUndefinedEndpoint_thenForbidden() throws Exception {
     mockMvc
       .perform(
-        get("/some/other/path").with(jwt().authorities(new SimpleGrantedAuthority("ROLE_vwv_user")))
+        get("/some/other/path").with(
+          jwt().authorities(new SimpleGrantedAuthority("ROLE_adm_vwv_user"))
+        )
       )
       .andExpect(status().isForbidden());
   }
