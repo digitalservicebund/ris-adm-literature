@@ -60,14 +60,12 @@ public class SecurityConfiguration {
       )
       .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
       .csrf(AbstractHttpConfigurer::disable)
-      // --- CHANGE 1: ADDED TO EXPLICITLY DISABLE CORS ---
       .cors(AbstractHttpConfigurer::disable)
       .sessionManagement(sessionManagement ->
         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       )
       .headers(httpSecurityHeadersConfigurer ->
         httpSecurityHeadersConfigurer
-          // --- CHANGE 2: THE ENTIRE contentSecurityPolicy BLOCK WAS REMOVED ---
           .contentTypeOptions(_ -> {})
           .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
           .referrerPolicy(referrerPolicyConfig ->
