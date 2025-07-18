@@ -1,5 +1,4 @@
 import path from 'path'
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 import { defineConfig } from 'vite'
 import Icons from 'unplugin-icons/vite'
@@ -16,11 +15,6 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
-    sentryVitePlugin({
-      org: 'digitalservice',
-      project: 'ris-adm-vwv',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
   ],
 
   server: {

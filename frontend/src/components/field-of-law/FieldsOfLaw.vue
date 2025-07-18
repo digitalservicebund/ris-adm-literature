@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import * as Sentry from '@sentry/vue'
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import FieldOfLawDirectInputSearch from '@/components/field-of-law/FieldOfLawDirectInputSearch.vue'
 import FieldOfLawExpandableContainer, {
@@ -35,7 +34,7 @@ const selectedNodes = computed({
   set: (newValues) => {
     store.documentUnit!.fieldsOfLaw = newValues?.filter((value) => {
       if (Object.keys(value).length === 0) {
-        Sentry.captureMessage('FieldOfLaw list contains empty objects', 'error')
+        //Sentry.captureMessage('FieldOfLaw list contains empty objects', 'error')
         return false
       } else {
         return true

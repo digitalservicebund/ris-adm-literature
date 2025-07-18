@@ -3,11 +3,4 @@
     <springProfile name="!(staging | production | uat)">
         <include resource="org/springframework/boot/logging/logback/base.xml"/>
     </springProfile>
-    <springProfile name="staging,production,uat">
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
-        <appender name="SENTRY" class="io.sentry.logback.SentryAppender" />
-        <root level="INFO">
-            <appender-ref ref="SENTRY"/>
-        </root>
-    </springProfile>
 </configuration>
