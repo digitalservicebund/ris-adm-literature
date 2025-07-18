@@ -67,7 +67,7 @@ public class SecurityConfiguration {
         httpSecurityHeadersConfigurer
           .contentSecurityPolicy(contentSecurityPolicyConfig ->
             contentSecurityPolicyConfig.policyDirectives(
-              "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'; connect-src 'self' *.sentry.io data:"
+              "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'; connect-src 'self' https://neuris.login.bare.id *.sentry.io data:"
             )
           )
           .contentTypeOptions(_ -> {})
