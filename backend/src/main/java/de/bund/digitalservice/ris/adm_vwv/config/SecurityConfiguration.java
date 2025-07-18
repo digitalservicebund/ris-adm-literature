@@ -41,12 +41,7 @@ public class SecurityConfiguration {
       .authorizeHttpRequests(authorize ->
         authorize
           // --- PUBLIC ENDPOINTS ---
-          .requestMatchers(
-            "/.well-known/security.txt",
-            "/actuator/**",
-            "/api/swagger-ui/index.html",
-            "/environment"
-          )
+          .requestMatchers("/actuator/**", "/api/swagger-ui/index.html", "/environment")
           .permitAll()
           // --- SECURED ENDPOINTS ---
           .requestMatchers("/api/**") // Secure all API paths
