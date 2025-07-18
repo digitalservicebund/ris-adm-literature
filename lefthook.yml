@@ -15,6 +15,6 @@ pre-commit:
       # run only on changes in the backend folder
       # also: set the working directory for the command in 'run'
       root: backend
-      run: ../.lefthook/spotless-check.sh
+      run: ../.lefthook/spotless-apply.sh && ../.lefthook/spotless-check.sh
       stage_fixed: true
 
