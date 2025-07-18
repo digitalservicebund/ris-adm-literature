@@ -8,6 +8,7 @@ vi.mock("@/services/auth", () => {
     useAuthentication: () => ({
       addAuthorizationHeader: (init: HeadersInit) => ({ ...init }),
       tryRefresh: vi.fn().mockReturnValue(true),
+      getUsername: () => 'test test',
     }),
   }
 })
