@@ -60,14 +60,16 @@ public class SecurityConfiguration {
       )
       .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
       .csrf(AbstractHttpConfigurer::disable)
-      // --- CHANGE 1: ADDED TO EXPLICITLY DISABLE CORS ---
-      .cors(AbstractHttpConfigurer::disable)
       .sessionManagement(sessionManagement ->
         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       )
       .headers(httpSecurityHeadersConfigurer ->
         httpSecurityHeadersConfigurer
-          // --- CHANGE 2: THE ENTIRE contentSecurityPolicy BLOCK WAS REMOVED ---
+          .contentSecurityPolicy(contentSecurityPolicyConfig ->
+            contentSecurityPolicyConfig.policyDirectives(
+              "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'; connect-src 'self' https://neuris.login.bare.id *.sentry.io data:"
+            )
+          )
           .contentTypeOptions(_ -> {})
           .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
           .referrerPolicy(referrerPolicyConfig ->
@@ -103,7 +105,7 @@ public class SecurityConfiguration {
    * <p>
    * The method suppresses unchecked warnings because Keycloak consistently provides the "realm_access" claim
    * as a {@code Map<String, Object>} containing a {@code List<String>} for roles. Since the format is well-defined
-   * and predictable in a Keycloak context, the unchecked cast is safe in this specific context.
+   * and predictable in Keycloak, the unchecked cast is safe in this specific context.
    * </p>
    *
    * @return a configured instance of {@link JwtAuthenticationConverter} that maps Keycloak roles to Spring Security authorities
