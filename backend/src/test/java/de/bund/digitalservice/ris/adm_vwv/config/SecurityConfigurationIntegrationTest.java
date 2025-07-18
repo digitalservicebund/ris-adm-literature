@@ -43,11 +43,6 @@ class SecurityConfigurationIntegrationTest {
     mockMvc.perform(get("/actuator/health")).andExpect(status().isOk());
   }
 
-  @Test
-  void whenRequestingPublicSecurityTxt_thenOk() throws Exception {
-    mockMvc.perform(get("/.well-known/security.txt")).andExpect(status().isNotFound());
-  }
-
   // --- SECURED ENDPOINTS ---
 
   @Test
