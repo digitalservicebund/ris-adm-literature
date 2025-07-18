@@ -1,17 +1,7 @@
 <script lang="ts" setup>
 import { commands } from '@guardian/prosemirror-invisibles'
-import { Blockquote } from '@tiptap/extension-blockquote'
-import { Bold } from '@tiptap/extension-bold'
-import { Color } from '@tiptap/extension-color'
-import { Document } from '@tiptap/extension-document'
-import { HardBreak } from '@tiptap/extension-hard-break'
-import { History } from '@tiptap/extension-history'
-import { Italic } from '@tiptap/extension-italic'
-import { Strike } from '@tiptap/extension-strike'
-import { Text } from '@tiptap/extension-text'
 import { TextAlign } from '@tiptap/extension-text-align'
-import { TextStyle } from '@tiptap/extension-text-style'
-import { Underline } from '@tiptap/extension-underline'
+import { TextStyle, Color } from '@tiptap/extension-text-style'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import { computed, onMounted, ref, watch } from 'vue'
 import TextEditorMenu from '@/components/input/TextEditorMenu.vue'
@@ -25,6 +15,7 @@ import { CustomListItem } from '@/editor/listItem'
 import { CustomOrderedList } from '@/editor/orderedList'
 import { CustomParagraph } from '@/editor/paragraph'
 import { CustomSubscript, CustomSuperscript } from '@/editor/scriptText'
+import StarterKit from '@tiptap/starter-kit'
 
 interface Props {
   value?: string
@@ -63,22 +54,21 @@ const editor = new Editor({
   },
   content: props.value,
   extensions: [
-    Document,
-    CustomParagraph,
-    Text,
-    Bold,
+    StarterKit.configure({
+      listItem: false,
+      bulletList: false,
+      orderedList: false,
+      paragraph: false,
+    }),
     Color,
     FontSize,
-    Italic,
     CustomListItem,
     CustomBulletList,
     CustomOrderedList,
-    Underline,
-    Strike,
+    CustomParagraph,
     CustomSubscript,
     CustomSuperscript,
     TextStyle,
-    HardBreak,
     InvisibleCharacters,
     TextAlign.configure({
       types: ['paragraph', 'span'],
@@ -93,10 +83,6 @@ const editor = new Editor({
         class: 'inline align-baseline',
       },
     }),
-    History.configure({
-      depth: 100,
-    }),
-    Blockquote,
     Indent.configure({
       names: ['listItem', 'paragraph'],
     }),
@@ -138,7 +124,7 @@ watch(
     // incoming changes
     // the cursor should not jump to the end of the content but stay where it is
     const cursorPos = editor.state.selection.anchor
-    editor.commands.setContent(value, false)
+    editor.commands.setContent(value, { emitUpdate: false })
     editor.commands.setTextSelection(cursorPos)
   },
 )
