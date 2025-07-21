@@ -34,19 +34,20 @@ test.describe('RubrikenPage - Formatdaten', () => {
       const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
       // eslint-disable-next-line playwright/no-raw-locators
       const newAktenzeichenInput = aktenzeichenGroup.locator('input')
+      const aktenzeichenWithSpecialCharacters = '123äöüß$%&'
 
       await expect(newAktenzeichenInput).toHaveCount(1)
       await expect(aktenzeichenGroup.getByRole('listitem')).toHaveCount(0)
       // when
       await newAktenzeichenInput.fill('Az1')
       await newAktenzeichenInput.press('Enter')
-      await newAktenzeichenInput.fill('Az2')
+      await newAktenzeichenInput.fill(aktenzeichenWithSpecialCharacters)
       await newAktenzeichenInput.press('Enter')
       // then
       // Created elements are list elements (<li>) so we need to select them explicitly
       await expect(aktenzeichenGroup.getByRole('listitem')).toHaveCount(2)
       await expect(page.getByText('Az1')).toHaveCount(1)
-      await expect(page.getByText('Az2')).toHaveCount(1)
+      await expect(page.getByText(aktenzeichenWithSpecialCharacters)).toHaveCount(1)
     })
   })
 
