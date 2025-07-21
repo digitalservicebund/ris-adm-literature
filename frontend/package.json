@@ -58,7 +58,7 @@
     "vite": "^7.0.4",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vue-router": "^4.5.1",
-    "vue-tsc": "^3.0.2"
+    "vue-tsc": "^3.0.3"
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.2",
