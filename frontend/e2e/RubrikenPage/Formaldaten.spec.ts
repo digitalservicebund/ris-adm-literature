@@ -54,13 +54,12 @@ test.describe('RubrikenPage - Formatdaten', () => {
           await expect(page.getByText(aktenzeichenWithSpecialCharacters)).toHaveCount(1)
         },
       )
+
       test(
         '"Eintrag löschen" results in deleting the Aktenzeichen',
         { tag: ['@RISDEV-7680'] },
         async ({ page }) => {
-          await page.goto('/documentUnit/KSNR054920707/fundstellen')
-          await page.getByText('Rubriken').click()
-          await expect(page.getByText('Rubriken')).toHaveCount(1)
+          await page.goto('/documentUnit/KSNR054920707/rubriken')
           const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
           // eslint-disable-next-line playwright/no-raw-locators
           const newAktenzeichenInput = aktenzeichenGroup.locator('input')
