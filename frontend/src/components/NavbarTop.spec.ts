@@ -7,6 +7,6 @@ describe('NavbarTop', () => {
     render(NavbarTop)
 
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
-    expect(screen.getByText('test test')).toBeInTheDocument()
+    expect(screen.getByText('vorname nachname')).toBeInTheDocument()
   })
 })
