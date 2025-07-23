@@ -60,8 +60,8 @@
       "id": "test",
       "email": "test@example.com",
       "username": "test",
-      "firstName": "test",
-      "lastName": "test",
+      "firstName": "vorname",
+      "lastName": "nachname",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
