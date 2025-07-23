@@ -66,6 +66,9 @@ jobs:
         if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
         run: npx playwright install ${{ matrix.playwright-project.install }}
+      - name: Install Chromium for Setup
+        working-directory: ./frontend
+        run: npx playwright install chromium
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
         run: |
