@@ -8,7 +8,7 @@ import messages from '../src/i18n/messages.json' with { type: 'json' }
 test.describe('StartPage', () => {
   test(
     'Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data',
-    { tag: ['@RISDEV-6041'] },
+    { tag: ['@RISDEV-6041', '@RISDEV-8587'] },
     async ({ page }) => {
       // Arrange
       await page.route('/api/documentation-units', async (route) => {

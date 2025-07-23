@@ -58,6 +58,7 @@ export default defineConfig({
       use: {
         storageState: authFile,
       },
+      testIgnore: 'Login.spec.ts',
     },
     {
       dependencies: ['setup', 'seed data'],
@@ -66,6 +67,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         storageState: authFile,
       },
+      testIgnore: 'Login.spec.ts',
     },
     {
       dependencies: ['setup', 'seed data'],
@@ -74,6 +76,7 @@ export default defineConfig({
         ...devices['Desktop Firefox'],
         storageState: authFile,
       },
+      testIgnore: 'Login.spec.ts',
     },
     // Deactivated since storageState doesn't work with Safari:
     // https://github.com/microsoft/playwright/issues/20301
@@ -92,6 +95,27 @@ export default defineConfig({
       use: {
         ...devices['Desktop Edge'],
         storageState: authFile,
+      },
+      testIgnore: 'Login.spec.ts',
+    },
+    {
+      name: 'Login Test - Chromium',
+      testMatch: 'login.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+    {
+      name: 'Login Test - Firefox',
+      testMatch: 'login.spec.ts',
+      use: {
+        ...devices['Desktop Firefox'],
+      },
+    },
+    {
+      name: 'Login Test - Edge',
+      use: {
+        ...devices['Desktop Edge'],
       },
     },
   ],
