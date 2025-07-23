@@ -45,3 +45,24 @@ npm run dev
 ```
 
 The last step will tell you where to point your browser in order to access the app.
+
+## CI/CD Workflow
+
+This project uses GitHub Actions to automate testing, builds, and deployments.
+
+### Automated Deployments
+
+* **Pull Requests:** All PRs automatically trigger builds and required status checks.
+* **Staging Environment:** Merging a PR to the **`main`** branch automatically builds the final images and deploys the new version to the Staging environment.
+
+### Manual Test Deployments to Staging
+
+You can manually deploy a feature branch to the Staging environment for testing. This is a temporary deployment that will be overwritten by the next merge or push to `main`.
+
+1.  **Build the Image:** Add the **`dev-env`** label to your pull request. This triggers a workflow to build and push a container image.
+
+2.  **Find the Image Tag:** In the completed GitHub Actions run, find the full image tag in the logs of the `build-frontend-image` or `build-backend-image` job. It will look similar to this: `ris-adm-vwv-frontend:65969a5aa2935dc8f7cdeffffdb0f8ca823b3ec3`.
+
+3.  **Deploy the Image:**
+  * Go to the [kustomization.yaml](https://github.com/digitalservicebund/ris-adm-vwv-infra/blob/main/manifests/overlays/staging/kustomization.yaml) file in the infrastructure repository.
+  * Update the `newTag` value for the corresponding image with the tag you copied and commit the change.
