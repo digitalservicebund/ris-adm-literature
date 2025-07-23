@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test.describe('Rubriken page - Langüberschrift', () => {
   test(
-    'Data of Langüberschrift persists during reload when saved',
+    'Data of Langüberschrift persists during reload when saved, can be updated with special characters',
     { tag: ['@RISDEV-6213'] },
     async ({ page }) => {
       // given
@@ -11,14 +11,25 @@ test.describe('Rubriken page - Langüberschrift', () => {
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
-      await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
-      await page.getByText('Amtl. Langüberschrift').fill(myLangueberschrift)
-      await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue(myLangueberschrift)
+      await expect(page.getByText('Amtl. Langüberschrift *')).toHaveCount(1)
+      await page.getByText('Amtl. Langüberschrift *').fill(myLangueberschrift)
+      await expect(page.getByText('Amtl. Langüberschrift *')).toHaveValue(myLangueberschrift)
       // when
       await page.getByText('Speichern').click()
       await page.reload()
       // then
-      await expect(page.getByText('Amtl. Langüberschrift')).toHaveValue(myLangueberschrift)
+      await expect(page.getByText('Amtl. Langüberschrift *')).toHaveValue(myLangueberschrift)
+
+      // given
+      const LangUeberschriftWithSpecialCharacters = '123äöüß$%&'
+      // when
+      await page.getByText('Amtl. Langüberschrift *').fill(LangUeberschriftWithSpecialCharacters)
+      await page.getByText('Speichern').click()
+      await page.reload()
+      // then
+      await expect(page.getByText('Amtl. Langüberschrift *')).toHaveValue(
+        LangUeberschriftWithSpecialCharacters,
+      )
     },
   )
 })
