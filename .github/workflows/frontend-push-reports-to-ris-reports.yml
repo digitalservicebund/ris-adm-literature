@@ -62,6 +62,7 @@ jobs:
             git commit \
               -m ${{ toJSON(github.event.head_commit.message) }} \
               -m "From commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" &&
+            git pull origin main --rebase &&
             git push origin main &&
             echo "Pushed reports to ${{ github.server_url }}/${{ env.REPORTS_REPOSITORY }}" >> $GITHUB_STEP_SUMMARY
 
