@@ -1,10 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.config;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
@@ -15,10 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * Logs incoming requests and their responses.
  */
+@Slf4j
 @Configuration
 public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
-
-  private static final Logger LOG = LoggerFactory.getLogger(LoggingConfig.class);
 
   /**
    * A nested filter class to prevent logging for actuator endpoints.
@@ -63,7 +61,7 @@ public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
   public void afterCompletion(
     HttpServletRequest request,
     HttpServletResponse response,
-    @NotNull Object handler,
+    @Nonnull Object handler,
     Exception ex
   ) {
     String logMessage = String.format(
@@ -74,9 +72,9 @@ public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
     );
 
     if (ex != null) {
-      LOG.error("{} error='{}'", logMessage, ex.getMessage(), ex);
+      log.error("{} error='{}'", logMessage, ex.getMessage(), ex);
     } else {
-      LOG.info(logMessage);
+      log.info(logMessage);
     }
   }
 }
