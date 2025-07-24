@@ -12,6 +12,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Logs incoming requests and their responses.
+ */
 @Configuration
 public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
 
