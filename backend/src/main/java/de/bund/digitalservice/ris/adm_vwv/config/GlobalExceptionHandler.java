@@ -28,9 +28,10 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<String> handleAllExceptions(Exception ex, WebRequest request) {
+    String requestDescription = request.getDescription(true);
     LOG.error(
       "An unexpected error occurred for request {}: {}",
-      request.getDescription(true),
+      requestDescription,
       ex.getMessage(),
       ex
     );
