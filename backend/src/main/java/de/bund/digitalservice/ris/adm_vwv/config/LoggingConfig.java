@@ -33,6 +33,8 @@ public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
 
   /**
    * Creates the @Bean for logging the request body, headers, etc.
+   *
+   * @return the log filter
    */
   @Bean
   public CommonsRequestLoggingFilter logFilter() {
