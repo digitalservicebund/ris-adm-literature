@@ -9,16 +9,6 @@ import New from '@/routes/documentUnit/new.vue'
 
 const router = createRouter({
   history: createWebHistory(),
-  scrollBehavior(to) {
-    if (to.hash) {
-      const top = to.hash === '#formaldaten' ? 170 : 80
-      return {
-        el: to.hash,
-        behavior: 'smooth',
-        top: top,
-      }
-    }
-  },
   routes: [
     {
       path: '/',
