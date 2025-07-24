@@ -50,6 +50,30 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await expect(dokumentTypTextbox.getByText('Verwaltungsvorschrift')).toHaveCount(0)
     },
   )
+
+  test(
+    'Dokumenttyp Zusatz: An existing value can be edited with special characters',
+    { tag: ['@RISDEV-6300'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+      const dokumenttypZusatzElement = page.getByText('Dokumenttyp Zusatz')
+      await dokumenttypZusatzElement.fill('Bekanntmachung')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      await expect(dokumenttypZusatzElement).toHaveValue('Bekanntmachung')
+
+      // when
+      await dokumenttypZusatzElement.fill('123äöüß$%&')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(dokumenttypZusatzElement).toHaveValue('123äöüß$%&')
+    },
+  )
 })
 
 test.describe('RubrikenPage - Dokumenttyp - Bestandsdaten', () => {
@@ -64,7 +88,7 @@ test.describe('RubrikenPage - Dokumenttyp - Bestandsdaten', () => {
 
       // then
       await expect(page.getByText('Dokumenttyp *')).toHaveValue('Verwaltungsregelung')
-      await expect(page.getByText('Dokumenttyp Zusatz *')).toHaveValue('Bekanntmachung')
+      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
     },
   )
 })

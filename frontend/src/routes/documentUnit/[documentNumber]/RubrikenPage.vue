@@ -147,7 +147,7 @@ watch(
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
         </InputField>
-        <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz *">
+        <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz">
           <InputText
             id="documentTypeLongText"
             v-model="dokumenttypZusatz"
@@ -170,6 +170,7 @@ watch(
             v-model="inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
+            is-future-date
             :has-error="slotProps.hasError"
             @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
