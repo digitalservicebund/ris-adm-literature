@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
@@ -18,7 +18,9 @@ import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
 import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const store = useDocumentUnitStore()
 
 const langueberschrift = computed({
@@ -83,6 +85,31 @@ const dokumenttypZusatz = computed({
     store.documentUnit!.dokumenttypZusatz = newValue
   },
 })
+
+function scrollToHash(offset = 80) {
+  if (!route.hash) return
+  const rawHash = '#' + route.hash.slice(1).split('&')[0]
+  const safeSelector = CSS.escape(rawHash.slice(1)) // remove "#" and escape
+  const cleanHash = '#' + safeSelector
+
+  const el = document.querySelector(cleanHash)
+
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.pageYOffset - offset
+    window.scrollTo({ top, behavior: 'smooth' })
+  }
+}
+
+onMounted(() => {
+  scrollToHash()
+})
+
+watch(
+  () => route.hash,
+  () => {
+    scrollToHash()
+  },
+)
 </script>
 
 <template>
