@@ -184,7 +184,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Inkrafttretedatum: an existing date can be edited',
+    'Inkrafttretedatum: an existing date can be edited with a date in the future',
     { tag: ['@RISDEV-6301'] },
     async ({ page }) => {
       // given
@@ -199,11 +199,12 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
 
       // when
-      await inkrafttretedatumElement.fill('01.01.2000')
+      const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
+      await inkrafttretedatumElement.fill(tomorrow)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
-      await expect(inkrafttretedatumElement).toHaveValue('01.01.2000')
+      await expect(inkrafttretedatumElement).toHaveValue(tomorrow)
     },
   )
 

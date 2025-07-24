@@ -86,7 +86,7 @@ test.describe('RubrikenPage - Dokumenttyp - Bestandsdaten', () => {
 
       // then
       await expect(page.getByText('Dokumenttyp *')).toHaveValue('Verwaltungsregelung')
-      await expect(page.getByText('Dokumenttyp Zusatz *')).toHaveValue('Bekanntmachung')
+      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
     },
   )
 })
