@@ -28,7 +28,7 @@ cronjob.DocumentationUnitIndexJob: "0 0 8 * * Mon-Fri"
 
 logging:
   level:
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    de.bund.digitalservice.ris.adm_vwv.config: DEBUG
 
 frontend:
   auth:
