@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test.describe('Rubriken page - Langüberschrift', () => {
   test(
-    'Data of Langüberschrift persists during reload when saved, can be updated with special characters',
+    'Data of Langüberschrift persists during reload when saved',
     { tag: ['@RISDEV-6213'] },
     async ({ page }) => {
       // given

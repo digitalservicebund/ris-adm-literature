@@ -209,7 +209,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Inkrafttretedatum: validation errors are shown',
+    'Inkrafttretedatum: if invalid, validation errors are shown',
     { tag: ['@RISDEV-6301'] },
     async ({ page }) => {
       // given
@@ -235,7 +235,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
 
   test(
     'Ausserkrafttretensdatum: a future date can be entered and no validation error is shown',
-    { tag: ['@RISDEV-6296'] },
+    { tag: ['@RISDEV-6302'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -259,7 +259,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
 
   test(
     'Ausserkrafttretensdatum: an existing date can be edited',
-    { tag: ['@RISDEV-6296'] },
+    { tag: ['@RISDEV-6302'] },
     async ({ page }) => {
       // given
       await page.goto('/')
@@ -283,7 +283,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
 
   test(
     'Ausserkrafttretensdatum: validation errors are shown',
-    { tag: ['@RISDEV-6296'] },
+    { tag: ['@RISDEV-6302'] },
     async ({ page }) => {
       // given
       await page.goto('/')

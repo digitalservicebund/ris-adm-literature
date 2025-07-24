@@ -66,9 +66,11 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await page.reload()
       await expect(dokumenttypZusatzElement).toHaveValue('Bekanntmachung')
 
+      // when
       await dokumenttypZusatzElement.fill('123äöüß$%&')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
+      // then
       await expect(dokumenttypZusatzElement).toHaveValue('123äöüß$%&')
     },
   )
