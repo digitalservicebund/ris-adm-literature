@@ -8,11 +8,24 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * Global exception handler for the application.
+ * This class uses @ControllerAdvice to provide centralized exception handling
+ * across all controllers.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+  /**
+   * Handles all uncaught exceptions.
+   * Logs the full exception and returns a 500 Internal Server Error response to the client.
+   *
+   * @param ex The exception that was thrown.
+   * @param request The current web request.
+   * @return A ResponseEntity with a 500 status code and a generic error message.
+   */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<String> handleAllExceptions(Exception ex, WebRequest request) {
     LOG.error(
