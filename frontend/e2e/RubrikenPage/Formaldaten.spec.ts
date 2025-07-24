@@ -76,62 +76,6 @@ test.describe('RubrikenPage - Formatdaten', () => {
   })
 
   test(
-    'Dokumenttyp Zusatz: Can be entered and persists through a reload',
-    { tag: ['@RISDEV-6300'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
-
-      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveCount(1)
-
-      // when
-      await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
-      // then
-      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
-
-      // when
-      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
-      await page.reload()
-      // then
-      await expect(page.getByText('Dokumenttyp Zusatz')).toHaveValue('Bekanntmachung')
-    },
-  )
-
-  test(
-    'Dokumenttyp: Can be filtered, entered and persists through a reload',
-    { tag: ['@RISDEV-6299'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
-
-      const dokumenttypElement = page.getByText('Dokumenttyp *')
-      await expect(dokumenttypElement).toHaveCount(1)
-
-      // when
-      await dokumenttypElement.fill('V')
-      // then
-      await expect(page.getByText('VR')).toHaveCount(1)
-
-      // when
-      await page.getByText('VR').click()
-      // then
-      await expect(dokumenttypElement).toHaveValue('Verwaltungsregelung')
-
-      // when
-      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
-      await page.reload()
-      // then
-      await expect(dokumenttypElement).toHaveValue('Verwaltungsregelung')
-    },
-  )
-
-  test(
     'Aktenzeichen: Can be entered, persist through a reload, can be edited',
     { tag: ['@RISDEV-6303, @RISDEV-7680'] },
     async ({ page }) => {
@@ -217,7 +161,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.waitForURL(/documentUnit/)
       await page.getByText('Rubriken').click()
 
-      const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens')
+      const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
       await expect(inkrafttretedatumElement).toHaveCount(1)
 
       // when
@@ -236,6 +180,55 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.reload()
       // then
       await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+    },
+  )
+
+  test(
+    'Inkrafttretedatum: an existing date can be edited',
+    { tag: ['@RISDEV-6301'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+      const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
+      await inkrafttretedatumElement.fill('02.02.1970')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      await expect(inkrafttretedatumElement).toHaveValue('02.02.1970')
+
+      // when
+      await inkrafttretedatumElement.fill('01.01.2000')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(inkrafttretedatumElement).toHaveValue('01.01.2000')
+    },
+  )
+
+  test(
+    'Inkrafttretedatum: validation errors are shown',
+    { tag: ['@RISDEV-6301'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+      const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
+
+      // when
+      await inkrafttretedatumElement.fill('99.99.9999')
+      await inkrafttretedatumElement.press('Tab')
+      // then
+      await expect(page.getByText('Kein valides Datum')).toBeVisible()
+
+      // when
+      await inkrafttretedatumElement.fill('12.12.20')
+      await inkrafttretedatumElement.press('Tab')
+      // then
+      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
     },
   )
 
@@ -260,6 +253,55 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await expect(ausserkrafttretedatumElement).toHaveValue(tomorrow)
       await expect(ausserkrafttretedatumElement).not.toHaveAttribute('aria-invalid', 'true')
       await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeHidden()
+    },
+  )
+
+  test(
+    'Ausserkrafttretensdatum: an existing date can be edited',
+    { tag: ['@RISDEV-6296'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+      const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
+      await ausserkrafttretedatumElement.fill('02.02.1970')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      await expect(ausserkrafttretedatumElement).toHaveValue('02.02.1970')
+
+      // when
+      await ausserkrafttretedatumElement.fill('01.01.2000')
+      await page.getByRole('button', { name: 'Speichern', exact: true }).click()
+      await page.reload()
+      // then
+      await expect(ausserkrafttretedatumElement).toHaveValue('01.01.2000')
+    },
+  )
+
+  test(
+    'Ausserkrafttretensdatum: validation errors are shown',
+    { tag: ['@RISDEV-6296'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByText('Rubriken').click()
+      const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
+
+      // when
+      await ausserkrafttretedatumElement.fill('99.99.9999')
+      await ausserkrafttretedatumElement.press('Tab')
+      // then
+      await expect(page.getByText('Kein valides Datum')).toBeVisible()
+
+      // when
+      await ausserkrafttretedatumElement.fill('12.12.20')
+      await ausserkrafttretedatumElement.press('Tab')
+      // then
+      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
     },
   )
 })
