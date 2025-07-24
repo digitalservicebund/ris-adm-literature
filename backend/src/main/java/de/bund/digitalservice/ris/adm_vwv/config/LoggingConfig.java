@@ -44,7 +44,7 @@ public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
   }
 
   /**
-   * Registers this class itself as the interceptor.
+   * Registers this class itself as the interceptor and excludes health checks.
    */
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
