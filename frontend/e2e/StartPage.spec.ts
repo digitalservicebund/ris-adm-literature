@@ -32,6 +32,8 @@ test.describe('StartPage', () => {
       await expect(page.getByText('BSG')).toHaveCount(1)
       await expect(page.getByText('Übersicht Verwaltungsvorschriften')).toHaveCount(1)
       await expect(page.getByText('Neue Dokumentationseinheit')).toHaveCount(1)
+      await expect(page.getByText('Schnellsuche')).toBeVisible()
+      await expect(page.getByRole('columnheader', { name: 'Dokumentnummer' })).toBeVisible()
     },
   )
 
