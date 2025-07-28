@@ -43,6 +43,11 @@ class SecurityConfigurationIntegrationTest {
     mockMvc.perform(get("/actuator/health")).andExpect(status().isOk());
   }
 
+  @Test
+  void whenRequestingSwaggerDocs_thenOk() throws Exception {
+    mockMvc.perform(get("/api/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
   // --- SECURED ENDPOINTS ---
 
   @Test
