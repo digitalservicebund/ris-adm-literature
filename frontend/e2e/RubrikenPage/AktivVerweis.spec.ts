@@ -351,6 +351,49 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await expect(page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' })).toHaveCount(0)
     },
   )
+
+  test(
+    'Shows validation error when Fassungsdatum is in wrong format, cant be saved when invalid',
+    { tag: ['@RISDEV-7908'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/documentUnit/KSNR054920707/rubriken')
+
+      // when
+      await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
+      await page.getByRole('textbox', { name: 'Art der Verweisung' }).click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'Anwendung' })
+        .click()
+      await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+        .click()
+      await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('99.99.9999{Tab}')
+
+      // then
+      await expect(page.getByText('Kein valides Datum')).toBeVisible()
+
+      // when
+      await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('20.12.20')
+      await page.keyboard.press('Tab')
+      // then
+      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+
+      // when
+      const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
+      await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill(`${tomorrow}{Tab}`)
+      // then
+      await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
+
+      // when
+      await page.getByRole('button', { name: 'Verweis speichern' }).click()
+      // then
+      await expect(page.getByTestId('list-entry-0')).toBeHidden()
+    },
+  )
 })
 
 test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
