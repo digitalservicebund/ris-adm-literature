@@ -10,6 +10,7 @@ vi.mock('keycloak-js', () => {
   MockKeycloak.prototype.didInitialize = false
   MockKeycloak.prototype.token = undefined
   MockKeycloak.prototype.idTokenParsed = undefined
+  MockKeycloak.prototype.accountManagement = vi.fn().mockResolvedValue(undefined)
   MockKeycloak.prototype.createLogoutUrl = vi.fn().mockReturnValue(undefined)
   MockKeycloak.prototype.updateToken = vi.fn().mockResolvedValue(true)
 
@@ -296,5 +297,20 @@ describe('auth', () => {
     const result2 = tryRefresh()
     await expect(result2).resolves.toBe(true)
     expect(Keycloak.default.prototype.updateToken).toHaveBeenCalledTimes(2)
+  })
+
+  it('opens the user profile page when configured', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, openUserProfile } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    const configuredResult = openUserProfile()
+    await expect(configuredResult).resolves.toBeUndefined()
+    expect(Keycloak.default.prototype.accountManagement).toHaveBeenCalledTimes(1)
   })
 })

@@ -8,5 +8,7 @@ describe('NavbarTop', () => {
 
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
+    expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
+    expect(screen.getByLabelText('Log out')).toBeInTheDocument()
   })
 })
