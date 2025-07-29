@@ -54,12 +54,20 @@ dependencies {
 
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
+
+    // CVE-2025-48924
+    exclude("org.apache.commons", "commons-lang3")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
+    // CVE-2025-53864
+    exclude("com.nimbusds", "nimbus-jose-jwt")
+  }
 
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
+  implementation("com.nimbusds:nimbus-jose-jwt:10.0.2")
+  implementation("org.apache.commons:commons-lang3:3.18.0")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
