@@ -6,7 +6,7 @@ import { useAuthentication } from '@/services/auth'
 import IconPermIdentity from '~icons/ic/baseline-perm-identity'
 import IconLogout from '~icons/ic/baseline-logout'
 
-const { getUsername, logout, openUserProfile } = useAuthentication()
+const { getUsername, logout } = useAuthentication()
 </script>
 
 <template>
@@ -19,9 +19,7 @@ const { getUsername, logout, openUserProfile } = useAuthentication()
     </div>
     <div class="flex items-center gap-10">
       <FlexContainer alignItems="items-center">
-        <button @click="openUserProfile" aria-label="Open user profile">
-          <IconPermIdentity data-testid="iconPermIdentity" />
-        </button>
+        <IconPermIdentity data-testid="iconPermIdentity" />
         <FlexItem>
           {{ getUsername() ?? 'Vorname Nachname' }}
         </FlexItem>

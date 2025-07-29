@@ -26,15 +26,6 @@ describe('NavbarTop', () => {
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
   })
 
-  it('calls openUserProfile when the settings icon is clicked', async () => {
-    render(NavbarTop)
-
-    const settingsButton = screen.getByLabelText('Open user profile')
-    await fireEvent.click(settingsButton)
-
-    expect(mockAuth.openUserProfile).toHaveBeenCalledTimes(1)
-  })
-
   it('calls logout when the logout icon is clicked', async () => {
     render(NavbarTop)
 
