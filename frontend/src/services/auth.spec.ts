@@ -10,8 +10,10 @@ vi.mock('keycloak-js', () => {
   MockKeycloak.prototype.didInitialize = false
   MockKeycloak.prototype.token = undefined
   MockKeycloak.prototype.idTokenParsed = undefined
+  MockKeycloak.prototype.accountManagement = vi.fn().mockResolvedValue(undefined)
   MockKeycloak.prototype.createLogoutUrl = vi.fn().mockReturnValue(undefined)
   MockKeycloak.prototype.updateToken = vi.fn().mockResolvedValue(true)
+  MockKeycloak.prototype.logout = vi.fn()
 
   return { default: MockKeycloak }
 })
@@ -296,5 +298,38 @@ describe('auth', () => {
     const result2 = tryRefresh()
     await expect(result2).resolves.toBe(true)
     expect(Keycloak.default.prototype.updateToken).toHaveBeenCalledTimes(2)
+  })
+
+  it('opens the user profile page when configured', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, openUserProfile } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    await openUserProfile()
+
+    expect(Keycloak.default.prototype.accountManagement).toHaveBeenCalledTimes(1)
+  })
+
+  it('logs out with the correct redirect URI', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, logout } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    logout()
+
+    expect(Keycloak.default.prototype.logout).toHaveBeenCalledTimes(1)
+    expect(Keycloak.default.prototype.logout).toHaveBeenCalledWith({
+      redirectUri: window.location.origin,
+    })
   })
 })
