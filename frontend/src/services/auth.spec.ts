@@ -309,8 +309,8 @@ describe('auth', () => {
       url: 'http://test.url',
     })
 
-    const configuredResult = openUserProfile()
-    await expect(configuredResult).resolves.toBeUndefined()
+    await openUserProfile()
+
     expect(Keycloak.default.prototype.accountManagement).toHaveBeenCalledTimes(1)
   })
 })
