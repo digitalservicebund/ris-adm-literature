@@ -13,6 +13,7 @@ vi.mock('keycloak-js', () => {
   MockKeycloak.prototype.accountManagement = vi.fn().mockResolvedValue(undefined)
   MockKeycloak.prototype.createLogoutUrl = vi.fn().mockReturnValue(undefined)
   MockKeycloak.prototype.updateToken = vi.fn().mockResolvedValue(true)
+  MockKeycloak.prototype.logout = vi.fn()
 
   return { default: MockKeycloak }
 })
@@ -312,5 +313,23 @@ describe('auth', () => {
     await openUserProfile()
 
     expect(Keycloak.default.prototype.accountManagement).toHaveBeenCalledTimes(1)
+  })
+
+  it('logs out with the correct redirect URI', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, logout } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    logout()
+
+    expect(Keycloak.default.prototype.logout).toHaveBeenCalledTimes(1)
+    expect(Keycloak.default.prototype.logout).toHaveBeenCalledWith({
+      redirectUri: window.location.origin,
+    })
   })
 })
