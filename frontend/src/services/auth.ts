@@ -36,16 +36,6 @@ function createAuthentication() {
   }
 
   /**
-   * Whether the authentication has already been configured successfully using
-   * `configure`.
-   *
-   * @returns True if authentication is currently active
-   */
-  function isConfigured(): boolean {
-    return keycloak?.didInitialize ?? false
-  }
-
-  /**
    * Adds an Authorization header with the current token to a set of headers.
    * If authentication hasn't been configured yet, this method will do nothing.
    *
@@ -67,15 +57,6 @@ function createAuthentication() {
    */
   function getUsername(): string | undefined {
     return keycloak?.idTokenParsed?.name
-  }
-
-  /**
-   * Creates a URL which, when visited, ends the current session and redirects
-   * the user to the login page. Can be undefined if keycloak hasn't been configured
-   * yet.
-   */
-  function getLogoutLink(): string | undefined {
-    return keycloak?.createLogoutUrl()
   }
 
   function logout(): Promise<void> | undefined {
@@ -114,19 +95,12 @@ function createAuthentication() {
     }
   }
 
-  function openUserProfile(): Promise<void> | undefined {
-    return keycloak?.accountManagement()
-  }
-
   return () => ({
     addAuthorizationHeader,
     configure,
-    getLogoutLink,
     logout,
     getUsername,
-    isConfigured,
     tryRefresh,
-    openUserProfile,
   })
 }
 

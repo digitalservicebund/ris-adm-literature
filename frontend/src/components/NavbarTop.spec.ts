@@ -4,7 +4,6 @@ import NavbarTop from '@/components/NavbarTop.vue'
 
 const mockAuth = {
   logout: vi.fn(),
-  openUserProfile: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
 }
 

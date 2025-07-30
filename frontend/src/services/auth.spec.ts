@@ -83,26 +83,6 @@ describe('auth', () => {
     ).rejects.toThrow(expect.objectContaining({ cause: 'Error' }))
   })
 
-  it('returns that it is configured', async () => {
-    const { useAuthentication } = await import('./auth.ts')
-    const { configure, isConfigured } = useAuthentication()
-
-    await configure({
-      clientId: 'test-client',
-      realm: 'test-realm',
-      url: 'http://test.url',
-    })
-
-    expect(isConfigured()).toBe(false)
-  })
-
-  it('returns that it is not configured', async () => {
-    const { useAuthentication } = await import('./auth.ts')
-    const { isConfigured } = useAuthentication()
-
-    expect(isConfigured()).toBe(false)
-  })
-
   it('adds an authorization header when a token is available', async () => {
     vi.spyOn(Keycloak.default.prototype, 'token', 'get').mockReturnValue('1234')
     const { useAuthentication } = await import('./auth.ts')
@@ -180,23 +160,6 @@ describe('auth', () => {
     const username = getUsername()
 
     expect(username).toBeUndefined()
-  })
-
-  it('returns a logout link', async () => {
-    vi.spyOn(Keycloak.default.prototype, 'createLogoutUrl').mockReturnValue('http://example.com')
-
-    const { useAuthentication } = await import('./auth.ts')
-    const { configure, getLogoutLink } = useAuthentication()
-
-    await configure({
-      clientId: 'test-client',
-      realm: 'test-realm',
-      url: 'http://test.url',
-    })
-
-    const logoutLink = getLogoutLink()
-
-    expect(logoutLink).toBe('http://example.com')
   })
 
   it('returns false when attempting to refresh a token before configuring auth', async () => {
@@ -298,21 +261,6 @@ describe('auth', () => {
     const result2 = tryRefresh()
     await expect(result2).resolves.toBe(true)
     expect(Keycloak.default.prototype.updateToken).toHaveBeenCalledTimes(2)
-  })
-
-  it('opens the user profile page when configured', async () => {
-    const { useAuthentication } = await import('./auth.ts')
-    const { configure, openUserProfile } = useAuthentication()
-
-    await configure({
-      clientId: 'test-client',
-      realm: 'test-realm',
-      url: 'http://test.url',
-    })
-
-    await openUserProfile()
-
-    expect(Keycloak.default.prototype.accountManagement).toHaveBeenCalledTimes(1)
   })
 
   it('logs out with the correct redirect URI', async () => {
