@@ -40,7 +40,7 @@ public class DocumentationUnitController {
    * @param sortByProperty Sort by what property?
    * @param sortDirection Sort ascending or descending?
    * @param usePagination Search with pagination?
-   * @return paginated list of document units
+   * @return paginated list of document units.
    */
   @GetMapping("api/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
