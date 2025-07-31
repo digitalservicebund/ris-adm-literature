@@ -139,6 +139,21 @@ sonar {
     property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.token", System.getenv("SONAR_TOKEN"))
     property("sonar.coverage.exclusions", "**/Application.java")
+
+    // exclusions: TODOs, deprecations, section comment outs
+    property("sonar.issue.ignore.multicriteria", "S125,S1133,S1135")
+
+    // Exclude: Sections of code should not be commented out
+    property("sonar.issue.ignore.multicriteria.S125.ruleKey", "java:S125")
+    property("sonar.issue.ignore.multicriteria.S125.resourceKey", "**/*.java")
+
+    // Exclude: Deprecated code should be removed
+    property("sonar.issue.ignore.multicriteria.S1133.ruleKey", "java:S1133")
+    property("sonar.issue.ignore.multicriteria.S1133.resourceKey", "**/*.java")
+
+    // Exclude: Track uses of "TODOs" tags
+    property("sonar.issue.ignore.multicriteria.S1135.ruleKey", "java:S1135")
+    property("sonar.issue.ignore.multicriteria.S1135.resourceKey", "**/*.java")
   }
 }
 
