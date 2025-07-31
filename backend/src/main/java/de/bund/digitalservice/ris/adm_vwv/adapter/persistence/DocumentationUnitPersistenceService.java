@@ -42,6 +42,16 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
 
+  /*
+* A commented function, a TODO
+*
+ public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }*/
+
+  /**
+   * @deprecated is this deprecated?
+   */
   @Override
   @Transactional(readOnly = true)
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
