@@ -29,7 +29,7 @@ public class DocumentationUnitController {
 
   /**
    * Returns information on all documentation units as required by the
-   * documentation units overview
+   * documentation units overview.
    *
    * @param documentNumber Filter by documentNumber.
    * @param langueberschrift Filter by langueberschrift.
