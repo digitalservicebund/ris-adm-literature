@@ -145,15 +145,15 @@ sonar {
 
     // Exclude: Sections of code should not be commented out
     property("sonar.issue.ignore.multicriteria.S125.ruleKey", "java:S125")
-    property("sonar.issue.ignore.multicriteria.S125.resourceKey", "**/*.java")
+    property("sonar.issue.ignore.multicriteria.S125.resourceKey", "**/*")
 
     // Exclude: Deprecated code should be removed
     property("sonar.issue.ignore.multicriteria.S1133.ruleKey", "java:S1133")
-    property("sonar.issue.ignore.multicriteria.S1133.resourceKey", "**/*.java")
+    property("sonar.issue.ignore.multicriteria.S1133.resourceKey", "**/*.ja")
 
     // Exclude: Track uses of "TODOs" tags
     property("sonar.issue.ignore.multicriteria.S1135.ruleKey", "java:S1135")
-    property("sonar.issue.ignore.multicriteria.S1135.resourceKey", "**/*.java")
+    property("sonar.issue.ignore.multicriteria.S1135.resourceKey", "**/*")
   }
 }
 
