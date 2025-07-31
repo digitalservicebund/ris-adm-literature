@@ -54,7 +54,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
    */
   @Override
   @Transactional(readOnly = true)
-  @Deprecated
+  @Deprecated(since = "2025")
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
