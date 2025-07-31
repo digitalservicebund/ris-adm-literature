@@ -72,10 +72,27 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
     }
   }
 
+  /*
+  const onDropdownClick = (event: AutoCompleteDropdownClickEvent | { query: undefined }) => {
+    if (event.query === undefined) {
+      // dropdown has been closed
+      suggestions.value = []
+    } else {
+      // onComplete will also fire, but with an empty query
+      // therefore, call it again
+      onComplete(event)
+    }
+  }
+  */
+
+  /**
+   * @deprecated is it?
+   */
   const onItemSelect = () => {
     suggestions.value = []
   }
 
+  // TODO: lets test it
   return {
     suggestions,
     onComplete,
