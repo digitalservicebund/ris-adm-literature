@@ -149,7 +149,7 @@ sonar {
 
     // Exclude: Deprecated code should be removed
     property("sonar.issue.ignore.multicriteria.S1133.ruleKey", "java:S1133")
-    property("sonar.issue.ignore.multicriteria.S1133.resourceKey", "**/*.ja")
+    property("sonar.issue.ignore.multicriteria.S1133.resourceKey", "**/*")
 
     // Exclude: Track uses of "TODOs" tags
     property("sonar.issue.ignore.multicriteria.S1135.ruleKey", "java:S1135")
