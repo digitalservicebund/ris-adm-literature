@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(TestController.class)
 @Import(SecurityConfiguration.class)
 @WithMockJwt
-public class CustomResponseEntityExceptionHandlerTest {
+class CustomResponseEntityExceptionHandlerTest {
 
   @Autowired
   private MockMvc mockMvc;
