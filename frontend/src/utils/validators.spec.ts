@@ -3,7 +3,7 @@ import {
   areDatesValid,
   getFutureDateErrMessage,
   getInvalidDateErrMessage,
-  validateDocumentUnit,
+  missingDocUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
 import type { DocumentUnit } from '@/domain/documentUnit'
@@ -79,7 +79,7 @@ describe('Validators functions', () => {
   describe('validateDocumentUnit', () => {
     it('should return a list of missing fields', () => {
       const doc: DocumentUnit = {
-        id: 'id',
+        id: 'docId1',
         documentNumber: 'KSNR999999999',
         note: '',
         langueberschrift: 'this is a langueberschrift',
@@ -87,10 +87,10 @@ describe('Validators functions', () => {
         zitierdaten: [],
       }
 
-      const actual = validateDocumentUnit(doc)
+      const actual = missingDocUnitFields(doc)
       const expected = ['inkrafttretedatum', 'dokumenttyp', 'zitierdaten', 'normgeberList']
 
-      expect(actual.sort()).toEqual(expected.sort())
+      expect(expected.sort()).toEqual(actual.sort())
     })
   })
 })
