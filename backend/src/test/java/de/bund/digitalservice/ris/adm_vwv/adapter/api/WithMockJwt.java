@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 @Documented
 @WithSecurityContext(factory = WithMockJwtSecurityContextFactory.class)
 public @interface WithMockJwt {
-  long value() default 1L;
+  String value() default "6efd8630-721e-47a7-856e-8b89723dc9d4";
 
   String[] roles() default { "ROLE_adm_vwv_user" };
 }
