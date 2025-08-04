@@ -2,23 +2,23 @@
 import Button from 'primevue/button'
 import IconCheck from '~icons/material-symbols/check'
 import TitleElement from '@/components/TitleElement.vue'
-import SanityCheck from '@/components/publication/SanityCheck.vue'
 import { computed } from 'vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { missingDocUnitFields } from '@/utils/validators'
 import type { DocumentUnit } from '@/domain/documentUnit'
+import PlausibilitaetsPruefung from '@/components/publication/PlausibilitaetsPruefung.vue'
+import { missingDocumentUnitFields } from '@/utils/validators'
 
 const store = useDocumentUnitStore()
 
-const missingFields = computed(() => missingDocUnitFields(store.documentUnit as DocumentUnit))
+const missingFields = computed(() => missingDocumentUnitFields(store.documentUnit as DocumentUnit))
 </script>
 
 <template>
   <div class="flex w-full flex-1 grow flex-col p-24">
-    <div aria-label="Abgabe" class="flex flex-col gap-24 bg-white p-24">
-      <TitleElement class="mb-16">Abgabe</TitleElement>
-      <SanityCheck :missing-fields="missingFields" />
-      <hr class="text-blue-500" />
+    <div aria-label="Abgabe" class="flex flex-col bg-white p-24">
+      <TitleElement class="mb-24">Abgabe</TitleElement>
+      <PlausibilitaetsPruefung :missing-fields="missingFields" />
+      <hr class="text-blue-500 my-24" />
       <div class="flex flex-row">
         <Button
           :disabled="missingFields.length > 0"

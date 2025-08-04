@@ -11,7 +11,7 @@ function getLabel(field: string): string {
   return (
     {
       langueberschrift: 'Amtl. Langüberschrift',
-      inkrafttretedatum: 'Datum des Inkraftretens',
+      inkrafttretedatum: 'Datum des Inkrafttretens',
       dokumenttyp: 'Dokumenttyp',
       normgeberList: 'Normgeber',
       zitierdaten: 'Zitierdatum',

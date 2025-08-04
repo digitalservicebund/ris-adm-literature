@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/vue'
-import SanityCheck from '@/components/publication/SanityCheck.vue'
+import SanityCheck from '@/components/publication/PlausibilitaetsPruefung.vue'
 
 describe('SanityCheck', () => {
   it('renders positive message when there is no missing fields', () => {
@@ -30,7 +30,7 @@ describe('SanityCheck', () => {
     expect(screen.getByText('Plausibilitätsprüfung')).toBeInTheDocument()
     expect(screen.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeInTheDocument()
     expect(screen.getByText('Amtl. Langüberschrift')).toBeInTheDocument()
-    expect(screen.getByText('Datum des Inkraftretens')).toBeInTheDocument()
+    expect(screen.getByText('Datum des Inkrafttretens')).toBeInTheDocument()
     expect(screen.getByText('Dokumenttyp')).toBeInTheDocument()
     expect(screen.getByText('Normgeber')).toBeInTheDocument()
     expect(screen.getByText('Zitierdatum')).toBeInTheDocument()
