@@ -35,7 +35,7 @@ function getLabel(field: string): string {
       </router-link>
     </div>
   </div>
-  <div v-else class="flex items-center pl-16">
+  <div v-else class="flex items-center p-16">
     <IconCheck class="text-green-700 mr-16" />
     <span>Alle Pflichtfelder sind korrekt ausgefüllt.</span>
   </div>

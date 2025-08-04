@@ -16,8 +16,9 @@ const missingFields = computed(() => missingDocUnitFields(store.documentUnit as 
 <template>
   <div class="flex w-full flex-1 grow flex-col p-24">
     <div aria-label="Abgabe" class="flex flex-col gap-24 bg-white p-24">
-      <TitleElement>Abgabe</TitleElement>
+      <TitleElement class="mb-16">Abgabe</TitleElement>
       <SanityCheck :missing-fields="missingFields" />
+      <hr class="text-blue-500" />
       <div class="flex flex-row">
         <Button
           :disabled="missingFields.length > 0"
