@@ -10,21 +10,17 @@ import type { DocumentUnit } from '@/domain/documentUnit'
 
 const store = useDocumentUnitStore()
 
-const isPublishable = computed(() =>
-  store.documentUnit
-    ? missingDocUnitFields(store.documentUnit as DocumentUnit).length === 0
-    : false,
-)
+const missingFields = computed(() => missingDocUnitFields(store.documentUnit as DocumentUnit))
 </script>
 
 <template>
   <div class="flex w-full flex-1 grow flex-col p-24">
     <div aria-label="Abgabe" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Abgabe</TitleElement>
-      <SanityCheck />
+      <SanityCheck :missing-fields="missingFields" />
       <div class="flex flex-row">
         <Button
-          :disabled="!isPublishable"
+          :disabled="missingFields.length > 0"
           label="Zur Veröffentlichung freigeben"
           :loading="false"
           :text="false"
