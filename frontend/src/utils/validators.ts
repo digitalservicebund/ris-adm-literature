@@ -23,7 +23,7 @@ export function getFutureDateErrMessage(dates: string[]): string {
 }
 
 // Returns a list of missing required fields
-export function missingDocUnitFields(doc: DocumentUnit): string[] {
+export function missingDocumentUnitFields(doc: DocumentUnit): string[] {
   return requiredDocumentUnitFields.filter((field) => {
     const value = doc[field]
     return !value || (Array.isArray(value) && value.length === 0)
