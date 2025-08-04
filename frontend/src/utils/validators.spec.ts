@@ -79,8 +79,8 @@ describe('Validators functions', () => {
   describe('validateDocumentUnit', () => {
     it('should return a list of missing fields', () => {
       const doc: DocumentUnit = {
-        id: 'docId1',
-        documentNumber: 'KSNR999999999',
+        id: 'testDocId1',
+        documentNumber: 'testDocNumber1',
         note: '',
         langueberschrift: 'this is a langueberschrift',
         inkrafttretedatum: '',
