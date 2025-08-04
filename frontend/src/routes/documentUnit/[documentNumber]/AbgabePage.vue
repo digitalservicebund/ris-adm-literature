@@ -5,8 +5,8 @@ import TitleElement from '@/components/TitleElement.vue'
 import { computed } from 'vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
 import type { DocumentUnit } from '@/domain/documentUnit'
-import PlausibilitaetsPruefung from '@/components/publication/PlausibilitaetsPruefung.vue'
 import { missingDocumentUnitFields } from '@/utils/validators'
+import Plausibilitaetspruefung from '@/components/publication/Plausibilitaetspruefung.vue'
 
 const store = useDocumentUnitStore()
 
@@ -17,7 +17,7 @@ const missingFields = computed(() => missingDocumentUnitFields(store.documentUni
   <div class="flex w-full flex-1 grow flex-col p-24">
     <div aria-label="Abgabe" class="flex flex-col bg-white p-24">
       <TitleElement class="mb-24">Abgabe</TitleElement>
-      <PlausibilitaetsPruefung :missing-fields="missingFields" />
+      <Plausibilitaetspruefung :missing-fields="missingFields" />
       <hr class="text-blue-500 my-24" />
       <div class="flex flex-row">
         <Button

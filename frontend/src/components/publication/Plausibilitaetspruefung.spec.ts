@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/vue'
-import SanityCheck from '@/components/publication/PlausibilitaetsPruefung.vue'
+import Plausibilitaetspruefung from './Plausibilitaetspruefung.vue'
 
 describe('SanityCheck', () => {
   it('renders positive message when there is no missing fields', () => {
-    render(SanityCheck, {
+    render(Plausibilitaetspruefung, {
       props: {
         missingFields: [],
       },
@@ -15,7 +15,7 @@ describe('SanityCheck', () => {
   })
 
   it('renders 5 missing fields and a link to rubriken', () => {
-    render(SanityCheck, {
+    render(Plausibilitaetspruefung, {
       props: {
         missingFields: [
           'langueberschrift',
@@ -38,7 +38,7 @@ describe('SanityCheck', () => {
   })
 
   it('renders the field key if not mapped', () => {
-    render(SanityCheck, {
+    render(Plausibilitaetspruefung, {
       props: {
         missingFields: ['unmappedField'],
       },
