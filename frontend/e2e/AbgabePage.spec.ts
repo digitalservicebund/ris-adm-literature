@@ -30,11 +30,13 @@ test.describe('AbgabePage', () => {
       await page.goto('/documentUnit/KSNR999999999/rubriken')
       await expect(page.getByText('Amtl. Langüberschrift *')).toHaveCount(1)
       await page.getByText('Amtl. Langüberschrift *').fill('')
+      await expect(page.getByRole('button', { name: 'Speichern' })).toBeVisible()
 
       // when
       await page.getByText('Abgabe').click()
 
       // then
+      await expect(page.getByRole('button', { name: 'Speichern' })).toBeHidden()
       await expect(page.getByRole('heading', { name: 'Abgabe' })).toBeVisible()
       await expect(page.getByText('Plausibilitätsprüfung')).toBeVisible()
       await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt')).toBeVisible()

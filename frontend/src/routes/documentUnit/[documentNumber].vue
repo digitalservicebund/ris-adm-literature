@@ -75,6 +75,7 @@ watch(error, (err) => {
       <DocumentUnitInfoPanel
         data-testid="document-unit-info-panel"
         :heading="documentUnit?.documentNumber ?? ''"
+        :hide-save-button="route.path.includes('abgabe')"
       />
       <div class="flex grow flex-col items-start">
         <FlexContainer

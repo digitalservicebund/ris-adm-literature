@@ -13,10 +13,13 @@ function mockDocumentUnitStore(callback = vi.fn()) {
   return documentUnitStore
 }
 
-function renderComponent(options?: { heading?: string /*coreData?: CoreData*/ }) {
+function renderComponent(options?: {
+  heading?: string /*coreData?: CoreData*/
+  hideSaveButton?: boolean
+}) {
   return {
     ...render(DocumentUnitInfoPanel, {
-      props: { heading: options?.heading ?? '' },
+      props: { heading: options?.heading ?? '', hideSaveButton: options?.hideSaveButton ?? false },
     }),
   }
 }
@@ -62,5 +65,14 @@ describe('documentUnit InfoPanel', () => {
         'Fehler beim Speichern: Dokumentationseinheit konnte nicht aktualisiert werden.',
       ),
     ).toBeInTheDocument()
+  })
+
+  it('hide the save button when prop is set', async () => {
+    // given
+    mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false))
+    renderComponent({ hideSaveButton: true })
+
+    // then
+    expect(screen.queryByRole('button', { name: 'Speichern' })).not.toBeInTheDocument()
   })
 })
