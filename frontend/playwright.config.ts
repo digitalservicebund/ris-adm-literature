@@ -114,6 +114,7 @@ export default defineConfig({
     },
     {
       name: 'Login Test - Edge',
+      testMatch: 'login.spec.ts',
       use: {
         ...devices['Desktop Edge'],
       },
