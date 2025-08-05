@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import Plausibilitaetspruefung from './Plausibilitaetspruefung.vue'
 
-describe('SanityCheck', () => {
+describe('Plausibilitaetspruefung', () => {
   it('renders positive message when there is no missing fields', () => {
     render(Plausibilitaetspruefung, {
       props: {
