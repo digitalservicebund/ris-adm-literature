@@ -98,6 +98,8 @@ export default defineConfig({
       },
       testIgnore: 'Login.spec.ts',
     },
+    // The following tests test the login functionality itself, so they need to be separate projects which run without
+    // the playwright login as a dependency.
     {
       name: 'Login Test - Chromium',
       testMatch: 'login.spec.ts',
