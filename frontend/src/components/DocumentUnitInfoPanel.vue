@@ -9,10 +9,12 @@ import { PublicationState } from '@/domain/publicationStatus'
 
 interface Props {
   heading?: string
+  hideSaveButton?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   heading: '',
+  hideSaveButton: false,
 })
 
 const statusBadge = ref(
@@ -74,7 +76,13 @@ const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError
         <span>{{ formattedLastSavedOn }}</span>
         Uhr
       </p>
-      <Button data-testid="save-button" label="Speichern" size="small" @click="triggerSave" />
+      <Button
+        v-if="!hideSaveButton"
+        data-testid="save-button"
+        label="Speichern"
+        size="small"
+        @click="triggerSave"
+      />
     </div>
   </div>
 </template>
