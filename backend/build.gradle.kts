@@ -66,7 +66,7 @@ dependencies {
 
   implementation("com.google.protobuf:protobuf-java:4.31.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.nimbusds:nimbus-jose-jwt:10.4")
+  implementation("com.nimbusds:nimbus-jose-jwt:10.4.1")
   implementation("org.apache.commons:commons-lang3:3.18.0")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
