@@ -31,7 +31,7 @@
     "@iconify-json/material-symbols": "^1.2.30",
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^4.0.2",
-    "@sentry/vue": "^10.1.0",
+    "@sentry/vue": "^10.2.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@tiptap/extension-blockquote": "^3.0.9",
     "@tiptap/extension-document": "^3.0.9",
