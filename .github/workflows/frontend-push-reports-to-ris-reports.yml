@@ -23,7 +23,7 @@ jobs:
 
       ## Frontend unit test report
       - name: Download artifact frontend unit test report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: frontend-unit-test-report-html
           path: tmp/frontend-unit-test-report-html/
@@ -36,7 +36,7 @@ jobs:
 
       ## Frontend licence report
       - name: Download artifact frontend license report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: frontend-license-report
           path: tmp/frontend-license-report/

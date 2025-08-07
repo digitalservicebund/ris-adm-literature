@@ -23,7 +23,7 @@ jobs:
 
       ## ADRs
       - name: Download ADRs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: adr-list
           path: tmp/adr-source
@@ -37,7 +37,7 @@ jobs:
 
       ## Backend unit test report
       - name: Download artifact backend test report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: backend-test-report
           path: tmp/backend-test-report/
@@ -50,7 +50,7 @@ jobs:
 
       ## Backend license report
       - name: Download artifact backend license report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: backend-license-report
           path: tmp/backend-license-report/
@@ -62,7 +62,7 @@ jobs:
 
       ## Backend code documentation
       - name: Download backend code documentation
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: backend-license-report
           path: tmp/backend-code-documentation/
