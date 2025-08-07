@@ -4,31 +4,41 @@ on:
 jobs:
   e2e-tests:
     strategy:
+      fail-fast: false # Allows all matrix jobs to finish even if one fails
       matrix:
-        playwright-project:
-          [
-            { name: "chromium", install: "chromium" },
-            { name: "firefox", install: "firefox" },
-            { name: "msedge", install: "msedge chromium" },
-          ]
-        shardIndex: [1, 2, 3, 4]
-        shardTotal: [4]
-    runs-on: ubuntu-latest
+        project:
+          # Regular, sharded tests
+          - { name: "chromium", install: "chromium", shard: 1 }
+          - { name: "chromium", install: "chromium", shard: 2 }
+          - { name: "chromium", install: "chromium", shard: 3 }
+          - { name: "chromium", install: "chromium", shard: 4 }
+          - { name: "firefox", install: "firefox", shard: 1 }
+          - { name: "firefox", install: "firefox", shard: 2 }
+          - { name: "firefox", install: "firefox", shard: 3 }
+          - { name: "firefox", install: "firefox", shard: 4 }
+          - { name: "msedge", install: "msedge chromium", shard: 1 }
+          - { name: "msedge", install: "msedge chromium", shard: 2 }
+          - { name: "msedge", install: "msedge chromium", shard: 3 }
+          - { name: "msedge", install: "msedge chromium", shard: 4 }
+          # Login tests (no shard property)
+          - { name: "loginChromium" }
+          - { name: "loginFirefox" }
+          - { name: "loginEdge" }
 
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # setup backend
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: "23.0"
           distribution: "temurin"
           cache: gradle
-          cache-dependency-path: | # optional
+          cache-dependency-path: |
             backend/*.gradle*
             backend/**/gradle-wrapper.properties
       - name: Setup and validate Gradle
-        uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96
       - name: Start backend
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
@@ -39,13 +49,6 @@ jobs:
           node-version-file: ./frontend/.node-version
           cache: npm
           cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
@@ -55,7 +58,6 @@ jobs:
         working-directory: ./frontend
         run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
       - name: Cache browser binaries
-        id: cache-browser-binaries
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -74,7 +76,7 @@ jobs:
         run: |
           until curl --output /dev/null --silent --head --fail http://localhost:8080/actuator/health/readiness; do
             echo "Waiting for backend to be fully up..."
-            sleep 0.1
+            sleep 0.5
           done
       - name: Run Playwright setup and seed data
         working-directory: ./frontend
@@ -82,17 +84,19 @@ jobs:
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
         run: |
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-      - name: Rename ${{ matrix.playwright-project.name }} test report blob
-        working-directory: ./frontend
-        run: mv frontend-e2e-test-report.blob frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.${{ matrix.shardIndex }}.zip
-      - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
+          SHARD_ARG=""
+          if [[ -n "${{ matrix.project.shard }}" ]]; then
+            SHARD_ARG="--shard=${{ matrix.project.shard }}/4"
+          fi
+          npm run test:e2e -- --project ${{ matrix.project.name }} $SHARD_ARG
+      - name: Upload e2e test report blob
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.${{ matrix.shardIndex }}
+          name: e2e-report-${{ matrix.project.name }}-${{ matrix.project.shard || 'full' }}
           retention-days: 3
-          path: frontend/frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.${{ matrix.shardIndex }}.zip
+          path: frontend/frontend-e2e-test-report.blob
+
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
