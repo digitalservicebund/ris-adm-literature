@@ -103,6 +103,24 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   }
 
   @Override
+  @Transactional
+  public DocumentationUnit publish(@Nonnull String documentNumber, @Nonnull String xml) {
+    return documentationUnitRepository
+      .findByDocumentNumber(documentNumber)
+      .map(documentationUnitEntity -> {
+        documentationUnitEntity.setJson(null);
+        documentationUnitEntity.setXml(xml);
+        log.info("Published documentation unit with document number: {}.", documentNumber);
+        documentationUnitIndexRepository.save(
+          mapDocumentationUnitIndex(createIndex(documentationUnitEntity))
+        );
+        log.info("Re-indexed documentation unit with document number: {}.", documentNumber);
+        return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), null, xml);
+      })
+      .orElse(null);
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
     @Nonnull DocumentationUnitQuery query
@@ -153,14 +171,14 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   /**
    * Execute indexing of all documentation units without documentation unit index.
    * <p>
-   *   The method selects all documentation units which are unindexed in batches and extracts
-   *   the needed data for the index in parallel. Exceptions during the extraction
-   *   are ignored. After extraction a new instance of {@link DocumentationUnitIndexEntity} is
-   *   created and saved.
+   * The method selects all documentation units which are unindexed in batches and extracts
+   * the needed data for the index in parallel. Exceptions during the extraction
+   * are ignored. After extraction a new instance of {@link DocumentationUnitIndexEntity} is
+   * created and saved.
    * </p>
    * <p>
-   *   <b>NOTE:</b>This method guarantees that an index is created for each documentation unit
-   *   without an index before calling this method.
+   * <b>NOTE:</b>This method guarantees that an index is created for each documentation unit
+   * without an index before calling this method.
    * </p>
    *
    * @return Number of indexed documents

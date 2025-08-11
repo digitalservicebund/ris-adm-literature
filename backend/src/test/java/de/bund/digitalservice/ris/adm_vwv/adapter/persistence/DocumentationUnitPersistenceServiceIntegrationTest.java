@@ -157,6 +157,40 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
+  void publish() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR2025000001p");
+    UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
+
+    // when
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    documentationUnitPersistenceService.publish(documentationUnitEntity.getDocumentNumber(), xml);
+
+    // then
+    assertThat(entityManager.find(DocumentationUnitEntity.class, id))
+      .extracting(DocumentationUnitEntity::getJson, DocumentationUnitEntity::getXml)
+      .containsExactly(null, xml);
+  }
+
+  @Test
+  void publish_notFound() {
+    // given
+
+    // when
+    documentationUnitPersistenceService.publish("gibtsnicht", "{\"test\":\"content\"");
+
+    // then
+    TypedQuery<DocumentationUnitEntity> query = entityManager
+      .getEntityManager()
+      .createQuery(
+        "from DocumentationUnitEntity where documentNumber = 'gibtsnicht'",
+        DocumentationUnitEntity.class
+      );
+    assertThat(query.getResultList()).isEmpty();
+  }
+
+  @Test
   void findDocumentationUnitOverviewElements() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();

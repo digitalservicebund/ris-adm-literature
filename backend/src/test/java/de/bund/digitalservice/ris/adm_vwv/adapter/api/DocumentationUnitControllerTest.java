@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
@@ -133,6 +135,99 @@ class DocumentationUnitControllerTest {
       .perform(
         put("/api/documentation-units/{documentNumber}", documentNumber)
           .content(json)
+          .contentType(MediaType.APPLICATION_JSON)
+      )
+      // then
+      .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName(
+    "Request PUT on publish returns HTTP 200 and data from mocked documentation unit port"
+  )
+  void publish() throws Exception {
+    // given
+    String documentNumber = "KSNR054920707";
+    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+      documentNumber,
+      "Lange Überschrift"
+    );
+    String json =
+      """
+      {
+        "documentNumber": "KSNR054920707",
+        "langueberschrift": "Lange Überschrift"
+      }""";
+    given(documentationUnitPort.publish(documentNumber, documentationUnitContent)).willReturn(
+      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+    );
+
+    // when
+    mockMvc
+      .perform(
+        put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          .content(
+            """
+            {
+              "documentNumber": "KSNR054920707",
+              "references": [],
+              "fieldsOfLaw": [],
+              "langueberschrift": "Lange Überschrift",
+              "keywords": [],
+              "zitierdaten": [],
+              "aktenzeichen": [],
+              "noAktenzeichen": true,
+              "activeCitations": [],
+              "activeReferences": [],
+              "normReferences": [],
+              "normgeberList": []
+            }"""
+          )
+          .contentType(MediaType.APPLICATION_JSON)
+      )
+      // then
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.documentNumber").value(documentNumber))
+      .andExpect(jsonPath("$.json.langueberschrift").value("Lange Überschrift"));
+  }
+
+  @Test
+  @DisplayName(
+    "Request PUT on publish returns HTTP 404 because mocked documentation unit port returns empty optional"
+  )
+  void publish_notFound() throws Exception {
+    // given
+    String documentNumber = "KSNR000000001";
+    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+      documentNumber,
+      "Test"
+    );
+    given(documentationUnitPort.publish(documentNumber, documentationUnitContent)).willReturn(
+      Optional.empty()
+    );
+
+    // when
+    mockMvc
+      .perform(
+        put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          .content(
+            """
+            {
+              "documentNumber": "KSNR000000001",
+              "references": [],
+              "fieldsOfLaw": [],
+              "langueberschrift": "Test",
+              "keywords": [],
+              "zitierdaten": [],
+              "aktenzeichen": [],
+              "noAktenzeichen": true,
+              "activeCitations": [],
+              "activeReferences": [],
+              "normReferences": [],
+              "normgeberList": []
+            }
+            """
+          )
           .contentType(MediaType.APPLICATION_JSON)
       )
       // then

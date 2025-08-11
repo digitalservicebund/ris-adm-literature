@@ -4,7 +4,10 @@
   <akn:doc name="offene-struktur">
     <akn:meta>
       <akn:identification source="attributsemantik-noch-undefiniert">
-        <!-- omitted -->
+        <!-- mostly omitted -->
+        <akn:FRBRExpression>
+          <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
+        </akn:FRBRExpression>
       </akn:identification>
       <akn:classification source="attributsemantik-noch-undefiniert">
         <akn:keyword showAs="Schlag" dictionary="attributsemantik-noch-undefiniert" value="Schlag"/>
