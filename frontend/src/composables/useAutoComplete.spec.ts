@@ -188,9 +188,19 @@ describe('usePeriodikumSearch', () => {
     expect(results).toHaveLength(2)
   })
 
-  it('returns filtered periodika by title', () => {
+  it('returns an empty array if no matches', () => {
     const search = usePeriodikumSearch(mockPeriodika)
-    const results = search('bu')
+    const results = search('xyz')
+    expect(results).toEqual([])
+  })
+
+  it.each([
+    ['title', 'bu'],
+    ['abbreviation', 'BAnz'],
+    ['label', 'BAnz | Bundesanzeiger'],
+  ])('returns filtered periodika by %s', (_, query) => {
+    const search = usePeriodikumSearch(mockPeriodika)
+    const results = search(query)
     expect(results).toEqual([
       {
         id: bundesanzeigerFixture.id,
@@ -198,11 +208,5 @@ describe('usePeriodikumSearch', () => {
         secondaryLabel: '',
       },
     ])
-  })
-
-  it('returns an empty array if no matches', () => {
-    const search = usePeriodikumSearch(mockPeriodika)
-    const results = search('xyz')
-    expect(results).toEqual([])
   })
 })

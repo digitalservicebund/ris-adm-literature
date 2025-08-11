@@ -112,7 +112,13 @@ export function useRegionSearch(regions: Ref<Region[]>) {
 export function usePeriodikumSearch(periodika: Ref<Periodikum[]>) {
   return function searchFn(query?: string) {
     return periodika.value
-      .filter((p) => !query || p.title?.toLowerCase().includes(query.toLowerCase()))
+      .filter(
+        (p) =>
+          !query ||
+          p.title?.toLowerCase().includes(query.toLowerCase()) ||
+          p.abbreviation?.toLowerCase().includes(query.toLowerCase()) ||
+          `${p.abbreviation} | ${p.title}`.toLowerCase().includes(query?.toLowerCase()),
+      )
       .map((p) => ({
         id: p.id,
         label: `${p.abbreviation} | ${p.title}`,
