@@ -170,7 +170,7 @@ class DocumentationUnitControllerTest {
             """
             {
               "documentNumber": "KSNR054920707",
-              "references": [],
+              "fundstellen": [],
               "fieldsOfLaw": [],
               "langueberschrift": "Lange Überschrift",
               "keywords": [],
@@ -214,7 +214,7 @@ class DocumentationUnitControllerTest {
             """
             {
               "documentNumber": "KSNR000000001",
-              "references": [],
+              "fundstellen": [],
               "fieldsOfLaw": [],
               "langueberschrift": "Test",
               "keywords": [],

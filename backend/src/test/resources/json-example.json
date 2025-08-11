@@ -1,12 +1,12 @@
 {
   "id": "1be4284a-395f-47ce-bab8-cce9d53e78d4",
   "documentNumber": "KSNR",
-  "references": [
+  "fundstellen": [
     {
       "id": "ea101225-a12b-4e96-a5fc-c9c10316a3d8",
-      "citation": "2021, Seite 15",
-      "legalPeriodical": null,
-      "legalPeriodicalRawValue": "Das Periodikum"
+      "zitatstelle": "2021, Seite 15",
+      "periodikum": null,
+      "ambiguousPeriodikum": "Das Periodikum"
     }
   ],
   "fieldsOfLaw": [
