@@ -7,7 +7,7 @@ import type { Periodikum } from '@/domain/fundstelle'
 
 defineProps<{
   inputId: string
-  isInvalid: boolean
+  invalid: boolean
 }>()
 
 const modelValue = defineModel<Periodikum | undefined>()
@@ -41,13 +41,14 @@ onMounted(async () => {
     :model-value="selectedPeriodikumId"
     :suggestions="suggestions"
     :input-id="inputId"
-    :invalid="isInvalid"
+    :invalid="invalid"
     :initial-label="modelValue?.title"
     aria-label="Periodikum"
     append-to="self"
     typeahead
     dropdown
     dropdown-mode="blank"
+    complete-on-focus
     @update:model-value="onModelValueChange"
     @complete="onComplete"
     @dropdown-click="onDropdownClick"

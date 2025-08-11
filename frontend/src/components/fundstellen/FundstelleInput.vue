@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref, watch } from 'vue'
 import InputField from '../input/InputField.vue'
 import { type Fundstelle, type Periodikum } from '@/domain/fundstelle'
 import InputText from 'primevue/inputtext'
@@ -22,8 +22,6 @@ const validationStore = useValidationStore<['periodikum', 'zitatstelle'][number]
 
 const periodikum = ref<Periodikum | undefined>(props.fundstelle?.periodikum || undefined)
 const zitatstelle = ref<string>(props.fundstelle?.zitatstelle || '')
-
-const isInvalid = computed(() => !periodikum.value)
 
 const onClickSave = () => {
   const isValid = validate()
@@ -49,9 +47,7 @@ const onClickDelete = () => {
 }
 
 const validate = () => {
-  // validationStore.reset()
   let isValid = true
-  console.log(periodikum.value)
   if (!periodikum.value) {
     validationStore.add('Pflichtfeld nicht befüllt', 'periodikum')
     isValid = false
@@ -62,6 +58,17 @@ const validate = () => {
   }
   return isValid
 }
+
+watch(
+  () => props.fundstelle,
+  (val) => {
+    validationStore.remove('periodikum')
+    if (!!val?.ambiguousPeriodikum && !val?.periodikum) {
+      validationStore.add('Mehrdeutiger Verweis', 'periodikum')
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -77,7 +84,7 @@ const validate = () => {
         <PeriodikumDropDown
           input-id="periodikum"
           v-model="periodikum"
-          :is-invalid="slotProps.hasError"
+          :invalid="slotProps.hasError"
           @focus="validationStore.remove('periodikum')"
         />
       </InputField>
@@ -91,7 +98,7 @@ const validate = () => {
           <InputText
             id="zitatstelle"
             v-model="zitatstelle"
-            :is-invalid="slotProps.hasError"
+            :invalid="slotProps.hasError"
             aria-label="zitatstelle"
             size="small"
             fluid
@@ -105,7 +112,6 @@ const validate = () => {
     </div>
     <div class="flex w-full gap-16 mt-16">
       <Button
-        :disabled="isInvalid"
         aria-label="Fundstelle übernehmen"
         label="Übernehmen"
         size="small"

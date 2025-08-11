@@ -25,7 +25,7 @@ describe('PeriodikumDropDown', () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
         inputId: 'foo',
-        isInvalid: false,
+        invalid: false,
         modelValue: undefined,
       },
     })
@@ -42,7 +42,7 @@ describe('PeriodikumDropDown', () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
         inputId: 'foo',
-        isInvalid: false,
+        invalid: false,
         modelValue: undefined,
       },
     })
@@ -66,7 +66,7 @@ describe('PeriodikumDropDown', () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
         inputId: 'foo',
-        isInvalid: false,
+        invalid: false,
         modelValue: undefined,
       },
     })
@@ -85,7 +85,8 @@ describe('PeriodikumDropDown', () => {
     // when
     await input.setValue('unknownId')
 
-    // then value is not emitted
-    expect(emitted).toHaveLength(1)
+    // then undefined is emitted
+    expect(emitted).toHaveLength(2)
+    expect(emitted[1][0]).toEqual(undefined)
   })
 })

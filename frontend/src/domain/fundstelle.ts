@@ -9,5 +9,6 @@ export interface Periodikum {
 export interface Fundstelle {
   readonly id: string
   zitatstelle: string
-  periodikum: Periodikum
+  periodikum?: Periodikum
+  ambiguousPeriodikum?: string
 }

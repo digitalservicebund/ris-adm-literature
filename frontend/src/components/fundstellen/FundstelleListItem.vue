@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
 import ToolTip from '@/components/ToolTip.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import { type Fundstelle } from '@/domain/fundstelle'
 import FundstelleInput from './FundstelleInput.vue'
+import IconBadge from '../IconBadge.vue'
+import { ref } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   fundstelle: Fundstelle
 }>()
 const emit = defineEmits<{
@@ -47,10 +48,18 @@ const onDeleteFundstelle = (fundstelleId: string) => {
     @cancel="onClickCancel"
     show-cancel-button
   />
-  <div v-else class="flex w-full items-center">
-    <div class="ris-label1-regular">
-      {{ `${fundstelle.periodikum.abbreviation} ${fundstelle.zitatstelle}` }}
+  <div v-else class="flex w-full flex-row items-center">
+    <div class="ris-label1-regular mr-8">
+      {{
+        `${fundstelle.periodikum ? fundstelle.periodikum.abbreviation : fundstelle.ambiguousPeriodikum} ${props.fundstelle.zitatstelle}`
+      }}
     </div>
+    <IconBadge
+      v-if="!fundstelle.periodikum && !!fundstelle.ambiguousPeriodikum"
+      background-color="bg-red-300"
+      color="text-red-900"
+      label="Mehrdeutiger Verweis"
+    />
     <ToolTip class="ml-auto" text="Aufklappen">
       <button
         aria-label="Fundstelle Editieren"

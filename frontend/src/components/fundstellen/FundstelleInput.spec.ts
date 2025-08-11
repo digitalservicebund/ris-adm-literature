@@ -64,7 +64,6 @@ describe('FundstelleInput', () => {
     expect(screen.getByText('Periodikum *')).toBeInTheDocument()
     expect(screen.getByText('Zitatstelle *')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Fundstelle übernehmen' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Fundstelle übernehmen' })).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'Eintrag löschen' })).not.toBeInTheDocument()
   })
 
@@ -136,7 +135,7 @@ describe('FundstelleInput', () => {
     const emittedVal = emitted('updateFundstelle') as [Fundstelle[]]
     const updatedEntity = emittedVal?.[0][0]
     expect(updatedEntity.id).toEqual(fundstelleFixture.id)
-    expect(updatedEntity.periodikum.id).toEqual('bundesanzeigerTestId')
+    expect(updatedEntity.periodikum?.id).toEqual('bundesanzeigerTestId')
     expect(updatedEntity.zitatstelle).toEqual('test')
   })
 
@@ -152,14 +151,17 @@ describe('FundstelleInput', () => {
 
     // when
     const periodikumInput = screen.getByTestId('periodikum-input')
-    await await user.clear(periodikumInput)
+    const zitatstelleInput = screen.getByRole('textbox', { name: 'zitatstelle' })
+    await user.clear(periodikumInput)
     await user.type(periodikumInput, 'bundesanzeigerTestId')
+    await user.clear(zitatstelleInput)
+    await user.type(zitatstelleInput, 'test')
     await user.click(screen.getByRole('button', { name: 'Fundstelle übernehmen' }))
     // then
     const emittedVal = emitted('updateFundstelle') as [Fundstelle[]]
     const createdEntity = emittedVal?.[0][0]
     expect(createdEntity.id).toEqual('mocked-uuid')
-    expect(createdEntity.periodikum.id).toEqual('bundesanzeigerTestId')
+    expect(createdEntity.periodikum?.id).toEqual('bundesanzeigerTestId')
   })
 
   it('should delete an existing fundstelle', async () => {
