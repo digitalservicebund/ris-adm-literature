@@ -61,15 +61,21 @@ public class LdmlConverterService {
     );
   }
 
+  /**
+   * Converts the given business model to LDML xml.
+   * @param documentationUnitContent The documentation unit content to convert
+   * @param previousXmlVersion Previous xml version of the documentation unit if it was once published, if not set to {@code null}
+   * @return LDML xml representation of the given documentation unit content
+   */
   public String convertToLdml(
     @Nonnull DocumentationUnitContent documentationUnitContent,
-    String previousVersion
+    String previousXmlVersion
   ) {
     AkomaNtoso akomaNtoso;
-    if (previousVersion != null) {
+    if (previousXmlVersion != null) {
       // If there is a previous version it could be a migrated documented. In that case we have to hold some
       // historic data.
-      akomaNtoso = xmlReader.readXml(previousVersion);
+      akomaNtoso = xmlReader.readXml(previousXmlVersion);
     } else {
       akomaNtoso = new AkomaNtoso();
       Doc doc = new Doc();
