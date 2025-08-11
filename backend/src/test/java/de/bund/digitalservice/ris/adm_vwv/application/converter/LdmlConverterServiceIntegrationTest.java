@@ -647,4 +647,43 @@ class LdmlConverterServiceIntegrationTest {
         tuple("JurpnOrgan", InstitutionType.INSTITUTION, List.of("AA"))
       );
   }
+
+  @Test
+  void convertToLdml() {
+    // given
+    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+      "KSNR00000011",
+      "Lange Überschrift"
+    );
+
+    // when
+    String xml = ldmlConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
+      """
+    );
+  }
+
+  @Test
+  void convertToLdml_withExistingVersion() {
+    // given
+    String previousXmlVersion = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+      "KSNR00000011",
+      "Lange Überschrift"
+    );
+
+    // when
+    String xml = ldmlConverterService.convertToLdml(documentationUnitContent, previousXmlVersion);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
+      """
+    );
+  }
 }

@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,41 @@ class DocumentationUnitServiceIntegrationTest {
 
     // then
     assertThat(updated).isEmpty();
+  }
+
+  @Test
+  void publish() {
+    // given
+    DocumentationUnit documentationUnit = documentationUnitService.create();
+
+    // when
+    Optional<DocumentationUnit> published = documentationUnitService.publish(
+      documentationUnit.documentNumber(),
+      TestDocumentationUnitContent.create(documentationUnit.documentNumber(), "Lang")
+    );
+
+    // then
+    assertThat(published)
+      .isPresent()
+      .hasValueSatisfying(dun ->
+        assertThat(dun.json()).contains(
+          "\"documentNumber\":\"" + documentationUnit.documentNumber() + "\""
+        )
+      );
+  }
+
+  @Test
+  void publish_notFound() {
+    // given
+    String documentNumber = "KSNR000000001a";
+
+    // when
+    Optional<DocumentationUnit> published = documentationUnitService.publish(
+      documentNumber,
+      TestDocumentationUnitContent.create(null, null)
+    );
+
+    // then
+    assertThat(published).isEmpty();
   }
 }

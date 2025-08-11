@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class LdmlConverterService {
 
   private final XmlReader xmlReader;
+  private final XmlWriter xmlWriter;
   private final FundstellenTransformer fundstellenTransformer;
   private final DocumentTypeTransformer documentTypeTransformer;
   private final NormgeberTransformer normgeberTransformer;
@@ -58,5 +59,38 @@ public class LdmlConverterService {
       null,
       normgeberTransformer.transform(akomaNtoso)
     );
+  }
+
+  /**
+   * Converts the given business model to LDML xml.
+   * @param documentationUnitContent The documentation unit content to convert
+   * @param previousXmlVersion Previous xml version of the documentation unit if it was once published, if not set to {@code null}
+   * @return LDML xml representation of the given documentation unit content
+   */
+  public String convertToLdml(
+    @Nonnull DocumentationUnitContent documentationUnitContent,
+    String previousXmlVersion
+  ) {
+    AkomaNtoso akomaNtoso;
+    if (previousXmlVersion != null) {
+      // If there is a previous version it could be a migrated documented. In that case we have to hold some
+      // historic data.
+      akomaNtoso = xmlReader.readXml(previousXmlVersion);
+    } else {
+      akomaNtoso = new AkomaNtoso();
+      Doc doc = new Doc();
+      akomaNtoso.setDoc(doc);
+      Meta meta = new Meta();
+      Identification identification = new Identification();
+      FrbrElement frbrExpression = new FrbrElement();
+      FrbrAlias frbrAlias = new FrbrAlias();
+      frbrAlias.setName("documentNumber");
+      frbrAlias.setValue(documentationUnitContent.documentNumber());
+      frbrExpression.setFrbrAlias(List.of(frbrAlias));
+      identification.setFrbrExpression(frbrExpression);
+      meta.setIdentification(identification);
+      doc.setMeta(meta);
+    }
+    return xmlWriter.writeXml(akomaNtoso);
   }
 }

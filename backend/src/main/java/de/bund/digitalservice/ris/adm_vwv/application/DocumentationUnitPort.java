@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 
@@ -19,6 +20,11 @@ public interface DocumentationUnitPort {
    *     with the given document number
    */
   Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json);
+
+  Optional<DocumentationUnit> publish(
+    @Nonnull String documentNumber,
+    @Nonnull DocumentationUnitContent documentationUnitContent
+  );
 
   /**
    * Returns paginated documentation units overview elements.
