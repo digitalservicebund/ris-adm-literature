@@ -91,6 +91,31 @@ public class LdmlConverterService {
       meta.setIdentification(identification);
       doc.setMeta(meta);
     }
+    Meta meta = akomaNtoso.getDoc().getMeta();
+    setInkrafttretedatum(meta, documentationUnitContent.inkrafttretedatum());
+    setAusserkrafttretedatum(meta, documentationUnitContent.ausserkrafttretedatum());
+    setZitierdaten(meta, documentationUnitContent.zitierdaten());
     return xmlWriter.writeXml(akomaNtoso);
+  }
+
+  private void setInkrafttretedatum(Meta meta, String inkrafttretedatum) {
+    if (inkrafttretedatum != null) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setEntryIntoEffectDate(inkrafttretedatum);
+    }
+  }
+
+  private void setAusserkrafttretedatum(Meta meta, String ausserkrafttretedatum) {
+    if (ausserkrafttretedatum != null) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setExpiryDate(ausserkrafttretedatum);
+    }
+  }
+
+  private void setZitierdaten(Meta meta, List<String> zitierdaten) {
+    if (!zitierdaten.isEmpty()) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setDateToQuoteList(zitierdaten);
+    }
   }
 }

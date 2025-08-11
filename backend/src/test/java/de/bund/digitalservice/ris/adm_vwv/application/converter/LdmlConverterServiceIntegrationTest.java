@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -684,6 +685,50 @@ class LdmlConverterServiceIntegrationTest {
       """
       <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
       """
+    );
+  }
+
+  @Test
+  @DisplayName(
+    "Converts Inkrafttretedatum, Ausserkrafttretedatum and Zitierdaten to tags in ris:metadata"
+  )
+  void convertToLdml_dates() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of("2025-02-04", "2025-02-05"),
+      "2025-01-01",
+      "2027-09-30",
+      null,
+      null,
+      List.of(),
+      true,
+      null,
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of()
+    );
+
+    // when
+    String xml = ldmlConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <ris:entryIntoEffectDate>2025-01-01</ris:entryIntoEffectDate>
+      <ris:expiryDate>2027-09-30</ris:expiryDate>
+      <ris:dateToQuoteList>
+          <ris:dateToQuoteEntry>2025-02-04</ris:dateToQuoteEntry>
+          <ris:dateToQuoteEntry>2025-02-05</ris:dateToQuoteEntry>
+      </ris:dateToQuoteList>""".indent(20)
     );
   }
 }

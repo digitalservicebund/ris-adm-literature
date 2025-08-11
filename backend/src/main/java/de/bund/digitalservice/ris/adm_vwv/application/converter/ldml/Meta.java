@@ -23,4 +23,18 @@ public class Meta {
 
   @XmlElement(namespace = XmlNamespace.AKN_NS)
   private Proprietary proprietary;
+
+  /**
+   * Returns the set proprietary instance or creates and sets a new one including an instance
+   * of {@link RisMetadata}.
+   *
+   * @return Instance of {@code Proprietary}
+   */
+  public Proprietary getOrCreateProprietary() {
+    if (proprietary == null) {
+      proprietary = new Proprietary();
+      proprietary.setMetadata(new RisMetadata());
+    }
+    return proprietary;
+  }
 }
