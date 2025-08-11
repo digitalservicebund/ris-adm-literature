@@ -12,7 +12,7 @@ defineProps<{
 
 const modelValue = defineModel<Periodikum | undefined>()
 const emit = defineEmits<{
-  'update:modelValue': [value: Periodikum]
+  'update:modelValue': [value: Periodikum | undefined]
 }>()
 
 const autoComplete = ref<typeof RisAutoComplete | null>(null)
@@ -26,9 +26,7 @@ const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComple
 function onModelValueChange(id: string | undefined) {
   selectedPeriodikumId.value = id
   const selectedPeriodikum = periodika.value.find((p: Periodikum) => p.id === id)
-  if (selectedPeriodikum) {
-    emit('update:modelValue', selectedPeriodikum)
-  }
+  emit('update:modelValue', selectedPeriodikum)
 }
 
 onMounted(async () => {

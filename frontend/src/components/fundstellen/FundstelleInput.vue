@@ -18,7 +18,7 @@ const emit = defineEmits<{
   cancel: [void]
 }>()
 
-const validationStore = useValidationStore<'periodikum'>()
+const validationStore = useValidationStore<['periodikum', 'zitatstelle'][number]>()
 
 const periodikum = ref<Periodikum | undefined>(props.fundstelle?.periodikum || undefined)
 const zitatstelle = ref<string>(props.fundstelle?.zitatstelle || '')
@@ -26,13 +26,16 @@ const zitatstelle = ref<string>(props.fundstelle?.zitatstelle || '')
 const isInvalid = computed(() => !periodikum.value)
 
 const onClickSave = () => {
-  const fundstelle = {
-    id: props.fundstelle ? props.fundstelle.id : crypto.randomUUID(),
-    periodikum: periodikum.value!,
-    zitatstelle: zitatstelle.value,
-  }
+  const isValid = validate()
+  if (isValid) {
+    const fundstelle = {
+      id: props.fundstelle ? props.fundstelle.id : crypto.randomUUID(),
+      periodikum: periodikum.value!,
+      zitatstelle: zitatstelle.value,
+    }
 
-  emit('updateFundstelle', fundstelle)
+    emit('updateFundstelle', fundstelle)
+  }
 }
 
 const onClickCancel = () => {
@@ -45,23 +48,20 @@ const onClickDelete = () => {
   emit('deleteFundstelle', props.fundstelle!.id)
 }
 
-// const validatePeriodikum = () => {
-//   const periodikumId = periodikum.value?.id
-//   if (periodikumId && existingPeriodikumIds.value.includes(periodikumId)) {
-//     validationStore.add('Fundstelle bereits eingegeben', 'periodikum')
-//   } else {
-//     validationStore.remove('periodikum')
-//   }
-// }
-
-// Reset the selected region on periodikum change
-// Triggers validation
-// watch(periodikum, (newVal, oldVal) => {
-//   if (newVal?.id !== oldVal?.id) {
-//     selectedRegion.value = undefined
-//     //validatePeriodikum()
-//   }
-// })
+const validate = () => {
+  // validationStore.reset()
+  let isValid = true
+  console.log(periodikum.value)
+  if (!periodikum.value) {
+    validationStore.add('Pflichtfeld nicht befüllt', 'periodikum')
+    isValid = false
+  }
+  if (!zitatstelle.value) {
+    validationStore.add('Pflichtfeld nicht befüllt', 'zitatstelle')
+    isValid = false
+  }
+  return isValid
+}
 </script>
 
 <template>
@@ -78,16 +78,24 @@ const onClickDelete = () => {
           input-id="periodikum"
           v-model="periodikum"
           :is-invalid="slotProps.hasError"
+          @focus="validationStore.remove('periodikum')"
         />
       </InputField>
       <div class="flex w-full flex-col">
-        <InputField id="zitatstelle" label="Zitatstelle *">
+        <InputField
+          id="zitatstelle"
+          v-slot="slotProps"
+          label="Zitatstelle *"
+          :validation-error="validationStore.getByField('zitatstelle')"
+        >
           <InputText
             id="zitatstelle"
             v-model="zitatstelle"
+            :is-invalid="slotProps.hasError"
             aria-label="zitatstelle"
             size="small"
             fluid
+            @focus="validationStore.remove('zitatstelle')"
           />
         </InputField>
         <span v-if="periodikum" class="ris-label3-regular pt-4">
