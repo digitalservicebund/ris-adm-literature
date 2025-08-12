@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { type Fundstelle } from '@/domain/fundstelle'
 import FundstelleInput from './FundstelleInput.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import { ambiguousFundstelleFixture, fundstelleFixture } from '@/testing/fixtures/fundstelle'
 
 // Stubbing complex dropdown components with simple input fields to:
 // - Hide their internal implementation during testing
@@ -176,5 +176,39 @@ describe('FundstelleInput', () => {
     const emittedVal = emitted('deleteFundstelle') as [string[]]
     const id = emittedVal?.[0][0]
     expect(id).toEqual(fundstelleFixture.id)
+  })
+
+  it('should show error message when ambiguous', async () => {
+    renderComponent({
+      fundstelle: ambiguousFundstelleFixture,
+      showCancelButton: true,
+    })
+
+    expect(screen.getByText('Mehrdeutiger Verweis')).toBeVisible()
+  })
+
+  it('should show error message for mandatory fields', async () => {
+    const { user, emitted } = renderComponent(
+      { fundstelle: undefined, showCancelButton: true },
+      { PeriodikumDropDown: stubs.PeriodikumDropdownStub },
+    )
+
+    // when
+    const periodikumInput = screen.getByTestId('periodikum-input')
+    await user.clear(periodikumInput)
+    await user.type(periodikumInput, 'bundesanzeigerTestId')
+    await user.click(screen.getByRole('button', { name: 'Fundstelle übernehmen' }))
+    // then
+    expect(screen.getByText('Pflichtfeld nicht befüllt')).toBeVisible()
+    expect(emitted()['updateFundstelle']).toBeFalsy()
+
+    // when
+    const zitatstelleInput = screen.getByRole('textbox', { name: 'zitatstelle' })
+    await user.type(periodikumInput, 'bundesanzeigerTestId')
+    await user.clear(zitatstelleInput)
+    await user.click(screen.getByRole('button', { name: 'Fundstelle übernehmen' }))
+    // then
+    expect(screen.getByText('Pflichtfeld nicht befüllt')).toBeVisible()
+    expect(emitted()['updateFundstelle']).toBeFalsy()
   })
 })

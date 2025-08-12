@@ -3,15 +3,16 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import FundstelleListItem from './FundstelleListItem.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import { ambiguousFundstelleFixture, fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import type { Fundstelle } from '@/domain/fundstelle'
 
-function renderComponent() {
+function renderComponent(fundstelle: Fundstelle) {
   const user = userEvent.setup()
 
   return {
     user,
     ...render(FundstelleListItem, {
-      props: { fundstelle: fundstelleFixture },
+      props: { fundstelle },
       global: {
         plugins: [
           [
@@ -35,14 +36,19 @@ function renderComponent() {
 
 describe('FundstelleListItem', () => {
   it('renders label', async () => {
-    renderComponent()
+    renderComponent(fundstelleFixture)
     expect(screen.getByText('BAnz 1973, 608')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Fundstelle Editieren' })).toBeInTheDocument()
     expect(screen.queryByLabelText('Fundstelle *')).not.toBeInTheDocument()
   })
 
+  it('renders label for ambiguous fundstelle', async () => {
+    renderComponent(ambiguousFundstelleFixture)
+    expect(screen.getByText('BAnz 1973, 608')).toBeInTheDocument()
+  })
+
   it('toggles the edit mode when clicking on expand', async () => {
-    const { user } = renderComponent()
+    const { user } = renderComponent(fundstelleFixture)
 
     // when
     await user.click(screen.getByRole('button', { name: 'Fundstelle Editieren' }))
@@ -52,7 +58,7 @@ describe('FundstelleListItem', () => {
   })
 
   it('emits an update when clicking on save', async () => {
-    const { user, emitted } = renderComponent()
+    const { user, emitted } = renderComponent(fundstelleFixture)
 
     // when
     await user.click(screen.getByRole('button', { name: 'Fundstelle Editieren' }))
@@ -64,7 +70,7 @@ describe('FundstelleListItem', () => {
   })
 
   it('leaves edit mode on cancel', async () => {
-    const { user } = renderComponent()
+    const { user } = renderComponent(fundstelleFixture)
 
     // when
     await user.click(screen.getByRole('button', { name: 'Fundstelle Editieren' }))
@@ -76,7 +82,7 @@ describe('FundstelleListItem', () => {
   })
 
   it('emits an delete event when clicking on delete', async () => {
-    const { user, emitted } = renderComponent()
+    const { user, emitted } = renderComponent(fundstelleFixture)
 
     // when
     await user.click(screen.getByRole('button', { name: 'Fundstelle Editieren' }))

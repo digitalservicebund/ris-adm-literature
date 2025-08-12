@@ -65,4 +65,16 @@ describe('NormgeberList', () => {
     expect(screen.getByText('Periodikum *')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Fundstelle hinzufügen' })).not.toBeInTheDocument()
   })
+
+  it('closes the creation panel', async () => {
+    const { user } = renderComponent([fundstelleFixture])
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Fundstelle hinzufügen' }))
+    await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
+
+    // then
+    expect(screen.getByText('BAnz 1973, 608')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Fundstelle hinzufügen' })).toBeInTheDocument()
+  })
 })
