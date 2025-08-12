@@ -121,7 +121,7 @@ test.describe('FundstellenPage', () => {
     },
   )
 
-  test.skip(
+  test(
     'Periodikum and Zitatstelle are mandatory fields',
     { tag: ['@RISDEV-7978'] },
     async ({ page }) => {
@@ -131,7 +131,7 @@ test.describe('FundstellenPage', () => {
       // When
       await page.getByRole('combobox', { name: 'Periodikum' }).fill('Die')
       await page.getByText('ABc | Die Beispieler').click()
-      await page.getByRole('button', { name: 'Fundstelle speichern' }).click()
+      await page.getByRole('button', { name: 'Fundstelle übernehmen' }).click()
 
       // Then
       await expect(page.getByRole('textbox', { name: 'Zitatstelle' })).toHaveAttribute(
@@ -142,15 +142,11 @@ test.describe('FundstellenPage', () => {
 
       // When
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
-      await page.getByRole('button', { name: 'Auswahl zurücksetzen' }).click()
+      await page.getByRole('button', { name: 'Entfernen' }).click()
       await page.keyboard.press('Tab')
-      await page.getByRole('button', { name: 'Fundstelle speichern' }).click()
+      await page.getByRole('button', { name: 'Fundstelle übernehmen' }).click()
 
       // Then
-      await expect(page.getByRole('textbox', { name: 'Periodikum' })).toHaveAttribute(
-        'invalid',
-        'true',
-      )
       await expect(page.getByText('Pflichtfeld nicht befüllt')).toBeVisible()
     },
   )
@@ -234,7 +230,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
 })
 
 test.describe('FundstellenPage - Bestandsdaten', () => {
-  test.skip(
+  test(
     'Load test documentation unit and expect fundstellen',
     { tag: ['@RISDEV-7639'] },
     async ({ page }) => {

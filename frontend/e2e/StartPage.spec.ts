@@ -212,7 +212,7 @@ test.describe('List of documents', () => {
     },
   )
 
-  test.skip(
+  test(
     'shows dokumentnummer, zitierdatum, langueberschrift, fundstelle for a newly created document',
     { tag: ['@RISDEV-8315', '@RISDEV-7599'] },
     async ({ page }) => {
