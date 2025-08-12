@@ -650,6 +650,7 @@ class LdmlConverterServiceIntegrationTest {
   }
 
   @Test
+  @DisplayName("Conversion of document with document number results into xml with FRBRalias")
   void convertToLdml() {
     // given
     DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
@@ -669,6 +670,10 @@ class LdmlConverterServiceIntegrationTest {
   }
 
   @Test
+  @DisplayName(
+    "Conversion of document with document number and an existing published version " +
+    "results into xml with FRBRalias"
+  )
   void convertToLdml_withExistingVersion() {
     // given
     String previousXmlVersion = TestFile.readFileToString("ldml-example.akn.xml");

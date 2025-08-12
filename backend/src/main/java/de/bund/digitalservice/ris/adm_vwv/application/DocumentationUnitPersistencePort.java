@@ -13,7 +13,11 @@ public interface DocumentationUnitPersistencePort {
 
   DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json);
 
-  DocumentationUnit publish(@Nonnull String documentNumber, @Nonnull String xml);
+  DocumentationUnit publish(
+    @Nonnull String documentNumber,
+    @Nonnull String json,
+    @Nonnull String xml
+  );
 
   Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
     @Nonnull DocumentationUnitQuery query

@@ -104,11 +104,15 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
 
   @Override
   @Transactional
-  public DocumentationUnit publish(@Nonnull String documentNumber, @Nonnull String xml) {
+  public DocumentationUnit publish(
+    @Nonnull String documentNumber,
+    @Nonnull String json,
+    @Nonnull String xml
+  ) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
       .map(documentationUnitEntity -> {
-        documentationUnitEntity.setJson(null);
+        documentationUnitEntity.setJson(json);
         documentationUnitEntity.setXml(xml);
         log.info("Published documentation unit with document number: {}.", documentNumber);
         documentationUnitIndexRepository.save(

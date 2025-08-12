@@ -38,13 +38,13 @@ public class DocumentationUnitService implements DocumentationUnitPort {
 
   private Optional<DocumentationUnit> convertLdml(DocumentationUnit documentationUnit) {
     var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+    String json = convertToJson(documentationUnitContent);
+    return Optional.of(new DocumentationUnit(documentationUnit, json));
+  }
+
+  private String convertToJson(DocumentationUnitContent documentationUnitContent) {
     try {
-      return Optional.of(
-        new DocumentationUnit(
-          documentationUnit,
-          objectMapper.writeValueAsString(documentationUnitContent)
-        )
-      );
+      return objectMapper.writeValueAsString(documentationUnitContent);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -74,8 +74,10 @@ public class DocumentationUnitService implements DocumentationUnitPort {
         documentationUnitContent,
         documentationUnit.xml()
       );
+      String json = convertToJson(documentationUnitContent);
       DocumentationUnit publishedDocumentationUnit = documentationUnitPersistencePort.publish(
         documentNumber,
+        json,
         xml
       );
       return convertLdml(publishedDocumentationUnit);

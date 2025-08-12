@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -157,6 +158,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
+  @DisplayName("After publishing a documentation unit, given JSON and XML is returned.")
   void publish() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
@@ -165,29 +167,35 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
     // when
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
-    documentationUnitPersistenceService.publish(documentationUnitEntity.getDocumentNumber(), xml);
+    String json = TestFile.readFileToString("json-example.json");
+    documentationUnitPersistenceService.publish(
+      documentationUnitEntity.getDocumentNumber(),
+      json,
+      xml
+    );
 
     // then
     assertThat(entityManager.find(DocumentationUnitEntity.class, id))
       .extracting(DocumentationUnitEntity::getJson, DocumentationUnitEntity::getXml)
-      .containsExactly(null, xml);
+      .containsExactly(json, xml);
   }
 
   @Test
+  @DisplayName(
+    "If a document with an unknown ID is published, this does not lead to creating the document."
+  )
   void publish_notFound() {
     // given
 
     // when
-    documentationUnitPersistenceService.publish("gibtsnicht", "{\"test\":\"content\"");
+    DocumentationUnit published = documentationUnitPersistenceService.publish(
+      "gibtsnicht",
+      "{\"test\":\"content\"",
+      "<akn:akomaNtoso/>"
+    );
 
     // then
-    TypedQuery<DocumentationUnitEntity> query = entityManager
-      .getEntityManager()
-      .createQuery(
-        "from DocumentationUnitEntity where documentNumber = 'gibtsnicht'",
-        DocumentationUnitEntity.class
-      );
-    assertThat(query.getResultList()).isEmpty();
+    assertThat(published).isNull();
   }
 
   @Test
