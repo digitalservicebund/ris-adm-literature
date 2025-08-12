@@ -55,6 +55,17 @@ describe('NormgeberList', () => {
     expect(screen.getByRole('button', { name: 'Fundstelle hinzufügen' })).toBeInTheDocument()
   })
 
+  it('deletes an existing fundstellen', async () => {
+    const { user } = renderComponent([fundstelleFixture])
+    expect(screen.getByText('BAnz 1973, 608')).toBeInTheDocument()
+
+    // when
+    await user.click(screen.getByRole('button', { name: 'Fundstelle Editieren' }))
+    await user.click(screen.getByRole('button', { name: 'Eintrag löschen' }))
+    // then
+    expect(screen.queryByText('BAnz 1973, 608')).not.toBeInTheDocument()
+  })
+
   it('opens the creation panel on clicking add', async () => {
     const { user } = renderComponent([fundstelleFixture])
 

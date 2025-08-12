@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * @param id                    The uuid
  * @param documentNumber        The document number
- * @param fundstellen            List of fundstellen
+ * @param fundstellen           List of fundstellen
  * @param fieldsOfLaw           List of fields of law
  * @param langueberschrift      Long title
  * @param keywords              List of keywords
