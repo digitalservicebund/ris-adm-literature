@@ -35,7 +35,7 @@ public class DomXmlReader {
       Document document = documentBuilder.parse(new InputSource(new StringReader(xml)));
       return document.getDocumentElement();
     } catch (SAXException | IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(e);
     }
   }
 }
