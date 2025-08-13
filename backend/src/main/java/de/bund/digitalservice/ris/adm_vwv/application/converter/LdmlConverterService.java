@@ -3,12 +3,18 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
 import jakarta.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * LDML converter service for transforming Business Models into XML/LDML and vice versa.
@@ -20,6 +26,7 @@ public class LdmlConverterService {
 
   private final XmlReader xmlReader;
   private final XmlWriter xmlWriter;
+  private final DomXmlReader domXmlReader = new DomXmlReader();
   private final FundstellenTransformer fundstellenTransformer;
   private final DocumentTypeTransformer documentTypeTransformer;
   private final NormgeberTransformer normgeberTransformer;
@@ -28,6 +35,7 @@ public class LdmlConverterService {
 
   /**
    * Converts the xml of the given documentation unit to business models.
+   *
    * @param documentationUnit The documentation unit to convert
    * @return Business model representation of given documentation unit's xml
    */
@@ -63,8 +71,9 @@ public class LdmlConverterService {
 
   /**
    * Converts the given business model to LDML xml.
+   *
    * @param documentationUnitContent The documentation unit content to convert
-   * @param previousXmlVersion Previous xml version of the documentation unit if it was once published, if not set to {@code null}
+   * @param previousXmlVersion       Previous xml version of the documentation unit if it was once published, if not set to {@code null}
    * @return LDML xml representation of the given documentation unit content
    */
   public String convertToLdml(
@@ -90,11 +99,19 @@ public class LdmlConverterService {
       identification.setFrbrExpression(frbrExpression);
       meta.setIdentification(identification);
       doc.setMeta(meta);
+      doc.setPreface(new Preface());
+      doc.setMainBody(new MainBody());
     }
     Meta meta = akomaNtoso.getDoc().getMeta();
     setInkrafttretedatum(meta, documentationUnitContent.inkrafttretedatum());
     setAusserkrafttretedatum(meta, documentationUnitContent.ausserkrafttretedatum());
     setZitierdaten(meta, documentationUnitContent.zitierdaten());
+    setLangueberschrift(
+      akomaNtoso.getDoc().getPreface(),
+      documentationUnitContent.langueberschrift()
+    );
+    setGliederung(meta, documentationUnitContent.gliederung());
+    setKurzreferat(akomaNtoso.getDoc().getMainBody(), documentationUnitContent.kurzreferat());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -117,5 +134,64 @@ public class LdmlConverterService {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       risMetadata.setDateToQuoteList(zitierdaten);
     }
+  }
+
+  private void setLangueberschrift(Preface preface, String langueberschrift) {
+    LongTitle longTitle = new LongTitle();
+    preface.setLongTitle(longTitle);
+    JaxbHtml jaxbHtml = new JaxbHtml();
+    jaxbHtml.setName("longTitle");
+    longTitle.setBlock(jaxbHtml);
+    jaxbHtml.setHtml(List.of(langueberschrift));
+  }
+
+  private void setGliederung(Meta meta, String gliederung) {
+    if (StringUtils.isNotBlank(gliederung)) {
+      List<String> entries = Pattern.compile("<p>(.*?)</p>")
+        .matcher(gliederung)
+        .results()
+        .map(matchResult -> matchResult.group(1))
+        .toList();
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setTableOfContentsEntries(entries);
+    }
+  }
+
+  private void setKurzreferat(MainBody mainBody, String kurzreferat) {
+    if (StringUtils.isBlank(kurzreferat)) {
+      JaxbHtml hcontainer = new JaxbHtml();
+      hcontainer.setName("crossheading");
+      mainBody.setHcontainer(hcontainer);
+      return;
+    }
+    JaxbHtml div = new JaxbHtml();
+    mainBody.setDiv(div);
+    // As our editor do not offer any formatting, it is sufficient to replace <p> elements
+    String kurzreferatWithAknNs = kurzreferat.replaceAll("<(/?)p>", "<$1akn:p>");
+    Node node = domXmlReader.readXml("<div>" + kurzreferatWithAknNs + "</div>");
+    div.setHtml(
+      NodeToList.toList(node.getChildNodes())
+        .stream()
+        .map(childNode -> {
+          if (childNode instanceof Element element) {
+            element.setAttributeNS(
+              "http://www.w3.org/2000/xmlns/",
+              "xmlns:akn",
+              XmlNamespace.AKN_NS
+            );
+            return childNode;
+          } else if (
+            childNode.getNodeType() == Node.TEXT_NODE &&
+            StringUtils.isNotBlank(childNode.getTextContent())
+          ) {
+            // We only add non-empty text nodes
+            return childNode.getTextContent();
+          }
+          // In case there would be processing instructions or comments
+          return null;
+        })
+        .filter(Objects::nonNull)
+        .toList()
+    );
   }
 }
