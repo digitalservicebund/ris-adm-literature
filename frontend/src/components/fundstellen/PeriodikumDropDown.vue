@@ -42,7 +42,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :input-id="inputId"
     :invalid="invalid"
-    :initial-label="`${modelValue?.abbreviation} | ${modelValue?.title}`"
+    :initial-label="modelValue && `${modelValue.abbreviation} | ${modelValue.title}`"
     aria-label="Periodikum"
     append-to="self"
     typeahead

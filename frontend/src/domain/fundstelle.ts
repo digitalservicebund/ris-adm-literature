@@ -1,8 +1,8 @@
 export interface Periodikum {
   readonly id: string
+  abbreviation: string
   title: string
   subtitle?: string
-  abbreviation?: string
   citationStyle?: string
 }
 
