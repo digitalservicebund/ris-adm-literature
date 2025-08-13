@@ -9,25 +9,20 @@ import type EditableListItem from '@/domain/editableListItem'
 import DummyInputGroupVue from '@/kitchensink/components/DummyInputGroup.vue'
 import DummyListItem from '@/kitchensink/domain/dummyListItem'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import Reference from '@/domain/reference.ts'
-import DocumentUnitReferenceInput from '@/components/periodical/DocumentUnitReferenceInput.vue'
-import ReferenceSummary from '@/components/periodical/ReferenceSummary.vue'
-import LegalPeriodical from '@/domain/legalPeriodical.ts'
+import NormReferenceInput from './NormReferenceInput.vue'
+import NormReferenceSummary from './NormReferenceSummary.vue'
+import NormReference from '@/domain/normReference'
 
 const items = [
+  { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
   {
-    title: 'Bundesanzeiger',
-    abbreviation: 'BAnz',
-    citationStyle: '2009, Seite 21',
-  },
-  {
-    title: 'Phantasierecht aktiv',
-    abbreviation: 'AA',
-    citationStyle: '2011',
+    abbreviation: 'KVLG',
+    officialLongTitle:
+      'Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung',
   },
 ]
 
-const paginatedLegalPeriodicals = {
+const paginatedRisAbbr = {
   pageable: 'INSTANCE',
   last: true,
   totalElements: 2,
@@ -202,7 +197,7 @@ describe('EditableList', () => {
         new Response(
           JSON.stringify({
             legalPeriodicals: items,
-            paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: items },
+            paginatedLegalPeriodicals: { ...paginatedRisAbbr, content: items },
           }),
           { status: 200 },
         ),
@@ -264,7 +259,7 @@ describe('EditableList', () => {
         new Response(
           JSON.stringify({
             legalPeriodicals: items,
-            paginatedLegalPeriodicals: { ...paginatedLegalPeriodicals, content: items },
+            paginatedLegalPeriodicals: { ...paginatedRisAbbr, content: items },
           }),
           { status: 200 },
         ),
@@ -274,10 +269,10 @@ describe('EditableList', () => {
     it('add reference', async () => {
       // Arrange
       await renderComponent({
-        editComponent: DocumentUnitReferenceInput,
-        summaryComponent: ReferenceSummary,
+        editComponent: NormReferenceInput,
+        summaryComponent: NormReferenceSummary,
         modelValue: [],
-        defaultValue: new Reference(),
+        defaultValue: new NormReference(),
       })
       const user = userEvent.setup()
 
@@ -286,41 +281,39 @@ describe('EditableList', () => {
       await user.click(openDropdownContainer)
       const dropdownItems = screen.getAllByLabelText('dropdown-option')
       await user.click(dropdownItems[0])
-      const citationInput = screen.getByLabelText('Zitatstelle')
-      await user.type(citationInput, 'abcde')
-      await user.click(screen.getByLabelText('Fundstelle speichern'))
+      await user.click(screen.getByLabelText('Norm speichern'))
 
       // Assert
-      expect(screen.getByText('BAnz abcde')).toBeInTheDocument()
+      expect(screen.getByText('SGB 5')).toBeInTheDocument()
     })
 
     it('edit reference', async () => {
       // Arrange
-      await renderComponent<Reference>({
-        editComponent: DocumentUnitReferenceInput,
-        summaryComponent: ReferenceSummary,
+      await renderComponent({
+        editComponent: NormReferenceInput,
+        summaryComponent: NormReferenceSummary,
         modelValue: [
-          new Reference({
-            legalPeriodical: new LegalPeriodical({
-              title: 'Phantasierecht aktiv',
-              abbreviation: 'AA',
-            }),
-            citation: '12345',
+          new NormReference({
+            normAbbreviation: {
+              abbreviation: 'SGB 5',
+              officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
+            },
           }),
         ],
-        defaultValue: new Reference(),
+        defaultValue: new NormReference(),
       })
       const user = userEvent.setup()
 
       // Act
       await user.click(screen.getByTestId('list-entry-0'))
-      const citationInput = screen.getByLabelText('Zitatstelle')
-      await user.clear(citationInput)
-      await user.type(citationInput, 'abcde')
-      await user.click(screen.getByLabelText('Fundstelle speichern'))
+      const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
+      await user.click(openDropdownContainer)
+      const dropdownItems = screen.getAllByLabelText('dropdown-option')
+      await user.click(dropdownItems[1])
+      await user.click(screen.getByLabelText('Norm speichern'))
 
       // Assert
-      expect(screen.getByText('AA abcde')).toBeInTheDocument()
+      expect(screen.getByText('KVLG')).toBeInTheDocument()
     })
   })
 })

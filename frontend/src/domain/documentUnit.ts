@@ -1,4 +1,3 @@
-import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
@@ -6,6 +5,7 @@ import type NormReference from './normReference'
 import type { Normgeber } from './normgeber'
 import type { DocumentType } from './documentType'
 import type { Page } from './pagination'
+import type { Fundstelle } from './fundstelle'
 
 export interface DocumentUnitSearchParams {
   documentNumber: string
@@ -30,7 +30,7 @@ export interface DocumentUnitListItem {
 export interface DocumentUnit {
   readonly id: string
   readonly documentNumber: string
-  references?: Reference[]
+  fundstellen?: Fundstelle[]
   fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string
   keywords?: string[]

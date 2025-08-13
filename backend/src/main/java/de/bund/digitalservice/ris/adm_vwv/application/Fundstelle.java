@@ -3,10 +3,19 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import java.util.UUID;
 
 /**
- * Fundstelle business object
+ * A reference to a legal periodical (Fundstelle).
  *
- * @param id          The uuid of the Fundstelle
- * @param zitatstelle The Zitatstelle of the Fundstelle
- * @param periodikum  The Periodikum of this Fundstelle
+ * @param id                  The id of the reference.
+ * @param zitatstelle         The citation
+ * @param periodikum          The periodikum, where reference was found.
+ *                            If multiple periodika were found with same
+ *                            abbreviation then this field is set to null and
+ *                            ambiguous periodikum is set instead.
+ * @param ambiguousPeriodikum If set, periodikum is not unique
  */
-public record Fundstelle(UUID id, String zitatstelle, Periodikum periodikum) {}
+public record Fundstelle(
+  UUID id,
+  String zitatstelle,
+  LegalPeriodical periodikum,
+  String ambiguousPeriodikum
+) {}

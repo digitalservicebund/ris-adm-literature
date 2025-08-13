@@ -62,9 +62,9 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(documentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::references)
-      .asInstanceOf(InstanceOfAssertFactories.list(Reference.class))
-      .extracting(Reference::citation, Reference::legalPeriodicalRawValue)
+      .extracting(DocumentationUnitContent::fundstellen)
+      .asInstanceOf(InstanceOfAssertFactories.list(Fundstelle.class))
+      .extracting(Fundstelle::zitatstelle, Fundstelle::ambiguousPeriodikum)
       .containsOnly(tuple("2021, Seite 15", "Das Periodikum"));
   }
 

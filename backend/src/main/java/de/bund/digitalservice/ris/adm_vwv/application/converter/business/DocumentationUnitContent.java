@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
+import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
  *
  * @param id                    The uuid
  * @param documentNumber        The document number
- * @param references            List of references ("Fundstellen")
+ * @param fundstellen           List of fundstellen
  * @param fieldsOfLaw           List of fields of law
  * @param langueberschrift      Long title
  * @param keywords              List of keywords
@@ -33,7 +34,7 @@ import java.util.UUID;
 public record DocumentationUnitContent(
   UUID id,
   String documentNumber,
-  List<Reference> references,
+  List<Fundstelle> fundstellen,
   List<FieldOfLaw> fieldsOfLaw,
   String langueberschrift,
   List<String> keywords,

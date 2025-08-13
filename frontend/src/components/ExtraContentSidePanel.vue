@@ -83,7 +83,7 @@ onMounted(() => {
             <TextAreaInput
               :id="id"
               v-model="props.documentUnit!.note"
-              aria-label="Notiz Eingabefeld"
+              ariaLabel="Notiz Eingabefeld"
               autosize
               class="w-full"
               custom-classes="max-h-[65vh]"

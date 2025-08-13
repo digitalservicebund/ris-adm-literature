@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Reference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import java.util.List;
 import java.util.UUID;
@@ -49,13 +49,15 @@ class FundstellenTransformerTest {
     );
 
     // when
-    List<Reference> references = fundstellenTransformer.transform(akomaNtoso);
+    List<Fundstelle> fundstellen = fundstellenTransformer.transform(akomaNtoso);
 
     // then
-    assertThat(references)
+    assertThat(fundstellen)
       .hasSize(2)
-      .extracting(Reference::legalPeriodicalRawValue, Reference::citation, r ->
-        r.legalPeriodical().title()
+      .extracting(
+        f -> f.periodikum().abbreviation(),
+        Fundstelle::zitatstelle,
+        f -> f.periodikum().title()
       )
       .containsExactly(
         tuple("BAnz", "Seite 5", "Bundesanzeiger"),
@@ -74,10 +76,10 @@ class FundstellenTransformerTest {
     doc.setMeta(meta);
 
     // when
-    List<Reference> references = fundstellenTransformer.transform(akomaNtoso);
+    List<Fundstelle> fundstellen = fundstellenTransformer.transform(akomaNtoso);
 
     // then
-    assertThat(references).isEmpty();
+    assertThat(fundstellen).isEmpty();
   }
 
   @Test
@@ -114,16 +116,12 @@ class FundstellenTransformerTest {
     );
 
     // when
-    List<Reference> references = fundstellenTransformer.transform(akomaNtoso);
+    List<Fundstelle> fundstellen = fundstellenTransformer.transform(akomaNtoso);
 
     // then
-    assertThat(references)
+    assertThat(fundstellen)
       .singleElement()
-      .extracting(
-        Reference::legalPeriodicalRawValue,
-        Reference::citation,
-        Reference::legalPeriodical
-      )
+      .extracting(Fundstelle::ambiguousPeriodikum, Fundstelle::zitatstelle, Fundstelle::periodikum)
       .containsExactly("BRD", "Seite 5", null);
   }
 

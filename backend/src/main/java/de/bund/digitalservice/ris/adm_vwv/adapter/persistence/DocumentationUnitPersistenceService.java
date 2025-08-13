@@ -295,12 +295,19 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       documentationUnitEntity
     );
     documentationUnitIndex.setLangueberschrift(documentationUnitContent.langueberschrift());
-    if (documentationUnitContent.references() != null) {
+    if (documentationUnitContent.fundstellen() != null) {
       documentationUnitIndex.setFundstellen(
         documentationUnitContent
-          .references()
+          .fundstellen()
           .stream()
-          .map(r -> r.legalPeriodicalRawValue() + " " + r.citation())
+          .map(
+            f ->
+              (f.ambiguousPeriodikum() != null
+                  ? f.ambiguousPeriodikum()
+                  : f.periodikum().abbreviation()) +
+              " " +
+              f.zitatstelle()
+          )
           .collect(Collectors.joining(ENTRY_SEPARATOR))
       );
     }

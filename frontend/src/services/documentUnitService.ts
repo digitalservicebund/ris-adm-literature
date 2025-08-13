@@ -1,7 +1,6 @@
 import type { DocumentUnit, DocumentUnitSearchParams } from '@/domain/documentUnit'
 import ActiveCitation from '@/domain/activeCitation'
 import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
-import Reference from '@/domain/reference.ts'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
@@ -71,9 +70,7 @@ function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit
     id: data.id,
     documentNumber: data.documentNumber,
   }
-  documentUnit.references = documentUnit.references?.map(
-    (reference) => new Reference({ ...reference }),
-  )
+
   documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
   documentUnit.activeCitations = documentUnit.activeCitations?.map(
     (activeCitation) => new ActiveCitation({ ...activeCitation }),
