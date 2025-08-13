@@ -21,7 +21,7 @@ const selectedPeriodikumId = ref<string | undefined>(modelValue.value?.id)
 
 const searchFn = usePeriodikumSearch(periodika)
 
-const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComplete(searchFn)
+const { suggestions, onComplete, onDropdownClick } = useAutoComplete(searchFn)
 
 function onModelValueChange(id: string | undefined) {
   selectedPeriodikumId.value = id
@@ -42,7 +42,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :input-id="inputId"
     :invalid="invalid"
-    :initial-label="modelValue?.title"
+    :initial-label="`${modelValue?.abbreviation} | ${modelValue?.title}`"
     aria-label="Periodikum"
     append-to="self"
     typeahead
@@ -52,6 +52,5 @@ onMounted(async () => {
     @update:model-value="onModelValueChange"
     @complete="onComplete"
     @dropdown-click="onDropdownClick"
-    @item-select="onItemSelect"
   />
 </template>
