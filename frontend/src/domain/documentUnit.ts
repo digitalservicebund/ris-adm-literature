@@ -1,4 +1,3 @@
-import Reference from './reference'
 import { type FieldOfLaw } from './fieldOfLaw'
 import ActiveCitation from './activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
@@ -31,7 +30,6 @@ export interface DocumentUnitListItem {
 export interface DocumentUnit {
   readonly id: string
   readonly documentNumber: string
-  references?: Reference[]
   fundstellen?: Fundstelle[]
   fieldsOfLaw?: FieldOfLaw[]
   langueberschrift?: string

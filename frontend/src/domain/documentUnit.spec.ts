@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { type DocumentUnit } from './documentUnit'
-import Reference from './reference'
-import LegalPeriodical from './legalPeriodical'
+import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
 
 describe('DocumentUnit', () => {
   it('instantiates with id and documentNumber', () => {
@@ -10,7 +9,8 @@ describe('DocumentUnit', () => {
       id: 'foo',
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
-      references: [],
+      fundstellen: [],
+      note: '',
     }
 
     // then
@@ -18,27 +18,20 @@ describe('DocumentUnit', () => {
     expect(documentUnit.documentNumber).toEqual('KSNR054920707')
   })
 
-  it('sets a reference', () => {
+  it('sets a fundstelle', () => {
     // given when
     const documentUnit: DocumentUnit = {
       id: 'foo',
       documentNumber: 'KSNR054920707',
-      references: [
-        new Reference({
-          legalPeriodical: new LegalPeriodical({
-            title: 'Phantasierecht aktiv',
-            abbreviation: 'AA',
-          }),
-          citation: '12345',
-        }),
-      ],
+      fundstellen: [fundstelleFixture],
       fieldsOfLaw: [],
+      note: '',
     }
 
     // then
-    expect(documentUnit.references).toHaveLength(1)
-    expect(documentUnit.references?.at(0)?.legalPeriodical?.title).toEqual('Phantasierecht aktiv')
-    expect(documentUnit.references?.at(0)?.legalPeriodical?.abbreviation).toEqual('AA')
-    expect(documentUnit.references?.at(0)?.citation).toEqual('12345')
+    expect(documentUnit.fundstellen).toHaveLength(1)
+    expect(documentUnit.fundstellen?.at(0)?.periodikum?.title).toEqual('Bundesanzeiger')
+    expect(documentUnit.fundstellen?.at(0)?.periodikum?.abbreviation).toEqual('BAnz')
+    expect(documentUnit.fundstellen?.at(0)?.zitatstelle).toEqual('1973, 608')
   })
 })

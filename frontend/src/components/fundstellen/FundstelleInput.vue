@@ -61,9 +61,9 @@ const validate = () => {
 
 watch(
   () => props.fundstelle,
-  (val) => {
+  (fundstelle) => {
     validationStore.remove('periodikum')
-    if (!!val?.ambiguousPeriodikum && !val?.periodikum) {
+    if (!!fundstelle?.ambiguousPeriodikum && !fundstelle?.periodikum) {
       validationStore.add('Mehrdeutiger Verweis', 'periodikum')
     }
   },

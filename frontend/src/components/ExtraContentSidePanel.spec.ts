@@ -5,14 +5,14 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { createRouter, createWebHistory, type Router } from 'vue-router'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 import type { DocumentUnit } from '@/domain/documentUnit'
-import Reference from '@/domain/reference'
+import type { Fundstelle } from '@/domain/fundstelle'
 
 let router: Router
 
 function renderComponent(
   options: {
     note?: string
-    references?: Reference[]
+    fundstellen?: Fundstelle[]
     showEditButton?: boolean
     isEditable?: boolean
     hidePanelModeBar?: boolean

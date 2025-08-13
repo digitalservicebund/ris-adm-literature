@@ -68,7 +68,7 @@ test.describe('FundstellenPage', () => {
       await page.getByRole('button', { name: 'Fundstelle Editieren' }).click()
       await page.getByText('Abbrechen').click()
 
-      // Asser
+      // Assert
       await expect(page.getByText('ABc 1991, Seite 92')).toHaveCount(1)
     },
   )
@@ -172,7 +172,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
         const documentUnit: DocumentUnit = {
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           documentNumber: 'KSNR054920707',
-          references: [],
+          fundstellen: [],
           fieldsOfLaw: [],
           note: '',
         }

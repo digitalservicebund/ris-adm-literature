@@ -1,18 +1,18 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import NormgeberList from './FundstellenList.vue'
 import { createTestingPinia } from '@pinia/testing'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import type { Fundstelle } from '@/domain/fundstelle'
 import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import FundstellenList from './FundstellenList.vue'
 
 function renderComponent(fundstellenList?: Fundstelle[]) {
   const user = userEvent.setup()
 
   return {
     user,
-    ...render(NormgeberList, {
+    ...render(FundstellenList, {
       global: {
         plugins: [
           [

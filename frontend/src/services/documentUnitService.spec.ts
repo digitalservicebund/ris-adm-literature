@@ -22,7 +22,7 @@ describe('documentUnitService', () => {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
-      references: [],
+      fundstellen: [],
       activeCitations: [],
       activeReferences: [
         new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
@@ -65,7 +65,7 @@ describe('documentUnitService', () => {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
-      references: [],
+      fundstellen: [],
       activeCitations: [],
       activeReferences: [
         new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
