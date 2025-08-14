@@ -18,7 +18,6 @@ import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Integration test for the S3PublishService.
@@ -56,13 +55,7 @@ class S3PublishServiceIntegrationTest {
 
   @BeforeEach
   void setUp() {
-    try {
-      s3Client.createBucket(b -> b.bucket(BUCKET_NAME));
-    } catch (S3Exception e) {
-      if (!e.awsErrorDetails().errorCode().equals("BucketAlreadyOwnedByYou")) {
-        throw e;
-      }
-    }
+    s3Client.createBucket(b -> b.bucket(BUCKET_NAME));
   }
 
   @Test
