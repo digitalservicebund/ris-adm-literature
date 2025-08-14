@@ -41,6 +41,7 @@ val springdocVersion = "2.8.9"
 val sentryVersion = "8.19.1"
 val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
+val commonsTextVersion = "1.14.0"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -68,6 +69,7 @@ dependencies {
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.nimbusds:nimbus-jose-jwt:10.4.1")
   implementation("org.apache.commons:commons-lang3:3.18.0")
+  implementation("org.apache.commons:commons-text:$commonsTextVersion")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
   implementation("org.flywaydb:flyway-database-postgresql")
