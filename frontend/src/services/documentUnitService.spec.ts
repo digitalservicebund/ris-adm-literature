@@ -4,6 +4,7 @@ import {
   useGetPaginatedDocUnits,
   usePostDocUnit,
   usePutDocUnit,
+  usePutPublishDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
@@ -101,6 +102,58 @@ describe('documentUnitService', () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
     const { data, error, isFetching, execute } = usePutDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('publishes a doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      fieldsOfLaw: [],
+      fundstellen: [],
+      activeCitations: [],
+      activeReferences: [
+        new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
+      ],
+      normReferences: [new NormReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 7' })] })],
+      note: '',
+    }
+
+    const publishedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      json: {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSNR054920707',
+        note: 'published',
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(publishedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutPublishDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+    expect(data.value?.note).toBe('published')
+  })
+
+  it('returns an error on failed publication', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutPublishDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       note: '',
