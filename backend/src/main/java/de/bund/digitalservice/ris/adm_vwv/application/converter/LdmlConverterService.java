@@ -1,7 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
@@ -112,6 +114,7 @@ public class LdmlConverterService {
     );
     setGliederung(meta, documentationUnitContent.gliederung());
     setKurzreferat(akomaNtoso.getDoc().getMainBody(), documentationUnitContent.kurzreferat());
+    setNormgeber(meta, documentationUnitContent.normgeberList());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -193,5 +196,25 @@ public class LdmlConverterService {
         .filter(Objects::nonNull)
         .toList()
     );
+  }
+
+  private void setNormgeber(Meta meta, List<Normgeber> normgeberList) {
+    if (!normgeberList.isEmpty()) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      List<RisNormgeber> risNormgeberList = normgeberList
+        .stream()
+        .map(normgeber -> {
+          RisNormgeber risNormgeber = new RisNormgeber();
+          if (normgeber.institution().type() == InstitutionType.INSTITUTION) {
+            risNormgeber.setOrgan(normgeber.institution().name());
+            risNormgeber.setStaat(normgeber.regions().getFirst().code());
+          } else {
+            risNormgeber.setStaat(normgeber.institution().name());
+          }
+          return risNormgeber;
+        })
+        .toList();
+      risMetadata.setNormgeber(risNormgeberList);
+    }
   }
 }

@@ -905,4 +905,47 @@ class LdmlConverterServiceIntegrationTest {
       </akn:mainBody>""".indent(8)
     );
   }
+
+  @Test
+  @DisplayName("Converts two 'Normgeber' to two ris:normgeber in ris:metadata")
+  void convertToLdml_normgeber() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      "  ",
+      List.of(),
+      true,
+      null,
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(
+        TestNormgeber.createByLegalEntity("Bundesagentur"),
+        TestNormgeber.createByInstitution("Bundesregierung", "DEU")
+      )
+    );
+
+    // when
+    String xml = ldmlConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <ris:metadata>
+          <ris:normgeber staat="Bundesagentur"/>
+          <ris:normgeber staat="DEU" organ="Bundesregierung"/>
+      </ris:metadata>""".indent(16)
+    );
+  }
 }
