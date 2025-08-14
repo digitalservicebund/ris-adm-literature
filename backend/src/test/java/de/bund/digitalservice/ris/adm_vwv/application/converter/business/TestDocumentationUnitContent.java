@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class TestDocumentationUnitContent {
       null,
       List.of(),
       true,
-      null,
+      new DocumentType("VR", "Verwaltungsregelung"),
       null,
       List.of(),
       List.of(),

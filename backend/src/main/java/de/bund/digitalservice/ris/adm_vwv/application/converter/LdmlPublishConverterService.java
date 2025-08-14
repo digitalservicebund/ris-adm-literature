@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
@@ -59,6 +61,14 @@ public class LdmlPublishConverterService {
     setGliederung(meta, documentationUnitContent.gliederung());
     setKurzreferat(akomaNtoso.getDoc().getMainBody(), documentationUnitContent.kurzreferat());
     setNormgeber(meta, documentationUnitContent.normgeberList());
+    setClassification(meta, documentationUnitContent.keywords());
+    setSachgebiete(meta, documentationUnitContent.fieldsOfLaw());
+    setDocumentType(
+      meta,
+      documentationUnitContent.dokumenttyp(),
+      documentationUnitContent.dokumenttypZusatz()
+    );
+    setAktenzeichen(meta, documentationUnitContent.aktenzeichen());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -179,6 +189,60 @@ public class LdmlPublishConverterService {
         })
         .toList();
       risMetadata.setNormgeber(risNormgeberList);
+    }
+  }
+
+  private void setClassification(Meta meta, List<String> keywords) {
+    if (!keywords.isEmpty()) {
+      Classification classification = new Classification();
+      meta.setClassification(classification);
+      classification.setKeyword(
+        keywords
+          .stream()
+          .map(keywordValue -> {
+            Keyword keyword = new Keyword();
+            keyword.setShowAs(keywordValue);
+            keyword.setValue(keywordValue);
+            return keyword;
+          })
+          .toList()
+      );
+    }
+  }
+
+  private void setSachgebiete(Meta meta, List<FieldOfLaw> fieldsOfLaw) {
+    if (!fieldsOfLaw.isEmpty()) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setFieldsOfLaw(
+        fieldsOfLaw
+          .stream()
+          .map(fieldOfLaw -> {
+            RisFieldOfLaw risFieldOfLaw = new RisFieldOfLaw();
+            risFieldOfLaw.setValue(fieldOfLaw.identifier());
+            risFieldOfLaw.setNotation(fieldOfLaw.notation());
+            return risFieldOfLaw;
+          })
+          .toList()
+      );
+    }
+  }
+
+  private void setDocumentType(Meta meta, DocumentType dokumenttyp, String dokumenttypZusatz) {
+    RisDocumentType risDocumentType = new RisDocumentType();
+    risDocumentType.setCategory(dokumenttyp.abbreviation());
+    String value = dokumenttyp.abbreviation();
+    if (StringUtils.isNotBlank(dokumenttypZusatz)) {
+      risDocumentType.setLongTitle(dokumenttypZusatz);
+      value += " " + dokumenttypZusatz;
+    }
+    risDocumentType.setValue(value);
+    meta.getOrCreateProprietary().getMetadata().setDocumentType(risDocumentType);
+  }
+
+  private void setAktenzeichen(Meta meta, List<String> aktenzeichen) {
+    if (!aktenzeichen.isEmpty()) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setReferenceNumbers(aktenzeichen);
     }
   }
 }
