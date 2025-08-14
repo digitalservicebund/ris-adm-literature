@@ -39,7 +39,7 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
     suggestions.value = searchFn(query)
   }
 
-  const searchDebounced = useDebounceFn(search, 250)
+  const searchDebounced = useDebounceFn(search, 50)
 
   /*
   Workaround for loading prop being ignored in PrimeVue AutoComplete:
@@ -115,9 +115,9 @@ export function usePeriodikumSearch(periodika: Ref<Periodikum[]>) {
       .filter(
         (p) =>
           !query ||
-          p.title?.toLowerCase().includes(query.toLowerCase()) ||
-          p.abbreviation?.toLowerCase().includes(query.toLowerCase()) ||
-          `${p.abbreviation} | ${p.title}`.toLowerCase().includes(query?.toLowerCase()),
+          p.title?.toLowerCase().includes(query.trim().toLowerCase()) ||
+          p.abbreviation?.toLowerCase().includes(query.trim().toLowerCase()) ||
+          `${p.abbreviation} | ${p.title}`.toLowerCase().includes(query.trim().toLowerCase()),
       )
       .map((p) => ({
         id: p.id,
