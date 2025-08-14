@@ -30,7 +30,7 @@ async function onClickPublish() {
       <Plausibilitaetspruefung :missing-fields="missingFields" />
       <hr class="text-blue-500 my-24" />
       <Message class="mb-24" severity="info">
-        <label class="ris-label2-bold">Hinweise zur Veröffentlichung</label>
+        <span class="ris-label2-bold">Hinweise zur Veröffentlichung</span>
         <ul class="list-disc list-inside">
           <li>Aktuell befindet sich diese Dokumentationsumgebung im Testmodus.</li>
           <li>
