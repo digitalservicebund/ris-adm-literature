@@ -78,6 +78,8 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
+  implementation(platform("software.amazon.awssdk:bom:2.27.21"))
+  implementation("software.amazon.awssdk:s3")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
@@ -90,6 +92,7 @@ dependencies {
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:postgresql")
   testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
+  testImplementation("org.testcontainers:localstack:1.20.0")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

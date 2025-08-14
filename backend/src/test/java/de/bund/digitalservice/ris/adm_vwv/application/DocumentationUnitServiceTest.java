@@ -2,13 +2,17 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -23,6 +27,12 @@ class DocumentationUnitServiceTest {
 
   @InjectMocks
   private DocumentationUnitService documentationUnitService;
+
+  @Mock
+  private PublishPort publishPort;
+
+  @Mock
+  private Map<String, PublishPort> publishers;
 
   @Mock
   private DocumentationUnitPersistencePort documentationUnitPersistencePort;
@@ -148,5 +158,29 @@ class DocumentationUnitServiceTest {
       null,
       List.of()
     );
+  }
+
+  @Test
+  void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
+    String DOC_NUMBER = "doc123";
+    String FAKE_XML = "<test>xml</test>";
+    String BSG_PUBLISHER_NAME = "privateBsgPublisher";
+    String FAKE_JSON = "{\"test\":\"json\"}";
+
+    var doc = new DocumentationUnit(DOC_NUMBER, UUID.randomUUID(), null, FAKE_XML);
+    var content = TestDocumentationUnitContent.create(DOC_NUMBER, "Lange Überschrift");
+    var publishedDoc = new DocumentationUnit(DOC_NUMBER, UUID.randomUUID(), FAKE_JSON, FAKE_XML);
+
+    when(documentationUnitPersistencePort.findByDocumentNumber(DOC_NUMBER)).thenReturn(
+      Optional.of(doc)
+    );
+    when(ldmlConverterService.convertToLdml(any(), any())).thenReturn(FAKE_XML);
+    when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
+    when(publishers.get(BSG_PUBLISHER_NAME)).thenReturn(publishPort);
+
+    documentationUnitService.publish(DOC_NUMBER, content);
+
+    verify(documentationUnitPersistencePort).publish(eq(DOC_NUMBER), anyString(), eq(FAKE_XML));
+    verify(publishPort).publish(any(PublishPort.Options.class));
   }
 }

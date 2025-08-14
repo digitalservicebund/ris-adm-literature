@@ -5,20 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  * Application service for CRUD operations on document units.
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class DocumentationUnitService implements DocumentationUnitPort {
 
   private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
   private final LdmlConverterService ldmlConverterService;
   private final ObjectMapper objectMapper;
+  private final Map<String, PublishPort> publishers;
 
   @Override
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
@@ -80,6 +84,23 @@ public class DocumentationUnitService implements DocumentationUnitPort {
         json,
         xml
       );
+
+      // publish to portal
+      // later when we want to publish to other publishers, we can recevie them form the method param and select them here
+      final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
+
+      PublishPort selectedPublisher = publishers.get(BSG_PUBLISHER_NAME);
+      try {
+        var publishOptions = new PublishPort.Options(documentNumber, xml);
+        selectedPublisher.publish(publishOptions);
+      } catch (Exception e) {
+        // TODO: How to handle publishing errors? //NOSONAR
+        log.error(
+          "Failed to publish document {} to external storage, but the database record was updated.",
+          documentNumber,
+          e
+        );
+      }
       return convertLdml(publishedDocumentationUnit);
     }
     return Optional.empty();
