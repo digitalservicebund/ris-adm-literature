@@ -39,7 +39,7 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
     suggestions.value = searchFn(query)
   }
 
-  const searchDebounced = useDebounceFn(search, 50)
+  const searchDebounced = useDebounceFn(search, 0)
 
   /*
   Workaround for loading prop being ignored in PrimeVue AutoComplete:

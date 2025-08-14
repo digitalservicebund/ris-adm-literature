@@ -48,7 +48,7 @@ onMounted(async () => {
     typeahead
     dropdown
     complete-on-focus
-    select-on-focus
+    auto-option-focus
     @update:model-value="onModelValueChange"
     @complete="onComplete"
   />
