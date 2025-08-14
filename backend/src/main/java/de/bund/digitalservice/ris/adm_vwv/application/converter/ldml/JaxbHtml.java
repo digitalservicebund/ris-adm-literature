@@ -19,5 +19,5 @@ public class JaxbHtml {
 
   @XmlAnyElement
   @XmlMixed
-  private List<?> html;
+  private List<Object> html;
 }

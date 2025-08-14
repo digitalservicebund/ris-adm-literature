@@ -31,7 +31,7 @@ public class KurzreferatTransformer {
       return null;
     }
     // Filter out empty text nodes (with only whitespaces)
-    List<?> filteredHtml = mainBody
+    List<Object> filteredHtml = mainBody
       .getDiv()
       .getHtml()
       .stream()
