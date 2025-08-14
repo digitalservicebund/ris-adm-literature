@@ -1,20 +1,12 @@
-🚧 TODO: Resolve all construction markers/comments and remove them before merging to `main`
-
-# 10. Template
-
-🚧 Update date once we reach "Accepted"
+# 10. Single app for administrative directives and literature
 
 Date: 2025-08-13
 
 ## Status
 
-🚧 This should become "Accepted" before merging to `main`
-
 Draft 
 
 ## Context
-
-🚧 The issue motivating this decision, and any context that influences or constrains the decision.
 
 Our team has built the BSG app for handling (creating/editing/publishing) administrative directives of the BSG (Bundessozialgericht).
 
@@ -58,8 +50,6 @@ We also considered that
 
 ## Decision
 
-🚧 The change that we're proposing or have agreed to implement.
-
 We handle the "Literatur" documents in the same app we built for the BSG's administrative directives.
 
 Each document type gets its own flow in the frontend.
@@ -67,8 +57,6 @@ Each document type gets its own flow in the frontend.
 We stay with the existing database schemas.
 
 ## Consequences
-
-🚧 What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
 We expect the following benefits:
 - High delivery velocity:
