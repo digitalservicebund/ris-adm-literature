@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv.application;
+package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import javax.annotation.Nonnull;
 
@@ -6,6 +6,12 @@ import javax.annotation.Nonnull;
  * A port for publishing documentation unit content to an external storage system.
  */
 public interface PublishPort {
+  /**
+   * Identifies the correct publisher
+   * @return the name of the publisher
+   */
+  String getName();
+
   /**
    * Publishes the provided content to the configured storage.
    *
@@ -18,6 +24,7 @@ public interface PublishPort {
    *
    * @param documentNumber The unique identifier for the document, used as the storage key.
    * @param xmlContent The LDML XML content of the document to be stored.
+   * @param targetPublisher The target publisher
    */
-  record Options(String documentNumber, String xmlContent) {}
+  record Options(String documentNumber, String xmlContent, String targetPublisher) {}
 }

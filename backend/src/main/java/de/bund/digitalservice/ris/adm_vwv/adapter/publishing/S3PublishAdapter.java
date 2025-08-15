@@ -1,6 +1,7 @@
-package de.bund.digitalservice.ris.adm_vwv.application;
+package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import jakarta.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -11,15 +12,16 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
  * Responsible for publishing documents to the s3 buckets
  */
 @Slf4j
-//TODO: Is this really a service? Where to put the class?
-public class S3PublishService implements PublishPort {
+@RequiredArgsConstructor
+public class S3PublishAdapter implements PublishPort {
 
   private final S3Client s3Client;
   private final String bucketName;
+  private final String publisherName;
 
-  public S3PublishService(S3Client s3Client, String bucketName) {
-    this.s3Client = s3Client;
-    this.bucketName = bucketName;
+  @Override
+  public String getName() {
+    return this.publisherName;
   }
 
   @Override

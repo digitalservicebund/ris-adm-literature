@@ -48,12 +48,11 @@ public class AwsConfig {
   /**
    * Creates a mock S3Client bean that writes to the local filesystem.
    * <p>
-   * This bean is activated for any profile other than 'staging', 'production', or 'uat'.
    *
    * @return An {@link S3MockClient} instance that simulates S3 operations locally.
    */
   @Bean("privateBsgS3Client")
-  @Profile("!staging & !production & !uat")
+  @Profile("!staging & !production & !uat & !test")
   public S3Client privateBsgS3MockClient() {
     return new S3MockClient();
   }

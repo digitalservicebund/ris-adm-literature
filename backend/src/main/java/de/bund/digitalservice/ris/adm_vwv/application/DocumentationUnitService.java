@@ -2,11 +2,11 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
   private final LdmlConverterService ldmlConverterService;
   private final LdmlPublishConverterService ldmlPublishConverterService;
   private final ObjectMapper objectMapper;
-  private final Map<String, PublishPort> publishers;
+  private final PublishPort publishPort;
 
   @Override
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
@@ -88,13 +88,13 @@ public class DocumentationUnitService implements DocumentationUnitPort {
       );
 
       // publish to portal
-      // later when we want to publish to other publishers, we can recevie them form the method param and select them here
-      final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
-
-      PublishPort selectedPublisher = publishers.get(BSG_PUBLISHER_NAME);
+      // later when we want to publish to other publishers, we can receive them form the method param and select them here
       try {
-        var publishOptions = new PublishPort.Options(documentNumber, xml);
-        selectedPublisher.publish(publishOptions);
+        final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
+        var publishOptions = new PublishPort.Options(documentNumber, xml, BSG_PUBLISHER_NAME);
+
+        // Call the composite publisher, which handles the routing internally
+        publishPort.publish(publishOptions);
       } catch (Exception e) {
         // TODO: How to handle publishing errors? //NOSONAR
         log.error(
