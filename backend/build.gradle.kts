@@ -65,7 +65,7 @@ dependencies {
     exclude("com.nimbusds", "nimbus-jose-jwt")
   }
 
-  implementation("com.google.protobuf:protobuf-java:4.31.1")
+  implementation("com.google.protobuf:protobuf-java:4.32.0")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.nimbusds:nimbus-jose-jwt:10.4.2")
   implementation("org.apache.commons:commons-lang3:3.18.0")
