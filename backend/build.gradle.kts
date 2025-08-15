@@ -43,6 +43,7 @@ val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.20.0"
+val awsVersion = "2.27.21"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -80,7 +81,7 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
-  implementation(platform("software.amazon.awssdk:bom:2.27.21"))
+  implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
   implementation("software.amazon.awssdk:s3")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
