@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import java.util.List;
@@ -39,6 +40,9 @@ class DocumentationUnitServiceTest {
 
   @Mock
   private LdmlConverterService ldmlConverterService;
+
+  @Mock
+  private LdmlPublishConverterService ldmlPublishConverterService;
 
   @Spy
   private ObjectMapper objectMapper;
@@ -174,7 +178,7 @@ class DocumentationUnitServiceTest {
     when(documentationUnitPersistencePort.findByDocumentNumber(DOC_NUMBER)).thenReturn(
       Optional.of(doc)
     );
-    when(ldmlConverterService.convertToLdml(any(), any())).thenReturn(FAKE_XML);
+    when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(FAKE_XML);
     when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
     when(publishers.get(BSG_PUBLISHER_NAME)).thenReturn(publishPort);
 
