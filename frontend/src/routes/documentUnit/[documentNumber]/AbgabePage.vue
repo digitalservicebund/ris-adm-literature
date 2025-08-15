@@ -34,7 +34,7 @@ async function onClickPublish() {
         <ul class="list-disc list-inside">
           <li>Aktuell befindet sich diese Dokumentationsumgebung im Testmodus.</li>
           <li>
-            Ein Klick auf “Zur Veröffentlichung freigeben” hat keinerlei Auswirkungen auf die Daten
+            Ein Klick auf „Zur Veröffentlichung freigeben‟ hat keinerlei Auswirkungen auf die Daten
             in der jDV.
           </li>
           <li>

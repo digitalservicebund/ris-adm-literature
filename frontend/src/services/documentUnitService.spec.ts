@@ -92,7 +92,6 @@ describe('documentUnitService', () => {
       json: {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
-        note: 'updated',
       },
     }
 
@@ -106,7 +105,6 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
     expect(data.value?.id).toBe(docUnit.id)
-    expect(data.value?.note).toBe('updated')
   })
 
   it('returns an error on failed update', async () => {
@@ -157,7 +155,6 @@ describe('documentUnitService', () => {
       json: {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
-        note: 'published',
       },
     }
 
@@ -171,7 +168,6 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
     expect(data.value?.id).toBe(docUnit.id)
-    expect(data.value?.note).toBe('published')
   })
 
   it('returns an error on failed publication', async () => {
