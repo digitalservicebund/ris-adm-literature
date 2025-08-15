@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv.adapter;
+package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import jakarta.annotation.PostConstruct;
 import java.io.File;
@@ -31,7 +31,6 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 /**
  * Mocked S3Client for local development
  */
-//TODO: Where to put this class?
 @Slf4j
 public class S3MockClient implements S3Client {
 

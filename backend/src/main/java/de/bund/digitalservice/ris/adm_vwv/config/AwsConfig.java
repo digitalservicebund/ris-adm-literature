@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.S3MockClient;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.S3MockClient;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
