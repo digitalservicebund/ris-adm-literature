@@ -43,6 +43,7 @@ public class AwsConfig {
       .credentialsProvider(
         StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey))
       )
+      .forcePathStyle(true)
       .build();
   }
 
