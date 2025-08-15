@@ -11,9 +11,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -30,9 +29,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 //TODO: Where to put this class?
+@Slf4j
 public class S3MockClient implements S3Client {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(S3MockClient.class);
 
   @Value("${local.file-storage}")
   private Path relativeLocalStorageDirectory;
@@ -71,7 +69,7 @@ public class S3MockClient implements S3Client {
         fos.write(content, 0, len);
       }
     } catch (IOException ex) {
-      LOGGER.info("Couldn't write file: {}", fileName, ex);
+      log.info("Couldn't write file: {}", fileName, ex);
     }
 
     return PutObjectResponse.builder().build();
@@ -115,10 +113,10 @@ public class S3MockClient implements S3Client {
       bytes = new byte[(int) file.length()];
       int readBytes = fl.read(bytes);
       if (readBytes != file.length()) {
-        LOGGER.warn("different size between file length and read bytes");
+        log.warn("different size between file length and read bytes");
       }
     } catch (IOException ex) {
-      LOGGER.error("Couldn't get object from local storage.");
+      log.error("Couldn't get object from local storage.");
     }
 
     return (T) ResponseBytes.fromByteArray(GetObjectResponse.builder().build(), bytes);
@@ -132,7 +130,7 @@ public class S3MockClient implements S3Client {
       try {
         Files.delete(file.toPath());
       } catch (IOException ex) {
-        LOGGER.error("Couldn't delete file", ex);
+        log.error("Couldn't delete file", ex);
       }
     }
 
