@@ -61,7 +61,6 @@ public class PublisherConfig {
       public void publish(@Nonnull Options options) {
         String target = options.targetPublisher();
         PublishPort selectedPublisher = publisherMap.get(target);
-
         if (selectedPublisher != null) {
           selectedPublisher.publish(options);
         } else {

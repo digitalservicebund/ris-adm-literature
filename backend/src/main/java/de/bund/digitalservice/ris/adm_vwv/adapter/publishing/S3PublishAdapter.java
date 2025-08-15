@@ -31,7 +31,6 @@ public class S3PublishAdapter implements PublishPort {
 
     try {
       log.info("Publishing document {} to S3 bucket '{}'", documentNumber, bucketName);
-
       PutObjectRequest xmlRequest = PutObjectRequest.builder()
         .bucket(bucketName)
         .key(xmlKey)

@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.S3MockClient;
 import java.net.URI;
 import java.net.URISyntaxException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.services.s3.S3Client;
  * different environments and buckets.
  */
 @Configuration
+@Slf4j
 public class AwsConfig {
 
   /**
@@ -37,6 +39,8 @@ public class AwsConfig {
     @Value("${otc.obs.private.bsg-access-key-id}") String accessKeyId,
     @Value("${otc.obs.private.bsg-access-key}") String secretAccessKey
   ) throws URISyntaxException {
+    log.info("Endpoint {}", endpoint);
+
     return S3Client.builder()
       .region(Region.of(region))
       .endpointOverride(new URI(endpoint))
