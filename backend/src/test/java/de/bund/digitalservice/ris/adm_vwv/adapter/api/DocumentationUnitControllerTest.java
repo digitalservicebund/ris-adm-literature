@@ -170,6 +170,7 @@ class DocumentationUnitControllerTest {
             """
             {
               "documentNumber": "KSNR054920707",
+              "dokumenttyp": { "abbreviation": "VR", "name": "Verwaltungsregelung" },
               "fundstellen": [],
               "fieldsOfLaw": [],
               "langueberschrift": "Lange Überschrift",
