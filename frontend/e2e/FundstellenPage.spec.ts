@@ -143,7 +143,7 @@ test.describe('FundstellenPage', () => {
       // When
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
       await page.getByRole('button', { name: 'Entfernen' }).click()
-      await page.keyboard.press('Tab')
+      await page.keyboard.press('Escape')
       await page.getByRole('button', { name: 'Fundstelle übernehmen' }).click()
 
       // Then
