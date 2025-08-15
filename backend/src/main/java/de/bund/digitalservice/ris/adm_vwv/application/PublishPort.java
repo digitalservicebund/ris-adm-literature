@@ -13,5 +13,11 @@ public interface PublishPort {
    */
   void publish(@Nonnull Options options);
 
+  /**
+   * A data record holding the necessary information for publishing a document.
+   *
+   * @param documentNumber The unique identifier for the document, used as the storage key.
+   * @param xmlContent The LDML XML content of the document to be stored.
+   */
   record Options(String documentNumber, String xmlContent) {}
 }

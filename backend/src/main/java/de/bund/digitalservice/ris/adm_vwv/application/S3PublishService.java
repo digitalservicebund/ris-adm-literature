@@ -7,6 +7,9 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
+/**
+ * Responsible for publishing documents to the s3 buckets
+ */
 @Slf4j
 //TODO: Is this really a service? Where to put the class?
 public class S3PublishService implements PublishPort {

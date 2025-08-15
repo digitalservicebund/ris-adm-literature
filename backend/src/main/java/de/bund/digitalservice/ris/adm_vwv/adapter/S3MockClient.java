@@ -28,6 +28,9 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
+/**
+ * Mocked S3Client for local development
+ */
 //TODO: Where to put this class?
 @Slf4j
 public class S3MockClient implements S3Client {
@@ -47,6 +50,9 @@ public class S3MockClient implements S3Client {
     /* this method is empty because of mock */
   }
 
+  /**
+   * Inits the client.
+   */
   @PostConstruct
   public void init() {
     this.localStorageDirectory = relativeLocalStorageDirectory.toAbsolutePath();
