@@ -32,6 +32,14 @@ frontend:
     realm: ${oauth2.realm:ris}
     clientId: ${oauth2.client-id:ris-vwv-local}
 
+local:
+  file-storage: output/s3-mock-storage
+
+otc:
+  private-bsg-client:
+    bucket-name: local-mock-bucket
+
+
 ---
 
 spring:

@@ -2,13 +2,19 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -25,10 +31,19 @@ class DocumentationUnitServiceTest {
   private DocumentationUnitService documentationUnitService;
 
   @Mock
+  private PublishPort publishPort;
+
+  @Mock
+  private Map<String, PublishPort> publishers;
+
+  @Mock
   private DocumentationUnitPersistencePort documentationUnitPersistencePort;
 
   @Mock
   private LdmlConverterService ldmlConverterService;
+
+  @Mock
+  private LdmlPublishConverterService ldmlPublishConverterService;
 
   @Spy
   private ObjectMapper objectMapper;
@@ -148,5 +163,29 @@ class DocumentationUnitServiceTest {
       null,
       List.of()
     );
+  }
+
+  @Test
+  void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
+    String docNumber = "doc123";
+    String fakeXml = "<test>xml</test>";
+    String bsgPublisherName = "privateBsgPublisher";
+    String fakeJson = "{\"test\":\"json\"}";
+
+    var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
+    var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
+    var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
+
+    when(documentationUnitPersistencePort.findByDocumentNumber(docNumber)).thenReturn(
+      Optional.of(doc)
+    );
+    when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
+    when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
+    when(publishers.get(bsgPublisherName)).thenReturn(publishPort);
+
+    documentationUnitService.publish(docNumber, content);
+
+    verify(documentationUnitPersistencePort).publish(eq(docNumber), anyString(), eq(fakeXml));
+    verify(publishPort).publish(any(PublishPort.Options.class));
   }
 }

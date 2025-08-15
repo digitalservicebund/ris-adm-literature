@@ -17,3 +17,19 @@ sentry:
   send-default-pii: true
   # Set traces_sample_rate to 1.0 to capture 100% of transactions for tracing.
   tracesSampleRate: 0.01
+
+frontend:
+  auth:
+    url: ${oauth2.frontend-url}
+    realm: ${oauth2.realm}
+    clientId: ${oauth2.client-id}
+
+otc:
+  region: ${otc.region}
+  private-bsg-client:
+    bucket-name: ${otc.obs.private.bucket-name}
+  obs:
+    endpoint: ${otc.obs.endpoint}
+    private:
+      bsg-access-key-id: ${otc.obs.private.bsg-access-key}
+      bsg-access-key: ${otc.obs.private.bsg-access-key-id}

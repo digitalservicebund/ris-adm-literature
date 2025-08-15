@@ -19,3 +19,13 @@ frontend:
     url: http://localhost:8443
     realm: ris
     clientId: ris-vwv-local
+
+otc:
+  region: eu-de
+  private-bsg-client:
+    bucket-name: test
+  obs:
+    endpoint: https://example.com
+    private:
+      bsg-access-key-id: test
+      bsg-access-key: test

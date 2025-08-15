@@ -7,6 +7,8 @@ spring:
         sources:
           - name: database-config
           - name: oauth2-config
+          - name: obs-credentials-secrets
+          - name: otc-config
       secrets:
         enabled: true
         fail-fast: true

@@ -9,3 +9,5 @@ CVE-2025-22866
 CVE-2025-22874
 # Reason: CVE-2025-47907 appears in go stdlib used in paketobuildpacks, only used for the build process
 CVE-2025-47907
+# Reason: CVE-2025-55163 is not applicable as we only use the synchronous S3Client, not the vulnerable async client.
+CVE-2025-55163

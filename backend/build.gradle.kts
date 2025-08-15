@@ -42,6 +42,9 @@ val sentryVersion = "8.19.1"
 val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
+val localStackVersion = "1.20.0"
+val awsVersion = "2.29.52"
+
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -78,6 +81,8 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
+  implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
+  implementation("software.amazon.awssdk:s3")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
@@ -90,6 +95,7 @@ dependencies {
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:postgresql")
   testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
+  testImplementation("org.testcontainers:localstack:$localStackVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
