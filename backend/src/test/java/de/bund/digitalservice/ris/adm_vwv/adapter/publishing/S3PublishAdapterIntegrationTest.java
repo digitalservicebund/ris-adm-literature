@@ -31,7 +31,10 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
  * and verifies that the composite publisher correctly routes requests to the appropriate bean.
  */
 @Testcontainers
-@SpringBootTest
+// This property is needed because our main AwsConfig provides a mock S3Client bean
+// for the "test" profile, but this test needs to override it with a real one
+// from the inner @TestConfiguration. This property allows that override to happen.
+@SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
 @ActiveProfiles("test")
 class S3PublishAdapterIntegrationTest {
 
@@ -42,7 +45,7 @@ class S3PublishAdapterIntegrationTest {
 
   @Container
   static LocalStackContainer localStack = new LocalStackContainer(
-    DockerImageName.parse("localstack/localstack:3.5.0")
+    DockerImageName.parse("localstack/localstack:4.7.0")
   ).withServices(LocalStackContainer.Service.S3);
 
   /**

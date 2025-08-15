@@ -52,7 +52,7 @@ public class AwsConfig {
    * @return An {@link S3MockClient} instance that simulates S3 operations locally.
    */
   @Bean("privateBsgS3Client")
-  @Profile("!staging & !production & !uat & !test")
+  @Profile("!staging & !production & !uat")
   public S3Client privateBsgS3MockClient() {
     return new S3MockClient();
   }
