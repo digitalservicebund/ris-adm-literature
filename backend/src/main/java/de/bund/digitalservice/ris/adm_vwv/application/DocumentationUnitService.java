@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
 
   private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
   private final LdmlConverterService ldmlConverterService;
+  private final LdmlPublishConverterService ldmlPublishConverterService;
   private final ObjectMapper objectMapper;
   private final Map<String, PublishPort> publishers;
 
@@ -74,7 +76,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     );
     if (optionalDocumentationUnit.isPresent()) {
       DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
-      String xml = ldmlConverterService.convertToLdml(
+      String xml = ldmlPublishConverterService.convertToLdml(
         documentationUnitContent,
         documentationUnit.xml()
       );
