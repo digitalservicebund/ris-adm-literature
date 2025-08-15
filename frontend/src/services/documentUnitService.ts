@@ -39,6 +39,21 @@ export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<Docume
     .put(documentUnit)
 }
 
+export function usePutPublishDocUnit(documentUnit: DocumentUnit): UseFetchReturn<DocumentUnit> {
+  return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`, {
+    afterFetch: async ({ data }) => {
+      if (!data) return { data }
+
+      return {
+        data: mapResponseDataToDocumentUnit(data),
+      }
+    },
+    immediate: false,
+  })
+    .json()
+    .put(documentUnit)
+}
+
 export function usePostDocUnit(): UseFetchReturn<DocumentUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}`).json().post()
 }

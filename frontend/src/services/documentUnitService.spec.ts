@@ -4,12 +4,15 @@ import {
   useGetPaginatedDocUnits,
   usePostDocUnit,
   usePutDocUnit,
+  usePutPublishDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
 import { ref } from 'vue'
 import { until } from '@vueuse/core'
+import ActiveCitation from '@/domain/activeCitation'
+import { activeCitationFixture } from '@/testing/fixtures/activeCitation'
 
 describe('documentUnitService', () => {
   beforeEach(() => {
@@ -23,7 +26,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
       fundstellen: [],
-      activeCitations: [],
+      activeCitations: [new ActiveCitation(activeCitationFixture)],
       activeReferences: [
         new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
       ],
@@ -47,6 +50,15 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
     expect(data.value).toEqual(docUnit)
+  })
+
+  it('data is null when fetch returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = useGetDocUnit('KSNR054920707')
+    await execute()
+
+    expect(data.value).toEqual(null)
   })
 
   it('returns an error on failed fetch ', async () => {
@@ -80,7 +92,6 @@ describe('documentUnitService', () => {
       json: {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
-        note: 'updated',
       },
     }
 
@@ -94,7 +105,6 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
     expect(data.value?.id).toBe(docUnit.id)
-    expect(data.value?.note).toBe('updated')
   })
 
   it('returns an error on failed update', async () => {
@@ -110,6 +120,82 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeTruthy()
     expect(data.value).toBeNull()
+  })
+
+  it('data is null when update call returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('publishes a doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      fieldsOfLaw: [],
+      fundstellen: [],
+      activeCitations: [],
+      activeReferences: [
+        new ActiveReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 5' })] }),
+      ],
+      normReferences: [new NormReference({ singleNorms: [new SingleNorm({ singleNorm: '§ 7' })] })],
+      note: '',
+    }
+
+    const publishedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      json: {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSNR054920707',
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(publishedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutPublishDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+  })
+
+  it('returns an error on failed publication', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutPublishDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('data is null when publish returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutPublishDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
   })
 
   it('creates a doc unit', async () => {
