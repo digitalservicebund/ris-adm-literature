@@ -74,7 +74,8 @@ public class S3MockClient implements S3Client {
         fos.write(content, 0, len);
       }
     } catch (IOException ex) {
-      log.info("Couldn't write file: {}", fileName, ex);
+      log.info("Couldn't write file: {}", fileName);
+      log.debug(ex.getMessage(), ex);
     }
 
     return PutObjectResponse.builder().build();
@@ -120,7 +121,7 @@ public class S3MockClient implements S3Client {
       if (readBytes != file.length()) {
         log.warn("different size between file length and read bytes");
       }
-    } catch (IOException ex) {
+    } catch (IOException _) {
       log.error("Couldn't get object from local storage.");
     }
 

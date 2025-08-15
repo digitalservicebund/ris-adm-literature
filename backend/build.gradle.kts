@@ -42,6 +42,8 @@ val sentryVersion = "8.19.1"
 val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
+val localStackVersion = "1.20.0"
+
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -92,7 +94,7 @@ dependencies {
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:postgresql")
   testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
-  testImplementation("org.testcontainers:localstack:1.20.0")
+  testImplementation("org.testcontainers:localstack:$localStackVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

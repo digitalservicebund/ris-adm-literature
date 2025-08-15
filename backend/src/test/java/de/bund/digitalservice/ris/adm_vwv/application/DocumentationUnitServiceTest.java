@@ -167,25 +167,25 @@ class DocumentationUnitServiceTest {
 
   @Test
   void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
-    String DOC_NUMBER = "doc123";
-    String FAKE_XML = "<test>xml</test>";
-    String BSG_PUBLISHER_NAME = "privateBsgPublisher";
-    String FAKE_JSON = "{\"test\":\"json\"}";
+    String docNumber = "doc123";
+    String fakeXml = "<test>xml</test>";
+    String bsgPublisherName = "privateBsgPublisher";
+    String fakeJson = "{\"test\":\"json\"}";
 
-    var doc = new DocumentationUnit(DOC_NUMBER, UUID.randomUUID(), null, FAKE_XML);
-    var content = TestDocumentationUnitContent.create(DOC_NUMBER, "Lange Überschrift");
-    var publishedDoc = new DocumentationUnit(DOC_NUMBER, UUID.randomUUID(), FAKE_JSON, FAKE_XML);
+    var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
+    var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
+    var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
 
-    when(documentationUnitPersistencePort.findByDocumentNumber(DOC_NUMBER)).thenReturn(
+    when(documentationUnitPersistencePort.findByDocumentNumber(docNumber)).thenReturn(
       Optional.of(doc)
     );
-    when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(FAKE_XML);
+    when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
     when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
-    when(publishers.get(BSG_PUBLISHER_NAME)).thenReturn(publishPort);
+    when(publishers.get(bsgPublisherName)).thenReturn(publishPort);
 
-    documentationUnitService.publish(DOC_NUMBER, content);
+    documentationUnitService.publish(docNumber, content);
 
-    verify(documentationUnitPersistencePort).publish(eq(DOC_NUMBER), anyString(), eq(FAKE_XML));
+    verify(documentationUnitPersistencePort).publish(eq(docNumber), anyString(), eq(fakeXml));
     verify(publishPort).publish(any(PublishPort.Options.class));
   }
 }
