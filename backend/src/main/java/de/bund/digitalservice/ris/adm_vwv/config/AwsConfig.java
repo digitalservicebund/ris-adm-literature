@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.S3MockClient;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,13 +33,13 @@ public class AwsConfig {
   @Profile("staging")
   public S3Client privateBsgS3Client(
     @Value("${otc.region}") String region,
-    @Value("${otc.obs.endpoint}") URI endpoint,
+    @Value("${otc.obs.endpoint}") String endpoint,
     @Value("${otc.obs.private.bsg-access-key-id}") String accessKeyId,
     @Value("${otc.obs.private.bsg-access-key}") String secretAccessKey
-  ) {
+  ) throws URISyntaxException {
     return S3Client.builder()
       .region(Region.of(region))
-      .endpointOverride(endpoint)
+      .endpointOverride(new URI(endpoint))
       .credentialsProvider(
         StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey))
       )
