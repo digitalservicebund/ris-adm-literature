@@ -611,4 +611,66 @@ class LdmlPublishConverterServiceIntegrationTest {
       </ris:activeReferences>""".indent(20)
     );
   }
+
+  @Test
+  @DisplayName(
+    "Keeps 'Zuordnungen', 'Verwaltungsdaten', 'Juris-Abkürzung', and 'Region' from previous document version in ris:metadata"
+  )
+  void convertToLdml_previousVersionContent() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR1234567890",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      null,
+      List.of(),
+      false,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of()
+    );
+    String previousXml = TestFile.readFileToString("ldml-example-historic-data.akn.xml");
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, previousXml);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <ris:zuordnungen>
+          <ris:zuordnung aspekt="Titel" begriff="Bundesausschuss"/>
+          <ris:zuordnung aspekt="Titel" begriff="BA"/>
+          <ris:zuordnung aspekt="VRNr" begriff="12345"/>
+      </ris:zuordnungen>""".indent(20),
+      """
+      <ris:historicAdministrativeData>
+          <dokstelle name="BSG" status="1">
+              <fantasiedatum>BSG</fantasiedatum>
+              <erzeugt>2025-01-01</erzeugt>
+              <geaendert>2025-01-01 14:06</geaendert>
+              <publiziert>
+                  <datum>2025-01-02 00:00</datum>
+                  <file>BSG.VR.20250101</file>
+                  <status>5</status>
+              </publiziert>
+          </dokstelle>
+      </ris:historicAdministrativeData>""".indent(20),
+      """
+      <ris:region>DEU</ris:region>
+      <ris:historicAbbreviation>VR Bundesausschuss 2025-01-01 12345</ris:historicAbbreviation>""".indent(
+          20
+        )
+    );
+  }
 }

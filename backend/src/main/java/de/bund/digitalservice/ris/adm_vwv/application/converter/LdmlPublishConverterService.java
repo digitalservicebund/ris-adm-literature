@@ -49,6 +49,23 @@ public class LdmlPublishConverterService {
       // If there is a previous version it could be a migrated documented. In that case we have to hold some
       // historic data.
       akomaNtoso = xmlReader.readXml(previousXmlVersion);
+      RisMetadata previousRisMetadata = akomaNtoso
+        .getDoc()
+        .getMeta()
+        .getProprietary()
+        .getMetadata();
+      Meta meta = createMeta(documentationUnitContent.documentNumber());
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setHistoricAdministrativeData(
+        previousRisMetadata.getHistoricAdministrativeData()
+      );
+      risMetadata.setHistoricAbbreviation(previousRisMetadata.getHistoricAbbreviation());
+      risMetadata.setZuordnungen(previousRisMetadata.getZuordnungen());
+      risMetadata.setRegion(previousRisMetadata.getRegion());
+      normalizeHistoricAdministrativeData(meta);
+      akomaNtoso.getDoc().setMeta(meta);
+      akomaNtoso.getDoc().setPreface(new Preface());
+      akomaNtoso.getDoc().setMainBody(new MainBody());
     } else {
       akomaNtoso = createAkomaNtoso(documentationUnitContent);
     }
@@ -83,19 +100,24 @@ public class LdmlPublishConverterService {
     akomaNtoso = new AkomaNtoso();
     Doc doc = new Doc();
     akomaNtoso.setDoc(doc);
+    Meta meta = createMeta(documentationUnitContent.documentNumber());
+    doc.setMeta(meta);
+    doc.setPreface(new Preface());
+    doc.setMainBody(new MainBody());
+    return akomaNtoso;
+  }
+
+  private Meta createMeta(String documentNumber) {
     Meta meta = new Meta();
     Identification identification = new Identification();
     FrbrElement frbrExpression = new FrbrElement();
     FrbrAlias frbrAlias = new FrbrAlias();
     frbrAlias.setName("documentNumber");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrAlias.setValue(documentNumber);
     frbrExpression.setFrbrAlias(List.of(frbrAlias));
     identification.setFrbrExpression(frbrExpression);
     meta.setIdentification(identification);
-    doc.setMeta(meta);
-    doc.setPreface(new Preface());
-    doc.setMainBody(new MainBody());
-    return akomaNtoso;
+    return meta;
   }
 
   private void setInkrafttretedatum(Meta meta, String inkrafttretedatum) {
@@ -389,5 +411,33 @@ public class LdmlPublishConverterService {
         yield referenceType;
       }
     };
+  }
+
+  private void normalizeHistoricAdministrativeData(Meta meta) {
+    JaxbHtml historicAdministrativeData = meta
+      .getOrCreateProprietary()
+      .getMetadata()
+      .getHistoricAdministrativeData();
+    if (historicAdministrativeData != null) {
+      List<?> nodes = historicAdministrativeData.getHtml();
+      List<Node> filteredNodes = nodes
+        .stream()
+        .filter(Node.class::isInstance)
+        .map(Node.class::cast)
+        .filter(node -> !(node.getNodeType() == Node.TEXT_NODE && node.getTextContent().isBlank()))
+        .toList();
+      filteredNodes.forEach(this::removeBlankTextNodes);
+      historicAdministrativeData.setHtml(filteredNodes);
+    }
+  }
+
+  private void removeBlankTextNodes(Node node) {
+    for (Node childNode : NodeToList.toList(node.getChildNodes())) {
+      if (childNode.getNodeType() == Node.TEXT_NODE && childNode.getTextContent().isBlank()) {
+        node.removeChild(childNode);
+      } else {
+        removeBlankTextNodes(childNode);
+      }
+    }
   }
 }
