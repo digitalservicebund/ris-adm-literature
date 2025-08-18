@@ -422,7 +422,7 @@ public class LdmlPublishConverterService {
       List<?> nodes = historicAdministrativeData.getHtml();
       List<Node> filteredNodes = nodes
         .stream()
-        .filter(node -> node instanceof Node)
+        .filter(Node.class::isInstance)
         .map(Node.class::cast)
         .filter(node -> !(node.getNodeType() == Node.TEXT_NODE && node.getTextContent().isBlank()))
         .toList();
