@@ -4,10 +4,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import jakarta.annotation.Nonnull;
@@ -77,6 +74,7 @@ public class LdmlPublishConverterService {
     setFundstellen(meta, documentationUnitContent.fundstellen());
     setNormReferences(meta, documentationUnitContent.normReferences());
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
+    setActiveReferences(meta, documentationUnitContent.activeReferences());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -343,5 +341,53 @@ public class LdmlPublishConverterService {
             .toList()
         );
     }
+  }
+
+  private void setActiveReferences(Meta meta, List<ActiveReference> activeReferences) {
+    if (CollectionUtils.isNotEmpty(activeReferences)) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setActiveReferences(
+        activeReferences
+          .stream()
+          .flatMap(activeReference -> {
+            if (CollectionUtils.isNotEmpty(activeReference.singleNorms())) {
+              return activeReference
+                .singleNorms()
+                .stream()
+                .map(singleNorm -> {
+                  RisActiveReference risActiveReference = new RisActiveReference();
+                  risActiveReference.setTypeNumber(
+                    transformReferenceType(activeReference.referenceType())
+                  );
+                  risActiveReference.setReference(
+                    activeReference.normAbbreviation().abbreviation()
+                  );
+                  risActiveReference.setParagraph(singleNorm.singleNorm());
+                  risActiveReference.setDateOfVersion(singleNorm.dateOfVersion());
+                  return risActiveReference;
+                });
+            }
+            RisActiveReference risActiveReference = new RisActiveReference();
+            risActiveReference.setTypeNumber(
+              transformReferenceType(activeReference.referenceType())
+            );
+            risActiveReference.setReference(activeReference.normAbbreviation().abbreviation());
+            return Stream.of(risActiveReference);
+          })
+          .toList()
+      );
+    }
+  }
+
+  private String transformReferenceType(String referenceType) {
+    return switch (referenceType) {
+      case "anwendung" -> "01";
+      case "neuregelung" -> "31";
+      case "rechtsgrundlage" -> "82";
+      default -> {
+        log.debug("Unhandled reference type: {}", referenceType);
+        yield referenceType;
+      }
+    };
   }
 }

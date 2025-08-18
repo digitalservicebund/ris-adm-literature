@@ -540,4 +540,75 @@ class LdmlPublishConverterServiceIntegrationTest {
       </akn:analysis>""".indent(12)
     );
   }
+
+  @Test
+  @DisplayName("Converts 'Aktivverweisungen' into ris:activeReferences in ris:metadata")
+  void convertToLdml_activeReferences() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      "  ",
+      List.of(),
+      false,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(
+        new ActiveReference(
+          "administrative_regulation",
+          "anwendung",
+          new NormAbbreviation(UUID.randomUUID(), "VR XML-Erzeugung", null),
+          null,
+          List.of(
+            new SingleNorm(UUID.randomUUID(), "§ 2 Seite 1", "2025-01-01", null),
+            new SingleNorm(UUID.randomUUID(), "§ 5", "2025-01-02", null)
+          )
+        ),
+        new ActiveReference(
+          "norm",
+          "rechtsgrundlage",
+          new NormAbbreviation(UUID.randomUUID(), "BGB", null),
+          null,
+          List.of(
+            new SingleNorm(UUID.randomUUID(), "§ 10 Abs. 1", null, "2010"),
+            new SingleNorm(UUID.randomUUID(), "§ 11", "2001-02-05", null)
+          )
+        ),
+        new ActiveReference(
+          "administrative_regulation",
+          "neuregelung",
+          new NormAbbreviation(UUID.randomUUID(), "VV RIS-Abkürzungen", null),
+          null,
+          List.of()
+        )
+      ),
+      List.of(),
+      null,
+      List.of()
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <ris:activeReferences>
+          <ris:activeReference typeNumber="01" reference="VR XML-Erzeugung" paragraph="§ 2 Seite 1" dateOfVersion="2025-01-01"/>
+          <ris:activeReference typeNumber="01" reference="VR XML-Erzeugung" paragraph="§ 5" dateOfVersion="2025-01-02"/>
+          <ris:activeReference typeNumber="82" reference="BGB" paragraph="§ 10 Abs. 1"/>
+          <ris:activeReference typeNumber="82" reference="BGB" paragraph="§ 11" dateOfVersion="2001-02-05"/>
+          <ris:activeReference typeNumber="31" reference="VV RIS-Abkürzungen"/>
+      </ris:activeReferences>""".indent(20)
+    );
+  }
 }
