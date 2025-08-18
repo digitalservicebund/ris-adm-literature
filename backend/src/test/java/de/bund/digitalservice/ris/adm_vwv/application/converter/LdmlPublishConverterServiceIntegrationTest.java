@@ -4,11 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestNormgeber;
+import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
+import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -451,6 +452,92 @@ class LdmlPublishConverterServiceIntegrationTest {
     assertThat(xml).contains(
       """
       <ris:documentType category="VR">VR</ris:documentType>""".indent(20)
+    );
+  }
+
+  @Test
+  @DisplayName(
+    "Converts 'Fundstelle', 'Normenkette', and 'Aktivzitierung Rechtssprechung' into akn:analysis"
+  )
+  void convertToLdml_references() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(
+        new Fundstelle(
+          UUID.randomUUID(),
+          "Seite 2",
+          new LegalPeriodical(UUID.randomUUID(), "DOK", "Die Dokumente", null, null),
+          null
+        ),
+        new Fundstelle(
+          UUID.randomUUID(),
+          "Kap. 5, Abs. 1",
+          new LegalPeriodical(UUID.randomUUID(), "VJP", "Juristische Periodika", null, null),
+          null
+        )
+      ),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      "  ",
+      List.of(),
+      false,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(
+        new ActiveCitation(
+          UUID.randomUUID(),
+          false,
+          "KSNR00000011",
+          new Court(UUID.randomUUID(), "sozial", "Kassel", "BSG"),
+          "2024-02-04",
+          "X/I 43",
+          null,
+          new CitationType(UUID.randomUUID(), "Ueb", "Übernahme")
+        )
+      ),
+      List.of(),
+      List.of(
+        new NormReference(
+          new NormAbbreviation(UUID.randomUUID(), "BGB", "Bürgerliches Gesetzbuch"),
+          "BGB",
+          List.of(
+            new SingleNorm(UUID.randomUUID(), "§1", null, null),
+            new SingleNorm(UUID.randomUUID(), "§2 Abs. 1", "2025-01-01", "2025")
+          )
+        )
+      ),
+      null,
+      List.of()
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+          <akn:otherReferences source="attributsemantik-noch-undefiniert">
+              <akn:implicitReference shortForm="DOK" showAs="DOK, Seite 2"/>
+              <akn:implicitReference shortForm="VJP" showAs="VJP, Kap. 5, Abs. 1"/>
+              <akn:implicitReference shortForm="BGB" showAs="BGB §1">
+                  <ris:normReference singleNorm="§1"/>
+              </akn:implicitReference>
+              <akn:implicitReference shortForm="BGB" showAs="BGB §2 Abs. 1">
+                  <ris:normReference singleNorm="§2 Abs. 1" dateOfRelevance="2025" dateOfVersion="2025-01-01"/>
+              </akn:implicitReference>
+              <akn:implicitReference shortForm="Übernahme BSG X/I 43" showAs="Übernahme BSG X/I 43 2024-02-04">
+                  <ris:caselawReference abbreviation="Übernahme" court="BSG" courtLocation="Kassel" date="2024-02-04" documentNumber="KSNR00000011" referenceNumber="X/I 43"/>
+              </akn:implicitReference>
+          </akn:otherReferences>
+      </akn:analysis>""".indent(12)
     );
   }
 }

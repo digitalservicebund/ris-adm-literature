@@ -3,6 +3,8 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.ldml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -36,5 +38,21 @@ public class Meta {
       proprietary.setMetadata(new RisMetadata());
     }
     return proprietary;
+  }
+
+  /**
+   * Returns the set analysis instance or creates and sets a new one including an instance
+   * of {@link OtherReferences} with empty list of {@link ImplicitReference}.
+   *
+   * @return Instance of {@code Analysis}
+   */
+  public Analysis getOrCreateAnalysis() {
+    if (analysis == null) {
+      analysis = new Analysis();
+      OtherReferences otherReferences = new OtherReferences();
+      otherReferences.setImplicitReferences(new ArrayList<>());
+      analysis.setOtherReferences(List.of(otherReferences));
+    }
+    return analysis;
   }
 }
