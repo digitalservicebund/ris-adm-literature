@@ -4,7 +4,9 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormReference;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
@@ -12,6 +14,7 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -72,6 +75,8 @@ public class LdmlPublishConverterService {
     );
     setAktenzeichen(meta, documentationUnitContent.aktenzeichen());
     setFundstellen(meta, documentationUnitContent.fundstellen());
+    setNormReferences(meta, documentationUnitContent.normReferences());
+    setCaselawReferences(meta, documentationUnitContent.activeCitations());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -252,19 +257,91 @@ public class LdmlPublishConverterService {
   private void setFundstellen(Meta meta, List<Fundstelle> fundstellen) {
     if (CollectionUtils.isNotEmpty(fundstellen)) {
       OtherReferences otherReferences = meta.getOrCreateAnalysis().getOtherReferences().getFirst();
-      otherReferences.setImplicitReferences(
-        fundstellen
-          .stream()
-          .map(fundstelle -> {
-            ImplicitReference implicitReference = new ImplicitReference();
-            implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
-            implicitReference.setShowAs(
-              fundstelle.periodikum().abbreviation() + ", " + fundstelle.zitatstelle()
-            );
-            return implicitReference;
-          })
-          .toList()
-      );
+      otherReferences
+        .getImplicitReferences()
+        .addAll(
+          fundstellen
+            .stream()
+            .map(fundstelle -> {
+              ImplicitReference implicitReference = new ImplicitReference();
+              implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
+              implicitReference.setShowAs(
+                fundstelle.periodikum().abbreviation() + ", " + fundstelle.zitatstelle()
+              );
+              return implicitReference;
+            })
+            .toList()
+        );
+    }
+  }
+
+  private void setNormReferences(Meta meta, List<NormReference> normReferences) {
+    if (CollectionUtils.isNotEmpty(normReferences)) {
+      OtherReferences otherReferences = meta.getOrCreateAnalysis().getOtherReferences().getFirst();
+      otherReferences
+        .getImplicitReferences()
+        .addAll(
+          normReferences
+            .stream()
+            .flatMap(normReference -> {
+              if (CollectionUtils.isNotEmpty(normReference.singleNorms())) {
+                return normReference
+                  .singleNorms()
+                  .stream()
+                  .map(singleNorm -> {
+                    ImplicitReference implicitReference = new ImplicitReference();
+                    String abbreviation = normReference.normAbbreviation().abbreviation();
+                    implicitReference.setShortForm(abbreviation);
+                    implicitReference.setShowAs(abbreviation + " " + singleNorm.singleNorm());
+                    RisNormReference risNormReference = new RisNormReference();
+                    risNormReference.setSingleNorm(singleNorm.singleNorm());
+                    risNormReference.setDateOfVersion(singleNorm.dateOfVersion());
+                    risNormReference.setDateOfRelevance(singleNorm.dateOfRelevance());
+                    implicitReference.setNormReference(risNormReference);
+                    return implicitReference;
+                  });
+              }
+              ImplicitReference implicitReference = new ImplicitReference();
+              String abbreviation = normReference.normAbbreviation().abbreviation();
+              implicitReference.setShortForm(abbreviation);
+              implicitReference.setShowAs(abbreviation);
+              return Stream.of(implicitReference);
+            })
+            .toList()
+        );
+    }
+  }
+
+  private void setCaselawReferences(Meta meta, List<ActiveCitation> activeCitations) {
+    if (CollectionUtils.isNotEmpty(activeCitations)) {
+      OtherReferences otherReferences = meta.getOrCreateAnalysis().getOtherReferences().getFirst();
+      otherReferences
+        .getImplicitReferences()
+        .addAll(
+          activeCitations
+            .stream()
+            .map(activeCitation -> {
+              ImplicitReference implicitReference = new ImplicitReference();
+              String shortForm =
+                activeCitation.citationType().label() +
+                " " +
+                activeCitation.court().label() +
+                " " +
+                activeCitation.fileNumber();
+              implicitReference.setShortForm(shortForm);
+              implicitReference.setShowAs(shortForm + " " + activeCitation.decisionDate());
+              RisCaselawReference caselawReference = new RisCaselawReference();
+              caselawReference.setAbbreviation(activeCitation.citationType().label());
+              caselawReference.setCourt(activeCitation.court().label());
+              caselawReference.setCourtLocation(activeCitation.court().location());
+              caselawReference.setDate(activeCitation.decisionDate());
+              caselawReference.setDocumentNumber(activeCitation.documentNumber());
+              caselawReference.setReferenceNumber(activeCitation.fileNumber());
+              implicitReference.setCaselawReference(caselawReference);
+              return implicitReference;
+            })
+            .toList()
+        );
     }
   }
 }

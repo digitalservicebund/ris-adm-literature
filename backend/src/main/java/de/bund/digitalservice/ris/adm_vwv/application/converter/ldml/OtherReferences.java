@@ -17,6 +17,6 @@ public class OtherReferences {
   @XmlAttribute
   private String source = "attributsemantik-noch-undefiniert";
 
-  @XmlElement(namespace = XmlNamespace.AKN_NS)
+  @XmlElement(name = "implicitReference", namespace = XmlNamespace.AKN_NS)
   private List<ImplicitReference> implicitReferences;
 }

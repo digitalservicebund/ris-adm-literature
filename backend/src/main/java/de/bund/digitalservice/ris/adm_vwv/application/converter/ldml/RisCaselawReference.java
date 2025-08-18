@@ -25,8 +25,8 @@ public class RisCaselawReference {
   private String date;
 
   @XmlAttribute
-  private String referenceNumber;
+  private String documentNumber;
 
   @XmlAttribute
-  private String documentNumber;
+  private String referenceNumber;
 }
