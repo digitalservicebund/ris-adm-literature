@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -671,6 +672,70 @@ class LdmlPublishConverterServiceIntegrationTest {
       <ris:historicAbbreviation>VR Bundesausschuss 2025-01-01 12345</ris:historicAbbreviation>""".indent(
           20
         )
+    );
+  }
+
+  @Test
+  @DisplayName("Convert ldml identification in akn:meta")
+  void convertToLdml_identification() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR1234567890",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of("2025-02-02"),
+      null,
+      null,
+      null,
+      null,
+      List.of("12345"),
+      false,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(TestNormgeber.createByLegalEntity("Bundesausschuss"))
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:identification source="attributsemantik-noch-undefiniert">
+          <akn:FRBRWork>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
+              <akn:FRBRdate date="2025-01-01" name="erfassungsdatum"/>
+              <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
+              <akn:FRBRcountry value="de"/>
+              <akn:FRBRsubtype value="VR"/>
+              <akn:FRBRnumber value="12345"/>
+              <akn:FRBRname value="Bundesausschuss"/>
+          </akn:FRBRWork>
+          <akn:FRBRExpression>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
+              <akn:FRBRalias name="documentNumber" value="KSNR1234567890"/>
+              <akn:FRBRdate date="2025-02-02" name="zitierdatum"/>
+              <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
+              <akn:FRBRlanguage language="deu"/>
+          </akn:FRBRExpression>
+          <akn:FRBRManifestation>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu.akn.xml"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu.akn.xml"/>
+              <akn:FRBRdate date="${generierung}" name="generierung"/>
+              <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
+              <akn:FRBRformat value="xml"/>
+          </akn:FRBRManifestation>
+      </akn:identification>
+      """.replace("${generierung}", LocalDate.now().toString()).indent(12)
     );
   }
 }

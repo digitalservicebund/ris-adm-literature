@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import jakarta.annotation.Nonnull;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -92,6 +93,7 @@ public class LdmlPublishConverterService {
     setNormReferences(meta, documentationUnitContent.normReferences());
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
     setActiveReferences(meta, documentationUnitContent.activeReferences());
+    setIdentification(meta, documentationUnitContent);
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -439,5 +441,74 @@ public class LdmlPublishConverterService {
         removeBlankTextNodes(childNode);
       }
     }
+  }
+
+  private void setIdentification(Meta meta, DocumentationUnitContent documentationUnitContent) {
+    Identification identification = new Identification();
+    FrbrElement frbrWork = new FrbrElement();
+    String aktenzeichen;
+    if (!documentationUnitContent.aktenzeichen().isEmpty()) {
+      aktenzeichen = documentationUnitContent.aktenzeichen().getFirst();
+    } else {
+      aktenzeichen = "";
+      // TODO get aktenzeichen from VR number of the previous version
+    }
+
+    String normgeberName = documentationUnitContent.normgeberList().getFirst().institution().name();
+
+    String eli =
+      "/eli/bund/verwaltungsvorschriften/" +
+      documentationUnitContent.dokumenttyp().abbreviation().toLowerCase() +
+      "/" +
+      new Slug(normgeberName) +
+      "/" +
+      "2025/" +
+      new Slug(aktenzeichen);
+
+    frbrWork.setFrbrThis(new FrbrThis(eli));
+    frbrWork.setFrbrUri(new FrbrUri(eli));
+    FrbrDate erfassungsdatum = new FrbrDate();
+    erfassungsdatum.setDate("2025-01-01");
+    erfassungsdatum.setName("erfassungsdatum");
+    frbrWork.setFrbrDate(erfassungsdatum);
+    FrbrAuthor author = new FrbrAuthor();
+    author.setHref("recht.bund.de/institution/bundessozialgericht");
+    frbrWork.setFrbrAuthor(author);
+    frbrWork.setFrbrCountry(new FrbrCountry());
+    frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
+    frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
+    frbrWork.setFrbrName(new FrbrName(normgeberName));
+    identification.setFrbrWork(frbrWork);
+
+    FrbrElement frbrExpression = new FrbrElement();
+    String expressionEli = eli + "/" + documentationUnitContent.zitierdaten().getFirst() + "/deu";
+    frbrExpression.setFrbrThis(new FrbrThis(expressionEli));
+    frbrExpression.setFrbrUri(new FrbrUri(expressionEli));
+    FrbrAlias frbrAlias = new FrbrAlias();
+    frbrAlias.setName("documentNumber");
+    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrExpression.setFrbrAlias(List.of(frbrAlias));
+    FrbrDate zitierdatum = new FrbrDate();
+    zitierdatum.setDate(documentationUnitContent.zitierdaten().getFirst());
+    zitierdatum.setName("zitierdatum");
+    frbrExpression.setFrbrDate(zitierdatum);
+    frbrExpression.setFrbrAuthor(author);
+    frbrExpression.setFrbrLanguage(new FrbrLanguage());
+    identification.setFrbrExpression(frbrExpression);
+
+    FrbrElement frbrManifestation = new FrbrElement();
+    String manifestationEli =
+      eli + "/" + documentationUnitContent.zitierdaten().getFirst() + "/deu.akn.xml";
+    frbrManifestation.setFrbrThis(new FrbrThis(manifestationEli));
+    frbrManifestation.setFrbrUri(new FrbrUri(manifestationEli));
+    FrbrDate generierungDate = new FrbrDate();
+    generierungDate.setDate(LocalDate.now().toString());
+    generierungDate.setName("generierung");
+    frbrManifestation.setFrbrDate(generierungDate);
+    frbrManifestation.setFrbrAuthor(author);
+    frbrManifestation.setFrbrFormat(new FrbrFormat());
+    identification.setFrbrManifestation(frbrManifestation);
+
+    meta.setIdentification(identification);
   }
 }
