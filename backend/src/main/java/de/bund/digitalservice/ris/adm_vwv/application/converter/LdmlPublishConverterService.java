@@ -49,6 +49,21 @@ public class LdmlPublishConverterService {
       // If there is a previous version it could be a migrated documented. In that case we have to hold some
       // historic data.
       akomaNtoso = xmlReader.readXml(previousXmlVersion);
+      RisMetadata previousRisMetadata = akomaNtoso
+        .getDoc()
+        .getMeta()
+        .getProprietary()
+        .getMetadata();
+      Meta meta = createMeta(documentationUnitContent.documentNumber());
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setHistoricAdministrativeData(
+        previousRisMetadata.getHistoricAdministrativeData()
+      );
+      risMetadata.setHistoricAbbreviation(previousRisMetadata.getHistoricAbbreviation());
+      risMetadata.setZuordnungen(previousRisMetadata.getZuordnungen());
+      risMetadata.setRegion(previousRisMetadata.getRegion());
+      normalizeHistoricAdministrativeData(meta);
+      akomaNtoso.getDoc().setMeta(meta);
       akomaNtoso.getDoc().setPreface(new Preface());
       akomaNtoso.getDoc().setMainBody(new MainBody());
     } else {
@@ -77,9 +92,6 @@ public class LdmlPublishConverterService {
     setNormReferences(meta, documentationUnitContent.normReferences());
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
     setActiveReferences(meta, documentationUnitContent.activeReferences());
-    // Zuordnungen, historic administrative data, historic abbreviation, and region
-    // are already set by previous version of this document.
-    normalizeHistoricAdministrativeData(meta);
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -88,19 +100,24 @@ public class LdmlPublishConverterService {
     akomaNtoso = new AkomaNtoso();
     Doc doc = new Doc();
     akomaNtoso.setDoc(doc);
+    Meta meta = createMeta(documentationUnitContent.documentNumber());
+    doc.setMeta(meta);
+    doc.setPreface(new Preface());
+    doc.setMainBody(new MainBody());
+    return akomaNtoso;
+  }
+
+  private Meta createMeta(String documentNumber) {
     Meta meta = new Meta();
     Identification identification = new Identification();
     FrbrElement frbrExpression = new FrbrElement();
     FrbrAlias frbrAlias = new FrbrAlias();
     frbrAlias.setName("documentNumber");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrAlias.setValue(documentNumber);
     frbrExpression.setFrbrAlias(List.of(frbrAlias));
     identification.setFrbrExpression(frbrExpression);
     meta.setIdentification(identification);
-    doc.setMeta(meta);
-    doc.setPreface(new Preface());
-    doc.setMainBody(new MainBody());
-    return akomaNtoso;
+    return meta;
   }
 
   private void setInkrafttretedatum(Meta meta, String inkrafttretedatum) {
