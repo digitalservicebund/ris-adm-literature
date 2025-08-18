@@ -49,6 +49,8 @@ public class LdmlPublishConverterService {
       // If there is a previous version it could be a migrated documented. In that case we have to hold some
       // historic data.
       akomaNtoso = xmlReader.readXml(previousXmlVersion);
+      akomaNtoso.getDoc().setPreface(new Preface());
+      akomaNtoso.getDoc().setMainBody(new MainBody());
     } else {
       akomaNtoso = createAkomaNtoso(documentationUnitContent);
     }
@@ -75,6 +77,9 @@ public class LdmlPublishConverterService {
     setNormReferences(meta, documentationUnitContent.normReferences());
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
     setActiveReferences(meta, documentationUnitContent.activeReferences());
+    // Zuordnungen, historic administrative data, historic abbreviation, and region
+    // are already set by previous version of this document.
+    normalizeHistoricAdministrativeData(meta);
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -389,5 +394,33 @@ public class LdmlPublishConverterService {
         yield referenceType;
       }
     };
+  }
+
+  private void normalizeHistoricAdministrativeData(Meta meta) {
+    JaxbHtml historicAdministrativeData = meta
+      .getOrCreateProprietary()
+      .getMetadata()
+      .getHistoricAdministrativeData();
+    if (historicAdministrativeData != null) {
+      List<?> nodes = historicAdministrativeData.getHtml();
+      List<Node> filteredNodes = nodes
+        .stream()
+        .filter(node -> node instanceof Node)
+        .map(Node.class::cast)
+        .filter(node -> !(node.getNodeType() == Node.TEXT_NODE && node.getTextContent().isBlank()))
+        .toList();
+      filteredNodes.forEach(this::removeBlankTextNodes);
+      historicAdministrativeData.setHtml(filteredNodes);
+    }
+  }
+
+  private void removeBlankTextNodes(Node node) {
+    for (Node childNode : NodeToList.toList(node.getChildNodes())) {
+      if (childNode.getNodeType() == Node.TEXT_NODE && childNode.getTextContent().isBlank()) {
+        node.removeChild(childNode);
+      } else {
+        removeBlankTextNodes(childNode);
+      }
+    }
   }
 }
