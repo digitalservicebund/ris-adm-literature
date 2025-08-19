@@ -3,6 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,19 +39,20 @@ public record DocumentationUnitContent(
   String documentNumber,
   List<Fundstelle> fundstellen,
   List<FieldOfLaw> fieldsOfLaw,
-  String langueberschrift,
+  @NotBlank(message = "Langueberschrift muss vorhanden sein.") String langueberschrift,
   List<String> keywords,
-  List<String> zitierdaten,
-  String inkrafttretedatum,
+  @NotEmpty(message = "Zitierdaten muss mindestens einen Eintrag haben.") List<String> zitierdaten,
+  @NotBlank(message = "Inkrafttretedatum muss vorhanden sein.") String inkrafttretedatum,
   String ausserkrafttretedatum,
   String gliederung,
   String kurzreferat,
   List<String> aktenzeichen,
   boolean noAktenzeichen,
-  DocumentType dokumenttyp,
+  @NotNull(message = "Dokumenttyp muss vorhanden sein.") DocumentType dokumenttyp,
   String dokumenttypZusatz,
   List<ActiveCitation> activeCitations,
   List<ActiveReference> activeReferences,
+  @NotEmpty(message = "NormgeberList muss mindestens einen Eintrag haben.")
   List<NormReference> normReferences,
   String note,
   List<Normgeber> normgeberList
