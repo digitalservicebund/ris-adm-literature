@@ -141,7 +141,7 @@ jobs:
         # https://github.com/Nautilus-Cyberneering/pygithub/blob/main/docs/how_to_sign_automatic_commits_in_github_actions.md#solution-01-using-the-temporary-github_token-generated-for-each-workflow-job
       - name: Create Commit with GPG Signature
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
-        uses: qoomon/actions--create-commit@c495e09ee4ceb341683d2348bdf78e7202f93657
+        uses: qoomon/actions--create-commit@1024e41b35513ae9fa6c043f1746c3d21e91e826
         id: commit
         with:
           message: "Auto-update: Manage pinned dependencies based on CVE results"
