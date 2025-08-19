@@ -284,10 +284,18 @@ public class LdmlPublishConverterService {
             .stream()
             .map(fundstelle -> {
               ImplicitReference implicitReference = new ImplicitReference();
-              implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
-              implicitReference.setShowAs(
-                fundstelle.periodikum().abbreviation() + ", " + fundstelle.zitatstelle()
-              );
+              if (fundstelle.periodikum() == null) {
+                // Can occur due to ambiguous Periodika. Revisit this case after implementing RISDEV-8915
+                implicitReference.setShortForm(fundstelle.ambiguousPeriodikum());
+                implicitReference.setShowAs(
+                  fundstelle.ambiguousPeriodikum() + ", " + fundstelle.zitatstelle()
+                );
+              } else {
+                implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
+                implicitReference.setShowAs(
+                  fundstelle.periodikum().abbreviation() + ", " + fundstelle.zitatstelle()
+                );
+              }
               return implicitReference;
             })
             .toList()
