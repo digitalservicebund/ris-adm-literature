@@ -97,7 +97,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -127,7 +127,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -140,7 +140,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -168,7 +168,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       """
@@ -184,7 +184,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -211,7 +211,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -227,7 +227,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -257,7 +257,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -270,7 +270,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -296,7 +296,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -337,7 +337,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of("Schlag", "Wort", "Langer Text mit Sonderzeichen <>& und Leerzeichen"),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -350,7 +350,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -383,7 +383,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       ),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -396,7 +396,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -409,7 +409,8 @@ class LdmlPublishConverterServiceIntegrationTest {
           <ris:fieldOfLaw notation="NEW">SO-01</ris:fieldOfLaw>
           <ris:fieldOfLaw notation="OLD">03-04</ris:fieldOfLaw>
       </ris:fieldsOfLaw>
-      <ris:documentType category="VR" longTitle="Zusatz">VR Zusatz</ris:documentType>
+      <ris:documentType category="VR" longTitle="Zusatz">VR Zusatz</ris:documentType>""".indent(20),
+      """
       <ris:referenceNumbers>
           <ris:referenceNumber>X/I-43</ris:referenceNumber>
           <ris:referenceNumber>Akt. 45 / 2-3</ris:referenceNumber>
@@ -430,7 +431,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -443,7 +444,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -482,7 +483,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -515,7 +516,7 @@ class LdmlPublishConverterServiceIntegrationTest {
         )
       ),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -553,7 +554,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -594,7 +595,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       ),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
@@ -626,7 +627,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -639,7 +640,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
     String previousXml = TestFile.readFileToString("ldml-example-historic-data.akn.xml");
 
@@ -712,7 +713,7 @@ class LdmlPublishConverterServiceIntegrationTest {
           <akn:FRBRWork>
               <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
               <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
-              <akn:FRBRdate date="2025-01-01" name="erfassungsdatum"/>
+              <akn:FRBRdate date="${generierung}" name="erfassungsdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRcountry value="de"/>
               <akn:FRBRsubtype value="VR"/>

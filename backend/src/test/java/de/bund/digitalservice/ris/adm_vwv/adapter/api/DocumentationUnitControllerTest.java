@@ -148,7 +148,7 @@ class DocumentationUnitControllerTest {
   void publish() throws Exception {
     // given
     String documentNumber = "KSNR054920707";
-    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.createEmpty(
       documentNumber,
       "Lange Überschrift"
     );
@@ -170,7 +170,6 @@ class DocumentationUnitControllerTest {
             """
             {
               "documentNumber": "KSNR054920707",
-              "dokumenttyp": { "abbreviation": "VR", "name": "Verwaltungsregelung" },
               "fundstellen": [],
               "fieldsOfLaw": [],
               "langueberschrift": "Lange Überschrift",

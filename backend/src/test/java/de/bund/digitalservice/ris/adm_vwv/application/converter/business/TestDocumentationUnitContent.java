@@ -16,7 +16,7 @@ public class TestDocumentationUnitContent {
       List.of(),
       languberschrift,
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -24,6 +24,34 @@ public class TestDocumentationUnitContent {
       List.of(),
       true,
       new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(TestNormgeber.createByLegalEntity("Erste Jurpn"))
+    );
+  }
+
+  public static DocumentationUnitContent createEmpty(
+    String documentNumber,
+    String languberschrift
+  ) {
+    return new DocumentationUnitContent(
+      null,
+      documentNumber,
+      List.of(),
+      List.of(),
+      languberschrift,
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      null,
+      List.of(),
+      true,
+      null,
       null,
       List.of(),
       List.of(),
