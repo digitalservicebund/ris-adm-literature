@@ -544,6 +544,51 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
+  @DisplayName("Converts 'Fundstelle' with two ambiguous periodika into akn:analysis")
+  void convertToLdml_fundstelleWithAmbiguousPeriodikum() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(
+        new Fundstelle(UUID.randomUUID(), "Seite 2", null, "DOK"),
+        new Fundstelle(UUID.randomUUID(), "Kap. 5, Abs. 1", null, "VJP")
+      ),
+      List.of(),
+      "Lange Überschrift",
+      List.of(),
+      List.of(),
+      null,
+      null,
+      null,
+      "  ",
+      List.of(),
+      false,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of()
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+          <akn:otherReferences source="attributsemantik-noch-undefiniert">
+              <akn:implicitReference shortForm="DOK" showAs="DOK, Seite 2"/>
+              <akn:implicitReference shortForm="VJP" showAs="VJP, Kap. 5, Abs. 1"/>
+          </akn:otherReferences>
+      </akn:analysis>""".indent(12)
+    );
+  }
+
+  @Test
   @DisplayName("Converts 'Aktivverweisungen' into ris:activeReferences in ris:metadata")
   void convertToLdml_activeReferences() {
     // given

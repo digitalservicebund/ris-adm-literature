@@ -5,6 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormRef
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleNorm;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Analysis;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.ImplicitReferenceType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.OtherReferences;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +46,8 @@ public class NormReferencesTransformer {
     return otherReferencesWithImplicitAndNormReferences
       .stream()
       .flatMap(or -> or.getImplicitReferences().stream())
+      .filter(implicitReference -> implicitReference.getNormReference() != null)
+      .filter(ir -> ir.getReferenceType() == ImplicitReferenceType.ACTIVE_REFERENCE)
       .map(implicitReference ->
         new NormReference(
           new NormAbbreviation(
