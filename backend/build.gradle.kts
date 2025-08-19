@@ -43,7 +43,7 @@ val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.20.0"
-val awsVersion = "2.29.52"
+val awsVersion = "2.32.25"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
