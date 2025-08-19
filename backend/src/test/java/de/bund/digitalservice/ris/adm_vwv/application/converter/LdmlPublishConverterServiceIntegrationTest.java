@@ -557,7 +557,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       "Lange Überschrift",
       List.of(),
-      List.of(),
+      List.of("2025-01-01"),
       null,
       null,
       null,
@@ -570,7 +570,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of()
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
     );
 
     // when
