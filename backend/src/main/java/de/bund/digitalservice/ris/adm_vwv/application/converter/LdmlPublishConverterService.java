@@ -135,7 +135,7 @@ public class LdmlPublishConverterService {
   }
 
   private void setZitierdaten(Meta meta, List<String> zitierdaten) {
-    if (!zitierdaten.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(zitierdaten)) {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       risMetadata.setDateToQuoteList(zitierdaten);
     }
@@ -201,7 +201,7 @@ public class LdmlPublishConverterService {
   }
 
   private void setNormgeber(Meta meta, List<Normgeber> normgeberList) {
-    if (!normgeberList.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(normgeberList)) {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       List<RisNormgeber> risNormgeberList = normgeberList
         .stream()
@@ -221,7 +221,7 @@ public class LdmlPublishConverterService {
   }
 
   private void setClassification(Meta meta, List<String> keywords) {
-    if (!keywords.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(keywords)) {
       Classification classification = new Classification();
       meta.setClassification(classification);
       classification.setKeyword(
@@ -239,7 +239,7 @@ public class LdmlPublishConverterService {
   }
 
   private void setSachgebiete(Meta meta, List<FieldOfLaw> fieldsOfLaw) {
-    if (!fieldsOfLaw.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(fieldsOfLaw)) {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       risMetadata.setFieldsOfLaw(
         fieldsOfLaw
@@ -268,7 +268,7 @@ public class LdmlPublishConverterService {
   }
 
   private void setAktenzeichen(Meta meta, List<String> aktenzeichen) {
-    if (!aktenzeichen.isEmpty()) {
+    if (CollectionUtils.isNotEmpty(aktenzeichen)) {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       risMetadata.setReferenceNumbers(aktenzeichen);
     }
