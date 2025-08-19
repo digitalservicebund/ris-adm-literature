@@ -92,6 +92,7 @@ public class LdmlPublishConverterService {
     setNormReferences(meta, documentationUnitContent.normReferences());
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
     setActiveReferences(meta, documentationUnitContent.activeReferences());
+    setIdentification(meta, documentationUnitContent);
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -447,5 +448,14 @@ public class LdmlPublishConverterService {
         removeBlankTextNodes(childNode);
       }
     }
+  }
+
+  private void setIdentification(Meta meta, DocumentationUnitContent documentationUnitContent) {
+    Identification identification = new IdentificationConverter()
+      .convert(
+        documentationUnitContent,
+        meta.getOrCreateProprietary().getMetadata().getZuordnungen()
+      );
+    meta.setIdentification(identification);
   }
 }

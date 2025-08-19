@@ -8,13 +8,41 @@ import java.util.List;
  */
 public class TestDocumentationUnitContent {
 
-  public static DocumentationUnitContent create(String documentNumber, String languberschrift) {
+  public static DocumentationUnitContent create(String documentNumber, String langueberschrift) {
     return new DocumentationUnitContent(
       null,
       documentNumber,
       List.of(),
       List.of(),
-      languberschrift,
+      langueberschrift,
+      List.of(),
+      List.of("2025-01-01"),
+      null,
+      null,
+      null,
+      null,
+      List.of(),
+      true,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(TestNormgeber.createByLegalEntity("Erste Jurpn"))
+    );
+  }
+
+  public static DocumentationUnitContent createEmpty(
+    String documentNumber,
+    String langueberschrift
+  ) {
+    return new DocumentationUnitContent(
+      null,
+      documentNumber,
+      List.of(),
+      List.of(),
+      langueberschrift,
       List.of(),
       List.of(),
       null,
@@ -23,7 +51,7 @@ public class TestDocumentationUnitContent {
       null,
       List.of(),
       true,
-      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
       null,
       List.of(),
       List.of(),
