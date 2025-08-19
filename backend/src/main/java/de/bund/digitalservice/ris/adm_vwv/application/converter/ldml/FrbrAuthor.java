@@ -13,5 +13,5 @@ import lombok.Data;
 public class FrbrAuthor {
 
   @XmlAttribute
-  private String href = "attributsemantik-noch-undefiniert";
+  private String href = "recht.bund.de/institution/bundessozialgericht";
 }

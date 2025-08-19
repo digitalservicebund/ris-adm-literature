@@ -27,7 +27,7 @@ public record Eli(
   }
 
   String toExpression() {
-    return toWork() + "/" + zitierdatum + "/" + "deu";
+    return toWork() + "/" + (zitierdatum != null ? zitierdatum : "0000-00-00") + "/" + "deu";
   }
 
   String toManifestation() {

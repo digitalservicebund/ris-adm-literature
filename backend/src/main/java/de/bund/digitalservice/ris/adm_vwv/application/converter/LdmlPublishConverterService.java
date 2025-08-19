@@ -8,7 +8,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import jakarta.annotation.Nonnull;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -444,72 +443,11 @@ public class LdmlPublishConverterService {
   }
 
   private void setIdentification(Meta meta, DocumentationUnitContent documentationUnitContent) {
-    Identification identification = new Identification();
-    FrbrElement frbrWork = new FrbrElement();
-    String aktenzeichen = null;
-    if (CollectionUtils.isNotEmpty(documentationUnitContent.aktenzeichen())) {
-      aktenzeichen = documentationUnitContent.aktenzeichen().getFirst();
-    } else {
-      List<RisZuordnung> zuordnungen = meta.getOrCreateProprietary().getMetadata().getZuordnungen();
-      if (CollectionUtils.isNotEmpty(zuordnungen)) {
-        aktenzeichen = zuordnungen
-          .stream()
-          .filter(risZuordnung -> risZuordnung.getAspekt().equals("VRNr"))
-          .map(RisZuordnung::getBegriff)
-          .findFirst()
-          .orElse(null);
-      }
-    }
-
-    Eli eli = new Eli(
-      documentationUnitContent.dokumenttyp(),
-      documentationUnitContent.normgeberList().getFirst(),
-      aktenzeichen,
-      documentationUnitContent.zitierdaten().getFirst(),
-      LocalDate.now()
-    );
-
-    frbrWork.setFrbrThis(new FrbrThis(eli.toWork()));
-    frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
-    FrbrDate erfassungsdatum = new FrbrDate();
-    erfassungsdatum.setDate("2025-01-01");
-    erfassungsdatum.setName("erfassungsdatum");
-    frbrWork.setFrbrDate(erfassungsdatum);
-    FrbrAuthor author = new FrbrAuthor();
-    author.setHref("recht.bund.de/institution/bundessozialgericht");
-    frbrWork.setFrbrAuthor(author);
-    frbrWork.setFrbrCountry(new FrbrCountry());
-    frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
-    frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
-    frbrWork.setFrbrName(new FrbrName(eli.normgeber().format()));
-    identification.setFrbrWork(frbrWork);
-
-    FrbrElement frbrExpression = new FrbrElement();
-    frbrExpression.setFrbrThis(new FrbrThis(eli.toExpression()));
-    frbrExpression.setFrbrUri(new FrbrUri(eli.toExpression()));
-    FrbrAlias frbrAlias = new FrbrAlias();
-    frbrAlias.setName("documentNumber");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
-    frbrExpression.setFrbrAlias(List.of(frbrAlias));
-    FrbrDate zitierdatum = new FrbrDate();
-    zitierdatum.setDate(documentationUnitContent.zitierdaten().getFirst());
-    zitierdatum.setName("zitierdatum");
-    frbrExpression.setFrbrDate(zitierdatum);
-    frbrExpression.setFrbrAuthor(author);
-    frbrExpression.setFrbrLanguage(new FrbrLanguage());
-    identification.setFrbrExpression(frbrExpression);
-
-    FrbrElement frbrManifestation = new FrbrElement();
-    frbrManifestation.setFrbrThis(new FrbrThis(eli.toManifestation()));
-    frbrManifestation.setFrbrUri(new FrbrUri(eli.toManifestation()));
-    FrbrDate generierungDate = new FrbrDate();
-    generierungDate.setDate(LocalDate.now().toString());
-    generierungDate.setName("generierung");
-    frbrManifestation.setFrbrDate(generierungDate);
-    frbrManifestation.setFrbrAuthor(author);
-    frbrManifestation.setFrbrFormat(new FrbrFormat());
-    identification.setFrbrManifestation(frbrManifestation);
-
+    Identification identification = new IdentificationConverter()
+      .convert(
+        documentationUnitContent,
+        meta.getOrCreateProprietary().getMetadata().getZuordnungen()
+      );
     meta.setIdentification(identification);
   }
 }
