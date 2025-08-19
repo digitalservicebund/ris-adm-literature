@@ -46,6 +46,7 @@ public class NormReferencesTransformer {
     return otherReferencesWithImplicitAndNormReferences
       .stream()
       .flatMap(or -> or.getImplicitReferences().stream())
+      .filter(implicitReference -> implicitReference.getNormReference() != null)
       .filter(ir -> ir.getReferenceType() == ImplicitReferenceType.ACTIVE_REFERENCE)
       .map(implicitReference ->
         new NormReference(
