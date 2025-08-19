@@ -691,7 +691,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       null,
       null,
       null,
-      List.of("12345"),
+      List.of("X 43/I 9"),
       false,
       new DocumentType("VR", "Verwaltungsregelung"),
       null,
@@ -699,7 +699,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("Bundesausschuss"))
+      List.of(TestNormgeber.createByLegalEntity("Bundesausschuss ÜT 1"))
     );
 
     // when
@@ -710,26 +710,26 @@ class LdmlPublishConverterServiceIntegrationTest {
       """
       <akn:identification source="attributsemantik-noch-undefiniert">
           <akn:FRBRWork>
-              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
-              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
               <akn:FRBRdate date="2025-01-01" name="erfassungsdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRcountry value="de"/>
               <akn:FRBRsubtype value="VR"/>
-              <akn:FRBRnumber value="12345"/>
-              <akn:FRBRname value="Bundesausschuss"/>
+              <akn:FRBRnumber value="X 43/I 9"/>
+              <akn:FRBRname value="Bundesausschuss ÜT 1"/>
           </akn:FRBRWork>
           <akn:FRBRExpression>
-              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
-              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu"/>
               <akn:FRBRalias name="documentNumber" value="KSNR1234567890"/>
               <akn:FRBRdate date="2025-02-02" name="zitierdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRlanguage language="deu"/>
           </akn:FRBRExpression>
           <akn:FRBRManifestation>
-              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu.akn.xml"/>
-              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu.akn.xml"/>
+              <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu.akn.xml"/>
+              <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu.akn.xml"/>
               <akn:FRBRdate date="${generierung}" name="generierung"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRformat value="xml"/>

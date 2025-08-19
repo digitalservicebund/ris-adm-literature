@@ -446,27 +446,31 @@ public class LdmlPublishConverterService {
   private void setIdentification(Meta meta, DocumentationUnitContent documentationUnitContent) {
     Identification identification = new Identification();
     FrbrElement frbrWork = new FrbrElement();
-    String aktenzeichen;
-    if (!documentationUnitContent.aktenzeichen().isEmpty()) {
+    String aktenzeichen = null;
+    if (CollectionUtils.isNotEmpty(documentationUnitContent.aktenzeichen())) {
       aktenzeichen = documentationUnitContent.aktenzeichen().getFirst();
     } else {
-      aktenzeichen = "";
-      // TODO get aktenzeichen from VR number of the previous version
+      List<RisZuordnung> zuordnungen = meta.getOrCreateProprietary().getMetadata().getZuordnungen();
+      if (CollectionUtils.isNotEmpty(zuordnungen)) {
+        aktenzeichen = zuordnungen
+          .stream()
+          .filter(risZuordnung -> risZuordnung.getAspekt().equals("VRNr"))
+          .map(RisZuordnung::getBegriff)
+          .findFirst()
+          .orElse(null);
+      }
     }
 
-    String normgeberName = documentationUnitContent.normgeberList().getFirst().institution().name();
+    Eli eli = new Eli(
+      documentationUnitContent.dokumenttyp(),
+      documentationUnitContent.normgeberList().getFirst(),
+      aktenzeichen,
+      documentationUnitContent.zitierdaten().getFirst(),
+      LocalDate.now()
+    );
 
-    String eli =
-      "/eli/bund/verwaltungsvorschriften/" +
-      documentationUnitContent.dokumenttyp().abbreviation().toLowerCase() +
-      "/" +
-      new Slug(normgeberName) +
-      "/" +
-      "2025/" +
-      new Slug(aktenzeichen);
-
-    frbrWork.setFrbrThis(new FrbrThis(eli));
-    frbrWork.setFrbrUri(new FrbrUri(eli));
+    frbrWork.setFrbrThis(new FrbrThis(eli.toWork()));
+    frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
     FrbrDate erfassungsdatum = new FrbrDate();
     erfassungsdatum.setDate("2025-01-01");
     erfassungsdatum.setName("erfassungsdatum");
@@ -477,13 +481,12 @@ public class LdmlPublishConverterService {
     frbrWork.setFrbrCountry(new FrbrCountry());
     frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
     frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
-    frbrWork.setFrbrName(new FrbrName(normgeberName));
+    frbrWork.setFrbrName(new FrbrName(eli.normgeber().format()));
     identification.setFrbrWork(frbrWork);
 
     FrbrElement frbrExpression = new FrbrElement();
-    String expressionEli = eli + "/" + documentationUnitContent.zitierdaten().getFirst() + "/deu";
-    frbrExpression.setFrbrThis(new FrbrThis(expressionEli));
-    frbrExpression.setFrbrUri(new FrbrUri(expressionEli));
+    frbrExpression.setFrbrThis(new FrbrThis(eli.toExpression()));
+    frbrExpression.setFrbrUri(new FrbrUri(eli.toExpression()));
     FrbrAlias frbrAlias = new FrbrAlias();
     frbrAlias.setName("documentNumber");
     frbrAlias.setValue(documentationUnitContent.documentNumber());
@@ -497,10 +500,8 @@ public class LdmlPublishConverterService {
     identification.setFrbrExpression(frbrExpression);
 
     FrbrElement frbrManifestation = new FrbrElement();
-    String manifestationEli =
-      eli + "/" + documentationUnitContent.zitierdaten().getFirst() + "/deu.akn.xml";
-    frbrManifestation.setFrbrThis(new FrbrThis(manifestationEli));
-    frbrManifestation.setFrbrUri(new FrbrUri(manifestationEli));
+    frbrManifestation.setFrbrThis(new FrbrThis(eli.toManifestation()));
+    frbrManifestation.setFrbrUri(new FrbrUri(eli.toManifestation()));
     FrbrDate generierungDate = new FrbrDate();
     generierungDate.setDate(LocalDate.now().toString());
     generierungDate.setName("generierung");

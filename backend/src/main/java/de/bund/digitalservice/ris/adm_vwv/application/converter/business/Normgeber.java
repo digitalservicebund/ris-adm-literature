@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
+import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
 import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -17,4 +18,12 @@ public record Normgeber(
   @Nonnull UUID id,
   @Nonnull Institution institution,
   @Nonnull List<Region> regions
-) {}
+) {
+  public String format() {
+    String formatted = institution.name();
+    if (institution.type() == InstitutionType.INSTITUTION) {
+      formatted = regions().getFirst().code() + " " + institution.name();
+    }
+    return formatted;
+  }
+}
