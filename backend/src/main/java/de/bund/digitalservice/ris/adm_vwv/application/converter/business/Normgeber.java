@@ -19,6 +19,12 @@ public record Normgeber(
   @Nonnull Institution institution,
   @Nonnull List<Region> regions
 ) {
+  /**
+   * Returns a string representation of this instance containing the institution name
+   * and region in case if the institution is of type {@code INSTITUTION}.
+   *
+   * @return String representation of this instance
+   */
   public String format() {
     String formatted = institution.name();
     if (institution.type() == InstitutionType.INSTITUTION) {

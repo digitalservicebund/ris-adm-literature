@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeb
 import jakarta.annotation.Nonnull;
 import java.time.LocalDate;
 
-public record Eli(
+record Eli(
   @Nonnull DocumentType documentType,
   @Nonnull Normgeber normgeber,
   String aktenzeichen,

@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class IdentificationConverter {
+class IdentificationConverter {
 
   Identification convert(
     @Nonnull DocumentationUnitContent documentationUnitContent,
