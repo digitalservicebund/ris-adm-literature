@@ -8,13 +8,13 @@ import java.util.List;
  */
 public class TestDocumentationUnitContent {
 
-  public static DocumentationUnitContent create(String documentNumber, String languberschrift) {
+  public static DocumentationUnitContent create(String documentNumber, String langueberschrift) {
     return new DocumentationUnitContent(
       null,
       documentNumber,
       List.of(),
       List.of(),
-      languberschrift,
+      langueberschrift,
       List.of(),
       List.of("2025-01-01"),
       null,
@@ -35,14 +35,14 @@ public class TestDocumentationUnitContent {
 
   public static DocumentationUnitContent createEmpty(
     String documentNumber,
-    String languberschrift
+    String langueberschrift
   ) {
     return new DocumentationUnitContent(
       null,
       documentNumber,
       List.of(),
       List.of(),
-      languberschrift,
+      langueberschrift,
       List.of(),
       List.of(),
       null,
