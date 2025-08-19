@@ -42,7 +42,7 @@ val sentryVersion = "8.19.1"
 val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
-val localStackVersion = "1.20.0"
+val localStackVersion = "1.21.3"
 val awsVersion = "2.29.52"
 
 dependencies {
