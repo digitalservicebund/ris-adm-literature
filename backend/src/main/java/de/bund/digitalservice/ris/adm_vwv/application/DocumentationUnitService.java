@@ -11,6 +11,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Application service for CRUD operations on document units.
@@ -66,6 +67,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     return Optional.ofNullable(documentationUnitPersistencePort.update(documentNumber, json));
   }
 
+  @Transactional
   @Override
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
@@ -74,38 +76,42 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     var optionalDocumentationUnit = documentationUnitPersistencePort.findByDocumentNumber(
       documentNumber
     );
-    if (optionalDocumentationUnit.isPresent()) {
-      DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
-      String xml = ldmlPublishConverterService.convertToLdml(
-        documentationUnitContent,
-        documentationUnit.xml()
-      );
-      String json = convertToJson(documentationUnitContent);
-      DocumentationUnit publishedDocumentationUnit = documentationUnitPersistencePort.publish(
-        documentNumber,
-        json,
-        xml
-      );
 
-      // publish to portal
-      // later when we want to publish to other publishers, we can receive them form the method param and select them here
-      try {
-        final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
-        var publishOptions = new PublishPort.Options(documentNumber, xml, BSG_PUBLISHER_NAME);
-
-        // Call the composite publisher, which handles the routing internally
-        publishPort.publish(publishOptions);
-      } catch (Exception e) {
-        // TODO: How to handle publishing errors? //NOSONAR
-        log.error(
-          "Failed to publish document {} to external storage, but the database record was updated.",
-          documentNumber,
-          e
-        );
-      }
-      return convertLdml(publishedDocumentationUnit);
+    if (optionalDocumentationUnit.isEmpty()) {
+      return Optional.empty();
     }
-    return Optional.empty();
+
+    DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
+    String xml = ldmlPublishConverterService.convertToLdml(
+      documentationUnitContent,
+      documentationUnit.xml()
+    );
+    String json = convertToJson(documentationUnitContent);
+    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistencePort.publish(
+      documentNumber,
+      json,
+      xml
+    );
+
+    // publish to portal
+    // later when we want to publish to other publishers, we can receive them form the method param and select them here
+    try {
+      final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
+      var publishOptions = new PublishPort.Options(documentNumber, xml, BSG_PUBLISHER_NAME);
+      publishPort.publish(publishOptions);
+    } catch (Exception e) {
+      // publishing fails. We return a 503 and rollback the transaction
+      log.error(
+        "Failed to publish document {} to external storage. Rolling back database changes.",
+        documentNumber,
+        e
+      );
+      throw new PublishingFailedException(
+        "External publishing failed for document: " + documentNumber,
+        e
+      );
+    }
+    return convertLdml(publishedDocumentationUnit);
   }
 
   @Override

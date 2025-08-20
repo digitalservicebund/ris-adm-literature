@@ -5,12 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
@@ -135,99 +133,6 @@ class DocumentationUnitControllerTest {
       .perform(
         put("/api/documentation-units/{documentNumber}", documentNumber)
           .content(json)
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      // then
-      .andExpect(status().isNotFound());
-  }
-
-  @Test
-  @DisplayName(
-    "Request PUT on publish returns HTTP 200 and data from mocked documentation unit port"
-  )
-  void publish() throws Exception {
-    // given
-    String documentNumber = "KSNR054920707";
-    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.createEmpty(
-      documentNumber,
-      "Lange Überschrift"
-    );
-    String json =
-      """
-      {
-        "documentNumber": "KSNR054920707",
-        "langueberschrift": "Lange Überschrift"
-      }""";
-    given(documentationUnitPort.publish(documentNumber, documentationUnitContent)).willReturn(
-      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
-    );
-
-    // when
-    mockMvc
-      .perform(
-        put("/api/documentation-units/{documentNumber}/publish", documentNumber)
-          .content(
-            """
-            {
-              "documentNumber": "KSNR054920707",
-              "fundstellen": [],
-              "fieldsOfLaw": [],
-              "langueberschrift": "Lange Überschrift",
-              "keywords": [],
-              "zitierdaten": [],
-              "aktenzeichen": [],
-              "noAktenzeichen": true,
-              "activeCitations": [],
-              "activeReferences": [],
-              "normReferences": [],
-              "normgeberList": []
-            }"""
-          )
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      // then
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.documentNumber").value(documentNumber))
-      .andExpect(jsonPath("$.json.langueberschrift").value("Lange Überschrift"));
-  }
-
-  @Test
-  @DisplayName(
-    "Request PUT on publish returns HTTP 404 because mocked documentation unit port returns empty optional"
-  )
-  void publish_notFound() throws Exception {
-    // given
-    String documentNumber = "KSNR000000001";
-    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
-      documentNumber,
-      "Test"
-    );
-    given(documentationUnitPort.publish(documentNumber, documentationUnitContent)).willReturn(
-      Optional.empty()
-    );
-
-    // when
-    mockMvc
-      .perform(
-        put("/api/documentation-units/{documentNumber}/publish", documentNumber)
-          .content(
-            """
-            {
-              "documentNumber": "KSNR000000001",
-              "fundstellen": [],
-              "fieldsOfLaw": [],
-              "langueberschrift": "Test",
-              "keywords": [],
-              "zitierdaten": [],
-              "aktenzeichen": [],
-              "noAktenzeichen": true,
-              "activeCitations": [],
-              "activeReferences": [],
-              "normReferences": [],
-              "normgeberList": []
-            }
-            """
-          )
           .contentType(MediaType.APPLICATION_JSON)
       )
       // then
@@ -415,6 +320,244 @@ class DocumentationUnitControllerTest {
         Arguments.of("documentNumber", "documentNumber"),
         Arguments.of(null, "documentNumber")
       );
+    }
+  }
+
+  @Nested
+  @DisplayName("Publish Endpoint")
+  class PublishEndpointValidationTests {
+
+    @Test
+    @DisplayName("Request PUT on publish returns HTTP 200 for a valid request")
+    void publish_success() throws Exception {
+      // given
+      String documentNumber = "KSNR054920707";
+      String validJsonRequest =
+        """
+        {
+          "langueberschrift": "Gültige Überschrift",
+          "zitierdaten": ["2023-01-01"],
+          "inkrafttretedatum": "2023-01-01",
+          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+          "normReferences": [
+            {
+              "normAbbreviation": {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "abbreviation": "BGB",
+                "officialLongTitle": "Bürgerliches Gesetzbuch"
+              },
+              "normAbbreviationRawValue": "BGB",
+              "singleNorms": [
+                {
+                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                  "singleNorm": "§ 823",
+                  "dateOfVersion": "2023-01-01",
+                  "dateOfRelevance": "2023-01-01"
+                }
+              ]
+            }
+          ]
+        }""";
+
+      given(
+        documentationUnitPort.publish(any(String.class), any(DocumentationUnitContent.class))
+      ).willReturn(
+        Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), validJsonRequest))
+      );
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.documentNumber").value(documentNumber));
+    }
+
+    @ParameterizedTest(name = "returns HTTP 400 for invalid field: {0}")
+    @MethodSource("invalidPublishPayloads")
+    @DisplayName("Request PUT on publish returns HTTP 400 for invalid data")
+    void publish_validationFails(String fieldName, String payload) throws Exception {
+      // given
+      String documentNumber = "KSNR000000001";
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(payload)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isBadRequest());
+    }
+
+    private static Stream<Arguments> invalidPublishPayloads() {
+      String baseJson =
+        """
+        {
+          "langueberschrift": "Eine gültige Überschrift",
+          "zitierdaten": ["2023-10-26"],
+          "inkrafttretedatum": "2023-10-26",
+          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+          "normReferences": [
+            {
+              "normAbbreviation": {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "abbreviation": "BGB",
+                "officialLongTitle": "Bürgerliches Gesetzbuch"
+              },
+              "normAbbreviationRawValue": "BGB",
+              "singleNorms": [
+                {
+                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                  "singleNorm": "§ 823",
+                  "dateOfVersion": "2023-01-01",
+                  "dateOfRelevance": "2023-01-01"
+                }
+              ]
+            }
+          ]
+        }
+        """;
+
+      return Stream.of(
+        Arguments.of(
+          "langueberschrift",
+          baseJson.replace(
+            "\"langueberschrift\": \"Eine gültige Überschrift\"",
+            "\"langueberschrift\": \"  \""
+          )
+        ),
+        Arguments.of(
+          "zitierdaten",
+          baseJson.replace("\"zitierdaten\": [\"2023-10-26\"]", "\"zitierdaten\": []")
+        ),
+        Arguments.of(
+          "inkrafttretedatum",
+          baseJson.replace("\"inkrafttretedatum\": \"2023-10-26\"", "\"inkrafttretedatum\": \"\"")
+        ),
+        Arguments.of(
+          "dokumenttyp",
+          baseJson.replace(
+            "\"dokumenttyp\": { \"abbreviation\": \"TYPE_A\", \"name\": \"Type A Document\" }",
+            "\"dokumenttyp\": null"
+          )
+        ),
+        Arguments.of(
+          "normReferences",
+          """
+          {
+            "langueberschrift": "Eine gültige Überschrift",
+            "zitierdaten": ["2023-10-26"],
+            "inkrafttretedatum": "2023-10-26",
+            "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+            "normReferences": []
+          }
+          """
+        )
+      );
+    }
+
+    @Test
+    @DisplayName(
+      "Request PUT on publish returns HTTP 404 because mocked documentation unit port returns empty optional"
+    )
+    void publish_notFound() throws Exception {
+      // given
+      String documentNumber = "KSNR000000001";
+      String validJsonRequest =
+        """
+        {
+          "langueberschrift": "Gültige Überschrift",
+          "zitierdaten": ["2023-01-01"],
+          "inkrafttretedatum": "2023-01-01",
+          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+          "normReferences": [
+            {
+              "normAbbreviation": {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "abbreviation": "BGB",
+                "officialLongTitle": "Bürgerliches Gesetzbuch"
+              },
+              "normAbbreviationRawValue": "BGB",
+              "singleNorms": [
+                {
+                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                  "singleNorm": "§ 823",
+                  "dateOfVersion": "2023-01-01",
+                  "dateOfRelevance": "2023-01-01"
+                }
+              ]
+            }
+          ]
+        }""";
+
+      given(
+        documentationUnitPort.publish(any(String.class), any(DocumentationUnitContent.class))
+      ).willReturn(Optional.empty());
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Request PUT on publish returns HTTP 503 when external publishing fails")
+    void publish_externalFailure() throws Exception {
+      // given
+      String documentNumber = "KSNR054920707";
+      String validJsonRequest =
+        """
+        {
+          "langueberschrift": "Gültige Überschrift",
+          "zitierdaten": ["2023-01-01"],
+          "inkrafttretedatum": "2023-01-01",
+          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+          "normReferences": [
+            {
+              "normAbbreviation": {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "abbreviation": "BGB",
+                "officialLongTitle": "Bürgerliches Gesetzbuch"
+              },
+              "normAbbreviationRawValue": "BGB",
+              "singleNorms": [
+                {
+                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                  "singleNorm": "§ 823",
+                  "dateOfVersion": "2023-01-01",
+                  "dateOfRelevance": "2023-01-01"
+                }
+              ]
+            }
+          ]
+        }""";
+
+      given(
+        documentationUnitPort.publish(any(String.class), any(DocumentationUnitContent.class))
+      ).willThrow(
+        new PublishingFailedException("External system unavailable", new RuntimeException())
+      );
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isServiceUnavailable());
     }
   }
 }
