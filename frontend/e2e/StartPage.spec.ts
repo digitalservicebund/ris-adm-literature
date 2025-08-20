@@ -601,4 +601,21 @@ test.describe('Search documentation units', () => {
     await expect(page.getByText(testData.docNumber1)).toBeVisible()
     await expect(page.getByText(testData.docNumber2)).toBeHidden()
   })
+
+  test(
+    'clicking the "Suche" link navigates to the start page',
+    { tag: ['@RISDEV-8251'] },
+    async ({ page }) => {
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+
+      await page.waitForURL(/documentUnit/)
+      await expect(page).not.toHaveURL('/')
+
+      await page.getByRole('link', { name: 'Suche' }).click()
+
+      await expect(page).toHaveURL('/')
+      await expect(page.getByText('Schnellsuche')).toBeVisible()
+    },
+  )
 })

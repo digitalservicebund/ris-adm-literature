@@ -23,14 +23,24 @@ describe('NavbarTop', () => {
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
 
-  it('calls logout when the logout icon is clicked', async () => {
+  it('Log out calls logout when the logout icon is clicked', async () => {
     render(NavbarTop)
 
     const logoutButton = screen.getByLabelText('Log out')
     await fireEvent.click(logoutButton)
 
     expect(mockAuth.logout).toHaveBeenCalledTimes(1)
+  })
+
+  it('Suche is a link that navigates to the main page', () => {
+    render(NavbarTop)
+
+    const searchLink = screen.getByRole('link', { name: 'Suche' })
+
+    expect(searchLink).toBeInTheDocument()
+    expect(searchLink).toHaveAttribute('href', '/')
   })
 })
