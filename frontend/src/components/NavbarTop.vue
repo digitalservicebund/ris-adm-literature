@@ -11,12 +11,14 @@ const { getUsername, logout } = useAuthentication()
 
 <template>
   <nav class="flex items-center justify-between border-y border-gray-400 px-16 py-16 print:hidden">
-    <div class="flex items-center gap-48">
+    <div class="flex items-center gap-44">
       <div class="flex flex-col">
         <span class="ris-body1-bold">Rechtsinformationen</span>
         <span class="leading-none text-gray-900">des Bundes</span>
       </div>
-      <router-link to="/" class="bg-yellow-500">Suche</router-link>
+      <router-link to="/" class="ris-label1-regular p-8 hover:bg-yellow-500 hover:underline"
+        >Suche</router-link
+      >
     </div>
     <div class="flex items-center gap-10">
       <FlexContainer alignItems="items-center">
