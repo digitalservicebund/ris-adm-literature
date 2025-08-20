@@ -339,23 +339,12 @@ class DocumentationUnitControllerTest {
           "zitierdaten": ["2023-01-01"],
           "inkrafttretedatum": "2023-01-01",
           "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normReferences": [
-            {
-              "normAbbreviation": {
-                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                "abbreviation": "BGB",
-                "officialLongTitle": "Bürgerliches Gesetzbuch"
-              },
-              "normAbbreviationRawValue": "BGB",
-              "singleNorms": [
-                {
-                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
-                  "singleNorm": "§ 823",
-                  "dateOfVersion": "2023-01-01",
-                  "dateOfRelevance": "2023-01-01"
-                }
-              ]
-            }
+          "normgeberList": [
+              {
+                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
+                "regions": [{ "code": "DE" }]
+              }
           ]
         }""";
 
@@ -403,22 +392,11 @@ class DocumentationUnitControllerTest {
           "zitierdaten": ["2023-10-26"],
           "inkrafttretedatum": "2023-10-26",
           "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normReferences": [
+          "normgeberList": [
             {
-              "normAbbreviation": {
-                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                "abbreviation": "BGB",
-                "officialLongTitle": "Bürgerliches Gesetzbuch"
-              },
-              "normAbbreviationRawValue": "BGB",
-              "singleNorms": [
-                {
-                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
-                  "singleNorm": "§ 823",
-                  "dateOfVersion": "2023-01-01",
-                  "dateOfRelevance": "2023-01-01"
-                }
-              ]
+              "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+              "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
+              "regions": [{ "code": "DE" }]
             }
           ]
         }
@@ -448,14 +426,14 @@ class DocumentationUnitControllerTest {
           )
         ),
         Arguments.of(
-          "normReferences",
+          "normgeberList",
           """
           {
             "langueberschrift": "Eine gültige Überschrift",
             "zitierdaten": ["2023-10-26"],
             "inkrafttretedatum": "2023-10-26",
             "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-            "normReferences": []
+            "normgeberList": []
           }
           """
         )
@@ -476,23 +454,12 @@ class DocumentationUnitControllerTest {
           "zitierdaten": ["2023-01-01"],
           "inkrafttretedatum": "2023-01-01",
           "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normReferences": [
-            {
-              "normAbbreviation": {
-                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                "abbreviation": "BGB",
-                "officialLongTitle": "Bürgerliches Gesetzbuch"
-              },
-              "normAbbreviationRawValue": "BGB",
-              "singleNorms": [
-                {
-                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
-                  "singleNorm": "§ 823",
-                  "dateOfVersion": "2023-01-01",
-                  "dateOfRelevance": "2023-01-01"
-                }
-              ]
-            }
+          "normgeberList": [
+              {
+                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
+                "regions": [{ "code": "DE" }]
+              }
           ]
         }""";
 
@@ -523,23 +490,12 @@ class DocumentationUnitControllerTest {
           "zitierdaten": ["2023-01-01"],
           "inkrafttretedatum": "2023-01-01",
           "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normReferences": [
-            {
-              "normAbbreviation": {
-                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                "abbreviation": "BGB",
-                "officialLongTitle": "Bürgerliches Gesetzbuch"
-              },
-              "normAbbreviationRawValue": "BGB",
-              "singleNorms": [
-                {
-                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
-                  "singleNorm": "§ 823",
-                  "dateOfVersion": "2023-01-01",
-                  "dateOfRelevance": "2023-01-01"
-                }
-              ]
-            }
+          "normgeberList": [
+              {
+                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
+                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
+                "regions": [{ "code": "DE" }]
+              }
           ]
         }""";
 

@@ -52,7 +52,7 @@ public record DocumentationUnitContent(
   String dokumenttypZusatz,
   List<ActiveCitation> activeCitations,
   List<ActiveReference> activeReferences,
-  @NotEmpty List<NormReference> normReferences,
+  List<NormReference> normReferences,
   String note,
-  List<Normgeber> normgeberList
+  @NotEmpty List<Normgeber> normgeberList
 ) {}
