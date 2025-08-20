@@ -133,26 +133,21 @@ public class DocumentationUnitController {
    *
    * @param documentNumber           The document number of the document to publish
    * @param documentationUnitContent The documentation unit content to publish
-   * @return The published documentation unit or HTTP 404 if not found
+   * @return The published documentation unit or
+   * - HTTP 404 if not found
+   * - HTTP 503 if the external
    */
   @PutMapping("api/documentation-units/{documentNumber}/publish")
-  public ResponseEntity<Object> publish(
+  public ResponseEntity<DocumentationUnit> publish(
     @PathVariable String documentNumber,
     @RequestBody @Valid DocumentationUnitContent documentationUnitContent
   ) {
-    try {
-      Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitPort.publish(
-        documentNumber,
-        documentationUnitContent
-      );
-      return optionalDocumentationUnit
-        .<ResponseEntity<Object>>map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build()); // NOSONAR
-    } catch (PublishingFailedException e) {
-      // Return a 503 error if the external publishing fails
-      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
-        "Das Veröffentlichen des Dokuments is fehlgeschlagen. Grund: " + e.getMessage()
-      );
-    }
+    Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitPort.publish(
+      documentNumber,
+      documentationUnitContent
+    );
+    return optionalDocumentationUnit
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
   }
 }

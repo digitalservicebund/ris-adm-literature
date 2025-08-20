@@ -557,15 +557,7 @@ class DocumentationUnitControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
         )
         // then
-        .andExpect(status().isServiceUnavailable())
-        .andExpect(
-          content()
-            .string(
-              org.hamcrest.Matchers.containsString(
-                "Das Veröffentlichen des Dokuments is fehlgeschlagen."
-              )
-            )
-        );
+        .andExpect(status().isServiceUnavailable());
     }
   }
 }
