@@ -134,8 +134,9 @@ public class DocumentationUnitController {
    * @param documentNumber           The document number of the document to publish
    * @param documentationUnitContent The documentation unit content to publish
    * @return The published documentation unit or
-   * - HTTP 404 if not found
-   * - HTTP 503 if the external
+   *         <br>- HTTP 400 if input not valid
+   *         <br>- HTTP 404 if not found
+   *         <br>- HTTP 503 if the external
    */
   @PutMapping("api/documentation-units/{documentNumber}/publish")
   public ResponseEntity<DocumentationUnit> publish(
