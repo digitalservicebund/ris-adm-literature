@@ -136,7 +136,7 @@ public class DocumentationUnitController {
    * @return The published documentation unit or HTTP 404 if not found
    */
   @PutMapping("api/documentation-units/{documentNumber}/publish")
-  public ResponseEntity<?> publish(
+  public ResponseEntity<Object> publish(
     @PathVariable String documentNumber,
     @RequestBody @Valid DocumentationUnitContent documentationUnitContent
   ) {
@@ -146,7 +146,7 @@ public class DocumentationUnitController {
         documentationUnitContent
       );
       return optionalDocumentationUnit
-        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .<ResponseEntity<Object>>map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
     } catch (PublishingFailedException e) {
       // Return a 503 error if the external publishing fails
