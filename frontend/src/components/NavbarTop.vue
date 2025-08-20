@@ -16,6 +16,9 @@ const { getUsername, logout } = useAuthentication()
         <span class="ris-body1-bold">Rechtsinformationen</span>
         <span class="leading-none text-gray-900">des Bundes</span>
       </div>
+      <router-link to="/" class="ris-label1-regular p-8 hover:bg-yellow-500 hover:underline"
+        >Suche</router-link
+      >
     </div>
     <div class="flex items-center gap-10">
       <FlexContainer alignItems="items-center">
