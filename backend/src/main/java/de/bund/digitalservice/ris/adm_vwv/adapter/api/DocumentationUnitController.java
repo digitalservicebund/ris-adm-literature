@@ -147,7 +147,7 @@ public class DocumentationUnitController {
       );
       return optionalDocumentationUnit
         .<ResponseEntity<Object>>map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+        .orElse(ResponseEntity.notFound().build()); // NOSONAR
     } catch (PublishingFailedException e) {
       // Return a 503 error if the external publishing fails
       return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
