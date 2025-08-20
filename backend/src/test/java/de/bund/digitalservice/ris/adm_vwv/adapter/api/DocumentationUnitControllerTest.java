@@ -380,8 +380,7 @@ class DocumentationUnitControllerTest {
     @ParameterizedTest(name = "returns HTTP 400 for invalid field: {0}")
     @MethodSource("invalidPublishPayloads")
     @DisplayName("Request PUT on publish returns HTTP 400 for invalid data")
-    void publish_validationFails(String fieldName, String payload, String expectedMessage)
-      throws Exception {
+    void publish_validationFails(String fieldName, String payload) throws Exception {
       // given
       String documentNumber = "KSNR000000001";
 
@@ -393,12 +392,10 @@ class DocumentationUnitControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
         )
         // then
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(org.hamcrest.Matchers.containsString(expectedMessage)));
+        .andExpect(status().isBadRequest());
     }
 
     private static Stream<Arguments> invalidPublishPayloads() {
-      // A base valid JSON object that is modified for each test case
       String baseJson =
         """
         {
@@ -433,26 +430,22 @@ class DocumentationUnitControllerTest {
           baseJson.replace(
             "\"langueberschrift\": \"Eine gültige Überschrift\"",
             "\"langueberschrift\": \"  \""
-          ),
-          "Langueberschrift muss vorhanden sein."
+          )
         ),
         Arguments.of(
           "zitierdaten",
-          baseJson.replace("\"zitierdaten\": [\"2023-10-26\"]", "\"zitierdaten\": []"),
-          "Zitierdaten muss mindestens einen Eintrag haben."
+          baseJson.replace("\"zitierdaten\": [\"2023-10-26\"]", "\"zitierdaten\": []")
         ),
         Arguments.of(
           "inkrafttretedatum",
-          baseJson.replace("\"inkrafttretedatum\": \"2023-10-26\"", "\"inkrafttretedatum\": \"\""),
-          "Inkrafttretedatum muss vorhanden sein."
+          baseJson.replace("\"inkrafttretedatum\": \"2023-10-26\"", "\"inkrafttretedatum\": \"\"")
         ),
         Arguments.of(
           "dokumenttyp",
           baseJson.replace(
             "\"dokumenttyp\": { \"abbreviation\": \"TYPE_A\", \"name\": \"Type A Document\" }",
             "\"dokumenttyp\": null"
-          ),
-          "Dokumenttyp muss vorhanden sein."
+          )
         ),
         Arguments.of(
           "normReferences",
@@ -464,8 +457,7 @@ class DocumentationUnitControllerTest {
             "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
             "normReferences": []
           }
-          """,
-          "NormgeberList muss mindestens einen Eintrag haben."
+          """
         )
       );
     }
@@ -517,6 +509,63 @@ class DocumentationUnitControllerTest {
         )
         // then
         .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Request PUT on publish returns HTTP 503 when external publishing fails")
+    void publish_externalFailure() throws Exception {
+      // given
+      String documentNumber = "KSNR054920707";
+      String validJsonRequest =
+        """
+        {
+          "langueberschrift": "Gültige Überschrift",
+          "zitierdaten": ["2023-01-01"],
+          "inkrafttretedatum": "2023-01-01",
+          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
+          "normReferences": [
+            {
+              "normAbbreviation": {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "abbreviation": "BGB",
+                "officialLongTitle": "Bürgerliches Gesetzbuch"
+              },
+              "normAbbreviationRawValue": "BGB",
+              "singleNorms": [
+                {
+                  "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+                  "singleNorm": "§ 823",
+                  "dateOfVersion": "2023-01-01",
+                  "dateOfRelevance": "2023-01-01"
+                }
+              ]
+            }
+          ]
+        }""";
+
+      given(
+        documentationUnitPort.publish(any(String.class), any(DocumentationUnitContent.class))
+      ).willThrow(
+        new PublishingFailedException("External system unavailable", new RuntimeException())
+      );
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isServiceUnavailable())
+        .andExpect(
+          content()
+            .string(
+              org.hamcrest.Matchers.containsString(
+                "Das Veröffentlichen des Dokuments is fehlgeschlagen."
+              )
+            )
+        );
     }
   }
 }

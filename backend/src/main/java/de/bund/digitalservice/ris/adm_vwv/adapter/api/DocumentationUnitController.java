@@ -1,10 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitPort;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -134,21 +131,28 @@ public class DocumentationUnitController {
   /**
    * Publishes the documentation unit with the given document number and content.
    *
-   * @param documentNumber The document number of the document to publish
+   * @param documentNumber           The document number of the document to publish
    * @param documentationUnitContent The documentation unit content to publish
    * @return The published documentation unit or HTTP 404 if not found
    */
   @PutMapping("api/documentation-units/{documentNumber}/publish")
-  public ResponseEntity<DocumentationUnit> publish(
+  public ResponseEntity<?> publish(
     @PathVariable String documentNumber,
     @RequestBody @Valid DocumentationUnitContent documentationUnitContent
   ) {
-    Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitPort.publish(
-      documentNumber,
-      documentationUnitContent
-    );
-    return optionalDocumentationUnit
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+    try {
+      Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitPort.publish(
+        documentNumber,
+        documentationUnitContent
+      );
+      return optionalDocumentationUnit
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+    } catch (PublishingFailedException e) {
+      // Return a 503 error if the external publishing fails
+      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
+        "Das Veröffentlichen des Dokuments is fehlgeschlagen. Grund: " + e.getMessage()
+      );
+    }
   }
 }
