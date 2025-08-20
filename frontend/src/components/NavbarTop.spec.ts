@@ -11,13 +11,26 @@ vi.mock('@/services/auth', () => ({
   useAuthentication: () => mockAuth,
 }))
 
+const renderComponent = () => {
+  return render(NavbarTop, {
+    global: {
+      stubs: {
+        'router-link': {
+          template: '<a :href="to" v-bind="$attrs"><slot /></a>',
+          props: ['to'],
+        },
+      },
+    },
+  })
+}
+
 describe('NavbarTop', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders properly', () => {
-    render(NavbarTop)
+    renderComponent()
 
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
@@ -27,7 +40,7 @@ describe('NavbarTop', () => {
   })
 
   it('Log out calls logout when the logout icon is clicked', async () => {
-    render(NavbarTop)
+    renderComponent()
 
     const logoutButton = screen.getByLabelText('Log out')
     await fireEvent.click(logoutButton)
@@ -36,7 +49,7 @@ describe('NavbarTop', () => {
   })
 
   it('Suche is a link that navigates to the main page', () => {
-    render(NavbarTop)
+    renderComponent()
 
     const searchLink = screen.getByRole('link', { name: 'Suche' })
 
