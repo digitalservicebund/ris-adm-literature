@@ -3,6 +3,10 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
@@ -136,8 +140,37 @@ public class DocumentationUnitController {
    * @return The published documentation unit or
    *         <br>- HTTP 400 if input not valid
    *         <br>- HTTP 404 if not found
-   *         <br>- HTTP 503 if the external
+   *         <br>- HTTP 503 if the external publishing service is unavailable
    */
+  @ApiResponses(
+    value = {
+      @ApiResponse(
+        responseCode = "200",
+        description = "Successfully published the documentation unit",
+        content = {
+          @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = DocumentationUnit.class)
+          ),
+        }
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid input, validation failed for the request body",
+        content = @Content
+      ),
+      @ApiResponse(
+        responseCode = "404",
+        description = "Documentation unit with the given number was not found",
+        content = @Content
+      ),
+      @ApiResponse(
+        responseCode = "503",
+        description = "The external publishing service is unavailable",
+        content = @Content
+      ),
+    }
+  )
   @PutMapping("api/documentation-units/{documentNumber}/publish")
   public ResponseEntity<DocumentationUnit> publish(
     @PathVariable String documentNumber,
