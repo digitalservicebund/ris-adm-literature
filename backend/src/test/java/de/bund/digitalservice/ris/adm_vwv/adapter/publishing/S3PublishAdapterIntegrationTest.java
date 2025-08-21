@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,7 +123,7 @@ class S3PublishAdapterIntegrationTest {
       List<ObjectIdentifier> toDelete = objects
         .stream()
         .map(o -> ObjectIdentifier.builder().key(o.key()).build())
-        .collect(Collectors.toList());
+        .toList();
       DeleteObjectsRequest deleteRequest = DeleteObjectsRequest.builder()
         .bucket(bucketName)
         .delete(Delete.builder().objects(toDelete).build())
