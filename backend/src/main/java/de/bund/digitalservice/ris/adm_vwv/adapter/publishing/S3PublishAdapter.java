@@ -22,6 +22,10 @@ public class S3PublishAdapter implements PublishPort {
   private final String bucketName;
   private final String publisherName;
 
+  /**
+   * Creates a UTC timestamp for changelog filenames.
+   * Example: 2025-08-21T07_25_07Z
+   */
   private static final DateTimeFormatter CHANGELOG_TIMESTAMP_FORMATTER =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH_mm_ss'Z'").withZone(ZoneOffset.UTC);
 
