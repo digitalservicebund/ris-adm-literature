@@ -20,6 +20,7 @@ public class S3PublishAdapter implements PublishPort {
 
   private final S3Client s3Client;
   private final String bucketName;
+  private final String datatype;
   private final String publisherName;
 
   /**
@@ -53,7 +54,7 @@ public class S3PublishAdapter implements PublishPort {
       // Publish a new changelog file
       log.info("Publishing changelog file to S3 bucket '{}'", bucketName);
       String timestamp = CHANGELOG_TIMESTAMP_FORMATTER.format(Instant.now());
-      String changelogKey = String.format("changelogs/%s-%s.json", timestamp, bucketName);
+      String changelogKey = String.format("changelogs/%s-%s.json", timestamp, datatype);
       String changelogContent = "{\"change_all\": true}";
 
       PutObjectRequest changelogRequest = PutObjectRequest.builder()
