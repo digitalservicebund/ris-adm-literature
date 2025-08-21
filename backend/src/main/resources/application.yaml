@@ -38,6 +38,8 @@ local:
 otc:
   private-bsg-client:
     bucket-name: local-mock-bucket
+  obs:
+    datatype: local-datatype
 
 
 ---
