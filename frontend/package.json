@@ -63,7 +63,7 @@
     "@pinia/testing": "^1.0.2",
     "@playwright/test": "^1.54.2",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/user-event": "^14.6.1",
     "@testing-library/vue": "^8.1.0",
     "@tsconfig/node24": "^24.0.1",
