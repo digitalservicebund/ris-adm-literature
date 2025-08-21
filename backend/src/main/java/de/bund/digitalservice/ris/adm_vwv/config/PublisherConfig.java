@@ -25,9 +25,10 @@ public class PublisherConfig {
   @Bean("privateBsgPublisher")
   public PublishPort privateBsgPublisher(
     @Qualifier("privateBsgS3Client") S3Client s3Client,
-    @Value("${otc.private-bsg-client.bucket-name}") String bucketName
+    @Value("${otc.private-bsg-client.bucket-name}") String bucketName,
+    @Value("${otc.obs.datatype}") String datatype
   ) {
-    return new S3PublishAdapter(s3Client, bucketName, "privateBsgPublisher");
+    return new S3PublishAdapter(s3Client, bucketName, datatype, "privateBsgPublisher");
   }
 
   /**

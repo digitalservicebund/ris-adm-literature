@@ -30,6 +30,7 @@ otc:
     bucket-name: ${otc.obs.private.bucket-name}
   obs:
     endpoint: ${otc.obs.endpoint}
+    datatype: ${otc.obs.datatype}
     private:
       bsg-access-key-id: ${otc.obs.private.bsg-access-key}
       bsg-access-key: ${otc.obs.private.bsg-access-key-id}

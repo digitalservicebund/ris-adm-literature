@@ -26,6 +26,7 @@ otc:
     bucket-name: test
   obs:
     endpoint: https://example.com
+    datatype: testData
     private:
       bsg-access-key-id: test
       bsg-access-key: test

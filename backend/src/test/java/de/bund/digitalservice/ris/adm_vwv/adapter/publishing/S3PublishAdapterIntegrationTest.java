@@ -3,12 +3,15 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -21,9 +24,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
 
 /**
  * Integration test for the composite publisher logic.
@@ -42,6 +43,9 @@ class S3PublishAdapterIntegrationTest {
   private static final String FIRST_PUBLISHER_NAME = "privateBsgPublisher";
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
   private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
+  private static final String FIRST_DATATYPE = "first-datatype";
+  private static final String SECOND_DATATYPE = "second-datatype";
+  private static final String CHANGELOG_DIR = "changelogs/";
 
   @Container
   static LocalStackContainer localStack = new LocalStackContainer(
@@ -55,6 +59,7 @@ class S3PublishAdapterIntegrationTest {
   static class S3TestConfig {
 
     @Bean("privateBsgS3Client")
+    @Primary
     public S3Client s3Client() {
       return S3Client.builder()
         .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.S3))
@@ -68,9 +73,24 @@ class S3PublishAdapterIntegrationTest {
         .build();
     }
 
+    @Bean(FIRST_PUBLISHER_NAME)
+    public PublishPort firstTestPublisher(S3Client s3Client) {
+      return new S3PublishAdapter(
+        s3Client,
+        FIRST_BUCKET_NAME,
+        FIRST_DATATYPE,
+        FIRST_PUBLISHER_NAME
+      );
+    }
+
     @Bean(SECOND_PUBLISHER_NAME)
     public PublishPort secondTestPublisher(S3Client s3Client) {
-      return new S3PublishAdapter(s3Client, SECOND_BUCKET_NAME, SECOND_PUBLISHER_NAME);
+      return new S3PublishAdapter(
+        s3Client,
+        SECOND_BUCKET_NAME,
+        SECOND_DATATYPE,
+        SECOND_PUBLISHER_NAME
+      );
     }
   }
 
@@ -89,6 +109,27 @@ class S3PublishAdapterIntegrationTest {
   void setUp() {
     createBucket(FIRST_BUCKET_NAME);
     createBucket(SECOND_BUCKET_NAME);
+  }
+
+  @AfterEach
+  void tearDown() {
+    cleanupBucket(FIRST_BUCKET_NAME);
+    cleanupBucket(SECOND_BUCKET_NAME);
+  }
+
+  private void cleanupBucket(String bucketName) {
+    List<S3Object> objects = listObjectsInDirectory(bucketName, "");
+    if (!objects.isEmpty()) {
+      List<ObjectIdentifier> toDelete = objects
+        .stream()
+        .map(o -> ObjectIdentifier.builder().key(o.key()).build())
+        .toList();
+      DeleteObjectsRequest deleteRequest = DeleteObjectsRequest.builder()
+        .bucket(bucketName)
+        .delete(Delete.builder().objects(toDelete).build())
+        .build();
+      s3Client.deleteObjects(deleteRequest);
+    }
   }
 
   private void createBucket(String bucketName) {
@@ -122,6 +163,22 @@ class S3PublishAdapterIntegrationTest {
     assertThatThrownBy(() -> s3Client.getObject(secondBucketRequest)).isInstanceOf(
       S3Exception.class
     );
+
+    // Verify the changelog file exists in the FIRST bucket
+    List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
+    assertThat(firstBucketChangelogs).hasSize(1);
+    S3Object changelog = firstBucketChangelogs.getFirst();
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", FIRST_DATATYPE));
+    assertThat(getObjectContent(FIRST_BUCKET_NAME, changelog.key())).isEqualTo(
+      "{\"change_all\": true}"
+    );
+
+    // Verify the changelog file does NOT exist in the SECOND bucket
+    List<S3Object> secondBucketChangelogs = listObjectsInDirectory(
+      SECOND_BUCKET_NAME,
+      CHANGELOG_DIR
+    );
+    assertThat(secondBucketChangelogs).isEmpty();
   }
 
   @Test
@@ -151,6 +208,22 @@ class S3PublishAdapterIntegrationTest {
     assertThatThrownBy(() -> s3Client.getObject(firstBucketRequest)).isInstanceOf(
       S3Exception.class
     );
+
+    // Verify the changelog file exists in the SECOND bucket
+    List<S3Object> secondBucketChangelogs = listObjectsInDirectory(
+      SECOND_BUCKET_NAME,
+      CHANGELOG_DIR
+    );
+    assertThat(secondBucketChangelogs).hasSize(1);
+    S3Object changelog = secondBucketChangelogs.getFirst();
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", SECOND_DATATYPE));
+    assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
+      "{\"change_all\": true}"
+    );
+
+    // Verify the changelog file does NOT exist in the FIRST bucket
+    List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
+    assertThat(firstBucketChangelogs).isEmpty();
   }
 
   @Test
@@ -176,5 +249,22 @@ class S3PublishAdapterIntegrationTest {
 
     assertThatThrownBy(() -> s3Client.getObject(request1)).isInstanceOf(S3Exception.class);
     assertThatThrownBy(() -> s3Client.getObject(request2)).isInstanceOf(S3Exception.class);
+
+    // Verify that NO changelog file was created in EITHER bucket
+    assertThat(listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR)).isEmpty();
+    assertThat(listObjectsInDirectory(SECOND_BUCKET_NAME, CHANGELOG_DIR)).isEmpty();
+  }
+
+  private List<S3Object> listObjectsInDirectory(String bucketName, String directoryPrefix) {
+    ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+      .bucket(bucketName)
+      .prefix(directoryPrefix)
+      .build();
+    return s3Client.listObjectsV2(listRequest).contents();
+  }
+
+  private String getObjectContent(String bucketName, String key) {
+    GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+    return s3Client.getObjectAsBytes(request).asUtf8String();
   }
 }
