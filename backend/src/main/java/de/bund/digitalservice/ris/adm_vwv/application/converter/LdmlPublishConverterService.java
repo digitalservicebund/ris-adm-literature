@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -96,7 +98,7 @@ public class LdmlPublishConverterService {
     return xmlWriter.writeXml(akomaNtoso);
   }
 
-  private String sanitizeForXml(String input) {
+  private String unescapeHtml(String input) {
     return input == null
       ? null
       : input
@@ -161,7 +163,7 @@ public class LdmlPublishConverterService {
     JaxbHtml jaxbHtml = new JaxbHtml();
     jaxbHtml.setName("longTitle");
     longTitle.setBlock(jaxbHtml);
-    jaxbHtml.setHtml(List.of(sanitizeForXml(langueberschrift)));
+    jaxbHtml.setHtml(List.of(unescapeHtml(langueberschrift)));
   }
 
   private void setGliederung(Meta meta, String gliederung) {
@@ -169,7 +171,7 @@ public class LdmlPublishConverterService {
       List<String> entries = Pattern.compile("<p>(.*?)</p>")
         .matcher(gliederung)
         .results()
-        .map(matchResult -> sanitizeForXml(matchResult.group(1)))
+        .map(matchResult -> unescapeHtml(matchResult.group(1)))
         .toList();
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
       risMetadata.setTableOfContentsEntries(entries);
@@ -185,11 +187,19 @@ public class LdmlPublishConverterService {
     }
     JaxbHtml div = new JaxbHtml();
     mainBody.setDiv(div);
-    String sanitizedKurzreferat = sanitizeForXml(kurzreferat);
-    // As our editor do not offer any formatting, it is sufficient to replace <p> elements
-    String kurzreferatWithAknNs = sanitizedKurzreferat
+
+    // Some files have complex html logic like style="text-align: center;" so we must handle these cases
+    // We only allow paragraphs and line breaks.
+    Safelist safelist = Safelist.none().addTags("p", "br");
+    String cleanHtml = Jsoup.clean(kurzreferat, safelist);
+
+    // Unescape HTML entities like &nbsp; from the cleaned string
+    String unescapedHtml = unescapeHtml(cleanHtml);
+
+    String kurzreferatWithAknNs = unescapedHtml
       .replaceAll("<(/?)p>", "<$1akn:p>")
       .replaceAll("<br\\s*/?>", "<akn:br/>");
+
     Node node = domXmlReader.readXml("<div>" + kurzreferatWithAknNs + "</div>");
     div.setHtml(
       NodeToList.toList(node.getChildNodes())
@@ -246,7 +256,7 @@ public class LdmlPublishConverterService {
           .stream()
           .map(keywordValue -> {
             Keyword keyword = new Keyword();
-            String sanitizedKeyword = sanitizeForXml(keywordValue);
+            String sanitizedKeyword = unescapeHtml(keywordValue);
             keyword.setShowAs(sanitizedKeyword);
             keyword.setValue(sanitizedKeyword);
             return keyword;
@@ -277,7 +287,7 @@ public class LdmlPublishConverterService {
     RisDocumentType risDocumentType = new RisDocumentType();
     risDocumentType.setCategory(dokumenttyp.abbreviation());
     String value = dokumenttyp.abbreviation();
-    String sanitizedZusatz = sanitizeForXml(dokumenttypZusatz);
+    String sanitizedZusatz = unescapeHtml(dokumenttypZusatz);
     if (StringUtils.isNotBlank(sanitizedZusatz)) {
       risDocumentType.setLongTitle(sanitizedZusatz);
       value += " " + sanitizedZusatz;
@@ -289,7 +299,7 @@ public class LdmlPublishConverterService {
   private void setAktenzeichen(Meta meta, List<String> aktenzeichen) {
     if (CollectionUtils.isNotEmpty(aktenzeichen)) {
       RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setReferenceNumbers(aktenzeichen.stream().map(this::sanitizeForXml).toList());
+      risMetadata.setReferenceNumbers(aktenzeichen.stream().map(this::unescapeHtml).toList());
     }
   }
 
@@ -305,12 +315,12 @@ public class LdmlPublishConverterService {
               ImplicitReference implicitReference = new ImplicitReference();
               if (fundstelle.periodikum() == null) {
                 // Can occur due to ambiguous Periodika. Revisit this case after implementing RISDEV-8915
-                String sanitizedAmbiguous = sanitizeForXml(fundstelle.ambiguousPeriodikum());
-                String sanitizedZitatstelle = sanitizeForXml(fundstelle.zitatstelle());
+                String sanitizedAmbiguous = unescapeHtml(fundstelle.ambiguousPeriodikum());
+                String sanitizedZitatstelle = unescapeHtml(fundstelle.zitatstelle());
                 implicitReference.setShortForm(sanitizedAmbiguous);
                 implicitReference.setShowAs(sanitizedAmbiguous + ", " + sanitizedZitatstelle);
               } else {
-                String sanitizedZitatstelle = sanitizeForXml(fundstelle.zitatstelle());
+                String sanitizedZitatstelle = unescapeHtml(fundstelle.zitatstelle());
                 implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
                 implicitReference.setShowAs(
                   fundstelle.periodikum().abbreviation() + ", " + sanitizedZitatstelle

@@ -844,4 +844,59 @@ class LdmlPublishConverterServiceIntegrationTest {
         "<ris:documentType category=\"VR\" longTitle=\"Zusatz\u00A0Info\">VR Zusatz\u00A0Info</ris:documentType>"
       );
   }
+
+  @Test
+  @DisplayName("Correctly cleans and converts a HTML payload in 'Kurzreferat'")
+  void convertToLdml_withRealPayloadHtmlInKurzreferat() {
+    // given
+    String realPayloadHtml =
+      """
+      <p><span>Der Bundesvorstand der Deutschen Rentenversicherung Bund hat folgende verbindliche Entscheidung getroffen:</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>1. Bei Erziehung eines Kindes in einem anderen Mitgliedstaat werden bei Eintritt des Leistungsfalls Kindererziehungszeiten und Berücksichtigungszeiten nach den §§ 56, 57 bzw 249 SGB 6 anerkannt, wenn für die erziehende Person vor, während oder nach der Erziehung des Kindes in Deutschland Versicherungszeiten nach Art 1 Buchst t EGV 883/2004 zurückgelegt wurden, und für die erziehende Person in keinem anderen Mitgliedstaat Versicherungszeiten nach Maßgabe des Art 1 Buchst t EGV 883/2004 anzurechnen sind.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>2. Wohnzeiten nach Art 1 Buchst v EGV 883/2004, die im Erziehungsmitgliedstaat oder einem anderen Mitgliedstaat vor, während oder nach einer Kindererziehungszeit zurückgelegt wurden, stehen der Anrechnung von Kindererziehungszeiten nicht entgegen.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>3. Die Anrechnung der Kindererziehungszeit und der Berücksichtigungszeit wegen Kindererziehung ist nicht auf einzelne Rentenarten beschränkt.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>Gleichzeitig tritt die bisherige verbindliche Entscheidung vom Januar 2013, veröffentlicht am 31.5.2013, außer Kraft.</span></p>
+      """;
+
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR_REAL_PAYLOAD_TEST",
+      List.of(),
+      List.of(),
+      "Titel",
+      List.of(),
+      List.of("2025-01-01"),
+      null,
+      null,
+      null,
+      realPayloadHtml,
+      List.of(),
+      true,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(TestNormgeber.createByLegalEntity("DEU"))
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    String expectedXmlFragment =
+      """
+      <akn:mainBody>
+          <akn:div>
+              <akn:p>Der Bundesvorstand der Deutschen Rentenversicherung Bund hat folgende verbindliche Entscheidung getroffen:</akn:p>
+              <akn:p>\u00A0</akn:p>
+              <akn:p>1. Bei Erziehung eines Kindes in einem anderen Mitgliedstaat werden bei Eintritt des Leistungsfalls Kindererziehungszeiten und Berücksichtigungszeiten nach den §§ 56, 57 bzw 249 SGB 6 anerkannt, wenn für die erziehende Person vor, während oder nach der Erziehung des Kindes in Deutschland Versicherungszeiten nach Art 1 Buchst t EGV 883/2004 zurückgelegt wurden, und für die erziehende Person in keinem anderen Mitgliedstaat Versicherungszeiten nach Maßgabe des Art 1 Buchst t EGV 883/2004 anzurechnen sind.</akn:p>
+              <akn:p>\u00A0</akn:p>
+              <akn:p>2. Wohnzeiten nach Art 1 Buchst v EGV 883/2004, die im Erziehungsmitgliedstaat oder einem anderen Mitgliedstaat vor, während oder nach einer Kindererziehungszeit zurückgelegt wurden, stehen der Anrechnung von Kindererziehungszeiten nicht entgegen.</akn:p>
+              <akn:p>\u00A0</akn:p>
+              <akn:p>3. Die Anrechnung der Kindererziehungszeit und der Berücksichtigungszeit wegen Kindererziehung ist nicht auf einzelne Rentenarten beschränkt.</akn:p>
+              <akn:p>\u00A0</akn:p>
+              <akn:p>Gleichzeitig tritt die bisherige verbindliche Entscheidung vom Januar 2013, veröffentlicht am 31.5.2013, außer Kraft.</akn:p>
+          </akn:div>
+      </akn:mainBody>""";
+
+    assertThat(xml).contains(expectedXmlFragment.indent(8));
+  }
 }
