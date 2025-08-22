@@ -821,30 +821,27 @@ class LdmlPublishConverterServiceIntegrationTest {
     String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
 
     // then: Assert that all HTML entities were correctly converted or escaped.
-    assertThat(xml).contains(
-      "<akn:block name=\"longTitle\">Überschrift mit Leerzeichen\u00A0und Umlauten: ä, ö, ü, ß</akn:block>"
-    );
-
-    assertThat(xml).contains(
-      "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Copyright © 2025\" value=\"Copyright © 2025\"/>",
-      "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Preis: 100€\" value=\"Preis: 100€\"/>",
-      "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Ein\u00A0Schlagwort\" value=\"Ein\u00A0Schlagwort\"/>",
-      "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Größer &gt; Kleiner &lt;\" value=\"Größer &gt; Kleiner &lt;\"/>"
-    );
-
-    assertThat(xml).contains(
-      "<ris:tableOfContentsEntry>Punkt\u00A01</ris:tableOfContentsEntry>",
-      "<ris:tableOfContentsEntry>Punkt\u00A02 mit ß</ris:tableOfContentsEntry>"
-    );
-
-    assertThat(xml).contains(
-      "<akn:p>Ein Text\u00A0mit einem geschützten Leerzeichen.</akn:p>",
-      "<akn:p>Und hier sind Umlaute: ä, ö, ü.</akn:p>",
-      "<akn:p>Sonderzeichen: © und €. Und ein Ampersand: &amp;</akn:p>"
-    );
-
-    assertThat(xml).contains(
-      "<ris:documentType category=\"VR\" longTitle=\"Zusatz\u00A0Info\">VR Zusatz\u00A0Info</ris:documentType>"
-    );
+    assertThat(xml)
+      .contains(
+        "<akn:block name=\"longTitle\">Überschrift mit Leerzeichen\u00A0und Umlauten: ä, ö, ü, ß</akn:block>"
+      )
+      .contains(
+        "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Copyright © 2025\" value=\"Copyright © 2025\"/>",
+        "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Preis: 100€\" value=\"Preis: 100€\"/>",
+        "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Ein\u00A0Schlagwort\" value=\"Ein\u00A0Schlagwort\"/>",
+        "<akn:keyword dictionary=\"attributsemantik-noch-undefiniert\" showAs=\"Größer &gt; Kleiner &lt;\" value=\"Größer &gt; Kleiner &lt;\"/>"
+      )
+      .contains(
+        "<ris:tableOfContentsEntry>Punkt\u00A01</ris:tableOfContentsEntry>",
+        "<ris:tableOfContentsEntry>Punkt\u00A02 mit ß</ris:tableOfContentsEntry>"
+      )
+      .contains(
+        "<akn:p>Ein Text\u00A0mit einem geschützten Leerzeichen.</akn:p>",
+        "<akn:p>Und hier sind Umlaute: ä, ö, ü.</akn:p>",
+        "<akn:p>Sonderzeichen: © und €. Und ein Ampersand: &amp;</akn:p>"
+      )
+      .contains(
+        "<ris:documentType category=\"VR\" longTitle=\"Zusatz\u00A0Info\">VR Zusatz\u00A0Info</ris:documentType>"
+      );
   }
 }

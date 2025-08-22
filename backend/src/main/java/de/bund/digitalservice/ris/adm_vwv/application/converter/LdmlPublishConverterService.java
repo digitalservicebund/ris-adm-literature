@@ -97,17 +97,16 @@ public class LdmlPublishConverterService {
   }
 
   private String sanitizeForXml(String input) {
-    if (input == null || input.isEmpty()) {
-      return input;
-    }
-    return input
-      .replace("&nbsp;", "\u00A0")
-      .replace("&auml;", "ä")
-      .replace("&ouml;", "ö")
-      .replace("&uuml;", "ü")
-      .replace("&szlig;", "ß")
-      .replace("&copy;", "©")
-      .replace("&euro;", "€");
+    return input == null
+      ? null
+      : input
+        .replace("&nbsp;", "\u00A0")
+        .replace("&auml;", "ä")
+        .replace("&ouml;", "ö")
+        .replace("&uuml;", "ü")
+        .replace("&szlig;", "ß")
+        .replace("&copy;", "©")
+        .replace("&euro;", "€");
   }
 
   private AkomaNtoso createAkomaNtoso(@Nonnull DocumentationUnitContent documentationUnitContent) {
