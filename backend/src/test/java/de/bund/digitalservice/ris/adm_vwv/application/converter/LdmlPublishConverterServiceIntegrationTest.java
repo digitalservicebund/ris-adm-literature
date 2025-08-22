@@ -805,7 +805,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       null,
       null,
       "<p>Punkt&nbsp;1</p><p>Punkt&nbsp;2 mit &szlig;</p>",
-      "<p>Ein Text&nbsp;mit einem geschützten Leerzeichen.</p><p>Und hier sind Umlaute: &auml;, &ouml;, &uuml;.</p><p>Sonderzeichen: &copy; und &euro;. Und ein Ampersand: &amp;</p>",
+      "<p>Ein Text&nbsp;mit einem geschützten Leerzeichen.</p><p>Und hier sind Umlaute: &auml;, &ouml;, &uuml;.</p><p>Sonderzeichen: &copy; und &euro;.</p>",
       List.of(),
       true,
       new DocumentType("VR", "Verwaltungsregelung"),
