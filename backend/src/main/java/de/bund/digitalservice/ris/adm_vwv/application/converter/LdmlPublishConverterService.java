@@ -187,7 +187,9 @@ public class LdmlPublishConverterService {
     mainBody.setDiv(div);
     String sanitizedKurzreferat = sanitizeForXml(kurzreferat);
     // As our editor do not offer any formatting, it is sufficient to replace <p> elements
-    String kurzreferatWithAknNs = sanitizedKurzreferat.replaceAll("<(/?)p>", "<$1akn:p>");
+    String kurzreferatWithAknNs = sanitizedKurzreferat
+      .replaceAll("<(/?)p>", "<$1akn:p>")
+      .replaceAll("<br\\s*/?>", "<akn:br/>");
     Node node = domXmlReader.readXml("<div>" + kurzreferatWithAknNs + "</div>");
     div.setHtml(
       NodeToList.toList(node.getChildNodes())
