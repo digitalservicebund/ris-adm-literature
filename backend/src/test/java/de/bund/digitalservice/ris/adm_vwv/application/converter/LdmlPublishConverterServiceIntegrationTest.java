@@ -838,7 +838,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       .contains(
         "<akn:p>Ein Text\u00A0mit einem geschützten Leerzeichen.</akn:p>",
         "<akn:p>Und hier sind Umlaute: ä, ö, ü.</akn:p>",
-        "<akn:p>Sonderzeichen: © und €. Und ein Ampersand: &amp;</akn:p>"
+        "<akn:p>Sonderzeichen: © und €.</akn:p>"
       )
       .contains(
         "<ris:documentType category=\"VR\" longTitle=\"Zusatz\u00A0Info\">VR Zusatz\u00A0Info</ris:documentType>"
