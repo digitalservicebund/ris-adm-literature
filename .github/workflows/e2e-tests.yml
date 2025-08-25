@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v5
       # setup backend
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: "23.0"
           distribution: "temurin"
