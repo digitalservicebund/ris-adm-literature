@@ -42,7 +42,7 @@
     "@tiptap/extension-superscript": "^3.2.1",
     "@tiptap/extension-text-align": "^3.2.0",
     "@tiptap/extension-text-style": "^3.2.0",
-    "@tiptap/pm": "^3.0.9",
+    "@tiptap/pm": "^3.3.0",
     "@tiptap/starter-kit": "^3.2.1",
     "@tiptap/vue-3": "^3.3.0",
     "@tsconfig/node23": "^23.0.2",
