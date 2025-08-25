@@ -45,7 +45,7 @@ val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 // This version needs to be pinned until we migrate to aws: https://digitalservicebund.slack.com/archives/C03M9TZTDK8/p1737969773917499
 val awsVersion = "2.29.52"
-val jsoupVersion = "1.21.1"
+val jsoupVersion = "1.21.2"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
