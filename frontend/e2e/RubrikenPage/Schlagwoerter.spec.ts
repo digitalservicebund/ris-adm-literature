@@ -14,8 +14,8 @@ test.describe('RubrikenPage - Schlagwörter', () => {
 
   test('Filling in Schlagwörter', { tag: ['@RISDEV-6047'] }, async ({ page }) => {
     await page.goto('/documentUnit/KSNR054920707/fundstellen')
-    await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    await page.getByRole('link', { name: 'Rubriken' }).click()
+    await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
 
     await expect(page.getByRole('heading', { name: 'Schlagwörter' })).toHaveCount(1)
 
@@ -85,7 +85,7 @@ test.describe('RubrikenPage - Schlagwörter with persistence', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const schlagwoerterHeadingElement = page.getByText('Schlagwörter')
       await expect(schlagwoerterHeadingElement).toHaveCount(2) // two headings
       await page.getByRole('button', { name: 'Schlagwörter hinzufügen' }).click()

@@ -20,8 +20,8 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       async ({ page }) => {
         // given
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
-        await page.getByText('Rubriken').click()
-        await expect(page.getByText('Rubriken')).toHaveCount(1)
+        await page.getByRole('link', { name: 'Rubriken' }).click()
+        await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
           page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
@@ -51,8 +51,8 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
     test('Add two norms, delete the first item', { tag: ['@RISDEV-6075'] }, async ({ page }) => {
       // given
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
-      await page.getByText('Rubriken').click()
-      await expect(page.getByText('Rubriken')).toHaveCount(1)
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+      await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
       await expect(
         page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
       ).toHaveCount(1)
@@ -88,8 +88,8 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       async ({ page }) => {
         // given
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
-        await page.getByText('Rubriken').click()
-        await expect(page.getByText('Rubriken')).toHaveCount(1)
+        await page.getByRole('link', { name: 'Rubriken' }).click()
+        await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
           page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
@@ -132,8 +132,8 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       async ({ page }) => {
         // given
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
-        await page.getByText('Rubriken').click()
-        await expect(page.getByText('Rubriken')).toHaveCount(1)
+        await page.getByRole('link', { name: 'Rubriken' }).click()
+        await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
           page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
@@ -175,8 +175,8 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       async ({ page }) => {
         // given
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
-        await page.getByText('Rubriken').click()
-        await expect(page.getByText('Rubriken')).toHaveCount(1)
+        await page.getByRole('link', { name: 'Rubriken' }).click()
+        await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
           page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
@@ -214,7 +214,7 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(
         page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
       ).toHaveCount(1)

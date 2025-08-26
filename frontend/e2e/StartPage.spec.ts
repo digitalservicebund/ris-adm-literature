@@ -154,7 +154,7 @@ test.describe('StartPage', () => {
         .url()
         .split('/')
         .filter((urlPart) => urlPart.startsWith('KSNR'))[0]
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const langue = page.getByRole('textbox', { name: 'Amtl. Langüberschrift' })
       const text1 = 'reindextest' + Date.now().toString()
       await langue.fill(text1)
@@ -172,7 +172,7 @@ test.describe('StartPage', () => {
           name: 'Dokument ' + documentNumber + ' editieren',
         })
         .click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const text2 = 'reindextest' + Date.now().toString()
       await langue.fill(text2)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
@@ -228,7 +228,7 @@ test.describe('List of documents', () => {
       await page.getByText('ABc | Die Beispieler').click()
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
       await page.getByText('Übernehmen').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       await page.getByText('Amtl. Langüberschrift').fill(langueberschrift)
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators

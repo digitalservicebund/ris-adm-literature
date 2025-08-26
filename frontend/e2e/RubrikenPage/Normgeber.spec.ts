@@ -9,7 +9,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await expect(page.getByRole('heading', { level: 2, name: 'Normgeber' })).toBeVisible()
 
@@ -52,7 +52,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
@@ -84,7 +84,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
@@ -112,7 +112,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
@@ -139,7 +139,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding a new normgeber
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
@@ -197,7 +197,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding twice the same institution
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
@@ -223,7 +223,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding an institutional normgeber
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })

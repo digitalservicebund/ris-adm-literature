@@ -47,6 +47,7 @@ export interface DocumentUnit {
   normReferences?: NormReference[]
   note: string
   normgeberList?: Normgeber[]
+  berufsbilder?: string[]
 }
 
 export const requiredDocumentUnitFields = [

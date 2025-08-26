@@ -14,7 +14,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 
   test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
     await page.goto('/documentUnit/KSNR054920707/fundstellen')
-    await page.getByText('Rubriken').click()
+    await page.getByRole('link', { name: 'Rubriken' }).click()
     const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
     await expect(artDerZitierungInput).toHaveCount(1)
 
@@ -57,7 +57,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     { tag: ['@RISDEV-6077'] },
     async ({ page }) => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
       await page
@@ -107,7 +107,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     { tag: ['@RISDEV-6077'] },
     async ({ page }) => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
       await page
@@ -165,7 +165,7 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
       // given
       await page.goto('/')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
       await expect(artDerZitierungInput).toHaveCount(1)
 
