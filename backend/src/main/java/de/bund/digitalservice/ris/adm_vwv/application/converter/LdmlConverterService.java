@@ -57,7 +57,8 @@ public class LdmlConverterService {
       new ActiveReferencesTransformer(akomaNtoso).transform(),
       new NormReferencesTransformer(akomaNtoso).transform(),
       null,
-      normgeberTransformer.transform(akomaNtoso)
+      normgeberTransformer.transform(akomaNtoso),
+      new BerufsbilderTransformer().transform(akomaNtoso)
     );
   }
 }

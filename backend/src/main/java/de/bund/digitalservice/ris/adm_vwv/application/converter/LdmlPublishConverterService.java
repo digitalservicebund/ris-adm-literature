@@ -95,6 +95,7 @@ public class LdmlPublishConverterService {
     setCaselawReferences(meta, documentationUnitContent.activeCitations());
     setActiveReferences(meta, documentationUnitContent.activeReferences());
     setIdentification(meta, documentationUnitContent);
+    setBerufsbilder(meta, documentationUnitContent.berufsbilder());
     return xmlWriter.writeXml(akomaNtoso);
   }
 
@@ -436,6 +437,13 @@ public class LdmlPublishConverterService {
           })
           .toList()
       );
+    }
+  }
+
+  private void setBerufsbilder(Meta meta, List<String> berufsbilder) {
+    if (CollectionUtils.isNotEmpty(berufsbilder)) {
+      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      risMetadata.setBerufsbilder(berufsbilder);
     }
   }
 

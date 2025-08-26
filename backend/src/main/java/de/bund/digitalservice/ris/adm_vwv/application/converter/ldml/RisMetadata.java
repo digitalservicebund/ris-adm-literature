@@ -58,4 +58,8 @@ public class RisMetadata {
   @XmlElementWrapper(name = "activeReferences", namespace = XmlNamespace.RIS_NS)
   @XmlElement(name = "activeReference", namespace = XmlNamespace.RIS_NS)
   private List<RisActiveReference> activeReferences;
+
+  @XmlElementWrapper(name = "berufsbilder", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "berufsbild", namespace = XmlNamespace.RIS_NS)
+  private List<String> berufsbilder;
 }
