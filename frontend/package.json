@@ -41,7 +41,7 @@
     "@tiptap/extension-subscript": "^3.2.0",
     "@tiptap/extension-superscript": "^3.3.0",
     "@tiptap/extension-text-align": "^3.3.0",
-    "@tiptap/extension-text-style": "^3.2.0",
+    "@tiptap/extension-text-style": "^3.3.0",
     "@tiptap/pm": "^3.3.0",
     "@tiptap/starter-kit": "^3.2.1",
     "@tiptap/vue-3": "^3.3.0",
