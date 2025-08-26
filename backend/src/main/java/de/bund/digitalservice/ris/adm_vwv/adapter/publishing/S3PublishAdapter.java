@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
+import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
 import jakarta.annotation.Nonnull;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -69,6 +70,10 @@ public class S3PublishAdapter implements PublishPort {
         "Failed to publish document {} or its changelog to S3 bucket '{}'",
         documentNumber,
         bucketName,
+        e
+      );
+      throw new PublishingFailedException(
+        "Failed to publish document " + documentNumber + " to S3",
         e
       );
     }
