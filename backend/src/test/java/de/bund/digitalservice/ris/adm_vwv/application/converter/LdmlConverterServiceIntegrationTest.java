@@ -647,4 +647,29 @@ class LdmlConverterServiceIntegrationTest {
         tuple("JurpnOrgan", InstitutionType.INSTITUTION, List.of("AA"))
       );
   }
+
+  @Test
+  void convertToBusinessModel_berufsbilder() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    List<String> expectedBerufsbilder = Stream.of("Brillenschleifer").toList();
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::berufsbilder)
+      .isEqualTo(expectedBerufsbilder);
+  }
 }

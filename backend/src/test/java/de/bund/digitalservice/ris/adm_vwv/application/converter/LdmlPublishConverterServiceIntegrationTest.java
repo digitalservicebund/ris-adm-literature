@@ -97,7 +97,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -140,7 +141,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -184,7 +186,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -227,7 +230,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -270,7 +274,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -312,7 +317,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(
         TestNormgeber.createByLegalEntity("Bundesagentur"),
         TestNormgeber.createByInstitution("Bundesregierung", "DEU")
-      )
+      ),
+      List.of()
     );
 
     // when
@@ -350,7 +356,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -396,7 +403,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -444,7 +452,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -516,7 +525,8 @@ class LdmlPublishConverterServiceIntegrationTest {
         )
       ),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -570,7 +580,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -640,7 +651,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       ),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -685,7 +697,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
     String previousXml = TestFile.readFileToString("ldml-example-historic-data.akn.xml");
 
@@ -745,7 +758,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("Bundesausschuss ÜT 1"))
+      List.of(TestNormgeber.createByLegalEntity("Bundesausschuss ÜT 1")),
+      List.of()
     );
 
     // when
@@ -814,7 +828,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -874,7 +889,8 @@ class LdmlPublishConverterServiceIntegrationTest {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("DEU"))
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of()
     );
 
     // when
@@ -898,5 +914,46 @@ class LdmlPublishConverterServiceIntegrationTest {
       </akn:mainBody>""";
 
     assertThat(xml).contains(expectedXmlFragment.indent(8));
+  }
+
+  @Test
+  @DisplayName("Converts berufsbilder to ris:berufsbilder in ris:metadata")
+  void convertToLdml_berufsbilder() {
+    // given
+    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+      null,
+      "KSNR00000011",
+      List.of(),
+      List.of(),
+      "Lange Überschrift",
+      List.of("Schlag", "Wort", "Langer Text mit Sonderzeichen <>& und Leerzeichen"),
+      List.of("2025-01-01"),
+      null,
+      null,
+      null,
+      "  ",
+      List.of(),
+      true,
+      new DocumentType("VR", "Verwaltungsregelung"),
+      null,
+      List.of(),
+      List.of(),
+      List.of(),
+      null,
+      List.of(TestNormgeber.createByLegalEntity("DEU")),
+      List.of("Handwerker")
+    );
+
+    // when
+    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+
+    // then
+    // then
+    assertThat(xml).contains(
+      """
+      <ris:berufsbilder>
+          <ris:berufsbild>Handwerker</ris:berufsbild>
+      </ris:berufsbilder>""".indent(20)
+    );
   }
 }

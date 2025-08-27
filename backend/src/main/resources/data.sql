@@ -67,6 +67,9 @@ WITH created as (
                     <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 1a" position="Abs 1"/>
                     <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 2" position="Abs 6"/>
                   </ris:activeReferences>
+                  <ris:berufsbilder>
+                    <ris:berufsbild>Brillenschleifer</ris:berufsbild>
+                  </ris:berufsbilder>
                 </ris:metadata>
               </akn:proprietary>
             </akn:meta>

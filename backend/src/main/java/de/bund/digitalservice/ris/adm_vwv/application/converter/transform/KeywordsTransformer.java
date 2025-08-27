@@ -7,7 +7,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Expiry date transformer.
+ * Keywords transformer.
  */
 @RequiredArgsConstructor
 public class KeywordsTransformer {

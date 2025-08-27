@@ -29,7 +29,8 @@ public class TestDocumentationUnitContent {
       List.of(),
       List.of(),
       null,
-      List.of(TestNormgeber.createByLegalEntity("Erste Jurpn"))
+      List.of(TestNormgeber.createByLegalEntity("Erste Jurpn")),
+      List.of()
     );
   }
 
@@ -57,6 +58,7 @@ public class TestDocumentationUnitContent {
       List.of(),
       List.of(),
       null,
+      List.of(),
       List.of()
     );
   }
