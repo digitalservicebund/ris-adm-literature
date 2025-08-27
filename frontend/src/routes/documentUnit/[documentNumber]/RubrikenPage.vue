@@ -20,6 +20,7 @@ import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import { useRoute } from 'vue-router'
 import Berufsbild from '@/components/Berufsbild.vue'
+import TitelAspekt from '@/components/TitelAspekt.vue'
 
 const route = useRoute()
 const store = useDocumentUnitStore()
@@ -203,6 +204,15 @@ watch(
               aria-label="Aktenzeichen"
             ></RisChipsInput>
           </InputField>
+        </div>
+      </div>
+
+      <div class="border-b-1 border-b-gray-400"></div>
+
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <h2 class="ris-label1-bold mb-16">Titelaspekt</h2>
+          <TitelAspekt />
         </div>
       </div>
 
