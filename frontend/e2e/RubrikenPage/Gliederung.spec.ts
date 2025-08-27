@@ -8,7 +8,7 @@ test.describe('RubrikenPage - Gliederung', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const gliederungEditor = page.getByTestId('Gliederung Editor')
       await expect(gliederungEditor).toHaveCount(1)
@@ -34,7 +34,7 @@ test.describe('RubrikenPage - Gliederung', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const gliederungEditorElement = page.getByTestId('Gliederung Editor')
       await gliederungEditorElement.click()
@@ -65,7 +65,7 @@ test.describe('RubrikenPage - Gliederung', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const gliederungEditorElement = page.getByTestId('Gliederung Editor')
       await gliederungEditorElement.click()
@@ -92,7 +92,7 @@ test.describe('RubrikenPage - Gliederung', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const gliederungEditorElement = page.getByTestId('Gliederung Editor')
       await gliederungEditorElement.click()

@@ -19,6 +19,7 @@ import type { DocumentType } from '@/domain/documentType'
 import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import { useRoute } from 'vue-router'
+import Berufsbild from '@/components/Berufsbild.vue'
 
 const route = useRoute()
 const store = useDocumentUnitStore()
@@ -260,6 +261,13 @@ watch(
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <ActiveCitations data-testid="activeCitations" />
+        </div>
+      </div>
+
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <h2 class="ris-label1-bold mb-16">Weitere rubriken</h2>
+          <Berufsbild />
         </div>
       </div>
     </div>

@@ -495,7 +495,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
     // given
     await page.goto('/')
     await page.getByText('Neue Dokumentationseinheit').click()
-    await page.getByText('Rubriken').click()
+    await page.getByRole('link', { name: 'Rubriken' }).click()
 
     await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
     await page.getByRole('radio', { name: 'Direkteingabe' }).check()
@@ -523,7 +523,7 @@ test.describe('RubrikenPage - Sachgebiete', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
       await page.getByRole('radio', { name: 'Direkteingabe' }).check()
 

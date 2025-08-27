@@ -16,8 +16,8 @@ test.describe('RubrikenPage - Formatdaten', () => {
 
     test('Filling in Amtl. Langüberschrift', { tag: ['@RISDEV-6043'] }, async ({ page }) => {
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
-      await page.getByText('Rubriken').click()
-      await expect(page.getByText('Rubriken')).toHaveCount(1)
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+      await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
 
       await expect(page.getByText('Amtl. Langüberschrift')).toHaveCount(1)
       // when
@@ -32,8 +32,8 @@ test.describe('RubrikenPage - Formatdaten', () => {
         { tag: ['@RISDEV-7680'] },
         async ({ page }) => {
           await page.goto('/documentUnit/KSNR054920707/fundstellen')
-          await page.getByText('Rubriken').click()
-          await expect(page.getByText('Rubriken')).toHaveCount(1)
+          await page.getByRole('link', { name: 'Rubriken' }).click()
+          await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
 
           const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
           // eslint-disable-next-line playwright/no-raw-locators
@@ -83,7 +83,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
       // eslint-disable-next-line playwright/no-raw-locators
@@ -129,7 +129,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
       await expect(ausserkrafttretedatumElement).toHaveCount(1)
@@ -159,7 +159,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
       await expect(inkrafttretedatumElement).toHaveCount(1)
@@ -191,7 +191,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
       await inkrafttretedatumElement.fill('02.02.1970')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
@@ -216,7 +216,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
 
       // when
@@ -241,7 +241,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
       await expect(ausserkrafttretedatumElement).toHaveCount(1)
@@ -265,7 +265,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
       await ausserkrafttretedatumElement.fill('02.02.1970')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
@@ -289,7 +289,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
 
       // when

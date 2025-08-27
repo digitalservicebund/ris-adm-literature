@@ -8,7 +8,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const kurzReferatTitleElement = page.getByText('Kurzreferat')
       await expect(kurzReferatTitleElement).toHaveCount(3)
@@ -36,7 +36,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
       await kurzreferatEditorElement.click()
@@ -67,7 +67,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
       await kurzreferatEditorElement.click()
@@ -94,7 +94,7 @@ test.describe('RubrikenPage - Kurzreferat', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const kurzreferatEditorElement = page.getByTestId('Kurzreferat Editor')
       await kurzreferatEditorElement.click()

@@ -334,8 +334,8 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
     async ({ page }) => {
       // given
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
-      await page.getByText('Rubriken').click()
-      await expect(page.getByText('Rubriken')).toHaveCount(1)
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+      await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
       const referenceTypeElement = page
         .getByTestId('activeReferences')
         .getByRole('textbox', { name: 'Art der Verweisung' })
@@ -455,8 +455,8 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
     // given
     await page.goto('/')
     await page.getByText('Neue Dokumentationseinheit').click()
-    await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    await page.getByRole('link', { name: 'Rubriken' }).click()
+    await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
     const referenceTypeElement = page
       .getByTestId('activeReferences')
       .getByRole('textbox', { name: 'Art der Verweisung' })

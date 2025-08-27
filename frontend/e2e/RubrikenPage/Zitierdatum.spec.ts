@@ -10,7 +10,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await expect(page.getByText('Zitierdatum *')).toBeVisible()
 
@@ -45,7 +45,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
@@ -76,7 +76,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
@@ -109,7 +109,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
       // eslint-disable-next-line playwright/no-raw-locators
@@ -139,7 +139,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // given
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })

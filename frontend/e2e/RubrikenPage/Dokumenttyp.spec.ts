@@ -9,7 +9,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
       const dokumenttypElement = page.getByText('Dokumenttyp *')
@@ -32,7 +32,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
       const dokumenttypElement = page.getByText('Dokumenttyp *')
@@ -59,7 +59,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.waitForURL(/documentUnit/)
-      await page.getByText('Rubriken').click()
+      await page.getByRole('link', { name: 'Rubriken' }).click()
       const dokumenttypZusatzElement = page.getByText('Dokumenttyp Zusatz')
       await dokumenttypZusatzElement.fill('Bekanntmachung')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()

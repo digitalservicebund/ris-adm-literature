@@ -5,8 +5,8 @@ test.describe('RubrikenPage - ExtraContentSidePanel', () => {
     // given
     await page.goto('/')
     await page.getByText('Neue Dokumentationseinheit').click()
-    await page.getByText('Rubriken').click()
-    await expect(page.getByText('Rubriken')).toHaveCount(1)
+    await page.getByRole('link', { name: 'Rubriken' }).click()
+    await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
     await page.getByRole('button', { name: 'Seitenpanel öffnen' }).click()
     await expect(page.getByRole('textbox', { name: 'Notiz Eingabefeld' })).toHaveCount(1)
 
@@ -30,8 +30,8 @@ test.describe('RubrikenPage - ExtraContentSidePanel', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.getByText('Rubriken').click()
-      await expect(page.getByText('Rubriken')).toHaveCount(1)
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+      await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
       await page.getByRole('button', { name: 'Seitenpanel öffnen' }).click()
       await expect(page.getByRole('textbox', { name: 'Notiz Eingabefeld' })).toHaveCount(1)
       const longNote = `Dies ist ein sehr langer Text.
