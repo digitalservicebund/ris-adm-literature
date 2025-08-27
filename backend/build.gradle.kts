@@ -38,7 +38,7 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.11"
-val sentryVersion = "8.19.1"
+val sentryVersion = "8.20.0"
 val hypersistenceVersion = "3.10.3"
 val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
