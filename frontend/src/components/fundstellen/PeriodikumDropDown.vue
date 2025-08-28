@@ -48,7 +48,7 @@ onMounted(async () => {
     typeahead
     dropdown
     complete-on-focus
-    auto-option-focus
+    :auto-option-focus="!selectedPeriodikumId"
     @update:model-value="onModelValueChange"
     @complete="onComplete"
   />
