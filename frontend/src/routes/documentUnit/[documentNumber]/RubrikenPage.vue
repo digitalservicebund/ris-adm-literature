@@ -207,11 +207,8 @@ watch(
         </div>
       </div>
 
-      <div class="border-b-1 border-b-gray-400"></div>
-
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <h2 class="ris-label1-bold mb-16">Titelaspekt</h2>
           <TitelAspekt />
         </div>
       </div>
@@ -276,7 +273,7 @@ watch(
 
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <h2 class="ris-label1-bold mb-16">Weitere rubriken</h2>
+          <h2 class="ris-label1-bold mb-16">Weitere Rubriken</h2>
           <Berufsbild />
         </div>
       </div>
