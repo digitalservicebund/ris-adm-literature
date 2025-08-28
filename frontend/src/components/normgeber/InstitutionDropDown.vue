@@ -50,6 +50,8 @@ onMounted(async () => {
     typeahead
     dropdown
     dropdown-mode="blank"
+    :auto-option-focus="!selectedInstitutionId"
+    complete-on-focus
     @update:model-value="onModelValueChange"
     @complete="onComplete"
     @dropdown-click="onDropdownClick"
