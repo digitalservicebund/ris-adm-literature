@@ -1,4 +1,4 @@
-FROM node:24.6.0 AS builder
+FROM node:24.7.0 AS builder
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend
