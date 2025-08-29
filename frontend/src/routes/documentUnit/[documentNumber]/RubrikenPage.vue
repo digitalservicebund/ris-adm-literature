@@ -21,6 +21,7 @@ import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import { useRoute } from 'vue-router'
 import Berufsbild from '@/components/Berufsbild.vue'
 import TitelAspekt from '@/components/TitelAspekt.vue'
+import DefinitionComponent from '@/components/DefinitionComponent.vue'
 
 const route = useRoute()
 const store = useDocumentUnitStore()
@@ -271,10 +272,18 @@ watch(
         </div>
       </div>
 
+      <div class="border-b-1 border-b-gray-400"></div>
+
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <h2 class="ris-label1-bold mb-16">Weitere Rubriken</h2>
           <Berufsbild />
+        </div>
+      </div>
+
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <DefinitionComponent />
         </div>
       </div>
     </div>
