@@ -9,10 +9,10 @@ import IconAdd from '~icons/material-symbols/add'
 
 const store = useDocumentUnitStore()
 
-const definitions = computed({
-  get: () => store.documentUnit!.definitions?.map((d) => d.begriff) ?? [],
+const definitionen = computed({
+  get: () => store.documentUnit!.definitionen?.map((d) => d.begriff) ?? [],
   set: (newValues: string[]) => {
-    store.documentUnit!.definitions = newValues.map((begriff) => ({ begriff }))
+    store.documentUnit!.definitionen = newValues.map((begriff) => ({ begriff }))
   },
 })
 
@@ -20,8 +20,8 @@ const showChips = ref(false)
 </script>
 
 <template>
-  <InputField v-if="definitions.length > 0 || showChips" id="definition" label="Definition">
-    <RisChipsInput id="definition" v-model="definitions" aria-label="Definition"></RisChipsInput>
+  <InputField v-if="definitionen.length > 0 || showChips" id="definition" label="Definition">
+    <RisChipsInput id="definition" v-model="definitionen" aria-label="Definition"></RisChipsInput>
   </InputField>
   <Button
     v-else

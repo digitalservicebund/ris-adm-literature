@@ -19,7 +19,7 @@ function renderComponent(titelAspekt?: string[]) {
                 docunitStore: {
                   documentUnit: <DocumentUnit>{
                     documentNumber: '1234567891234',
-                    titelAspekt: titelAspekt ?? [],
+                    titelAspekte: titelAspekt ?? [],
                   },
                 },
               },

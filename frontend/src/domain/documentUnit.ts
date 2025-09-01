@@ -49,8 +49,8 @@ export interface DocumentUnit {
   note: string
   normgeberList?: Normgeber[]
   berufsbilder?: string[]
-  titelAspekt?: string[]
-  definitions?: Definition[]
+  titelAspekte?: string[]
+  definitionen?: Definition[]
 }
 
 export const requiredDocumentUnitFields = [

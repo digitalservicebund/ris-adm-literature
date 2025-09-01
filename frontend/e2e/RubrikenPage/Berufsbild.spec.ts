@@ -21,10 +21,10 @@ test.describe('RubrikenPage - Berufsbild', () => {
 
       // when
       // eslint-disable-next-line playwright/no-raw-locators
-      const titelAspektInput = berufsbildGroup.locator('input')
-      await expect(titelAspektInput).toHaveCount(1)
-      await titelAspektInput.fill('Brillenschleifer')
-      await titelAspektInput.press('Enter')
+      const berufsbildInput = berufsbildGroup.locator('input')
+      await expect(berufsbildInput).toHaveCount(1)
+      await berufsbildInput.fill('Brillenschleifer')
+      await berufsbildInput.press('Enter')
       // then
       await expect(page.getByText('Brillenschleifer')).toHaveCount(1)
 

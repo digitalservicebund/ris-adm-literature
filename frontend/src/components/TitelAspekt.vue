@@ -9,10 +9,10 @@ import IconAdd from '~icons/material-symbols/add'
 
 const store = useDocumentUnitStore()
 
-const titelAspekt = computed({
-  get: () => store.documentUnit!.titelAspekt ?? [],
+const titelAspekte = computed({
+  get: () => store.documentUnit!.titelAspekte ?? [],
   set: (newValues: string[]) => {
-    store.documentUnit!.titelAspekt = newValues
+    store.documentUnit!.titelAspekte = newValues
   },
 })
 
@@ -20,8 +20,8 @@ const showChips = ref(false)
 </script>
 
 <template>
-  <InputField v-if="titelAspekt.length > 0 || showChips" id="titelAspekt" label="Titelaspekt">
-    <RisChipsInput id="titelAspekt" v-model="titelAspekt" aria-label="Titelaspekt"></RisChipsInput>
+  <InputField v-if="titelAspekte.length > 0 || showChips" id="titelAspekt" label="Titelaspekt">
+    <RisChipsInput id="titelAspekt" v-model="titelAspekte" aria-label="Titelaspekt"></RisChipsInput>
   </InputField>
   <Button
     v-else

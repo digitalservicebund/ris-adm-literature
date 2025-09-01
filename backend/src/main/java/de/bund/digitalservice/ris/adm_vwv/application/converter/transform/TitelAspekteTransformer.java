@@ -9,21 +9,21 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * TitelAspekt transformer.
+ * TitelAspekte transformer.
  */
 @RequiredArgsConstructor
-public class TitelAspektTransformer {
+public class TitelAspekteTransformer {
 
   /**
-   * Transforms the {@code AkomaNtoso} object to a list of terms represented as strings.
+   * Transforms the {@code AkomaNtoso} object to a list of titelAspekt represented as strings.
    *
    * @param akomaNtoso The Akoma Ntoso XML object to transform
-   * @return The list of terms (empty if there are none)
+   * @return The list of titelAspekt (empty if there are none)
    */
   public List<String> transform(@Nonnull AkomaNtoso akomaNtoso) {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
       .map(Proprietary::getMetadata)
-      .map(RisMetadata::getTitelAspekt)
+      .map(RisMetadata::getTitelAspekte)
       .orElse(List.of());
   }
 }

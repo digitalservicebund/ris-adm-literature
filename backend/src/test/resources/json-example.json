@@ -216,14 +216,13 @@
   "berufsbilder": [
     "Brillenschleifer"
   ],
-  "titelAspekt": [
+  "titelAspekte": [
     "Gemeinsamer Bundesausschuss",
     "GBA"
   ],
-  "definitions": [
+  "definitionen": [
     {
-      "begriff": "Sachgesamtheit",
-      "definition": ""
+      "begriff": "Sachgesamtheit"
     }
   ]
 }

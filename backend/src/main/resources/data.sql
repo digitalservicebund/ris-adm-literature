@@ -70,13 +70,13 @@ WITH created as (
                   <ris:berufsbilder>
                     <ris:berufsbild>Brillenschleifer</ris:berufsbild>
                   </ris:berufsbilder>
-                  <ris:titelAspekt>
-                    <ris:begriff>Gemeinsamer Bundesausschuss</ris:begriff>
-                    <ris:begriff>GBA</ris:begriff>
-                  </ris:titelAspekt>
-                  <ris:definitions>
+                  <ris:titelAspekte>
+                    <ris:titelAspekt>Gemeinsamer Bundesausschuss</ris:titelAspekt>
+                    <ris:titelAspekt>GBA</ris:titelAspekt>
+                  </ris:titelAspekte>
+                  <ris:definitionen>
                     <ris:definition begriff="Sachgesamtheit" />
-                  </ris:definitions>
+                  </ris:definitionen>
                 </ris:metadata>
               </akn:proprietary>
             </akn:meta>

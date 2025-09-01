@@ -11,10 +11,10 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Definitions transformer.
+ * Definitionen transformer.
  */
 @RequiredArgsConstructor
-public class DefinitionsTransformer {
+public class DefinitionenTransformer {
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of definitions.
@@ -23,14 +23,14 @@ public class DefinitionsTransformer {
    * @return The list of definitions (empty if there are none)
    */
   public List<Definition> transform(@Nonnull AkomaNtoso akomaNtoso) {
-    List<RisDefinition> risDefinitions = Optional.ofNullable(
+    List<RisDefinition> risDefinitionen = Optional.ofNullable(
       akomaNtoso.getDoc().getMeta().getProprietary()
     )
       .map(Proprietary::getMetadata)
-      .map(RisMetadata::getDefinitions)
+      .map(RisMetadata::getDefinitionen)
       .orElse(List.of());
 
-    return risDefinitions
+    return risDefinitionen
       .stream()
       .map(definition -> new Definition(definition.getBegriff()))
       .toList();

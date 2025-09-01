@@ -674,7 +674,7 @@ class LdmlConverterServiceIntegrationTest {
   }
 
   @Test
-  void convertToBusinessModel_titelAspekt() {
+  void convertToBusinessModel_titelAspekte() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
@@ -684,7 +684,7 @@ class LdmlConverterServiceIntegrationTest {
       xml
     );
 
-    List<String> expectedTitelAspekt = Stream.of("Gemeinsamer Bundesausschuss", "GBA").toList();
+    List<String> expectedTitelAspekte = Stream.of("Gemeinsamer Bundesausschuss", "GBA").toList();
 
     // when
     DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
@@ -694,12 +694,12 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(documentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::titelAspekt)
-      .isEqualTo(expectedTitelAspekt);
+      .extracting(DocumentationUnitContent::titelAspekte)
+      .isEqualTo(expectedTitelAspekte);
   }
 
   @Test
-  void convertToBusinessModel_definitions() {
+  void convertToBusinessModel_definitionen() {
     // given
     String xml = TestFile.readFileToString("ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
@@ -709,7 +709,7 @@ class LdmlConverterServiceIntegrationTest {
       xml
     );
 
-    List<Definition> expectedDefinitions = Stream.of(new Definition("Sachgesamtheit")).toList();
+    List<Definition> expectedDefinitionen = Stream.of(new Definition("Sachgesamtheit")).toList();
 
     // when
     DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
@@ -719,7 +719,7 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(documentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::definitions)
-      .isEqualTo(expectedDefinitions);
+      .extracting(DocumentationUnitContent::definitionen)
+      .isEqualTo(expectedDefinitionen);
   }
 }

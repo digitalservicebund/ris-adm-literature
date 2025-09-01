@@ -949,8 +949,8 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
-  @DisplayName("Converts berufsbilder, titelAspekt and definitions in ris:metadata")
-  void convertToLdml_berufsbilder_titelAspekt_definitions() {
+  @DisplayName("Converts berufsbilder, titelAspekte and definitionen in ris:metadata")
+  void convertToLdml_berufsbilder_titelAspekte_definitionen() {
     // given
     DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
       null,
@@ -987,12 +987,12 @@ class LdmlPublishConverterServiceIntegrationTest {
       <ris:berufsbilder>
           <ris:berufsbild>Handwerker</ris:berufsbild>
       </ris:berufsbilder>
-      <ris:titelAspekt>
-          <ris:begriff>Gemeinsamer Bundesausschuss</ris:begriff>
-      </ris:titelAspekt>
-      <ris:definitions>
+      <ris:titelAspekte>
+          <ris:titelAspekt>Gemeinsamer Bundesausschuss</ris:titelAspekt>
+      </ris:titelAspekte>
+      <ris:definitionen>
           <ris:definition begriff="Sachgesamtheit"/>
-      </ris:definitions>
+      </ris:definitionen>
       """.indent(20)
     );
   }

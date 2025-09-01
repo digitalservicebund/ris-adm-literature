@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, test } from 'vitest'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import type { Definition } from '@/domain/definition'
-import DefinitionComponent from './DefinitionComponent.vue'
+import DefinitionComponent from './Definitionen.vue'
 
 function renderComponent(definitions?: Definition[]) {
   const user = userEvent.setup()
@@ -20,7 +20,7 @@ function renderComponent(definitions?: Definition[]) {
                 docunitStore: {
                   documentUnit: <DocumentUnit>{
                     documentNumber: '1234567891234',
-                    definitions: definitions ?? [],
+                    definitionen: definitions ?? [],
                   },
                 },
               },
