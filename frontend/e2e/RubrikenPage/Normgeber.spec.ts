@@ -28,8 +28,10 @@ test.describe('RubrikenPage - Normgeber', () => {
       await regionElement.fill('AA')
       await expect(page.getByText('AA')).toHaveCount(1)
       await page.getByText('AA').click()
+
       // then
       await expect(regionElement).toHaveValue('AA')
+      await regionElement.press('Tab')
       await expect(addButton).toBeVisible()
       await expect(addButton).not.toHaveAttribute('disabled')
 
