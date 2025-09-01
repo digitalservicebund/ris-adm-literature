@@ -672,4 +672,54 @@ class LdmlConverterServiceIntegrationTest {
       .extracting(DocumentationUnitContent::berufsbilder)
       .isEqualTo(expectedBerufsbilder);
   }
+
+  @Test
+  void convertToBusinessModel_titelAspekte() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    List<String> expectedTitelAspekte = Stream.of("Gemeinsamer Bundesausschuss", "GBA").toList();
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::titelAspekte)
+      .isEqualTo(expectedTitelAspekte);
+  }
+
+  @Test
+  void convertToBusinessModel_definitionen() {
+    // given
+    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = new DocumentationUnit(
+      "KSNR20250000001",
+      UUID.randomUUID(),
+      null,
+      xml
+    );
+
+    List<Definition> expectedDefinitionen = Stream.of(new Definition("Sachgesamtheit")).toList();
+
+    // when
+    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      documentationUnit
+    );
+
+    // then
+    assertThat(documentationUnitContent)
+      .isNotNull()
+      .extracting(DocumentationUnitContent::definitionen)
+      .isEqualTo(expectedDefinitionen);
+  }
 }
