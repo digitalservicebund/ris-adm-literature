@@ -46,6 +46,7 @@ val localStackVersion = "1.21.3"
 // This version needs to be pinned until we migrate to aws: https://digitalservicebund.slack.com/archives/C03M9TZTDK8/p1737969773917499
 val awsVersion = "2.29.52"
 val jsoupVersion = "1.21.2"
+val commonsLang3 = "3.18.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -60,9 +61,6 @@ dependencies {
 
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
-
-    // CVE-2025-48924
-    exclude("org.apache.commons", "commons-lang3")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
@@ -73,7 +71,7 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:4.32.0")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.nimbusds:nimbus-jose-jwt:10.4.2")
-  implementation("org.apache.commons:commons-lang3:3.18.0")
+  implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
   implementation("org.springframework.retry:spring-retry")
   implementation("org.flywaydb:flyway-core")
