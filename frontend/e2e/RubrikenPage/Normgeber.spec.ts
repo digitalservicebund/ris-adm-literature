@@ -19,6 +19,8 @@ test.describe('RubrikenPage - Normgeber', () => {
       await normgeberElement.fill('Erstes')
       await expect(page.getByText('Erstes Organ')).toHaveCount(1)
       await page.getByText('Erstes Organ').click()
+      await expect(page.getByText('Erstes Organ')).toHaveCount(0)
+      await normgeberElement.press('Tab')
       // then
       await expect(normgeberElement).toHaveValue('Erstes Organ')
       await expect(addButton).toHaveAttribute('disabled')
@@ -31,12 +33,11 @@ test.describe('RubrikenPage - Normgeber', () => {
 
       // then
       await expect(regionElement).toHaveValue('AA')
-      await regionElement.press('Tab')
       await expect(addButton).toBeVisible()
-      await expect(addButton).not.toHaveAttribute('disabled')
+      await expect(addButton).toBeEnabled()
 
       // when
-      await addButton.click()
+      await page.getByRole('button', { name: 'Normgeber übernehmen' }).click({ force: true })
       await page.getByText('Speichern').click()
       await page.reload()
       // then
