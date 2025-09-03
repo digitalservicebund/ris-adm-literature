@@ -57,20 +57,13 @@ public class SentryCallbackFilter
    */
   @Override
   public SentryEvent execute(@NotNull SentryEvent event, Hint hint) {
-    Throwable throwable = null;
     Object throwableHint = hint.get("throwable");
-    if (throwableHint instanceof Throwable) {
-      throwable = (Throwable) throwableHint;
-    }
-
-    if (throwable instanceof ResponseStatusException) {
-      HttpStatusCode status = ((ResponseStatusException) throwable).getStatusCode();
-
+    if (throwableHint instanceof ResponseStatusException rse) {
+      HttpStatusCode status = rse.getStatusCode();
       if (status.is4xxClientError()) {
         return null; // Discard 4xx error events
       }
     }
-
     return event;
   }
 }
