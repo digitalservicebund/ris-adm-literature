@@ -16,7 +16,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // when
       const normgeberElement = page.getByRole('combobox', { name: 'Normgeber' })
       const addButton = page.getByRole('button', { name: 'Normgeber übernehmen', exact: true })
-      await normgeberElement.fill('Erstes')
+      await normgeberElement.click()
       await expect(page.getByText('Erstes Organ')).toHaveCount(1)
       await page.getByText('Erstes Organ').click()
       await expect(page.getByText('Erstes Organ')).toHaveCount(0)
@@ -37,7 +37,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       await expect(addButton).toBeEnabled()
 
       // when
-      await page.getByRole('button', { name: 'Normgeber übernehmen' }).click({ force: true })
+      await page.getByRole('button', { name: 'Normgeber übernehmen' }).click()
       await page.getByText('Speichern').click()
       await page.reload()
       // then
