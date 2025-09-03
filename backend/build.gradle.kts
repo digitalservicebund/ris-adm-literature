@@ -44,7 +44,7 @@ val postgresVersion = "42.7.7"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 // This version needs to be pinned until we migrate to aws: https://digitalservicebund.slack.com/archives/C03M9TZTDK8/p1737969773917499
-val awsVersion = "2.29.52"
+val awsVersion = "2.33.0"
 val jsoupVersion = "1.21.2"
 val commonsLang3 = "3.18.0"
 
