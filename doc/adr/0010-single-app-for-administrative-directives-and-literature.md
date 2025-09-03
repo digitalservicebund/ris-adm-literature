@@ -4,7 +4,7 @@ Date: 2025-08-13
 
 ## Status
 
-Draft 
+Accepted 
 
 ## Context
 
@@ -52,13 +52,13 @@ We looked at the following aspects with a focus on benefits (in terms of re-use)
 - **Team & Maintenance**
   - We are a single team of four engineers responsible for both implementation and long-term maintenance
   - Multiple repositories would add overhead for setup, maintenance, and alignment
-  - In general, separating apps is less risky than merging them later
+  - In general, separating apps is less risky than merging them later. There is a significant overlap of features and there is still some unknown about the system boundaries so splitting too early could potentially add some overhead cost.
 
 ## Decision
 
 We will **integrate the Literatur documents into the existing BSG app**.
 - Each document type will have its own frontend and backend flow.
-- We will use separate database schemas per domain.
+- We will use separate database schemas per domain with their own users.
 
 ## Consequences
 
@@ -71,5 +71,6 @@ We will **integrate the Literatur documents into the existing BSG app**.
 
 ### Risks:
 - Increased reliance on well-structured code and engineering best practices
+- The need for separation rules and architecture tests to ensure them
 - Significant growth in the number of documents will require scaling workflows, architecture, and tooling in ways not yet fully known
 - Supporting multiple domains introduces additional complexity for the engineering team
