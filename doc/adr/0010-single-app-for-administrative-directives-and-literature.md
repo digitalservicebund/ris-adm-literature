@@ -14,6 +14,8 @@ We are now tasked with supporting an additional document category: "Literatur", 
   - selbständige Literatur (SLI)
   - unselbständige Literatur (ULI)
 
+Because administrative directives and literature are two different business domains, they should be separated in the database, meaning two data sources and different database users to ensure strict isolation.
+
 This raises the architectural question of whether to:
 - Build a separate app (or apps) dedicated to these new document types, or
 - Extend the existing BSG app to handle multiple document types and user flows.
@@ -58,7 +60,7 @@ We looked at the following aspects with a focus on benefits (in terms of re-use)
 
 We will **integrate the Literatur documents into the existing BSG app**.
 - Each document type will have its own frontend and backend flow.
-- We will use separate database schemas per domain with their own users.
+- We will use separate database schemas per domain with their own users to ensure data isolation
 
 ## Consequences
 
@@ -68,6 +70,8 @@ We will **integrate the Literatur documents into the existing BSG app**.
   - No overhead from setting up a new app and its tooling
 - **Moderate maintenance growth**
   - One app to maintain, with slightly increased complexity
+- **Data isolation in the database layer**
+  - The business domain separation is guaranteed through the two different schemas and database users
 
 ### Risks:
 - Increased reliance on well-structured code and engineering best practices

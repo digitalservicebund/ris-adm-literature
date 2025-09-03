@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test.describe('RubrikenPage - Definition', () => {
   test(
-    'Definition: items can be added, edited, deleted and changes persist when saved',
+    'Definition: items can be added, edited with special characters, deleted and changes persist when saved',
     { tag: ['@RISDEV-8617'] },
     async ({ page }) => {
       // given
@@ -38,19 +38,19 @@ test.describe('RubrikenPage - Definition', () => {
       const listItem = definitionsGroup.getByRole('listitem', { name: 'Sachgesamtheit' })
       await expect(listItem).toHaveCount(1)
       await listItem.dblclick()
-      await listItem.getByRole('textbox').fill('Erwerbstätigkeit')
+      await listItem.getByRole('textbox').fill('Erwerbstätigkeit 123äöüß$%&')
       await page.keyboard.press('Enter')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
       await expect(definitionsGroup.getByRole('listitem')).toHaveCount(1)
       await expect(
-        definitionsGroup.getByRole('listitem', { name: 'Erwerbstätigkeit' }),
+        definitionsGroup.getByRole('listitem', { name: 'Erwerbstätigkeit 123äöüß$%&' }),
       ).toHaveCount(1)
 
       // when
       const deleteButton = definitionsGroup
-        .getByRole('listitem', { name: 'Erwerbstätigkeit' })
+        .getByRole('listitem', { name: 'Erwerbstätigkeit 123äöüß$%&' })
         .getByRole('button', { name: 'Eintrag löschen' })
       await deleteButton.click()
       // then

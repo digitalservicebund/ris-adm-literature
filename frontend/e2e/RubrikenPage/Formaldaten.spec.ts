@@ -307,7 +307,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
   )
 
   test(
-    'Titelaspekt: items can be added, edited, deleted and changes persist when saved',
+    'Titelaspekt: items can be added, edited with special characters, deleted and changes persist when saved',
     { tag: ['@RISDEV-8618'] },
     async ({ page }) => {
       // given
@@ -344,19 +344,19 @@ test.describe('RubrikenPage - Formatdaten', () => {
       })
       await expect(listItem).toHaveCount(1)
       await listItem.dblclick()
-      await listItem.getByRole('textbox').fill('Leistungserbringer')
+      await listItem.getByRole('textbox').fill('Leistungserbringer 123äöüß$%&')
       await page.keyboard.press('Enter')
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       await page.reload()
       // then
       await expect(titelAspektGroup.getByRole('listitem')).toHaveCount(1)
       await expect(
-        titelAspektGroup.getByRole('listitem', { name: 'Leistungserbringer' }),
+        titelAspektGroup.getByRole('listitem', { name: 'Leistungserbringer 123äöüß$%&' }),
       ).toHaveCount(1)
 
       // when
       const deleteButton = titelAspektGroup
-        .getByRole('listitem', { name: 'Leistungserbringer' })
+        .getByRole('listitem', { name: 'Leistungserbringer 123äöüß$%&' })
         .getByRole('button', { name: 'Eintrag löschen' })
       await deleteButton.click()
       // then
