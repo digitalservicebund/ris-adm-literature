@@ -23,7 +23,7 @@ async function copySummary() {
       <ToolTip text="Kopieren">
         <Button
           id="category-import"
-          aria-label="Rubriken-Import anzeigen"
+          aria-label="Aktivzitierung in die Zwischenablage kopieren"
           data-testid="copy-summary"
           size="small"
           text

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import dayjs from 'dayjs'
 
 test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,7 +16,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
   test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
     await page.goto('/documentUnit/KSNR054920707/fundstellen')
     await page.getByRole('link', { name: 'Rubriken' }).click()
-    const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
+    const artDerZitierungInput = page.getByText('Art der Zitierung *')
     await expect(artDerZitierungInput).toHaveCount(1)
 
     await artDerZitierungInput.click()
@@ -28,7 +29,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 
     await page.getByTestId('list-entry-0').click()
     await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(3)
-    await page.getByRole('textbox', { name: 'Gericht Aktivzitierung' }).click()
+    await page.getByText('Gericht *').click()
     await page
       .getByRole('button', { name: 'dropdown-option' })
       .filter({ hasText: 'AG Aachen' })
@@ -39,18 +40,55 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 
     await page.getByTestId('list-entry-0').click()
     await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(2)
-    await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
+    await page.getByText('Entscheidungsdatum *').fill('15.01.2025')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
     await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025')).toBeVisible()
     await expect(page.getByText('Fehlende Daten')).toBeVisible()
 
     await page.getByTestId('list-entry-0').click()
     await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(1)
-    await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
+    await page.getByText('Aktenzeichen *').fill('Az1')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
     await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
     await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
   })
+
+  test(
+    'Entscheidungsdatum: Invalid, incomplete or future date cannot be entered',
+    { tag: ['@RISDEV-8908'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      await page.waitForURL(/documentUnit/)
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+
+      const datumElement = page.getByText('Entscheidungsdatum *')
+      await expect(datumElement).toHaveCount(1)
+
+      // when
+      await datumElement.fill('thatshouldnotwork')
+      // then
+      await expect(datumElement).toHaveValue('__.__.____')
+
+      // when
+      await datumElement.fill('99.99.9999{Tab}')
+      // then
+      await expect(page.getByText('Kein valides Datum')).toBeVisible()
+
+      // when
+      await datumElement.fill('20.12.20')
+      await page.keyboard.press('Tab')
+      // then
+      await expect(page.getByText('Unvollständiges Datum')).toBeVisible()
+
+      // when
+      const tomorrow = dayjs().add(1, 'day').format('DD.MM.YYYY')
+      await datumElement.fill(`${tomorrow}{Tab}`)
+      // then
+      await expect(page.getByText('Das Datum darf nicht in der Zukunft liegen')).toBeVisible()
+    },
+  )
 
   test(
     'Add two active citations, delete the first item',
@@ -153,6 +191,51 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
 
       await page.getByTestId('activeCitations').getByRole('button', { name: 'Abbrechen' }).click()
       await expect(page.getByRole('textbox', { name: 'Art der Zitierung' })).toHaveCount(0)
+    },
+  )
+
+  test(
+    'An active citation can be copied in the clipboard',
+    { tag: ['@RISDEV-8908'] },
+    async ({ page }) => {
+      // mock clipboard before any page code runs
+      await page.addInitScript(() => {
+        let _text = ''
+
+        Object.defineProperty(navigator, 'clipboard', {
+          value: {
+            writeText: async (text: string) => {
+              _text = text
+            },
+            readText: async () => _text,
+          },
+        })
+      })
+
+      // given
+      await page.goto('/documentUnit/KSNR054920707/fundstellen')
+      await page.getByRole('link', { name: 'Rubriken' }).click()
+      const artDerZitierungInput = page.getByText('Art der Zitierung *')
+      await artDerZitierungInput.click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'Ablehnung' })
+        .click()
+      await page.getByText('Gericht *').click()
+      await page
+        .getByRole('button', { name: 'dropdown-option' })
+        .filter({ hasText: 'AG Aachen' })
+        .click()
+      await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+      await expect(page.getByText('Ablehnung, AG Aachen')).toBeVisible()
+
+      // when
+      await page
+        .getByRole('button', { name: 'Aktivzitierung in die Zwischenablage kopieren' })
+        .click()
+      // then
+      const clipboardValue = await page.evaluate(() => navigator.clipboard.readText())
+      expect(clipboardValue).toBe('Ablehnung, AG Aachen')
     },
   )
 })
