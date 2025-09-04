@@ -147,7 +147,8 @@ sonar {
     property("sonar.organization", "digitalservicebund")
     property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.token", System.getenv("SONAR_TOKEN"))
-    property("sonar.coverage.exclusions", "**/Application.java")
+    // we usually don't test config files
+    property("sonar.coverage.exclusions", "**/Application.java, **/config/*")
   }
 }
 
