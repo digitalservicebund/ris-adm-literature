@@ -78,7 +78,7 @@
     "eslint": "^9.34.0",
     "eslint-plugin-jest-dom": "^5.5.0",
     "eslint-plugin-playwright": "^2.2.2",
-    "eslint-plugin-testing-library": "^7.6.6",
+    "eslint-plugin-testing-library": "^7.6.8",
     "eslint-plugin-vue": "^10.4.0",
     "jsdom": "^26.1.0",
     "license-checker-rseidelsohn": "^4.4.2",
