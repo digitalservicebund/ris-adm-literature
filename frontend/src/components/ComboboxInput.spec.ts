@@ -4,18 +4,15 @@ import ComboboxInput from '@/components/ComboboxInput.vue'
 import type { ComboboxItem, ComboboxAttributes } from '@/components/input/types'
 import comboboxItemService from '@/services/comboboxItemService'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import LegalPeriodical from '@/domain/legalPeriodical.ts'
 
-const legalPeriodicalItems = [
+const documentTypeItems = [
   {
-    title: 'Bundesanzeiger',
-    abbreviation: 'BAnz',
-    citationStyle: '2009, Seite 21',
+    name: 'Verwaltungsvorschrift',
+    abbreviation: 'VV',
   },
   {
-    title: 'Phantasierecht aktiv',
-    abbreviation: 'AA',
-    citationStyle: '2011',
+    name: 'Verwaltungsregelung',
+    abbreviation: 'VR',
   },
 ]
 const fieldOfLawItems = [
@@ -64,7 +61,7 @@ function renderComponent(
         ariaLabel: options.ariaLabel ?? 'test label',
         manualEntry: options.manualEntry ?? false,
         noClear: options.noClear ?? false,
-        itemService: options.itemService ?? comboboxItemService.getLegalPeriodicals,
+        itemService: options.itemService ?? comboboxItemService.getDocumentTypes,
       },
     }),
   }
@@ -78,8 +75,8 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: legalPeriodicalItems,
-          paginatedLegalPeriodicals: { ...pagination, content: legalPeriodicalItems },
+          documentTypes: documentTypeItems,
+          paginatedDocumentTypes: { ...pagination, content: documentTypeItems },
         }),
         { status: 200 },
       ),
@@ -97,8 +94,8 @@ describe('Combobox Element', () => {
   it('is closed', () => {
     renderComponent()
 
-    expect(screen.queryByDisplayValue('Bundesanzeiger')).not.toBeInTheDocument()
-    expect(screen.queryByDisplayValue('Phantasierecht aktiv')).not.toBeInTheDocument()
+    expect(screen.queryByDisplayValue('Verwaltungsvorschrift')).not.toBeInTheDocument()
+    expect(screen.queryByDisplayValue('Verwaltungsregelung')).not.toBeInTheDocument()
   })
 
   it('is opened', async () => {
@@ -112,16 +109,6 @@ describe('Combobox Element', () => {
     await fireEvent.focus(input)
     await user.keyboard('{escape}')
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
-  })
-
-  it("should not show sideInformation 'amtlich'", async () => {
-    renderComponent()
-
-    const openComboboxContainer = screen.getByLabelText('Dropdown öffnen')
-    await user.click(openComboboxContainer)
-    await vi.advanceTimersByTimeAsync(debounceTimeout)
-    expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(2)
-    expect(screen.queryByText('amtlich')).not.toBeInTheDocument()
   })
 
   it('focus should open dropdown', async () => {
@@ -148,18 +135,16 @@ describe('Combobox Element', () => {
 
     expect(emitted()['update:modelValue']).toEqual([
       [
-        new LegalPeriodical({
-          title: 'Bundesanzeiger',
-          abbreviation: 'BAnz',
-          citationStyle: '2009, Seite 21',
-        }),
+        {
+          name: 'Verwaltungsvorschrift',
+          abbreviation: 'VV',
+        },
       ],
       [
-        new LegalPeriodical({
-          title: 'Bundesanzeiger',
-          abbreviation: 'BAnz',
-          citationStyle: '2009, Seite 21',
-        }),
+        {
+          name: 'Verwaltungsvorschrift',
+          abbreviation: 'VV',
+        },
       ],
     ])
   })
@@ -168,7 +153,7 @@ describe('Combobox Element', () => {
     const { emitted } = renderComponent()
     const input = screen.getByLabelText('test label')
 
-    await user.type(input, 'phantasierecht')
+    await user.type(input, 'verwalt')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
 
@@ -183,9 +168,8 @@ describe('Combobox Element', () => {
     expect(emitted()['update:modelValue']).toEqual([
       [
         {
-          title: 'Phantasierecht aktiv',
-          abbreviation: 'AA',
-          citationStyle: '2011',
+          abbreviation: 'VR',
+          name: 'Verwaltungsregelung',
         },
       ],
       [undefined],
@@ -196,20 +180,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Phantasierecht aktiv',
-              abbreviation: 'AA',
-              citationStyle: '2011',
+              name: 'Verwaltungsvorschrift',
+              abbreviation: 'VV',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Phantasierecht aktiv',
-                abbreviation: 'AA',
-                citationStyle: '2011',
+                name: 'Verwaltungsvorschrift',
+                abbreviation: 'VV',
               },
             ],
           },
@@ -221,33 +203,31 @@ describe('Combobox Element', () => {
     renderComponent()
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'phantasierecht')
+    await user.type(input, 'verwaltungsvorschrift')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.queryAllByLabelText('dropdown-option')
     expect(dropdownItems).toHaveLength(1)
 
-    expect(dropdownItems[0]).toHaveTextContent('Phantasierecht')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsvorschrift')
   })
 
   it('items should stay filtered after selection', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Phantasierecht aktiv',
-              abbreviation: 'AA',
-              citationStyle: '2011',
+              name: 'Verwaltungsvorschrift',
+              abbreviation: 'VV',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Phantasierecht aktiv',
-                abbreviation: 'AA',
-                citationStyle: '2011',
+                name: 'Verwaltungsvorschrift',
+                abbreviation: 'VV',
               },
             ],
           },
@@ -259,12 +239,12 @@ describe('Combobox Element', () => {
     renderComponent()
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'phantasierecht')
+    await user.type(input, 'verwaltungsvorschrift')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
 
-    expect(dropdownItems[0]).toHaveTextContent('Phantasierecht')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsvorschrift')
 
     await user.click(dropdownItems[0])
 
@@ -280,20 +260,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Phantasierecht aktiv',
-              abbreviation: 'AA',
-              citationStyle: '2011',
+              name: 'Verwaltungsvorschrift',
+              abbreviation: 'VV',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Phantasierecht aktiv',
-                abbreviation: 'AA',
-                citationStyle: '2011',
+                name: 'Verwaltungsvorschrift',
+                abbreviation: 'VV',
               },
             ],
           },
@@ -305,13 +283,13 @@ describe('Combobox Element', () => {
     renderComponent()
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'phantasierecht')
+    await user.type(input, 'verwaltungsvorschrift')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
 
     expect(dropdownItems).toHaveLength(1)
-    expect(dropdownItems[0]).toHaveTextContent('Phantasierecht')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsvorschrift')
 
     const closeDropdownContainer = screen.getByLabelText('Dropdown schließen')
 
@@ -326,20 +304,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -350,10 +326,10 @@ describe('Combobox Element', () => {
 
     renderComponent({
       modelValue: {
-        label: 'Bundesanzeiger',
+        label: 'Verwaltungsregelung',
         value: {
-          title: 'Bundesanzeiger',
-          abbreviation: 'BAnz',
+          name: 'Verwaltungsregelung',
+          abbreviation: 'VR',
         },
       },
     })
@@ -364,15 +340,15 @@ describe('Combobox Element', () => {
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     expect(dropdownItems).toHaveLength(1)
-    expect(dropdownItems[0]).toHaveTextContent('Bundesanzeiger')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsregelung')
   })
 
   it('items should show message if no items matched', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [],
-          paginatedLegalPeriodicals: { ...pagination, content: [] },
+          documentTypes: [],
+          paginatedDocumentTypes: { ...pagination, content: [] },
         }),
         { status: 200 },
       ),
@@ -394,20 +370,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Phantasierecht aktiv',
-              abbreviation: 'AA',
-              citationStyle: '2011',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Phantasierecht aktiv',
-                abbreviation: 'AA',
-                citationStyle: '2011',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -419,16 +393,16 @@ describe('Combobox Element', () => {
     renderComponent()
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'Phantasierecht')
+    await user.type(input, 'Verwaltungsregelung')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
     expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(1)
-    expect(dropdownItems[0]).toHaveTextContent('Phantasierecht')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsregelung')
 
     await user.click(dropdownItems[0])
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
-    expect(input).toHaveValue('Phantasierecht')
+    expect(input).toHaveValue('Verwaltungsregelung')
 
     const openDropdownContainer = screen.getByLabelText('Dropdown öffnen') as HTMLElement
     await user.click(openDropdownContainer)
@@ -436,9 +410,9 @@ describe('Combobox Element', () => {
     expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(1)
   })
 
-  it('uses endpoint to fetch all legal periodical items', async () => {
+  it('uses endpoint to fetch all document type items', async () => {
     renderComponent({
-      itemService: comboboxItemService.getLegalPeriodicals,
+      itemService: comboboxItemService.getDocumentTypes,
     })
 
     const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
@@ -448,7 +422,7 @@ describe('Combobox Element', () => {
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
 
     expect(dropdownItems).toHaveLength(2)
-    expect(dropdownItems[0]).toHaveTextContent('BAnz | Bundesanzeiger')
+    expect(dropdownItems[0]).toHaveTextContent('VerwaltungsvorschriftVV')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
   })
 
@@ -498,20 +472,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -523,22 +495,22 @@ describe('Combobox Element', () => {
     renderComponent({})
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'Bun')
+    await user.type(input, 'reg')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
 
     const dropdownItemElements = screen.getAllByLabelText('dropdown-option')
 
     // TODO checking for "b", "bg", "bgh" as the three arguments does not work though
     expect(dropdownItemElements).toHaveLength(1)
-    expect(dropdownItemElements[0]).toHaveTextContent('Bundesanzeiger')
+    expect(dropdownItemElements[0]).toHaveTextContent('Verwaltungsregelung')
   })
 
   it('should revert to last saved state when leaving the input field via esc/tab', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [],
-          paginatedLegalPeriodicals: { ...pagination, content: [] },
+          documentTypes: [],
+          paginatedDocumentTypes: { ...pagination, content: [] },
         }),
         { status: 200 },
       ),
@@ -563,20 +535,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -585,17 +555,17 @@ describe('Combobox Element', () => {
       ),
     )
 
-    await user.type(input, 'Bundesanzeiger')
+    await user.type(input, 'Verwaltungsregelung')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     dropdownItems = screen.getAllByLabelText('dropdown-option')
 
     expect(dropdownItems).toHaveLength(1)
-    expect(dropdownItems[0]).toHaveTextContent('BAnz | Bundesanzeiger')
+    expect(dropdownItems[0]).toHaveTextContent('VerwaltungsregelungVR')
 
     await user.keyboard('{enter}') // save the value
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     expect(screen.queryByLabelText('dropdown-option')).not.toBeInTheDocument()
-    expect(input).toHaveValue('Bundesanzeiger')
+    expect(input).toHaveValue('Verwaltungsregelung')
 
     await user.type(input, 'foo')
     await user.keyboard('{tab}')
@@ -612,20 +582,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -636,7 +604,7 @@ describe('Combobox Element', () => {
 
     const { emitted } = renderComponent()
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'Bundesanzeiger')
+    await user.type(input, 'VR')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(1)
 
@@ -648,9 +616,8 @@ describe('Combobox Element', () => {
     expect(emitted()['update:modelValue']).toEqual([
       [
         {
-          title: 'Bundesanzeiger',
-          abbreviation: 'BAnz',
-          citationStyle: '2009, Seite 21',
+          name: 'Verwaltungsregelung',
+          abbreviation: 'VR',
         },
       ],
     ])
@@ -660,8 +627,8 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [],
-          paginatedLegalPeriodicals: { ...pagination, content: [] },
+          documentTypes: [],
+          paginatedDocumentTypes: { ...pagination, content: [] },
         }),
         { status: 200 },
       ),
@@ -691,20 +658,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -716,33 +681,31 @@ describe('Combobox Element', () => {
     renderComponent({ manualEntry: true })
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'Bun')
+    await user.type(input, 'Ver')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.queryAllByLabelText('dropdown-option')
     expect(dropdownItems).toHaveLength(2)
-    expect(dropdownItems[0]).toHaveTextContent('Bundesanzeiger')
-    expect(dropdownItems[1]).toHaveTextContent('Bun neu erstellen')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsregelung')
+    expect(dropdownItems[1]).toHaveTextContent('Ver neu erstellen')
   })
 
   it('removes new entry option when exact match found', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -754,21 +717,21 @@ describe('Combobox Element', () => {
     renderComponent({ manualEntry: true })
 
     const input = screen.getByLabelText('test label')
-    await user.type(input, 'Bun')
+    await user.type(input, 'Ver')
 
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     const dropdownItems = screen.queryAllByLabelText('dropdown-option')
 
     expect(dropdownItems).toHaveLength(2)
-    expect(dropdownItems[0]).toHaveTextContent('Bundesanzeiger')
-    expect(dropdownItems[1]).toHaveTextContent('Bun neu erstellen')
+    expect(dropdownItems[0]).toHaveTextContent('Verwaltungsregelung')
+    expect(dropdownItems[1]).toHaveTextContent('Ver neu erstellen')
 
-    await user.type(input, 'BAnz | Bundesanzeiger')
+    await user.type(input, 'Verwaltungsregelung')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
 
     expect(screen.queryAllByLabelText('dropdown-option')).toHaveLength(1)
     expect(screen.queryAllByLabelText('dropdown-option')[0]).toHaveTextContent(
-      'BAnz | Bundesanzeiger',
+      'VerwaltungsregelungVR',
     )
   })
 
@@ -776,8 +739,8 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [],
-          paginatedLegalPeriodicals: { ...pagination, content: [] },
+          documentTypes: [],
+          paginatedDocumentTypes: { ...pagination, content: [] },
         }),
         { status: 200 },
       ),
@@ -823,8 +786,8 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [],
-          paginatedLegalPeriodicals: { ...pagination, content: [] },
+          documentTypes: [],
+          paginatedDocumentTypes: { ...pagination, content: [] },
         }),
         { status: 200 },
       ),
@@ -843,20 +806,18 @@ describe('Combobox Element', () => {
     vi.spyOn(window, 'fetch').mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          legalPeriodicals: [
+          documentTypes: [
             {
-              title: 'Bundesanzeiger',
-              abbreviation: 'BAnz',
-              citationStyle: '2009, Seite 21',
+              name: 'Verwaltungsregelung',
+              abbreviation: 'VR',
             },
           ],
-          paginatedLegalPeriodicals: {
+          paginatedDocumentTypes: {
             ...pagination,
             content: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
           },
@@ -869,7 +830,7 @@ describe('Combobox Element', () => {
     await user.keyboard('{Backspace}')
     await vi.advanceTimersByTimeAsync(debounceTimeout)
     expect(screen.getAllByLabelText('dropdown-option')).toHaveLength(1)
-    expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Bundesanzeiger')
+    expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Verwaltungsregelung')
   })
 
   describe('keyboard navigation', () => {
@@ -925,8 +886,8 @@ describe('Combobox Element', () => {
       vi.spyOn(window, 'fetch').mockResolvedValue(
         new Response(
           JSON.stringify({
-            legalPeriodicals: [],
-            paginatedLegalPeriodicals: { ...pagination, content: [] },
+            documentTypes: [],
+            paginatedDocumentTypes: { ...pagination, content: [] },
           }),
           { status: 200 },
         ),
@@ -948,20 +909,18 @@ describe('Combobox Element', () => {
       vi.spyOn(window, 'fetch').mockResolvedValue(
         new Response(
           JSON.stringify({
-            legalPeriodicals: [
+            documentTypes: [
               {
-                title: 'Bundesanzeiger',
-                abbreviation: 'BAnz',
-                citationStyle: '2009, Seite 21',
+                name: 'Verwaltungsregelung',
+                abbreviation: 'VR',
               },
             ],
-            paginatedLegalPeriodicals: {
+            paginatedDocumentTypes: {
               ...pagination,
               content: [
                 {
-                  title: 'Bundesanzeiger',
-                  abbreviation: 'BAnz',
-                  citationStyle: '2009, Seite 21',
+                  name: 'Verwaltungsregelung',
+                  abbreviation: 'VR',
                 },
               ],
             },
@@ -973,13 +932,13 @@ describe('Combobox Element', () => {
       renderComponent({ manualEntry: true })
       const input = screen.getByLabelText('test label')
       await fireEvent.focus(input)
-      await user.type(input, 'Bundesanzeiger')
+      await user.type(input, 'Ver')
       await vi.advanceTimersByTimeAsync(debounceTimeout)
       const items = screen.getAllByLabelText('dropdown-option')
-
       // Move to createNewItem link
       await fireEvent.keyDown(input, { key: 'ArrowDown' })
       await fireEvent.keyDown(input, { key: 'ArrowDown' })
+
       expect(items[1]).toHaveFocus()
 
       // Focus stays the same on last element

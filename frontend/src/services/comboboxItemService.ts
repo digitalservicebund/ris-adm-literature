@@ -1,10 +1,9 @@
 import type { UseFetchReturn } from '@vueuse/core'
 import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
-import LegalPeriodical from '@/domain/legalPeriodical.ts'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { CitationType } from '@/domain/citationType'
-import { computed, ref } from 'vue'
 import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
@@ -16,7 +15,6 @@ import { useApiFetch } from './apiService'
 enum Endpoint {
   documentTypes = 'lookup-tables/document-types',
   fieldsOfLaw = 'lookup-tables/fields-of-law',
-  legalPeriodicals = 'lookup-tables/legal-periodicals',
 }
 
 function formatDropdownItems(
@@ -36,18 +34,6 @@ function formatDropdownItems(
         label: item.identifier,
         value: item,
         additionalInformation: item.text,
-      }))
-    }
-    case Endpoint.legalPeriodicals: {
-      return (responseData as LegalPeriodical[]).map((item) => ({
-        label: '' + item.abbreviation + ' | ' + item.title,
-        value: {
-          abbreviation: item.abbreviation,
-          title: item.title,
-          subtitle: item.subtitle,
-          citationStyle: item.citationStyle,
-        },
-        additionalInformation: item.subtitle,
       }))
     }
   }
@@ -84,9 +70,6 @@ function fetchFromEndpoint(
         case Endpoint.fieldsOfLaw:
           ctx.data = formatDropdownItems(ctx.data.fieldsOfLaw, endpoint)
           break
-        case Endpoint.legalPeriodicals:
-          ctx.data = formatDropdownItems(ctx.data.legalPeriodicals, endpoint)
-          break
       }
       return ctx
     },
@@ -101,7 +84,6 @@ function fetchFromEndpoint(
 }
 
 export type ComboboxItemService = {
-  getLegalPeriodicals: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getCourts: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
   getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
@@ -113,8 +95,6 @@ export type ComboboxItemService = {
 }
 
 const service: ComboboxItemService = {
-  getLegalPeriodicals: (filter: Ref<string | undefined>) =>
-    fetchFromEndpoint(Endpoint.legalPeriodicals, filter, { usePagination: false }),
   getCourts: (filter: Ref<string | undefined>) => {
     const agAachen = {
       label: 'AG Aachen',
