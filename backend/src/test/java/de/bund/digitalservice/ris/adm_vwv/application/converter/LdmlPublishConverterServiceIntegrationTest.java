@@ -497,13 +497,13 @@ class LdmlPublishConverterServiceIntegrationTest {
         new Fundstelle(
           UUID.randomUUID(),
           "Seite 2",
-          new LegalPeriodical(UUID.randomUUID(), "DOK", "Die Dokumente", null, null),
+          new LegalPeriodical(UUID.randomUUID(), "DOK", "dok", "Die Dokumente", null, null),
           null
         ),
         new Fundstelle(
           UUID.randomUUID(),
           "Kap. 5, Abs. 1",
-          new LegalPeriodical(UUID.randomUUID(), "VJP", "Juristische Periodika", null, null),
+          new LegalPeriodical(UUID.randomUUID(), "VJP", "vjp", "Juristische Periodika", null, null),
           null
         )
       ),
@@ -557,8 +557,12 @@ class LdmlPublishConverterServiceIntegrationTest {
       """
       <akn:analysis source="attributsemantik-noch-undefiniert">
           <akn:otherReferences source="attributsemantik-noch-undefiniert">
-              <akn:implicitReference shortForm="DOK" showAs="DOK, Seite 2"/>
-              <akn:implicitReference shortForm="VJP" showAs="VJP, Kap. 5, Abs. 1"/>
+              <akn:implicitReference shortForm="DOK" showAs="DOK, Seite 2">
+                  <ris:fundstelle abbreviation="DOK" publicId="dok" zitatstelle="Seite 2"/>
+              </akn:implicitReference>
+              <akn:implicitReference shortForm="VJP" showAs="VJP, Kap. 5, Abs. 1">
+                  <ris:fundstelle abbreviation="VJP" publicId="vjp" zitatstelle="Kap. 5, Abs. 1"/>
+              </akn:implicitReference>
               <akn:implicitReference shortForm="BGB" showAs="BGB §1">
                   <ris:normReference singleNorm="§1"/>
               </akn:implicitReference>

@@ -218,7 +218,9 @@ CREATE TABLE
   caselaw_evaluation_complete                 VARCHAR(4),
   attachment_to                               VARCHAR(10),
   juris_id                                    VARCHAR(255) NOT NULL
-    CONSTRAINT legal_periodical_juris_id_uc UNIQUE
+    CONSTRAINT legal_periodical_juris_id_uc UNIQUE,
+  public_id VARCHAR(255) NOT NULL
+    CONSTRAINT legal_periodical_public_id_uc UNIQUE
 );
 
 CREATE INDEX
@@ -226,9 +228,9 @@ CREATE INDEX
   legal_periodical_documentation_office_caselaw_idx ON
   legal_periodical (responsible_documentation_office_caselaw_id);
 
-INSERT INTO legal_periodical (id, abbreviation, title, subtitle, citation_style, juris_id) VALUES
-(gen_random_uuid(), 'BKK', 'Die Betriebskrankenkasse', 'Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen', '1969, 138-140; BKK 2007, Sonderbeilage, 1-5', '9999'),
-(gen_random_uuid(), 'ABc', 'Die Beispieler', 'Zeitschrift des Beispiels', 'ab ab ab ab abc', '999');
+INSERT INTO legal_periodical (id, abbreviation, title, subtitle, citation_style, juris_id, public_id) VALUES
+(gen_random_uuid(), 'BKK', 'Die Betriebskrankenkasse', 'Zeitschrift des Bundesverbandes der Betriebskrankenkassen Essen', '1969, 138-140; BKK 2007, Sonderbeilage, 1-5', '9999', 'bkk'),
+(gen_random_uuid(), 'ABc', 'Die Beispieler', 'Zeitschrift des Beispiels', 'ab ab ab ab abc', '999', 'abc');
 
 CREATE TABLE
     IF NOT EXISTS

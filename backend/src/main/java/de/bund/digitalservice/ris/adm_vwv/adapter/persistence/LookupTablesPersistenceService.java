@@ -160,6 +160,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new LegalPeriodical(
         legalPeriodicalEntity.getId(),
         legalPeriodicalEntity.getAbbreviation(),
+        legalPeriodicalEntity.getPublicId(),
         legalPeriodicalEntity.getTitle(),
         legalPeriodicalEntity.getSubtitle(),
         legalPeriodicalEntity.getCitationStyle()

@@ -41,11 +41,18 @@ class FundstellenTransformerTest {
     );
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BAnz")).willReturn(
       List.of(
-        new LegalPeriodical(UUID.randomUUID(), "BAnz", "Bundesanzeiger", null, "2025, Seite 2")
+        new LegalPeriodical(
+          UUID.randomUUID(),
+          "BAnz",
+          "banz",
+          "Bundesanzeiger",
+          null,
+          "2025, Seite 2"
+        )
       )
     );
     given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("DOK")).willReturn(
-      List.of(new LegalPeriodical(UUID.randomUUID(), "DOK", "Dokument", null, "2020"))
+      List.of(new LegalPeriodical(UUID.randomUUID(), "DOK", "dok", "Dokument", null, "2020"))
     );
 
     // when
@@ -101,6 +108,7 @@ class FundstellenTransformerTest {
         new LegalPeriodical(
           UUID.randomUUID(),
           "BRD",
+          "brd",
           "Bericht aus Deutschland",
           null,
           "2025, Seite 2"
@@ -108,6 +116,7 @@ class FundstellenTransformerTest {
         new LegalPeriodical(
           UUID.randomUUID(),
           "BRD",
+          "brd-2",
           "Bericht aus Deutschland alt",
           null,
           "1998, Seite 2"
@@ -125,11 +134,113 @@ class FundstellenTransformerTest {
       .containsExactly("BRD", "Seite 5", null);
   }
 
-  private OtherReferences createOtherReference(String legalPeriodicalRawValue, String citation) {
+  @Test
+  @DisplayName(
+    "Transforms one fundstelle with resolved ambiguous legal periodical because of given public id"
+  )
+  void transform_ambiguousLegalPeriodicalCanBeResolvedByPublicId() {
+    // given
+    AkomaNtoso akomaNtoso = new AkomaNtoso();
+    Doc doc = new Doc();
+    akomaNtoso.setDoc(doc);
+    Meta meta = new Meta();
+    doc.setMeta(meta);
+    Analysis analysis = new Analysis();
+    meta.setAnalysis(analysis);
+    analysis.setOtherReferences(
+      List.of(createOtherReferenceWithFundstelle("BRD", "brd-2", "BRD Seite 5"))
+    );
+    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
+      List.of(
+        new LegalPeriodical(
+          UUID.randomUUID(),
+          "BRD",
+          "brd",
+          "Bericht aus Deutschland",
+          null,
+          "2025, Seite 2"
+        ),
+        new LegalPeriodical(
+          UUID.randomUUID(),
+          "BRD",
+          "brd-2",
+          "Bericht aus Deutschland alt",
+          null,
+          "1998, Seite 2"
+        )
+      )
+    );
+
+    // when
+    List<Fundstelle> fundstellen = fundstellenTransformer.transform(akomaNtoso);
+
+    // then
+    assertThat(fundstellen)
+      .singleElement()
+      .extracting(
+        f -> f.periodikum().abbreviation(),
+        Fundstelle::zitatstelle,
+        f -> f.periodikum().title()
+      )
+      .containsExactly("BRD", "Seite 5", "Bericht aus Deutschland alt");
+  }
+
+  @Test
+  @DisplayName(
+    "Transforms one fundstelle without legal periodical because abbreviation 'BRD' is ambiguous and public id is not found"
+  )
+  void transform_ambiguousLegalPeriodicalCannotBeResolvedByPublicId() {
+    // given
+    AkomaNtoso akomaNtoso = new AkomaNtoso();
+    Doc doc = new Doc();
+    akomaNtoso.setDoc(doc);
+    Meta meta = new Meta();
+    doc.setMeta(meta);
+    Analysis analysis = new Analysis();
+    meta.setAnalysis(analysis);
+    analysis.setOtherReferences(
+      List.of(createOtherReferenceWithFundstelle("DB", "db-3", "DB Seite 7"))
+    );
+    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("DB")).willReturn(
+      List.of(
+        new LegalPeriodical(UUID.randomUUID(), "DB", "db", "Datenbank", null, "2025, Seite 2"),
+        new LegalPeriodical(UUID.randomUUID(), "DB", "db-2", "Datenbank alt", null, "1998, Seite 2")
+      )
+    );
+
+    // when
+    List<Fundstelle> fundstellen = fundstellenTransformer.transform(akomaNtoso);
+
+    // then
+    assertThat(fundstellen)
+      .singleElement()
+      .extracting(Fundstelle::ambiguousPeriodikum, Fundstelle::zitatstelle, Fundstelle::periodikum)
+      .containsExactly("DB", "Seite 7", null);
+  }
+
+  private OtherReferences createOtherReference(String abbreviation, String citation) {
     OtherReferences otherReferences = new OtherReferences();
     ImplicitReference implicitReference = new ImplicitReference();
     implicitReference.setShowAs(citation);
-    implicitReference.setShortForm(legalPeriodicalRawValue);
+    implicitReference.setShortForm(abbreviation);
+    otherReferences.setImplicitReferences(List.of(implicitReference));
+    return otherReferences;
+  }
+
+  private OtherReferences createOtherReferenceWithFundstelle(
+    String abbreviation,
+    String publicId,
+    String citation
+  ) {
+    OtherReferences otherReferences = new OtherReferences();
+    ImplicitReference implicitReference = new ImplicitReference();
+    implicitReference.setShowAs(citation);
+    implicitReference.setShortForm(abbreviation);
+    RisFundstelle risFundstelle = new RisFundstelle();
+    risFundstelle.setAbbreviation(abbreviation);
+    risFundstelle.setZitatstelle(citation);
+    risFundstelle.setPublicId(publicId);
+    implicitReference.setFundstelle(risFundstelle);
     otherReferences.setImplicitReferences(List.of(implicitReference));
     return otherReferences;
   }
