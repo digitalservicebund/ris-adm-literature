@@ -1,6 +1,5 @@
 import type { UseFetchReturn } from '@vueuse/core'
 import { LabelPosition } from '@/components/input/InputField.vue'
-import LegalPeriodical from '@/domain/legalPeriodical'
 import type { CitationType } from '@/domain/citationType'
 import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
@@ -92,7 +91,6 @@ export interface DropdownInputField extends BaseInputField {
 //COMBOBOX
 export type ComboboxInputModelType =
   | FieldOfLaw
-  | LegalPeriodical
   | Court
   | DocumentType
   | CitationType
