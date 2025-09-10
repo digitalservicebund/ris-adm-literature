@@ -4,6 +4,7 @@ export interface Periodikum {
   title: string
   subtitle?: string
   citationStyle?: string
+  publicId?: string
 }
 
 export interface Fundstelle {

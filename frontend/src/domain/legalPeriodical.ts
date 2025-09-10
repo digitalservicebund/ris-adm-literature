@@ -5,6 +5,7 @@ export default class LegalPeriodical {
   abbreviation?: string
   primaryReference?: boolean
   citationStyle?: string
+  publicId?: string
 
   constructor(data: Partial<LegalPeriodical> = {}) {
     Object.assign(this, data)
