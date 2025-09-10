@@ -3,10 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
 import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Analysis;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.ImplicitReferenceType;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.OtherReferences;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
@@ -42,7 +39,7 @@ public class FundstellenTransformer {
       .filter(ir -> ir.getReferenceType() == ImplicitReferenceType.FUNDSTELLE)
       .map(ir -> {
         String abbreviation = ir.getShortForm();
-        LegalPeriodical periodikum = findPeriodikum(abbreviation);
+        LegalPeriodical periodikum = findPeriodikum(ir);
         String zitatstelle = StringUtils.substringAfter(ir.getShowAs(), abbreviation).trim();
         // In case the periodikum is not unique or not existing, the abbreviation is set and displayed in the UI.
         String ambiguousPeriodikum = periodikum == null ? abbreviation : null;
@@ -52,15 +49,27 @@ public class FundstellenTransformer {
   }
 
   @Nullable
-  private LegalPeriodical findPeriodikum(String abbreviation) {
+  private LegalPeriodical findPeriodikum(ImplicitReference implicitReference) {
     LegalPeriodical periodikum = null;
     List<LegalPeriodical> legalPeriodicals =
-      lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation(abbreviation);
+      lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation(
+        implicitReference.getShortForm()
+      );
     if (legalPeriodicals.size() == 1) {
       // The legal periodical is only set, if it is found and unambiguous in the database. In case there are multiple
       // legal periodicals with the same abbreviation it is not set which results to a user hint in
       // the UI ("Mehrdeutiger Verweis"). This behaviour is the same as in Caselaw.
       periodikum = legalPeriodicals.getFirst();
+    } else {
+      // For published documentation units by this App try to find a unique reference by public id
+      RisFundstelle fundstelle = implicitReference.getFundstelle();
+      if (fundstelle != null) {
+        periodikum = legalPeriodicals
+          .stream()
+          .filter(lp -> lp.publicId().equals(fundstelle.getPublicId()))
+          .findFirst()
+          .orElse(null);
+      }
     }
     return periodikum;
   }

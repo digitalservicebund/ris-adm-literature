@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
@@ -102,16 +103,7 @@ public class LdmlPublishConverterService {
   }
 
   private String unescapeHtml(String input) {
-    return input == null
-      ? null
-      : input
-        .replace("&nbsp;", "\u00A0")
-        .replace("&auml;", "ä")
-        .replace("&ouml;", "ö")
-        .replace("&uuml;", "ü")
-        .replace("&szlig;", "ß")
-        .replace("&copy;", "©")
-        .replace("&euro;", "€");
+    return input == null ? null : Parser.unescapeEntities(input, true);
   }
 
   private AkomaNtoso createAkomaNtoso(@Nonnull DocumentationUnitContent documentationUnitContent) {
@@ -316,18 +308,22 @@ public class LdmlPublishConverterService {
             .stream()
             .map(fundstelle -> {
               ImplicitReference implicitReference = new ImplicitReference();
+              String zitatstelle = fundstelle.zitatstelle();
               if (fundstelle.periodikum() == null) {
-                // Can occur due to ambiguous Periodika. Revisit this case after implementing RISDEV-8915
-                String sanitizedAmbiguous = unescapeHtml(fundstelle.ambiguousPeriodikum());
-                String sanitizedZitatstelle = unescapeHtml(fundstelle.zitatstelle());
-                implicitReference.setShortForm(sanitizedAmbiguous);
-                implicitReference.setShowAs(sanitizedAmbiguous + ", " + sanitizedZitatstelle);
+                // Can occur due to ambiguous Periodika. User have to resolve it manually.
+                implicitReference.setShortForm(fundstelle.ambiguousPeriodikum());
+                implicitReference.setShowAs(fundstelle.ambiguousPeriodikum() + ", " + zitatstelle);
               } else {
-                String sanitizedZitatstelle = unescapeHtml(fundstelle.zitatstelle());
                 implicitReference.setShortForm(fundstelle.periodikum().abbreviation());
                 implicitReference.setShowAs(
-                  fundstelle.periodikum().abbreviation() + ", " + sanitizedZitatstelle
+                  fundstelle.periodikum().abbreviation() + ", " + zitatstelle
                 );
+                // RISDEV-8915 persist public id reference for resolving ambiguous periodika
+                RisFundstelle risFundstelle = new RisFundstelle();
+                risFundstelle.setAbbreviation(fundstelle.periodikum().abbreviation());
+                risFundstelle.setZitatstelle(zitatstelle);
+                risFundstelle.setPublicId(fundstelle.periodikum().publicId());
+                implicitReference.setFundstelle(risFundstelle);
               }
               return implicitReference;
             })

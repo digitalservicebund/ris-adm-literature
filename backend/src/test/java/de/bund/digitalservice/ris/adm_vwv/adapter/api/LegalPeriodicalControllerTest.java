@@ -43,6 +43,7 @@ class LegalPeriodicalControllerTest {
     var lp1 = new LegalPeriodical(
       UUID.randomUUID(),
       lp1Abbreviation,
+      "aa",
       lp1Title,
       lp1Subtitle,
       lp1CitationStyle
@@ -54,6 +55,7 @@ class LegalPeriodicalControllerTest {
     var lp2 = new LegalPeriodical(
       UUID.randomUUID(),
       lp2Abbreviation,
+      "bkk",
       lp2Title,
       lp2Subtitle,
       lp2CitationStyle

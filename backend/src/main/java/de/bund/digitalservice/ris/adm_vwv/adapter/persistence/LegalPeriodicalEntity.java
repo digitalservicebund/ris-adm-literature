@@ -34,4 +34,6 @@ public class LegalPeriodicalEntity {
   private String citationStyle;
 
   private String jurisId;
+
+  private String publicId;
 }
