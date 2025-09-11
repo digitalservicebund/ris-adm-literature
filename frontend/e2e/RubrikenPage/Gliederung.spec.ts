@@ -69,7 +69,11 @@ test.describe('RubrikenPage - Gliederung', () => {
 
       const gliederungEditorElement = page.getByTestId('Gliederung Editor')
       await gliederungEditorElement.click()
-      await page.keyboard.type('Gliederung: Neuer Text 1\n Line 2\n Line 3\n Line 4\n Line 5')
+      let textLines = 'Gliederung: Neuer Text 1'
+      for (let i = 2; i <= 16; i++) {
+        textLines += `\nLine ${i}`
+      }
+      await page.keyboard.type(textLines)
 
       const text1 = page.getByText('Text 1')
       await expect(text1).not.toBeInViewport()
@@ -78,7 +82,7 @@ test.describe('RubrikenPage - Gliederung', () => {
       const expansionButton = page
         .getByLabel('Gliederung Button Leiste')
         .getByRole('button', { name: 'Erweitern' })
-      expansionButton.click()
+      await expansionButton.click()
 
       // then
       await expect(text1).toBeInViewport()
