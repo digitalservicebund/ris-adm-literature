@@ -228,7 +228,7 @@ watch(
             label="Gliederung"
             :should-show-button="false"
             :show-formatting-buttons="false"
-            field-size="small"
+            field-size="big"
           />
         </div>
       </div>
@@ -299,7 +299,7 @@ watch(
             label="Kurzreferat"
             :should-show-button="false"
             :show-formatting-buttons="false"
-            field-size="small"
+            field-size="big"
           />
         </div>
       </div>
