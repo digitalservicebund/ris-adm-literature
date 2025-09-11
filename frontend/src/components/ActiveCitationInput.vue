@@ -14,6 +14,7 @@ import { type CitationType } from '@/domain/citationType'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
 import type { DocumentType } from '@/domain/documentType'
+import CourtDropDown from '@/components/CourtDropDown.vue'
 
 const props = defineProps<{
   modelValue?: ActiveCitation
@@ -89,7 +90,6 @@ async function search() {
           court: {
             type: 'type1',
             location: 'location1',
-            label: 'label1',
           },
           decisionDate: '2022-02-01',
           documentType: {
@@ -219,17 +219,24 @@ onMounted(() => {
           label="Gericht *"
           :validation-error="validationStore.getByField('court')"
         >
-          <ComboboxInput
-            id="activeCitationCourt"
+          <CourtDropDown
+            input-id="activeCitationCourt"
             v-model="activeCitation.court"
-            aria-label="Gericht Aktivzitierung"
-            clear-on-choosing-item
-            :has-error="slotProps.hasError"
-            :item-service="ComboboxItemService.getCourts"
-            :read-only="activeCitation.hasForeignSource"
+            :invalid="slotProps.hasError"
             @focus="validationStore.remove('court')"
-          >
-          </ComboboxInput>
+          />
+
+          <!--          <ComboboxInput-->
+          <!--            id="activeCitationCourt"-->
+          <!--            v-model="activeCitation.court"-->
+          <!--            aria-label="Gericht Aktivzitierung"-->
+          <!--            clear-on-choosing-item-->
+          <!--            :has-error="slotProps.hasError"-->
+          <!--            :item-service="ComboboxItemService.getCourts"-->
+          <!--            :read-only="activeCitation.hasForeignSource"-->
+          <!--            @focus="validationStore.remove('court')"-->
+          <!--          >-->
+          <!--          </ComboboxInput>-->
         </InputField>
         <InputField
           id="activeCitationDecisionDate"
