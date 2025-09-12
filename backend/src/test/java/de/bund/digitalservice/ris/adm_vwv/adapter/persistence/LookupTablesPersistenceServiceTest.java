@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -488,6 +489,27 @@ class LookupTablesPersistenceServiceTest {
       .containsExactly(
         Tuple.tuple("AG", "Aachen"),
         Tuple.tuple("Berufsgericht für Architekten", "Bremen")
+      );
+  }
+
+  @Test
+  void findNormAbbreviations_all() {
+    // given
+
+    // when
+    var abbreviations = lookupTablesPersistenceService.findNormAbbreviations(
+      new NormAbbreviationQuery(null, new QueryOptions(0, 10, "type", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(abbreviations.content())
+      .extracting(NormAbbreviation::abbreviation, NormAbbreviation::officialLongTitle)
+      .containsExactly(
+        Tuple.tuple("SGB 5", "Sozialgesetzbuch (SGB) Fünftes Buch (V)"),
+        Tuple.tuple(
+          "KVLG",
+          "Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung"
+        )
       );
   }
 }
