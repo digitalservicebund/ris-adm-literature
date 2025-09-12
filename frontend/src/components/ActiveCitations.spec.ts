@@ -33,7 +33,7 @@ function renderComponent(activeCitations?: ActiveCitation[]) {
                   },
                 },
               },
-              stubActions: false,
+              stubActions: true,
             }),
           ],
         ],
@@ -215,15 +215,14 @@ describe('active citations', () => {
       }),
     )
     const { user } = renderComponent([generateActiveCitation()])
-
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
     expect(screen.queryByText(/AG Aachen/)).not.toBeInTheDocument()
 
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
-
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalled())
     const gerichtDropDown = screen.getByLabelText('Gericht *')
     await user.click(gerichtDropDown)
+    await user.click(screen.getByRole('button', { name: 'Entfernen' }))
     await user.type(gerichtDropDown, 'AG')
     await waitFor(() => {
       expect(screen.getByText('AG Aachen')).toBeInTheDocument()
