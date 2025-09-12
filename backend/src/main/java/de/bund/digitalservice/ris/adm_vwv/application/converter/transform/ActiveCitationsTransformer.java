@@ -39,7 +39,7 @@ public class ActiveCitationsTransformer {
           UUID.randomUUID(),
           false,
           cr.getDocumentNumber(),
-          new Court(null, null, cr.getCourtLocation(), cr.getCourt()),
+          new Court(UUID.randomUUID(), cr.getCourt(), cr.getCourtLocation(), null),
           cr.getDate(),
           cr.getReferenceNumber(),
           null,
