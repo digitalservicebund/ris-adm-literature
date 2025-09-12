@@ -35,8 +35,8 @@ class CourtControllerTest {
   @DisplayName("GET returns HTTP 200 and a JSON with two courts with type, and location")
   void getCourts() throws Exception {
     // given
-    var court1 = new Court(UUID.randomUUID(), "AG", "Aachen", null);
-    var court2 = new Court(UUID.randomUUID(), "Berufsgericht für Architekten", "Bremen", null);
+    var court1 = new Court(UUID.randomUUID(), "AG", "Aachen");
+    var court2 = new Court(UUID.randomUUID(), "Berufsgericht für Architekten", "Bremen");
     String searchTerm = "a";
     given(
       lookupTablesPort.findCourts(

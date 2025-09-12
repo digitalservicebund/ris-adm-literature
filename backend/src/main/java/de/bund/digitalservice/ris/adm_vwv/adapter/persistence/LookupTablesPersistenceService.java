@@ -236,12 +236,11 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     log.info("Ignoring given query as mocked result is returned always: {}.", query);
     return new Page<>(
       List.of(
-        new Court(UUID.fromString("0e1b035-a7f4-4d88-b5c0-a7d0466b8752"), "AG", "Aachen", null),
+        new Court(UUID.fromString("0e1b035-a7f4-4d88-b5c0-a7d0466b8752"), "AG", "Aachen"),
         new Court(
           UUID.fromString("8163531c-2c51-410a-9591-b45b004771da"),
           "Berufsgericht für Architekten",
-          "Bremen",
-          null
+          "Bremen"
         )
       ),
       2,
