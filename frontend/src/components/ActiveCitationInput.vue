@@ -88,6 +88,7 @@ async function search() {
         new ActiveCitation({
           uuid: '123',
           court: {
+            id: 'courtId',
             type: 'type1',
             location: 'location1',
           },
@@ -225,18 +226,6 @@ onMounted(() => {
             :invalid="slotProps.hasError"
             @focus="validationStore.remove('court')"
           />
-
-          <!--          <ComboboxInput-->
-          <!--            id="activeCitationCourt"-->
-          <!--            v-model="activeCitation.court"-->
-          <!--            aria-label="Gericht Aktivzitierung"-->
-          <!--            clear-on-choosing-item-->
-          <!--            :has-error="slotProps.hasError"-->
-          <!--            :item-service="ComboboxItemService.getCourts"-->
-          <!--            :read-only="activeCitation.hasForeignSource"-->
-          <!--            @focus="validationStore.remove('court')"-->
-          <!--          >-->
-          <!--          </ComboboxInput>-->
         </InputField>
         <InputField
           id="activeCitationDecisionDate"
