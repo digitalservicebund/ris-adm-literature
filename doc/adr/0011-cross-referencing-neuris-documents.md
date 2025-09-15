@@ -43,7 +43,7 @@ Two reference directions must be represented:
 ### Benefits:
 - The central reference table acts as the source of truth for all references and can be accessed by all streams.
 - Referential integrity is preserved by the central registry table.
-- Domain isolation preserved: Document ownership stays within its respective schema.
+- Domain isolation is preserved: Document ownership stays within its respective schema.
 - Simplified local testing: CI/CD can spin up all schemas locally without needing remote services.
 
 ### Risks:
