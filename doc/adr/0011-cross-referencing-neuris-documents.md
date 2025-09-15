@@ -21,6 +21,7 @@ Two reference directions must be represented:
 
 - Referential integrity must be maintained, even across schema boundaries.
 - Streams should have read/write access to references but read-only access to other streams document tables.
+- Streams do not reference foreign documents in their stream schema directly.
 - The application should be testable in isolation, without relying on a remote shared database.
 - CI/CD pipelines must be able to spin up a local environment (e.g., via Docker) with all necessary schemas and tables.
 
