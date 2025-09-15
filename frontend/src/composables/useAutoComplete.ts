@@ -4,6 +4,7 @@ import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
 import type { Institution, Region } from '@/domain/normgeber'
 import type { Periodikum } from '@/domain/fundstelle'
 import type { Court } from '@/domain/court.ts'
+import type { NormAbbreviation } from '@/domain/normAbbreviation'
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
@@ -142,6 +143,23 @@ export function useCourtSearch(courts: Ref<Court[]>) {
         id: c.id,
         label: `${c.type} ${c.location}`,
         secondaryLabel: c.revoked || '',
+      }))
+  }
+}
+
+export function useNormAbbreviationsSearch(normAbbreviations: Ref<NormAbbreviation[]>) {
+  return function searchFn(query?: string) {
+    return normAbbreviations.value
+      .filter(
+        (abbr) =>
+          !query ||
+          abbr.abbreviation.toLowerCase().includes(query.trim().toLowerCase()) ||
+          abbr.officialLongTitle?.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+      .map((abbr) => ({
+        id: abbr.id,
+        label: abbr.abbreviation,
+        secondaryLabel: abbr.officialLongTitle || '',
       }))
   }
 }

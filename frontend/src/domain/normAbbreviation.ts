@@ -1,5 +1,5 @@
-export type NormAbbreviation = {
-  id?: string
+export interface NormAbbreviation {
+  readonly id: string
   abbreviation: string
   decisionDate?: string
   documentId?: string

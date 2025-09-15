@@ -72,6 +72,6 @@ describe('InstitutionDropDown', () => {
 
     const emitted = wrapper.emitted('update:modelValue')!
     expect(emitted).toHaveLength(1)
-    expect(emitted[0][0]).toEqual(mockInstitutions[0])
+    expect(emitted[0]?.[0]).toEqual(mockInstitutions[0])
   })
 })
