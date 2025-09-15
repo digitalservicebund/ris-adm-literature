@@ -29,7 +29,7 @@ Two reference directions must be represented:
 
 🚧 The change that we're proposing or have agreed to implement.🚧 
 
-- To represent references in both directions, even across domains, a central reference table will be introduced: `ris_references` in a shared schema with read and write access for each stream
+- To represent references (in both directions, possibly across domains), a central reference table will be introduced: `ris_references` in a shared schema with read and write access for each stream.
 - In this shared schema, a central registry table will be introduced which will hold the identifiers for all documents across streams.
 - Each stream-specific schema will maintain its own documents table for storing its document data, and will have read-only access to other streams documents tables.
 - For local development and CI/CD, the Docker initialization process will create:
