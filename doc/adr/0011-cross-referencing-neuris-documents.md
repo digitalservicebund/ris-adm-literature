@@ -15,7 +15,7 @@ NeuRIS must support cross-references between documents of heterogeneous types (e
 Two reference directions must be represented:
 
 - **Active References (Aktivzitierung)**: Explicit links created by a source document to a target.
-- **Passive References (Passivzitierung)**: Implicit links indicating a document has been referenced by another source.
+- **Passive References (Passivzitierung)**: Implicit links indicating that a document is the target of another source's reference.
 
 #### Requirements & Constraints:
 
