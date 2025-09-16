@@ -4,7 +4,6 @@ import { computed, ref } from 'vue'
 import type { ComboboxInputModelType, ComboboxItem } from '@/components/input/types'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { CitationType } from '@/domain/citationType'
-import type { NormAbbreviation } from '@/domain/normAbbreviation.ts'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 import errorMessages from '@/i18n/errors.json'
@@ -84,7 +83,6 @@ function fetchFromEndpoint(
 
 export type ComboboxItemService = {
   getDocumentTypes: (filter: Ref<string | undefined>) => UseFetchReturn<ComboboxItem[]>
-  getRisAbbreviations: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getCitationTypes: (filter: Ref<string | undefined>) => ComboboxResult<ComboboxItem[]>
   getFieldOfLawSearchByIdentifier: (
@@ -95,41 +93,6 @@ export type ComboboxItemService = {
 const service: ComboboxItemService = {
   getDocumentTypes: (filter: Ref<string | undefined>) =>
     fetchFromEndpoint(Endpoint.documentTypes, filter, { usePagination: false }),
-  getRisAbbreviations: (filter: Ref<string | undefined>) => {
-    const risAbbreviationValues = [
-      { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
-      {
-        abbreviation: 'KVLG',
-        officialLongTitle:
-          'Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung',
-      },
-    ]
-
-    const risAbbreviations = risAbbreviationValues.map(
-      (v) =>
-        <NormAbbreviation>{ abbreviation: v.abbreviation, officialLongTitle: v.officialLongTitle },
-    )
-    const items = ref(
-      risAbbreviations.map(
-        (na) =>
-          <ComboboxItem>{
-            label: na.abbreviation,
-            value: na,
-            additionalInformation: na.officialLongTitle,
-          },
-      ),
-    )
-    const execute = async () => {
-      return service.getRisAbbreviations(filter)
-    }
-    const result: ComboboxResult<ComboboxItem[]> = {
-      data: items,
-      execute: execute,
-      canAbort: computed(() => false),
-      abort: () => {},
-    }
-    return result
-  },
   getActiveReferenceTypes: (filter: Ref<string | undefined>) => {
     const items = ref(
       Object.values(ActiveReferenceType).map(

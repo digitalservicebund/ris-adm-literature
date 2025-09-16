@@ -251,6 +251,7 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
+      await expect(page.getByRole('option', { name: 'SGB 5' })).toBeVisible()
       await page.getByRole('option', { name: 'SGB 5' }).click()
 
       // then
