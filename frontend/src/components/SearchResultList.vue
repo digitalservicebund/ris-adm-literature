@@ -33,19 +33,19 @@ export type SearchResults<Type extends RelatedDocumentation> = {
 
 <template>
   <div id="search-results">
-    <FlexContainer v-if="isLoading" class="m-24" justify-content="justify-center">
+    <FlexContainer v-if="isLoading" class="m-16" justify-content="justify-center">
       <LoadingSpinner />
     </FlexContainer>
 
     <div v-else-if="searchResults?.length === 0" class="grid justify-items-center">
-      <FlexContainer class="m-24" justify-content="justify-center">
+      <FlexContainer class="m-16" justify-content="justify-center">
         <p>{{ errorMessages.SEARCH_RESULTS_NOT_FOUND.title }}</p>
       </FlexContainer>
     </div>
 
     <FlexContainer
       v-else-if="searchResults"
-      class="p-24"
+      class="p-16"
       data-testid="search-results"
       flex-direction="flex-col"
     >
