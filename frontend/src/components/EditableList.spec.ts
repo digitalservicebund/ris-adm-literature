@@ -1,5 +1,5 @@
 import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
+import { render, screen, waitFor } from '@testing-library/vue'
 import type { Component } from 'vue'
 import { markRaw, ref, h } from 'vue'
 import type { ComponentExposed } from 'vue-component-type-helpers'
@@ -12,6 +12,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import NormReferenceInput from './NormReferenceInput.vue'
 import NormReferenceSummary from './NormReferenceSummary.vue'
 import NormReference from '@/domain/normReference'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 
 const items = [
   { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
@@ -256,13 +257,9 @@ describe('EditableList', () => {
   describe('EditableList with DocumentUnitInputReference', () => {
     beforeEach(() => {
       vi.spyOn(window, 'fetch').mockResolvedValue(
-        new Response(
-          JSON.stringify({
-            legalPeriodicals: items,
-            paginatedLegalPeriodicals: { ...paginatedRisAbbr, content: items },
-          }),
-          { status: 200 },
-        ),
+        new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+          status: 200,
+        }),
       )
     })
 
@@ -277,10 +274,9 @@ describe('EditableList', () => {
       const user = userEvent.setup()
 
       // Act
-      const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
-      await user.click(openDropdownContainer)
-      const dropdownItems = screen.getAllByLabelText('dropdown-option')
-      await user.click(dropdownItems[0])
+      const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+      await user.type(abbreviationField, 'SGB')
+      await user.click(screen.getByText('SGB 5'))
       await user.click(screen.getByLabelText('Norm speichern'))
 
       // Assert
@@ -294,10 +290,7 @@ describe('EditableList', () => {
         summaryComponent: NormReferenceSummary,
         modelValue: [
           new NormReference({
-            normAbbreviation: {
-              abbreviation: 'SGB 5',
-              officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
-            },
+            normAbbreviation: kvlgFixture,
           }),
         ],
         defaultValue: new NormReference(),
@@ -306,14 +299,19 @@ describe('EditableList', () => {
 
       // Act
       await user.click(screen.getByTestId('list-entry-0'))
-      const openDropdownContainer = screen.getByLabelText('Dropdown öffnen')
-      await user.click(openDropdownContainer)
-      const dropdownItems = screen.getAllByLabelText('dropdown-option')
-      await user.click(dropdownItems[1])
+
+      const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+      await user.click(screen.getByRole('button', { name: 'Entfernen' }))
+      await user.type(abbreviationField, 'SGB')
+      await waitFor(() => {
+        expect(screen.getByText('SGB 5')).toBeVisible()
+      })
+      await user.click(screen.getByText('SGB 5'))
+      expect(abbreviationField).toHaveValue('SGB 5')
       await user.click(screen.getByLabelText('Norm speichern'))
 
       // Assert
-      expect(screen.getByText('KVLG')).toBeInTheDocument()
+      expect(screen.getByText('SGB 5')).toBeInTheDocument()
     })
   })
 })

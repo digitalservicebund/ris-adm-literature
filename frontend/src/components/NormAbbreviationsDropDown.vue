@@ -8,6 +8,7 @@ import { useFetchNormAbbreviations } from '@/services/normAbbreviationService'
 defineProps<{
   inputId: string
   invalid: boolean
+  ariaLabel?: string
 }>()
 
 const modelValue = defineModel<NormAbbreviation | undefined>()
@@ -43,8 +44,9 @@ onMounted(async () => {
     :input-id="inputId"
     :invalid="invalid"
     :initial-label="modelValue && `${modelValue.abbreviation}`"
-    aria-label="RIS-Abkürzung"
+    :aria-label="ariaLabel"
     append-to="self"
+    placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
     typeahead
     dropdown
     complete-on-focus
