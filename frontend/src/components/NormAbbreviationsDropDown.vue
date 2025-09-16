@@ -9,6 +9,7 @@ defineProps<{
   inputId: string
   invalid: boolean
   ariaLabel?: string
+  placeholder?: string
 }>()
 
 const modelValue = defineModel<NormAbbreviation | undefined>()
@@ -46,7 +47,7 @@ onMounted(async () => {
     :initial-label="modelValue && `${modelValue.abbreviation}`"
     :aria-label="ariaLabel"
     append-to="self"
-    placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
+    :placeholder="placeholder"
     typeahead
     dropdown
     complete-on-focus

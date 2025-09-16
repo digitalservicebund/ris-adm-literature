@@ -1,10 +1,11 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import ActiveReference, { ActiveReferenceType } from '@/domain/activeReference.ts'
 import ActiveReferenceInput from '@/components/ActiveReferenceInput.vue'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 
 function renderComponent(options?: { modelValue?: ActiveReference }) {
   const user = userEvent.setup()
@@ -135,7 +136,7 @@ describe('ActiveReferenceInput', () => {
 
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(2)
     const removeSingleNormButtons = screen.getAllByLabelText('Einzelnorm löschen')
-    await user.click(removeSingleNormButtons[0])
+    await user.click(removeSingleNormButtons[0]!)
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(1)
   })
 
@@ -154,7 +155,7 @@ describe('ActiveReferenceInput', () => {
 
     expect((await screen.findAllByLabelText('Einzelnorm der Norm')).length).toBe(1)
     const removeSingleNormButtons = screen.getAllByLabelText('Einzelnorm löschen')
-    await user.click(removeSingleNormButtons[0])
+    await user.click(removeSingleNormButtons[0]!)
     expect(screen.queryByText('Einzelnorm der Norm')).not.toBeInTheDocument()
   })
 
@@ -271,13 +272,19 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('validates empty reference type', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user } = renderComponent()
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
 
     const addButton = screen.getByLabelText('Verweis speichern')
     await user.click(addButton)
@@ -322,19 +329,25 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('correctly updates the value of ris abbreviation input', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user, emitted } = renderComponent()
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const referenceTypeField = screen.getByLabelText('Art der Verweisung')
     await user.type(referenceTypeField, 'A')
     const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
     expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
-    await user.click(referenceTypeDropdownItems[0])
+    await user.click(referenceTypeDropdownItems[0]!)
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
 
     const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
@@ -344,6 +357,7 @@ describe('ActiveReferenceInput', () => {
           referenceDocumentType: 'norm',
           referenceType: ActiveReferenceType.ANWENDUNG,
           normAbbreviation: {
+            id: 'sgb5TestId',
             abbreviation: 'SGB 5',
             officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
           },
@@ -438,13 +452,19 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('removes entry on cancel edit, when not previously saved yet', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user, emitted } = renderComponent()
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
 
     const cancelEdit = screen.getByLabelText('Abbrechen')
     await user.click(cancelEdit)
@@ -454,20 +474,26 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('removes multiple single norms on change to Verwaltungsvorschrift', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     // given
     const { user } = renderComponent()
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const referenceTypeField = screen.getByLabelText('Art der Verweisung')
     await user.type(referenceTypeField, 'A')
     const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
     expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
-    await user.click(referenceTypeDropdownItems[0])
+    await user.click(referenceTypeDropdownItems[0]!)
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
 
     await user.click(screen.getByRole('button', { name: 'Weitere Einzelnorm' }))
     await user.click(screen.getByRole('button', { name: 'Weitere Einzelnorm' }))
@@ -488,17 +514,23 @@ describe('ActiveReferenceInput', () => {
 
   it('Restore single norm on change to Verwaltungsvorschrift after removing all single norms', async () => {
     // given
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user } = renderComponent()
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+
     const referenceTypeField = screen.getByLabelText('Art der Verweisung')
     await user.type(referenceTypeField, 'A')
     const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
     expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
-    await user.click(referenceTypeDropdownItems[0])
+    await user.click(referenceTypeDropdownItems[0]!)
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
     await user.click(screen.getByRole('button', { name: 'Einzelnorm löschen' }))
 
     // when
@@ -509,20 +541,26 @@ describe('ActiveReferenceInput', () => {
   })
 
   it('removes singleNorm and dateOfRelevance on change to Verwaltungsvorschrift', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     // given
     const { user } = renderComponent()
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const referenceTypeField = screen.getByLabelText('Art der Verweisung')
     await user.type(referenceTypeField, 'A')
     const referenceTypeDropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
     expect(referenceTypeDropdownItems[0]).toHaveTextContent('Anwendung')
-    await user.click(referenceTypeDropdownItems[0])
+    await user.click(referenceTypeDropdownItems[0]!)
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByText('SGB 5'))
 
     const singleNormInput = screen.getByLabelText('Einzelnorm der Norm')
     await user.type(singleNormInput, 'ABC12345')

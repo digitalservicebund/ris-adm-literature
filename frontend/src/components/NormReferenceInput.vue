@@ -175,6 +175,7 @@ watch(
         v-model="normAbbreviation"
         :invalid="slotProps.hasError"
         aria-label="RIS-Abkürzung"
+        placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
         input-id="norm-reference-abbreviation"
       />
     </InputField>
