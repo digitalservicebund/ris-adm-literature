@@ -17,21 +17,15 @@ Two reference directions must be represented:
 - **Active References (Aktivzitierung)**: Explicit links created by a source document to a target.
 - **Passive References (Passivzitierung)**: Implicit links indicating that a document is the target of another source's reference.
 
-#### Requirements & Constraints:
-
-- Referential integrity must be maintained, even across schema boundaries.
-- Streams should have read/write access to references but read-only access to other streams document tables.
-- Streams do not reference foreign documents in their stream schema directly.
-- The application should be testable in isolation, without relying on a remote shared database.
-- CI/CD pipelines must be able to spin up a local environment (e.g., via Docker) with all necessary schemas and tables.
+These references are included in the LDML documents published on the portal and the streams should control what references to include.
 
 ## Decision
 
 🚧 The change that we're proposing or have agreed to implement.🚧 
 
 - To represent references (in both directions, possibly across domains), a central reference table will be introduced: `ris_references` in a shared schema with read and write access for each stream.
-- In this shared schema, a central registry table will be introduced which will hold the identifiers for all documents across streams.
-- Each stream-specific schema will maintain its own documents table for storing its document data, and will have read-only access to other streams documents tables.
+- In this shared schema, a central registry table will be introduced which will hold the identifiers for all documents across streams to maintain the referential integrity.
+- Each stream-specific schema will maintain its own documents table for storing its document data, and will have read-only access to other streams documents tables. Streams do not reference foreign documents in their stream schema directly.
 - For local development and CI/CD, the Docker initialization process will create:
   - The shared schema with both the central registry and `ris_references` tables.
   - All domain-specific schemas and their documents tables with seed data.
