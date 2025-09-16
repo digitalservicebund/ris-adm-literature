@@ -23,11 +23,11 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
       .getByRole('button', { name: 'dropdown-option' })
       .filter({ hasText: 'Anwendung' })
       .click()
-    await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
     await page
-      .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+      .getByTestId('activeReferences')
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
       .click()
+    await page.getByRole('option', { name: 'SGB 5' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     // then
@@ -47,12 +47,9 @@ test.describe('Verweise: Verwaltungsvorschrift und Norm', () => {
       .click()
     await page
       .getByTestId('activeReferences')
-      .getByRole('textbox', { name: 'RIS-Abkürzung' })
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
       .click()
-    await page
-      .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
-      .click()
+    await page.getByRole('option', { name: 'SGB 5' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     // then
