@@ -245,4 +245,10 @@ describe('useNormAbbreviationsSearch', () => {
       },
     ])
   })
+
+  it('secondary label is empty when no official long title', () => {
+    const search = useNormAbbreviationsSearch(ref([{ id: 'normTestId', abbreviation: 'normAbbr' }]))
+    const results = search('normAbbr')
+    expect(results).toEqual([{ id: 'normTestId', label: 'normAbbr' }])
+  })
 })

@@ -159,7 +159,7 @@ export function useNormAbbreviationsSearch(normAbbreviations: Ref<NormAbbreviati
       .map((abbr) => ({
         id: abbr.id,
         label: abbr.abbreviation,
-        secondaryLabel: abbr.officialLongTitle || '',
+        secondaryLabel: abbr.officialLongTitle || undefined,
       }))
   }
 }
