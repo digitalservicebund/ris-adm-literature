@@ -10,7 +10,9 @@ const { getUsername, logout } = useAuthentication()
 </script>
 
 <template>
-  <nav class="flex items-center justify-between border-y border-gray-400 px-16 py-16 print:hidden">
+  <nav
+    class="flex items-center justify-between border-y border-gray-400 px-24 py-16 print:hidden bg-white"
+  >
     <div class="flex items-center gap-44">
       <div class="flex flex-col">
         <span class="ris-body1-bold">Rechtsinformationen</span>
