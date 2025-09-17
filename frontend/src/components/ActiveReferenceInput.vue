@@ -17,6 +17,7 @@ import ActiveReference, {
 } from '@/domain/activeReference.ts'
 import RadioButton from 'primevue/radiobutton'
 import labels from '@/components/activeReferenceInputLabels.json'
+import NormAbbreviationsDropDown from './NormAbbreviationsDropDown.vue'
 
 const props = defineProps<{
   modelValue?: ActiveReference
@@ -48,14 +49,7 @@ const singleNorms = ref(
  * against already existing norm abbreviations in the list.
  */
 const normAbbreviation = computed({
-  get: () =>
-    activeReference.value.normAbbreviation
-      ? {
-          label: activeReference.value.normAbbreviation.abbreviation,
-          value: activeReference.value.normAbbreviation,
-          additionalInformation: activeReference.value.normAbbreviation.officialLongTitle,
-        }
-      : undefined,
+  get: () => activeReference.value.normAbbreviation,
   set: (newValue) => {
     const newNormAbbreviation = { ...newValue } as NormAbbreviation
     if (newValue) {
@@ -184,9 +178,13 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
 function removeMultipleSingleNorms() {
   if (singleNorms.value.length > 0) {
     // Remove all single norms expect the first one for administrative regulations
-    singleNorms.value.splice(1, singleNorms.value.length)
-    singleNorms.value[0].singleNorm = undefined
-    singleNorms.value[0].dateOfRelevance = undefined
+    singleNorms.value = singleNorms.value
+      .filter((_, i) => i === 0)
+      .map((norm) => ({
+        ...norm,
+        singleNorm: undefined,
+        dateOfRelevance: undefined,
+      }))
   } else {
     // As there is no 'Weitere Einzelnorm' button for administrative regulation on switch we have to
     // add one entry ro restore the UI.
@@ -277,18 +275,13 @@ watch(
         :label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation + ` *`"
         :validation-error="validationStore.getByField('normAbbreviation')"
       >
-        <ComboboxInput
-          id="active-reference-abbreviation"
+        <NormAbbreviationsDropDown
           v-model="normAbbreviation"
-          :aria-label="labels[`${activeReference.referenceDocumentType}`].risAbbreviation"
-          :has-error="slotProps.hasError"
-          :item-service="ComboboxItemService.getRisAbbreviations"
-          no-clear
-          :placeholder="
-            labels[`${activeReference.referenceDocumentType}`].risAbbreviationPlaceholder
-          "
-          @focus="validationStore.remove('normAbbreviation')"
-        ></ComboboxInput>
+          :invalid="slotProps.hasError"
+          aria-label="RIS-Abkürzung"
+          placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
+          input-id="active-reference-abbreviation"
+        />
       </InputField>
     </div>
     <div class="flex flex-col gap-24">

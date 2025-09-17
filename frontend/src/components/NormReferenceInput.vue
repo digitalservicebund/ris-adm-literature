@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { type ValidationError } from './input/types'
-import ComboboxInput from '@/components/ComboboxInput.vue'
 import InputField from '@/components/input/InputField.vue'
 import Button from 'primevue/button'
 import SingleNormInput from '@/components/SingleNormInput.vue'
@@ -10,8 +9,8 @@ import LegalForce from '@/domain/legalForce'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import NormReference from '@/domain/normReference'
 import SingleNorm from '@/domain/singleNorm'
-import ComboboxItemService from '@/services/comboboxItemService'
 import IconAdd from '~icons/ic/baseline-add'
+import NormAbbreviationsDropDown from './NormAbbreviationsDropDown.vue'
 
 const props = defineProps<{
   modelValue?: NormReference
@@ -43,14 +42,7 @@ const singleNorms = ref(
  * against already existing norm abbreviations in the list.
  */
 const normAbbreviation = computed({
-  get: () =>
-    norm.value.normAbbreviation
-      ? {
-          label: norm.value.normAbbreviation.abbreviation,
-          value: norm.value.normAbbreviation,
-          additionalInformation: norm.value.normAbbreviation.officialLongTitle,
-        }
-      : undefined,
+  get: () => norm.value.normAbbreviation,
   set: (newValue) => {
     const newNormAbbreviation = { ...newValue } as NormAbbreviation
     if (newValue) {
@@ -179,16 +171,13 @@ watch(
       label="RIS-Abkürzung *"
       :validation-error="validationStore.getByField('normAbbreviation')"
     >
-      <ComboboxInput
-        id="norm-reference-abbreviation"
+      <NormAbbreviationsDropDown
         v-model="normAbbreviation"
+        :invalid="slotProps.hasError"
         aria-label="RIS-Abkürzung"
-        :has-error="slotProps.hasError"
-        :item-service="ComboboxItemService.getRisAbbreviations"
-        no-clear
         placeholder="Abkürzung, Kurz- oder Langtitel oder Region eingeben..."
-        @focus="validationStore.remove('normAbbreviation')"
-      ></ComboboxInput>
+        input-id="norm-reference-abbreviation"
+      />
     </InputField>
     <div v-if="normAbbreviation || norm.normAbbreviationRawValue">
       <SingleNormInput

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
   useAutoComplete,
   useInstitutionSearch,
+  useNormAbbreviationsSearch,
   usePeriodikumSearch,
   useRegionSearch,
   type AutoCompleteSuggestion,
@@ -11,6 +12,8 @@ import { InstitutionType, type Institution, type Region } from '@/domain/normgeb
 import { ref } from 'vue'
 import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum'
 import type { Periodikum } from '@/domain/fundstelle'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import type { NormAbbreviation } from '@/domain/normAbbreviation'
 
 describe('useAutoComplete', () => {
   // Mock debounce to avoid delay
@@ -208,5 +211,44 @@ describe('usePeriodikumSearch', () => {
         secondaryLabel: '',
       },
     ])
+  })
+})
+
+describe('useNormAbbreviationsSearch', () => {
+  const mockAbbr = ref<NormAbbreviation[]>([sgb5Fixture, kvlgFixture])
+
+  it('returns all abbreviations when query is empty', () => {
+    const search = useNormAbbreviationsSearch(mockAbbr)
+    const results = search('')
+    expect(results).toHaveLength(2)
+  })
+
+  it('returns an empty array if no matches', () => {
+    const search = useNormAbbreviationsSearch(mockAbbr)
+    const results = search('xyz')
+    expect(results).toEqual([])
+  })
+
+  it.each([
+    ['abbreviation', 'sg'],
+    ['abbreviation', 'SGB'],
+    ['officialLongTitle', 'Sozialgesetzbuch'],
+    ['officialLongTitle', 'Fünftes'],
+  ])('returns filtered periodika by %s', (_, query) => {
+    const search = useNormAbbreviationsSearch(mockAbbr)
+    const results = search(query)
+    expect(results).toEqual([
+      {
+        id: sgb5Fixture.id,
+        label: sgb5Fixture.abbreviation,
+        secondaryLabel: sgb5Fixture.officialLongTitle,
+      },
+    ])
+  })
+
+  it('secondary label is empty when no official long title', () => {
+    const search = useNormAbbreviationsSearch(ref([{ id: 'normTestId', abbreviation: 'normAbbr' }]))
+    const results = search('normAbbr')
+    expect(results).toEqual([{ id: 'normTestId', label: 'normAbbr' }])
   })
 })

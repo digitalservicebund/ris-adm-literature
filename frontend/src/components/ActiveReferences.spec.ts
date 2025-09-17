@@ -1,6 +1,6 @@
 import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/vue'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import ActiveReferences from '@/components/ActiveReferences.vue'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
@@ -12,6 +12,7 @@ import { createTestingPinia } from '@pinia/testing'
 import type { DocumentUnit } from '@/domain/documentUnit.ts'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()
@@ -49,10 +50,7 @@ function generateActiveReference(options?: {
   return new ActiveReference({
     referenceDocumentType: options?.referenceDocumentType ?? ActiveReferenceDocumentType.NORM,
     referenceType: options?.referenceType ?? ActiveReferenceType.ANWENDUNG,
-    normAbbreviation: options?.normAbbreviation ?? {
-      abbreviation: 'SGB 5',
-      officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
-    },
+    normAbbreviation: options?.normAbbreviation ?? sgb5Fixture,
     singleNorms: options?.singleNorms ?? [],
   })
 }
@@ -107,33 +105,44 @@ describe('ActiveReferences', () => {
   })
 
   it('validates against duplicate entries in new entries', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user } = renderComponent([
       generateActiveReference({
-        normAbbreviation: {
-          abbreviation: 'SGB 5',
-          officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)',
-        },
+        normAbbreviation: sgb5Fixture,
       }),
     ])
     await user.click(screen.getByLabelText('Weitere Angabe'))
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await user.click(screen.getByRole('option', { name: 'SGB 5' }))
     await screen.findByText(/RIS-Abkürzung bereits eingegeben/)
   })
 
   it('validates against duplicate entries in existing entries', async () => {
+    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ normAbbreviations: [sgb5Fixture, kvlgFixture] }), {
+        status: 200,
+      }),
+    )
+
     const { user } = renderComponent([generateActiveReference()])
     await user.click(screen.getByTestId('list-entry-0'))
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
+    await user.click(screen.getByRole('button', { name: 'Entfernen' }))
     await user.type(abbreviationField, 'SGB')
-    const dropdownItems = screen.getAllByLabelText('dropdown-option') as HTMLElement[]
-    expect(dropdownItems[0]).toHaveTextContent('SGB 5')
-    await user.click(dropdownItems[0])
+    await waitFor(() => {
+      expect(screen.getByText('SGB 5')).toBeVisible()
+    })
+    await user.click(screen.getByRole('option', { name: 'SGB 5' }))
     await screen.findByText(/RIS-Abkürzung bereits eingegeben/)
     const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
@@ -144,6 +153,7 @@ describe('ActiveReferences', () => {
     const { user } = renderComponent([
       generateActiveReference({
         normAbbreviation: {
+          id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',
         },
         singleNorms: [
@@ -164,13 +174,13 @@ describe('ActiveReferences', () => {
     await user.click(screen.getByLabelText('Weitere Einzelnorm'))
 
     const singleNorms = await screen.findAllByLabelText('Einzelnorm der Norm')
-    await user.type(singleNorms[1], '§ 345')
+    await user.type(singleNorms[1]!, '§ 345')
 
     const dates = await screen.findAllByLabelText('Fassungsdatum der Norm')
-    await user.type(dates[1], '01.01.2022')
+    await user.type(dates[1]!, '01.01.2022')
 
     const years = await screen.findAllByLabelText('Jahr der Norm')
-    await user.type(years[1], '2022')
+    await user.type(years[1]!, '2022')
 
     const button = screen.getByLabelText('Verweis speichern')
     await user.click(button)
@@ -184,6 +194,7 @@ describe('ActiveReferences', () => {
       generateActiveReference(),
       generateActiveReference({
         normAbbreviation: {
+          id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',
         },
       }),
@@ -210,6 +221,7 @@ describe('ActiveReferences', () => {
       generateActiveReference({
         referenceType: ActiveReferenceType.RECHTSGRUNDLAGE,
         normAbbreviation: {
+          id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',
         },
         singleNorms: [new SingleNorm({ singleNorm: '§ 123' })],
@@ -225,6 +237,7 @@ describe('ActiveReferences', () => {
     renderComponent([
       generateActiveReference({
         normAbbreviation: {
+          id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',
         },
         singleNorms: [
@@ -247,6 +260,7 @@ describe('ActiveReferences', () => {
     renderComponent([
       generateActiveReference({
         normAbbreviation: {
+          id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',
         },
         singleNorms: [

@@ -27,9 +27,10 @@ test.describe('RubrikenPage - Verweise with mocked routes', () => {
       // when
       await page.getByRole('radio', { name: 'Norm auswählen' }).click()
       // then
+      await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
       const activeReferenceElement = page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
       // save and cancel buttons are hidden
       await expect(page.getByRole('button', { name: 'Verweis speichern' })).toBeHidden()
@@ -49,9 +50,7 @@ test.describe('RubrikenPage - Verweise with mocked routes', () => {
       await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }).click()
       // then
       await expect(
-        page
-          .getByTestId('activeReferences')
-          .getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }),
+        page.getByTestId('activeReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
       ).toHaveCount(1)
 
       // when switching back to norm
@@ -85,9 +84,10 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
         .getByRole('textbox', { name: 'Art der Verweisung' })
       await expect(referenceTypeElement).toHaveCount(1)
       await expect(page.getByText('Art der Verweisung *')).toBeVisible()
+      await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
       const activeReferenceElement = page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
       await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
 
@@ -157,7 +157,7 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
       // when
       await page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
       await expect(page.getByText('SGB 5')).toBeVisible()
       await page.getByText('SGB 5').click()
@@ -202,7 +202,7 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
       await expect(referenceTypeElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
@@ -244,22 +244,17 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
       await page.getByText('Anwendung').click()
       await page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
       await expect(page.getByText('SGB 5')).toBeVisible()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'SGB 5' })
-        .click()
+      await page.getByText('SGB 5').click()
       await page.getByRole('button', { name: 'Verweis speichern' }).click()
       await page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'SGB 5' })
-        .click()
+      await expect(page.getByRole('option', { name: 'SGB 5' })).toBeVisible()
+      await page.getByRole('option', { name: 'SGB 5' }).click()
 
       // then
       await expect(page.getByText('RIS-Abkürzung bereits eingegeben')).toBeVisible()
@@ -292,7 +287,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await expect(referenceTypeElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
@@ -342,7 +337,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await expect(referenceTypeElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
@@ -387,11 +382,11 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
         .getByRole('button', { name: 'dropdown-option' })
         .filter({ hasText: 'Anwendung' })
         .click()
-      await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
       await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+        .getByTestId('activeReferences')
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
+      await page.getByRole('option', { name: 'SGB 5' }).click()
       await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
       await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
       await page.getByRole('button', { name: 'Verweis speichern' }).click()
@@ -420,11 +415,11 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
         .getByRole('button', { name: 'dropdown-option' })
         .filter({ hasText: 'Anwendung' })
         .click()
-      await page.getByRole('textbox', { name: 'Suche nach Verwaltungsvorschrift' }).click()
       await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'SGB 5Sozialgesetzbuch (SGB) F' })
+        .getByTestId('activeReferences')
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
+      await page.getByRole('option', { name: 'SGB 5' }).click()
       await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('99.99.9999{Tab}')
 
       // then
@@ -463,7 +458,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
     await expect(referenceTypeElement).toHaveCount(1)
     const activeReferenceElement = page
       .getByTestId('activeReferences')
-      .getByRole('textbox', { name: 'RIS-Abkürzung' })
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
     await expect(activeReferenceElement).toHaveCount(1)
 
     await expect(page.getByRole('radio', { name: 'Norm auswählen' })).toHaveCount(1)

@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
@@ -59,5 +60,10 @@ public class LookupTablesService implements LookupTablesPort {
   @Override
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
     return lookupTablesPersistencePort.findCourts(query);
+  }
+
+  @Override
+  public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
+    return lookupTablesPersistencePort.findNormAbbreviations(query);
   }
 }

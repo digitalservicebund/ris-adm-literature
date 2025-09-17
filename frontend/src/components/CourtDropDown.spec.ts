@@ -74,13 +74,13 @@ describe('CourtDropDown', () => {
     // then
     const emitted = wrapper.emitted('update:modelValue')!
     expect(emitted).toHaveLength(1)
-    expect(emitted[0][0]).toEqual(agAachenFixture)
+    expect(emitted[0]?.[0]).toEqual(agAachenFixture)
 
     // when
     await input.setValue('unknownId')
 
     // then undefined is emitted
     expect(emitted).toHaveLength(2)
-    expect(emitted[1][0]).toEqual(undefined)
+    expect(emitted[1]?.[0]).toEqual(undefined)
   })
 })

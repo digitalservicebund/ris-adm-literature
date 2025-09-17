@@ -22,14 +22,15 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
         await page.getByRole('link', { name: 'Rubriken' }).click()
         await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
+        await expect(page.getByTestId('normReferences').getByText('RIS-Abkürzung *')).toBeVisible()
         await expect(
-          page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+          page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
 
         // when
         await page
           .getByTestId('normReferences')
-          .getByRole('textbox', { name: 'RIS-Abkürzung' })
+          .getByRole('combobox', { name: 'RIS-Abkürzung' })
           .click()
         await expect(page.getByText('KVLG')).toBeVisible()
         await page.getByText('KVLG').click()
@@ -54,13 +55,13 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
       await expect(
-        page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+        page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
       ).toHaveCount(1)
 
       // when
       await page
         .getByTestId('normReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
       await expect(page.getByText('SGB 5')).toBeVisible()
       await page.getByText('SGB 5').click()
@@ -68,7 +69,7 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       await page.getByRole('button', { name: 'Norm speichern' }).click()
       await page
         .getByTestId('normReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
       await expect(page.getByText('KVLG')).toBeVisible()
       await page.getByText('KVLG').click()
@@ -91,13 +92,13 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await page.getByRole('link', { name: 'Rubriken' }).click()
         await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
-          page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+          page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
 
         // when
         await page
           .getByTestId('normReferences')
-          .getByRole('textbox', { name: 'RIS-Abkürzung' })
+          .getByRole('combobox', { name: 'RIS-Abkürzung' })
           .click()
         await expect(page.getByText('SGB 5')).toBeVisible()
         await page.getByText('SGB 5').click()
@@ -135,13 +136,13 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await page.getByRole('link', { name: 'Rubriken' }).click()
         await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
-          page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+          page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
 
         // when
         await page
           .getByTestId('normReferences')
-          .getByRole('textbox', { name: 'RIS-Abkürzung' })
+          .getByRole('combobox', { name: 'RIS-Abkürzung' })
           .click()
         await expect(page.getByText('SGB 5')).toBeVisible()
         await page.getByText('SGB 5').click()
@@ -178,29 +179,22 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await page.getByRole('link', { name: 'Rubriken' }).click()
         await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
         await expect(
-          page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+          page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)
 
         // when
         await page
           .getByTestId('normReferences')
-          .getByRole('textbox', { name: 'RIS-Abkürzung' })
+          .getByRole('combobox', { name: 'RIS-Abkürzung' })
           .click()
         await expect(page.getByText('SGB 5')).toBeVisible()
-        await page
-          .getByRole('button', { name: 'dropdown-option' })
-          .filter({ hasText: 'SGB 5' })
-          .click()
+        await page.getByText('SGB 5').click()
         await page.getByRole('button', { name: 'Norm speichern' }).click()
         await page
           .getByTestId('normReferences')
-          .getByRole('textbox', { name: 'RIS-Abkürzung' })
+          .getByRole('combobox', { name: 'RIS-Abkürzung' })
           .click()
-        await page
-          .getByRole('button', { name: 'dropdown-option' })
-          .filter({ hasText: 'SGB 5' })
-          .click()
-
+        await page.getByRole('option', { name: 'SGB 5' }).click()
         // then
         await expect(page.getByText('RIS-Abkürzung bereits eingegeben')).toBeVisible()
       },
@@ -216,13 +210,13 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
       await page.getByText('Neue Dokumentationseinheit').click()
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(
-        page.getByTestId('normReferences').getByRole('textbox', { name: 'RIS-Abkürzung' }),
+        page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
       ).toHaveCount(1)
 
       // when
       await page
         .getByTestId('normReferences')
-        .getByRole('textbox', { name: 'RIS-Abkürzung' })
+        .getByRole('combobox', { name: 'RIS-Abkürzung' })
         .click()
       await expect(page.getByText('KVLG')).toBeVisible()
       await page.getByText('KVLG').click()
