@@ -49,7 +49,10 @@ class NormAbbreviationControllerTest {
     );
     given(
       lookupTablesPort.findNormAbbreviations(
-        new NormAbbreviationQuery("", new QueryOptions(0, 2, "type", Sort.Direction.ASC, true))
+        new NormAbbreviationQuery(
+          "",
+          new QueryOptions(0, 2, "abbreviation", Sort.Direction.ASC, true)
+        )
       )
     ).willReturn(TestPage.create(List.of(normAbbr1, normAbbr2)));
 

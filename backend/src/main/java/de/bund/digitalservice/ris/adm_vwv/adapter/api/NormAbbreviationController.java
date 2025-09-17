@@ -34,7 +34,7 @@ public class NormAbbreviationController {
     @RequestParam(required = false) String searchTerm,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "4") int pageSize,
-    @RequestParam(defaultValue = "type") String sortByProperty,
+    @RequestParam(defaultValue = "abbreviation") String sortByProperty,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination
   ) {

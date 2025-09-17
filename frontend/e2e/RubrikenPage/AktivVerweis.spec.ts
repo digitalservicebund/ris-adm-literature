@@ -27,6 +27,7 @@ test.describe('RubrikenPage - Verweise with mocked routes', () => {
       // when
       await page.getByRole('radio', { name: 'Norm auswählen' }).click()
       // then
+      await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
       const activeReferenceElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })
@@ -83,6 +84,7 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
         .getByRole('textbox', { name: 'Art der Verweisung' })
       await expect(referenceTypeElement).toHaveCount(1)
       await expect(page.getByText('Art der Verweisung *')).toBeVisible()
+      await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
       const activeReferenceElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })

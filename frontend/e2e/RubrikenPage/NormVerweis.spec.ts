@@ -22,6 +22,7 @@ test.describe('RubrikenPage - Verweise: Norm', () => {
         await page.goto('/documentUnit/KSNR054920707/fundstellen')
         await page.getByRole('link', { name: 'Rubriken' }).click()
         await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
+        await expect(page.getByTestId('normReferences').getByText('RIS-Abkürzung *')).toBeVisible()
         await expect(
           page.getByTestId('normReferences').getByRole('combobox', { name: 'RIS-Abkürzung' }),
         ).toHaveCount(1)

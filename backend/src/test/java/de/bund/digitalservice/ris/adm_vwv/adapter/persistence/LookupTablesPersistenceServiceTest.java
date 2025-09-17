@@ -498,7 +498,10 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     var abbreviations = lookupTablesPersistenceService.findNormAbbreviations(
-      new NormAbbreviationQuery(null, new QueryOptions(0, 10, "type", Sort.Direction.ASC, true))
+      new NormAbbreviationQuery(
+        null,
+        new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
+      )
     );
 
     // then
