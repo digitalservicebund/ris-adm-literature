@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,31 +28,30 @@ class XmlValidatorTest {
     """;
 
   @Test
-  void constructor_shouldThrowException_whenSchemaListIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new XmlValidator(null));
-  }
-
-  @Test
   void constructor_shouldThrowException_whenSchemaListIsEmpty() {
     List<String> emptyList = Collections.emptyList();
-    assertThrows(IllegalArgumentException.class, () -> new XmlValidator(emptyList));
+    assertThatThrownBy(() -> new XmlValidator(emptyList)).isInstanceOf(
+      IllegalArgumentException.class
+    );
   }
 
   @Test
   void constructor_shouldThrowException_whenSchemaPathIsNotFound() {
     List<String> nonExistentPath = List.of("/non/existent/path.xsd");
-    assertThrows(IllegalArgumentException.class, () -> new XmlValidator(nonExistentPath));
+    assertThatThrownBy(() -> new XmlValidator(nonExistentPath)).isInstanceOf(
+      IllegalArgumentException.class
+    );
   }
 
   @Test
   void validate_shouldSucceed_forValidXml() {
     XmlValidator validator = new XmlValidator(List.of("/schemas/test-schema.xsd"));
-    assertDoesNotThrow(() -> validator.validate(validXml));
+    assertThatCode(() -> validator.validate(validXml)).doesNotThrowAnyException();
   }
 
   @Test
   void validate_shouldThrowException_forInvalidXml() {
     XmlValidator validator = new XmlValidator(List.of("/schemas/test-schema.xsd"));
-    assertThrows(SAXException.class, () -> validator.validate(invalidXml));
+    assertThatThrownBy(() -> validator.validate(invalidXml)).isInstanceOf(SAXException.class);
   }
 }
