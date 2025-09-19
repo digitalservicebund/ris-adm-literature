@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.S3PublishAdapter;
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.validation.XmlValidator;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.XmlValidator;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;

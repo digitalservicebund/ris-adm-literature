@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.validation.XmlValidator;
 import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_vwv.application.ValidationFailedException;
 import jakarta.annotation.Nonnull;

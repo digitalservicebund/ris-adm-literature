@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv.adapter.publishing.validation;
+package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.SAXException;
 
 @Slf4j
-public class SchemaBasedXmlValidator implements XmlValidator {
+public class XmlValidator {
 
   private final Schema schema;
 
@@ -21,7 +21,7 @@ public class SchemaBasedXmlValidator implements XmlValidator {
    * Creates a validator instance for a specific set of schemas.
    * @param schemaClasspathPaths A list of classpath paths to the XSD files.
    */
-  public SchemaBasedXmlValidator(List<String> schemaClasspathPaths) {
+  public XmlValidator(List<String> schemaClasspathPaths) {
     if (schemaClasspathPaths == null || schemaClasspathPaths.isEmpty()) {
       throw new IllegalArgumentException("At least one schema path must be provided.");
     }
@@ -45,10 +45,10 @@ public class SchemaBasedXmlValidator implements XmlValidator {
     }
   }
 
-  @Override
   public void validate(String xmlContent) throws IOException, SAXException {
     Validator validator = schema.newValidator();
     validator.validate(new StreamSource(new StringReader(xmlContent)));
+    log.info("Successfully validated XML schema.");
   }
 
   private StreamSource streamSourceFromClasspath(String path) {
