@@ -57,7 +57,6 @@ public class XmlValidator {
   public void validate(String xmlContent) throws IOException, SAXException {
     Validator validator = schema.newValidator();
     validator.validate(new StreamSource(new StringReader(xmlContent)));
-    log.info("Successfully validated XML schema.");
   }
 
   private StreamSource streamSourceFromClasspath(String path) {
