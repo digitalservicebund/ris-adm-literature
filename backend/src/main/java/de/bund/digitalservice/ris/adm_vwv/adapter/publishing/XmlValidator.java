@@ -12,6 +12,9 @@ import javax.xml.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.SAXException;
 
+/**
+ * Validates xml against their respective schemas.
+ */
 @Slf4j
 public class XmlValidator {
 
@@ -45,6 +48,12 @@ public class XmlValidator {
     }
   }
 
+  /**
+   * Validates a xml file.
+   * @param xmlContent The content of the file
+   * @throws IOException IOException
+   * @throws SAXException SAXException
+   */
   public void validate(String xmlContent) throws IOException, SAXException {
     Validator validator = schema.newValidator();
     validator.validate(new StreamSource(new StringReader(xmlContent)));
