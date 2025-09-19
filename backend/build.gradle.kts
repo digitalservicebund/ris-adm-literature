@@ -60,6 +60,9 @@ dependencies {
 
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
+
+    // CVE‐2025‐8916
+    exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
@@ -70,6 +73,7 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:4.32.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.nimbusds:nimbus-jose-jwt:10.5")
+  implementation("org.bouncycastle:bcpkix-jdk18on:1.80")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
   implementation("org.springframework.retry:spring-retry")
