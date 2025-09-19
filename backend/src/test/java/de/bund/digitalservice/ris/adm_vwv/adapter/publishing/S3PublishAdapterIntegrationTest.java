@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -58,6 +59,11 @@ class S3PublishAdapterIntegrationTest {
   @TestConfiguration
   static class S3TestConfig {
 
+    @Bean
+    public XmlValidator xmlValidator() {
+      return mock(XmlValidator.class);
+    }
+
     @Bean("privateBsgS3Client")
     @Primary
     public S3Client s3Client() {
@@ -74,9 +80,10 @@ class S3PublishAdapterIntegrationTest {
     }
 
     @Bean(FIRST_PUBLISHER_NAME)
-    public PublishPort firstTestPublisher(S3Client s3Client) {
+    public PublishPort firstTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
       return new S3PublishAdapter(
         s3Client,
+        xmlValidator,
         FIRST_BUCKET_NAME,
         FIRST_DATATYPE,
         FIRST_PUBLISHER_NAME
@@ -84,9 +91,10 @@ class S3PublishAdapterIntegrationTest {
     }
 
     @Bean(SECOND_PUBLISHER_NAME)
-    public PublishPort secondTestPublisher(S3Client s3Client) {
+    public PublishPort secondTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
       return new S3PublishAdapter(
         s3Client,
+        xmlValidator,
         SECOND_BUCKET_NAME,
         SECOND_DATATYPE,
         SECOND_PUBLISHER_NAME
@@ -234,7 +242,9 @@ class S3PublishAdapterIntegrationTest {
     var options = new PublishPort.Options(docNumber, xmlContent, "unknown-publisher");
 
     // when
-    publishPort.publish(options);
+    assertThatThrownBy(() -> publishPort.publish(options))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessageContaining("No publisher found for target: unknown-publisher");
 
     // then
     // Verify that NO file was created in EITHER bucket

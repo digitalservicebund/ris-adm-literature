@@ -23,7 +23,6 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @RequiredArgsConstructor
 public class S3PublishAdapter implements PublishPort {
 
-  // 1. Add the validator as a final field.
   private final S3Client s3Client;
   private final XmlValidator xmlValidator;
   private final String bucketName;
