@@ -83,10 +83,13 @@ dependencies {
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
   implementation("software.amazon.awssdk:s3") {
+    // CVE-2025-58056
+    exclude("io.netty", "netty-codec-http")
     // CVE CVE-2025-58057
     exclude("io.netty", "netty-codec")
   }
   implementation("io.netty:netty-codec:4.1.125.Final")
+  implementation("io.netty:netty-codec-http:4.1.125.Final")
   implementation("org.jsoup:jsoup:$jsoupVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
