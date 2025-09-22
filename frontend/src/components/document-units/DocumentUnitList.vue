@@ -33,7 +33,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
     :pt="{
       thead: {
         style: 'box-shadow: inset 0 -2px #DCE8EF;',
-        class: 'sticky top-0 z-1 bg-white text-gray-900',
+        class: 'sticky top-0 z-1 bg-white',
       },
       bodyRow: ({ context: { index } }) => ({ 'data-testid': `row-${index}` }),
     }"
@@ -46,7 +46,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
         {{ zitierdatenLabel(data.zitierdaten) }}
       </template>
     </Column>
-    <Column field="langueberschrift" header="Amtl. Langueberschrift" />
+    <Column field="langueberschrift" header="Amtl. Langüberschrift" />
     <Column field="sources" header="Fundstelle">
       <template #body="{ data }">
         <ul v-for="(fundstelle, index) in data.fundstellen" :key="index">

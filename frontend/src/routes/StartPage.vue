@@ -8,7 +8,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="flex flex-col gap-16 p-24">
+  <div class="flex flex-col gap-16 p-24 bg-white">
     <div class="flex justify-between items-end">
       <h1 class="ris-heading2-regular">Übersicht Verwaltungsvorschriften</h1>
 
