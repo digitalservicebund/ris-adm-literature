@@ -60,7 +60,7 @@ function createAuthentication() {
   }
 
   function logout(): Promise<void> | undefined {
-    const redirectUri = window.location.origin
+    const redirectUri = globalThis.location.origin
 
     return keycloak?.logout({ redirectUri: redirectUri })
   }
