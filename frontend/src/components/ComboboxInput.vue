@@ -233,11 +233,11 @@ watch(
 )
 
 onMounted(() => {
-  window.addEventListener('click', handleClickOutside)
+  globalThis.addEventListener('click', handleClickOutside)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('click', handleClickOutside)
+  globalThis.removeEventListener('click', handleClickOutside)
 })
 </script>
 

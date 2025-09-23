@@ -40,17 +40,17 @@ export const useApiFetch = createFetch({
         return
       }
 
-      // Only set the Content-Type if the body is not FormData
-      if (!(options.body instanceof FormData)) {
-        options.headers = {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          ...options.headers,
-        }
-      } else {
+      if (options.body instanceof FormData) {
         // Let the browser handle the Content-Type for FormData
         options.headers = {
           Accept: 'application/json',
+          ...options.headers,
+        }
+      } else {
+        // Only set the Content-Type if the body is not FormData
+        options.headers = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
           ...options.headers,
         }
       }

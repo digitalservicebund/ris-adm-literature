@@ -4,7 +4,7 @@ import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
   java
-  id("org.springframework.boot") version "3.5.5"
+  id("org.springframework.boot") version "3.5.6"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "6.3.1.5724"
@@ -38,9 +38,9 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.13"
-val sentryVersion = "8.21.1"
+val sentryVersion = "8.22.0"
 val hypersistenceVersion = "3.11.0"
-val postgresVersion = "42.7.7"
+val postgresVersion = "42.7.8"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 val awsVersion = "2.33.0"
@@ -60,6 +60,9 @@ dependencies {
 
     // CVE-2023-51775
     exclude("org.bitbucket.b_c", "jose4j")
+
+    // CVE‐2025‐8916
+    exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
@@ -70,6 +73,7 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:4.32.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("com.nimbusds:nimbus-jose-jwt:10.5")
+  implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
   implementation("org.springframework.retry:spring-retry")
@@ -81,7 +85,15 @@ dependencies {
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
-  implementation("software.amazon.awssdk:s3")
+
+  implementation("software.amazon.awssdk:s3") {
+    // CVE-2025-58056
+    exclude("io.netty", "netty-codec-http")
+    // CVE CVE-2025-58057
+    exclude("io.netty", "netty-codec")
+  }
+  implementation("io.netty:netty-codec:4.2.6.Final")
+  implementation("io.netty:netty-codec-http:4.2.6.Final")
   implementation("org.jsoup:jsoup:$jsoupVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
@@ -156,7 +168,7 @@ tasks.bootBuildImage {
   val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
 
   imageName.set(containerImageRef)
-  builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
+  builder.set("paketobuildpacks/builder-noble-java-tiny:0.0.62")
   publish.set(false)
   runImage.set("cgr.dev/chainguard/jre@sha256:40baab93abc011b4fd78161e6c4a6c922b14d5f8e831c67f312e5ca065100964")
 
