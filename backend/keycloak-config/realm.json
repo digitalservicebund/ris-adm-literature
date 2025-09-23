@@ -74,6 +74,25 @@
       "realmRoles": [
         "adm_vwv_user"
       ]
+    },
+    {
+      "id": "test-sli-bag",
+      "email": "testbag@example.com",
+      "username": "testbag",
+      "firstName": "bag",
+      "lastName": "nachname",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "adm_lit_bag_user"
+      ]
     }
   ]
 }
