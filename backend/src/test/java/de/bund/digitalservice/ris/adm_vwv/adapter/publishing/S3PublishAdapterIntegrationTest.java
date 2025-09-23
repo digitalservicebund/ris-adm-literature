@@ -153,7 +153,6 @@ class S3PublishAdapterIntegrationTest {
         .build();
       s3Client.deleteObjects(deleteRequest);
     }
-    // Delete any bucket policies that may have been set
     try {
       s3Client.deleteBucketPolicy(b -> b.bucket(bucketName));
     } catch (S3Exception _) {
