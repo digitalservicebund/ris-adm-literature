@@ -27,10 +27,10 @@ export function useSaveToRemote() {
     try {
       const success = await store.updateDocumentUnit()
 
-      if (!success) {
-        lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title }
-      } else {
+      if (success) {
         lastSavedOn.value = new Date()
+      } else {
+        lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title }
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
