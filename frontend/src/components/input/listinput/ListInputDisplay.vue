@@ -13,7 +13,7 @@ const emit = defineEmits<{
 }>()
 
 function normalize(str: string) {
-  return str.replaceAll(/[^A-Z0-9]/gi, '_').toLowerCase()
+  return str.replaceAll(/[^A-Z0-9]/i, '_').toLowerCase()
 }
 
 const buttonLabel = computed(() =>
