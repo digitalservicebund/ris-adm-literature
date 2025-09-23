@@ -2,8 +2,8 @@
 import dayjs from 'dayjs'
 import { computed } from 'vue'
 import EditableList from '@/components/EditableList.vue'
-import NormReferenceInput from '@/components/NormReferenceInput.vue'
-import NormReferenceSummary from '@/components/NormReferenceSummary.vue'
+import NormReferenceInput from '@/components/norm-reference/NormReferenceInput.vue'
+import NormReferenceSummary from '@/components/norm-reference/NormReferenceSummary.vue'
 import NormReference from '@/domain/normReference'
 
 import SingleNorm from '@/domain/singleNorm'

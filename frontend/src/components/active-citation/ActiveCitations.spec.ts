@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
-import ActiveCitations from '@/components/ActiveCitations.vue'
+import ActiveCitations from '@/components/active-citation/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
 import { type DocumentUnit } from '@/domain/documentUnit'
@@ -181,7 +181,7 @@ describe('active citations', () => {
       expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Änderung')
     })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    await user.click(dropdownItems[0])
+    await user.click(dropdownItems[0]!)
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
@@ -201,7 +201,7 @@ describe('active citations', () => {
       expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('VE')
     })
     const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    await user.click(dropdownItems[0])
+    await user.click(dropdownItems[0]!)
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 

@@ -1,7 +1,7 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import ActiveReferences from '@/components/ActiveReferences.vue'
+import ActiveReferences from '@/components/active-reference/ActiveReferences.vue'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
 import ActiveReference, {

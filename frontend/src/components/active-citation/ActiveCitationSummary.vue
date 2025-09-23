@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import ToolTip from './ToolTip.vue'
+import ToolTip from '@/components/ToolTip.vue'
 import DocumentationUnitSummary from '@/components/DocumentationUnitSummary.vue'
 import Button from 'primevue/button'
 import ActiveCitation from '@/domain/activeCitation'
