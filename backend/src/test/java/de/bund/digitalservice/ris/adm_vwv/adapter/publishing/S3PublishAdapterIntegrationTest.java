@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_vwv.application.ValidationFailedException;
+import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -132,6 +135,13 @@ class S3PublishAdapterIntegrationTest {
   }
 
   private void cleanupBucket(String bucketName) {
+    try {
+      s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+    } catch (S3Exception e) {
+      // Bucket doesn't exist, so no cleanup needed.
+      return;
+    }
+
     List<S3Object> objects = listObjectsInDirectory(bucketName, "");
     if (!objects.isEmpty()) {
       List<ObjectIdentifier> toDelete = objects
@@ -144,10 +154,20 @@ class S3PublishAdapterIntegrationTest {
         .build();
       s3Client.deleteObjects(deleteRequest);
     }
+    // Delete any bucket policies that may have been set
+    try {
+      s3Client.deleteBucketPolicy(b -> b.bucket(bucketName));
+    } catch (S3Exception _) {
+      // Ignore if no policy was set
+    }
   }
 
   private void createBucket(String bucketName) {
-    s3Client.createBucket(b -> b.bucket(bucketName));
+    try {
+      s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+    } catch (S3Exception e) {
+      s3Client.createBucket(b -> b.bucket(bucketName));
+    }
   }
 
   @Test
@@ -289,7 +309,72 @@ class S3PublishAdapterIntegrationTest {
         "XML validation failed for document doc-invalid-123 at line 1, column 10"
       );
 
-    // Verify that no file was created in the bucket
+    GetObjectRequest request = GetObjectRequest.builder()
+      .bucket(FIRST_BUCKET_NAME)
+      .key(String.format("%s.akn.xml", docNumber))
+      .build();
+    assertThatThrownBy(() -> s3Client.getObject(request)).isInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowPublishingFailedException_whenS3XmlUploadFails() {
+    // given
+    String docNumber = "doc-s3-fail-123";
+    String xmlContent = "<test>will fail</test>";
+    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(FIRST_BUCKET_NAME).build());
+
+    // when / then
+    assertThatThrownBy(() -> publishPort.publish(options))
+      .isInstanceOf(PublishingFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-s3-fail-123 to S3. Call to external system failed."
+      )
+      .hasCauseInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowValidationFailedException_forGenericSAXException() throws Exception {
+    // given
+    String docNumber = "doc-sax-fail-456";
+    String xmlContent = "<test>sax error</test>";
+    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    doThrow(new SAXException("Generic SAX error")).when(xmlValidator).validate(xmlContent);
+
+    // when / then
+    assertThatThrownBy(() -> publishPort.publish(options))
+      .isInstanceOf(ValidationFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-sax-fail-456. Validation error: Generic SAX error"
+      )
+      .hasCauseInstanceOf(SAXException.class);
+
+    GetObjectRequest request = GetObjectRequest.builder()
+      .bucket(FIRST_BUCKET_NAME)
+      .key(String.format("%s.akn.xml", docNumber))
+      .build();
+    assertThatThrownBy(() -> s3Client.getObject(request)).isInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowValidationFailedException_forIOException() throws Exception {
+    // given
+    String docNumber = "doc-io-fail-789";
+    String xmlContent = "<test>io error</test>";
+    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    doThrow(new IOException("Generic IO error")).when(xmlValidator).validate(xmlContent);
+
+    // when / then
+    assertThatThrownBy(() -> publishPort.publish(options))
+      .isInstanceOf(ValidationFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-io-fail-789. Validation error: Generic IO error"
+      )
+      .hasCauseInstanceOf(IOException.class);
+
     GetObjectRequest request = GetObjectRequest.builder()
       .bucket(FIRST_BUCKET_NAME)
       .key(String.format("%s.akn.xml", docNumber))
