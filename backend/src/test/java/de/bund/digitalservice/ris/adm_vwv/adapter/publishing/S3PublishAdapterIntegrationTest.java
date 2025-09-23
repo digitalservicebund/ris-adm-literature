@@ -137,8 +137,7 @@ class S3PublishAdapterIntegrationTest {
   private void cleanupBucket(String bucketName) {
     try {
       s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
-    } catch (S3Exception e) {
-      // Bucket doesn't exist, so no cleanup needed.
+    } catch (S3Exception _) {
       return;
     }
 
@@ -165,7 +164,7 @@ class S3PublishAdapterIntegrationTest {
   private void createBucket(String bucketName) {
     try {
       s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
-    } catch (S3Exception e) {
+    } catch (S3Exception _) {
       s3Client.createBucket(b -> b.bucket(bucketName));
     }
   }
