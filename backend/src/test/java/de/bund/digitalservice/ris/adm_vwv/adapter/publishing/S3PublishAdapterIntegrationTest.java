@@ -153,19 +153,10 @@ class S3PublishAdapterIntegrationTest {
         .build();
       s3Client.deleteObjects(deleteRequest);
     }
-    try {
-      s3Client.deleteBucketPolicy(b -> b.bucket(bucketName));
-    } catch (S3Exception _) {
-      // Ignore if no policy was set
-    }
   }
 
   private void createBucket(String bucketName) {
-    try {
-      s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
-    } catch (S3Exception _) {
-      s3Client.createBucket(b -> b.bucket(bucketName));
-    }
+    s3Client.createBucket(b -> b.bucket(bucketName));
   }
 
   @Test
