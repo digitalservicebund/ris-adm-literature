@@ -15,7 +15,7 @@ export const CustomParagraph = Paragraph.extend({
           const listIndexStyle = [
             ...new Set(
               JSON.stringify(attributes.listIndexStyle)
-                .replace(/"/g, '')
+                .replaceAll(/"/g, '')
                 .split(';')
                 .map((s) => s.trim())
                 .filter((s) => s.length > 0 && (s.includes('display') || s.includes('text-align'))),
