@@ -78,7 +78,9 @@ export class NodeHelper implements NodeHelperInterface {
 
       if (fieldsOfLaw.value !== null) {
         // Put resulting elements to nodes map
-        fieldsOfLaw.value.forEach((fieldOfLaw) => this.nodes.set(fieldOfLaw.identifier, fieldOfLaw))
+        for (const fieldOfLaw of fieldsOfLaw.value) {
+          this.nodes.set(fieldOfLaw.identifier, fieldOfLaw)
+        }
         // Add resulting elements as children to requested node and put it to map
         node.children = fieldsOfLaw.value
         this.nodes.set(node.identifier, node)

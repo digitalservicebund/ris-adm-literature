@@ -130,9 +130,9 @@ async function search() {
 function validateRequiredInput() {
   validationStore.reset()
 
-  activeCitation.value.missingRequiredFields.forEach((missingField) =>
-    validationStore.add('Pflichtfeld nicht befüllt', missingField),
-  )
+  for (const missingField of activeCitation.value.missingRequiredFields) {
+    validationStore.add('Pflichtfeld nicht befüllt', missingField)
+  }
 }
 
 async function addActiveCitation() {

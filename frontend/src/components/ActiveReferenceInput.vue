@@ -102,14 +102,14 @@ async function addNormReference() {
       ...activeReference.value,
       singleNorms: singleNorms.value
         .map((singleNorm) =>
-          !singleNorm.isEmpty
-            ? new SingleNorm({
+          singleNorm.isEmpty
+            ? null
+            : new SingleNorm({
                 ...singleNorm,
                 legalForce: singleNorm.legalForce
                   ? new LegalForce({ ...singleNorm.legalForce })
                   : undefined,
-              })
-            : null,
+              }),
         )
         .filter((norm) => norm !== null) as SingleNorm[],
     })
