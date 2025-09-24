@@ -10,6 +10,7 @@ import FlexItem from '@/components/FlexItem.vue'
 const { getUsername, logout, getRealmRoles } = useAuthentication()
 
 const userRolesLabel = computed(() => {
+  // TODO: decide and show correct String (lit type vs. Dokumentationsstelle) // NOSONAR
   if (getRealmRoles) {
     const roles = getRealmRoles()
     return roles.length > 0 ? roles[0] : 'Keine Rolle' // take the first role for now
@@ -27,7 +28,6 @@ const userRolesLabel = computed(() => {
         <span class="ris-body1-bold">Rechtsinformationen</span>
         <span class="leading-none text-gray-900">des Bundes</span>
       </div>
-      <!-- TODO: update to work for all roles / subroutes -->
       <router-link to="/" class="ris-label1-regular p-8 hover:bg-yellow-500 hover:underline"
         >Suche</router-link
       >

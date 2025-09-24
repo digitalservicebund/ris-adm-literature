@@ -29,7 +29,7 @@ test.describe('StartPage', () => {
       // user icon
       await expect(page.getByTestId('iconPermIdentity')).toHaveCount(1)
       await expect(page.getByText('vorname nachname')).toBeVisible()
-      await expect(page.getByText('BSG')).toHaveCount(1)
+      await expect(page.getByText('adm_vwv_user')).toHaveCount(1)
       await expect(page.getByText('Übersicht Verwaltungsvorschriften')).toHaveCount(1)
       await expect(page.getByText('Neue Dokumentationseinheit')).toHaveCount(1)
       await expect(page.getByText('Schnellsuche')).toBeVisible()
@@ -603,7 +603,7 @@ test.describe('Search documentation units', () => {
   })
 
   test(
-    'clicking the "Suche" link navigates to the start page',
+    'clicking the "Suche" link navigates to the start page of app',
     { tag: ['@RISDEV-8251'] },
     async ({ page }) => {
       await page.goto('/')
@@ -614,7 +614,7 @@ test.describe('Search documentation units', () => {
 
       await page.getByRole('link', { name: 'Suche' }).click()
 
-      await expect(page).toHaveURL('/')
+      await expect(page).toHaveURL('/verwaltungsvorschriften')
       await expect(page.getByText('Schnellsuche')).toBeVisible()
     },
   )
