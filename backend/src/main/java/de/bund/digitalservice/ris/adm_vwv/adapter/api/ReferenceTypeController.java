@@ -33,7 +33,7 @@ public class ReferenceTypeController {
   public ResponseEntity<ReferenceTypeResponse> getReferenceTypes(
     @RequestParam(required = false) String searchTerm,
     @RequestParam(defaultValue = "0") int pageNumber,
-    @RequestParam(defaultValue = "4") int pageSize,
+    @RequestParam(defaultValue = "3") int pageSize,
     @RequestParam(defaultValue = "name") String sortByProperty,
     @RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
     @RequestParam(defaultValue = "true") boolean usePagination

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Response with the referenceTypes.
  *
- * @param referenceTypes List of norm abbreviations
+ * @param referenceTypes List of reference types (e.g. anwendung)
  * @param page Pagination data
  */
 public record ReferenceTypeResponse(List<ReferenceType> referenceTypes, PageResponse page) {}
