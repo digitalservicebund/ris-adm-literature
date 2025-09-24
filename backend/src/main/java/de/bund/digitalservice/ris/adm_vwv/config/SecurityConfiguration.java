@@ -47,7 +47,7 @@ public class SecurityConfiguration {
           .permitAll()
           // --- SECURED ENDPOINTS ---
           .requestMatchers("/api/**")
-          .hasAnyRole("adm_vwv_user", "adm_lit_bag_user")
+          .hasRole("adm_vwv_user")
           // --- DENY ALL OTHERS ---
           .anyRequest()
           .denyAll()
