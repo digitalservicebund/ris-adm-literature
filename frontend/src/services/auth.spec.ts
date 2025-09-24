@@ -4,6 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 // Unmock the globally mocked auth module
 vi.unmock('@/services/auth')
 
+vi.mock('@/router.ts', () => ({
+  default: {
+    push: vi.fn(),
+  },
+}))
+
 vi.mock('keycloak-js', () => {
   const MockKeycloak = vi.fn()
   MockKeycloak.prototype.init = vi.fn().mockResolvedValue(true)
@@ -14,6 +20,7 @@ vi.mock('keycloak-js', () => {
   MockKeycloak.prototype.createLogoutUrl = vi.fn().mockReturnValue(undefined)
   MockKeycloak.prototype.updateToken = vi.fn().mockResolvedValue(true)
   MockKeycloak.prototype.logout = vi.fn()
+  MockKeycloak.prototype.hasRealmRole = vi.fn().mockReturnValue(false)
 
   return { default: MockKeycloak }
 })
