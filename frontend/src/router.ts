@@ -19,7 +19,7 @@ const router = createRouter({
       redirect: () => {
         const auth = useAuthentication()
         const userRoles = auth.getRealmRoles()
-        // TODO: Implement logic if user has multiple roles // NOSONAR
+        // Implementation logic if user has multiple roles will be implemented with RISDEV-9446
         for (const role of userRoles) {
           const routeName = roleToHomeRouteMap[role]
           if (routeName) {

@@ -10,10 +10,10 @@ import FlexItem from '@/components/FlexItem.vue'
 const { getUsername, logout, getRealmRoles } = useAuthentication()
 
 const userRolesLabel = computed(() => {
-  // TODO: decide and show correct String (lit type vs. Dokumentationsstelle) // NOSONAR
+  // Actual Roles and Dok-Stellen will be implemented with RISDEV-9442
   if (getRealmRoles) {
     const roles = getRealmRoles()
-    return roles.length > 0 ? roles[0] : 'Keine Rolle' // take the first role for now
+    return roles.length > 0 ? roles[0] : '' // take the first role for now
   }
   return 'Rolle lädt...'
 })
