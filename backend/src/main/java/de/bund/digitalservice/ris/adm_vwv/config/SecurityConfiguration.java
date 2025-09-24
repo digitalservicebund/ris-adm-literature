@@ -46,8 +46,8 @@ public class SecurityConfiguration {
           .requestMatchers("/actuator/**", "/api/swagger-ui/**", "/environment")
           .permitAll()
           // --- SECURED ENDPOINTS ---
-          .requestMatchers("/api/**") // Secure all API paths
-          .hasRole("adm_vwv_user")
+          .requestMatchers("/api/**")
+          .hasAnyRole("adm_vwv_user", "adm_lit_bag_user")
           // --- DENY ALL OTHERS ---
           .anyRequest()
           .denyAll()
