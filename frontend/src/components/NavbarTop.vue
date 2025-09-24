@@ -11,11 +11,8 @@ const { getUsername, logout, getRealmRoles } = useAuthentication()
 
 const userRolesLabel = computed(() => {
   // Actual Roles and Dok-Stellen will be implemented with RISDEV-9442
-  if (getRealmRoles) {
-    const roles = getRealmRoles()
-    return roles.length > 0 ? roles[0] : '' // take the first role for now
-  }
-  return 'Rolle lädt...'
+  const roles = getRealmRoles()
+  return roles.length > 0 ? roles[0] : '' // take the first role for now
 })
 </script>
 
