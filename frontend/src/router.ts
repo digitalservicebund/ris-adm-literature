@@ -111,7 +111,7 @@ router.beforeEach((to, from, next) => {
 
 export const roleToHomeRouteMap: Record<string, string> = {
   adm_vwv_user: 'StartPageVwv',
-  adm_lit_bag_user: 'LiteraturUnselbstaendig',
+  adm_lit_bag_user: 'StartPageUli',
 }
 
 export default router
