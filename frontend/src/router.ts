@@ -84,8 +84,7 @@ router.beforeEach((to, from, next) => {
       next({ name: 'Forbidden' })
     }
   } else {
-    // If no role is required, or user is not authenticated yet (Keycloak will handle it),
-    // allow the navigation to proceed.
+    // TODO: handle unauthicated cases
     next()
   }
 })
