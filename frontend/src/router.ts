@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import StartPage from './routes/StartPage.vue'
+import StartPageVwv from './routes/StartPageVwv.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
 import DocumentUnitWrapper from './routes/documentUnit/[documentNumber].vue'
 import AbgabePage from './routes/documentUnit/[documentNumber]/AbgabePage.vue'
@@ -15,8 +15,28 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'StartPage',
-      component: StartPage,
+      name: 'RootRedirect',
+      redirect: () => {
+        const auth = useAuthentication()
+        const userRoles = auth.getRealmRoles()
+        // TODO: Implement logic if user has multiple roles // NOSONAR
+        for (const role of userRoles) {
+          const routeName = roleToHomeRouteMap[role]
+          if (routeName) {
+            return { name: routeName }
+          }
+        }
+        // Fallback for users with no matching role or anonymous users
+        return { path: '/forbidden' }
+      },
+    },
+    {
+      path: '/verwaltungsvorschriften',
+      name: 'StartPageVwv',
+      component: StartPageVwv,
+      meta: {
+        requiresRole: 'adm_vwv_user',
+      },
     },
     {
       path: '/documentUnit/new',
@@ -25,7 +45,7 @@ const router = createRouter({
     },
     {
       path: '/literatur-unselbstaendig',
-      name: 'LiteraturUnselbstaendig',
+      name: 'StartPageUli',
       component: StartPageUli,
       meta: {
         requiresRole: 'adm_lit_bag_user',
@@ -84,9 +104,14 @@ router.beforeEach((to, from, next) => {
       next({ name: 'Forbidden' })
     }
   } else {
-    // TODO: handle unauthicated cases
+    // bareId / keycloak manages it
     next()
   }
 })
+
+export const roleToHomeRouteMap: Record<string, string> = {
+  adm_vwv_user: 'StartPageVwv',
+  adm_lit_bag_user: 'LiteraturUnselbstaendig',
+}
 
 export default router

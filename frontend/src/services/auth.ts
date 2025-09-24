@@ -1,6 +1,5 @@
 import type { KeycloakConfig } from 'keycloak-js'
 import Keycloak from 'keycloak-js'
-import router from '@/router.ts'
 
 export type AuthenticationConfig = KeycloakConfig
 
@@ -30,10 +29,6 @@ function createAuthentication() {
         pkceMethod: 'S256',
         scope: 'profile email',
       })
-
-      if (keycloak.hasRealmRole('adm_lit_bag_user')) {
-        await router.push('/literatur-unselbstaendig')
-      }
     } catch (e) {
       keycloak = undefined
       throw new Error('Failed to initialize authentication', { cause: e })
