@@ -209,7 +209,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
-    log.info("Ignoring given query as mocked result is returned always: {}.", query);
+    log.info(
+      "Ignoring given query as mocked norm abbreviations result is always returned: {}.",
+      query
+    );
     return new Page<>(
       List.of(
         new NormAbbreviation(
@@ -262,7 +265,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
-    log.info("Ignoring given query as mocked result is returned always: {}.", query);
+    log.info("Ignoring given query as mocked courts result is always returned: {}.", query);
     return new Page<>(
       List.of(
         new Court(UUID.fromString("0e1b035-a7f4-4d88-b5c0-a7d0466b8752"), "AG", "Aachen"),
@@ -285,7 +288,10 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   @Override
   @Transactional(readOnly = true)
   public Page<ReferenceType> findReferenceTypes(@Nonnull ReferenceTypeQuery query) {
-    log.info("Ignoring given query as mocked result is returned always: {}.", query);
+    log.info(
+      "Ignoring given query as mocked reference types result is always returned: {}.",
+      query
+    );
     return new Page<>(
       List.of(
         new ReferenceType(UUID.fromString("3b0c6c8c-bb5d-4c18-9d1d-6d3c93e88f45"), "anwendung"),
