@@ -9,6 +9,7 @@ import New from '@/routes/documentUnit/new.vue'
 import { useAuthentication } from '@/services/auth.ts'
 import Forbidden from '@/routes/Forbidden.vue'
 import StartPageUli from '@/routes/StartPageUli.vue'
+import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles.ts'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,7 +36,7 @@ const router = createRouter({
       name: 'StartPageVwv',
       component: StartPageVwv,
       meta: {
-        requiresRole: 'adm_vwv_user',
+        requiresRole: USER_ROLES.VWV_USER,
       },
     },
     {
@@ -48,7 +49,7 @@ const router = createRouter({
       name: 'StartPageUli',
       component: StartPageUli,
       meta: {
-        requiresRole: 'adm_lit_bag_user',
+        requiresRole: USER_ROLES.LIT_BAG_USER,
       },
     },
     {
@@ -108,10 +109,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
-export const roleToHomeRouteMap: Record<string, string> = {
-  adm_vwv_user: 'StartPageVwv',
-  adm_lit_bag_user: 'StartPageUli',
-}
 
 export default router
