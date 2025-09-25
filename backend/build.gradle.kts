@@ -45,7 +45,7 @@ val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 val awsVersion = "2.33.0"
 val jsoupVersion = "1.21.2"
-val commonsLang3 = "3.18.0"
+val commonsLang3 = "3.19.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
