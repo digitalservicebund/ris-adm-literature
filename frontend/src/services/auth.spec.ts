@@ -4,6 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 // Unmock the globally mocked auth module
 vi.unmock('@/services/auth')
 
+vi.mock('@/router.ts', () => ({
+  default: {
+    push: vi.fn(),
+  },
+}))
+
 vi.mock('keycloak-js', () => {
   const MockKeycloak = vi.fn()
   MockKeycloak.prototype.init = vi.fn().mockResolvedValue(true)
@@ -14,6 +20,9 @@ vi.mock('keycloak-js', () => {
   MockKeycloak.prototype.createLogoutUrl = vi.fn().mockReturnValue(undefined)
   MockKeycloak.prototype.updateToken = vi.fn().mockResolvedValue(true)
   MockKeycloak.prototype.logout = vi.fn()
+  MockKeycloak.prototype.hasRealmRole = vi.fn().mockReturnValue(false)
+  MockKeycloak.prototype.authenticated = undefined
+  MockKeycloak.prototype.realmAccess = undefined
 
   return { default: MockKeycloak }
 })
@@ -279,5 +288,95 @@ describe('auth', () => {
     expect(Keycloak.default.prototype.logout).toHaveBeenCalledWith({
       redirectUri: window.location.origin,
     })
+  })
+
+  it('returns true when the user is authenticated', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'authenticated', 'get').mockReturnValue(true)
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, isAuthenticated } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(isAuthenticated()).toBe(true)
+  })
+
+  it('returns false when the user is not authenticated', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'authenticated', 'get').mockReturnValue(false)
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, isAuthenticated } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(isAuthenticated()).toBe(false)
+  })
+
+  it('returns false for isAuthenticated when not configured', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { isAuthenticated } = useAuthentication()
+    expect(isAuthenticated()).toBe(false)
+  })
+
+  it('returns true if the user has the specified realm role', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'hasRealmRole').mockImplementation(
+      (role: string) => role === 'admin',
+    )
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, hasRealmRole } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(hasRealmRole('admin')).toBe(true)
+    expect(hasRealmRole('user')).toBe(false)
+  })
+
+  it('returns false for hasRealmRole when not configured', async () => {
+    const { useAuthentication } = await import('./auth.ts')
+    const { hasRealmRole } = useAuthentication()
+    expect(hasRealmRole('any-role')).toBe(false)
+  })
+
+  it('returns a list of realm roles', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'realmAccess', 'get').mockReturnValue({
+      roles: ['admin', 'user'],
+    })
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, getRealmRoles } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(getRealmRoles()).toEqual(['admin', 'user'])
+  })
+
+  it('returns an empty array for getRealmRoles when not configured or no roles exist', async () => {
+    const { useAuthentication: useAuth1 } = await import('./auth.ts')
+    const { getRealmRoles: getRealmRolesUnconfigured } = useAuth1()
+    expect(getRealmRolesUnconfigured()).toEqual([])
+
+    vi.spyOn(Keycloak.default.prototype, 'realmAccess', 'get').mockReturnValue(undefined)
+    const { useAuthentication: useAuth2 } = await import('./auth.ts')
+    const { configure, getRealmRoles } = useAuth2()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+    expect(getRealmRoles()).toEqual([])
   })
 })

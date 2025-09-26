@@ -5,6 +5,7 @@ import NavbarTop from '@/components/NavbarTop.vue'
 const mockAuth = {
   logout: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
+  getRealmRoles: vi.fn(() => []),
 }
 
 vi.mock('@/services/auth', () => ({
@@ -55,5 +56,12 @@ describe('NavbarTop', () => {
 
     expect(searchLink).toBeInTheDocument()
     expect(searchLink).toHaveAttribute('href', '/')
+  })
+
+  it('displays the first role when roles are available', () => {
+    mockAuth.getRealmRoles = vi.fn(() => ['Administrator', 'User'])
+    renderComponent()
+
+    expect(screen.getByText('Administrator | staging')).toBeInTheDocument()
   })
 })

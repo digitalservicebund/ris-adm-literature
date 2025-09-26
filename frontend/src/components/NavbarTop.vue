@@ -1,12 +1,19 @@
 <script lang="ts" setup>
-import FlexContainer from '@/components/FlexContainer.vue'
-import FlexItem from '@/components/FlexItem.vue'
+import { computed } from 'vue'
 import IconBadge from '@/components/IconBadge.vue'
 import { useAuthentication } from '@/services/auth'
 import IconPermIdentity from '~icons/ic/baseline-perm-identity'
 import IconLogout from '~icons/ic/baseline-logout'
+import FlexContainer from '@/components/FlexContainer.vue'
+import FlexItem from '@/components/FlexItem.vue'
 
-const { getUsername, logout } = useAuthentication()
+const { getUsername, logout, getRealmRoles } = useAuthentication()
+
+const userRolesLabel = computed(() => {
+  // Actual Roles and Dok-Stellen will be implemented with RISDEV-9442
+  const roles = getRealmRoles()
+  return roles.length > 0 ? roles[0] : '' // take the first role for now
+})
 </script>
 
 <template>
@@ -29,7 +36,11 @@ const { getUsername, logout } = useAuthentication()
           {{ getUsername() ?? 'Vorname Nachname' }}
         </FlexItem>
         <FlexItem>
-          <IconBadge :background-color="'bg-red-300'" color="text-black" :label="'BSG | Staging'" />
+          <IconBadge
+            :background-color="'bg-red-300'"
+            color="text-black"
+            :label="`${userRolesLabel ?? ''} | staging`"
+          />
         </FlexItem>
         <FlexItem>
           <button @click="logout" class="hover:cursor-pointer" aria-label="Log out">
