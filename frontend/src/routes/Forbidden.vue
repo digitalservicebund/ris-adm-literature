@@ -16,7 +16,7 @@ import Button from 'primevue/button'
       Überprüfen Sie, ob Sie die gesamte Adresse kopiert haben.
     </p>
     <router-link :to="{ name: 'RootRedirect' }">
-      <Button label="Zurück ur Startseite" />
+      <Button label="Zurück zur Startseite" />
     </router-link>
   </div>
 </template>
