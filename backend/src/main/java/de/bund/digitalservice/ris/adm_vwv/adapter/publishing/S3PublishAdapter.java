@@ -42,13 +42,13 @@ public class S3PublishAdapter implements PublishPort {
   }
 
   @Override
-  public void publish(@Nonnull Options options) {
-    String documentNumber = options.documentNumber();
+  public void publish(@Nonnull PublicationDetails publicationDetails) {
+    String documentNumber = publicationDetails.documentNumber();
     String xmlKey = String.format("%s.akn.xml", documentNumber);
 
     try {
       log.info("Validating XML for document {}", documentNumber);
-      xmlValidator.validate(options.xmlContent());
+      xmlValidator.validate(publicationDetails.xmlContent());
       log.info("XML validation successful for document {}", documentNumber);
 
       log.info("Publishing document {} to S3 bucket '{}'", documentNumber, bucketName);
@@ -57,7 +57,7 @@ public class S3PublishAdapter implements PublishPort {
         .key(xmlKey)
         .contentType("application/xml")
         .build();
-      s3Client.putObject(xmlRequest, RequestBody.fromString(options.xmlContent()));
+      s3Client.putObject(xmlRequest, RequestBody.fromString(publicationDetails.xmlContent()));
       log.info("Successfully published document {} to S3.", documentNumber);
 
       // Publish a new changelog file

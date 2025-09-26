@@ -190,7 +190,7 @@ class DocumentationUnitServiceTest {
     documentationUnitService.publish(docNumber, content);
 
     verify(documentationUnitPersistencePort).publish(eq(docNumber), anyString(), eq(fakeXml));
-    verify(publishPort).publish(any(PublishPort.Options.class));
+    verify(publishPort).publish(any(PublishPort.PublicationDetails.class));
   }
 
   @Test
@@ -215,7 +215,7 @@ class DocumentationUnitServiceTest {
 
     doThrow(new PublishingFailedException("External system is down", null))
       .when(publishPort)
-      .publish(any(PublishPort.Options.class));
+      .publish(any(PublishPort.PublicationDetails.class));
 
     // then
     assertThatThrownBy(() ->

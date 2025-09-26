@@ -130,12 +130,13 @@ class S3PublishAdapterIntegrationTest {
 
   @AfterEach
   void tearDown() {
-    cleanupBucket(FIRST_BUCKET_NAME);
-    cleanupBucket(SECOND_BUCKET_NAME);
+    deleteBucket(FIRST_BUCKET_NAME);
+    deleteBucket(SECOND_BUCKET_NAME);
   }
 
-  private void cleanupBucket(String bucketName) {
+  private void deleteBucket(String bucketName) {
     try {
+      // If the bucket doesn't exist we don't need to clean it and can return
       s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
     } catch (S3Exception _) {
       return;
@@ -153,6 +154,7 @@ class S3PublishAdapterIntegrationTest {
         .build();
       s3Client.deleteObjects(deleteRequest);
     }
+    s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
   }
 
   private void createBucket(String bucketName) {
@@ -164,7 +166,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-abc-456";
     String xmlContent = "<test-data>This is a test</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     // when
     publishPort.publish(options);
@@ -209,7 +211,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-xyz-789";
     String xmlContent = "<test-data>Another test</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
 
     // when
     publishPort.publish(options);
@@ -254,7 +256,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-def-789";
     String xmlContent = "<test-data>This should not be published</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, "unknown-publisher");
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, "unknown-publisher");
 
     // when
     assertThatThrownBy(() -> publishPort.publish(options))
@@ -285,7 +287,11 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-invalid-123";
     String invalidXmlContent = "<invalid>";
-    var options = new PublishPort.Options(docNumber, invalidXmlContent, FIRST_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(
+      docNumber,
+      invalidXmlContent,
+      FIRST_PUBLISHER_NAME
+    );
 
     doThrow(new SAXParseException("XML is malformed", null, null, 1, 10))
       .when(xmlValidator)
@@ -310,7 +316,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-s3-fail-123";
     String xmlContent = "<test>will fail</test>";
-    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(FIRST_BUCKET_NAME).build());
 
@@ -328,7 +334,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-sax-fail-456";
     String xmlContent = "<test>sax error</test>";
-    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     doThrow(new SAXException("Generic SAX error")).when(xmlValidator).validate(xmlContent);
 
@@ -352,7 +358,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-io-fail-789";
     String xmlContent = "<test>io error</test>";
-    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     doThrow(new IOException("Generic IO error")).when(xmlValidator).validate(xmlContent);
 

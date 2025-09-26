@@ -132,7 +132,7 @@ class DocumentationUnitServiceIntegrationTest {
     // Publishing to bucket fails
     doThrow(new PublishingFailedException("External system is down", null))
       .when(publishPort)
-      .publish(any(PublishPort.Options.class));
+      .publish(any(PublishPort.PublicationDetails.class));
 
     // when: Attempt to publish, and it fails
     Throwable thrown = catchThrowable(() ->

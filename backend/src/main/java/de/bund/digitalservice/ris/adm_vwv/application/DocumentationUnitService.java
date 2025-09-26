@@ -97,7 +97,11 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     // later when we want to publish to other publishers, we can receive them form the method param and select them here
     // If the publishing or validation fails, the transaction is rolled back
     final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
-    var publishOptions = new PublishPort.Options(documentNumber, xml, BSG_PUBLISHER_NAME);
+    var publishOptions = new PublishPort.PublicationDetails(
+      documentNumber,
+      xml,
+      BSG_PUBLISHER_NAME
+    );
     publishPort.publish(publishOptions);
     return convertLdml(publishedDocumentationUnit);
   }

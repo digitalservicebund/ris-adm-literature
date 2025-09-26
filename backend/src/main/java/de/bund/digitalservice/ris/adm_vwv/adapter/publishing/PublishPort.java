@@ -15,9 +15,9 @@ public interface PublishPort {
   /**
    * Publishes the provided content to the configured storage.
    *
-   * @param options The options containing the content and identifier.
+   * @param publicationDetails The options containing the content and identifier.
    */
-  void publish(@Nonnull Options options);
+  void publish(@Nonnull PublicationDetails publicationDetails);
 
   /**
    * A data record holding the necessary information for publishing a document.
@@ -26,5 +26,5 @@ public interface PublishPort {
    * @param xmlContent The LDML XML content of the document to be stored.
    * @param targetPublisher The target publisher
    */
-  record Options(String documentNumber, String xmlContent, String targetPublisher) {}
+  record PublicationDetails(String documentNumber, String xmlContent, String targetPublisher) {}
 }
