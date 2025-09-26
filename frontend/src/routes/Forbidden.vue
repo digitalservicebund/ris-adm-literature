@@ -3,10 +3,20 @@ import Button from 'primevue/button'
 </script>
 
 <template>
-  <div class="flex flex-col gap-16 p-16">
-    <div class="flex flex-col gap-4 items-start">
-      <h1 class="ris-heading2-regular">Keine Berechtigung (403)</h1>
-      <router-link :to="{ name: 'RootRedirect' }"> <Button label="Zur Startseite" /> </router-link>
-    </div>
+  <div class="mt-48 ml-48 gap-16 p-16">
+    <h1 class="ris-heading2-regular mb-32">
+      Diese Dokumentationseinheit existiert nicht oder Sie haben keine Berechtigung.
+    </h1>
+    <p class="mb-16">
+      <strong>Haben Sie die Internetadresse direkt eingegeben?</strong><br />
+      Überprüfen Sie die Schreibweise.
+    </p>
+    <p class="mb-32">
+      <strong>Haben Sie die Internetadresse kopiert?</strong><br />
+      Überprüfen Sie, ob Sie die gesamte Adresse kopiert haben.
+    </p>
+    <router-link :to="{ name: 'RootRedirect' }">
+      <Button label="Zurück ur Startseite" />
+    </router-link>
   </div>
 </template>
