@@ -1,9 +1,9 @@
 on:
   workflow_call:
     secrets:
-      SLACK_WEBHOOK_URL: 
+      SLACK_WEBHOOK_URL:
         required: true
-      SONAR_TOKEN: 
+      SONAR_TOKEN_FRONTEND:
         required: true
 
 jobs:
@@ -187,7 +187,7 @@ jobs:
         run: npm ci
         working-directory: ./frontend
       - name: Run license scanner
-        run: npm run audit:licences
+        run: npm run audit:licencesfr
         working-directory: ./frontend
       - name: Upload licence report
         if: always()

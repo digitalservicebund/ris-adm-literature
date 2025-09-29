@@ -92,7 +92,7 @@ jobs:
     uses: ./.github/workflows/frontend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+      SONAR_TOKEN_FRONTEND: ${{ secrets.SONAR_TOKEN_FRONTEND }}
 
   frontend-build-image-and-scan:
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
