@@ -3,7 +3,7 @@ on:
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
-      SONAR_TOKEN:
+      SONAR_TOKEN_BACKEND:
         required: true
 
 jobs:

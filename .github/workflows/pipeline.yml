@@ -41,7 +41,7 @@ jobs:
     uses: ./.github/workflows/backend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+      SONAR_TOKEN_BACKEND: ${{ secrets.SONAR_TOKEN_BACKEND }}
 
   backend-build-image-and-scan:
     uses: ./.github/workflows/backend-build-image-and-scan.yml
