@@ -679,6 +679,13 @@ class LdmlPublishConverterServiceIntegrationTest {
           new NormAbbreviation(UUID.randomUUID(), "VV RIS-Abkürzungen", null),
           null,
           List.of()
+        ),
+        new ActiveReference(
+          "administrative_regulation",
+          "unbekannt",
+          new NormAbbreviation(UUID.randomUUID(), "unbekannt", null),
+          null,
+          List.of()
         )
       ),
       List.of(),
@@ -701,6 +708,7 @@ class LdmlPublishConverterServiceIntegrationTest {
           <ris:activeReference typeNumber="82" reference="BGB" paragraph="§ 10 Abs. 1"/>
           <ris:activeReference typeNumber="82" reference="BGB" paragraph="§ 11" dateOfVersion="2001-02-05"/>
           <ris:activeReference typeNumber="31" reference="VV RIS-Abkürzungen"/>
+          <ris:activeReference typeNumber="unbekannt" reference="unbekannt"/>
       </ris:activeReferences>""".indent(20)
     );
   }
