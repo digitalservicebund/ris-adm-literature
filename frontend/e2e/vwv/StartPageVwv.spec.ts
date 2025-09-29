@@ -8,7 +8,7 @@ import messages from '../../src/i18n/messages.json' with { type: 'json' }
 test.describe('StartPage VwV', () => {
   test(
     'Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data',
-    { tag: ['@RISDEV-6041', '@RISDEV-8587'] },
+    { tag: ['@RISDEV-6041', '@RISDEV-8587', '@RISDEV-9370'] },
     async ({ page }) => {
       // Arrange
       await page.route('/api/documentation-units', async (route) => {
@@ -21,7 +21,7 @@ test.describe('StartPage VwV', () => {
       })
 
       // Action
-      await page.goto('/')
+      await page.goto('/verwaltungsvorschriften')
 
       // Assert
       await expect(page.getByText('Rechtsinformationen')).toBeVisible()
@@ -31,7 +31,8 @@ test.describe('StartPage VwV', () => {
       await expect(page.getByText('vorname nachname')).toBeVisible()
       await expect(page.getByText('adm_vwv_user')).toHaveCount(1)
       await expect(page.getByText('Übersicht Verwaltungsvorschriften')).toHaveCount(1)
-      await expect(page.getByText('Neue Dokumentationseinheit')).toHaveCount(1)
+      await expect(page.getByRole('button', { name: 'Neue Dokumentationseinheit' })).toHaveCount(1)
+      await expect(page.getByRole('button', { name: 'Log out' })).toHaveCount(1)
       await expect(page.getByText('Schnellsuche')).toBeVisible()
       await expect(page.getByRole('columnheader', { name: 'Dokumentnummer' })).toBeVisible()
     },

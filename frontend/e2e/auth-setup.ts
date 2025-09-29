@@ -1,7 +1,7 @@
 import { test as setup, expect, Page } from '@playwright/test'
 
-const vwvAuthFile = './frontend/e2e/.auth/vwv.json'
-const uliAuthFile = './frontend/e2e/.auth/uli.json'
+const vwvAuthFile = '../frontend/e2e/.auth/vwv.json'
+const uliAuthFile = '../frontend/e2e/.auth/uli.json'
 const baseURL = 'http://localhost:5173'
 
 async function performLogin(page: Page, username: string, password: string) {
