@@ -1,7 +1,7 @@
 on:
   workflow_call:
     secrets:
-      GH_TOKEN:
+      GH_SECRET_SCANNING_TOKEN:
         required: true
       SLACK_WEBHOOK_URL:
         required: true
