@@ -1,4 +1,4 @@
-FROM node:24.8.0
+FROM node:24.9.0
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend
