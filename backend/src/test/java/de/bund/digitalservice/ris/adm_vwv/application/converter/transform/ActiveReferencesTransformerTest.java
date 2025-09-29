@@ -115,7 +115,7 @@ class ActiveReferencesTransformerTest {
     assertThat(activeReferences)
       .hasSize(1)
       .first()
-      .extracting(ActiveReference::referenceType)
+      .extracting(ActiveReference::verweisTyp)
       .isEqualTo(expectedReferenceType);
   }
 

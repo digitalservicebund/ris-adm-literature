@@ -11,12 +11,12 @@ import SingleNorm from '@/domain/singleNorm'
 import IconAdd from '~icons/ic/baseline-add'
 import ActiveReference, {
   ActiveReferenceDocumentType,
-  ReferenceTypeEnum,
+  VerweisTypEnum,
 } from '@/domain/activeReference.ts'
 import RadioButton from 'primevue/radiobutton'
 import labels from '@/components/active-reference/activeReferenceInputLabels.json'
 import NormAbbreviationsDropDown from '@/components/NormAbbreviationsDropDown.vue'
-import ReferenceTypeDropDown from './ReferenceTypeDropDown.vue'
+import VerweisTypDropDown from './VerweisTypDropDown.vue'
 
 const props = defineProps<{
   modelValue?: ActiveReference
@@ -31,7 +31,7 @@ const emit = defineEmits<{
 
 const validationStore =
   useValidationStore<
-    ['referenceType', 'normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
+    ['verweisTyp', 'normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
   >()
 
 const activeReference = ref(new ActiveReference({ ...props.modelValue }))
@@ -66,11 +66,11 @@ const normAbbreviation = computed({
   },
 })
 
-const referenceType = computed<ReferenceTypeEnum | undefined>({
-  get: () => activeReference.value.referenceType,
+const verweisTyp = computed<VerweisTypEnum | undefined>({
+  get: () => activeReference.value.verweisTyp,
   set: (newValue) => {
-    validationStore.remove('referenceType')
-    activeReference.value.referenceType = newValue
+    validationStore.remove('verweisTyp')
+    activeReference.value.verweisTyp = newValue
   },
 })
 
@@ -79,11 +79,11 @@ const referenceType = computed<ReferenceTypeEnum | undefined>({
  * sa new emtpy entry is added to the list
  */
 async function addNormReference() {
-  if (!activeReference.value.referenceType) {
-    validationStore.add('Art der Verweisung fehlt', 'referenceType')
+  if (!activeReference.value.verweisTyp) {
+    validationStore.add('Art der Verweisung fehlt', 'verweisTyp')
   }
   if (
-    !validationStore.getByField('referenceType') &&
+    !validationStore.getByField('verweisTyp') &&
     !validationStore.getByField('singleNorm') &&
     !validationStore.getByField('dateOfVersion') &&
     !validationStore.getByField('dateOfRelevance') &&
@@ -153,7 +153,7 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
     validationStore.add(
       validationError.message,
       validationError.instance as [
-        'referenceType',
+        'verweisTyp',
         'singleNorm',
         'dateOfVersion',
         'dateOfRelevance',
@@ -161,7 +161,7 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
     )
   } else {
     validationStore.remove(
-      field as ['referenceType', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number],
+      field as ['verweisTyp', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number],
     )
   }
 }
@@ -245,10 +245,10 @@ watch(
         id="active-reference-type-field"
         v-slot="slotProps"
         label="Art der Verweisung *"
-        :validation-error="validationStore.getByField('referenceType')"
+        :validation-error="validationStore.getByField('verweisTyp')"
       >
-        <ReferenceTypeDropDown
-          v-model="referenceType"
+        <VerweisTypDropDown
+          v-model="verweisTyp"
           :invalid="slotProps.hasError"
           aria-label="Art der Verweisung"
           placeholder="Bitte auswählen"

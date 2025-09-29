@@ -5,8 +5,8 @@ import type { Institution, Region } from '@/domain/normgeber'
 import type { Periodikum } from '@/domain/fundstelle'
 import type { Court } from '@/domain/court.ts'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
-import type { ReferenceType } from '@/domain/referenceType'
-import { referenceTypeToLabel } from '@/domain/activeReference'
+import type { VerweisTyp } from '@/domain/verweisTyp'
+import { verweisTypToLabel } from '@/domain/activeReference'
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
@@ -166,13 +166,13 @@ export function useNormAbbreviationsSearch(normAbbreviations: Ref<NormAbbreviati
   }
 }
 
-export function useReferenceTypeSearch(referenceTypes: Ref<ReferenceType[]>) {
+export function useVerweisTypSearch(verweisTypen: Ref<VerweisTyp[]>) {
   return function searchFn(query?: string) {
-    return referenceTypes.value
+    return verweisTypen.value
       .filter((type) => !query || type.name.toLowerCase().includes(query.trim().toLowerCase()))
       .map((type) => ({
         id: type.id,
-        label: referenceTypeToLabel[type.name],
+        label: verweisTypToLabel[type.name],
       }))
   }
 }

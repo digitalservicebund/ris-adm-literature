@@ -79,10 +79,10 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
     async ({ page }) => {
       // given
       await page.goto('/documentUnit/KSNR054920707/rubriken')
-      const referenceTypeElement = page
+      const verweisTypElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'Art der Verweisung' })
-      await expect(referenceTypeElement).toHaveCount(1)
+      await expect(verweisTypElement).toHaveCount(1)
       await expect(page.getByText('Art der Verweisung *')).toBeVisible()
       await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
       const activeReferenceElement = page
@@ -92,7 +92,7 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
       await expect(page.getByTestId('activeReferences').getByText('RIS-Abkürzung *')).toBeVisible()
 
       // when
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await expect(page.getByText('Neuregelung')).toBeVisible()
       await page.getByText('Neuregelung').click()
       await activeReferenceElement.click()
@@ -196,17 +196,17 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
     async ({ page }) => {
       // given
       await page.goto('/documentUnit/KSNR054920707/rubriken')
-      const referenceTypeElement = page
+      const verweisTypElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'Art der Verweisung' })
-      await expect(referenceTypeElement).toHaveCount(1)
+      await expect(verweisTypElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await expect(page.getByText('Anwendung')).toBeVisible()
       await page.getByText('Anwendung').click()
 
@@ -237,10 +237,10 @@ test.describe('RubrikenPage - Verweise (on Norm) with mocked routes', () => {
       await page.goto('/documentUnit/KSNR054920707/rubriken')
 
       // when
-      const referenceTypeElement = page
+      const verweisTypElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'Art der Verweisung' })
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await page.getByText('Anwendung').click()
       await page
         .getByTestId('activeReferences')
@@ -281,17 +281,17 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       // given
       await page.goto('/documentUnit/KSNR054920707/rubriken')
       await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswählen' }).click()
-      const referenceTypeElement = page
+      const verweisTypElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'Art der Verweisung' })
-      await expect(referenceTypeElement).toHaveCount(1)
+      await expect(verweisTypElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await expect(page.getByText('Neuregelung')).toBeVisible()
       await page.getByText('Neuregelung').click()
       await activeReferenceElement.click()
@@ -331,17 +331,17 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await page.goto('/documentUnit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
-      const referenceTypeElement = page
+      const verweisTypElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'Art der Verweisung' })
-      await expect(referenceTypeElement).toHaveCount(1)
+      await expect(verweisTypElement).toHaveCount(1)
       const activeReferenceElement = page
         .getByTestId('activeReferences')
         .getByRole('combobox', { name: 'RIS-Abkürzung' })
       await expect(activeReferenceElement).toHaveCount(1)
 
       // when
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await expect(page.getByText('Anwendung')).toBeVisible()
       await page.getByText('Anwendung').click()
 
@@ -351,7 +351,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift) with mocked ro
       await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('1991, Seite 92')
       await page.getByRole('button', { name: 'Verweis speichern' }).click()
 
-      await referenceTypeElement.click()
+      await verweisTypElement.click()
       await expect(page.getByText('Rechtsgrundlage')).toBeVisible()
       await page.getByText('Rechtsgrundlage').click()
 
@@ -446,10 +446,10 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
     await page.getByText('Neue Dokumentationseinheit').click()
     await page.getByRole('link', { name: 'Rubriken' }).click()
     await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
-    const referenceTypeElement = page
+    const verweisTypElement = page
       .getByTestId('activeReferences')
       .getByRole('combobox', { name: 'Art der Verweisung' })
-    await expect(referenceTypeElement).toHaveCount(1)
+    await expect(verweisTypElement).toHaveCount(1)
     const activeReferenceElement = page
       .getByTestId('activeReferences')
       .getByRole('combobox', { name: 'RIS-Abkürzung' })
@@ -461,7 +461,7 @@ test.describe('RubrikenPage - Verweise (on Verwaltungsvorschrift)', () => {
     )
 
     // when
-    await referenceTypeElement.click()
+    await verweisTypElement.click()
     await expect(page.getByText('Neuregelung')).toBeVisible()
     await page.getByText('Neuregelung').click()
     await activeReferenceElement.click()

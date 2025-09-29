@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ReferenceType;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.VerweisTyp;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -518,15 +518,15 @@ class LookupTablesPersistenceServiceTest {
   }
 
   @Test
-  void findReferenceTypes_all() {
+  void findVerweisTypen_all() {
     // when
-    var refTypes = lookupTablesPersistenceService.findReferenceTypes(
-      new ReferenceTypeQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+    var refTypes = lookupTablesPersistenceService.findVerweisTypen(
+      new VerweisTypQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
     );
 
     // then
     assertThat(refTypes.content())
-      .extracting(ReferenceType::name)
+      .extracting(VerweisTyp::name)
       .containsExactly("anwendung", "neuregelung", "rechtsgrundlage");
   }
 }

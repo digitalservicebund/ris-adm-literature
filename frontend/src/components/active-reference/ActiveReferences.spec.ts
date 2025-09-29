@@ -6,7 +6,7 @@ import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
 import ActiveReference, {
   ActiveReferenceDocumentType,
-  ReferenceTypeEnum,
+  VerweisTypEnum,
 } from '@/domain/activeReference.ts'
 import { createTestingPinia } from '@pinia/testing'
 import type { DocumentUnit } from '@/domain/documentUnit.ts'
@@ -17,7 +17,7 @@ import {
   anwendungFixture,
   neuregelungFixture,
   rechtsgrundlageFixture,
-} from '@/testing/fixtures/referenceType'
+} from '@/testing/fixtures/verweisTyp'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()
@@ -48,13 +48,13 @@ function renderComponent(activeReferences?: ActiveReference[]) {
 
 function generateActiveReference(options?: {
   referenceDocumentType?: ActiveReferenceDocumentType
-  referenceType?: ReferenceTypeEnum
+  verweisTyp?: VerweisTypEnum
   normAbbreviation?: NormAbbreviation
   singleNorms?: SingleNorm[]
 }) {
   return new ActiveReference({
     referenceDocumentType: options?.referenceDocumentType ?? ActiveReferenceDocumentType.NORM,
-    referenceType: options?.referenceType ?? ReferenceTypeEnum.ANWENDUNG,
+    verweisTyp: options?.verweisTyp ?? VerweisTypEnum.ANWENDUNG,
     normAbbreviation: options?.normAbbreviation ?? sgb5Fixture,
     singleNorms: options?.singleNorms ?? [],
   })
@@ -115,7 +115,7 @@ describe('ActiveReferences', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -149,7 +149,7 @@ describe('ActiveReferences', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -250,7 +250,7 @@ describe('ActiveReferences', () => {
   it('render summary with one single norms', async () => {
     renderComponent([
       generateActiveReference({
-        referenceType: ReferenceTypeEnum.RECHTSGRUNDLAGE,
+        verweisTyp: VerweisTypEnum.RECHTSGRUNDLAGE,
         normAbbreviation: {
           id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',

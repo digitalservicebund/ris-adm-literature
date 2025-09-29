@@ -417,7 +417,7 @@ public class LdmlPublishConverterService {
                 .map(singleNorm -> {
                   RisActiveReference risActiveReference = new RisActiveReference();
                   risActiveReference.setTypeNumber(
-                    transformReferenceType(activeReference.referenceType())
+                    transformVerweisTyp(activeReference.verweisTyp())
                   );
                   risActiveReference.setReference(
                     activeReference.normAbbreviation().abbreviation()
@@ -428,9 +428,7 @@ public class LdmlPublishConverterService {
                 });
             }
             RisActiveReference risActiveReference = new RisActiveReference();
-            risActiveReference.setTypeNumber(
-              transformReferenceType(activeReference.referenceType())
-            );
+            risActiveReference.setTypeNumber(transformVerweisTyp(activeReference.verweisTyp()));
             risActiveReference.setReference(activeReference.normAbbreviation().abbreviation());
             return Stream.of(risActiveReference);
           })
@@ -469,14 +467,14 @@ public class LdmlPublishConverterService {
     }
   }
 
-  private String transformReferenceType(String referenceType) {
-    return switch (referenceType) {
+  private String transformVerweisTyp(String verweisTyp) {
+    return switch (verweisTyp) {
       case "anwendung" -> "01";
       case "neuregelung" -> "31";
       case "rechtsgrundlage" -> "82";
       default -> {
-        log.debug("Unhandled reference type: {}", referenceType);
-        yield referenceType;
+        log.debug("Unhandled reference type: {}", verweisTyp);
+        yield verweisTyp;
       }
     };
   }

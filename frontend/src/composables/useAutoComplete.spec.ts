@@ -4,7 +4,7 @@ import {
   useInstitutionSearch,
   useNormAbbreviationsSearch,
   usePeriodikumSearch,
-  useReferenceTypeSearch,
+  useVerweisTypSearch,
   useRegionSearch,
   type AutoCompleteSuggestion,
 } from '@/composables/useAutoComplete'
@@ -15,8 +15,8 @@ import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/peri
 import type { Periodikum } from '@/domain/fundstelle'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
-import type { ReferenceType } from '@/domain/referenceType'
-import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/referenceType'
+import type { VerweisTyp } from '@/domain/verweisTyp'
+import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp'
 
 describe('useAutoComplete', () => {
   // Mock debounce to avoid delay
@@ -256,17 +256,17 @@ describe('useNormAbbreviationsSearch', () => {
   })
 })
 
-describe('useReferenceTypeSearch', () => {
-  const mockRefTypes = ref<ReferenceType[]>([anwendungFixture, neuregelungFixture])
+describe('useVerweisTypSearch', () => {
+  const mockRefTypes = ref<VerweisTyp[]>([anwendungFixture, neuregelungFixture])
 
   it('returns all abbreviations when query is empty', () => {
-    const search = useReferenceTypeSearch(mockRefTypes)
+    const search = useVerweisTypSearch(mockRefTypes)
     const results = search('')
     expect(results).toHaveLength(2)
   })
 
   it('returns an empty array if no matches', () => {
-    const search = useReferenceTypeSearch(mockRefTypes)
+    const search = useVerweisTypSearch(mockRefTypes)
     const results = search('xyz')
     expect(results).toEqual([])
   })
@@ -276,7 +276,7 @@ describe('useReferenceTypeSearch', () => {
     ['name', 'Anwend'],
     ['name', 'Anwendung'],
   ])('returns filtered reference type by %s', (_, query) => {
-    const search = useReferenceTypeSearch(mockRefTypes)
+    const search = useVerweisTypSearch(mockRefTypes)
     const results = search(query)
     expect(results).toEqual([
       {

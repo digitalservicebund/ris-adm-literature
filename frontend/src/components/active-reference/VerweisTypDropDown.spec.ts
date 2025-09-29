@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ReferenceTypeDropDown from '@/components/active-reference/ReferenceTypeDropDown.vue'
-import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/referenceType'
+import VerweisTypDropDown from '@/components/active-reference/VerweisTypDropDown.vue'
+import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({
   RisAutoComplete: {
@@ -11,15 +11,15 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
   },
 }))
 
-describe('ReferenceTypeDropDown', () => {
+describe('VerweisTypDropDown', () => {
   it('renders correctly', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
-      new Response(JSON.stringify({ referenceTypes: [anwendungFixture, neuregelungFixture] }), {
+      new Response(JSON.stringify({ verweisTypen: [anwendungFixture, neuregelungFixture] }), {
         status: 200,
       }),
     )
 
-    const wrapper = mount(ReferenceTypeDropDown, {
+    const wrapper = mount(VerweisTypDropDown, {
       props: {
         inputId: 'foo',
         invalid: false,
@@ -36,7 +36,7 @@ describe('ReferenceTypeDropDown', () => {
   it('renders correctly on fetching error', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch').mockRejectedValue('fetch error')
 
-    const wrapper = mount(ReferenceTypeDropDown, {
+    const wrapper = mount(VerweisTypDropDown, {
       props: {
         inputId: 'foo',
         invalid: false,
@@ -52,12 +52,12 @@ describe('ReferenceTypeDropDown', () => {
 
   it('emits updated model value when selection changes', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
-      new Response(JSON.stringify({ referenceTypes: [anwendungFixture, neuregelungFixture] }), {
+      new Response(JSON.stringify({ verweisTypen: [anwendungFixture, neuregelungFixture] }), {
         status: 200,
       }),
     )
 
-    const wrapper = mount(ReferenceTypeDropDown, {
+    const wrapper = mount(VerweisTypDropDown, {
       props: {
         inputId: 'foo',
         invalid: false,

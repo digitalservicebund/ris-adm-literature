@@ -1,7 +1,7 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import ActiveReference, { ReferenceTypeEnum } from '@/domain/activeReference.ts'
+import ActiveReference, { VerweisTypEnum } from '@/domain/activeReference.ts'
 import ActiveReferenceInput from '@/components/active-reference/ActiveReferenceInput.vue'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
@@ -10,7 +10,7 @@ import {
   anwendungFixture,
   neuregelungFixture,
   rechtsgrundlageFixture,
-} from '@/testing/fixtures/referenceType'
+} from '@/testing/fixtures/verweisTyp'
 
 function renderComponent(options?: { modelValue?: ActiveReference }) {
   const user = userEvent.setup()
@@ -50,7 +50,7 @@ describe('ActiveReferenceInput', () => {
   it('render values if given', async () => {
     renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -80,7 +80,7 @@ describe('ActiveReferenceInput', () => {
   it('renders multiple single norm input groups', async () => {
     renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -107,7 +107,7 @@ describe('ActiveReferenceInput', () => {
   it('adds new single norm', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -126,7 +126,7 @@ describe('ActiveReferenceInput', () => {
   it('removes single norm', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -148,7 +148,7 @@ describe('ActiveReferenceInput', () => {
   it('removes last single norm in list', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -167,7 +167,7 @@ describe('ActiveReferenceInput', () => {
   it('validates invalid norm input on blur', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -183,7 +183,7 @@ describe('ActiveReferenceInput', () => {
   it('validates invalid norm input on mount', async () => {
     renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -202,7 +202,7 @@ describe('ActiveReferenceInput', () => {
   it('does not add norm with invalid single norm input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -223,7 +223,7 @@ describe('ActiveReferenceInput', () => {
   it('does not add norm with invalid version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -241,7 +241,7 @@ describe('ActiveReferenceInput', () => {
   it('does not add norm with incomplete version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -260,7 +260,7 @@ describe('ActiveReferenceInput', () => {
   it('does not add norm with invalid year input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -282,7 +282,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -323,7 +323,7 @@ describe('ActiveReferenceInput', () => {
   it('new input removes error message', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
         singleNorms: [
           {
@@ -352,7 +352,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -370,8 +370,8 @@ describe('ActiveReferenceInput', () => {
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(2))
 
-    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
-    await user.type(referenceTypeField, 'A')
+    const verweisTypField = screen.getByLabelText('Art der Verweisung')
+    await user.type(verweisTypField, 'A')
     await user.click(screen.getByText('Anwendung'))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
@@ -384,7 +384,7 @@ describe('ActiveReferenceInput', () => {
       [
         {
           referenceDocumentType: 'norm',
-          referenceType: ReferenceTypeEnum.ANWENDUNG,
+          verweisTyp: VerweisTypEnum.ANWENDUNG,
           normAbbreviation: {
             id: 'sgb5TestId',
             abbreviation: 'SGB 5',
@@ -400,7 +400,7 @@ describe('ActiveReferenceInput', () => {
   it('correctly updates the value of the single norm input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -413,7 +413,7 @@ describe('ActiveReferenceInput', () => {
   it('correctly updates the value of the version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -427,7 +427,7 @@ describe('ActiveReferenceInput', () => {
   it('correctly updates the value of the version date input', async () => {
     const { user } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -441,7 +441,7 @@ describe('ActiveReferenceInput', () => {
   it('emits add event', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -455,7 +455,7 @@ describe('ActiveReferenceInput', () => {
   it('emits delete event', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -469,7 +469,7 @@ describe('ActiveReferenceInput', () => {
   it('emits cancel edit', async () => {
     const { user, emitted } = renderComponent({
       modelValue: {
-        referenceType: ReferenceTypeEnum.ANWENDUNG,
+        verweisTyp: VerweisTypEnum.ANWENDUNG,
         normAbbreviation: { id: '123', abbreviation: 'ABC' },
       } as ActiveReference,
     })
@@ -486,7 +486,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -521,7 +521,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -540,8 +540,8 @@ describe('ActiveReferenceInput', () => {
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(2))
 
-    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
-    await user.type(referenceTypeField, 'A')
+    const verweisTypField = screen.getByLabelText('Art der Verweisung')
+    await user.type(verweisTypField, 'A')
     await user.click(screen.getByText('Anwendung'))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
@@ -571,7 +571,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -588,8 +588,8 @@ describe('ActiveReferenceInput', () => {
     const { user } = renderComponent()
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(2))
 
-    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
-    await user.type(referenceTypeField, 'A')
+    const verweisTypField = screen.getByLabelText('Art der Verweisung')
+    await user.type(verweisTypField, 'A')
     await user.click(screen.getByText('Anwendung'))
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
     await user.type(abbreviationField, 'SGB')
@@ -609,7 +609,7 @@ describe('ActiveReferenceInput', () => {
     fetchSpy.mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          referenceTypes: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
+          verweisTypen: [anwendungFixture, neuregelungFixture, rechtsgrundlageFixture],
         }),
         {
           status: 200,
@@ -628,8 +628,8 @@ describe('ActiveReferenceInput', () => {
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(2))
 
-    const referenceTypeField = screen.getByLabelText('Art der Verweisung')
-    await user.type(referenceTypeField, 'A')
+    const verweisTypField = screen.getByLabelText('Art der Verweisung')
+    await user.type(verweisTypField, 'A')
     await user.click(screen.getByText('Anwendung'))
 
     const abbreviationField = screen.getByLabelText('RIS-Abkürzung')
