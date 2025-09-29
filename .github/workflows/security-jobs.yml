@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    secrets:
+      GH_TOKEN:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
   confirm-repository-secret-scanning-with-push-protection:

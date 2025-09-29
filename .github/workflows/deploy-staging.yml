@@ -4,6 +4,19 @@ on:
       container-image-version:
         required: true
         type: string
+    secrets:
+      DEPLOY_KEY:
+        required: true
+      ARGOCD_PIPELINE_PASSWORD:
+        required: true
+      ARGOCD_SERVER:
+        required: true
+      METRICS_DEPLOYMENT_WEBHOOK_URL:
+        required: true
+      METRICS_WEBHOOK_TOKEN:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
   deploy-staging:

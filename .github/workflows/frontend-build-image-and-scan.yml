@@ -7,6 +7,11 @@ on:
       image-ref:
         required: true
         type: string
+    secrets:
+      SENTRY_AUTH_TOKEN: 
+        required: true
+      SLACK_WEBHOOK_URL: 
+        required: true
 
 jobs:
   frontend-build-image-and-scan:

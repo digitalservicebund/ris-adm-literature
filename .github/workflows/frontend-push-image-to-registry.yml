@@ -10,6 +10,9 @@ on:
       image-ref:
         required: true
         type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
   frontend-push-image-to-registry:
