@@ -187,7 +187,7 @@ jobs:
         run: npm ci
         working-directory: ./frontend
       - name: Run license scanner
-        run: npm run audit:licencesfr
+        run: npm run audit:licences
         working-directory: ./frontend
       - name: Upload licence report
         if: always()
