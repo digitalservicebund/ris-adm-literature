@@ -540,6 +540,11 @@ class LdmlPublishConverterServiceIntegrationTest {
             new SingleNorm(UUID.randomUUID(), "§1", null, null),
             new SingleNorm(UUID.randomUUID(), "§2 Abs. 1", "2025-01-01", "2025")
           )
+        ),
+        new NormReference(
+          new NormAbbreviation(UUID.randomUUID(), "NormRef", "Normen Referat"),
+          "NormRef",
+          null
         )
       ),
       null,
@@ -569,6 +574,7 @@ class LdmlPublishConverterServiceIntegrationTest {
               <akn:implicitReference shortForm="BGB" showAs="BGB §2 Abs. 1">
                   <ris:normReference singleNorm="§2 Abs. 1" dateOfRelevance="2025" dateOfVersion="2025-01-01"/>
               </akn:implicitReference>
+              <akn:implicitReference shortForm="NormRef" showAs="NormRef"/>
               <akn:implicitReference shortForm="Übernahme BSG Kassel X/I 43" showAs="Übernahme BSG Kassel X/I 43 2024-02-04">
                   <ris:caselawReference abbreviation="Übernahme" court="BSG" courtLocation="Kassel" date="2024-02-04" documentNumber="KSNR00000011" referenceNumber="X/I 43"/>
               </akn:implicitReference>
