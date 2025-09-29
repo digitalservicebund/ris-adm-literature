@@ -87,7 +87,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "tailwindcss": "~4.1.12",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.44.0",
+    "typescript-eslint": "^8.44.1",
     "vitest": "^3.2.4",
     "vue-eslint-parser": "^10.2.0"
   },
