@@ -9,7 +9,6 @@ import java.util.Optional;
  */
 public interface DocumentationUnitPort {
   Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber);
-  DocumentationUnit create();
 
   /**
    * Updates a documentation unit by document number and returns the updated documentation unit.

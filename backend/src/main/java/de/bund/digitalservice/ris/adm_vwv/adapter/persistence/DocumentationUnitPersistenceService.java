@@ -57,8 +57,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       );
   }
 
-  @Override
-  public DocumentationUnit create() {
+  public DocumentationUnit create(String documentationOffice) {
     // Issue for the very first documentation unit of a new year: If for this year
     // there is no
     // document number stored, then concurrent threads can lead to an
@@ -76,7 +75,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .retryOn(DataIntegrityViolationException.class)
       .build();
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create()
+      documentationUnitCreationService.create(DocumentationOffice.valueOf(documentationOffice))
     );
     log.info(
       "New documentation unit created with document number: {}",

@@ -31,6 +31,7 @@ public class DocumentationUnitController {
   );
 
   private final DocumentationUnitPort documentationUnitPort;
+  private final DocumentationUnitService documentationUnitService;
 
   /**
    * Returns information on all documentation units as required by the
@@ -110,8 +111,8 @@ public class DocumentationUnitController {
    */
   @PostMapping("api/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
-  public DocumentationUnit create() {
-    return documentationUnitPort.create();
+  public DocumentationUnit create(@Valid @RequestBody CreateDocumentationUnitRequest request) {
+    return documentationUnitService.create(request.getDocumentationOffice());
   }
 
   /**

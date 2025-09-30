@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
@@ -26,6 +27,7 @@ public class DocumentationUnitService implements DocumentationUnitPort {
   private final LdmlPublishConverterService ldmlPublishConverterService;
   private final ObjectMapper objectMapper;
   private final PublishPort publishPort;
+  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
   @Override
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
@@ -57,9 +59,8 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     }
   }
 
-  @Override
-  public DocumentationUnit create() {
-    return documentationUnitPersistencePort.create();
+  public DocumentationUnit create(String documentationOffice) {
+    return documentationUnitPersistenceService.create(documentationOffice);
   }
 
   @Override

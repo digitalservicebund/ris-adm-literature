@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface DocumentationUnitPersistencePort {
   Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber);
 
-  DocumentationUnit create();
-
   DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json);
 
   DocumentationUnit publish(
