@@ -569,7 +569,7 @@ class LdmlConverterServiceIntegrationTest {
       .extracting(
         ActiveReference::referenceDocumentType,
         ActiveReference::normAbbreviationRawValue,
-        ActiveReference::referenceType,
+        ActiveReference::verweisTyp,
         activeReference ->
           activeReference.singleNorms().stream().map(SingleNorm::singleNorm).toList()
       )
