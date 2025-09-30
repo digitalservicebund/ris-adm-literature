@@ -65,14 +65,10 @@ dependencies {
     exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
-    // CVE-2025-53864
-    exclude("com.nimbusds", "nimbus-jose-jwt")
-  }
+  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
   implementation("com.google.protobuf:protobuf-java:4.32.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.nimbusds:nimbus-jose-jwt:10.5")
   implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
@@ -87,13 +83,10 @@ dependencies {
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
   implementation("software.amazon.awssdk:s3") {
-    // CVE-2025-58056
-    exclude("io.netty", "netty-codec-http")
-    // CVE CVE-2025-58057
+    // CVE-2025-58057
     exclude("io.netty", "netty-codec")
   }
   implementation("io.netty:netty-codec:4.2.6.Final")
-  implementation("io.netty:netty-codec-http:4.2.6.Final")
   implementation("org.jsoup:jsoup:$jsoupVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")

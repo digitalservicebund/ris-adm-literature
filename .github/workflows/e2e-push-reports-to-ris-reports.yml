@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY:
+        required: true
 
 jobs:
   push-e2e-report-to-ris-reports:

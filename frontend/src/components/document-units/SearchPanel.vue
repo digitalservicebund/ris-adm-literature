@@ -63,7 +63,7 @@ function onClickReset() {
       <InputField id="zitierdatum" v-slot="slotProps" @update:validation-error="onValidationError">
         <DateInput
           :key="zitierdatumKey"
-          id="zitierdaten"
+          id="zitierdatum"
           v-model="searchParams.zitierdaten"
           ariaLabel="Zitierdatum"
           mask="99.99.9999"

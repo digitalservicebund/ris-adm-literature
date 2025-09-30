@@ -226,7 +226,7 @@ watch(
             :label-position="LabelPosition.RIGHT"
           >
             <RadioButton
-              id="normReferenceDocumentType"
+              input-id="normReferenceDocumentType"
               v-model="activeReference.referenceDocumentType"
               aria-label="Norm auswählen"
               :value="`${ActiveReferenceDocumentType.NORM}`"
@@ -239,7 +239,7 @@ watch(
             :label-position="LabelPosition.RIGHT"
           >
             <RadioButton
-              id="administrativeRegulationReferenceDocumentType"
+              input-id="administrativeRegulationReferenceDocumentType"
               v-model="activeReference.referenceDocumentType"
               aria-label="Verwaltungsvorschrift auswählen"
               :value="`${ActiveReferenceDocumentType.ADMINISTRATIVE_REGULATION}`"
