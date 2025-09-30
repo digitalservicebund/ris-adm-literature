@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.*;
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.mapInstitutionType;
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.mapInstitutionTypeString;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.Page;
@@ -32,6 +33,7 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final LegalPeriodicalsRepository legalPeriodicalsRepository;
   private final RegionRepository regionRepository;
   private final InstitutionRepository institutionRepository;
+  private final CitationTypeRepository citationTypeRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -306,6 +308,46 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       true,
       false
     );
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    var citationTypes = StringUtils.isBlank(searchTerm)
+      ? citationTypeRepository.findAll(pageable)
+      : citationTypeRepository.findByAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+        searchTerm,
+        searchTerm,
+        pageable
+      );
+    return PageTransformer.transform(citationTypes, mapCitationTypeEntity());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<ZitierArt> findZitierArtenByAbbreviation(@Nonnull String abbreviation) {
+    CitationTypeEntity probe = new CitationTypeEntity();
+    probe.setAbbreviation(abbreviation);
+    return citationTypeRepository
+      .findAll(Example.of(probe))
+      .stream()
+      .map(mapCitationTypeEntity())
+      .toList();
+  }
+
+  private Function<CitationTypeEntity, ZitierArt> mapCitationTypeEntity() {
+    return citationTypeEntity ->
+      new ZitierArt(
+        citationTypeEntity.getId(),
+        citationTypeEntity.getAbbreviation(),
+        citationTypeEntity.getLabel()
+      );
   }
 
   private Function<InstitutionEntity, Institution> mapInstitutionEntity() {

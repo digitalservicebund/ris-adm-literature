@@ -64,6 +64,11 @@ public class LookupTablesService implements LookupTablesPort {
   }
 
   @Override
+  public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
+    return lookupTablesPersistencePort.findZitierArten(query);
+  }
+
+  @Override
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
     return lookupTablesPersistencePort.findNormAbbreviations(query);
   }

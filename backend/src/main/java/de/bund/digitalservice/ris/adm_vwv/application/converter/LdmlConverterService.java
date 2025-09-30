@@ -24,6 +24,7 @@ public class LdmlConverterService {
   private final NormgeberTransformer normgeberTransformer;
   private final FieldsOfLawTransformer fieldsOfLawTransformer;
   private final KurzreferatTransformer kurzreferatTransformer;
+  private final ActiveCitationsTransformer activeCitationsTransformer;
 
   /**
    * Converts the xml of the given documentation unit to business models.
@@ -53,7 +54,7 @@ public class LdmlConverterService {
       referenceNumbers.isEmpty(),
       documentTypeTransformer.transform(akomaNtoso),
       new DocumentTypeZusatzTransformer(akomaNtoso).transform(),
-      new ActiveCitationsTransformer(akomaNtoso).transform(),
+      activeCitationsTransformer.transform(akomaNtoso),
       new ActiveReferencesTransformer(akomaNtoso).transform(),
       new NormReferencesTransformer(akomaNtoso).transform(),
       null,

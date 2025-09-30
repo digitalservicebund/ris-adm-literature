@@ -9,4 +9,5 @@ import java.util.UUID;
  * @param jurisShortcut Juris shortcut
  * @param label The label
  */
+@Deprecated
 public record CitationType(UUID uuid, String jurisShortcut, String label) {}

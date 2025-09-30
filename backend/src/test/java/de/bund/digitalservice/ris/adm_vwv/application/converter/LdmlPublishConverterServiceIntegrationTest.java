@@ -2,10 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
-import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.*;
 import de.bund.digitalservice.ris.adm_vwv.test.TestFile;
 import java.time.LocalDate;
@@ -528,7 +525,7 @@ class LdmlPublishConverterServiceIntegrationTest {
           "2024-02-04",
           "X/I 43",
           null,
-          new CitationType(UUID.randomUUID(), "Ueb", "Übernahme")
+          new ZitierArt(UUID.randomUUID(), "Übernahme", "Übernahme")
         )
       ),
       List.of(),
