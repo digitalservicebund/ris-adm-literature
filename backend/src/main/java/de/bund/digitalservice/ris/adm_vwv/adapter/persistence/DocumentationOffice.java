@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,15 +25,4 @@ public enum DocumentationOffice {
    * The security role associated with this document type.
    */
   private final String role;
-
-  public static DocumentationOffice fromRole(String userRole) {
-    String roleName = userRole.startsWith("ROLE_") ? userRole.substring(5) : userRole;
-
-    return Arrays.stream(values())
-      .filter(
-        type -> type.getRole().equalsIgnoreCase(roleName) || type.name().equalsIgnoreCase(roleName)
-      )
-      .findFirst()
-      .orElseThrow(() -> new IllegalArgumentException("Unknown role: " + userRole));
-  }
 }
