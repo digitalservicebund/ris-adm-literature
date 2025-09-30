@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.mapInstitutionType;
-import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.mapInstitutionTypeString;
+import static de.bund.digitalservice.ris.adm_vwv.adapter.persistence.InstitutionTypeMapper.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.Page;
