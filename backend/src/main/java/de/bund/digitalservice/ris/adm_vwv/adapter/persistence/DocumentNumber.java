@@ -6,7 +6,9 @@ import java.util.Objects;
 
 public class DocumentNumber {
 
-  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("000000");
+  private static final String LEGACY_PREFIX = "KSNR";
+  private static final int COUNTER_LENGTH = 6;
+  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0".repeat(COUNTER_LENGTH));
 
   private final String prefix;
   private final Year year;
@@ -24,25 +26,28 @@ public class DocumentNumber {
     this.latestNumber = latestNumber;
   }
 
+  /**
+   * The LEGACY constructor for the original KSNR document numbers.
+   * It calls the main constructor with the hardcoded "KSNR" prefix.
+   * @param year The current year.
+   * @param latestNumber The last persisted number for the KSNR series, or null.
+   */
+  public DocumentNumber(Year year, String latestNumber) {
+    this(LEGACY_PREFIX, year, latestNumber);
+  }
+
   public String create() {
     String fullPrefix = this.prefix + this.year.getValue();
     int number = 0;
 
-    if (latestNumber != null && !latestNumber.isEmpty()) {
+    if (latestNumber != null) {
+      // Check that the latest number starts with the expected prefix
       if (!latestNumber.startsWith(fullPrefix)) {
         throw new IllegalArgumentException(
           "Invalid last document number: " + latestNumber + " does not match prefix " + fullPrefix
         );
       }
-
-      String counterStr = latestNumber.substring(fullPrefix.length());
-
-      if (!counterStr.matches("\\d+")) {
-        throw new IllegalArgumentException(
-          "Invalid last document number: counter part contains non-digit characters."
-        );
-      }
-
+      // The counter is the part of the string after the full prefix
       number = Integer.parseInt(latestNumber.substring(fullPrefix.length()));
     }
 

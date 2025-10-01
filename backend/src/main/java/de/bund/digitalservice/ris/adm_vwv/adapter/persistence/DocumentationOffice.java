@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-//TODO: Decide how to implement this after we have the roles in bareId
 public enum DocumentationOffice {
   // Existing type
   ADM_VWV("KSNR", "adm_vwv_user"),

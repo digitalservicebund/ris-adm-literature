@@ -78,9 +78,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
 
     // when
-    DocumentationUnit documentationUnit = documentationUnitPersistenceService.create(
-      DocumentationOffice.ADM_VWV.name()
-    );
+    DocumentationUnit documentationUnit = documentationUnitPersistenceService.create();
 
     // then
     assertThat(
