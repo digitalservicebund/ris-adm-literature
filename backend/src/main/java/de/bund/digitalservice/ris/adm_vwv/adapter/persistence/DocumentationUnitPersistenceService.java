@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
-  private final UserInformationService userInformationService;
 
   @Override
   @Transactional(readOnly = true)
@@ -75,8 +76,9 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     RetryTemplate retryTemplate = RetryTemplate.builder()
       .retryOn(DataIntegrityViolationException.class)
       .build();
-    UserInformationService.UserDocumentDetails details =
-      userInformationService.getCurrentUserDocumentDetails();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
+
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
       documentationUnitCreationService.create(details.office(), details.type())
     );
