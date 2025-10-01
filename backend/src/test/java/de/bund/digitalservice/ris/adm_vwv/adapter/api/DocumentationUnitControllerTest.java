@@ -42,6 +42,9 @@ class DocumentationUnitControllerTest {
   @MockitoBean
   private DocumentationUnitPort documentationUnitPort;
 
+  @Autowired
+  private DocumentationUnitService documentationUnitService;
+
   @Test
   @DisplayName("Request GET returns HTTP 200 and data from mocked documentation unit port")
   void find() throws Exception {
@@ -82,7 +85,7 @@ class DocumentationUnitControllerTest {
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitPort.create()).willReturn(
+    given(documentationUnitService.create()).willReturn(
       new DocumentationUnit("KSNR054920707", id, null)
     );
 
