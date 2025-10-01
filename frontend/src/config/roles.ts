@@ -4,6 +4,6 @@ export const USER_ROLES = {
 } as const
 
 export const roleToHomeRouteMap: Record<string, string> = {
-  [USER_ROLES.VWV_USER]: 'StartPageVwv',
-  [USER_ROLES.LIT_BAG_USER]: 'StartPageUli',
+  [USER_ROLES.VWV_USER]: 'vwv-start-page',
+  [USER_ROLES.LIT_BAG_USER]: 'uli-start-page',
 }

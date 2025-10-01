@@ -8,8 +8,8 @@ describe('Role Configuration', () => {
   })
 
   it('should map roles to the correct home route names', () => {
-    expect(roleToHomeRouteMap[USER_ROLES.VWV_USER]).toBe('StartPageVwv')
-    expect(roleToHomeRouteMap[USER_ROLES.LIT_BAG_USER]).toBe('StartPageUli')
+    expect(roleToHomeRouteMap[USER_ROLES.VWV_USER]).toBe('vwv-start-page')
+    expect(roleToHomeRouteMap[USER_ROLES.LIT_BAG_USER]).toBe('uli-start-page')
   })
 
   it('should have a home route mapping for every defined user role', () => {

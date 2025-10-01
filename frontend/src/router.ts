@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import StartPageVwv from './routes/vwv/documentUnit/StartPageVwv.vue'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
 import DocumentUnitWrapper from './routes/vwv/documentUnit/[documentNumber].vue'
 import AbgabePage from './routes/vwv/documentUnit/[documentNumber]/AbgabePage.vue'
@@ -8,8 +7,9 @@ import FundstellenPage from '@/routes/vwv/documentUnit/[documentNumber]/Fundstel
 import New from '@/routes/vwv/documentUnit/new.vue'
 import { useAuthentication } from '@/services/auth.ts'
 import Forbidden from '@/routes/Forbidden.vue'
-import StartPageUli from '@/routes/uli/StartPageUli.vue'
 import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles.ts'
+import StartPageTemplate from './routes/StartPageTemplate.vue'
+import DocumentUnits from './components/document-units/DocumentUnits.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -33,49 +33,86 @@ const router = createRouter({
     },
     {
       path: '/verwaltungsvorschriften',
-      name: 'StartPageVwv',
-      component: StartPageVwv,
       meta: {
         requiresRole: USER_ROLES.VWV_USER,
       },
-    },
-    {
-      path: '/documentUnit/new',
-      name: 'documentUnit-new',
-      component: New,
+      children: [
+        {
+          path: '',
+          component: StartPageTemplate,
+          props: { title: 'Übersicht Verwaltungsvorschriften' },
+          children: [
+            {
+              path: '',
+              name: 'vwv-start-page',
+              component: DocumentUnits,
+            },
+          ],
+        },
+        {
+          path: 'documentUnit/new',
+          name: 'vwv-documentUnit-new',
+          component: New,
+        },
+        {
+          path: 'documentUnit/:documentNumber',
+          name: 'vwv-documentUnit-documentNumber',
+          component: DocumentUnitWrapper,
+          props: true,
+          redirect: { name: 'vwv-documentUnit-documentNumber-fundstellen' },
+          children: [
+            {
+              path: 'fundstellen',
+              name: 'vwv-documentUnit-documentNumber-fundstellen',
+              props: true,
+              component: FundstellenPage,
+            },
+            {
+              path: 'rubriken',
+              name: 'vwv-documentUnit-documentNumber-rubriken',
+              props: true,
+              component: RubrikenPage,
+            },
+            {
+              path: 'abgabe',
+              name: 'vwv-documentUnit-documentNumber-abgabe',
+              props: true,
+              component: AbgabePage,
+            },
+          ],
+        },
+      ],
     },
     {
       path: '/literatur-unselbstaendig',
-      name: 'StartPageUli',
-      component: StartPageUli,
       meta: {
         requiresRole: USER_ROLES.LIT_BAG_USER,
       },
-    },
-    {
-      path: '/documentUnit/:documentNumber',
-      name: 'documentUnit-documentNumber',
-      component: DocumentUnitWrapper,
-      props: true,
-      redirect: { name: 'documentUnit-documentNumber-fundstellen' },
       children: [
         {
-          path: '/documentUnit/:documentNumber/fundstellen',
-          name: 'documentUnit-documentNumber-fundstellen',
-          props: true,
-          component: FundstellenPage,
+          path: '',
+          name: 'uli-start-page',
+          component: StartPageTemplate,
+          props: { title: 'Übersicht Unselbstständige Literatur' },
         },
         {
-          path: '/documentUnit/:documentNumber/rubriken',
-          name: 'documentUnit-documentNumber-rubriken',
-          props: true,
-          component: RubrikenPage,
+          path: 'documentUnit/new',
+          name: 'uli-documentUnit-new',
+          component: New,
         },
         {
-          path: '/documentUnit/:documentNumber/abgabe',
-          name: 'documentUnit-documentNumber-abgabe',
+          path: 'documentUnit/:documentNumber',
+          name: 'uli-documentUnit-documentNumber',
+          component: DocumentUnitWrapper,
           props: true,
-          component: AbgabePage,
+          redirect: { name: 'uli-documentUnit-documentNumber-rubriken' },
+          children: [
+            {
+              path: 'rubriken',
+              name: 'uli-documentUnit-documentNumber-rubriken',
+              component: { template: '<div />' }, // renders nothing visible
+            },
+          ],
         },
       ],
     },
