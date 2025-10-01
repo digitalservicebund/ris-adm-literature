@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class DocumentationUnitService implements DocumentationUnitPort {
+public class DocumentationUnitService {
 
   private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
   private final LdmlConverterService ldmlConverterService;
@@ -29,7 +29,6 @@ public class DocumentationUnitService implements DocumentationUnitPort {
   private final PublishPort publishPort;
   private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
-  @Override
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     var optionalDocumentationUnit = documentationUnitPersistencePort.findByDocumentNumber(
       documentNumber
@@ -63,13 +62,11 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     return documentationUnitPersistenceService.create();
   }
 
-  @Override
   public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {
     return Optional.ofNullable(documentationUnitPersistencePort.update(documentNumber, json));
   }
 
   @Transactional
-  @Override
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
@@ -107,7 +104,6 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     return convertLdml(publishedDocumentationUnit);
   }
 
-  @Override
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
     @Nonnull DocumentationUnitQuery queryOptions
   ) {
