@@ -3,8 +3,10 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.application.CustomJwtAuthenticationConverter;
-import java.io.Serializable;
+import de.bund.digitalservice.ris.adm_vwv.application.UserDocumentDetails;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -20,57 +22,14 @@ class SecurityConfigurationTest {
 
   private Converter<Jwt, AbstractAuthenticationToken> authenticationConverter;
 
-  private enum DocumentationOffice {
-    BGH,
-  }
-
-  private enum DocumentType {
-    VWV,
-  }
-
-  private enum ApplicationRole {
-    ADM_VWV_USER(DocumentType.VWV, DocumentationOffice.BGH);
-
-    private final DocumentType documentType;
-    private final DocumentationOffice office;
-
-    ApplicationRole(DocumentType type, DocumentationOffice office) {
-      this.documentType = type;
-      this.office = office;
-    }
-
-    public static ApplicationRole from(String roleName) {
-      if ("adm_vwv_user".equalsIgnoreCase(roleName)) {
-        return ADM_VWV_USER;
-      }
-      throw new IllegalArgumentException("Unknown role: " + roleName);
-    }
-
-    public DocumentType getDocumentType() {
-      return documentType;
-    }
-
-    public DocumentationOffice getDocumentationOffice(Jwt jwt) {
-      return office;
-    }
-  }
-
-  // This is needed because the real record implements Serializable
-  public record UserDocumentDetails(DocumentationOffice office, DocumentType type)
-    implements Serializable {}
-
   @BeforeEach
   void setUp() {
-    // We now test the new custom converter
     authenticationConverter = new CustomJwtAuthenticationConverter();
   }
 
   @Test
   void shouldConvertJwtToTokenWithCorrectPrincipalAndAuthorities() {
-    final Map<String, Object> realmAccess = Map.of(
-      "roles",
-      List.of("adm_vwv_user", "another_role")
-    );
+    final Map<String, Object> realmAccess = Map.of("roles", List.of("adm_user", "another_role"));
     final Jwt jwt = createMockJwt(Map.of("realm_access", realmAccess));
 
     // when
@@ -79,26 +38,23 @@ class SecurityConfigurationTest {
     // then
     assertThat(token).isNotNull();
 
-    // 1. Verify the authorities are still created correctly
     assertThat(token.getAuthorities())
       .hasSize(2)
       .containsExactlyInAnyOrder(
-        new SimpleGrantedAuthority("ROLE_adm_vwv_user"),
+        new SimpleGrantedAuthority("ROLE_adm_user"),
         new SimpleGrantedAuthority("ROLE_another_role")
       );
 
-    // 2. Verify the principal is our custom UserDocumentDetails object
     assertThat(token.getPrincipal()).isInstanceOf(UserDocumentDetails.class);
 
-    // 3. Verify the content of the principal is correct
     UserDocumentDetails details = (UserDocumentDetails) token.getPrincipal();
-    assertThat(details.office()).isEqualTo(DocumentationOffice.BGH);
-    assertThat(details.type()).isEqualTo(DocumentType.VWV);
+    assertThat(details.office()).isEqualTo(DocumentationOffice.BSG);
+    assertThat(details.type()).isEqualTo(DocumentType.ADMINISTRATIVE);
   }
 
   @Test
   void shouldThrowExceptionWhenNoValidApplicationRoleIsFound() {
-    // given: A JWT with roles that are not valid application roles
+    // given
     final Map<String, Object> realmAccess = Map.of("roles", List.of("some_other_role", "guest"));
     final Jwt jwt = createMockJwt(Map.of("realm_access", realmAccess));
 
@@ -110,7 +66,7 @@ class SecurityConfigurationTest {
 
   @Test
   void shouldThrowExceptionWhenRolesListIsEmpty() {
-    // given: A JWT with an empty roles list
+    // given
     final Map<String, Object> realmAccess = Map.of("roles", List.of());
     final Jwt jwt = createMockJwt(Map.of("realm_access", realmAccess));
 

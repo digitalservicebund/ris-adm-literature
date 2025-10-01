@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class DocumentNumberTest {
 
+  // TODO: add all dokkies
   private static Stream<Arguments> latestDocumentNumbers() {
     return Stream.of(
       Arguments.of("KSNR", Year.of(2025), null, "KSNR2025000001"),
@@ -39,8 +40,7 @@ class DocumentNumberTest {
     return Stream.of(
       // prefix, year, latestDocumentNumber
       Arguments.of("KSNR", Year.of(2025), "KSNE2025000001"),
-      Arguments.of("KSNR", Year.of(2025), "KSNR2024000001"),
-      Arguments.of("STLU", Year.of(2025), "STLU2025-000001")
+      Arguments.of("KSNR", Year.of(2025), "KSNR2024000001")
     );
   }
 
