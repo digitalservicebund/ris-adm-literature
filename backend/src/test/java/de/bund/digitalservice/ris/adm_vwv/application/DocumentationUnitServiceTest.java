@@ -9,6 +9,8 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
@@ -39,6 +41,9 @@ class DocumentationUnitServiceTest {
 
   @Mock
   private DocumentationUnitPersistencePort documentationUnitPersistencePort;
+
+  @Mock
+  private DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
   @Mock
   private LdmlConverterService ldmlConverterService;
@@ -204,12 +209,16 @@ class DocumentationUnitServiceTest {
     );
 
     // when
-    when(documentationUnitPersistencePort.create()).thenReturn(sampleDocUnit);
+    when(documentationUnitPersistenceService.create(DocumentationOffice.ADM_VWV.name())).thenReturn(
+      sampleDocUnit
+    );
     when(documentationUnitPersistencePort.findByDocumentNumber(anyString())).thenReturn(
       Optional.of(sampleDocUnit)
     );
 
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
     String documentNumber = documentationUnit.documentNumber();
     assertThat(documentationUnit.json()).isNull();
 

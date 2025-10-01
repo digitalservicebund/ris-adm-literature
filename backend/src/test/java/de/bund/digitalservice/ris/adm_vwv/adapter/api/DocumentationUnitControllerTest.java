@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
@@ -41,6 +42,9 @@ class DocumentationUnitControllerTest {
 
   @MockitoBean
   private DocumentationUnitPort documentationUnitPort;
+
+  @Autowired
+  private DocumentationUnitService documentationUnitService;
 
   @Test
   @DisplayName("Request GET returns HTTP 200 and data from mocked documentation unit port")
@@ -82,7 +86,7 @@ class DocumentationUnitControllerTest {
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitPort.create()).willReturn(
+    given(documentationUnitService.create(DocumentationOffice.ADM_VWV.name())).willReturn(
       new DocumentationUnit("KSNR054920707", id, null)
     );
 

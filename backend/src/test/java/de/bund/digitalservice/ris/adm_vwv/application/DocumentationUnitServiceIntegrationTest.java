@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import java.util.Optional;
@@ -27,7 +28,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void find() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
     String documentNumber = documentationUnit.documentNumber();
 
     // when
@@ -48,7 +51,9 @@ class DocumentationUnitServiceIntegrationTest {
     // given
 
     // when
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
 
     // then
     assertThat(documentationUnit)
@@ -60,7 +65,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void update() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
 
     // when
     Optional<DocumentationUnit> updated = documentationUnitService.update(
@@ -89,7 +96,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void publish() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
 
     // when
     Optional<DocumentationUnit> published = documentationUnitService.publish(
@@ -125,7 +134,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void publish_shouldRollbackTransaction_whenExternalPublishingFails() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentationOffice.ADM_VWV.name()
+    );
     String documentNumber = documentationUnit.documentNumber();
     assertThat(documentationUnit.json()).isNull();
 
