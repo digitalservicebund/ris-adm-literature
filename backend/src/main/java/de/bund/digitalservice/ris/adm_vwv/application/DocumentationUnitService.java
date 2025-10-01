@@ -22,15 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DocumentationUnitService {
 
-  private final DocumentationUnitPersistencePort documentationUnitPersistencePort;
+  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
   private final LdmlConverterService ldmlConverterService;
   private final LdmlPublishConverterService ldmlPublishConverterService;
   private final ObjectMapper objectMapper;
   private final PublishPort publishPort;
-  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
-    var optionalDocumentationUnit = documentationUnitPersistencePort.findByDocumentNumber(
+    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
     );
     if (
@@ -63,7 +62,7 @@ public class DocumentationUnitService {
   }
 
   public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {
-    return Optional.ofNullable(documentationUnitPersistencePort.update(documentNumber, json));
+    return Optional.ofNullable(documentationUnitPersistenceService.update(documentNumber, json));
   }
 
   @Transactional
@@ -71,7 +70,7 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
-    var optionalDocumentationUnit = documentationUnitPersistencePort.findByDocumentNumber(
+    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
     );
 
@@ -85,7 +84,7 @@ public class DocumentationUnitService {
       documentationUnit.xml()
     );
     String json = convertToJson(documentationUnitContent);
-    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistencePort.publish(
+    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
       documentNumber,
       json,
       xml
@@ -107,6 +106,6 @@ public class DocumentationUnitService {
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
     @Nonnull DocumentationUnitQuery queryOptions
   ) {
-    return documentationUnitPersistencePort.findDocumentationUnitOverviewElements(queryOptions);
+    return documentationUnitPersistenceService.findDocumentationUnitOverviewElements(queryOptions);
   }
 }

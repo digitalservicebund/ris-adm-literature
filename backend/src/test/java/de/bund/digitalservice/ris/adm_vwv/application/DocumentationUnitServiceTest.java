@@ -39,9 +39,6 @@ class DocumentationUnitServiceTest {
   private Map<String, PublishPort> publishers;
 
   @Mock
-  private DocumentationUnitPersistencePort documentationUnitPersistencePort;
-
-  @Mock
   private DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
   @Mock
@@ -78,7 +75,7 @@ class DocumentationUnitServiceTest {
       null,
       xml
     );
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR2025000001")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(
@@ -114,7 +111,7 @@ class DocumentationUnitServiceTest {
       null,
       xml
     );
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR2025000001")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(null);
@@ -132,7 +129,7 @@ class DocumentationUnitServiceTest {
   @Test
   void findByDocumentNumber_doesNotExist() {
     // given
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR112233445566")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR112233445566")).willReturn(
       Optional.empty()
     );
 
@@ -184,11 +181,11 @@ class DocumentationUnitServiceTest {
     var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
     var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
 
-    when(documentationUnitPersistencePort.findByDocumentNumber(docNumber)).thenReturn(
+    when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
       Optional.of(doc)
     );
     when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
-    when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
+    when(documentationUnitPersistenceService.publish(any(), any(), any())).thenReturn(publishedDoc);
     when(publishers.get(bsgPublisherName)).thenReturn(publishPort);
 
     documentationUnitService.publish(docNumber, content);
@@ -209,7 +206,7 @@ class DocumentationUnitServiceTest {
 
     // when
     when(documentationUnitPersistenceService.create()).thenReturn(sampleDocUnit);
-    when(documentationUnitPersistencePort.findByDocumentNumber(anyString())).thenReturn(
+    when(documentationUnitPersistenceService.findByDocumentNumber(anyString())).thenReturn(
       Optional.of(sampleDocUnit)
     );
 

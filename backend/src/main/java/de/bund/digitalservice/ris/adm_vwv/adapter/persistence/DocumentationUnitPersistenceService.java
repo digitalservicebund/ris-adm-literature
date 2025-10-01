@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class DocumentationUnitPersistenceService implements DocumentationUnitPersistencePort {
+public class DocumentationUnitPersistenceService {
 
   static final String ENTRY_SEPARATOR = "$µµµµµ$";
 
@@ -44,7 +44,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
 
-  @Override
   @Transactional(readOnly = true)
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     return documentationUnitRepository
@@ -89,7 +88,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     return documentationUnit;
   }
 
-  @Override
   @Transactional
   public DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json) {
     return documentationUnitRepository
@@ -106,7 +104,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .orElse(null);
   }
 
-  @Override
   @Transactional
   public DocumentationUnit publish(
     @Nonnull String documentNumber,
@@ -128,7 +125,6 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       .orElse(null);
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
     @Nonnull DocumentationUnitQuery query
