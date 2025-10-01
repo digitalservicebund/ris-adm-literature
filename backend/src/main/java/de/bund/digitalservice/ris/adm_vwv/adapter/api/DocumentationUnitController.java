@@ -111,8 +111,8 @@ public class DocumentationUnitController {
    */
   @PostMapping("api/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
-  public DocumentationUnit create(@Valid @RequestBody CreateDocumentationUnitRequest request) {
-    return documentationUnitService.create(request.getDocumentationOffice());
+  public DocumentationUnit create() {
+    return documentationUnitService.create();
   }
 
   /**

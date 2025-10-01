@@ -36,7 +36,7 @@ const router = createRouter({
       name: 'StartPageVwv',
       component: StartPageVwv,
       meta: {
-        requiresRole: USER_ROLES.VWV_USER,
+        requiresRole: USER_ROLES.ADM_USER,
       },
     },
     {
@@ -49,7 +49,7 @@ const router = createRouter({
       name: 'StartPageUli',
       component: StartPageUli,
       meta: {
-        requiresRole: USER_ROLES.LIT_BAG_USER,
+        requiresRole: USER_ROLES.LITERATURE_USER,
       },
     },
     {

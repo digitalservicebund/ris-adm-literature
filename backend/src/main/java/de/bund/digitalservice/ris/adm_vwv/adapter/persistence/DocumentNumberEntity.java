@@ -40,5 +40,9 @@ public class DocumentNumberEntity {
    */
   @Enumerated(EnumType.STRING)
   @Column(name = "document_type", nullable = false)
+  private DocumentType documentType;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "documentation_office", nullable = false)
   private DocumentationOffice documentationOffice;
 }

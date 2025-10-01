@@ -11,8 +11,7 @@ const toast = useToast()
 const router = useRouter()
 
 onBeforeMount(async () => {
-  // TODO: no hardcoding, maybe use composable
-  const { data, error, isFinished } = usePostDocUnit('BFH')
+  const { data, error, isFinished } = usePostDocUnit()
   await until(isFinished).toBe(true)
 
   if (error.value) {

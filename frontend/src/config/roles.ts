@@ -1,9 +1,9 @@
 export const USER_ROLES = {
-  VWV_USER: 'adm_vwv_user',
-  LIT_BAG_USER: 'adm_lit_bag_user',
+  ADM_USER: 'adm_user',
+  LITERATURE_USER: 'literature_user',
 } as const
 
 export const roleToHomeRouteMap: Record<string, string> = {
-  [USER_ROLES.VWV_USER]: 'StartPageVwv',
-  [USER_ROLES.LIT_BAG_USER]: 'StartPageUli',
+  [USER_ROLES.ADM_USER]: 'StartPageVwv',
+  [USER_ROLES.LITERATURE_USER]: 'StartPageUli',
 }

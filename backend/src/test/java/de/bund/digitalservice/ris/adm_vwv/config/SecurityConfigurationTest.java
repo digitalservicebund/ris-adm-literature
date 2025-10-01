@@ -26,10 +26,7 @@ class SecurityConfigurationTest {
   @Test
   void shouldConvertRolesCorrectly() {
     // given
-    final Map<String, Object> realmAccess = Map.of(
-      "roles",
-      List.of("adm_vwv_user", "another_role")
-    );
+    final Map<String, Object> realmAccess = Map.of("roles", List.of("adm_user", "another_role"));
     final Jwt jwt = createMockJwt(Map.of("realm_access", realmAccess));
 
     // when
@@ -40,7 +37,7 @@ class SecurityConfigurationTest {
     assertThat(token.getAuthorities())
       .hasSize(2)
       .containsExactlyInAnyOrder(
-        new SimpleGrantedAuthority("ROLE_adm_vwv_user"),
+        new SimpleGrantedAuthority("ROLE_adm_user"),
         new SimpleGrantedAuthority("ROLE_another_role")
       );
   }

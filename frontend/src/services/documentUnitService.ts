@@ -54,8 +54,8 @@ export function usePutPublishDocUnit(documentUnit: DocumentUnit): UseFetchReturn
     .put(documentUnit)
 }
 
-export function usePostDocUnit(office: string): UseFetchReturn<DocumentUnit> {
-  return useApiFetch(`${DOCUMENTATION_UNITS_URL}`).json().post({ documentationOffice: office })
+export function usePostDocUnit(): UseFetchReturn<DocumentUnit> {
+  return useApiFetch(`${DOCUMENTATION_UNITS_URL}`).json().post()
 }
 
 export function useGetPaginatedDocUnits(

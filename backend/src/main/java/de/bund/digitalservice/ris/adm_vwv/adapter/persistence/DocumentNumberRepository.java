@@ -26,8 +26,10 @@ interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, U
    * @param documentationOffice The office (e.g., BAG, BFH) whose counter we need.
    * @return An optional containing the document number entity if found.
    */
-  Optional<DocumentNumberEntity> findByYearAndDocumentationOffice(
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  Optional<DocumentNumberEntity> findByYearAndDocumentationOfficeAndDocumentType(
     Year year,
-    DocumentationOffice documentationOffice
+    DocumentationOffice documentationOffice,
+    DocumentType documentType
   );
 }

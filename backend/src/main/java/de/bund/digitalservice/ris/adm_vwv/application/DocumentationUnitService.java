@@ -59,8 +59,8 @@ public class DocumentationUnitService implements DocumentationUnitPort {
     }
   }
 
-  public DocumentationUnit create(String documentationOffice) {
-    return documentationUnitPersistenceService.create(documentationOffice);
+  public DocumentationUnit create() {
+    return documentationUnitPersistenceService.create();
   }
 
   @Override

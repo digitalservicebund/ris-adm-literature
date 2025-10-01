@@ -41,6 +41,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
+  private final UserInformationService userInformationService;
 
   @Override
   @Transactional(readOnly = true)
@@ -57,7 +58,7 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
       );
   }
 
-  public DocumentationUnit create(String documentationOffice) {
+  public DocumentationUnit create() {
     // Issue for the very first documentation unit of a new year: If for this year
     // there is no
     // document number stored, then concurrent threads can lead to an
@@ -74,8 +75,10 @@ public class DocumentationUnitPersistenceService implements DocumentationUnitPer
     RetryTemplate retryTemplate = RetryTemplate.builder()
       .retryOn(DataIntegrityViolationException.class)
       .build();
+    UserInformationService.UserDocumentDetails details =
+      userInformationService.getCurrentUserDocumentDetails();
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create(DocumentationOffice.valueOf(documentationOffice))
+      documentationUnitCreationService.create(details.office(), details.type())
     );
     log.info(
       "New documentation unit created with document number: {}",

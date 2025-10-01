@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = NormAbbreviationController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 class NormAbbreviationControllerTest {
 
   @Autowired

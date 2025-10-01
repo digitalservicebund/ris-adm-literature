@@ -47,7 +47,8 @@ public class SecurityConfiguration {
           .permitAll()
           // --- SECURED ENDPOINTS ---
           .requestMatchers("/api/**")
-          .hasRole("adm_vwv_user")
+          // TODO: Remove adm_vwv_user once role flow is implemented //NOSONAR
+          .hasAnyRole("adm_user", "adm_vwv_user", "literature_user")
           // --- DENY ALL OTHERS ---
           .anyRequest()
           .denyAll()

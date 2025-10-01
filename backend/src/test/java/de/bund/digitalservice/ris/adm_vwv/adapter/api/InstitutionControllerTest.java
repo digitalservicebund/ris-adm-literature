@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = InstitutionController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 class InstitutionControllerTest {
 
   @Autowired
