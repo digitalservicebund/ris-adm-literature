@@ -14,7 +14,8 @@ import org.springframework.util.CollectionUtils;
 @Getter
 @RequiredArgsConstructor
 public enum ApplicationRole {
-  ADMINISTRATIVE("adm_user", DocumentTypeCode.ADMINISTRATIVE) {
+  // TODO: Remove adm_vwv_user once roles are defined in bareId // NOSONAR
+  ADMINISTRATIVE(List.of("adm_user", "adm_vwv_user"), DocumentTypeCode.ADMINISTRATIVE) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       // For administrative users, the office is always BSG.
@@ -22,7 +23,7 @@ public enum ApplicationRole {
     }
   },
 
-  LITERATURE("literature_user", DocumentTypeCode.LITERATURE_DEPENDENT) {
+  LITERATURE(List.of("literature_user"), DocumentTypeCode.LITERATURE_DEPENDENT) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       List<String> groups = jwt.getClaimAsStringList("groups");
@@ -37,7 +38,7 @@ public enum ApplicationRole {
     }
   };
 
-  private final String roleName;
+  private final List<String> roleNames;
   private final DocumentTypeCode documentTypeCode;
 
   /**
@@ -55,7 +56,7 @@ public enum ApplicationRole {
    */
   public static ApplicationRole from(String roleName) {
     return Stream.of(values())
-      .filter(role -> role.roleName.equalsIgnoreCase(roleName))
+      .filter(role -> role.roleNames.stream().anyMatch(name -> name.equalsIgnoreCase(roleName)))
       .findFirst()
       .orElseThrow(() -> new IllegalArgumentException("Unknown application role: " + roleName));
   }

@@ -35,7 +35,7 @@ const router = createRouter({
     {
       path: ROUTE_PATHS.VWV.BASE,
       meta: {
-        requiresRole: USER_ROLES.ADM_USER,
+        requiresRole: [USER_ROLES.ADM_USER, USER_ROLES.ADM_VWV_USER],
       },
       children: [
         {
@@ -133,10 +133,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthentication()
-  const requiredRole = to.meta.requiresRole as string | undefined
+  const requiredRoles = to.meta.requiresRole as string[] | undefined
 
-  if (requiredRole && auth.isAuthenticated()) {
-    if (auth.hasRealmRole(requiredRole)) {
+  if (requiredRoles && requiredRoles.length > 0 && auth.isAuthenticated()) {
+    const hasRequiredRole = requiredRoles.some((role) => auth.hasRealmRole(role))
+
+    if (hasRequiredRole) {
       next()
     } else {
       // User does not have the required role, redirect to the 'Forbidden' page
