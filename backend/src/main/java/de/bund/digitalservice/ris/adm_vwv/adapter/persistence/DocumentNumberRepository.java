@@ -19,17 +19,20 @@ interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, U
   Optional<DocumentNumberEntity> findByYear(@Nonnull Year year);
 
   /**
-   * Finds a document number entity by its year and specific documentation office.
-   * This is the primary method for finding the correct counter for a given office.
+   /**
+   * Finds the current document number by the given year, office and document type code.
+   * The operation creates a pessimistic lock for the found
+   * entity, so that concurrent threads have to wait until the transaction completes.
    *
-   * @param year The calendar year.
-   * @param documentationOffice The office (e.g., BAG, BFH) whose counter we need.
-   * @return An optional containing the document number entity if found.
+   * @param year The year the document number belongs to
+   * @param documentationOffice The office, e.g., BAG, BFH
+   * @param documentTypeCode The document type code, e.g. LU, LS
+   * @return Document number with the given year or an empty optional if not found
    */
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  Optional<DocumentNumberEntity> findByYearAndDocumentationOfficeAndDocumentType(
+  Optional<DocumentNumberEntity> findByYearAndDocumentationOfficeAndDocumentTypeCode(
     Year year,
     DocumentationOffice documentationOffice,
-    DocumentType documentType
+    DocumentTypeCode documentTypeCode
   );
 }

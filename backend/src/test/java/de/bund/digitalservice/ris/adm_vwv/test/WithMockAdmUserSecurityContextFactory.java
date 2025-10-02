@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.test;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.application.UserDocumentDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +15,10 @@ public class WithMockAdmUserSecurityContextFactory
   public SecurityContext createSecurityContext(WithMockAdmUser annotation) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-    var principal = new UserDocumentDetails(DocumentationOffice.BSG, DocumentType.ADMINISTRATIVE);
+    var principal = new UserDocumentDetails(
+      DocumentationOffice.BSG,
+      DocumentTypeCode.ADMINISTRATIVE
+    );
 
     var auth = new UsernamePasswordAuthenticationToken(principal, "password");
 

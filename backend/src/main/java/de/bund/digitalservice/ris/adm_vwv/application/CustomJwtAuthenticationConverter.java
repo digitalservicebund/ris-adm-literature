@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,7 +66,7 @@ public class CustomJwtAuthenticationConverter
       throw new IllegalStateException("User does not have a required application role.");
     }
 
-    DocumentType type = applicationRole.getDocumentType();
+    DocumentTypeCode type = applicationRole.getDocumentTypeCode();
     DocumentationOffice office = applicationRole.getDocumentationOffice(jwt);
 
     var userDetails = new UserDocumentDetails(office, type);

@@ -15,15 +15,15 @@ class DocumentationUnitCreationService {
 
   @Transactional
   // 1. Create or update the document number for this year and docOffice type
-  public DocumentationUnit create(DocumentationOffice office, DocumentType type) {
+  public DocumentationUnit create(DocumentationOffice office, DocumentTypeCode type) {
     Year thisYear = Year.now();
     DocumentNumberEntity documentNumberEntity = documentNumberRepository
-      .findByYearAndDocumentationOfficeAndDocumentType(thisYear, office, type)
+      .findByYearAndDocumentationOfficeAndDocumentTypeCode(thisYear, office, type)
       .orElseGet(() -> {
         DocumentNumberEntity newEntity = new DocumentNumberEntity();
         newEntity.setYear(thisYear);
         newEntity.setDocumentationOffice(office);
-        newEntity.setDocumentType(type);
+        newEntity.setDocumentTypeCode(type);
         return newEntity;
       });
 

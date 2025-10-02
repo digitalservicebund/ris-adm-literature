@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Table(
   name = "document_number",
-  uniqueConstraints = { @UniqueConstraint(columnNames = { "year", "document_type" }) }
+  uniqueConstraints = { @UniqueConstraint(columnNames = { "year", "document_type_code" }) }
 )
 public class DocumentNumberEntity {
 
@@ -39,8 +39,8 @@ public class DocumentNumberEntity {
    * The type of the document, which determines the prefix and numbering sequence.
    */
   @Enumerated(EnumType.STRING)
-  @Column(name = "document_type", nullable = false)
-  private DocumentType documentType;
+  @Column(name = "document_type_code", nullable = false)
+  private DocumentTypeCode documentTypeCode;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "documentation_office", nullable = false)

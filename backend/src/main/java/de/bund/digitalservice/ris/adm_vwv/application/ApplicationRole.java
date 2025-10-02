@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentType;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import java.util.List;
 import java.util.stream.Stream;
@@ -12,7 +12,7 @@ import org.springframework.util.CollectionUtils;
 @Getter
 @RequiredArgsConstructor
 public enum ApplicationRole {
-  ADMINISTRATIVE("adm_user", DocumentType.ADMINISTRATIVE) {
+  ADMINISTRATIVE("adm_user", DocumentTypeCode.ADMINISTRATIVE) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       // For administrative users, the office is always BSG.
@@ -20,7 +20,7 @@ public enum ApplicationRole {
     }
   },
 
-  LITERATURE("literature_user", DocumentType.LITERATURE) {
+  LITERATURE("literature_user", DocumentTypeCode.LITERATURE_DEPENDENT) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       List<String> groups = jwt.getClaimAsStringList("groups");
@@ -36,7 +36,7 @@ public enum ApplicationRole {
   };
 
   private final String roleName;
-  private final DocumentType documentType;
+  private final DocumentTypeCode documentTypeCode;
 
   /**
    * Determines the documentation office based on the specific logic for each role.
