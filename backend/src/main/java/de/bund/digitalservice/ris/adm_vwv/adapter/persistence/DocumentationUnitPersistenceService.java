@@ -48,8 +48,7 @@ public class DocumentationUnitPersistenceService {
    * Finds a document by its number.
    *
    * @param documentNumber The document number
-   * @return an {@link Optional} containing the found {@link DocumentationUnit},
-   * or empty if not found.
+   * @return an {@link Optional} containing the found {@link DocumentationUnit}, or empty if not found.
    */
   @Transactional(readOnly = true)
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
