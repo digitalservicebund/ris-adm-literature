@@ -11,8 +11,8 @@ import java.time.Year;
  * @param latestNumber The last persisted number for this series, or null if none exists (6-digits).
  */
 public record DocumentNumber(String prefix, Year year, String latestNumber) {
-  private static final int COUNTER_LENGTH = 6;
-  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0".repeat(COUNTER_LENGTH));
+  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("000000");
+  private static final String VALID_DOCUMENT_NUMBER_PATTERN = "[A-Z]{4}\\d{10}";
 
   /**
    * Creates the next document number in the series.
@@ -29,6 +29,9 @@ public record DocumentNumber(String prefix, Year year, String latestNumber) {
         throw new IllegalArgumentException(
           "Invalid last document number: " + latestNumber() + " does not match prefix " + fullPrefix
         );
+      }
+      if (!latestNumber().matches(VALID_DOCUMENT_NUMBER_PATTERN)) {
+        throw new IllegalArgumentException("Invalid last document number: " + latestNumber());
       }
       number = Integer.parseInt(latestNumber().substring(fullPrefix.length()));
     }

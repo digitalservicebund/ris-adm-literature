@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * Temporary class to create LIT sequential numbers
  */
+// TODO: Remove once RISDEV-9545 is implemented // NOSONAR
 @Component
 public class InMemoryDocumentNumberStore {
 
