@@ -15,10 +15,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-@Table(
-  name = "document_number",
-  uniqueConstraints = { @UniqueConstraint(columnNames = { "year", "document_type_code" }) }
-)
+@Table(name = "document_number")
 public class DocumentNumberEntity {
 
   @Id
@@ -26,23 +23,11 @@ public class DocumentNumberEntity {
   private UUID id;
 
   /**
-   * The latest document number used. The complete string is persisted here,
-   * e.g. {@code KSNR2025000001} or {@code KALU2025000001}.
+   * The latest document number used. The complete string is persisted here, e.g. {@code KSNR2025000001}.
    */
   @Basic(optional = false)
   private String latest;
 
   @Basic(optional = false)
   private Year year;
-
-  /**
-   * The type of the document, which determines the prefix and numbering sequence.
-   */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "document_type_code", nullable = false)
-  private DocumentTypeCode documentTypeCode;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "documentation_office", nullable = false)
-  private DocumentationOffice documentationOffice;
 }

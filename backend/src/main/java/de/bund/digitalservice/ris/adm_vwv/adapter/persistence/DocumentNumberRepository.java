@@ -17,22 +17,4 @@ interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, U
    */
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<DocumentNumberEntity> findByYear(@Nonnull Year year);
-
-  /**
-   /**
-   * Finds the current document number by the given year, office and document type code.
-   * The operation creates a pessimistic lock for the found
-   * entity, so that concurrent threads have to wait until the transaction completes.
-   *
-   * @param year The year the document number belongs to
-   * @param documentationOffice The office, e.g., BAG, BFH
-   * @param documentTypeCode The document type code, e.g. LU, LS
-   * @return Document number with the given year or an empty optional if not found
-   */
-  @Lock(LockModeType.PESSIMISTIC_WRITE)
-  Optional<DocumentNumberEntity> findByYearAndDocumentationOfficeAndDocumentTypeCode(
-    Year year,
-    DocumentationOffice documentationOffice,
-    DocumentTypeCode documentTypeCode
-  );
 }
