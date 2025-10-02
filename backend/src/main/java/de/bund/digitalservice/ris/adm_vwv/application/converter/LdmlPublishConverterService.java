@@ -381,7 +381,7 @@ public class LdmlPublishConverterService {
               ImplicitReference implicitReference = new ImplicitReference();
               String shortForm = StringUtils.joinWith(
                 " ",
-                activeCitation.citationType().label(),
+                activeCitation.zitierArt().label(),
                 activeCitation.court().type(),
                 activeCitation.court().location(),
                 activeCitation.fileNumber()
@@ -389,7 +389,7 @@ public class LdmlPublishConverterService {
               implicitReference.setShortForm(shortForm);
               implicitReference.setShowAs(shortForm + " " + activeCitation.decisionDate());
               RisCaselawReference caselawReference = new RisCaselawReference();
-              caselawReference.setAbbreviation(activeCitation.citationType().label());
+              caselawReference.setAbbreviation(activeCitation.zitierArt().abbreviation());
               caselawReference.setCourt(activeCitation.court().type());
               caselawReference.setCourtLocation(activeCitation.court().location());
               caselawReference.setDate(activeCitation.decisionDate());

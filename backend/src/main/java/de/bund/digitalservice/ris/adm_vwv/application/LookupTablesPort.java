@@ -27,6 +27,8 @@ public interface LookupTablesPort {
 
   Page<Court> findCourts(@Nonnull CourtQuery query);
 
+  Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query);
+
   Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query);
 
   Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query);

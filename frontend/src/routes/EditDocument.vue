@@ -7,11 +7,12 @@ import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
 import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import { useAdmVwvMenuItems } from '@/composables/useAdmVwvMenuItems'
+import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
 import type { DocumentUnit } from '@/domain/documentUnit'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
+import { ROUTE_NAMES } from '@/constants/routes'
 
 const props = defineProps<{
   documentNumber: string
@@ -19,6 +20,7 @@ const props = defineProps<{
 
 const toast = useToast()
 
+// Use specific store for uli documents
 const store = useDocumentUnitStore()
 
 const { documentUnit, error } = storeToRefs(store) as {
@@ -27,7 +29,10 @@ const { documentUnit, error } = storeToRefs(store) as {
 }
 
 const route = useRoute()
-const menuItems = useAdmVwvMenuItems(props.documentNumber, route.query)
+const getMenuItems = () =>
+  route.name === ROUTE_NAMES.ULI.DOCUMENT_UNIT.EDIT
+    ? getUliMenuItems(props.documentNumber, route.query)
+    : getAdmVwvMenuItems(props.documentNumber, route.query)
 
 const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
 
@@ -68,7 +73,7 @@ watch(error, (err) => {
         test-id="side-toggle-navigation"
         @update:is-expanded="toggleNavigationPanel"
       >
-        <NavbarSide :is-child="false" :menu-items="menuItems" :route="route" />
+        <NavbarSide :is-child="false" :menu-items="getMenuItems()" :route="route" />
       </SideToggle>
     </div>
     <div v-if="documentUnit" class="flex w-full min-w-0 flex-col bg-gray-100">

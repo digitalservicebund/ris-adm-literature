@@ -58,7 +58,9 @@ test.describe('StartPage VwV', () => {
 
       // Assert
       // this needs to change when KSNR are generated dynamically
-      await expect(page).toHaveURL('/documentUnit/KSNR054920707/fundstellen')
+      await expect(page).toHaveURL(
+        '/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen',
+      )
     },
   )
 
