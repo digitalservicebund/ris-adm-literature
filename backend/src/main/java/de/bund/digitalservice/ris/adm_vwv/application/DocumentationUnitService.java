@@ -28,6 +28,13 @@ public class DocumentationUnitService {
   private final ObjectMapper objectMapper;
   private final PublishPort publishPort;
 
+  /**
+   * Finds a DocumentationUnit by its document number.
+   * If the found unit exists with XML but no JSON, it is converted before being returned.
+   *
+   * @param documentNumber The document number to search for.
+   * @return An {@link Optional} containing the DocumentationUnit, or an empty Optional if not found.
+   */
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
@@ -65,6 +72,18 @@ public class DocumentationUnitService {
     return Optional.ofNullable(documentationUnitPersistenceService.update(documentNumber, json));
   }
 
+  /**
+   * Updates and publishes a DocumentationUnit with new content.
+   * <p>
+   * The update is persisted to the database and then published to an external bucket.
+   * The {@link UserDocumentDetails} decide to which bucket to publish (to be implemented):
+   * {@code UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal()}
+   * This entire operation is transactional and will be rolled back if any step fails.
+   *
+   * @param documentNumber The identifier of the documentation unit to publish.
+   * @param documentationUnitContent The new content for the unit.
+   * @return An {@link Optional} with the updated unit, or empty if the document number was not found.
+   */
   @Transactional
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,

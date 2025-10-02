@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * Defines application roles, each mapping to a document type and providing logic
+ * to determine a user's {@link DocumentationOffice} from their JWT claims.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum ApplicationRole {

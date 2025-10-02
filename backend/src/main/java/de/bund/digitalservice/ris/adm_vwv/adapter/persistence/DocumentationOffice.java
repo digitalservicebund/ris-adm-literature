@@ -2,6 +2,10 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import lombok.Getter;
 
+/**
+ * Represents the documentation offices,
+ * each with a unique prefix for identification.
+ */
 @Getter
 public enum DocumentationOffice {
   BAG("KA"),
