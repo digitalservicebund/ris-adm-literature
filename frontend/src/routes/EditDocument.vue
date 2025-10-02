@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, type Ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, type Ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
@@ -29,10 +29,11 @@ const { documentUnit, error } = storeToRefs(store) as {
 }
 
 const route = useRoute()
-const getMenuItems = () =>
-  route.name === ROUTE_NAMES.ULI.DOCUMENT_UNIT.EDIT
+const menuItems = computed(() =>
+  route.name === ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN
     ? getUliMenuItems(props.documentNumber, route.query)
-    : getAdmVwvMenuItems(props.documentNumber, route.query)
+    : getAdmVwvMenuItems(props.documentNumber, route.query),
+)
 
 const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
 
@@ -73,7 +74,7 @@ watch(error, (err) => {
         test-id="side-toggle-navigation"
         @update:is-expanded="toggleNavigationPanel"
       >
-        <NavbarSide :is-child="false" :menu-items="getMenuItems()" :route="route" />
+        <NavbarSide :is-child="false" :menu-items="menuItems" :route="route" />
       </SideToggle>
     </div>
     <div v-if="documentUnit" class="flex w-full min-w-0 flex-col bg-gray-100">
