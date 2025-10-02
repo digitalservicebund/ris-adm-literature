@@ -3,10 +3,10 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
-import de.bund.digitalservice.ris.adm_vwv.application.CustomJwtAuthenticationConverter;
-import de.bund.digitalservice.ris.adm_vwv.application.UserDocumentDetails;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_vwv.config.security.CustomJwtAuthenticationConverter;
+import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv.application;
+package de.bund.digitalservice.ris.adm_vwv.config.security;
 
 import java.util.Collection;
 import lombok.EqualsAndHashCode;

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.Getter;

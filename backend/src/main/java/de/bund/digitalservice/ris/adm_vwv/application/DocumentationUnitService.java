@@ -7,6 +7,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

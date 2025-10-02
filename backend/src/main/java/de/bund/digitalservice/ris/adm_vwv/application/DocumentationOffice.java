@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
+package de.bund.digitalservice.ris.adm_vwv.application;
 
 import lombok.Getter;
 

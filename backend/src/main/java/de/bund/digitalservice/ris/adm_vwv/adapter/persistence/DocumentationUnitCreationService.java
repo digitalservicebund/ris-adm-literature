@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import java.text.DecimalFormat;
 import java.time.Year;

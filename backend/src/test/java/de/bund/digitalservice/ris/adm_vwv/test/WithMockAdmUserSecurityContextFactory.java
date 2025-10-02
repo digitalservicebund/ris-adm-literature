@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.test;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
-import de.bund.digitalservice.ris.adm_vwv.application.UserDocumentDetails;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

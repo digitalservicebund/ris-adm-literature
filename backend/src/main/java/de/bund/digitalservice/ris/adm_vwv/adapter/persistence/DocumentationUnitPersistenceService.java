@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;

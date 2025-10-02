@@ -1,7 +1,7 @@
-package de.bund.digitalservice.ris.adm_vwv.application;
+package de.bund.digitalservice.ris.adm_vwv.config.security;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentTypeCode;
-import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import java.io.Serializable;
 
 /**

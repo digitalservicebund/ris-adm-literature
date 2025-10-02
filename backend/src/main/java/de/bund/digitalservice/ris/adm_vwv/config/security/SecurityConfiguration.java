@@ -1,6 +1,5 @@
-package de.bund.digitalservice.ris.adm_vwv.config;
+package de.bund.digitalservice.ris.adm_vwv.config.security;
 
-import de.bund.digitalservice.ris.adm_vwv.application.CustomJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
