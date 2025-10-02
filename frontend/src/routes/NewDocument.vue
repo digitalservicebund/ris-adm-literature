@@ -25,7 +25,7 @@ onBeforeMount(async () => {
   if (data.value) {
     const sectionPath = route.matched[0]?.path || ''
     const newPath = `${sectionPath}/documentUnit/${data.value.documentNumber}`
-    router.push(newPath)
+    router.replace(newPath)
   }
 })
 </script>
