@@ -34,10 +34,10 @@ jobs:
         with:
           environment: staging
           version: ${{ inputs.container-image-version }}
-          deploying_repo: ris-adm-vwv-frontend,ris-adm-vwv-backend
-          infra_repo: ris-adm-vwv-infra
+          deploying_repo: ris-adm-literature-frontend,ris-adm-literature-backend
+          infra_repo: ris-adm-literature-infra
           deploy_key: ${{ secrets.DEPLOY_KEY }}
-          app: ris-adm-vwv-staging
+          app: ris-adm-literature-staging
           argocd_pipeline_password: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
           argocd_server: ${{ secrets.ARGOCD_SERVER }}
           argocd_sync_timeout: 300
@@ -45,7 +45,7 @@ jobs:
         continue-on-error: true
         uses: digitalservicebund/track-deployment@5a2815e150e1268983aac5ca04c8c046ed1b614a # v1.0.0
         with:
-          project: ris-adm-vwv
+          project: ris-adm-literature
           environment: staging
           metrics_deployment_webhook_url: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
           metrics_webhook_token: ${{ secrets.METRICS_WEBHOOK_TOKEN }}
