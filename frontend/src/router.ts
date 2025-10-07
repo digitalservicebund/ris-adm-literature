@@ -87,7 +87,7 @@ const router = createRouter({
     {
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
-        requiresRole: USER_ROLES.LITERATURE_USER,
+        requiresRole: [USER_ROLES.LITERATURE_USER],
       },
       children: [
         {
