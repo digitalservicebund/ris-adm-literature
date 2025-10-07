@@ -38,7 +38,7 @@ class ApplicationRoleTest {
       DocumentTypeCode expectedType
     ) {
       // Then
-      assertThat(role.getRoleName()).isEqualTo(expectedRoleName);
+      assertThat(role.getRoleNames().getFirst()).isEqualTo(expectedRoleName);
       assertThat(role.getDocumentTypeCode()).isEqualTo(expectedType);
     }
 
