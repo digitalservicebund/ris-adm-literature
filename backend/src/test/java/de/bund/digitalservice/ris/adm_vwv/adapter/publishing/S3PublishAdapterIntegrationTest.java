@@ -86,7 +86,7 @@ class S3PublishAdapterIntegrationTest {
     }
 
     @Bean(FIRST_PUBLISHER_NAME)
-    public PublishPort firstTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
+    public Publisher firstTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
       return new S3PublishAdapter(
         s3Client,
         xmlValidator,
@@ -97,7 +97,7 @@ class S3PublishAdapterIntegrationTest {
     }
 
     @Bean(SECOND_PUBLISHER_NAME)
-    public PublishPort secondTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
+    public Publisher secondTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
       return new S3PublishAdapter(
         s3Client,
         xmlValidator,
@@ -109,7 +109,7 @@ class S3PublishAdapterIntegrationTest {
   }
 
   @Autowired
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Autowired
   private S3Client s3Client;
@@ -166,10 +166,10 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-abc-456";
     String xmlContent = "<test-data>This is a test</test-data>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     // when
-    publishPort.publish(options);
+    publisher.publish(options);
 
     // then
     // Verify the file exists in the FIRST bucket
@@ -211,10 +211,10 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-xyz-789";
     String xmlContent = "<test-data>Another test</test-data>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
 
     // when
-    publishPort.publish(options);
+    publisher.publish(options);
 
     // then
     // Verify the file exists in the SECOND bucket
@@ -256,10 +256,10 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-def-789";
     String xmlContent = "<test-data>This should not be published</test-data>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, "unknown-publisher");
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, "unknown-publisher");
 
     // when
-    assertThatThrownBy(() -> publishPort.publish(options))
+    assertThatThrownBy(() -> publisher.publish(options))
       .isInstanceOf(IllegalArgumentException.class)
       .hasMessageContaining("No publisher found for target: unknown-publisher");
 
@@ -287,7 +287,7 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-invalid-123";
     String invalidXmlContent = "<invalid>";
-    var options = new PublishPort.PublicationDetails(
+    var options = new Publisher.PublicationDetails(
       docNumber,
       invalidXmlContent,
       FIRST_PUBLISHER_NAME
@@ -298,7 +298,7 @@ class S3PublishAdapterIntegrationTest {
       .validate(invalidXmlContent);
 
     // when / then
-    assertThatThrownBy(() -> publishPort.publish(options))
+    assertThatThrownBy(() -> publisher.publish(options))
       .isInstanceOf(ValidationFailedException.class)
       .hasMessageContaining(
         "XML validation failed for document doc-invalid-123 at line 1, column 10"
@@ -316,12 +316,12 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-s3-fail-123";
     String xmlContent = "<test>will fail</test>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(FIRST_BUCKET_NAME).build());
 
     // when / then
-    assertThatThrownBy(() -> publishPort.publish(options))
+    assertThatThrownBy(() -> publisher.publish(options))
       .isInstanceOf(PublishingFailedException.class)
       .hasMessageContaining(
         "Failed to publish document doc-s3-fail-123 to S3. Call to external system failed."
@@ -334,12 +334,12 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-sax-fail-456";
     String xmlContent = "<test>sax error</test>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     doThrow(new SAXException("Generic SAX error")).when(xmlValidator).validate(xmlContent);
 
     // when / then
-    assertThatThrownBy(() -> publishPort.publish(options))
+    assertThatThrownBy(() -> publisher.publish(options))
       .isInstanceOf(ValidationFailedException.class)
       .hasMessageContaining(
         "Failed to publish document doc-sax-fail-456. Validation error: Generic SAX error"
@@ -358,12 +358,12 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-io-fail-789";
     String xmlContent = "<test>io error</test>";
-    var options = new PublishPort.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     doThrow(new IOException("Generic IO error")).when(xmlValidator).validate(xmlContent);
 
     // when / then
-    assertThatThrownBy(() -> publishPort.publish(options))
+    assertThatThrownBy(() -> publisher.publish(options))
       .isInstanceOf(ValidationFailedException.class)
       .hasMessageContaining(
         "Failed to publish document doc-io-fail-789. Validation error: Generic IO error"

@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.ZitierArt;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ActiveCitationsTransformer {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of active citations.
@@ -56,7 +56,7 @@ public class ActiveCitationsTransformer {
   }
 
   private ZitierArt findZitierArt(RisCaselawReference caselawReference) {
-    return lookupTablesPersistencePort
+    return lookupTablesPersistenceService
       .findZitierArtenByAbbreviation(caselawReference.getAbbreviation())
       .stream()
       .findFirst()

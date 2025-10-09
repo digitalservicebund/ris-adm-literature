@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FundstellenTransformer {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of references.
@@ -52,7 +52,7 @@ public class FundstellenTransformer {
   private LegalPeriodical findPeriodikum(ImplicitReference implicitReference) {
     LegalPeriodical periodikum = null;
     List<LegalPeriodical> legalPeriodicals =
-      lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation(
+      lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation(
         implicitReference.getShortForm()
       );
     if (legalPeriodicals.size() == 1) {

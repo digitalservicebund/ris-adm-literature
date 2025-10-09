@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LookupTablesPersistenceService implements LookupTablesPersistencePort {
+public class LookupTablesPersistenceService {
 
   private final DocumentTypeRepository documentTypeRepository;
   private final FieldOfLawRepository fieldOfLawRepository;
@@ -34,7 +34,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final InstitutionRepository institutionRepository;
   private final CitationTypeRepository citationTypeRepository;
 
-  @Override
+  /**
+   * Finds a paginated list of document types based on a search query.
+   *
+   * @param query The query containing search term and pagination options.
+   * @return A page of {@link DocumentType}.
+   */
   @Transactional(readOnly = true)
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -53,7 +58,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(documentTypes, mapDocumentTypeEntity());
   }
 
-  @Override
+  /**
+   * Finds a single document type by its abbreviation.
+   *
+   * @param abbreviation The abbreviation of the document type to find.
+   * @return An {@link Optional} containing the found {@link DocumentType}, or empty if not found.
+   */
   @Transactional(readOnly = true)
   public Optional<DocumentType> findDocumentTypeByAbbreviation(@Nonnull String abbreviation) {
     return documentTypeRepository.findByAbbreviation(abbreviation).map(mapDocumentTypeEntity());
@@ -64,7 +74,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName());
   }
 
-  @Override
+  /**
+   * Finds all direct children of a field of law by its identifier.
+   *
+   * @param identifier The unique identifier of the parent field of law.
+   * @return A list of child {@link FieldOfLaw}.
+   */
   @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
     return fieldOfLawRepository
@@ -75,7 +90,11 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .orElse(List.of());
   }
 
-  @Override
+  /**
+   * Finds all top-level fields of law (those without a parent).
+   *
+   * @return A list of parent {@link FieldOfLaw}.
+   */
   @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawParents() {
     return fieldOfLawRepository
@@ -87,7 +106,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .toList();
   }
 
-  @Override
+  /**
+   * Finds a single field of law by its identifier.
+   *
+   * @param identifier The unique identifier of the field of law.
+   * @return An {@link Optional} containing the found {@link FieldOfLaw}, or empty if not found.
+   */
   @Transactional(readOnly = true)
   public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
     return fieldOfLawRepository
@@ -96,7 +120,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       );
   }
 
-  @Override
+  /**
+   * Finds a paginated list of fields of law based on a search query.
+   *
+   * @param query The query containing search terms and pagination options.
+   * @return A page of {@link FieldOfLaw}.
+   */
   @Transactional(readOnly = true)
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -136,7 +165,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
+  /**
+   * Finds a paginated list of legal periodicals based on a search query.
+   *
+   * @param query The query containing search term and pagination options.
+   * @return A page of {@link LegalPeriodical}.
+   */
   @Transactional(readOnly = true)
   public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -168,7 +202,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       );
   }
 
-  @Override
+  /**
+   * Finds all legal periodicals matching a given abbreviation.
+   *
+   * @param abbreviation The exact abbreviation to search for.
+   * @return A list of matching {@link LegalPeriodical}.
+   */
   @Transactional(readOnly = true)
   public List<LegalPeriodical> findLegalPeriodicalsByAbbreviation(@Nonnull String abbreviation) {
     LegalPeriodicalEntity probe = new LegalPeriodicalEntity();
@@ -180,7 +219,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .toList();
   }
 
-  @Override
+  /**
+   * Finds a paginated list of regions based on a search query.
+   *
+   * @param query The query containing search term and pagination options.
+   * @return A page of {@link Region}.
+   */
   @Transactional(readOnly = true)
   public Page<Region> findRegions(@Nonnull RegionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -196,7 +240,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(regions, mapRegionEntity());
   }
 
-  @Override
+  /**
+   * Finds a single region by its code.
+   *
+   * @param code The code of the region to find.
+   * @return An {@link Optional} containing the found {@link Region}, or empty if not found.
+   */
   @Transactional(readOnly = true)
   public Optional<Region> findRegionByCode(@Nonnull String code) {
     return regionRepository.findByCode(code).map(mapRegionEntity());
@@ -207,7 +256,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new Region(regionEntity.getId(), regionEntity.getCode(), regionEntity.getLongText());
   }
 
-  @Override
+  /**
+   * Finds a paginated list of norm abbreviations (currently mocked).
+   *
+   * @param query The query, which is currently ignored.
+   * @return A page of mocked {@link NormAbbreviation}.
+   */
   @Transactional(readOnly = true)
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
     log.info(
@@ -237,7 +291,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
+  /**
+   * Finds a paginated list of institutions based on a search query.
+   *
+   * @param query The query containing search term and pagination options.
+   * @return A page of {@link Institution}.
+   */
   @Transactional(readOnly = true)
   public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -252,7 +311,13 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(institutions, mapInstitutionEntity());
   }
 
-  @Override
+  /**
+   * Finds a single institution by its name and type.
+   *
+   * @param name The name of the institution.
+   * @param institutionType The type of the institution.
+   * @return An {@link Optional} containing the found {@link Institution}, or empty if not found.
+   */
   @Transactional(readOnly = true)
   public Optional<Institution> findInstitutionByNameAndType(
     @Nonnull String name,
@@ -263,7 +328,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .map(mapInstitutionEntity());
   }
 
-  @Override
+  /**
+   * Finds a paginated list of courts (currently mocked).
+   *
+   * @param query The query, which is currently ignored.
+   * @return A page of mocked {@link Court}.
+   */
   @Transactional(readOnly = true)
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
     log.info("Ignoring given query as mocked courts result is always returned: {}.", query);
@@ -286,7 +356,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
+  /**
+   * Finds a paginated list of reference types (VerweisTypen) (currently mocked).
+   *
+   * @param query The query, which is currently ignored.
+   * @return A page of mocked {@link VerweisTyp}.
+   */
   @Transactional(readOnly = true)
   public Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query) {
     log.info(
@@ -309,7 +384,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
+  /**
+   * Finds a paginated list of citation types (ZitierArten) based on a search query.
+   *
+   * @param query The query containing search term and pagination options.
+   * @return A page of {@link ZitierArt}.
+   */
   @Transactional(readOnly = true)
   public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -328,7 +408,12 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(citationTypes, mapCitationTypeEntity());
   }
 
-  @Override
+  /**
+   * Finds all citation types (ZitierArten) matching a given abbreviation.
+   *
+   * @param abbreviation The exact abbreviation to search for.
+   * @return A list of matching {@link ZitierArt}.
+   */
   @Transactional(readOnly = true)
   public List<ZitierArt> findZitierArtenByAbbreviation(@Nonnull String abbreviation) {
     CitationTypeEntity probe = new CitationTypeEntity();

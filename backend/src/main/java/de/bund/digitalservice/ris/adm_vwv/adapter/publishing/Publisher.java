@@ -3,9 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 import javax.annotation.Nonnull;
 
 /**
- * A port for publishing documentation unit content to an external storage system.
+ * An interface for publishing documentation unit content to an external system.
  */
-public interface PublishPort {
+public interface Publisher {
   /**
    * Identifies the correct publisher
    * @return the name of the publisher
