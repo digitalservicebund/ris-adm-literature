@@ -28,14 +28,14 @@ class RegionControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two regions with code and long text")
   void getDocumentTypes() throws Exception {
     // given
     given(
-      lookupTablesPort.findRegions(
+      lookupTablesService.findRegions(
         new RegionQuery(null, new QueryOptions(0, 2, "code", Sort.Direction.ASC, true))
       )
     ).willReturn(

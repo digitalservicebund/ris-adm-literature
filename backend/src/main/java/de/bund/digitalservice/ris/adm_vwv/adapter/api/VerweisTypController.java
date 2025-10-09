@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.VerweisTyp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class VerweisTypController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return verweisTypen (optionally with search term, pagination, sorting)
@@ -45,7 +46,7 @@ public class VerweisTypController {
       sortDirection,
       usePagination
     );
-    var paginatedVerweisTypen = lookupTablesPort.findVerweisTypen(
+    var paginatedVerweisTypen = lookupTablesService.findVerweisTypen(
       new VerweisTypQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(

@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class NormAbbreviationController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return norm abbreviations (optionally with search term, pagination, sorting)
@@ -45,7 +46,7 @@ public class NormAbbreviationController {
       sortDirection,
       usePagination
     );
-    var paginatedAbbreviations = lookupTablesPort.findNormAbbreviations(
+    var paginatedAbbreviations = lookupTablesService.findNormAbbreviations(
       new NormAbbreviationQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(

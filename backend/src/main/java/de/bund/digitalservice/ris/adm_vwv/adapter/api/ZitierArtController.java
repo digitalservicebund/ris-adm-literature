@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
+import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesService;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import de.bund.digitalservice.ris.adm_vwv.application.ZitierArtQuery;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ZitierArtController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return 'Zitierarten' (optionally with search term, pagination, sorting)
@@ -47,7 +47,7 @@ public class ZitierArtController {
       sortDirection,
       usePagination
     );
-    var paginatedZitierArten = lookupTablesPort.findZitierArten(
+    var paginatedZitierArten = lookupTablesService.findZitierArten(
       new ZitierArtQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(

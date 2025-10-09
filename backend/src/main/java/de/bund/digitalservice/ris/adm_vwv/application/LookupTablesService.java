@@ -14,66 +14,54 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class LookupTablesService implements LookupTablesPort {
+public class LookupTablesService {
 
   private final LookupTablesPersistencePort lookupTablesPersistencePort;
 
-  @Override
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
     return lookupTablesPersistencePort.findDocumentTypes(query);
   }
 
-  @Override
   public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
     return lookupTablesPersistencePort.findFieldsOfLawChildren(identifier);
   }
 
-  @Override
   public List<FieldOfLaw> findFieldsOfLawParents() {
     return lookupTablesPersistencePort.findFieldsOfLawParents();
   }
 
-  @Override
   public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
     return lookupTablesPersistencePort.findFieldOfLaw(identifier);
   }
 
-  @Override
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     return lookupTablesPersistencePort.findFieldsOfLaw(query);
   }
 
-  @Override
   public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
     return lookupTablesPersistencePort.findLegalPeriodicals(query);
   }
 
-  @Override
   public Page<Region> findRegions(@Nonnull RegionQuery regionQuery) {
     return lookupTablesPersistencePort.findRegions(regionQuery);
   }
 
-  @Override
   public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
     return lookupTablesPersistencePort.findInstitutions(query);
   }
 
-  @Override
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
     return lookupTablesPersistencePort.findCourts(query);
   }
 
-  @Override
   public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
     return lookupTablesPersistencePort.findZitierArten(query);
   }
 
-  @Override
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
     return lookupTablesPersistencePort.findNormAbbreviations(query);
   }
 
-  @Override
   public Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query) {
     return lookupTablesPersistencePort.findVerweisTypen(query);
   }

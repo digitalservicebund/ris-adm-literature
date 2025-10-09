@@ -28,7 +28,7 @@ class InstitutionControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two institutions with name, regions, and type")
@@ -36,7 +36,7 @@ class InstitutionControllerTest {
     // given
     String searchTerm = "jurpn";
     given(
-      lookupTablesPort.findInstitutions(
+      lookupTablesService.findInstitutions(
         new InstitutionQuery(searchTerm, new QueryOptions(0, 2, "name", Sort.Direction.ASC, true))
       )
     ).willReturn(

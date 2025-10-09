@@ -27,7 +27,7 @@ class DocumentTypeControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two documentTypes with abbreviation and name")
@@ -35,7 +35,7 @@ class DocumentTypeControllerTest {
     // given
     String searchTerm = "verwaltungs";
     given(
-      lookupTablesPort.findDocumentTypes(
+      lookupTablesService.findDocumentTypes(
         new DocumentTypeQuery(searchTerm, new QueryOptions(0, 2, "name", Sort.Direction.ASC, true))
       )
     ).willReturn(

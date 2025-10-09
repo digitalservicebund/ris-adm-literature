@@ -28,7 +28,7 @@ class ZitierArtControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with four 'Zitierarten'")
@@ -39,7 +39,7 @@ class ZitierArtControllerTest {
     var aenderung = new ZitierArt(UUID.randomUUID(), "Änderung", "Änderung");
     var uebernahme = new ZitierArt(UUID.randomUUID(), "Übernahme", "Übernahme");
     given(
-      lookupTablesPort.findZitierArten(
+      lookupTablesService.findZitierArten(
         new ZitierArtQuery("", new QueryOptions(0, 4, "abbreviation", Sort.Direction.ASC, true))
       )
     ).willReturn(TestPage.create(List.of(abgrenzung, ablehnung, aenderung, uebernahme)));

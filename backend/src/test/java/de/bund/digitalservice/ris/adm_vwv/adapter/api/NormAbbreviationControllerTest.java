@@ -29,7 +29,7 @@ class NormAbbreviationControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName(
@@ -48,7 +48,7 @@ class NormAbbreviationControllerTest {
       "Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung"
     );
     given(
-      lookupTablesPort.findNormAbbreviations(
+      lookupTablesService.findNormAbbreviations(
         new NormAbbreviationQuery(
           "",
           new QueryOptions(0, 2, "abbreviation", Sort.Direction.ASC, true)
