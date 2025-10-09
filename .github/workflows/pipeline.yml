@@ -190,26 +190,26 @@ jobs:
   # Deployment jobs
   #################
 
-#  deploy-staging:
-#    if: ${{ github.ref == 'refs/heads/main' }}
-#    needs:
-#      - security-jobs
-#      - e2e-tests
-#      - frontend-checks
-#      - frontend-build-image-and-scan
-#      - frontend-push-image-to-registry
-#      - backend-checks
-#      - backend-build-image-and-scan
-#      - backend-push-image-to-registry
-#    uses: ./.github/workflows/deploy-staging.yml
-#    permissions:
-#      id-token: write
-#    secrets:
-#      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-#      ARGOCD_PIPELINE_PASSWORD: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
-#      ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
-#      METRICS_DEPLOYMENT_WEBHOOK_URL: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
-#      METRICS_WEBHOOK_TOKEN: ${{ secrets.METRICS_WEBHOOK_TOKEN }}
-#      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-#    with:
-#      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
+  deploy-staging:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs:
+      - security-jobs
+      - e2e-tests
+      - frontend-checks
+      - frontend-build-image-and-scan
+      - frontend-push-image-to-registry
+      - backend-checks
+      - backend-build-image-and-scan
+      - backend-push-image-to-registry
+    uses: ./.github/workflows/deploy-staging.yml
+    permissions:
+      id-token: write
+    secrets:
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      ARGOCD_PIPELINE_PASSWORD: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
+      ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+      METRICS_DEPLOYMENT_WEBHOOK_URL: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
+      METRICS_WEBHOOK_TOKEN: ${{ secrets.METRICS_WEBHOOK_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}
