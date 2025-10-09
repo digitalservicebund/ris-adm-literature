@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocumentTypeTransformer {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a document type.
@@ -31,7 +31,7 @@ public class DocumentTypeTransformer {
       .map(Proprietary::getMetadata)
       .map(RisMetadata::getDocumentType)
       .flatMap(risDocumentType ->
-        lookupTablesPersistencePort.findDocumentTypeByAbbreviation(risDocumentType.getCategory())
+        lookupTablesPersistenceService.findDocumentTypeByAbbreviation(risDocumentType.getCategory())
       )
       .orElse(null);
   }

@@ -3,8 +3,8 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ class FieldsOfLawTransformerTest {
   private FieldsOfLawTransformer fieldsOfLawTransformer;
 
   @Mock
-  private LookupTablesPersistencePort lookupTablesPersistencePort;
+  private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Test
   @DisplayName("Transforms two fields of law")
@@ -38,7 +38,7 @@ class FieldsOfLawTransformerTest {
     RisMetadata risMetadata = new RisMetadata();
     proprietary.setMetadata(risMetadata);
     risMetadata.setFieldsOfLaw(List.of(createRisFieldOfLaw("PR-05-01")));
-    given(lookupTablesPersistencePort.findFieldOfLaw("PR-05-01")).willReturn(
+    given(lookupTablesPersistenceService.findFieldOfLaw("PR-05-01")).willReturn(
       Optional.of(
         new FieldOfLaw(
           UUID.randomUUID(),
@@ -93,7 +93,7 @@ class FieldsOfLawTransformerTest {
     RisMetadata risMetadata = new RisMetadata();
     proprietary.setMetadata(risMetadata);
     risMetadata.setFieldsOfLaw(List.of(createRisFieldOfLaw("RR-00-11")));
-    given(lookupTablesPersistencePort.findFieldOfLaw("RR-00-11")).willReturn(
+    given(lookupTablesPersistenceService.findFieldOfLaw("RR-00-11")).willReturn(
       Optional.of(
         new FieldOfLaw(
           UUID.randomUUID(),

@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LookupTablesPersistenceService implements LookupTablesPersistencePort {
+public class LookupTablesPersistenceService {
 
   private final DocumentTypeRepository documentTypeRepository;
   private final FieldOfLawRepository fieldOfLawRepository;
@@ -34,7 +34,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
   private final InstitutionRepository institutionRepository;
   private final CitationTypeRepository citationTypeRepository;
 
-  @Override
   @Transactional(readOnly = true)
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -53,7 +52,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(documentTypes, mapDocumentTypeEntity());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Optional<DocumentType> findDocumentTypeByAbbreviation(@Nonnull String abbreviation) {
     return documentTypeRepository.findByAbbreviation(abbreviation).map(mapDocumentTypeEntity());
@@ -64,7 +62,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
     return fieldOfLawRepository
@@ -75,7 +72,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .orElse(List.of());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public List<FieldOfLaw> findFieldsOfLawParents() {
     return fieldOfLawRepository
@@ -87,7 +83,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .toList();
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
     return fieldOfLawRepository
@@ -96,7 +91,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -136,7 +130,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -168,7 +161,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public List<LegalPeriodical> findLegalPeriodicalsByAbbreviation(@Nonnull String abbreviation) {
     LegalPeriodicalEntity probe = new LegalPeriodicalEntity();
@@ -180,7 +172,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .toList();
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<Region> findRegions(@Nonnull RegionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -196,7 +187,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(regions, mapRegionEntity());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Optional<Region> findRegionByCode(@Nonnull String code) {
     return regionRepository.findByCode(code).map(mapRegionEntity());
@@ -207,7 +197,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       new Region(regionEntity.getId(), regionEntity.getCode(), regionEntity.getLongText());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
     log.info(
@@ -237,7 +226,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -252,7 +240,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(institutions, mapInstitutionEntity());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Optional<Institution> findInstitutionByNameAndType(
     @Nonnull String name,
@@ -263,7 +250,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
       .map(mapInstitutionEntity());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
     log.info("Ignoring given query as mocked courts result is always returned: {}.", query);
@@ -286,7 +272,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query) {
     log.info(
@@ -309,7 +294,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     );
   }
 
-  @Override
   @Transactional(readOnly = true)
   public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
     QueryOptions queryOptions = query.queryOptions();
@@ -328,7 +312,6 @@ public class LookupTablesPersistenceService implements LookupTablesPersistencePo
     return PageTransformer.transform(citationTypes, mapCitationTypeEntity());
   }
 
-  @Override
   @Transactional(readOnly = true)
   public List<ZitierArt> findZitierArtenByAbbreviation(@Nonnull String abbreviation) {
     CitationTypeEntity probe = new CitationTypeEntity();
