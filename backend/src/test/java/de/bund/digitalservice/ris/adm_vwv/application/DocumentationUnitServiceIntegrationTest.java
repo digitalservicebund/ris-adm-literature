@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import java.util.Optional;
@@ -24,7 +24,7 @@ class DocumentationUnitServiceIntegrationTest {
   private DocumentationUnitService documentationUnitService;
 
   @MockitoBean
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Test
   void find() {
@@ -133,8 +133,8 @@ class DocumentationUnitServiceIntegrationTest {
 
     // Publishing to bucket fails
     doThrow(new PublishingFailedException("External system is down", null))
-      .when(publishPort)
-      .publish(any(PublishPort.PublicationDetails.class));
+      .when(publisher)
+      .publish(any(Publisher.PublicationDetails.class));
 
     // when: Attempt to publish, and it fails
     Throwable thrown = catchThrowable(() ->

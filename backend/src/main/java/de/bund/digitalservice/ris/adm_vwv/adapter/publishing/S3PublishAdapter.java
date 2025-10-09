@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class S3PublishAdapter implements PublishPort {
+public class S3PublishAdapter implements Publisher {
 
   private final S3Client s3Client;
   private final XmlValidator xmlValidator;
