@@ -29,7 +29,7 @@ class VerweisTypControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with three verweisTypen")
@@ -39,7 +39,7 @@ class VerweisTypControllerTest {
     var neuregelung = new VerweisTyp(UUID.randomUUID(), "neuregelung");
     var rechtsgrundlage = new VerweisTyp(UUID.randomUUID(), "rechtsgrundlage");
     given(
-      lookupTablesPort.findVerweisTypen(
+      lookupTablesService.findVerweisTypen(
         new VerweisTypQuery("", new QueryOptions(0, 3, "name", Sort.Direction.ASC, true))
       )
     ).willReturn(TestPage.create(List.of(anwendung, neuregelung, rechtsgrundlage)));

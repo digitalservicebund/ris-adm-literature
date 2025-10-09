@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CourtController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return courts (optionally with search term, pagination, sorting)
@@ -46,7 +46,7 @@ public class CourtController {
       sortDirection,
       usePagination
     );
-    var paginatedCourts = lookupTablesPort.findCourts(new CourtQuery(searchTerm, queryOptions));
+    var paginatedCourts = lookupTablesService.findCourts(new CourtQuery(searchTerm, queryOptions));
     return ResponseEntity.ok(
       new CourtResponse(paginatedCourts.content(), new PageResponse(paginatedCourts))
     );

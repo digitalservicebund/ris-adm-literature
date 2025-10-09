@@ -3,7 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService;
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
@@ -27,7 +27,7 @@ public class DocumentationUnitService {
   private final LdmlConverterService ldmlConverterService;
   private final LdmlPublishConverterService ldmlPublishConverterService;
   private final ObjectMapper objectMapper;
-  private final PublishPort publishPort;
+  private final Publisher publisher;
 
   /**
    * Finds a DocumentationUnit by its document number.
@@ -114,12 +114,8 @@ public class DocumentationUnitService {
     // later when we want to publish to other publishers, we can receive them form the method param and select them here
     // If the publishing or validation fails, the transaction is rolled back
     final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
-    var publishOptions = new PublishPort.PublicationDetails(
-      documentNumber,
-      xml,
-      BSG_PUBLISHER_NAME
-    );
-    publishPort.publish(publishOptions);
+    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, BSG_PUBLISHER_NAME);
+    publisher.publish(publishOptions);
     return convertLdml(publishedDocumentationUnit);
   }
 

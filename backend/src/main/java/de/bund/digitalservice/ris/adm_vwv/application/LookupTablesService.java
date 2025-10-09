@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.VerweisTyp;
@@ -14,67 +15,55 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class LookupTablesService implements LookupTablesPort {
+public class LookupTablesService {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
-  @Override
   public Page<DocumentType> findDocumentTypes(@Nonnull DocumentTypeQuery query) {
-    return lookupTablesPersistencePort.findDocumentTypes(query);
+    return lookupTablesPersistenceService.findDocumentTypes(query);
   }
 
-  @Override
   public List<FieldOfLaw> findFieldsOfLawChildren(@Nonnull String identifier) {
-    return lookupTablesPersistencePort.findFieldsOfLawChildren(identifier);
+    return lookupTablesPersistenceService.findFieldsOfLawChildren(identifier);
   }
 
-  @Override
   public List<FieldOfLaw> findFieldsOfLawParents() {
-    return lookupTablesPersistencePort.findFieldsOfLawParents();
+    return lookupTablesPersistenceService.findFieldsOfLawParents();
   }
 
-  @Override
   public Optional<FieldOfLaw> findFieldOfLaw(@Nonnull String identifier) {
-    return lookupTablesPersistencePort.findFieldOfLaw(identifier);
+    return lookupTablesPersistenceService.findFieldOfLaw(identifier);
   }
 
-  @Override
   public Page<FieldOfLaw> findFieldsOfLaw(@Nonnull FieldOfLawQuery query) {
-    return lookupTablesPersistencePort.findFieldsOfLaw(query);
+    return lookupTablesPersistenceService.findFieldsOfLaw(query);
   }
 
-  @Override
   public Page<LegalPeriodical> findLegalPeriodicals(@Nonnull LegalPeriodicalQuery query) {
-    return lookupTablesPersistencePort.findLegalPeriodicals(query);
+    return lookupTablesPersistenceService.findLegalPeriodicals(query);
   }
 
-  @Override
   public Page<Region> findRegions(@Nonnull RegionQuery regionQuery) {
-    return lookupTablesPersistencePort.findRegions(regionQuery);
+    return lookupTablesPersistenceService.findRegions(regionQuery);
   }
 
-  @Override
   public Page<Institution> findInstitutions(@Nonnull InstitutionQuery query) {
-    return lookupTablesPersistencePort.findInstitutions(query);
+    return lookupTablesPersistenceService.findInstitutions(query);
   }
 
-  @Override
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
-    return lookupTablesPersistencePort.findCourts(query);
+    return lookupTablesPersistenceService.findCourts(query);
   }
 
-  @Override
   public Page<ZitierArt> findZitierArten(@Nonnull ZitierArtQuery query) {
-    return lookupTablesPersistencePort.findZitierArten(query);
+    return lookupTablesPersistenceService.findZitierArten(query);
   }
 
-  @Override
   public Page<NormAbbreviation> findNormAbbreviations(@Nonnull NormAbbreviationQuery query) {
-    return lookupTablesPersistencePort.findNormAbbreviations(query);
+    return lookupTablesPersistenceService.findNormAbbreviations(query);
   }
 
-  @Override
   public Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query) {
-    return lookupTablesPersistencePort.findVerweisTypen(query);
+    return lookupTablesPersistenceService.findVerweisTypen(query);
   }
 }

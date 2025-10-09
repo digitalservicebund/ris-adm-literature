@@ -28,7 +28,7 @@ class LegalPeriodicalControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName(
@@ -62,7 +62,7 @@ class LegalPeriodicalControllerTest {
     );
     String searchTerm = "a";
     given(
-      lookupTablesPort.findLegalPeriodicals(
+      lookupTablesService.findLegalPeriodicals(
         new LegalPeriodicalQuery(
           searchTerm,
           new QueryOptions(0, 2, "abbreviation", Sort.Direction.ASC, true)

@@ -29,7 +29,7 @@ class CourtControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two courts with type, and location")
@@ -39,7 +39,7 @@ class CourtControllerTest {
     var court2 = new Court(UUID.randomUUID(), "Berufsgericht für Architekten", "Bremen");
     String searchTerm = "a";
     given(
-      lookupTablesPort.findCourts(
+      lookupTablesService.findCourts(
         new CourtQuery(searchTerm, new QueryOptions(0, 2, "type", Sort.Direction.ASC, true))
       )
     ).willReturn(TestPage.create(List.of(court1, court2)));

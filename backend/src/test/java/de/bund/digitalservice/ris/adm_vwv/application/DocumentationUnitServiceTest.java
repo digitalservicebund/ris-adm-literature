@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService;
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
@@ -33,10 +33,10 @@ class DocumentationUnitServiceTest {
   private DocumentationUnitService documentationUnitService;
 
   @Mock
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Mock
-  private Map<String, PublishPort> publishers;
+  private Map<String, Publisher> publishers;
 
   @Mock
   private DocumentationUnitPersistenceService documentationUnitPersistenceService;
@@ -186,12 +186,12 @@ class DocumentationUnitServiceTest {
     );
     when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
     when(documentationUnitPersistenceService.publish(any(), any(), any())).thenReturn(publishedDoc);
-    when(publishers.get(bsgPublisherName)).thenReturn(publishPort);
+    when(publishers.get(bsgPublisherName)).thenReturn(publisher);
 
     documentationUnitService.publish(docNumber, content);
 
     verify(documentationUnitPersistenceService).publish(eq(docNumber), anyString(), eq(fakeXml));
-    verify(publishPort).publish(any(PublishPort.PublicationDetails.class));
+    verify(publisher).publish(any(Publisher.PublicationDetails.class));
   }
 
   @Test
@@ -215,8 +215,8 @@ class DocumentationUnitServiceTest {
     assertThat(documentationUnit.json()).isNull();
 
     doThrow(new PublishingFailedException("External system is down", null))
-      .when(publishPort)
-      .publish(any(PublishPort.PublicationDetails.class));
+      .when(publisher)
+      .publish(any(Publisher.PublicationDetails.class));
 
     // then
     assertThatThrownBy(() ->

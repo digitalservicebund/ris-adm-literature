@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.ZitierArt;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
@@ -23,7 +23,7 @@ class ActiveCitationsTransformerTest {
   private ActiveCitationsTransformer activeCitationsTransformer;
 
   @Mock
-  private LookupTablesPersistencePort lookupTablesPersistencePort;
+  private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Test
   void transform() {
@@ -39,7 +39,7 @@ class ActiveCitationsTransformerTest {
       List.of(createOtherReference("Änderung", "XY-01"), createOtherReference("Übernahme", "ZZ-02"))
     );
     //noinspection unchecked
-    given(lookupTablesPersistencePort.findZitierArtenByAbbreviation(anyString())).willReturn(
+    given(lookupTablesPersistenceService.findZitierArtenByAbbreviation(anyString())).willReturn(
       List.of(new ZitierArt(UUID.randomUUID(), "Änderung", "Änderung")),
       List.of(new ZitierArt(UUID.randomUUID(), "Übernahme", "Übernahme"))
     );

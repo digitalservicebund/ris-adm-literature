@@ -1,9 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
-import de.bund.digitalservice.ris.adm_vwv.application.Region;
-import de.bund.digitalservice.ris.adm_vwv.application.RegionQuery;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RegionController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return regions (optionally with search term, pagination, sorting)
@@ -48,7 +45,9 @@ public class RegionController {
       sortDirection,
       usePagination
     );
-    var paginatedRegions = lookupTablesPort.findRegions(new RegionQuery(searchTerm, queryOptions));
+    var paginatedRegions = lookupTablesService.findRegions(
+      new RegionQuery(searchTerm, queryOptions)
+    );
     return ResponseEntity.ok(
       new RegionResponse(paginatedRegions.content(), new PageResponse(paginatedRegions))
     );

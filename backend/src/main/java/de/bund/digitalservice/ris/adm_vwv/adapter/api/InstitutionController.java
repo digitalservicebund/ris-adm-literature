@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
+import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesService;
 import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class InstitutionController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Return institutions (optionally with search term, pagination, sorting)
@@ -48,7 +48,7 @@ public class InstitutionController {
       sortDirection,
       usePagination
     );
-    var paginatedInstitutions = lookupTablesPort.findInstitutions(
+    var paginatedInstitutions = lookupTablesService.findInstitutions(
       new InstitutionQuery(searchTerm, queryOptions)
     );
     return ResponseEntity.ok(
