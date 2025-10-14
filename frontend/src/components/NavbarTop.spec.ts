@@ -5,7 +5,7 @@ import NavbarTop from '@/components/NavbarTop.vue'
 const mockAuth = {
   logout: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
-  getRealmRoles: vi.fn(() => []),
+  getGroup: vi.fn(() => 'BAG'),
 }
 
 vi.mock('@/services/auth', () => ({
@@ -36,6 +36,7 @@ describe('NavbarTop', () => {
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
+    expect(screen.getByText('BAG | staging')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
@@ -56,12 +57,5 @@ describe('NavbarTop', () => {
 
     expect(searchLink).toBeInTheDocument()
     expect(searchLink).toHaveAttribute('href', '/')
-  })
-
-  it('displays the first role when roles are available', () => {
-    mockAuth.getRealmRoles = vi.fn(() => ['Administrator', 'User'])
-    renderComponent()
-
-    expect(screen.getByText('Administrator | staging')).toBeInTheDocument()
   })
 })

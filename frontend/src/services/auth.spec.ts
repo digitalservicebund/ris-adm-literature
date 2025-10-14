@@ -379,4 +379,38 @@ describe('auth', () => {
     })
     expect(getRealmRoles()).toEqual([])
   })
+
+  it('returns the first group name from the token', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'idTokenParsed', 'get').mockReturnValue({
+      groups: ['/literature/BAG', '/other/GROUP'],
+    })
+
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, getGroup } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(getGroup()).toBe('BAG')
+  })
+
+  it('returns an empty string if no groups exist', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'idTokenParsed', 'get').mockReturnValue({
+      groups: [],
+    })
+
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, getGroup } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(getGroup()).toBe('')
+  })
 })

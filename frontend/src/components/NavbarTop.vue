@@ -7,13 +7,9 @@ import IconLogout from '~icons/ic/baseline-logout'
 import FlexContainer from '@/components/FlexContainer.vue'
 import FlexItem from '@/components/FlexItem.vue'
 
-const { getUsername, logout, getRealmRoles } = useAuthentication()
+const { getUsername, logout, getGroup } = useAuthentication()
 
-const userRolesLabel = computed(() => {
-  // Actual Roles and Dok-Stellen will be implemented with RISDEV-9442
-  const roles = getRealmRoles()
-  return roles.length > 0 ? roles[0] : '' // take the first role for now
-})
+const group = computed(() => (getGroup() ? `${getGroup()} | staging` : `staging`))
 </script>
 
 <template>
@@ -36,11 +32,7 @@ const userRolesLabel = computed(() => {
           {{ getUsername() ?? 'Vorname Nachname' }}
         </FlexItem>
         <FlexItem>
-          <IconBadge
-            :background-color="'bg-red-300'"
-            color="text-black"
-            :label="`${userRolesLabel ?? ''} | staging`"
-          />
+          <IconBadge :background-color="'bg-red-300'" color="text-black" :label="group" />
         </FlexItem>
         <FlexItem>
           <button @click="logout" class="hover:cursor-pointer" aria-label="Log out">
