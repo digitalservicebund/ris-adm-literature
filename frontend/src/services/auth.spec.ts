@@ -413,4 +413,19 @@ describe('auth', () => {
 
     expect(getGroup()).toBe('')
   })
+
+  it('returns an empty string if idTokenParsed is undefined', async () => {
+    vi.spyOn(Keycloak.default.prototype, 'idTokenParsed', 'get').mockReturnValue(undefined)
+
+    const { useAuthentication } = await import('./auth.ts')
+    const { configure, getGroup } = useAuthentication()
+
+    await configure({
+      clientId: 'test-client',
+      realm: 'test-realm',
+      url: 'http://test.url',
+    })
+
+    expect(getGroup()).toBe('')
+  })
 })
