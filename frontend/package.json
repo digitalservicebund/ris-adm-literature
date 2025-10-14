@@ -36,7 +36,7 @@
     "@tiptap/extension-blockquote": "^3.6.6",
     "@tiptap/extension-document": "^3.6.6",
     "@tiptap/extension-image": "^3.6.6",
-    "@tiptap/extension-list": "^3.6.6",
+    "@tiptap/extension-list": "^3.6.7",
     "@tiptap/extension-paragraph": "^3.6.6",
     "@tiptap/extension-subscript": "^3.6.6",
     "@tiptap/extension-superscript": "^3.6.5",
