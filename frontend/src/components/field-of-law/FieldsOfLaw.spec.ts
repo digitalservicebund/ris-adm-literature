@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import { createTestingPinia } from '@pinia/testing'
 import FieldsOfLawVue from '@/components/field-of-law/FieldsOfLaw.vue'
-import { type DocumentUnit } from '@/domain/documentUnit'
+import { type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { FieldOfLaw } from '@/domain/fieldOfLaw'
 
 function renderComponent() {
@@ -21,8 +21,8 @@ function renderComponent() {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     id: '123',
                     documentNumber: '1234567891234',
                     fieldsOfLaw: [] as FieldOfLaw[],

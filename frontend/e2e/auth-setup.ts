@@ -1,6 +1,6 @@
 import { test as setup, expect, Page } from '@playwright/test'
 
-const vwvAuthFile = '../frontend/e2e/.auth/vwv.json'
+const admAuthFile = '../frontend/e2e/.auth/adm.json'
 const uliAuthFile = '../frontend/e2e/.auth/uli.json'
 const baseURL = 'http://localhost:5173'
 
@@ -24,11 +24,11 @@ async function performLogin(page: Page, username: string, password: string) {
   await expect(mainPageLocator).toBeVisible()
 }
 
-// Setup for vwv user
-setup('authenticate as vwv user', async ({ page }) => {
-  console.info('--- Starting Setup: Authentication vwv user ---')
+// Setup for adm user
+setup('authenticate as adm user', async ({ page }) => {
+  console.info('--- Starting Setup: Authentication adm user ---')
   await performLogin(page, 'test', 'test')
-  await page.context().storageState({ path: vwvAuthFile })
+  await page.context().storageState({ path: admAuthFile })
   console.info('--- Authentication successful. State saved. ---')
 })
 

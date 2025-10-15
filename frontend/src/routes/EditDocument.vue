@@ -6,9 +6,9 @@ import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
@@ -21,10 +21,10 @@ const props = defineProps<{
 const toast = useToast()
 
 // Use specific store for uli documents
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const { documentUnit, error } = storeToRefs(store) as {
-  documentUnit: Ref<DocumentUnit>
+  documentUnit: Ref<AdmDocumentationUnit>
   error: Ref<Error | null>
 }
 

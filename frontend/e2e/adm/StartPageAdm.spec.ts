@@ -5,7 +5,7 @@ import messages from '../../src/i18n/messages.json' with { type: 'json' }
 // See here how to get started:
 // https://playwright.dev/docs/intro
 
-test.describe('StartPage VwV', () => {
+test.describe('StartPage Adm', () => {
   test(
     'Visiting the app root url, it shows the title "Rechtsinformationen [...]", an icon and user data',
     { tag: ['@RISDEV-6041', '@RISDEV-8587', '@RISDEV-9370'] },

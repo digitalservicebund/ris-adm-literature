@@ -9,7 +9,7 @@ import ActiveReference, {
   VerweisTypEnum,
 } from '@/domain/activeReference.ts'
 import { createTestingPinia } from '@pinia/testing'
-import type { DocumentUnit } from '@/domain/documentUnit.ts'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
@@ -30,8 +30,8 @@ function renderComponent(activeReferences?: ActiveReference[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     activeReferences: activeReferences ?? [],
                   },

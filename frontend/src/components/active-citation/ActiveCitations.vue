@@ -4,9 +4,9 @@ import ActiveCitationInput from '@/components/active-citation/ActiveCitationInpu
 import ActiveCitationSummary from '@/components/active-citation/ActiveCitationSummary.vue'
 import EditableList from '@/components/EditableList.vue'
 import ActiveCitation from '@/domain/activeCitation'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const activeCitations = computed({
   get: () => store.documentUnit!.activeCitations ?? [],

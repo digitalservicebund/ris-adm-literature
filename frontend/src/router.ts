@@ -3,9 +3,9 @@ import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
 import { useAuthentication } from '@/services/auth'
 import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
-import AbgabePage from './routes/vwv/documentUnit/[documentNumber]/AbgabePage.vue'
-import RubrikenPage from './routes/vwv/documentUnit/[documentNumber]/RubrikenPage.vue'
-import FundstellenPage from '@/routes/vwv/documentUnit/[documentNumber]/FundstellenPage.vue'
+import AbgabePage from './routes/adm/documentUnit/[documentNumber]/AbgabePage.vue'
+import RubrikenPage from './routes/adm/documentUnit/[documentNumber]/RubrikenPage.vue'
+import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/FundstellenPage.vue'
 import NewDocument from '@/routes/NewDocument.vue'
 import Forbidden from '@/routes/Forbidden.vue'
 import StartPageTemplate from './routes/StartPage.vue'
@@ -33,7 +33,7 @@ const router = createRouter({
       },
     },
     {
-      path: ROUTE_PATHS.VWV.BASE,
+      path: ROUTE_PATHS.ADM.BASE,
       meta: {
         requiresRole: [USER_ROLES.ADM_USER, USER_ROLES.ADM_VWV_USER],
       },
@@ -45,38 +45,38 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: ROUTE_NAMES.VWV.START_PAGE,
+              name: ROUTE_NAMES.ADM.START_PAGE,
               component: DocumentUnits,
             },
           ],
         },
         {
-          path: ROUTE_PATHS.VWV.DOCUMENT_UNIT.NEW,
-          name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.NEW,
+          path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.NEW,
+          name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.NEW,
           component: NewDocument,
         },
         {
-          path: ROUTE_PATHS.VWV.DOCUMENT_UNIT.EDIT,
-          name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.EDIT,
+          path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.EDIT,
+          name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.EDIT,
           component: EditDocument,
           props: true,
-          redirect: { name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.FUNDSTELLEN },
+          redirect: { name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN },
           children: [
             {
-              path: ROUTE_PATHS.VWV.DOCUMENT_UNIT.FUNDSTELLEN,
-              name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.FUNDSTELLEN,
+              path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.FUNDSTELLEN,
+              name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN,
               props: true,
               component: FundstellenPage,
             },
             {
-              path: ROUTE_PATHS.VWV.DOCUMENT_UNIT.RUBRIKEN,
-              name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+              path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.RUBRIKEN,
+              name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
               props: true,
               component: RubrikenPage,
             },
             {
-              path: ROUTE_PATHS.VWV.DOCUMENT_UNIT.ABGABE,
-              name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.ABGABE,
+              path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.ABGABE,
+              name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.ABGABE,
               props: true,
               component: AbgabePage,
             },

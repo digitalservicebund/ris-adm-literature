@@ -5,7 +5,7 @@ import { type Institution, InstitutionType, type Normgeber, type Region } from '
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import InstitutionDropDown from '@/components/normgeber/InstitutionDropDown.vue'
 import RegionDropDown from '@/components/normgeber/RegionDropDown.vue'
 
@@ -20,7 +20,7 @@ const emit = defineEmits<{
   cancel: [void]
 }>()
 
-const docUnitStore = useDocumentUnitStore()
+const docUnitStore = useAdmDocUnitStore()
 const validationStore = useValidationStore<'institution'>()
 
 const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)

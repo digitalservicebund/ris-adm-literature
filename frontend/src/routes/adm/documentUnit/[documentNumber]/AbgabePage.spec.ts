@@ -2,12 +2,12 @@ import { createTestingPinia } from '@pinia/testing'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, test, vi } from 'vitest'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import AbgabePage from './AbgabePage.vue'
 import { normgeberFixture } from '@/testing/fixtures/normgeber'
 import { docTypeFixture } from '@/testing/fixtures/documentType'
 
-function renderComponent(documentUnit: DocumentUnit) {
+function renderComponent(documentUnit: AdmDocumentationUnit) {
   const user = userEvent.setup()
 
   return {
@@ -18,7 +18,7 @@ function renderComponent(documentUnit: DocumentUnit) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit,
                 },
               },

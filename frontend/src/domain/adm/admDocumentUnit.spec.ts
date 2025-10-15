@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { type DocumentUnit } from './documentUnit'
+import { type AdmDocumentationUnit } from './admDocumentUnit'
 import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
 
 describe('DocumentUnit', () => {
   it('instantiates with id and documentNumber', () => {
     // given when
-    const documentUnit: DocumentUnit = {
+    const documentUnit: AdmDocumentationUnit = {
       id: 'foo',
       documentNumber: 'KSNR054920707',
       fieldsOfLaw: [],
@@ -20,7 +20,7 @@ describe('DocumentUnit', () => {
 
   it('sets a fundstelle', () => {
     // given when
-    const documentUnit: DocumentUnit = {
+    const documentUnit: AdmDocumentationUnit = {
       id: 'foo',
       documentNumber: 'KSNR054920707',
       fundstellen: [fundstelleFixture],

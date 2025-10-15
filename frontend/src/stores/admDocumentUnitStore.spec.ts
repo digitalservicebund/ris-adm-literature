@@ -21,7 +21,9 @@ describe('useDocumentUnitStore', () => {
       }),
     }))
 
-    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const { useAdmDocUnitStore: useDocumentUnitStore } = await import(
+      '@/stores/admDocumentUnitStore'
+    )
     const store = useDocumentUnitStore()
 
     // when
@@ -47,7 +49,9 @@ describe('useDocumentUnitStore', () => {
       }),
     }))
 
-    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const { useAdmDocUnitStore: useDocumentUnitStore } = await import(
+      '@/stores/admDocumentUnitStore'
+    )
     const store = useDocumentUnitStore()
 
     // when
@@ -79,7 +83,9 @@ describe('useDocumentUnitStore', () => {
       }),
     }))
 
-    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const { useAdmDocUnitStore: useDocumentUnitStore } = await import(
+      '@/stores/admDocumentUnitStore'
+    )
     const store = useDocumentUnitStore()
     await store.loadDocumentUnit('123')
 
@@ -113,7 +119,9 @@ describe('useDocumentUnitStore', () => {
       }),
     }))
 
-    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const { useAdmDocUnitStore: useDocumentUnitStore } = await import(
+      '@/stores/admDocumentUnitStore'
+    )
     const store = useDocumentUnitStore()
     await store.loadDocumentUnit('123')
 
@@ -137,7 +145,9 @@ describe('useDocumentUnitStore', () => {
       }),
     }))
 
-    const { useDocumentUnitStore } = await import('@/stores/documentUnitStore')
+    const { useAdmDocUnitStore: useDocumentUnitStore } = await import(
+      '@/stores/admDocumentUnitStore'
+    )
     const store = useDocumentUnitStore()
     await store.loadDocumentUnit('abc')
 

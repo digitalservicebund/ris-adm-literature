@@ -31,17 +31,17 @@ describe('getAdmVwvMenuItems', () => {
     const result = getAdmVwvMenuItems(mockDocumentNumber, mockRouteQuery)
 
     // Fundstellen
-    expect(result[0]?.route.name).toBe(ROUTE_NAMES.VWV.DOCUMENT_UNIT.FUNDSTELLEN)
+    expect(result[0]?.route.name).toBe(ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN)
     expect(result[0]?.route.params?.documentNumber).toBe(mockDocumentNumber)
     expect(result[0]?.route.query).toEqual(mockRouteQuery)
 
     // Rubriken
-    expect(result[1]?.route.name).toBe(ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN)
+    expect(result[1]?.route.name).toBe(ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN)
     expect(result[1]?.route.params?.documentNumber).toBe(mockDocumentNumber)
     expect(result[1]?.route.query).toEqual(mockRouteQuery)
 
     // Abgabe
-    expect(result[2]?.route.name).toBe(ROUTE_NAMES.VWV.DOCUMENT_UNIT.ABGABE)
+    expect(result[2]?.route.name).toBe(ROUTE_NAMES.ADM.DOCUMENT_UNIT.ABGABE)
     expect(result[2]?.route.params?.documentNumber).toBe(mockDocumentNumber)
     expect(result[2]?.route.query).toEqual(mockRouteQuery)
   })
@@ -66,7 +66,7 @@ describe('getAdmVwvMenuItems', () => {
     const rubrikenItem = result.find((item: MenuItem) => item.label === 'Rubriken')
 
     rubrikenItem?.children?.forEach((child: MenuItem) => {
-      expect(child.route.name).toBe(ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN)
+      expect(child.route.name).toBe(ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN)
       expect(child.route.params?.documentNumber).toBe(mockDocumentNumber)
       expect(child.route.query).toEqual(mockRouteQuery)
       expect(child.route.hash).toBeDefined()

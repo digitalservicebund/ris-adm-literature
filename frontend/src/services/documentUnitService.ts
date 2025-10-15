@@ -1,6 +1,6 @@
-import type { DocumentUnit, DocumentUnitSearchParams } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit, AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
 import ActiveCitation from '@/domain/activeCitation'
-import type { DocumentUnitResponse } from '@/domain/documentUnitResponse.ts'
+import type { DocumentUnitResponse } from '@/domain/adm/admDocumentUnitResponse'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
@@ -11,7 +11,7 @@ import { computed, type Ref } from 'vue'
 
 const DOCUMENTATION_UNITS_URL = '/documentation-units'
 
-export function useGetDocUnit(documentNumber: string): UseFetchReturn<DocumentUnit> {
+export function useGetDocUnit(documentNumber: string): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       if (!data) return { data }
@@ -24,7 +24,9 @@ export function useGetDocUnit(documentNumber: string): UseFetchReturn<DocumentUn
   }).json()
 }
 
-export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<DocumentUnit> {
+export function usePutDocUnit(
+  documentUnit: AdmDocumentationUnit,
+): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
     afterFetch: ({ data }) => {
       if (!data) return { data }
@@ -39,7 +41,9 @@ export function usePutDocUnit(documentUnit: DocumentUnit): UseFetchReturn<Docume
     .put(documentUnit)
 }
 
-export function usePutPublishDocUnit(documentUnit: DocumentUnit): UseFetchReturn<DocumentUnit> {
+export function usePutPublishDocUnit(
+  documentUnit: AdmDocumentationUnit,
+): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`, {
     afterFetch: async ({ data }) => {
       if (!data) return { data }
@@ -54,15 +58,15 @@ export function usePutPublishDocUnit(documentUnit: DocumentUnit): UseFetchReturn
     .put(documentUnit)
 }
 
-export function usePostDocUnit(): UseFetchReturn<DocumentUnit> {
+export function usePostDocUnit(): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}`).json().post()
 }
 
 export function useGetPaginatedDocUnits(
   pageNumber: Ref<number>,
   pageSize: number,
-  search: Ref<DocumentUnitSearchParams | undefined>,
-): UseFetchReturn<DocumentUnit> {
+  search: Ref<AdmDocUnitSearchParams | undefined>,
+): UseFetchReturn<AdmDocumentationUnit> {
   const urlWithParams = computed(() =>
     buildUrlWithParams(`${DOCUMENTATION_UNITS_URL}`, {
       pageNumber: pageNumber.value.toString(),
@@ -79,8 +83,8 @@ export function useGetPaginatedDocUnits(
   return useApiFetch(urlWithParams).json()
 }
 
-function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): DocumentUnit {
-  const documentUnit: DocumentUnit = {
+function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): AdmDocumentationUnit {
+  const documentUnit: AdmDocumentationUnit = {
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,

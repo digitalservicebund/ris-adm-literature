@@ -13,7 +13,7 @@ import NormReferences from '@/components/norm-reference/NormReferences.vue'
 import ActiveReferences from '@/components/active-reference/ActiveReferences.vue'
 import ActiveCitations from '@/components/active-citation/ActiveCitations.vue'
 import FieldsOfLaw from '@/components/field-of-law/FieldsOfLaw.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
 import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
@@ -24,7 +24,7 @@ import TitelAspekt from '@/components/TitelAspekt.vue'
 import Definitionen from '@/components/Definitionen.vue'
 
 const route = useRoute()
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const langueberschrift = computed({
   get: () => store.documentUnit!.langueberschrift,

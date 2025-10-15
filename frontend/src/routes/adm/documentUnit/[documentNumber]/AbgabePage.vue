@@ -3,19 +3,21 @@ import Button from 'primevue/button'
 import IconCheck from '~icons/material-symbols/check'
 import TitleElement from '@/components/TitleElement.vue'
 import { computed } from 'vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { missingDocumentUnitFields } from '@/utils/validators'
 import Plausibilitaetspruefung from '@/components/publication/Plausibilitaetspruefung.vue'
 import { Message } from 'primevue'
 import { usePutPublishDocUnit } from '@/services/documentUnitService'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
-const missingFields = computed(() => missingDocumentUnitFields(store.documentUnit as DocumentUnit))
+const missingFields = computed(() =>
+  missingDocumentUnitFields(store.documentUnit as AdmDocumentationUnit),
+)
 
 const { error, execute, isFetching, isFinished } = usePutPublishDocUnit(
-  store.documentUnit as DocumentUnit,
+  store.documentUnit as AdmDocumentationUnit,
 )
 
 async function onClickPublish() {

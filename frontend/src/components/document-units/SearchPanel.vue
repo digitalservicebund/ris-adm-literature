@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { DocumentUnitSearchParams } from '@/domain/documentUnit'
+import type { AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
 import { Button, InputText } from 'primevue'
 import { computed, ref } from 'vue'
 import DateInput from '@/components/input/DateInput.vue'
@@ -12,10 +12,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  search: [value: DocumentUnitSearchParams]
+  search: [value: AdmDocUnitSearchParams]
 }>()
 
-const searchParams = ref<DocumentUnitSearchParams>({
+const searchParams = ref<AdmDocUnitSearchParams>({
   documentNumber: '',
   langueberschrift: '',
   fundstellen: '',

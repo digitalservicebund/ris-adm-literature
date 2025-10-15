@@ -6,7 +6,7 @@ import {
   missingDocumentUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 
 describe('Validators functions', () => {
   describe('areDatesValid', () => {
@@ -78,7 +78,7 @@ describe('Validators functions', () => {
 
   describe('validateDocumentUnit', () => {
     it('should return a list of missing fields', () => {
-      const doc: DocumentUnit = {
+      const doc: AdmDocumentationUnit = {
         id: 'testDocId1',
         documentNumber: 'testDocNumber1',
         note: '',

@@ -2,7 +2,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, test } from 'vitest'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { Definition } from '@/domain/definition'
 import DefinitionComponent from './Definitionen.vue'
 
@@ -17,8 +17,8 @@ function renderComponent(definitions?: Definition[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     definitionen: definitions ?? [],
                   },
@@ -40,8 +40,8 @@ describe('Definition', () => {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                   },
                 },

@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import KeywordsComponent from '@/components/KeyWords.vue'
 import { describe, expect, test, vi } from 'vitest'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 
 const scrollIntoViewMock = vi.fn()
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
@@ -19,8 +19,8 @@ function renderComponent(keywords?: string[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     keywords: keywords ?? [],
                   },

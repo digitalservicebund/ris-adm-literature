@@ -1,26 +1,26 @@
-import { type FieldOfLaw } from './fieldOfLaw'
-import ActiveCitation from './activeCitation'
+import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import ActiveCitation from '@/domain/activeCitation'
 import type ActiveReference from '@/domain/activeReference.ts'
-import type NormReference from './normReference'
-import type { Normgeber } from './normgeber'
-import type { DocumentType } from './documentType'
-import type { Page } from './pagination'
-import type { Fundstelle } from './fundstelle'
-import type { Definition } from './definition'
+import type NormReference from '@/domain/normReference'
+import type { Normgeber } from '@/domain/normgeber'
+import type { DocumentType } from '@/domain/documentType'
+import type { Page } from '@/domain/pagination'
+import type { Fundstelle } from '@/domain/fundstelle'
+import type { Definition } from '@/domain/definition'
 
-export interface DocumentUnitSearchParams {
+export interface AdmDocUnitSearchParams {
   documentNumber: string
   langueberschrift: string
   fundstellen: string
   zitierdaten: string
 }
 
-export interface PaginatedDocumentUnitListResponse {
-  documentationUnitsOverview: DocumentUnitListItem[]
+export interface PaginatedAdmDocUnitListResponse {
+  documentationUnitsOverview: AdmDocUnitListItem[]
   page: Page
 }
 
-export interface DocumentUnitListItem {
+export interface AdmDocUnitListItem {
   readonly id: string
   readonly documentNumber: string
   zitierdaten: string[]
@@ -28,7 +28,7 @@ export interface DocumentUnitListItem {
   fundstellen: string[]
 }
 
-export interface DocumentUnit {
+export interface AdmDocumentationUnit {
   readonly id: string
   readonly documentNumber: string
   fundstellen?: Fundstelle[]
@@ -53,7 +53,7 @@ export interface DocumentUnit {
   definitionen?: Definition[]
 }
 
-export const requiredDocumentUnitFields = [
+export const requiredAdmDocUnitFields = [
   'langueberschrift',
   'inkrafttretedatum',
   'dokumenttyp',
