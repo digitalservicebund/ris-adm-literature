@@ -28,6 +28,7 @@ public class PublisherConfig {
     @Qualifier("privateBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
     @Value("${otc.private-bsg-client.bucket-name}") String bucketName,
+    // TODO: remove datatype // NOSONAR
     @Value("${otc.obs.datatype}") String datatype
   ) {
     return new S3PublishAdapter(s3Client, validator, bucketName, datatype, "privateBsgPublisher");
