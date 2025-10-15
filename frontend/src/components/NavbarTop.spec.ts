@@ -40,7 +40,7 @@ describe('NavbarTop', () => {
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
-    expect(screen.getByText('BAG | staging')).toBeInTheDocument()
+    expect(screen.getByText('BAG | Staging')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
@@ -70,6 +70,6 @@ describe('NavbarTop', () => {
     renderComponent()
 
     expect(screen.getByText('Vorname Nachname')).toBeInTheDocument()
-    expect(screen.getByText('staging')).toBeInTheDocument()
+    expect(screen.getByText('Staging')).toBeInTheDocument()
   })
 })

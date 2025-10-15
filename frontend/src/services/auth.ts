@@ -61,6 +61,7 @@ function createAuthentication() {
    */
   function getGroup(): string {
     const groups = keycloak?.idTokenParsed?.groups || []
+    // Extract name from group path e.g. /literature/BAG
     const groupNames = groups.map((path: string) => path.split('/').pop())
     return groupNames[0] ?? ''
   }

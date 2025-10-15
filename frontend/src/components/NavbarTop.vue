@@ -9,7 +9,7 @@ import FlexItem from '@/components/FlexItem.vue'
 
 const { getUsername, logout, getGroup } = useAuthentication()
 
-const group = computed(() => (getGroup() ? `${getGroup()} | staging` : `staging`))
+const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`))
 </script>
 
 <template>
