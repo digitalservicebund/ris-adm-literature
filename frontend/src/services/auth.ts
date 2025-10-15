@@ -55,6 +55,18 @@ function createAuthentication() {
   }
 
   /**
+   * Returns the group of the currently active user.
+   *
+   * @returns A string, or an empty string if not available.
+   */
+  function getGroup(): string {
+    const groups = keycloak?.idTokenParsed?.groups || []
+    // Extract name from group path e.g. /literature/BAG
+    const groupNames = groups.map((path: string) => path.split('/').pop())
+    return groupNames[0] ?? ''
+  }
+
+  /**
    * Checks if the Keycloak instance has been initialized and the user is authenticated.
    * @returns True if authenticated, otherwise false.
    */
@@ -131,6 +143,7 @@ function createAuthentication() {
     hasRealmRole,
     isAuthenticated,
     getRealmRoles,
+    getGroup,
   })
 }
 
