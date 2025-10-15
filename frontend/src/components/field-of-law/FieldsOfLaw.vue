@@ -11,7 +11,7 @@ import FieldOfLawTree from '@/components/field-of-law/FieldOfLawTree.vue'
 import { type Page } from '@/components/Pagination.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import { useGetPaginatedFieldsOfLaw } from '@/services/fieldOfLawService'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import StringsUtil from '@/utils/stringsUtil'
 import { until } from '@vueuse/core'
 
@@ -29,7 +29,7 @@ const results = ref<FieldOfLaw[]>()
 const currentPage = ref<Page>()
 const itemsPerPage = 10
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 const selectedNodes = computed({
   get: () => store.documentUnit!.fieldsOfLaw as FieldOfLaw[],
   set: (newValues) => {

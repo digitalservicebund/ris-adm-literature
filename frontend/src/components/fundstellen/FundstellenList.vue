@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { computed } from 'vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
@@ -7,7 +7,7 @@ import { useEditableList } from '@/composables/useEditableList'
 import FundstelleListItem from './FundstelleListItem.vue'
 import FundstelleInput from './FundstelleInput.vue'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const fundstellenList = computed({
   get: () => store.documentUnit!.fundstellen ?? [],

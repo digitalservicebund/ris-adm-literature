@@ -2,7 +2,7 @@ import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
 const docTypeToAuthFile = {
-  vwv: '../frontend/e2e/.auth/vwv.json',
+  adm: '../frontend/e2e/.auth/adm.json',
   uli: '../frontend/e2e/.auth/uli.json',
 }
 
@@ -82,7 +82,7 @@ export default defineConfig({
       name: 'seed data',
       testMatch: 'seed-data.ts',
       use: {
-        storageState: docTypeToAuthFile['vwv'],
+        storageState: docTypeToAuthFile['adm'],
       },
       testIgnore: 'Login.spec.ts',
     },

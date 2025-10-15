@@ -2,10 +2,10 @@ import { render, screen, within } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import DocumentUnitList, { type DocumentUnitListProps } from './DocumentUnitList.vue'
 import userEvent from '@testing-library/user-event'
-import type { DocumentUnitListItem } from '@/domain/documentUnit'
+import type { AdmDocUnitListItem } from '@/domain/adm/admDocumentUnit'
 import messages from '@/i18n/messages.json'
 
-const docUnitsMock: DocumentUnitListItem[] = [
+const docUnitsMock: AdmDocUnitListItem[] = [
   {
     id: 'docUnitId1',
     documentNumber: 'dokumentNummer1',

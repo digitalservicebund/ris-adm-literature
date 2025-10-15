@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { DocumentUnitListItem } from '@/domain/documentUnit'
+import type { AdmDocUnitListItem } from '@/domain/adm/admDocumentUnit'
 import dayjs from 'dayjs'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
@@ -8,7 +8,7 @@ import IconEdit from '~icons/ic/outline-edit'
 import messages from '@/i18n/messages.json'
 
 export interface DocumentUnitListProps {
-  docUnits: DocumentUnitListItem[]
+  docUnits: AdmDocUnitListItem[]
   firstRowIndex: number
   rowsPerPage: number
   totalRows: number
@@ -59,7 +59,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
       <template #body="{ data }">
         <router-link
           :to="{
-            name: 'vwv-documentUnit-documentNumber',
+            name: 'adm-documentUnit-documentNumber',
             params: { documentNumber: data.documentNumber },
           }"
         >

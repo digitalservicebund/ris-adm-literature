@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import errorMessages from '@/i18n/errors.json'
 
 function getCurrentTime(dateSaved: Date) {
@@ -9,7 +9,7 @@ function getCurrentTime(dateSaved: Date) {
 }
 
 export function useSaveToRemote() {
-  const store = useDocumentUnitStore()
+  const store = useAdmDocUnitStore()
   const saveIsInProgress = ref(false)
   const lastSaveError = ref<{ title: string } | undefined>(undefined)
   const lastSavedOn = ref<Date | undefined>(undefined)

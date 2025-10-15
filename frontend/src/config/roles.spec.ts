@@ -9,7 +9,7 @@ describe('Role Configuration', () => {
   })
 
   it('should map roles to the correct home route names', () => {
-    expect(roleToHomeRouteMap[USER_ROLES.ADM_USER]).toBe(ROUTE_NAMES.VWV.START_PAGE)
+    expect(roleToHomeRouteMap[USER_ROLES.ADM_USER]).toBe(ROUTE_NAMES.ADM.START_PAGE)
     expect(roleToHomeRouteMap[USER_ROLES.LITERATURE_USER]).toBe(ROUTE_NAMES.ULI.START_PAGE)
   })
 

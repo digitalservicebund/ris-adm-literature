@@ -12,9 +12,9 @@ jobs:
         # Standard, sharded runs
         playwright-project:
           [
-            { name: "chromium-vwv", install: "chromium" },
-            { name: "firefox-vwv", install: "firefox" },
-            { name: "msedge-vwv", install: "msedge chromium" },
+            { name: "chromium-adm", install: "chromium" },
+            { name: "firefox-adm", install: "firefox" },
+            { name: "msedge-adm", install: "msedge chromium" },
             { name: "chromium-uli", install: "chromium" },
             { name: "firefox-uli", install: "firefox" },
             { name: "msedge-uli", install: "msedge chromium" },

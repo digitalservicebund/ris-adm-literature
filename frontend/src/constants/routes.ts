@@ -3,15 +3,15 @@ export const ROUTE_NAMES = {
   FORBIDDEN: 'Forbidden',
   NOT_FOUND: 'Error 404 not found',
 
-  // VWV (Verwaltungsvorschriften)
-  VWV: {
-    START_PAGE: 'vwv-start-page',
+  // ADM (Verwaltungsvorschriften)
+  ADM: {
+    START_PAGE: 'adm-start-page',
     DOCUMENT_UNIT: {
-      NEW: 'vwv-documentUnit-new',
-      EDIT: 'vwv-documentUnit-documentNumber',
-      FUNDSTELLEN: 'vwv-documentUnit-documentNumber-fundstellen',
-      RUBRIKEN: 'vwv-documentUnit-documentNumber-rubriken',
-      ABGABE: 'vwv-documentUnit-documentNumber-abgabe',
+      NEW: 'adm-documentUnit-new',
+      EDIT: 'adm-documentUnit-documentNumber',
+      FUNDSTELLEN: 'adm-documentUnit-documentNumber-fundstellen',
+      RUBRIKEN: 'adm-documentUnit-documentNumber-rubriken',
+      ABGABE: 'adm-documentUnit-documentNumber-abgabe',
     },
   },
 
@@ -29,7 +29,7 @@ export const ROUTE_NAMES = {
 export const ROUTE_PATHS = {
   ROOT: '/',
   FORBIDDEN: '/forbidden',
-  VWV: {
+  ADM: {
     BASE: '/verwaltungsvorschriften',
     DOCUMENT_UNIT: {
       NEW: 'documentUnit/new',

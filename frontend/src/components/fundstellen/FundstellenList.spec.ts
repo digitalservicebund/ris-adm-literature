@@ -2,7 +2,7 @@ import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { Fundstelle } from '@/domain/fundstelle'
 import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
 import FundstellenList from './FundstellenList.vue'
@@ -18,8 +18,8 @@ function renderComponent(fundstellenList?: Fundstelle[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     fundstellen: fundstellenList ?? [],
                   },

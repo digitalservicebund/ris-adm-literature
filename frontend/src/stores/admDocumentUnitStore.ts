@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
 
-export const useDocumentUnitStore = defineStore('docunitStore', () => {
-  const documentUnit = ref<DocumentUnit | null>(null)
+export const useAdmDocUnitStore = defineStore('admDocUnitStore', () => {
+  const documentUnit = ref<AdmDocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
 
@@ -36,7 +36,7 @@ export const useDocumentUnitStore = defineStore('docunitStore', () => {
       error: putError,
       statusCode,
       execute,
-    } = usePutDocUnit(documentUnit.value as DocumentUnit)
+    } = usePutDocUnit(documentUnit.value as AdmDocumentationUnit)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {

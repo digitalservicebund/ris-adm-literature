@@ -6,7 +6,7 @@ import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import NormReference from '@/domain/normReference'
 import SingleNorm from '@/domain/singleNorm'
 import { createTestingPinia } from '@pinia/testing'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
@@ -22,8 +22,8 @@ function renderComponent(normReferences?: NormReference[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     normReferences: normReferences ?? [],
                   },

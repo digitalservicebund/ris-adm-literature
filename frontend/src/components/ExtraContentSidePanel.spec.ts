@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/vue'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { createRouter, createWebHistory, type Router } from 'vue-router'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { Fundstelle } from '@/domain/fundstelle'
 
 let router: Router
@@ -20,7 +20,7 @@ function renderComponent(
 ) {
   const user = userEvent.setup()
 
-  const documentUnit = <DocumentUnit>{
+  const documentUnit = <AdmDocumentationUnit>{
     documentNumber: '1234567891234',
     note: options.note ?? '',
   }
@@ -39,7 +39,7 @@ function renderComponent(
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit: documentUnit,
                 },
               },

@@ -21,13 +21,13 @@ export function getAdmVwvMenuItems(
       label: 'Fundstellen',
       route: {
         ...baseRoute,
-        name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.FUNDSTELLEN,
+        name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN,
       },
     },
     {
       label: 'Rubriken',
       route: {
-        name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+        name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
         ...baseRoute,
       },
       children: [
@@ -35,7 +35,7 @@ export function getAdmVwvMenuItems(
           label: 'Formaldaten',
           route: {
             ...baseRoute,
-            name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+            name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
             hash: '#formaldaten',
           },
         },
@@ -43,7 +43,7 @@ export function getAdmVwvMenuItems(
           label: 'Gliederung',
           route: {
             ...baseRoute,
-            name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+            name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
             hash: '#gliederung',
           },
         },
@@ -51,7 +51,7 @@ export function getAdmVwvMenuItems(
           label: 'Inhaltliche Erschließung',
           route: {
             ...baseRoute,
-            name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+            name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
             hash: '#inhaltlicheErschliessung',
           },
         },
@@ -59,7 +59,7 @@ export function getAdmVwvMenuItems(
           label: 'Kurzreferat',
           route: {
             ...baseRoute,
-            name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.RUBRIKEN,
+            name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
             hash: '#kurzreferat',
           },
         },
@@ -69,7 +69,7 @@ export function getAdmVwvMenuItems(
       label: 'Abgabe',
       route: {
         ...baseRoute,
-        name: ROUTE_NAMES.VWV.DOCUMENT_UNIT.ABGABE,
+        name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.ABGABE,
       },
     },
   ]
