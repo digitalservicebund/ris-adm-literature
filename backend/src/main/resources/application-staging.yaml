@@ -24,13 +24,11 @@ frontend:
     realm: ${oauth2.realm}
     clientId: ${oauth2.client-id}
 
-otc:
-  region: ${otc.region}
-  private-bsg-client:
-    bucket-name: ${otc.obs.private.bucket-name}
-  obs:
-    endpoint: ${otc.obs.endpoint}
-    datatype: ${otc.obs.datatype}
+s3:
+  region: ${s3.region}
+  endpoint: ${s3.endpoint}
+  adm:
     private:
-      bsg-access-key-id: ${otc.obs.private.bsg-access-key}
-      bsg-access-key: ${otc.obs.private.bsg-access-key-id}
+      access-key: ${s3.adm.private.access-key}
+      access-key-id: ${s3.adm.private.access-key-id}
+      bucket-name: ${otc.obs.private.bucket-name}

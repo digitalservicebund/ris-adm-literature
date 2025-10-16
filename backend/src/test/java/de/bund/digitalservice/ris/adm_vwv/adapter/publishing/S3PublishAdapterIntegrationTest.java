@@ -39,7 +39,7 @@ import software.amazon.awssdk.services.s3.model.*;
  * and verifies that the composite publisher correctly routes requests to the appropriate bean.
  */
 @Testcontainers
-// This property is needed because our main AwsConfig provides a mock S3Client bean
+// This property is needed because our main S3Config provides a mock S3Client bean
 // for the "test" profile, but this test needs to override it with a real one
 // from the inner @TestConfiguration. This property allows that override to happen.
 @SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
@@ -50,8 +50,6 @@ class S3PublishAdapterIntegrationTest {
   private static final String FIRST_PUBLISHER_NAME = "privateBsgPublisher";
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
   private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
-  private static final String FIRST_DATATYPE = "first-datatype";
-  private static final String SECOND_DATATYPE = "second-datatype";
   private static final String CHANGELOG_DIR = "changelogs/";
 
   @Container
@@ -87,13 +85,7 @@ class S3PublishAdapterIntegrationTest {
 
     @Bean(FIRST_PUBLISHER_NAME)
     public Publisher firstTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
-      return new S3PublishAdapter(
-        s3Client,
-        xmlValidator,
-        FIRST_BUCKET_NAME,
-        FIRST_DATATYPE,
-        FIRST_PUBLISHER_NAME
-      );
+      return new S3PublishAdapter(s3Client, xmlValidator, FIRST_BUCKET_NAME, FIRST_PUBLISHER_NAME);
     }
 
     @Bean(SECOND_PUBLISHER_NAME)
@@ -102,7 +94,6 @@ class S3PublishAdapterIntegrationTest {
         s3Client,
         xmlValidator,
         SECOND_BUCKET_NAME,
-        SECOND_DATATYPE,
         SECOND_PUBLISHER_NAME
       );
     }
@@ -164,7 +155,7 @@ class S3PublishAdapterIntegrationTest {
   @Test
   void publish_shouldRouteToFirstPublisherAndUploadToCorrectBucket() {
     // given
-    String docNumber = "doc-abc-456";
+    String docNumber = "KSNR456";
     String xmlContent = "<test-data>This is a test</test-data>";
     var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
@@ -193,7 +184,7 @@ class S3PublishAdapterIntegrationTest {
     List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
     assertThat(firstBucketChangelogs).hasSize(1);
     S3Object changelog = firstBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", FIRST_DATATYPE));
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(FIRST_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"change_all\": true}"
     );
@@ -241,7 +232,7 @@ class S3PublishAdapterIntegrationTest {
     );
     assertThat(secondBucketChangelogs).hasSize(1);
     S3Object changelog = secondBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", SECOND_DATATYPE));
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"change_all\": true}"
     );

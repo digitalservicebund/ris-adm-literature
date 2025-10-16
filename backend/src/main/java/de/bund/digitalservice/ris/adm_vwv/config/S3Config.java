@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.S3Client;
  */
 @Configuration
 @Slf4j
-public class AwsConfig {
+public class S3Config {
 
   /**
    * Creates and configures the S3Client bean for the private BSG bucket on OTC for the 'staging'
@@ -36,10 +36,10 @@ public class AwsConfig {
   @Bean("privateBsgS3Client")
   @Profile("staging")
   public S3Client privateBsgS3Client(
-    @Value("${otc.region}") String region,
-    @Value("${otc.obs.endpoint}") String endpoint,
-    @Value("${otc.obs.private.bsg-access-key-id}") String accessKeyId,
-    @Value("${otc.obs.private.bsg-access-key}") String secretAccessKey
+    @Value("${s3.region}") String region,
+    @Value("${s3.endpoint}") String endpoint,
+    @Value("${s3.adm.private.access-key-id}") String accessKeyId,
+    @Value("${s3.adm.private.access-key}") String secretAccessKey
   ) throws URISyntaxException {
     log.info("Endpoint {}", endpoint);
 
