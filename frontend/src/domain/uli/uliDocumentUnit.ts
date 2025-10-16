@@ -1,7 +1,8 @@
 export interface UliDocumentationUnit {
   readonly id: string
   readonly documentNumber: string
-  veroeffentlichungsjahr: string
+  veroeffentlichungsjahr?: string
+  note: string
 }
 
 export interface UliDocumentUnitResponse {

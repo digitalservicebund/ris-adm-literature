@@ -29,7 +29,7 @@ describe('useSaveToRemote', () => {
 
   it('calls the callback every time the trigger is called', async () => {
     const documentUnitStore = mockDocumentUnitStore()
-    const { triggerSave } = useSaveToRemote()
+    const { triggerSave } = useSaveToRemote(documentUnitStore)
 
     await triggerSave()
     expect(documentUnitStore.update).toHaveBeenCalledTimes(1)
@@ -45,7 +45,7 @@ describe('useSaveToRemote', () => {
       .mockImplementation(() => new Promise((resolve) => (resolveCallback = resolve)))
 
     const documentUnitStore = mockDocumentUnitStore(callback)
-    const { triggerSave } = useSaveToRemote()
+    const { triggerSave } = useSaveToRemote(documentUnitStore)
 
     triggerSave().then(() => {})
     triggerSave().then(() => {})
@@ -62,8 +62,8 @@ describe('useSaveToRemote', () => {
       .fn()
       .mockImplementation(() => new Promise((resolve) => (resolveCallback = resolve)))
 
-    mockDocumentUnitStore(callback)
-    const { triggerSave, saveIsInProgress } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore(callback)
+    const { triggerSave, saveIsInProgress } = useSaveToRemote(documentUnitStore)
 
     expect(saveIsInProgress.value).toBe(false)
 
@@ -79,8 +79,8 @@ describe('useSaveToRemote', () => {
 
   it('also sets back the in progress state when callback throws exception', async () => {
     const callback = vi.fn().mockRejectedValue(new Error())
-    mockDocumentUnitStore(callback)
-    const { triggerSave, saveIsInProgress } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore(callback)
+    const { triggerSave, saveIsInProgress } = useSaveToRemote(documentUnitStore)
 
     await triggerSave()
 
@@ -89,8 +89,8 @@ describe('useSaveToRemote', () => {
 
   it('sets the response error if update failed', async () => {
     const callback = vi.fn().mockResolvedValue(false)
-    mockDocumentUnitStore(callback)
-    const { triggerSave, lastSaveError } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore(callback)
+    const { triggerSave, lastSaveError } = useSaveToRemote(documentUnitStore)
 
     await triggerSave()
 
@@ -101,8 +101,8 @@ describe('useSaveToRemote', () => {
 
   it('sets connection error if callback throws exception one', async () => {
     const callback = vi.fn().mockRejectedValue(new Error())
-    mockDocumentUnitStore(callback)
-    const { triggerSave, lastSaveError } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore(callback)
+    const { triggerSave, lastSaveError } = useSaveToRemote(documentUnitStore)
 
     await triggerSave()
 
@@ -110,8 +110,8 @@ describe('useSaveToRemote', () => {
   })
 
   it('resets the response error after the next successful save', async () => {
-    mockDocumentUnitStore()
-    const { triggerSave, lastSaveError } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore()
+    const { triggerSave, lastSaveError } = useSaveToRemote(documentUnitStore)
 
     expect(lastSaveError.value).toBeUndefined()
 
@@ -128,8 +128,8 @@ describe('useSaveToRemote', () => {
   })
 
   it('sets the last save on date only after each successfully callback call', async () => {
-    mockDocumentUnitStore()
-    const { triggerSave, formattedLastSavedOn } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore()
+    const { triggerSave, formattedLastSavedOn } = useSaveToRemote(documentUnitStore)
 
     expect(formattedLastSavedOn.value).toBeUndefined()
 
@@ -154,8 +154,8 @@ describe('useSaveToRemote', () => {
   })
 
   it('does not reset error if callback did not change anything', async () => {
-    mockDocumentUnitStore()
-    const { triggerSave, formattedLastSavedOn, lastSaveError } = useSaveToRemote()
+    const documentUnitStore = mockDocumentUnitStore()
+    const { triggerSave, formattedLastSavedOn, lastSaveError } = useSaveToRemote(documentUnitStore)
 
     mockDocumentUnitStore(vi.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(false))
 

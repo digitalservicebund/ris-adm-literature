@@ -10,9 +10,10 @@ import { OpeningDirection } from '@/components/enumDisplayMode'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { useExtraContentSidePanelStore } from '@/stores/extraContentSidePanelStore'
 import { useRoute } from 'vue-router'
+import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 
 const props = defineProps<{
-  documentUnit?: AdmDocumentationUnit
+  documentUnit?: AdmDocumentationUnit | UliDocumentationUnit
   showEditButton?: boolean
   hidePanelModeBar?: boolean
   sidePanelShortcut?: string

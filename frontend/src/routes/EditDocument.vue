@@ -6,13 +6,13 @@ import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
-import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
 import { ROUTE_NAMES } from '@/constants/routes'
+import { useStoreForRoute } from '@/composables/useStoreForRoute'
+import type { DocumentUnitStore } from '@/stores/types'
 
 const props = defineProps<{
   documentNumber: string
@@ -20,13 +20,9 @@ const props = defineProps<{
 
 const toast = useToast()
 
-// Use specific store for uli documents
-const store = useAdmDocUnitStore()
+const store = useStoreForRoute<DocumentUnitStore>()
 
-const { documentUnit, error } = storeToRefs(store) as {
-  documentUnit: Ref<AdmDocumentationUnit>
-  error: Ref<Error | null>
-}
+const { documentUnit, error } = storeToRefs(store)
 
 const route = useRoute()
 const menuItems = computed(() =>
@@ -49,14 +45,17 @@ onMounted(async () => {
   await store.load(props.documentNumber)
 })
 
-watch(error, (err) => {
-  if (err) {
-    toast.add({
-      severity: 'error',
-      summary: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
-    })
-  }
-})
+watch(
+  () => error,
+  (err) => {
+    if (err) {
+      toast.add({
+        severity: 'error',
+        summary: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
+      })
+    }
+  },
+)
 </script>
 
 <template>

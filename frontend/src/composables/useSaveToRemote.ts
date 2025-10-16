@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import errorMessages from '@/i18n/errors.json'
 
 function getCurrentTime(dateSaved: Date) {
@@ -8,8 +7,22 @@ function getCurrentTime(dateSaved: Date) {
   return `${fullHour}:${fullMinute}`
 }
 
-export function useSaveToRemote() {
-  const store = useAdmDocUnitStore()
+/**
+ * A generic composable for saving data to a remote backend and abstracts the common "save" (update) workflow.
+ *
+ * @template T - A store-like object type that implements an `update()` method returning `Promise<boolean>`.
+ *
+ * @param {T} store - The store instance or object that exposes an asynchronous `update()` method.
+ *                    The `update()` method should return `true` on success and `false` on failure.
+ *
+ * @returns {{
+ *   saveIsInProgress: Ref<boolean>,
+ *   triggerSave: () => Promise<void>,
+ *   lastSaveError: Ref<{ title: string } | undefined>,
+ *   formattedLastSavedOn: ComputedRef<string | undefined>
+ * }}
+ */
+export function useSaveToRemote<T extends { update: () => Promise<boolean> }>(store: T) {
   const saveIsInProgress = ref(false)
   const lastSaveError = ref<{ title: string } | undefined>(undefined)
   const lastSavedOn = ref<Date | undefined>(undefined)
