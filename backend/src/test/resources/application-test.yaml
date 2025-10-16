@@ -20,13 +20,12 @@ frontend:
     realm: ris
     clientId: ris-adm-literature-local
 
-otc:
-  region: eu-de
-  private-bsg-client:
-    bucket-name: test
-  obs:
+s3:
+  bucket:
+    region: eu-de
     endpoint: https://example.com
-    datatype: testData
-    private:
-      bsg-access-key-id: test
-      bsg-access-key: test
+    adm:
+      private:
+        access-key-id: test
+        access-key: test
+        bucket-name: test
