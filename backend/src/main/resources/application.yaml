@@ -35,11 +35,10 @@ frontend:
 local:
   file-storage: output/s3-mock-storage
 
-otc:
-  private-bsg-client:
-    bucket-name: local-mock-bucket
-  obs:
-    datatype: local-datatype
+s3:
+  adm:
+    private:
+      bucket-name: local-mock-bucket
 
 
 ---

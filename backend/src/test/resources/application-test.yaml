@@ -20,13 +20,11 @@ frontend:
     realm: ris
     clientId: ris-vwv-local
 
-otc:
+s3:
   region: eu-de
-  private-bsg-client:
-    bucket-name: test
-  obs:
-    endpoint: https://example.com
-    datatype: testData
+  endpoint: https://example.com
+  adm:
     private:
-      bsg-access-key-id: test
-      bsg-access-key: test
+      access-key-id: test
+      access-key: test
+      bucket-name: test

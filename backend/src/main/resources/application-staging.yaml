@@ -31,4 +31,4 @@ s3:
     private:
       access-key: ${s3.adm.private.access-key}
       access-key-id: ${s3.adm.private.access-key-id}
-      bucket-name: ${otc.obs.private.bucket-name}
+      bucket-name: ${s3.adm.private.bucket-name}
