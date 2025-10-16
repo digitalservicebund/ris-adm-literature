@@ -39,7 +39,7 @@ test.describe('StartPage Adm', () => {
   )
 
   test(
-    'clicking "Neue Dokumentationseinheit", routes to a new documentation unit',
+    'clicking "Neue Dokumentationseinheit", routes to the Fundstellen of a new Dokumentationseinheit',
     { tag: ['@RISDEV-6041'] },
     async ({ page }) => {
       // Arrange
@@ -59,7 +59,7 @@ test.describe('StartPage Adm', () => {
       // Assert
       // this needs to change when KSNR are generated dynamically
       await expect(page).toHaveURL(
-        '/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen',
+        '/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen',
       )
     },
   )
