@@ -5,8 +5,7 @@ import { setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
 import userEvent from '@testing-library/user-event'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
+import type { DocumentUnitStore } from '@/stores/types'
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
@@ -15,9 +14,7 @@ vi.mock('vue-router', () => ({
 }))
 
 function mockDocumentUnitStore(callback = vi.fn()) {
-  const documentUnitStore = useStoreForRoute<
-    ReturnType<typeof useAdmDocUnitStore> | ReturnType<typeof useUliDocumentUnitStore>
-  >()
+  const documentUnitStore = useStoreForRoute<DocumentUnitStore>()
   documentUnitStore.update = callback
 
   return documentUnitStore
