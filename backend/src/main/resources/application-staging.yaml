@@ -24,11 +24,3 @@ frontend:
     realm: ${oauth2.realm}
     clientId: ${oauth2.client-id}
 
-s3:
-  region: ${s3.region}
-  endpoint: ${s3.endpoint}
-  adm:
-    private:
-      access-key: ${s3.adm.private.access-key}
-      access-key-id: ${s3.adm.private.access-key-id}
-      bucket-name: ${s3.adm.private.bucket-name}
