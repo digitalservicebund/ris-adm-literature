@@ -67,7 +67,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("com.google.protobuf:protobuf-java:4.32.1")
+  implementation("com.google.protobuf:protobuf-java:4.33.0")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
