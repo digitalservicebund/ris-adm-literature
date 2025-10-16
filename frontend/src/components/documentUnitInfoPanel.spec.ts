@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event'
 
 function mockDocumentUnitStore(callback = vi.fn()) {
   const documentUnitStore = useAdmDocUnitStore()
-  documentUnitStore.updateDocumentUnit = callback
+  documentUnitStore.update = callback
 
   return documentUnitStore
 }

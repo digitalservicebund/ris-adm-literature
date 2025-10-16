@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
-  useGetDocUnit,
+  useGetAdmDocUnit,
   useGetPaginatedDocUnits,
   usePostDocUnit,
-  usePutDocUnit,
-  usePutPublishDocUnit,
+  usePutAdmDocUnit,
+  usePutPublishAdmDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
@@ -44,7 +44,7 @@ describe('documentUnitService', () => {
       new Response(JSON.stringify(docUnitResp), { status: 200 }),
     )
 
-    const { data, error, isFetching, execute } = useGetDocUnit('KSNR054920707')
+    const { data, error, isFetching, execute } = useGetAdmDocUnit('KSNR054920707')
     await execute()
 
     expect(isFetching.value).toBe(false)
@@ -55,7 +55,7 @@ describe('documentUnitService', () => {
   it('data is null when fetch returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
-    const { data, execute } = useGetDocUnit('KSNR054920707')
+    const { data, execute } = useGetAdmDocUnit('KSNR054920707')
     await execute()
 
     expect(data.value).toEqual(null)
@@ -64,7 +64,7 @@ describe('documentUnitService', () => {
   it('returns an error on failed fetch ', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
-    const { data, error, isFetching, execute } = useGetDocUnit('KSNR054920708')
+    const { data, error, isFetching, execute } = useGetAdmDocUnit('KSNR054920708')
     await execute()
 
     expect(isFetching.value).toBe(false)
@@ -99,7 +99,7 @@ describe('documentUnitService', () => {
       new Response(JSON.stringify(updatedResp), { status: 200 }),
     )
 
-    const { data, error, isFetching, execute } = usePutDocUnit(docUnit)
+    const { data, error, isFetching, execute } = usePutAdmDocUnit(docUnit)
     await execute()
 
     expect(isFetching.value).toBe(false)
@@ -110,7 +110,7 @@ describe('documentUnitService', () => {
   it('returns an error on failed update', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
-    const { data, error, isFetching, execute } = usePutDocUnit({
+    const { data, error, isFetching, execute } = usePutAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       note: '',
@@ -125,7 +125,7 @@ describe('documentUnitService', () => {
   it('data is null when update call returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
-    const { data, execute } = usePutDocUnit({
+    const { data, execute } = usePutAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       note: '',
@@ -162,7 +162,7 @@ describe('documentUnitService', () => {
       new Response(JSON.stringify(publishedResp), { status: 200 }),
     )
 
-    const { data, error, isFetching, execute } = usePutPublishDocUnit(docUnit)
+    const { data, error, isFetching, execute } = usePutPublishAdmDocUnit(docUnit)
     await execute()
 
     expect(isFetching.value).toBe(false)
@@ -173,7 +173,7 @@ describe('documentUnitService', () => {
   it('returns an error on failed publication', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
-    const { data, error, isFetching, execute } = usePutPublishDocUnit({
+    const { data, error, isFetching, execute } = usePutPublishAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       note: '',
@@ -188,7 +188,7 @@ describe('documentUnitService', () => {
   it('data is null when publish returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
-    const { data, execute } = usePutPublishDocUnit({
+    const { data, execute } = usePutPublishAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       note: '',

@@ -12,7 +12,7 @@ vi.mock('vue', async (importActual) => {
 
 function mockDocumentUnitStore(callback = vi.fn()) {
   const documentUnitStore = useAdmDocUnitStore()
-  documentUnitStore.updateDocumentUnit = callback
+  documentUnitStore.update = callback
 
   return documentUnitStore
 }
@@ -32,10 +32,10 @@ describe('useSaveToRemote', () => {
     const { triggerSave } = useSaveToRemote()
 
     await triggerSave()
-    expect(documentUnitStore.updateDocumentUnit).toHaveBeenCalledTimes(1)
+    expect(documentUnitStore.update).toHaveBeenCalledTimes(1)
 
     await triggerSave()
-    expect(documentUnitStore.updateDocumentUnit).toHaveBeenCalledTimes(2)
+    expect(documentUnitStore.update).toHaveBeenCalledTimes(2)
   })
 
   it('does not call the callback if a call is still in progress', async () => {
@@ -53,7 +53,7 @@ describe('useSaveToRemote', () => {
     await flushPromises()
     triggerSave().then(() => {})
 
-    expect(documentUnitStore.updateDocumentUnit).toHaveBeenCalledTimes(2)
+    expect(documentUnitStore.update).toHaveBeenCalledTimes(2)
   })
 
   it('toggles the in progress state while callback runs', async () => {

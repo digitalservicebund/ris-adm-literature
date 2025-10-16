@@ -16,7 +16,7 @@ function renderComponent(berufsbilder?: string[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     berufsbilder: berufsbilder ?? [],
@@ -39,7 +39,7 @@ describe('Berufsbild', () => {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                   },

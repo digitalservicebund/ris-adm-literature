@@ -18,7 +18,7 @@ function renderComponent(fundstelle: Fundstelle) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',

@@ -42,11 +42,11 @@ function toggleNavigationPanel(expand?: boolean) {
 }
 
 onBeforeUnmount(async () => {
-  await store.unloadDocumentUnit()
+  await store.unload()
 })
 
 onMounted(async () => {
-  await store.loadDocumentUnit(props.documentNumber)
+  await store.load(props.documentNumber)
 })
 
 watch(error, (err) => {
