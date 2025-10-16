@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 import type { UseFetchReturn } from '@vueuse/core'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
+import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -24,7 +26,7 @@ import type { UseFetchReturn } from '@vueuse/core'
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
-export function defineDocumentUnitStore<T>(
+export function defineDocumentUnitStore<T extends AdmDocumentationUnit | UliDocumentationUnit>(
   getFn: (documentNumber: string) => UseFetchReturn<T>,
   updateFn: (doc: T) => UseFetchReturn<T>,
 ) {

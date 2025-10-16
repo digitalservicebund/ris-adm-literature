@@ -88,6 +88,7 @@ function getDocUnit<TResponse, TModel>(
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       if (!data) return { data }
+
       return {
         data: mapFn(data as TResponse),
       }
@@ -114,11 +115,13 @@ function putDocUnit<TResponse, TModel>(
 }
 
 function mapResponseToUliDocUnit(data: UliDocumentUnitResponse): UliDocumentationUnit {
-  return {
+  const documentUnit: UliDocumentationUnit = {
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
   }
+  documentUnit.note = documentUnit.note || ''
+  return documentUnit
 }
 
 function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentationUnit {
