@@ -17,9 +17,9 @@
   },
   "clients": [
     {
-      "id": "ris-vwv-local",
-      "clientId": "ris-vwv-local",
-      "name": "ris-vwv-local",
+      "id": "ris-adm-literature-local",
+      "clientId": "ris-adm-literature-local",
+      "name": "ris-adm-literature-local",
       "enabled": true,
       "directAccessGrantsEnabled": true,
       "publicClient": true,

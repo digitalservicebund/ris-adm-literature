@@ -18,7 +18,7 @@ frontend:
   auth:
     url: http://localhost:8443
     realm: ris
-    clientId: ris-vwv-local
+    clientId: ris-adm-literature-local
 
 otc:
   region: eu-de
