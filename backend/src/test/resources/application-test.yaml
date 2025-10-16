@@ -21,10 +21,11 @@ frontend:
     clientId: ris-vwv-local
 
 s3:
-  region: eu-de
-  endpoint: https://example.com
-  adm:
-    private:
-      access-key-id: test
-      access-key: test
-      bucket-name: test
+  bucket:
+    region: eu-de
+    endpoint: https://example.com
+    adm:
+      private:
+        access-key-id: test
+        access-key: test
+        bucket-name: test
