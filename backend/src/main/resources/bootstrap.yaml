@@ -8,7 +8,6 @@ spring:
           - name: database-config
           - name: oauth2-config
           - name: s3-config
-          - name: s3-buckets-credentials-secrets
       secrets:
         enabled: true
         fail-fast: true
