@@ -25,7 +25,7 @@ export function useSaveToRemote() {
     lastSaveError.value = undefined
 
     try {
-      const success = await store.updateDocumentUnit()
+      const success = await store.update()
 
       if (success) {
         lastSavedOn.value = new Date()

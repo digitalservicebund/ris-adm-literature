@@ -25,7 +25,7 @@ function renderComponent(activeCitations?: ActiveCitation[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     id: '123',
                     documentNumber: '1234567891234',

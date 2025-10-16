@@ -8,26 +8,6 @@ import type { Page } from '@/domain/pagination'
 import type { Fundstelle } from '@/domain/fundstelle'
 import type { Definition } from '@/domain/definition'
 
-export interface AdmDocUnitSearchParams {
-  documentNumber: string
-  langueberschrift: string
-  fundstellen: string
-  zitierdaten: string
-}
-
-export interface PaginatedAdmDocUnitListResponse {
-  documentationUnitsOverview: AdmDocUnitListItem[]
-  page: Page
-}
-
-export interface AdmDocUnitListItem {
-  readonly id: string
-  readonly documentNumber: string
-  zitierdaten: string[]
-  langueberschrift?: string
-  fundstellen: string[]
-}
-
 export interface AdmDocumentationUnit {
   readonly id: string
   readonly documentNumber: string
@@ -51,6 +31,32 @@ export interface AdmDocumentationUnit {
   berufsbilder?: string[]
   titelAspekte?: string[]
   definitionen?: Definition[]
+}
+
+export interface AdmDocUnitSearchParams {
+  documentNumber: string
+  langueberschrift: string
+  fundstellen: string
+  zitierdaten: string
+}
+
+export interface AdmDocUnitListItem {
+  readonly id: string
+  readonly documentNumber: string
+  zitierdaten: string[]
+  langueberschrift?: string
+  fundstellen: string[]
+}
+
+export interface PaginatedAdmDocUnitListResponse {
+  documentationUnitsOverview: AdmDocUnitListItem[]
+  page: Page
+}
+
+export interface AdmDocumentUnitResponse {
+  id: string
+  documentNumber: string
+  json: AdmDocumentationUnit
 }
 
 export const requiredAdmDocUnitFields = [

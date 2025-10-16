@@ -46,7 +46,7 @@ function renderSearchResults(
       // plugins: [
       //   createTestingPinia({
       //     initialState: {
-      //       admDocUnitStore: {
+      //       admDocumentUnit: {
       //         documentUnit: new DocumentUnit('foo', {
       //           documentNumber: '1234567891234',
       //         }),
