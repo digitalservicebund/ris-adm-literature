@@ -30,14 +30,14 @@ Details on each can be found in
 
 ## Quick Start
 
-Start the backend (this requires a docker demon)
+### Start the backend (this requires a docker demon)
 
 ```bash
 cd ./backend
 ./gradlew bootRun
 ```
 
-Start the frontend in dev mode
+### Start the frontend in dev mode
 
 ```bash
 cd ./frontend
@@ -45,6 +45,14 @@ npm run dev
 ```
 
 The last step will tell you where to point your browser in order to access the app.
+
+### Login
+When visiting the app with your browser, you'll be asked to log in. Depending on which document type's app you want to use, there are two logins configured:
+
+* One for BSG administrative directives
+* One for literature
+
+For the required emails/passwords, please refer to the local keycloak configuation file at [./backend/keycloak-config/realm.json](./backend/keycloak-config/realm.json).
 
 ## CI/CD Workflow
 
