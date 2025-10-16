@@ -45,7 +45,7 @@ class DocumentationUnitCreationService {
       documentationUnitEntity.setDocumentNumber(newDocumentNumber);
       DocumentationUnitEntity saved = documentationUnitRepository.save(documentationUnitEntity);
       return new DocumentationUnit(saved.getDocumentNumber(), saved.getId(), null);
-    } else { // TODO: This needs to be reworked once we have separate schemas --> RISDEV-9545 // NOSONAR
+    } else { // TODO: Check creation. This needs to be reworked once we have separate schemas --> RISDEV-9545 // NOSONAR
       // 1. Create a unique key for the document series (e.g., "KALUAB2025")
       String sequenceKey = prefix + thisYear.getValue();
 
