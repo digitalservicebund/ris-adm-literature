@@ -36,10 +36,10 @@ public class S3Config {
   @Bean("privateBsgS3Client")
   @Profile("staging")
   public S3Client privateBsgS3Client(
-    @Value("${s3.region}") String region,
-    @Value("${s3.endpoint}") String endpoint,
-    @Value("${s3.adm.private.access-key-id}") String accessKeyId,
-    @Value("${s3.adm.private.access-key}") String secretAccessKey
+    @Value("${s3.bucket.region}") String region,
+    @Value("${s3.bucket.endpoint}") String endpoint,
+    @Value("${s3.bucket.adm.private.access-key-id}") String accessKeyId,
+    @Value("${s3.bucket.adm.private.access-key}") String secretAccessKey
   ) throws URISyntaxException {
     log.info("Endpoint {}", endpoint);
 

@@ -35,6 +35,12 @@ frontend:
 local:
   file-storage: output/s3-mock-storage
 
+s3:
+  adm:
+    private:
+      bucket-name: local-mock-bucket
+
+
 ---
 
 spring:

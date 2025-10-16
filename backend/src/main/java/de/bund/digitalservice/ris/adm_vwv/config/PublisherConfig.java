@@ -27,7 +27,7 @@ public class PublisherConfig {
   public Publisher privateBsgPublisher(
     @Qualifier("privateBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
-    @Value("${s3.adm.private.bucket-name}") String bucketName
+    @Value("${s3.bucket.adm.private.bucket-name}") String bucketName
   ) {
     return new S3PublishAdapter(s3Client, validator, bucketName, "privateBsgPublisher");
   }
