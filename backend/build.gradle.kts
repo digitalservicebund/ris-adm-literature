@@ -1,6 +1,5 @@
 import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
-import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
   java
@@ -11,7 +10,7 @@ plugins {
   id("com.github.jk1.dependency-license-report") version "2.9"
   id("com.diffplug.spotless") version "8.0.0"
   id("checkstyle")
-  id("io.franzbecker.gradle-lombok") version "5.0.0"
+  id("io.freefair.lombok") version "9.0.0"
 }
 
 group = "de.bund.digitalservice"
@@ -247,24 +246,24 @@ lombok {
 }
 
 tasks {
-  val delombok by registering(DelombokTask::class) {
-    dependsOn(compileJava)
-    mainClass.set("lombok.launch.Main")
-    val outputDir by extra { file("${project.layout.buildDirectory.get()}/delombok") }
-    outputs.dir(outputDir)
-    sourceSets["main"].java.srcDirs.forEach {
-      inputs.dir(it)
-      args(it, "-d", outputDir)
-    }
-    doFirst {
-      outputDir.delete()
-    }
-  }
+//  val delombok by registering(DelombokTask::class) {
+//    dependsOn(compileJava)
+//    mainClass.set("lombok.launch.Main")
+//    val outputDir by extra { file("${project.layout.buildDirectory.get()}/delombok") }
+//    outputs.dir(outputDir)
+//    sourceSets["main"].java.srcDirs.forEach {
+//      inputs.dir(it)
+//      args(it, "-d", outputDir)
+//    }
+//    doFirst {
+//      outputDir.delete()
+//    }
+//  }
 
   javadoc {
-    dependsOn(delombok)
-    val outputDir: File by delombok.get().extra
-    source = fileTree(outputDir)
+//    dependsOn(delombok)
+//    val outputDir: File by delombok.get().extra
+//    source = fileTree(outputDir)
     isFailOnError = false
   }
 }
