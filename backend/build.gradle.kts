@@ -162,7 +162,6 @@ tasks.bootBuildImage {
   imageName.set(containerImageRef)
   builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
   publish.set(false)
-//  runImage.set("cgr.dev/chainguard/jre@sha256:40baab93abc011b4fd78161e6c4a6c922b14d5f8e831c67f312e5ca065100964")
 
   docker {
     publishRegistry {
@@ -246,24 +245,7 @@ lombok {
 }
 
 tasks {
-//  val delombok by registering(DelombokTask::class) {
-//    dependsOn(compileJava)
-//    mainClass.set("lombok.launch.Main")
-//    val outputDir by extra { file("${project.layout.buildDirectory.get()}/delombok") }
-//    outputs.dir(outputDir)
-//    sourceSets["main"].java.srcDirs.forEach {
-//      inputs.dir(it)
-//      args(it, "-d", outputDir)
-//    }
-//    doFirst {
-//      outputDir.delete()
-//    }
-//  }
-
   javadoc {
-//    dependsOn(delombok)
-//    val outputDir: File by delombok.get().extra
-//    source = fileTree(outputDir)
     isFailOnError = false
   }
 }
