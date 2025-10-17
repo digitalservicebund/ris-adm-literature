@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,20 +22,20 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = FieldOfLawController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 class FieldOfLawControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with one field of law child")
   void getFieldsOfLaw() throws Exception {
     // given
-    given(lookupTablesPort.findFieldsOfLawChildren("PR-01")).willReturn(
+    given(lookupTablesService.findFieldsOfLawChildren("PR-01")).willReturn(
       List.of(
         new FieldOfLaw(
           UUID.randomUUID(),
@@ -65,7 +65,7 @@ class FieldOfLawControllerTest {
   @DisplayName("GET returns HTTP 200 and a JSON with one field of law root (parent)")
   void getFieldsOfLawParents() throws Exception {
     // given
-    given(lookupTablesPort.findFieldsOfLawParents()).willReturn(
+    given(lookupTablesService.findFieldsOfLawParents()).willReturn(
       List.of(
         new FieldOfLaw(
           UUID.randomUUID(),
@@ -95,7 +95,7 @@ class FieldOfLawControllerTest {
   @DisplayName("GET returns HTTP 200 and a JSON with one field of law")
   void getTreeForFieldOfLaw() throws Exception {
     // given
-    given(lookupTablesPort.findFieldOfLaw("AR")).willReturn(
+    given(lookupTablesService.findFieldOfLaw("AR")).willReturn(
       Optional.of(
         new FieldOfLaw(
           UUID.randomUUID(),
@@ -125,7 +125,7 @@ class FieldOfLawControllerTest {
   @DisplayName("GET returns HTTP 404 for unknown identifier")
   void getTreeForFieldOfLaw_notFound() throws Exception {
     // given
-    given(lookupTablesPort.findFieldOfLaw("BR-123456")).willReturn(Optional.empty());
+    given(lookupTablesService.findFieldOfLaw("BR-123456")).willReturn(Optional.empty());
 
     // when
     mockMvc
@@ -144,7 +144,7 @@ class FieldOfLawControllerTest {
       null,
       new QueryOptions(0, 10, "identifier", Sort.Direction.ASC, true)
     );
-    given(lookupTablesPort.findFieldsOfLaw(query)).willReturn(
+    given(lookupTablesService.findFieldsOfLaw(query)).willReturn(
       TestPage.create(
         List.of(
           new FieldOfLaw(

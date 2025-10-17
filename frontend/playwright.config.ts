@@ -1,7 +1,33 @@
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
-const authFile = './e2e/storageState.json'
+const docTypeToAuthFile = {
+  adm: '../frontend/e2e/.auth/adm.json',
+  uli: '../frontend/e2e/.auth/uli.json',
+}
+
+// Map browsers to their devices
+const browsers = {
+  chromium: devices['Desktop Chrome'],
+  firefox: devices['Desktop Firefox'],
+  msedge: devices['Desktop Edge'],
+  // Safari intentionally excluded because of storageState issues
+  // https://github.com/microsoft/playwright/issues/20301
+  // https://github.com/microsoft/playwright/issues/35712
+};
+
+const docTypeProjects = Object.entries(docTypeToAuthFile).flatMap(([docType, authFile]) =>
+  Object.entries(browsers).map(([browserName, browserDevice]) => ({
+    dependencies: ['setup', 'seed data'],
+    name: `${browserName}-${docType}`,
+    testMatch: new RegExp(`.*/${docType}/.*\\.spec\\.ts`),
+    use: {
+      ...browserDevice,
+      storageState: authFile,
+    },
+    testIgnore: 'Login.spec.ts',
+  }))
+);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -56,45 +82,7 @@ export default defineConfig({
       name: 'seed data',
       testMatch: 'seed-data.ts',
       use: {
-        storageState: authFile,
-      },
-      testIgnore: 'Login.spec.ts',
-    },
-    {
-      dependencies: ['setup', 'seed data'],
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: authFile,
-      },
-      testIgnore: 'Login.spec.ts',
-    },
-    {
-      dependencies: ['setup', 'seed data'],
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: authFile,
-      },
-      testIgnore: 'Login.spec.ts',
-    },
-    // Deactivated since storageState doesn't work with Safari:
-    // https://github.com/microsoft/playwright/issues/20301
-    // https://github.com/microsoft/playwright/issues/35712
-    /*    {
-      dependencies: ['setup', 'seed data'],
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: authFile,
-      },
-    },*/
-    {
-      dependencies: ['setup', 'seed data'],
-      name: 'msedge', // is also using the Chromium engine, but may behave differently still
-      use: {
-        ...devices['Desktop Edge'],
-        storageState: authFile,
+        storageState: docTypeToAuthFile['adm'],
       },
       testIgnore: 'Login.spec.ts',
     },
@@ -121,6 +109,8 @@ export default defineConfig({
         ...devices['Desktop Edge'],
       },
     },
+
+    ...docTypeProjects,
   ],
 
   /* Run your local dev server before starting the tests */

@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+      SONAR_TOKEN_BACKEND:
+        required: true
 
 jobs:
   check-formatting-backend:
@@ -12,7 +17,7 @@ jobs:
       # NodeJS is used by prettier, which formats kotlin in spotless
       # Using the latest LTS should work
       - name: Setup NodeJS
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: ./backend/.node-version
       - name: Set up JDK

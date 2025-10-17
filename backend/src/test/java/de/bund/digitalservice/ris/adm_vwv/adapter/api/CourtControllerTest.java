@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
-import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -22,14 +22,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = CourtController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 class CourtControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two courts with type, and location")
@@ -39,7 +39,7 @@ class CourtControllerTest {
     var court2 = new Court(UUID.randomUUID(), "Berufsgericht für Architekten", "Bremen");
     String searchTerm = "a";
     given(
-      lookupTablesPort.findCourts(
+      lookupTablesService.findCourts(
         new CourtQuery(searchTerm, new QueryOptions(0, 2, "type", Sort.Direction.ASC, true))
       )
     ).willReturn(TestPage.create(List.of(court1, court2)));

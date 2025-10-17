@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
-import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -22,14 +22,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = NormAbbreviationController.class)
 @Import(SecurityConfiguration.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 class NormAbbreviationControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName(
@@ -48,7 +48,7 @@ class NormAbbreviationControllerTest {
       "Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung"
     );
     given(
-      lookupTablesPort.findNormAbbreviations(
+      lookupTablesService.findNormAbbreviations(
         new NormAbbreviationQuery(
           "",
           new QueryOptions(0, 2, "abbreviation", Sort.Direction.ASC, true)

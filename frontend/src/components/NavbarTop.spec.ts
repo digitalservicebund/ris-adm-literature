@@ -2,9 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import NavbarTop from '@/components/NavbarTop.vue'
 
-const mockAuth = {
+const mockAuth: {
+  logout: () => void
+  getUsername: () => string | undefined
+  getGroup: () => string
+} = {
   logout: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
+  getGroup: vi.fn(() => 'BAG'),
 }
 
 vi.mock('@/services/auth', () => ({
@@ -35,6 +40,7 @@ describe('NavbarTop', () => {
     expect(screen.getByText('Rechtsinformationen')).toBeInTheDocument()
     expect(screen.getByText('vorname nachname')).toBeInTheDocument()
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
+    expect(screen.getByText('BAG | Staging')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
@@ -55,5 +61,15 @@ describe('NavbarTop', () => {
 
     expect(searchLink).toBeInTheDocument()
     expect(searchLink).toHaveAttribute('href', '/')
+  })
+
+  it('renders default user infos if not available', () => {
+    vi.spyOn(mockAuth, 'getUsername').mockReturnValue(undefined)
+    vi.spyOn(mockAuth, 'getGroup').mockReturnValue('')
+
+    renderComponent()
+
+    expect(screen.getByText('Vorname Nachname')).toBeInTheDocument()
+    expect(screen.getByText('Staging')).toBeInTheDocument()
   })
 })

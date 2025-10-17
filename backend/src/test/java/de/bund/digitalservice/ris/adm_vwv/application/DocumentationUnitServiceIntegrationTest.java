@@ -5,8 +5,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@WithMockAdmUser
 class DocumentationUnitServiceIntegrationTest {
 
   @Autowired
   private DocumentationUnitService documentationUnitService;
 
   @MockitoBean
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Test
   void find() {
@@ -130,9 +132,9 @@ class DocumentationUnitServiceIntegrationTest {
     assertThat(documentationUnit.json()).isNull();
 
     // Publishing to bucket fails
-    doThrow(new RuntimeException("External system is down"))
-      .when(publishPort)
-      .publish(any(PublishPort.Options.class));
+    doThrow(new PublishingFailedException("External system is down", null))
+      .when(publisher)
+      .publish(any(Publisher.PublicationDetails.class));
 
     // when: Attempt to publish, and it fails
     Throwable thrown = catchThrowable(() ->

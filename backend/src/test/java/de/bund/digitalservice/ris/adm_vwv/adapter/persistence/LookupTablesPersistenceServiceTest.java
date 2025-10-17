@@ -6,8 +6,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Court;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.NormAbbreviation;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.VerweisTyp;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,6 +44,9 @@ class LookupTablesPersistenceServiceTest {
 
   @Mock
   private RegionRepository regionRepository;
+
+  @Mock
+  private CitationTypeRepository citationTypeRepository;
 
   @Test
   void findDocumentTypes_all() {
@@ -514,5 +519,91 @@ class LookupTablesPersistenceServiceTest {
           "Gesetz zur Weiterentwicklung des Rechts der gesetzlichen Krankenversicherung"
         )
       );
+  }
+
+  @Test
+  void findVerweisTypen_all() {
+    // when
+    var refTypes = lookupTablesPersistenceService.findVerweisTypen(
+      new VerweisTypQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(refTypes.content())
+      .extracting(VerweisTyp::name)
+      .containsExactly("anwendung", "neuregelung", "rechtsgrundlage");
+  }
+
+  @Test
+  void findZitierArten_all() {
+    // given
+    UUID uuid = UUID.randomUUID();
+    CitationTypeEntity citationTypeEntity = new CitationTypeEntity();
+    citationTypeEntity.setId(uuid);
+    citationTypeEntity.setAbbreviation("Änderung");
+    citationTypeEntity.setLabel("Änderung");
+    given(citationTypeRepository.findAll(any(Pageable.class))).willReturn(
+      new PageImpl<>(List.of(citationTypeEntity))
+    );
+
+    // when
+    var zitierArten = lookupTablesPersistenceService.findZitierArten(
+      new ZitierArtQuery(null, new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true))
+    );
+
+    // then
+    assertThat(zitierArten.content()).contains(new ZitierArt(uuid, "Änderung", "Änderung"));
+  }
+
+  @Test
+  void findZitierArten_something() {
+    // given
+    UUID uuid = UUID.randomUUID();
+    CitationTypeEntity citationTypeEntity = new CitationTypeEntity();
+    citationTypeEntity.setId(uuid);
+    citationTypeEntity.setAbbreviation("Änderung");
+    citationTypeEntity.setLabel("Änderung");
+    given(
+      citationTypeRepository.findByAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+        eq("something"),
+        eq("something"),
+        any(Pageable.class)
+      )
+    ).willReturn(new PageImpl<>(List.of(citationTypeEntity)));
+
+    // when
+    var zitierArten = lookupTablesPersistenceService.findZitierArten(
+      new ZitierArtQuery(
+        "something",
+        new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
+      )
+    );
+
+    // then
+    assertThat(zitierArten.content()).contains(new ZitierArt(uuid, "Änderung", "Änderung"));
+  }
+
+  @Test
+  void findZitierArtenByAbbreviation() {
+    // given
+    CitationTypeEntity probe = new CitationTypeEntity();
+    probe.setAbbreviation("Änderung");
+    CitationTypeEntity citationTypeEntity = new CitationTypeEntity();
+    UUID uuid = UUID.randomUUID();
+    citationTypeEntity.setId(uuid);
+    citationTypeEntity.setAbbreviation("Änderung");
+    citationTypeEntity.setLabel("Änderung");
+    given(citationTypeRepository.findAll(Example.of(probe))).willReturn(
+      List.of(citationTypeEntity)
+    );
+
+    // when
+    var zitierArten = lookupTablesPersistenceService.findZitierArtenByAbbreviation("Änderung");
+
+    // then
+    assertThat(zitierArten)
+      .first()
+      .extracting(ZitierArt::id, ZitierArt::abbreviation, ZitierArt::label)
+      .containsExactly(uuid, "Änderung", "Änderung");
   }
 }

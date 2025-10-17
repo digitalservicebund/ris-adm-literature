@@ -2,7 +2,12 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.publishing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
+import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
+import de.bund.digitalservice.ris.adm_vwv.application.ValidationFailedException;
+import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +24,8 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -32,7 +39,7 @@ import software.amazon.awssdk.services.s3.model.*;
  * and verifies that the composite publisher correctly routes requests to the appropriate bean.
  */
 @Testcontainers
-// This property is needed because our main AwsConfig provides a mock S3Client bean
+// This property is needed because our main S3Config provides a mock S3Client bean
 // for the "test" profile, but this test needs to override it with a real one
 // from the inner @TestConfiguration. This property allows that override to happen.
 @SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
@@ -43,8 +50,6 @@ class S3PublishAdapterIntegrationTest {
   private static final String FIRST_PUBLISHER_NAME = "privateBsgPublisher";
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
   private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
-  private static final String FIRST_DATATYPE = "first-datatype";
-  private static final String SECOND_DATATYPE = "second-datatype";
   private static final String CHANGELOG_DIR = "changelogs/";
 
   @Container
@@ -57,6 +62,11 @@ class S3PublishAdapterIntegrationTest {
    */
   @TestConfiguration
   static class S3TestConfig {
+
+    @Bean
+    public XmlValidator xmlValidator() {
+      return mock(XmlValidator.class);
+    }
 
     @Bean("privateBsgS3Client")
     @Primary
@@ -74,31 +84,29 @@ class S3PublishAdapterIntegrationTest {
     }
 
     @Bean(FIRST_PUBLISHER_NAME)
-    public PublishPort firstTestPublisher(S3Client s3Client) {
-      return new S3PublishAdapter(
-        s3Client,
-        FIRST_BUCKET_NAME,
-        FIRST_DATATYPE,
-        FIRST_PUBLISHER_NAME
-      );
+    public Publisher firstTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
+      return new S3PublishAdapter(s3Client, xmlValidator, FIRST_BUCKET_NAME, FIRST_PUBLISHER_NAME);
     }
 
     @Bean(SECOND_PUBLISHER_NAME)
-    public PublishPort secondTestPublisher(S3Client s3Client) {
+    public Publisher secondTestPublisher(S3Client s3Client, XmlValidator xmlValidator) {
       return new S3PublishAdapter(
         s3Client,
+        xmlValidator,
         SECOND_BUCKET_NAME,
-        SECOND_DATATYPE,
         SECOND_PUBLISHER_NAME
       );
     }
   }
 
   @Autowired
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Autowired
   private S3Client s3Client;
+
+  @Autowired
+  private XmlValidator xmlValidator;
 
   @DynamicPropertySource
   static void overrideProperties(DynamicPropertyRegistry registry) {
@@ -113,11 +121,18 @@ class S3PublishAdapterIntegrationTest {
 
   @AfterEach
   void tearDown() {
-    cleanupBucket(FIRST_BUCKET_NAME);
-    cleanupBucket(SECOND_BUCKET_NAME);
+    deleteBucket(FIRST_BUCKET_NAME);
+    deleteBucket(SECOND_BUCKET_NAME);
   }
 
-  private void cleanupBucket(String bucketName) {
+  private void deleteBucket(String bucketName) {
+    try {
+      // If the bucket doesn't exist we don't need to clean it and can return
+      s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+    } catch (S3Exception _) {
+      return;
+    }
+
     List<S3Object> objects = listObjectsInDirectory(bucketName, "");
     if (!objects.isEmpty()) {
       List<ObjectIdentifier> toDelete = objects
@@ -130,6 +145,7 @@ class S3PublishAdapterIntegrationTest {
         .build();
       s3Client.deleteObjects(deleteRequest);
     }
+    s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
   }
 
   private void createBucket(String bucketName) {
@@ -139,12 +155,12 @@ class S3PublishAdapterIntegrationTest {
   @Test
   void publish_shouldRouteToFirstPublisherAndUploadToCorrectBucket() {
     // given
-    String docNumber = "doc-abc-456";
+    String docNumber = "KSNR456";
     String xmlContent = "<test-data>This is a test</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
 
     // when
-    publishPort.publish(options);
+    publisher.publish(options);
 
     // then
     // Verify the file exists in the FIRST bucket
@@ -168,7 +184,7 @@ class S3PublishAdapterIntegrationTest {
     List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
     assertThat(firstBucketChangelogs).hasSize(1);
     S3Object changelog = firstBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", FIRST_DATATYPE));
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(FIRST_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"change_all\": true}"
     );
@@ -186,10 +202,10 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-xyz-789";
     String xmlContent = "<test-data>Another test</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, SECOND_PUBLISHER_NAME);
 
     // when
-    publishPort.publish(options);
+    publisher.publish(options);
 
     // then
     // Verify the file exists in the SECOND bucket
@@ -216,7 +232,7 @@ class S3PublishAdapterIntegrationTest {
     );
     assertThat(secondBucketChangelogs).hasSize(1);
     S3Object changelog = secondBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", SECOND_DATATYPE));
+    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"change_all\": true}"
     );
@@ -231,10 +247,12 @@ class S3PublishAdapterIntegrationTest {
     // given
     String docNumber = "doc-def-789";
     String xmlContent = "<test-data>This should not be published</test-data>";
-    var options = new PublishPort.Options(docNumber, xmlContent, "unknown-publisher");
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, "unknown-publisher");
 
     // when
-    publishPort.publish(options);
+    assertThatThrownBy(() -> publisher.publish(options))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessageContaining("No publisher found for target: unknown-publisher");
 
     // then
     // Verify that NO file was created in EITHER bucket
@@ -253,6 +271,101 @@ class S3PublishAdapterIntegrationTest {
     // Verify that NO changelog file was created in EITHER bucket
     assertThat(listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR)).isEmpty();
     assertThat(listObjectsInDirectory(SECOND_BUCKET_NAME, CHANGELOG_DIR)).isEmpty();
+  }
+
+  @Test
+  void publish_shouldThrowValidationFailedException_whenXmlIsInvalid() throws Exception {
+    // given
+    String docNumber = "doc-invalid-123";
+    String invalidXmlContent = "<invalid>";
+    var options = new Publisher.PublicationDetails(
+      docNumber,
+      invalidXmlContent,
+      FIRST_PUBLISHER_NAME
+    );
+
+    doThrow(new SAXParseException("XML is malformed", null, null, 1, 10))
+      .when(xmlValidator)
+      .validate(invalidXmlContent);
+
+    // when / then
+    assertThatThrownBy(() -> publisher.publish(options))
+      .isInstanceOf(ValidationFailedException.class)
+      .hasMessageContaining(
+        "XML validation failed for document doc-invalid-123 at line 1, column 10"
+      );
+
+    GetObjectRequest request = GetObjectRequest.builder()
+      .bucket(FIRST_BUCKET_NAME)
+      .key(String.format("%s.akn.xml", docNumber))
+      .build();
+    assertThatThrownBy(() -> s3Client.getObject(request)).isInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowPublishingFailedException_whenS3XmlUploadFails() {
+    // given
+    String docNumber = "doc-s3-fail-123";
+    String xmlContent = "<test>will fail</test>";
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(FIRST_BUCKET_NAME).build());
+
+    // when / then
+    assertThatThrownBy(() -> publisher.publish(options))
+      .isInstanceOf(PublishingFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-s3-fail-123 to S3. Call to external system failed."
+      )
+      .hasCauseInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowValidationFailedException_forGenericSAXException() throws Exception {
+    // given
+    String docNumber = "doc-sax-fail-456";
+    String xmlContent = "<test>sax error</test>";
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    doThrow(new SAXException("Generic SAX error")).when(xmlValidator).validate(xmlContent);
+
+    // when / then
+    assertThatThrownBy(() -> publisher.publish(options))
+      .isInstanceOf(ValidationFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-sax-fail-456. Validation error: Generic SAX error"
+      )
+      .hasCauseInstanceOf(SAXException.class);
+
+    GetObjectRequest request = GetObjectRequest.builder()
+      .bucket(FIRST_BUCKET_NAME)
+      .key(String.format("%s.akn.xml", docNumber))
+      .build();
+    assertThatThrownBy(() -> s3Client.getObject(request)).isInstanceOf(S3Exception.class);
+  }
+
+  @Test
+  void publish_shouldThrowValidationFailedException_forIOException() throws Exception {
+    // given
+    String docNumber = "doc-io-fail-789";
+    String xmlContent = "<test>io error</test>";
+    var options = new Publisher.PublicationDetails(docNumber, xmlContent, FIRST_PUBLISHER_NAME);
+
+    doThrow(new IOException("Generic IO error")).when(xmlValidator).validate(xmlContent);
+
+    // when / then
+    assertThatThrownBy(() -> publisher.publish(options))
+      .isInstanceOf(ValidationFailedException.class)
+      .hasMessageContaining(
+        "Failed to publish document doc-io-fail-789. Validation error: Generic IO error"
+      )
+      .hasCauseInstanceOf(IOException.class);
+
+    GetObjectRequest request = GetObjectRequest.builder()
+      .bucket(FIRST_BUCKET_NAME)
+      .key(String.format("%s.akn.xml", docNumber))
+      .build();
+    assertThatThrownBy(() -> s3Client.getObject(request)).isInstanceOf(S3Exception.class);
   }
 
   private List<S3Object> listObjectsInDirectory(String bucketName, String directoryPrefix) {

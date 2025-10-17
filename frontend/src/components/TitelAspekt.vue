@@ -1,13 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import InputField from './input/InputField.vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const titelAspekte = computed({
   get: () => store.documentUnit!.titelAspekte ?? [],

@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY:
+        required: true
 
 jobs:
   backend-push-reports-to-ris-reports:
@@ -31,7 +34,7 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/adr-source
-          destinationDir: adr/ris-adm-vwv
+          destinationDir: adr/ris-adm-literature
           reportIsDirectory: true
           keepAllVersions: false # don't need the timestamped snapshots of the whole folder
 
@@ -45,7 +48,7 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/backend-test-report
-          destinationDir: test-reports/ris-adm-vwv/backend/tests
+          destinationDir: test-reports/ris-adm-literature/backend/tests
           reportIsDirectory: true
 
       ## Backend license report
@@ -58,7 +61,7 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/backend-license-report/index.html
-          destinationDir: licence-reports/backend/ris-adm-vwv
+          destinationDir: licence-reports/backend/ris-adm-literature
 
       ## Backend code documentation
       - name: Download backend code documentation
@@ -70,7 +73,7 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/backend-code-documentation
-          destinationDir: code-documentation/backend/ris-adm-vwv
+          destinationDir: code-documentation/backend/ris-adm-literature
           reportIsDirectory: true
 
       ##############################################

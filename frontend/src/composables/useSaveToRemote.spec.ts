@@ -2,7 +2,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { flushPromises } from '@vue/test-utils'
 import { setActivePinia } from 'pinia'
 import { useSaveToRemote } from '@/composables/useSaveToRemote'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 vi.mock('vue', async (importActual) => {
@@ -11,7 +11,7 @@ vi.mock('vue', async (importActual) => {
 })
 
 function mockDocumentUnitStore(callback = vi.fn()) {
-  const documentUnitStore = useDocumentUnitStore()
+  const documentUnitStore = useAdmDocUnitStore()
   documentUnitStore.updateDocumentUnit = callback
 
   return documentUnitStore

@@ -4,6 +4,19 @@ on:
       container-image-version:
         required: true
         type: string
+    secrets:
+      DEPLOY_KEY:
+        required: true
+      ARGOCD_PIPELINE_PASSWORD:
+        required: true
+      ARGOCD_SERVER:
+        required: true
+      METRICS_DEPLOYMENT_WEBHOOK_URL:
+        required: true
+      METRICS_WEBHOOK_TOKEN:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
   deploy-staging:
@@ -15,16 +28,16 @@ jobs:
     permissions:
       id-token: write # Enable OIDC for gitsign
     steps:
-      - uses: chainguard-dev/actions/setup-gitsign@de56c2728beb0a0f371bff2ce2ee4b8afee4b5e8
+      - uses: chainguard-dev/actions/setup-gitsign@94249a4828defae94ef3eaeaafaff2f95f1b446f
       - name: Deploy new images
         uses: digitalservicebund/argocd-deploy@4fac1bb67c92ed168f6d9b22f8779ce241a9e412 # v1.0.0
         with:
           environment: staging
           version: ${{ inputs.container-image-version }}
-          deploying_repo: ris-adm-vwv-frontend,ris-adm-vwv-backend
-          infra_repo: ris-adm-vwv-infra
+          deploying_repo: ris-adm-literature-frontend,ris-adm-literature-backend
+          infra_repo: ris-adm-literature-infra
           deploy_key: ${{ secrets.DEPLOY_KEY }}
-          app: ris-adm-vwv-staging
+          app: ris-adm-literature-staging
           argocd_pipeline_password: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
           argocd_server: ${{ secrets.ARGOCD_SERVER }}
           argocd_sync_timeout: 300
@@ -32,7 +45,7 @@ jobs:
         continue-on-error: true
         uses: digitalservicebund/track-deployment@5a2815e150e1268983aac5ca04c8c046ed1b614a # v1.0.0
         with:
-          project: ris-adm-vwv
+          project: ris-adm-literature
           environment: staging
           metrics_deployment_webhook_url: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
           metrics_webhook_token: ${{ secrets.METRICS_WEBHOOK_TOKEN }}

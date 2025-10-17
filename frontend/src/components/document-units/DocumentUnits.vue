@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { DocumentUnitListItem, DocumentUnitSearchParams } from '@/domain/documentUnit'
+import type { AdmDocUnitListItem, AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
 import { watch } from 'vue'
 import DocumentUnitList from './DocumentUnitList.vue'
 import { useGetPaginatedDocUnits } from '@/services/documentUnitService'
@@ -19,7 +19,7 @@ const {
   fetchPaginatedData,
   isFetching,
   error,
-} = usePagination<DocumentUnitListItem, DocumentUnitSearchParams>(
+} = usePagination<AdmDocUnitListItem, AdmDocUnitSearchParams>(
   useGetPaginatedDocUnits,
   'documentationUnitsOverview',
 )
@@ -33,7 +33,7 @@ watch(error, (err) => {
   }
 })
 
-async function fetchData(page: number = 0, search?: DocumentUnitSearchParams) {
+async function fetchData(page: number = 0, search?: AdmDocUnitSearchParams) {
   await fetchPaginatedData(page, search)
 }
 
@@ -41,7 +41,7 @@ async function handlePageUpdate(pageState: PageState) {
   await fetchData(pageState.page)
 }
 
-async function handleSearch(search: DocumentUnitSearchParams) {
+async function handleSearch(search: AdmDocUnitSearchParams) {
   await fetchData(0, search)
 }
 </script>

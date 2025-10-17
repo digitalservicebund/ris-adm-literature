@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/active-citation/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
 import { type CitationType } from '@/domain/citationType'
-import { type DocumentUnit } from '@/domain/documentUnit'
+import { type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 import { createTestingPinia } from '@pinia/testing'
 import { config } from '@vue/test-utils'
@@ -25,8 +25,8 @@ function renderComponent(activeCitations?: ActiveCitation[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     id: '123',
                     documentNumber: '1234567891234',
                     activeCitations: activeCitations ?? [],

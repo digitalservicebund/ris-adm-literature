@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import NormgeberListItem from './NormgeberListItem.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { computed } from 'vue'
 import NormgeberInput from './NormgeberInput.vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
 import { useEditableList } from '@/composables/useEditableList'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const normgeberList = computed({
   get: () => store.documentUnit!.normgeberList ?? [],

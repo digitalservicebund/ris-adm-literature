@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { InstitutionType, type Normgeber } from '@/domain/normgeber'
 import NormgeberList from './NormgeberList.vue'
 import { createTestingPinia } from '@pinia/testing'
-import type { DocumentUnit } from '@/domain/documentUnit'
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 
 const mocknormgeberList: Normgeber[] = [
   {
@@ -29,8 +29,8 @@ function renderComponent(normgeberList?: Normgeber[]) {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
-                  documentUnit: <DocumentUnit>{
+                admDocUnitStore: {
+                  documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     normgeberList: normgeberList ?? [],
                   },

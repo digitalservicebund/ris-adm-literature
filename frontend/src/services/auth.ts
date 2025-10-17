@@ -36,6 +36,45 @@ function createAuthentication() {
   }
 
   /**
+   * Checks if the authenticated user has a specific realm role.
+   *
+   * @param role The name of the role to check.
+   * @returns True if the user has the role, otherwise false.
+   */
+  function hasRealmRole(role: string): boolean {
+    return keycloak?.hasRealmRole(role) ?? false
+  }
+
+  /**
+   * Returns the realm roles of the currently active user.
+   *
+   * @returns An array of role strings, or an empty array if not available.
+   */
+  function getRealmRoles(): string[] {
+    return keycloak?.realmAccess?.roles ?? []
+  }
+
+  /**
+   * Returns the group of the currently active user.
+   *
+   * @returns A string, or an empty string if not available.
+   */
+  function getGroup(): string {
+    const groups = keycloak?.idTokenParsed?.groups || []
+    // Extract name from group path e.g. /literature/BAG
+    const groupNames = groups.map((path: string) => path.split('/').pop())
+    return groupNames[0] ?? ''
+  }
+
+  /**
+   * Checks if the Keycloak instance has been initialized and the user is authenticated.
+   * @returns True if authenticated, otherwise false.
+   */
+  function isAuthenticated(): boolean {
+    return keycloak?.authenticated ?? false
+  }
+
+  /**
    * Adds an Authorization header with the current token to a set of headers.
    * If authentication hasn't been configured yet, this method will do nothing.
    *
@@ -101,6 +140,10 @@ function createAuthentication() {
     logout,
     getUsername,
     tryRefresh,
+    hasRealmRole,
+    isAuthenticated,
+    getRealmRoles,
+    getGroup,
   })
 }
 

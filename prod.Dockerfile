@@ -1,4 +1,4 @@
-FROM node:24.8.0 AS builder
+FROM node:24.10.0 AS builder
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend
@@ -17,7 +17,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN\
     SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
     npm run build
 
-FROM cgr.dev/chainguard/nginx:latest@sha256:a90da691b6053abc4d11e027c6e6f094ffc8256c3cb289ef696bae7fff984ecb
+FROM cgr.dev/chainguard/nginx:latest@sha256:2c1e4664d75cce12ae94a395620beefe0c48fc69875c6a08975ba1b8c5140438
 EXPOSE 8081
 COPY --from=builder /frontend/dist /var/lib/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/ris-adm-vwv.conf

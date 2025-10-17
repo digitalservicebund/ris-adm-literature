@@ -7,9 +7,9 @@ import NormReferenceSummary from '@/components/norm-reference/NormReferenceSumma
 import NormReference from '@/domain/normReference'
 
 import SingleNorm from '@/domain/singleNorm'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const normReferences = computed({
   get: () => store.documentUnit!.normReferences,

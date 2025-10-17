@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import InputField from '@/components/input/InputField.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import { useValidationStore } from '@/composables/useValidationStore'
 import { parseIsoDateToLocal, parseLocalDateToIso } from '@/utils/dateHelpers'
 import { getFutureDateErrMessage, getInvalidDateErrMessage } from '@/utils/validators'
 
-const docUnitStore = useDocumentUnitStore()
+const docUnitStore = useAdmDocUnitStore()
 const validationStore = useValidationStore<'zitierdaten'>()
 
 const zitierdaten = ref<string[]>(

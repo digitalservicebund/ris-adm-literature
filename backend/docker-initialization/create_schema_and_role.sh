@@ -74,5 +74,5 @@ setup_schema_and_permissions() {
 
 echo "Create lookup_tables role and schema"
 create_role_if_not_exists "lookup_tables" "test"
-setup_schema_and_permissions "ris_adm_vwv" "lookup_tables" "lookup_tables"
-grant_read_access "ris_adm_vwv" "lookup_tables" "test" "lookup_tables"
+setup_schema_and_permissions "ris_adm_literature" "lookup_tables" "lookup_tables"
+grant_read_access "ris_adm_literature" "lookup_tables" "test" "lookup_tables"

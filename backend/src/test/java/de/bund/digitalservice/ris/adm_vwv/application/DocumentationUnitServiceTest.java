@@ -2,14 +2,15 @@ package de.bund.digitalservice.ris.adm_vwv.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.PublishPort;
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitPersistenceService;
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
@@ -32,13 +33,13 @@ class DocumentationUnitServiceTest {
   private DocumentationUnitService documentationUnitService;
 
   @Mock
-  private PublishPort publishPort;
+  private Publisher publisher;
 
   @Mock
-  private Map<String, PublishPort> publishers;
+  private Map<String, Publisher> publishers;
 
   @Mock
-  private DocumentationUnitPersistencePort documentationUnitPersistencePort;
+  private DocumentationUnitPersistenceService documentationUnitPersistenceService;
 
   @Mock
   private LdmlConverterService ldmlConverterService;
@@ -74,7 +75,7 @@ class DocumentationUnitServiceTest {
       null,
       xml
     );
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR2025000001")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(
@@ -110,7 +111,7 @@ class DocumentationUnitServiceTest {
       null,
       xml
     );
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR2025000001")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(null);
@@ -128,7 +129,7 @@ class DocumentationUnitServiceTest {
   @Test
   void findByDocumentNumber_doesNotExist() {
     // given
-    given(documentationUnitPersistencePort.findByDocumentNumber("KSNR112233445566")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR112233445566")).willReturn(
       Optional.empty()
     );
 
@@ -180,42 +181,54 @@ class DocumentationUnitServiceTest {
     var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
     var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
 
-    when(documentationUnitPersistencePort.findByDocumentNumber(docNumber)).thenReturn(
+    when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
       Optional.of(doc)
     );
     when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
-    when(documentationUnitPersistencePort.publish(any(), any(), any())).thenReturn(publishedDoc);
-    when(publishers.get(bsgPublisherName)).thenReturn(publishPort);
+    when(documentationUnitPersistenceService.publish(any(), any(), any())).thenReturn(publishedDoc);
+    when(publishers.get(bsgPublisherName)).thenReturn(publisher);
 
     documentationUnitService.publish(docNumber, content);
 
-    verify(documentationUnitPersistencePort).publish(eq(docNumber), anyString(), eq(fakeXml));
-    verify(publishPort).publish(any(PublishPort.Options.class));
+    verify(documentationUnitPersistenceService).publish(eq(docNumber), anyString(), eq(fakeXml));
+    verify(publisher).publish(any(Publisher.PublicationDetails.class));
   }
 
   @Test
-  void publish_shouldThrowException_whenExternalPublishingFails() {
+  void publish_shouldThrowExceptionAndRollback_whenExternalPublishingFails() {
     // given
-    String docNumber = "doc123";
-    String fakeXml = "<test>xml</test>";
-    var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
-    var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
-
-    when(documentationUnitPersistencePort.findByDocumentNumber(docNumber)).thenReturn(
-      Optional.of(doc)
+    DocumentationUnit sampleDocUnit = new DocumentationUnit(
+      "KSNR123456789",
+      UUID.randomUUID(),
+      null,
+      null
     );
-    when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
-    doThrow(new RuntimeException("External system is down"))
-      .when(publishPort)
-      .publish(any(PublishPort.Options.class));
-    when(publishers.get(anyString())).thenReturn(publishPort);
 
     // when
-    Throwable thrown = catchThrowable(() -> documentationUnitService.publish(docNumber, content));
+    when(documentationUnitPersistenceService.create()).thenReturn(sampleDocUnit);
+    when(documentationUnitPersistenceService.findByDocumentNumber(anyString())).thenReturn(
+      Optional.of(sampleDocUnit)
+    );
+
+    DocumentationUnit documentationUnit = documentationUnitService.create();
+    String documentNumber = documentationUnit.documentNumber();
+    assertThat(documentationUnit.json()).isNull();
+
+    doThrow(new PublishingFailedException("External system is down", null))
+      .when(publisher)
+      .publish(any(Publisher.PublicationDetails.class));
 
     // then
-    assertThat(thrown)
-      .isInstanceOf(PublishingFailedException.class)
-      .hasMessageContaining("External publishing failed for document: " + docNumber);
+    assertThatThrownBy(() ->
+      documentationUnitService.publish(
+        documentNumber,
+        TestDocumentationUnitContent.create(documentNumber, "Some Content")
+      )
+    ).isInstanceOf(PublishingFailedException.class);
+
+    Optional<DocumentationUnit> actual = documentationUnitService.findByDocumentNumber(
+      documentNumber
+    );
+    assertThat(actual).isPresent().hasValueSatisfying(dun -> assertThat(dun.json()).isNull());
   }
 }

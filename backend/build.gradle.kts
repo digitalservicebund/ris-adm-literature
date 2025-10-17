@@ -7,9 +7,9 @@ plugins {
   id("org.springframework.boot") version "3.5.6"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
-  id("org.sonarqube") version "6.3.1.5724"
+  id("org.sonarqube") version "7.0.0.6105"
   id("com.github.jk1.dependency-license-report") version "2.9"
-  id("com.diffplug.spotless") version "7.2.1"
+  id("com.diffplug.spotless") version "8.0.0"
   id("checkstyle")
   id("io.franzbecker.gradle-lombok") version "5.0.0"
 }
@@ -38,14 +38,14 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.13"
-val sentryVersion = "8.22.0"
+val sentryVersion = "8.23.0"
 val hypersistenceVersion = "3.11.0"
 val postgresVersion = "42.7.8"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 val awsVersion = "2.33.0"
 val jsoupVersion = "1.21.2"
-val commonsLang3 = "3.18.0"
+val commonsLang3 = "3.19.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -65,14 +65,10 @@ dependencies {
     exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
-    // CVE-2025-53864
-    exclude("com.nimbusds", "nimbus-jose-jwt")
-  }
+  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("com.google.protobuf:protobuf-java:4.32.1")
+  implementation("com.google.protobuf:protobuf-java:4.33.0")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("com.nimbusds:nimbus-jose-jwt:10.5")
   implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
@@ -87,13 +83,10 @@ dependencies {
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
   implementation("software.amazon.awssdk:s3") {
-    // CVE-2025-58056
-    exclude("io.netty", "netty-codec-http")
-    // CVE CVE-2025-58057
+    // CVE-2025-58057
     exclude("io.netty", "netty-codec")
   }
-  implementation("io.netty:netty-codec:4.2.6.Final")
-  implementation("io.netty:netty-codec-http:4.2.6.Final")
+  implementation("io.netty:netty-codec:4.2.7.Final")
   implementation("org.jsoup:jsoup:$jsoupVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")

@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import ListInput from './input/listinput/ListInput.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 
 const emit = defineEmits<{
   reset: []
 }>()
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const keywords = computed({
   get: () => store.documentUnit!.keywords ?? [],

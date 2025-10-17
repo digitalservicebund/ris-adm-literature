@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import Zitierdaten from './ZitierdatenInput.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { InputText } from 'primevue'
 import dayjs from 'dayjs'
 
@@ -18,7 +18,7 @@ function renderComponent() {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',
@@ -45,7 +45,7 @@ describe('Zitierdatum', () => {
 
   it('adds a new zitierdatum', async () => {
     const { user } = renderComponent()
-    const docUnitStore = useDocumentUnitStore()
+    const docUnitStore = useAdmDocUnitStore()
 
     const input = screen.getByLabelText('Eintrag hinzufügen')
     await user.type(input, '01.01.1970{enter}')
@@ -55,7 +55,7 @@ describe('Zitierdatum', () => {
 
   it('shows an error on invalid date', async () => {
     const { user } = renderComponent()
-    const docUnitStore = useDocumentUnitStore()
+    const docUnitStore = useAdmDocUnitStore()
 
     const input = screen.getByLabelText('Eintrag hinzufügen')
     await user.type(input, '00.00.1970{enter}')
@@ -65,7 +65,7 @@ describe('Zitierdatum', () => {
   })
 
   it('shows an error on invalid date', async () => {
-    const docUnitStore = useDocumentUnitStore()
+    const docUnitStore = useAdmDocUnitStore()
     const { user } = renderComponent()
 
     const futureDate = dayjs().add(1, 'day').format('DD.MM.YYYY')
@@ -85,7 +85,7 @@ describe('Zitierdatum', () => {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',

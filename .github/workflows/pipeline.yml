@@ -17,7 +17,9 @@ jobs:
 
   security-jobs:
     uses: ./.github/workflows/security-jobs.yml
-    secrets: inherit # so the backend workflow can access "secrets.SLACK_WEBHOOK_URL" and others
+    secrets:
+      GH_SECRET_SCANNING_TOKEN: ${{ secrets.GH_SECRET_SCANNING_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
       security-events: write # trivy scan needs this
@@ -31,17 +33,20 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup and validate Gradle
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2
 
   backend-checks:
     needs:
       - backend-setup-gradle
     uses: ./.github/workflows/backend-checks.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SONAR_TOKEN_BACKEND: ${{ secrets.SONAR_TOKEN_BACKEND }}
 
   backend-build-image-and-scan:
     uses: ./.github/workflows/backend-build-image-and-scan.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
       security-events: write
@@ -59,7 +64,8 @@ jobs:
       - backend-checks
       - backend-build-image-and-scan
     uses: ./.github/workflows/backend-push-image-to-registry.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
       id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
@@ -75,7 +81,8 @@ jobs:
       - backend-checks
       - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
     uses: ./.github/workflows/backend-push-reports-to-ris-reports.yml
-    secrets: inherit
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
   ###############
   # Frontend jobs
@@ -83,11 +90,15 @@ jobs:
 
   frontend-checks:
     uses: ./.github/workflows/frontend-checks.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SONAR_TOKEN_FRONTEND: ${{ secrets.SONAR_TOKEN_FRONTEND }}
 
   frontend-build-image-and-scan:
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
-    secrets: inherit
+    secrets:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
       security-events: write
@@ -104,7 +115,8 @@ jobs:
       - frontend-checks
       - frontend-build-image-and-scan
     uses: ./.github/workflows/frontend-push-image-to-registry.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
       id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
@@ -119,7 +131,8 @@ jobs:
     needs:
       - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
-    secrets: inherit
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
   #######################################
   # e2e tests (frontend & backend)
@@ -127,13 +140,13 @@ jobs:
 
   e2e-tests: # we may need to split off the report handling in order to avoid pushing two reports at once
     uses: ./.github/workflows/e2e-tests.yml
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   e2e-compile-html-report:
     needs:
       - e2e-tests
     uses: ./.github/workflows/e2e-compile-html-report.yml
-    secrets: inherit
 
   e2e-push-reports-to-ris-reports:
     if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
@@ -141,7 +154,8 @@ jobs:
       - e2e-compile-html-report
       - backend-push-reports-to-ris-reports # don't push at the same time
     uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
-    secrets: inherit
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
   #######################################
   # Automerge if dependabot branch and all tests passing
@@ -190,6 +204,12 @@ jobs:
     uses: ./.github/workflows/deploy-staging.yml
     permissions:
       id-token: write
-    secrets: inherit
+    secrets:
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      ARGOCD_PIPELINE_PASSWORD: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
+      ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+      METRICS_DEPLOYMENT_WEBHOOK_URL: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
+      METRICS_WEBHOOK_TOKEN: ${{ secrets.METRICS_WEBHOOK_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       container-image-version: ${{ github.event.pull_request.head.sha || github.sha }}

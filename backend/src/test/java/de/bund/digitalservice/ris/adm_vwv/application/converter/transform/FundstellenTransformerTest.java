@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.Fundstelle;
 import de.bund.digitalservice.ris.adm_vwv.application.LegalPeriodical;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +23,7 @@ class FundstellenTransformerTest {
   private FundstellenTransformer fundstellenTransformer;
 
   @Mock
-  private LookupTablesPersistencePort lookupTablesPersistencePort;
+  private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Test
   @DisplayName("Transforms two Fundstellen with their legal periodicals")
@@ -39,7 +39,7 @@ class FundstellenTransformerTest {
     analysis.setOtherReferences(
       List.of(createOtherReference("BAnz", "BAnz Seite 5"), createOtherReference("DOK", "DOK 2021"))
     );
-    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BAnz")).willReturn(
+    given(lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("BAnz")).willReturn(
       List.of(
         new LegalPeriodical(
           UUID.randomUUID(),
@@ -51,7 +51,7 @@ class FundstellenTransformerTest {
         )
       )
     );
-    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("DOK")).willReturn(
+    given(lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("DOK")).willReturn(
       List.of(new LegalPeriodical(UUID.randomUUID(), "DOK", "dok", "Dokument", null, "2020"))
     );
 
@@ -103,7 +103,7 @@ class FundstellenTransformerTest {
     Analysis analysis = new Analysis();
     meta.setAnalysis(analysis);
     analysis.setOtherReferences(List.of(createOtherReference("BRD", "BRD Seite 5")));
-    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
+    given(lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
       List.of(
         new LegalPeriodical(
           UUID.randomUUID(),
@@ -150,7 +150,7 @@ class FundstellenTransformerTest {
     analysis.setOtherReferences(
       List.of(createOtherReferenceWithFundstelle("BRD", "brd-2", "BRD Seite 5"))
     );
-    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
+    given(lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("BRD")).willReturn(
       List.of(
         new LegalPeriodical(
           UUID.randomUUID(),
@@ -201,7 +201,7 @@ class FundstellenTransformerTest {
     analysis.setOtherReferences(
       List.of(createOtherReferenceWithFundstelle("DB", "db-3", "DB Seite 7"))
     );
-    given(lookupTablesPersistencePort.findLegalPeriodicalsByAbbreviation("DB")).willReturn(
+    given(lookupTablesPersistenceService.findLegalPeriodicalsByAbbreviation("DB")).willReturn(
       List.of(
         new LegalPeriodical(UUID.randomUUID(), "DB", "db", "Datenbank", null, "2025, Seite 2"),
         new LegalPeriodical(UUID.randomUUID(), "DB", "db-2", "Datenbank alt", null, "1998, Seite 2")

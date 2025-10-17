@@ -381,7 +381,7 @@ public class LdmlPublishConverterService {
               ImplicitReference implicitReference = new ImplicitReference();
               String shortForm = StringUtils.joinWith(
                 " ",
-                activeCitation.citationType().label(),
+                activeCitation.zitierArt().label(),
                 activeCitation.court().type(),
                 activeCitation.court().location(),
                 activeCitation.fileNumber()
@@ -389,7 +389,7 @@ public class LdmlPublishConverterService {
               implicitReference.setShortForm(shortForm);
               implicitReference.setShowAs(shortForm + " " + activeCitation.decisionDate());
               RisCaselawReference caselawReference = new RisCaselawReference();
-              caselawReference.setAbbreviation(activeCitation.citationType().label());
+              caselawReference.setAbbreviation(activeCitation.zitierArt().abbreviation());
               caselawReference.setCourt(activeCitation.court().type());
               caselawReference.setCourtLocation(activeCitation.court().location());
               caselawReference.setDate(activeCitation.decisionDate());
@@ -417,7 +417,7 @@ public class LdmlPublishConverterService {
                 .map(singleNorm -> {
                   RisActiveReference risActiveReference = new RisActiveReference();
                   risActiveReference.setTypeNumber(
-                    transformReferenceType(activeReference.referenceType())
+                    transformVerweisTyp(activeReference.verweisTyp())
                   );
                   risActiveReference.setReference(
                     activeReference.normAbbreviation().abbreviation()
@@ -428,9 +428,7 @@ public class LdmlPublishConverterService {
                 });
             }
             RisActiveReference risActiveReference = new RisActiveReference();
-            risActiveReference.setTypeNumber(
-              transformReferenceType(activeReference.referenceType())
-            );
+            risActiveReference.setTypeNumber(transformVerweisTyp(activeReference.verweisTyp()));
             risActiveReference.setReference(activeReference.normAbbreviation().abbreviation());
             return Stream.of(risActiveReference);
           })
@@ -469,14 +467,14 @@ public class LdmlPublishConverterService {
     }
   }
 
-  private String transformReferenceType(String referenceType) {
-    return switch (referenceType) {
+  private String transformVerweisTyp(String verweisTyp) {
+    return switch (verweisTyp) {
       case "anwendung" -> "01";
       case "neuregelung" -> "31";
       case "rechtsgrundlage" -> "82";
       default -> {
-        log.debug("Unhandled reference type: {}", referenceType);
-        yield referenceType;
+        log.debug("Unhandled reference type: {}", verweisTyp);
+        yield verweisTyp;
       }
     };
   }

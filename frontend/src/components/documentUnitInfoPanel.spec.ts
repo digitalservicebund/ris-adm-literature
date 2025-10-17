@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
 import userEvent from '@testing-library/user-event'
 
 function mockDocumentUnitStore(callback = vi.fn()) {
-  const documentUnitStore = useDocumentUnitStore()
+  const documentUnitStore = useAdmDocUnitStore()
   documentUnitStore.updateDocumentUnit = callback
 
   return documentUnitStore

@@ -1,4 +1,4 @@
-import { requiredDocumentUnitFields, type DocumentUnit } from '@/domain/documentUnit'
+import { requiredAdmDocUnitFields, type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
@@ -23,8 +23,8 @@ export function getFutureDateErrMessage(dates: string[]): string {
 }
 
 // Returns a list of missing required fields
-export function missingDocumentUnitFields(doc: DocumentUnit): string[] {
-  return requiredDocumentUnitFields.filter((field) => {
+export function missingDocumentUnitFields(doc: AdmDocumentationUnit): string[] {
+  return requiredAdmDocUnitFields.filter((field) => {
     const value = doc[field]
     return !value || (Array.isArray(value) && value.length === 0)
   })

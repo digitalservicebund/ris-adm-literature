@@ -523,8 +523,8 @@ class LdmlConverterServiceIntegrationTest {
       .hasSize(1)
       .first()
       .extracting(
-        ac -> ac.citationType().jurisShortcut(),
-        ac -> ac.citationType().label(),
+        ac -> ac.zitierArt().abbreviation(),
+        ac -> ac.zitierArt().label(),
         ac -> ac.court().type(),
         ac -> ac.court().location(),
         ActiveCitation::decisionDate,
@@ -532,8 +532,8 @@ class LdmlConverterServiceIntegrationTest {
         ActiveCitation::documentNumber
       )
       .containsExactly(
-        "Vgl",
-        "Vgl (fulltext not yet implemented)",
+        "Änderung",
+        "Änderung",
         "AG",
         "Aachen",
         "2021-10-20",
@@ -569,7 +569,7 @@ class LdmlConverterServiceIntegrationTest {
       .extracting(
         ActiveReference::referenceDocumentType,
         ActiveReference::normAbbreviationRawValue,
-        ActiveReference::referenceType,
+        ActiveReference::verweisTyp,
         activeReference ->
           activeReference.singleNorms().stream().map(SingleNorm::singleNorm).toList()
       )

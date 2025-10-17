@@ -1,7 +1,7 @@
 import NormReference from '@/domain/normReference.ts'
 import type EditableListItem from '@/domain/editableListItem.ts'
 
-export enum ActiveReferenceType {
+export enum VerweisTypEnum {
   ANWENDUNG = 'anwendung',
   NEUREGELUNG = 'neuregelung',
   RECHTSGRUNDLAGE = 'rechtsgrundlage',
@@ -12,18 +12,18 @@ export enum ActiveReferenceDocumentType {
   ADMINISTRATIVE_REGULATION = 'administrative_regulation',
 }
 
+export const verweisTypToLabel = {
+  [VerweisTypEnum.ANWENDUNG]: 'Anwendung',
+  [VerweisTypEnum.NEUREGELUNG]: 'Neuregelung',
+  [VerweisTypEnum.RECHTSGRUNDLAGE]: 'Rechtsgrundlage',
+}
+
 export default class ActiveReference extends NormReference {
   /**
    * Reference document type is either NORM or ADMINISTRATIVE_REGULATION
    */
   public referenceDocumentType: ActiveReferenceDocumentType = ActiveReferenceDocumentType.NORM
-  public referenceType?: ActiveReferenceType
-
-  static readonly referenceTypeLabels = new Map<ActiveReferenceType, string>([
-    [ActiveReferenceType.ANWENDUNG, 'Anwendung'],
-    [ActiveReferenceType.NEUREGELUNG, 'Neuregelung'],
-    [ActiveReferenceType.RECHTSGRUNDLAGE, 'Rechtsgrundlage'],
-  ])
+  public verweisTyp?: VerweisTypEnum
 
   constructor(data: Partial<ActiveReference> = {}) {
     super(data)
@@ -40,9 +40,9 @@ export default class ActiveReference extends NormReference {
     )
   }
 
-  get renderReferenceType(): string {
-    if (this.referenceType) {
-      return ActiveReference.referenceTypeLabels.get(this.referenceType) ?? ''
+  get renderVerweisTyp(): string {
+    if (this.verweisTyp) {
+      return verweisTypToLabel[this.verweisTyp] ?? ''
     }
     return ''
   }

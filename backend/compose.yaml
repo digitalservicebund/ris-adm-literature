@@ -1,10 +1,10 @@
-name: 'ris-adm-vwv-backend-container'
+name: 'ris-adm-literature-backend-container'
 services:
   postgres:
-    container_name: 'ris-adm-vwv-postgres'
+    container_name: 'ris-adm-literature-postgres'
     image: 'postgres:14-alpine'
     environment:
-      - 'POSTGRES_DB=ris_adm_vwv'
+      - 'POSTGRES_DB=ris_adm_literature'
       - 'POSTGRES_PASSWORD=test'
       - 'POSTGRES_USER=test'
     ports:
@@ -13,7 +13,7 @@ services:
       - ./docker-initialization:/docker-entrypoint-initdb.d/
 
   keycloak:
-    container_name: 'ris-adm-vwv-keycloak'
+    container_name: 'ris-adm-literature-keycloak'
     image: 'quay.io/keycloak/keycloak:26.2.5'
     environment:
       - 'KEYCLOAK_ADMIN=admin'

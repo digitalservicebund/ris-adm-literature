@@ -6,9 +6,9 @@ import ActiveReferenceInput from '@/components/active-reference/ActiveReferenceI
 import ActiveReferenceSummary from '@/components/active-reference/ActiveReferenceSummary.vue'
 import SingleNorm from '@/domain/singleNorm.ts'
 import dayjs from 'dayjs'
-import { useDocumentUnitStore } from '@/stores/documentUnitStore.ts'
+import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 
-const store = useDocumentUnitStore()
+const store = useAdmDocUnitStore()
 
 const activeReferences = computed({
   get: () => store.documentUnit!.activeReferences,

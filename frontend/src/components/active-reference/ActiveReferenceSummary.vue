@@ -25,7 +25,7 @@ const props = defineProps<{
           class="mr-8"
         />
         <div class="ris-label1-regular mr-8">
-          {{ data.renderReferenceType }} |
+          {{ data.renderVerweisTyp }} |
           <button
             :aria-label="
               data.normAbbreviation?.abbreviation +
@@ -70,7 +70,7 @@ const props = defineProps<{
             class="mr-8"
           />
           <div class="ris-label1-regular mr-8">
-            {{ data.renderReferenceType }} |
+            {{ data.renderVerweisTyp }} |
             <button
               :aria-label="
                 data.normAbbreviation?.abbreviation +

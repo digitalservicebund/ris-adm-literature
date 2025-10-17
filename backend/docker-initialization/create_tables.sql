@@ -299,6 +299,61 @@ INSERT INTO institution_region (institution_id, region_id) VALUES
         ('bddafc08-4031-4960-9aad-0868d48323f7', '01c63c40-74b4-486a-8914-083e7f03baef'),
         ('32b0a3fd-e340-4f9b-bd39-7fe2dcff9a75', '0e2b9b4d-4a8f-4124-a927-14eded513bee');
 
+CREATE TABLE
+    IF NOT EXISTS
+    document_category
+(
+    id    UUID       NOT NULL
+        CONSTRAINT document_category_pkey PRIMARY KEY,
+    label VARCHAR(1) NOT NULL
+        CONSTRAINT document_category_label_uc UNIQUE
+);
+
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'A') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'G') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'L') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'N') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES ('b46b4247-6869-4ab3-a357-806476195c76', 'R') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'S') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'U') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES ('6e81f59d-3b24-485f-9e74-7c309db78682', 'V') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'X') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'Z') ON CONFLICT DO NOTHING;
+
+CREATE TABLE
+    IF NOT EXISTS
+    citation_type
+(
+    id                                      UUID         NOT NULL
+        CONSTRAINT citation_type_pkey PRIMARY KEY,
+    abbreviation                            VARCHAR(255) NOT NULL,
+    label                                   VARCHAR(255) NOT NULL,
+    documentation_unit_document_category_id UUID
+        CONSTRAINT documentation_unit_document_category_fkey REFERENCES document_category,
+    citation_document_category_id           UUID
+        CONSTRAINT citation_document_category_fkey REFERENCES document_category,
+    juris_id                                VARCHAR(255) NOT NULL
+        CONSTRAINT citation_type_juris_id_key UNIQUE,
+    CONSTRAINT citation_type_key UNIQUE (
+                                         abbreviation,
+                                         documentation_unit_document_category_id,
+                                         citation_document_category_id
+        )
+);
+
+CREATE
+    INDEX citation_type_document_category_idx ON
+    citation_type (citation_document_category_id);
+
+CREATE
+    INDEX citation_type_documentation_unit_document_category_idx ON
+    citation_type (documentation_unit_document_category_id);
+
+INSERT INTO citation_type (id, abbreviation, label, documentation_unit_document_category_id, citation_document_category_id, juris_id) VALUES
+(gen_random_uuid(), 'Abgrenzung', 'Abgrenzung', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '1'),
+(gen_random_uuid(), 'Ablehnung', 'Ablehnung', 'b46b4247-6869-4ab3-a357-806476195c76', '6e81f59d-3b24-485f-9e74-7c309db78682', '2'),
+(gen_random_uuid(), 'Änderung', 'Änderung', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '3'),
+(gen_random_uuid(), 'Übernahme', 'Übernahme', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '4');
 
 
 set role test;

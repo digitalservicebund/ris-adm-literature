@@ -1,9 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLawQuery;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPort;
-import de.bund.digitalservice.ris.adm_vwv.application.QueryOptions;
+import de.bund.digitalservice.ris.adm_vwv.application.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
@@ -20,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FieldOfLawController {
 
-  private final LookupTablesPort lookupTablesPort;
+  private final LookupTablesService lookupTablesService;
 
   /**
    * Returns all fields of law under {@literal root} node.
@@ -29,7 +26,7 @@ public class FieldOfLawController {
    */
   @GetMapping("api/lookup-tables/fields-of-law/root/children")
   public ResponseEntity<FieldOfLawResponse> getFieldsOfLawParents() {
-    return ResponseEntity.ok(new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawParents()));
+    return ResponseEntity.ok(new FieldOfLawResponse(lookupTablesService.findFieldsOfLawParents()));
   }
 
   /**
@@ -43,7 +40,7 @@ public class FieldOfLawController {
     @PathVariable String identifier
   ) {
     return ResponseEntity.ok(
-      new FieldOfLawResponse(lookupTablesPort.findFieldsOfLawChildren(identifier))
+      new FieldOfLawResponse(lookupTablesService.findFieldsOfLawChildren(identifier))
     );
   }
 
@@ -55,7 +52,7 @@ public class FieldOfLawController {
    */
   @GetMapping("api/lookup-tables/fields-of-law/{identifier}")
   public ResponseEntity<FieldOfLaw> getTreeForFieldOfLaw(@PathVariable String identifier) {
-    return lookupTablesPort
+    return lookupTablesService
       .findFieldOfLaw(identifier)
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
@@ -92,7 +89,7 @@ public class FieldOfLawController {
       sortDirection,
       usePagination
     );
-    var paginatedFieldsOfLaw = lookupTablesPort.findFieldsOfLaw(
+    var paginatedFieldsOfLaw = lookupTablesService.findFieldsOfLaw(
       new FieldOfLawQuery(
         StringUtils.trimToNull(identifier),
         StringUtils.trimToNull(text),

@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY:
+        required: true
 
 jobs:
   push-e2e-report-to-ris-reports:
@@ -30,7 +33,7 @@ jobs:
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
           filePath: tmp/frontend-e2e-test-report-html
-          destinationDir: test-reports/ris-adm-vwv/frontend/e2e-tests
+          destinationDir: test-reports/ris-adm-literature/frontend/e2e-tests
           reportIsDirectory: true
 
       ##############################################

@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import FlexContainer from '@/components/FlexContainer.vue'
-import FlexItem from '@/components/FlexItem.vue'
+import { computed } from 'vue'
 import IconBadge from '@/components/IconBadge.vue'
 import { useAuthentication } from '@/services/auth'
 import IconPermIdentity from '~icons/ic/baseline-perm-identity'
 import IconLogout from '~icons/ic/baseline-logout'
+import FlexContainer from '@/components/FlexContainer.vue'
+import FlexItem from '@/components/FlexItem.vue'
 
-const { getUsername, logout } = useAuthentication()
+const { getUsername, logout, getGroup } = useAuthentication()
+
+const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`))
 </script>
 
 <template>
@@ -29,7 +32,7 @@ const { getUsername, logout } = useAuthentication()
           {{ getUsername() ?? 'Vorname Nachname' }}
         </FlexItem>
         <FlexItem>
-          <IconBadge :background-color="'bg-red-300'" color="text-black" :label="'BSG | Staging'" />
+          <IconBadge :background-color="'bg-red-300'" color="text-black" :label="group" />
         </FlexItem>
         <FlexItem>
           <button @click="logout" class="hover:cursor-pointer" aria-label="Log out">

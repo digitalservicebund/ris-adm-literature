@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FieldsOfLawTransformer {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of fields of law.
@@ -35,7 +35,7 @@ public class FieldsOfLawTransformer {
     return fieldsOfLaw
       .stream()
       .map(risFieldOfLaw ->
-        lookupTablesPersistencePort
+        lookupTablesPersistenceService
           .findFieldOfLaw(risFieldOfLaw.getValue())
           .orElseGet(() ->
             new FieldOfLaw(

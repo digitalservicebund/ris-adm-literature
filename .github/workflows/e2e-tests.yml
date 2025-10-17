@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
   e2e-tests:
@@ -9,9 +12,12 @@ jobs:
         # Standard, sharded runs
         playwright-project:
           [
-            { name: "chromium", install: "chromium" },
-            { name: "firefox", install: "firefox" },
-            { name: "msedge", install: "msedge chromium" },
+            { name: "chromium-adm", install: "chromium" },
+            { name: "firefox-adm", install: "firefox" },
+            { name: "msedge-adm", install: "msedge chromium" },
+            { name: "chromium-uli", install: "chromium" },
+            { name: "firefox-uli", install: "firefox" },
+            { name: "msedge-uli", install: "msedge chromium" },
           ]
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
@@ -37,13 +43,13 @@ jobs:
             backend/*.gradle*
             backend/**/gradle-wrapper.properties
       - name: Setup and validate Gradle
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2
       - name: Start backend
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
       # setup frontend
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: ./frontend/.node-version
           cache: npm

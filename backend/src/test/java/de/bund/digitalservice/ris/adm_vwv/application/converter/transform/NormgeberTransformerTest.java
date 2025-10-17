@@ -3,9 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
@@ -25,7 +25,7 @@ class NormgeberTransformerTest {
   private NormgeberTransformer normgeberTransformer;
 
   @Mock
-  private LookupTablesPersistencePort lookupTablesPersistencePort;
+  private LookupTablesPersistenceService lookupTablesPersistenceService;
 
   @Test
   @DisplayName("Transforms two normgeber, one legal entity and one institution with region")
@@ -47,15 +47,18 @@ class NormgeberTransformerTest {
       )
     );
     given(
-      lookupTablesPersistencePort.findInstitutionByNameAndType("DS", InstitutionType.LEGAL_ENTITY)
+      lookupTablesPersistenceService.findInstitutionByNameAndType(
+        "DS",
+        InstitutionType.LEGAL_ENTITY
+      )
     ).willReturn(createInstitution("DS", InstitutionType.LEGAL_ENTITY));
     given(
-      lookupTablesPersistencePort.findInstitutionByNameAndType(
+      lookupTablesPersistenceService.findInstitutionByNameAndType(
         "Ministerium für Digitales",
         InstitutionType.INSTITUTION
       )
     ).willReturn(createInstitution("Ministerium für Digitales", InstitutionType.INSTITUTION));
-    given(lookupTablesPersistencePort.findRegionByCode("BRD")).willReturn(createRegion());
+    given(lookupTablesPersistenceService.findRegionByCode("BRD")).willReturn(createRegion());
 
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
@@ -104,12 +107,12 @@ class NormgeberTransformerTest {
     proprietary.setMetadata(risMetadata);
     risMetadata.setNormgeber(List.of(createRisNormgeber("EU", "Europäische Kommission")));
     given(
-      lookupTablesPersistencePort.findInstitutionByNameAndType(
+      lookupTablesPersistenceService.findInstitutionByNameAndType(
         "Europäische Kommission",
         InstitutionType.INSTITUTION
       )
     ).willReturn(createInstitution("Europäische Kommission", InstitutionType.INSTITUTION));
-    given(lookupTablesPersistencePort.findRegionByCode("EU")).willReturn(Optional.empty());
+    given(lookupTablesPersistenceService.findRegionByCode("EU")).willReturn(Optional.empty());
 
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">

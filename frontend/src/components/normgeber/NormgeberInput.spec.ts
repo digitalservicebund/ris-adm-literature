@@ -87,7 +87,7 @@ function renderComponent(
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',
@@ -271,7 +271,7 @@ describe('NormgeberInput', () => {
           [
             createTestingPinia({
               initialState: {
-                docunitStore: {
+                admDocUnitStore: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',

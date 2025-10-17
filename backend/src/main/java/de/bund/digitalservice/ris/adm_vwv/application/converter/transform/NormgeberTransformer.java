@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
 import de.bund.digitalservice.ris.adm_vwv.application.Institution;
 import de.bund.digitalservice.ris.adm_vwv.application.InstitutionType;
-import de.bund.digitalservice.ris.adm_vwv.application.LookupTablesPersistencePort;
 import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NormgeberTransformer {
 
-  private final LookupTablesPersistencePort lookupTablesPersistencePort;
+  private final LookupTablesPersistenceService lookupTablesPersistenceService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of Normgeber.
@@ -49,12 +49,12 @@ public class NormgeberTransformer {
           institutionName = risNormgeber.getOrgan();
         }
         String summary = institutionName + " (" + institutionType + ")";
-        Institution institution = lookupTablesPersistencePort
+        Institution institution = lookupTablesPersistenceService
           .findInstitutionByNameAndType(institutionName, institutionType)
           .orElseThrow(() -> new IllegalArgumentException("Institution not found: " + summary));
         List<Region> regions = new ArrayList<>();
         if (risNormgeber.getOrgan() != null) {
-          lookupTablesPersistencePort
+          lookupTablesPersistenceService
             .findRegionByCode(risNormgeber.getStaat())
             .ifPresent(regions::add);
         }

@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import de.bund.digitalservice.ris.adm_vwv.config.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = DocumentTypeController.class)
-@WithMockUser(roles = "adm_vwv_user")
+@WithMockUser(roles = "adm_user")
 @Import(SecurityConfiguration.class)
 class DocumentTypeControllerTest {
 
@@ -27,7 +27,7 @@ class DocumentTypeControllerTest {
   private MockMvc mockMvc;
 
   @MockitoBean
-  private LookupTablesPort lookupTablesPort;
+  private LookupTablesService lookupTablesService;
 
   @Test
   @DisplayName("GET returns HTTP 200 and a JSON with two documentTypes with abbreviation and name")
@@ -35,7 +35,7 @@ class DocumentTypeControllerTest {
     // given
     String searchTerm = "verwaltungs";
     given(
-      lookupTablesPort.findDocumentTypes(
+      lookupTablesService.findDocumentTypes(
         new DocumentTypeQuery(searchTerm, new QueryOptions(0, 2, "name", Sort.Direction.ASC, true))
       )
     ).willReturn(
