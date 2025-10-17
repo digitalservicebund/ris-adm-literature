@@ -5,6 +5,7 @@ import { usePostDocUnit } from '@/services/documentUnitService'
 import { until } from '@vueuse/core'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
+import { ROUTE_PATHS } from '@/constants/routes'
 
 const toast = useToast()
 
@@ -24,7 +25,7 @@ onBeforeMount(async () => {
 
   if (data.value) {
     const sectionPath = route.matched[0]?.path || ''
-    const newPath = `${sectionPath}/dokumentationseinheit/${data.value.documentNumber}`
+    const newPath = `${sectionPath}/${ROUTE_PATHS.DOCUMENT_UNIT_BASE}/${data.value.documentNumber}`
     router.replace(newPath)
   }
 })

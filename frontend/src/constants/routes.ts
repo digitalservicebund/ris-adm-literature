@@ -26,14 +26,17 @@ export const ROUTE_NAMES = {
   },
 } as const
 
+const DOCUMENT_UNIT_BASE = 'dokumentationseinheit'
+
 export const ROUTE_PATHS = {
   ROOT: '/',
   FORBIDDEN: '/forbidden',
+  DOCUMENT_UNIT_BASE: DOCUMENT_UNIT_BASE,
   ADM: {
     BASE: '/verwaltungsvorschriften',
     DOCUMENT_UNIT: {
-      NEW: 'dokumentationseinheit/new',
-      EDIT: 'dokumentationseinheit/:documentNumber',
+      NEW: `${DOCUMENT_UNIT_BASE}/new`,
+      EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
       FUNDSTELLEN: 'fundstellen',
       RUBRIKEN: 'rubriken',
       ABGABE: 'abgabe',
@@ -42,8 +45,8 @@ export const ROUTE_PATHS = {
   ULI: {
     BASE: '/literatur-unselbstaendig',
     DOCUMENT_UNIT: {
-      NEW: 'dokumentationseinheit/new',
-      EDIT: 'dokumentationseinheit/:documentNumber',
+      NEW: `${DOCUMENT_UNIT_BASE}/new`,
+      EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
       RUBRIKEN: 'rubriken',
     },
   },
