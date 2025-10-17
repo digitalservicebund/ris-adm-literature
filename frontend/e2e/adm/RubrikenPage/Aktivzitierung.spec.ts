@@ -14,7 +14,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
   })
 
   test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
-    await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+    await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
     await page.getByRole('link', { name: 'Rubriken' }).click()
     const artDerZitierungInput = page.getByText('Art der Zitierung *')
     await expect(artDerZitierungInput).toHaveCount(1)
@@ -58,7 +58,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const datumElement = page.getByText('Entscheidungsdatum *')
@@ -92,7 +92,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     'Add two active citations, delete the first item',
     { tag: ['@RISDEV-6077'] },
     async ({ page }) => {
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
@@ -137,7 +137,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     'Search active citation, take it, change type, save, search again and cancel because already added',
     { tag: ['@RISDEV-6077'] },
     async ({ page }) => {
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
@@ -210,7 +210,7 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
       })
 
       // given
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const artDerZitierungInput = page.getByText('Art der Zitierung *')
       await artDerZitierungInput.click()
@@ -278,8 +278,8 @@ test.describe('RubrikenPage - Aktivzitierung - Bestandsdaten', () => {
       // given
 
       // when
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR999999999/rubriken')
-      await page.waitForURL(/documentUnit/)
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999/rubriken')
+      await page.waitForURL(/dokumentationseinheit/)
 
       // then
       await expect(page.getByText('AG Aachen, 20.10.2021, C-01/02 | WBRE000001234')).toHaveCount(1)

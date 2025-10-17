@@ -8,7 +8,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
@@ -31,7 +31,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
@@ -58,7 +58,7 @@ test.describe('RubrikenPage - Dokumenttyp', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const dokumenttypZusatzElement = page.getByText('Dokumenttyp Zusatz')
       await dokumenttypZusatzElement.fill('Bekanntmachung')
@@ -84,7 +84,7 @@ test.describe('RubrikenPage - Dokumenttyp - Bestandsdaten', () => {
       // given
 
       // when
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR999999999/rubriken')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999/rubriken')
 
       // then
       await expect(page.getByText('Dokumenttyp *')).toHaveValue('Verwaltungsregelung')

@@ -8,7 +8,7 @@ test.describe('RubrikenPage - Definition', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByText('Weitere Rubriken')).toBeVisible()
 

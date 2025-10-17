@@ -32,8 +32,8 @@ export const ROUTE_PATHS = {
   ADM: {
     BASE: '/verwaltungsvorschriften',
     DOCUMENT_UNIT: {
-      NEW: 'documentUnit/new',
-      EDIT: 'documentUnit/:documentNumber',
+      NEW: 'dokumentationseinheit/new',
+      EDIT: 'dokumentationseinheit/:documentNumber',
       FUNDSTELLEN: 'fundstellen',
       RUBRIKEN: 'rubriken',
       ABGABE: 'abgabe',

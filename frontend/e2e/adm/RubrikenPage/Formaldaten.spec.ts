@@ -15,7 +15,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
     })
 
     test('Filling in Amtl. Langüberschrift', { tag: ['@RISDEV-6043'] }, async ({ page }) => {
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
 
@@ -31,7 +31,9 @@ test.describe('RubrikenPage - Formatdaten', () => {
         'Filling in Aktenzeichen (incl. special characters)',
         { tag: ['@RISDEV-7680'] },
         async ({ page }) => {
-          await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen')
+          await page.goto(
+            '/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen',
+          )
           await page.getByRole('link', { name: 'Rubriken' }).click()
           await expect(page.getByRole('link', { name: 'Rubriken' })).toHaveCount(1)
 
@@ -59,7 +61,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
         '"Eintrag löschen" results in deleting the Aktenzeichen',
         { tag: ['@RISDEV-7680'] },
         async ({ page }) => {
-          await page.goto('/verwaltungsvorschriften/documentUnit/KSNR054920707/rubriken')
+          await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/rubriken')
           const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
           // eslint-disable-next-line playwright/no-raw-locators
           const newAktenzeichenInput = aktenzeichenGroup.locator('input')
@@ -82,7 +84,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const aktenzeichenGroup = page.getByRole('group', { name: 'Aktenzeichen' })
@@ -128,7 +130,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
@@ -158,7 +160,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
@@ -190,7 +192,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
       await inkrafttretedatumElement.fill('02.02.1970')
@@ -215,7 +217,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const inkrafttretedatumElement = page.getByText('Datum des Inkrafttretens *')
 
@@ -240,7 +242,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
@@ -264,7 +266,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
       await ausserkrafttretedatumElement.fill('02.02.1970')
@@ -288,7 +290,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       const ausserkrafttretedatumElement = page.getByText('Datum des Ausserkrafttretens')
 
@@ -313,7 +315,7 @@ test.describe('RubrikenPage - Formatdaten', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when

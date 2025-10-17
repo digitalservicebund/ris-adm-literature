@@ -15,7 +15,7 @@ const route = useRoute()
     <div class="flex justify-between items-end">
       <h1 class="ris-heading2-regular">{{ title }}</h1>
 
-      <router-link :to="`${route.path}/documentUnit/new`">
+      <router-link :to="`${route.path}/dokumentationseinheit/new`">
         <Button label="Neue Dokumentationseinheit">
           <template #icon>
             <IconAdd />

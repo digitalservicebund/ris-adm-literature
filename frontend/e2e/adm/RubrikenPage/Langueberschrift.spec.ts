@@ -9,7 +9,7 @@ test.describe('Rubriken page - Langüberschrift', () => {
       const myLangueberschrift = 'my persisting Langüberschrift'
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByText('Amtl. Langüberschrift *')).toHaveCount(1)
       await page.getByText('Amtl. Langüberschrift *').fill(myLangueberschrift)
@@ -30,7 +30,7 @@ test.describe('Rubriken page - Langüberschrift', () => {
       const myLangueberschrift = 'my existing Langüberschrift'
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
       await expect(page.getByText('Amtl. Langüberschrift *')).toHaveCount(1)
       await page.getByText('Amtl. Langüberschrift *').fill(myLangueberschrift)
@@ -61,7 +61,7 @@ test.describe('RubrikenPage - Langüberschrift - Bestandsdaten', () => {
       // given
 
       // when
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR999999999/rubriken')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999/rubriken')
 
       // then
       await expect(page.getByRole('textbox', { name: 'Amtl. Langüberschrift *' })).toHaveValue(

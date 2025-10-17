@@ -9,7 +9,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await expect(page.getByText('Zitierdatum *')).toBeVisible()
@@ -44,7 +44,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
@@ -75,7 +75,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
@@ -108,7 +108,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       const zitierdatenGroup = page.getByRole('group', { name: 'Zitierdatum' })
@@ -138,7 +138,7 @@ test.describe('RubrikenPage - Zitierdatum', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // given

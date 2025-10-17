@@ -39,7 +39,7 @@ test.describe('StartPage Adm', () => {
   )
 
   test(
-    'clicking "Neue Dokumentationseinheit", routes to a new documentation unit',
+    'clicking "Neue Dokumentationseinheit", routes to the Fundstellen of a new Dokumentationseinheit',
     { tag: ['@RISDEV-6041'] },
     async ({ page }) => {
       // Arrange
@@ -59,7 +59,7 @@ test.describe('StartPage Adm', () => {
       // Assert
       // this needs to change when KSNR are generated dynamically
       await expect(page).toHaveURL(
-        '/verwaltungsvorschriften/documentUnit/KSNR054920707/fundstellen',
+        '/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen',
       )
     },
   )
@@ -151,7 +151,7 @@ test.describe('StartPage Adm', () => {
 
       // when
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       const documentNumber = page
         .url()
@@ -612,7 +612,7 @@ test.describe('Search documentation units', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
 
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await expect(page).not.toHaveURL('/')
 
       await page.getByRole('link', { name: 'Suche' }).click()
