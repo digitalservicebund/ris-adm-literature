@@ -18,7 +18,7 @@ function renderComponent(fundstellenList?: Fundstelle[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     fundstellen: fundstellenList ?? [],

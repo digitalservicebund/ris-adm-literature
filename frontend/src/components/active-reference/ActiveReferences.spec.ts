@@ -30,7 +30,7 @@ function renderComponent(activeReferences?: ActiveReference[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     activeReferences: activeReferences ?? [],

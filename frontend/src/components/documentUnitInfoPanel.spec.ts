@@ -1,14 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
 import userEvent from '@testing-library/user-event'
+import { useStoreForRoute } from '@/composables/useStoreForRoute'
+import type { DocumentUnitStore } from '@/stores/types'
+
+vi.mock('vue-router', () => ({
+  useRoute: () => ({
+    meta: { storeId: 'admDocumentUnit' },
+  }),
+}))
 
 function mockDocumentUnitStore(callback = vi.fn()) {
-  const documentUnitStore = useAdmDocUnitStore()
-  documentUnitStore.updateDocumentUnit = callback
+  const documentUnitStore = useStoreForRoute<DocumentUnitStore>()
+  documentUnitStore.update = callback
 
   return documentUnitStore
 }

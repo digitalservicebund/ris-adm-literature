@@ -17,7 +17,7 @@ function renderComponent(definitions?: Definition[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     definitionen: definitions ?? [],
@@ -40,7 +40,7 @@ describe('Definition', () => {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                   },

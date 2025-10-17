@@ -87,7 +87,7 @@ function renderComponent(
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',
@@ -205,9 +205,9 @@ describe('NormgeberInput', () => {
     // then
     const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
     const updatedEntity = emittedVal?.[0][0]
-    expect(updatedEntity.id).toEqual(mockLegalEntityNormgeber.id)
-    expect(updatedEntity.institution.id).toEqual('institutionId')
-    expect(updatedEntity.regions[0].id).toEqual('regionId1')
+    expect(updatedEntity!.id).toEqual(mockLegalEntityNormgeber.id)
+    expect(updatedEntity!.institution.id).toEqual('institutionId')
+    expect(updatedEntity!.regions[0]!.id).toEqual('regionId1')
   })
 
   it('should create new entity', async () => {
@@ -228,8 +228,8 @@ describe('NormgeberInput', () => {
     // then
     const emittedVal = emitted('updateNormgeber') as [Normgeber[]]
     const createdEntity = emittedVal?.[0][0]
-    expect(createdEntity.id).toEqual('mocked-uuid')
-    expect(createdEntity.institution.id).toEqual('legalEntityId2')
+    expect(createdEntity!.id).toEqual('mocked-uuid')
+    expect(createdEntity!.institution.id).toEqual('legalEntityId2')
   })
 
   it('should reset the region on institution change', async () => {
@@ -271,7 +271,7 @@ describe('NormgeberInput', () => {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',

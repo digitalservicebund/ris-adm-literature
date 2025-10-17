@@ -1,6 +1,9 @@
-import type { AdmDocumentationUnit, AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
+import type {
+  AdmDocumentationUnit,
+  AdmDocumentUnitResponse,
+  AdmDocUnitSearchParams,
+} from '@/domain/adm/admDocumentUnit'
 import ActiveCitation from '@/domain/activeCitation'
-import type { DocumentUnitResponse } from '@/domain/adm/admDocumentUnitResponse'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
@@ -8,40 +11,33 @@ import { useApiFetch } from './apiService'
 import { type UseFetchReturn } from '@vueuse/core'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
 import { computed, type Ref } from 'vue'
+import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
 
 const DOCUMENTATION_UNITS_URL = '/documentation-units'
 
-export function useGetDocUnit(documentNumber: string): UseFetchReturn<AdmDocumentationUnit> {
-  return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
-    afterFetch: ({ data }) => {
-      if (!data) return { data }
-
-      return {
-        data: mapResponseDataToDocumentUnit(data),
-      }
-    },
-    immediate: false,
-  }).json()
+export function useGetAdmDocUnit(documentNumber: string): UseFetchReturn<AdmDocumentationUnit> {
+  return getDocUnit<AdmDocumentUnitResponse, AdmDocumentationUnit>(
+    documentNumber,
+    mapResponseToAdmDocUnit,
+  )
 }
 
-export function usePutDocUnit(
-  documentUnit: AdmDocumentationUnit,
-): UseFetchReturn<AdmDocumentationUnit> {
-  return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
-    afterFetch: ({ data }) => {
-      if (!data) return { data }
-
-      return {
-        data: mapResponseDataToDocumentUnit(data),
-      }
-    },
-    immediate: false,
-  })
-    .json()
-    .put(documentUnit)
+export function usePutAdmDocUnit(doc: AdmDocumentationUnit): UseFetchReturn<AdmDocumentationUnit> {
+  return putDocUnit<AdmDocumentUnitResponse, AdmDocumentationUnit>(doc, mapResponseToAdmDocUnit)
 }
 
-export function usePutPublishDocUnit(
+export function useGetUliDocUnit(documentNumber: string): UseFetchReturn<UliDocumentationUnit> {
+  return getDocUnit<UliDocumentUnitResponse, UliDocumentationUnit>(
+    documentNumber,
+    mapResponseToUliDocUnit,
+  )
+}
+
+export function usePutUliDocUnit(doc: UliDocumentationUnit): UseFetchReturn<UliDocumentationUnit> {
+  return putDocUnit<UliDocumentUnitResponse, UliDocumentationUnit>(doc, mapResponseToUliDocUnit)
+}
+
+export function usePutPublishAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
 ): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`, {
@@ -49,7 +45,7 @@ export function usePutPublishDocUnit(
       if (!data) return { data }
 
       return {
-        data: mapResponseDataToDocumentUnit(data),
+        data: mapResponseToAdmDocUnit(data),
       }
     },
     immediate: false,
@@ -58,7 +54,9 @@ export function usePutPublishDocUnit(
     .put(documentUnit)
 }
 
-export function usePostDocUnit(): UseFetchReturn<AdmDocumentationUnit> {
+export function usePostDocUnit<
+  T extends { id: string; documentNumber: string },
+>(): UseFetchReturn<T> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}`).json().post()
 }
 
@@ -83,7 +81,50 @@ export function useGetPaginatedDocUnits(
   return useApiFetch(urlWithParams).json()
 }
 
-function mapResponseDataToDocumentUnit(data: DocumentUnitResponse): AdmDocumentationUnit {
+function getDocUnit<TResponse, TModel>(
+  documentNumber: string,
+  mapFn: (data: TResponse) => TModel,
+): UseFetchReturn<TModel> {
+  return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
+    afterFetch: ({ data }) => {
+      if (!data) return { data }
+
+      return {
+        data: mapFn(data as TResponse),
+      }
+    },
+    immediate: false,
+  }).json()
+}
+
+function putDocUnit<TResponse, TModel>(
+  documentUnit: TModel & { documentNumber: string },
+  mapFn: (data: TResponse) => TModel,
+): UseFetchReturn<TModel> {
+  return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
+    afterFetch: ({ data }) => {
+      if (!data) return { data }
+      return {
+        data: mapFn(data as TResponse),
+      }
+    },
+    immediate: false,
+  })
+    .json()
+    .put(documentUnit)
+}
+
+function mapResponseToUliDocUnit(data: UliDocumentUnitResponse): UliDocumentationUnit {
+  const documentUnit: UliDocumentationUnit = {
+    ...data.json,
+    id: data.id,
+    documentNumber: data.documentNumber,
+  }
+  documentUnit.note = documentUnit.note || ''
+  return documentUnit
+}
+
+function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentationUnit {
   const documentUnit: AdmDocumentationUnit = {
     ...data.json,
     id: data.id,

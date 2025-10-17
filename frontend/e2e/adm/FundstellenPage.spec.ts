@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test'
-import { type DocumentUnit } from '../../src/domain/documentUnit.js'
 
 // See here how to get started:
 // https://playwright.dev/docs/intro
@@ -169,7 +168,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       })
       // Mock the GET request
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
-        const documentUnit: DocumentUnit = {
+        const documentUnit = {
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           documentNumber: 'KSNR054920707',
           fundstellen: [],
@@ -194,7 +193,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       // Mock the PUT and GET requests again
       await page.unrouteAll()
       await page.route('/api/documentation-units/KSNR054920707', async (route) => {
-        const documentUnit: DocumentUnit = {
+        const documentUnit = {
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           documentNumber: 'KSNR054920707',
           fundstellen: [

@@ -16,7 +16,7 @@ function renderComponent(titelAspekt?: string[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     titelAspekte: titelAspekt ?? [],
@@ -39,7 +39,7 @@ describe('TitelAspekt', () => {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                   },

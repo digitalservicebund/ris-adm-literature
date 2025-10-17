@@ -5,7 +5,8 @@ import { useSaveToRemote } from '@/composables/useSaveToRemote'
 import Button from 'primevue/button'
 import { useStatusBadge } from '@/composables/useStatusBadge'
 import { PublicationState } from '@/domain/publicationStatus'
-// import IconError from "~icons/ic/baseline-error"
+import { useStoreForRoute } from '@/composables/useStoreForRoute'
+import type { DocumentUnitStore } from '@/stores/types'
 
 interface Props {
   heading?: string
@@ -17,8 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
   hideSaveButton: false,
 })
 
+const store = useStoreForRoute<DocumentUnitStore>()
+
 const statusBadge = ref(
-  // useStatusBadge(documentUnitStore.documentUnit?.status).value,
   useStatusBadge({
     publicationStatus: PublicationState.UNPUBLISHED,
   }).value,
@@ -26,15 +28,10 @@ const statusBadge = ref(
 
 const formattedInfo = ''
 
-const { saveIsInProgress, triggerSave, lastSaveError, formattedLastSavedOn } = useSaveToRemote()
+const { saveIsInProgress, triggerSave, lastSaveError, formattedLastSavedOn } =
+  useSaveToRemote(store)
 
 const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError.value.title : '')
-
-// watchEffect(() => {
-//   statusBadge.value = useStatusBadge(
-//     documentUnitStore.documentUnit?.status,
-//   ).value
-// })
 </script>
 
 <template>
@@ -56,14 +53,6 @@ const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError
       :icon="toRaw(statusBadge.icon)"
       :label="statusBadge.label"
     />
-    <!-- <IconBadge
-      v-if="documentUnitStore.documentUnit?.status?.withError"
-      background-color="bg-red-300"
-      class="ml-12"
-      color="text-red-900"
-      :icon="IconError"
-      label="Fehler"
-    /> -->
 
     <span class="flex-grow"></span>
     <div class="ml-12 flex items-center space-x-[12px] whitespace-nowrap">

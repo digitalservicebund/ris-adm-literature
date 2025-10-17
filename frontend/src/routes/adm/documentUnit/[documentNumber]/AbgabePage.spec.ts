@@ -18,7 +18,7 @@ function renderComponent(documentUnit: AdmDocumentationUnit) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit,
                 },
               },

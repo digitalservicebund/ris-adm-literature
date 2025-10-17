@@ -8,7 +8,7 @@ import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { missingDocumentUnitFields } from '@/utils/validators'
 import Plausibilitaetspruefung from '@/components/publication/Plausibilitaetspruefung.vue'
 import { Message } from 'primevue'
-import { usePutPublishDocUnit } from '@/services/documentUnitService'
+import { usePutPublishAdmDocUnit } from '@/services/documentUnitService'
 
 const store = useAdmDocUnitStore()
 
@@ -16,7 +16,7 @@ const missingFields = computed(() =>
   missingDocumentUnitFields(store.documentUnit as AdmDocumentationUnit),
 )
 
-const { error, execute, isFetching, isFinished } = usePutPublishDocUnit(
+const { error, execute, isFetching, isFinished } = usePutPublishAdmDocUnit(
   store.documentUnit as AdmDocumentationUnit,
 )
 

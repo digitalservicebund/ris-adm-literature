@@ -29,7 +29,7 @@ function renderComponent(normgeberList?: Normgeber[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     normgeberList: normgeberList ?? [],
