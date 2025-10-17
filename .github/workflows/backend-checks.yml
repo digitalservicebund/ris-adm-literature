@@ -31,7 +31,7 @@ jobs:
             backend/**/gradle-wrapper.properties
       - name: Run spotlessCheck
         working-directory: ./backend
-        run: ./gradlew spotlessCheck --stackTrace
+        run: ./gradlew spotlessCheck
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
