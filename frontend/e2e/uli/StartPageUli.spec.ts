@@ -30,7 +30,6 @@ test.describe('StartPage ULI', () => {
       await page.goto('/literatur-unselbstaendig')
 
       // when
-      // TODO: await the button?
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
 
       // then
