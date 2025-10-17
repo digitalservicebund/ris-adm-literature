@@ -243,7 +243,7 @@ tasks.named<Checkstyle>("checkstyleTest") {
 }
 
 lombok {
-  version = "1.18.36"
+  version = "1.18.40"
 }
 
 tasks {
