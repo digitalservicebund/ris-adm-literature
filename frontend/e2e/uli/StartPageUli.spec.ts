@@ -22,7 +22,7 @@ test.describe('StartPage ULI', () => {
   )
 
   test(
-    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page, route "dokumentationseinheit" on success',
+    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page on success, route shows "/dokumentationseinheit/"',
     { tag: ['@RISDEV-9887'] },
     async ({ page }) => {
       // given
