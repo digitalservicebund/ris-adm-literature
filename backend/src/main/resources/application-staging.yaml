@@ -1,7 +1,7 @@
 spring:
   application.name: ris-adm-literature-backend
   datasource:
-    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm_vwv}
+    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
 
 management:
   endpoint:

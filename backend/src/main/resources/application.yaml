@@ -1,9 +1,9 @@
 spring:
   application.name: ris-adm-literature-backend
   datasource:
-    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm_vwv}
-    username: ${database.user:test}
-    password: ${database.password:test}
+    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm}
+    username: ${adm.database.user:test}
+    password: ${adm.database.password:test}
     driver-class-name: org.postgresql.Driver
   security:
     oauth2:
