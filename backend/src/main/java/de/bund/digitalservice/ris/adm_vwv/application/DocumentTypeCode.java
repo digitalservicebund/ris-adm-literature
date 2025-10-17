@@ -6,6 +6,7 @@ package de.bund.digitalservice.ris.adm_vwv.application;
  */
 public enum DocumentTypeCode {
   LITERATURE_DEPENDENT("LU"),
+  LITERATURE_INDEPENDENT("LS"),
   ADMINISTRATIVE("NR");
 
   public final String prefix;
