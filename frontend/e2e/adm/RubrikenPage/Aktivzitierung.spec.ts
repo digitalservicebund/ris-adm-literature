@@ -279,7 +279,7 @@ test.describe('RubrikenPage - Aktivzitierung - Bestandsdaten', () => {
 
       // when
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999/rubriken')
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
 
       // then
       await expect(page.getByText('AG Aachen, 20.10.2021, C-01/02 | WBRE000001234')).toHaveCount(1)

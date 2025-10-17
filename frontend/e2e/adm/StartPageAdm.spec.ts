@@ -151,7 +151,7 @@ test.describe('StartPage Adm', () => {
 
       // when
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('button', { name: 'Speichern', exact: true }).click()
       const documentNumber = page
         .url()
@@ -612,7 +612,7 @@ test.describe('Search documentation units', () => {
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
 
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await expect(page).not.toHaveURL('/')
 
       await page.getByRole('link', { name: 'Suche' }).click()

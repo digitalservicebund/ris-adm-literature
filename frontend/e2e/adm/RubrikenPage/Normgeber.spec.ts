@@ -8,7 +8,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       await expect(page.getByRole('heading', { level: 2, name: 'Normgeber' })).toBeVisible()
@@ -52,7 +52,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
@@ -84,7 +84,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
@@ -112,7 +112,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when
@@ -139,7 +139,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding a new normgeber
@@ -197,7 +197,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding twice the same institution
@@ -223,7 +223,7 @@ test.describe('RubrikenPage - Normgeber', () => {
       // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/documentUnit/)
+      await page.waitForURL(/dokumentationseinheit/)
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
       // when adding an institutional normgeber
@@ -246,7 +246,7 @@ test.describe('RubrikenPage - Normgeber - Bestandsdaten', () => {
       // given
 
       // when
-      await page.goto('/verwaltungsvorschriften/documentUnit/KSNR999999999/rubriken')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit//KSNR999999999/rubriken')
 
       // then
       await expect(page.getByText('Erste Jurpn')).toHaveCount(1)

@@ -6,7 +6,7 @@ test.describe('Login flow', () => {
     { tag: ['@RISDEV-8587'] },
     async ({ page }) => {
       const protectedUrl =
-        'http://localhost:5173/verwaltungsvorschriften/documentUnit/KSNR999999999/fundstellen'
+        'http://localhost:5173/verwaltungsvorschriften/dokumentationseinheit//KSNR999999999/fundstellen'
 
       await page.goto(protectedUrl)
       const loginFormLocator = page.getByLabel('Username or email')
