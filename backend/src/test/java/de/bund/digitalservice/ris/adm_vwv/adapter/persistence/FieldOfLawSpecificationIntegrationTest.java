@@ -2,26 +2,42 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.bund.digitalservice.ris.adm_vwv.config.multischema.SchemaContextHolder;
+import de.bund.digitalservice.ris.adm_vwv.config.multischema.SchemaType;
 import io.hypersistence.utils.hibernate.query.SQLExtractor;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@AutoConfigureTestEntityManager
+@Transactional
 @ActiveProfiles("test")
 class FieldOfLawSpecificationIntegrationTest {
 
   @Autowired
   private TestEntityManager entityManager;
+
+  @BeforeEach
+  void setUp() {
+    SchemaContextHolder.setSchema(SchemaType.ADM);
+  }
+
+  @AfterEach
+  void tearDown() {
+    SchemaContextHolder.clear();
+  }
 
   @Test
   void toPredicate() {

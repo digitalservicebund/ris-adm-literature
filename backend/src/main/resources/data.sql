@@ -1,7 +1,56 @@
+-- Create the schemas
+CREATE SCHEMA IF NOT EXISTS adm;
+CREATE SCHEMA IF NOT EXISTS lit;
+
+-- === Create Tables for ADM Schema ===
+CREATE TABLE IF NOT EXISTS adm.documentation_unit (
+                                                      id UUID PRIMARY KEY,
+                                                      document_number VARCHAR(255) NOT NULL UNIQUE,
+                                                      json TEXT,
+                                                      xml TEXT
+);
+
+CREATE TABLE IF NOT EXISTS adm.documentation_unit_index (
+                                                            id UUID PRIMARY KEY,
+                                                            documentation_unit_id UUID NOT NULL UNIQUE REFERENCES adm.documentation_unit(id),
+                                                            langueberschrift TEXT,
+                                                            fundstellen TEXT,
+                                                            zitierdaten TEXT
+);
+
+CREATE TABLE IF NOT EXISTS adm.document_number (
+                                                   id UUID PRIMARY KEY,
+                                                   latest VARCHAR(255) NOT NULL,
+                                                   year SMALLINT NOT NULL UNIQUE
+);
+
+-- === Create Identical Tables for LIT Schema ===
+CREATE TABLE IF NOT EXISTS lit.documentation_unit (
+                                                      id UUID PRIMARY KEY,
+                                                      document_number VARCHAR(255) NOT NULL UNIQUE,
+                                                      json TEXT,
+                                                      xml TEXT
+);
+
+CREATE TABLE IF NOT EXISTS lit.documentation_unit_index (
+                                                            id UUID PRIMARY KEY,
+                                                            documentation_unit_id UUID NOT NULL UNIQUE REFERENCES lit.documentation_unit(id),
+                                                            langueberschrift TEXT,
+                                                            fundstellen TEXT,
+                                                            zitierdaten TEXT
+);
+
+CREATE TABLE IF NOT EXISTS lit.document_number (
+                                                   id UUID PRIMARY KEY,
+                                                   latest VARCHAR(255) NOT NULL,
+                                                   year SMALLINT NOT NULL UNIQUE
+);
+
+
 -- Insert a test documentation unit xml. This file is only used in Spring Boot Profile "default".
 -- This inserts 100 documentation units for e2e tests to check on the search pagination
 WITH created as (
-    INSERT INTO documentation_unit (id, document_number, xml)
+    INSERT INTO adm.documentation_unit (id, document_number, xml)
         SELECT gen_random_uuid(),
                'KSNR' || s.running_number::text,
                '<?xml version="1.0" encoding="UTF-8"?>
@@ -96,43 +145,43 @@ WITH created as (
         FROM generate_series(999999999, 999999899, -1) AS s(running_number)
         ON conflict do nothing
         returning id as created_documentation_unit_id)
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT gen_random_uuid(), created.created_documentation_unit_id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01' FROM created
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+       SELECT gen_random_uuid(), created.created_documentation_unit_id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01' FROM created
 ON conflict do nothing;
 
 -- Insert specific documentation units for filtering tests
 
-INSERT INTO documentation_unit (id, document_number, xml)
+INSERT INTO adm.documentation_unit (id, document_number, xml)
 SELECT gen_random_uuid(), 'KSNR000000001', ''
-WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000001');
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000001');
 
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
 SELECT
     gen_random_uuid(),
     du.id,
     'Alpha Global Setup Document',
     'BGB 123$µµµµµ$VWV xyz',
     '2024-06-17$µµµµµ$1950-01-01'
-FROM documentation_unit du
+FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000001'
   AND NOT EXISTS (
-    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
+    SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
 );
 
 
-INSERT INTO documentation_unit (id, document_number, xml)
+INSERT INTO adm.documentation_unit (id, document_number, xml)
 SELECT gen_random_uuid(), 'KSNR000000002', ''
-WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000002');
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000002');
 
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
 SELECT
     gen_random_uuid(),
     du.id,
     'Beta Global Setup Document',
     'BGB 456',
     '2024-06-18'
-FROM documentation_unit du
+FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000002'
   AND NOT EXISTS (
-    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
+    SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
 );
