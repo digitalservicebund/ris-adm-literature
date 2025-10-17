@@ -20,4 +20,21 @@ test.describe('StartPage ULI', () => {
       await expect(page.getByRole('button', { name: 'Log out' })).toHaveCount(1)
     },
   )
+
+  // TODO: maybe also what happens if it does not work (notification)?
+  test(
+    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page on success',
+    { tag: ['@RISDEV-9887'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/literatur-unselbstaendig')
+
+      // when
+      // TODO: await the button?
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+
+      // then
+      await expect(page.getByRole('heading', { name: /KALU\d{10}/ })).toHaveCount(1)
+    },
+  )
 })
