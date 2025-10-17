@@ -21,7 +21,7 @@ const veroeffentlichungsjahr = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr">
+        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <YearInput
             id="veroeffentlichungsjahr"
             v-model="veroeffentlichungsjahr"
