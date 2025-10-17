@@ -246,7 +246,7 @@ test.describe('RubrikenPage - Normgeber - Bestandsdaten', () => {
       // given
 
       // when
-      await page.goto('/verwaltungsvorschriften/dokumentationseinheit//KSNR999999999/rubriken')
+      await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999/rubriken')
 
       // then
       await expect(page.getByText('Erste Jurpn')).toHaveCount(1)
