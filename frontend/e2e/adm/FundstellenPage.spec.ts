@@ -252,7 +252,7 @@ test.describe('FundstellenPage - Bestandsdaten', () => {
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR999999999')
 
       // then
-      await expect(page).toHaveURL(/\/documentUnit\/KSNR999999999\/fundstellen/)
+      await expect(page).toHaveURL(/\/dokumentationseinheit\/KSNR999999999\/fundstellen/)
     },
   )
 })
