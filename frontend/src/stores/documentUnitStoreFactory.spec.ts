@@ -47,7 +47,7 @@ describe('defineDocumentUnitStore', () => {
       execute,
     })
 
-    const store = defineDocumentUnitStore<MockDocument>(getFn, vi.fn())
+    const store = defineDocumentUnitStore(getFn, vi.fn())
 
     // when
     await store.load('does-not-exist')
@@ -76,7 +76,7 @@ describe('defineDocumentUnitStore', () => {
       execute,
     })
 
-    const store = defineDocumentUnitStore<MockDocument>(getFn, updateFn)
+    const store = defineDocumentUnitStore(getFn, updateFn)
     await store.load('123')
 
     // when
@@ -89,7 +89,7 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
   })
 
-  it('handles update error correctly', async () => {
+  it('updates the error state and leaves the original document untouched on a failed update', async () => {
     // given
     const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
     const putError = new Error('PUT failed')
@@ -107,7 +107,7 @@ describe('defineDocumentUnitStore', () => {
       execute,
     })
 
-    const store = defineDocumentUnitStore<MockDocument>(getFn, updateFn)
+    const store = defineDocumentUnitStore(getFn, updateFn)
     await store.load('123')
 
     // when
@@ -120,13 +120,15 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
   })
 
-  it('returns false when update is called without a document', async () => {
-    const store = defineDocumentUnitStore<MockDocument>(vi.fn(), vi.fn())
+  it('calling update returns false when no document is stored and state remains unchanged', async () => {
+    const store = defineDocumentUnitStore(vi.fn(), vi.fn())
 
     const success = await store.update()
 
     expect(success).toBe(false)
     expect(store.isLoading.value).toBe(false)
+    expect(store.error.value).toBeNull()
+    expect(store.documentUnit.value).toBeNull()
   })
 
   it('clears document unit on unload', async () => {
@@ -138,13 +140,20 @@ describe('defineDocumentUnitStore', () => {
       execute,
     })
 
-    const store = defineDocumentUnitStore<MockDocument>(getFn, vi.fn())
+    const store = defineDocumentUnitStore(getFn, vi.fn())
+
+    // when
     await store.load('1')
+
+    // then
+    expect(store.documentUnit.value).toEqual(mockDoc)
 
     // when
     store.unload()
 
     // then
     expect(store.documentUnit.value).toBeNull()
+    expect(store.isLoading.value).toBe(false)
+    expect(store.error.value).toBeNull()
   })
 })

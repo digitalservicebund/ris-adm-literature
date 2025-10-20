@@ -1,7 +1,5 @@
 import { ref } from 'vue'
 import type { UseFetchReturn } from '@vueuse/core'
-import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -10,7 +8,7 @@ import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
  * for different document types (e.g. ADM, ULI, SLI). It expects two composable
  * functions (`getFn` and `updateFn`) that perform the actual API operations.
  *
- * @template T - The document model (e.g. AdmDocumentationUnit).
+ * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
  * @param getFn - A function that retrieves a document by its number.
  *                Must return an object conforming to `UseFetchReturn<T>`.
@@ -26,11 +24,11 @@ import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
-export function defineDocumentUnitStore<T extends AdmDocumentationUnit | UliDocumentationUnit>(
-  getFn: (documentNumber: string) => UseFetchReturn<T>,
-  updateFn: (doc: T) => UseFetchReturn<T>,
+export function defineDocumentUnitStore<DocumentationUnit>(
+  getFn: (documentNumber: string) => UseFetchReturn<DocumentationUnit>,
+  updateFn: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>,
 ) {
-  const documentUnit = ref<T | null>(null)
+  const documentUnit = ref<DocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
 

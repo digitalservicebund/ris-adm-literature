@@ -7,13 +7,12 @@ import InputField from '@/components/input/InputField.vue'
 import TextAreaInput from '@/components/input/TextAreaInput.vue'
 import SideToggle from '@/components/SideToggle.vue'
 import { OpeningDirection } from '@/components/enumDisplayMode'
-import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { useExtraContentSidePanelStore } from '@/stores/extraContentSidePanelStore'
 import { useRoute } from 'vue-router'
-import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
+import type { DocumentationUnit } from '@/domain/documentUnit'
 
 const props = defineProps<{
-  documentUnit?: AdmDocumentationUnit | UliDocumentationUnit
+  documentUnit?: DocumentationUnit
   showEditButton?: boolean
   hidePanelModeBar?: boolean
   sidePanelShortcut?: string
