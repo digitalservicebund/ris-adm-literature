@@ -3,6 +3,7 @@ import { type Component, computed } from 'vue'
 import IconChevronLeft from '~icons/ic/baseline-chevron-left'
 import IconChevronRight from '~icons/ic/baseline-chevron-right'
 import ToolTip from '@/components/ToolTip.vue'
+import { OpeningDirection } from '@/components/enumDisplayMode'
 
 interface Props {
   isExpanded?: boolean
@@ -35,19 +36,12 @@ const classes = computed(() => ({
 
 const buttonClasses = computed(() => ({
   'right-0 -mr-16': props.openingDirection == OpeningDirection.RIGHT,
-  'left-0 -ml-16': props.openingDirection == OpeningDirection.LEFT,
+  'left-0 -ml-24': props.openingDirection == OpeningDirection.LEFT,
   [props.customButtonClasses]: props.customButtonClasses,
 }))
 
 const toggle = () => {
   emit('update:isExpanded', !props.isExpanded)
-}
-</script>
-
-<script lang="ts">
-export enum OpeningDirection {
-  LEFT = 'left',
-  RIGHT = 'right',
 }
 </script>
 
