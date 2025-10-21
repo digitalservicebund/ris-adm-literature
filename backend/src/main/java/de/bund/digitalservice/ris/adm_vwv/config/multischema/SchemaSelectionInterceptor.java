@@ -9,9 +9,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/**
+ * Intercepts incoming HTTP requests to select the appropriate database schema for the current request.
+ *
+ */
 @Component
 public class SchemaSelectionInterceptor implements HandlerInterceptor {
 
+  /**
+   * Selects and sets the database schema for the current request based on the authenticated user's document type.
+   *
+   * <p>If the user is authenticated and the principal is an instance of {@link UserDocumentDetails}, the schema is
+   * derived from the document type. Otherwise, it defaults to {@link SchemaType#ADM}.</p>
+   *
+   * @param request the current HTTP request
+   * @param response the current HTTP response
+   * @param handler the chosen handler to execute
+   * @return always {@code true} to continue the processing chain
+   */
   @Override
   public boolean preHandle(
     @NonNull HttpServletRequest request,
@@ -35,6 +50,17 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     return true;
   }
 
+  /**
+   * Cleans up the schema context after the request has been processed.
+   *
+   * <p>Removes the schema from {@link SchemaContextHolder} to prevent leaking ThreadLocal state
+   * across requests.</p>
+   *
+   * @param request the current HTTP request
+   * @param response the current HTTP response
+   * @param handler the executed handler
+   * @param ex any exception thrown on handler execution, if any
+   */
   @Override
   public void afterCompletion(
     @NonNull HttpServletRequest request,
