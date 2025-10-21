@@ -31,8 +31,8 @@ public class DataSourceConfig {
    * @return Properties bound from 'spring.datasource.lit'.
    */
   @Bean
-  @ConfigurationProperties("spring.datasource.literature")
-  public DataSourceProperties literatureDataSourceProperties() {
+  @ConfigurationProperties("spring.datasource.lit")
+  public DataSourceProperties litDataSourceProperties() {
     return new DataSourceProperties();
   }
 
@@ -53,6 +53,6 @@ public class DataSourceConfig {
    */
   @Bean(name = "litDataSource")
   public DataSource litDataSource() {
-    return literatureDataSourceProperties().initializeDataSourceBuilder().build();
+    return litDataSourceProperties().initializeDataSourceBuilder().build();
   }
 }

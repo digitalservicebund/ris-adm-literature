@@ -38,16 +38,12 @@ s3:
 
 
 database:
-  host: localhost
-  port: 5432
-  database: ris_adm_literature
-  user: test
-  password: test
+  host: ${DB_HOST:localhost}
+  port: ${DB_PORT:5432}
+  database: ${DB_NAME:ris_adm_literature}
+  user: ${DB_USER:test}
+  password: ${DB_PASS:test}
+  adm_schema: ${ADM_SCHEMA:adm}
+  lit_schema: ${LIT_SCHEMA:lit}
 
-adm:
-  database:
-    schema: adm
 
-literature:
-  database:
-    schema: literature
