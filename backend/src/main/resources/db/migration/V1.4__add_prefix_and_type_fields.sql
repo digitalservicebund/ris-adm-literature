@@ -24,15 +24,15 @@ WHERE prefix IS NULL;
 -- ### Backfill 'documentation_unit' table ###
 -- Backfill type
 UPDATE documentation_unit
-SET documentation_unit_type = 'ADMINISTRATIVE'
+SET documentation_unit_type = 'VERWALTUNGSVORSCHRIFTEN'
 WHERE SUBSTRING(document_number FROM 3 FOR 2) = 'NR' AND documentation_unit_type IS NULL;
 
 UPDATE documentation_unit
-SET documentation_unit_type = 'LITERATURE_DEPENDENT'
+SET documentation_unit_type = 'LITERATUR_UNSELBSTSTAENDIG'
 WHERE SUBSTRING(document_number FROM 3 FOR 2) = 'LU' AND documentation_unit_type IS NULL;
 
 UPDATE documentation_unit
-SET documentation_unit_type = 'LITERATURE_INDEPENDENT'
+SET documentation_unit_type = 'LITERATUR_SELBSTSTAENDIG'
 WHERE SUBSTRING(document_number FROM 3 FOR 2) = 'LS' AND documentation_unit_type IS NULL;
 
 -- Backfill office
