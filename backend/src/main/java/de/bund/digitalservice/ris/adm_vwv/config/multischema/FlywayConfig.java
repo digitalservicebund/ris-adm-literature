@@ -7,14 +7,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Manages the Flyway database migrations for the multi-schema setup.
+ * <p>
+ * This class provides a manual configuration to replace the default
+ * {@link org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration},
+ * which was excluded. It ensures that the same set of migrations is
+ * applied to both the 'adm' and 'lit' datasources.
+ */
 @Configuration
 public class FlywayConfig {
 
-  private static final String MIGRATION_LOCATION = "classpath:db/migration";
+  private static final String MIGRATION_LOCATION = "classpath:db.migration";
 
   /**
    * Defines the Flyway configuration for the ADM schema.
    * This is NOT a bean, just a private helper method.
+   *
+   * @param admDataSource The 'adm' data source.
+   * @param admSchema The name of the 'adm' schema.
+   * @return A configured {@link Flyway} instance for the 'adm' schema.
    */
   private Flyway createFlywayAdm(DataSource admDataSource, String admSchema) {
     return Flyway.configure()
@@ -28,6 +40,10 @@ public class FlywayConfig {
   /**
    * Defines the Flyway configuration for the LIT schema.
    * This is NOT a bean, just a private helper method.
+   *
+   * @param litDataSource The 'lit' data source.
+   * @param litSchema The name of the 'lit' schema.
+   * @return A configured {@link Flyway} instance for the 'lit' schema.
    */
   private Flyway createFlywayLit(DataSource litDataSource, String litSchema) {
     return Flyway.configure()
@@ -39,15 +55,27 @@ public class FlywayConfig {
   }
 
   /**
-   * This bean is the ONLY migration-related bean.
-   * It calls the private methods to create and run the migrations.
+   * Creates and runs the Flyway migrations for both schemas.
+   * <p>
+   * This bean acts as the trigger for the database migrations. It calls the
+   * private helper methods to configure and execute {@link Flyway#migrate()}
+   * for both the 'adm' and 'lit' datasources.
+   * <p>
+   * The {@link RoutingDataSourceConfig} is configured to {@link org.springframework.context.annotation.DependsOn}
+   * this bean, ensuring migrations complete before the main routing data source is used by JPA.
+   *
+   * @param admDataSource The {@link DataSource} for the 'adm' schema.
+   * @param admSchema The schema name for 'adm', injected from properties.
+   * @param litDataSource The {@link DataSource} for the 'lit' schema.
+   * @param litSchema The schema name for 'lit', injected from properties.
+   * @return A dummy {@link Object} to satisfy bean creation; its value is not used.
    */
   @Bean
   public Object flywayInitializer(
     @Qualifier("admDataSource") DataSource admDataSource,
-    @Value("${database.adm_schema}") String admSchema,
+    @Value("${database.schema:adm}") String admSchema, // Use the 'database.schema' property
     @Qualifier("litDataSource") DataSource litDataSource,
-    @Value("${database.lit_schema}") String litSchema
+    @Value("${literature.database.schema:lit}") String litSchema // Use the 'literature.database.schema' property
   ) {
     // Call the private methods to get the Flyway instances and migrate
     createFlywayAdm(admDataSource, admSchema).migrate();
