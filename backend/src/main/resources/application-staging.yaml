@@ -4,9 +4,6 @@ spring:
     hibernate:
       ddl-auto: validate
 
-  datasource:
-    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
-
 management:
   endpoint:
     health:
