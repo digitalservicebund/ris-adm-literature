@@ -1,4 +1,4 @@
-[![CI Pipeline](https://github.com/digitalservicebund/ris-adm-vwv/actions/workflows/pipeline.yml/badge.svg)](https://github.com/digitalservicebund/ris-adm-vwv/actions/workflows/pipeline.yml)
+[![CI Pipeline](https://github.com/digitalservicebund/ris-adm-literature/actions/workflows/pipeline.yml/badge.svg)](https://github.com/digitalservicebund/ris-adm-literature/actions/workflows/pipeline.yml)
 
 ---
 
