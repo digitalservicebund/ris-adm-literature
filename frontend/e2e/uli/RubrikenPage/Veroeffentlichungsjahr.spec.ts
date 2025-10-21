@@ -38,7 +38,7 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr (with mocked api route)', (
   })
 
   test(
-    'Shows validation error for an incomplete or invalid year',
+    'Shows validation error for an incomplete or invalid year, only numbers are accepted',
     { tag: ['@RISDEV-9372'] },
     async ({ page }) => {
       // when
@@ -57,6 +57,13 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr (with mocked api route)', (
 
       // then
       await expect(page.getByText('Kein valides Jahr')).toBeVisible()
+
+      // when
+      await yearInput.clear()
+      await yearInput.fill('year')
+
+      // then
+      await expect(yearInput).toHaveValue('____')
     },
   )
 })
