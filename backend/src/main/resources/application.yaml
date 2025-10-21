@@ -12,29 +12,20 @@ spring:
 
   datasource:
     adm:
-      url: jdbc:postgresql://${database.host}:${database.port}/${database.database}?currentSchema=${database.adm_schema}
-      username: ${database.user}
-      password: ${database.password}
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm}
+      username: ${adm.database.user:test}
+      password: ${adm.database.password:test}
       driver-class-name: org.postgresql.Driver
     lit:
-      url: jdbc:postgresql://${database.host}:${database.port}/${database.database}?currentSchema=${database.lit_schema}
-      username: ${database.user}
-      password: ${database.password}
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:lit}
+      username: ${lit.database.user:test}
+      password: ${lit.database.user:test}
       driver-class-name: org.postgresql.Driver
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${oauth2.issuer-uri:http://localhost:8443/realms/ris}
-
-database:
-  host: ${DB_HOST:localhost}
-  port: ${DB_PORT:5432}
-  database: ${DB_NAME:ris_adm_literature}
-  user: ${DB_USER:test}
-  password: ${DB_PASS:test}
-  adm_schema: ${ADM_SCHEMA:adm}
-  lit_schema: ${LIT_SCHEMA:lit}
 
 management:
   endpoint:

@@ -21,9 +21,8 @@ test.describe('StartPage ULI', () => {
     },
   )
 
-  // TODO: maybe also what happens if it does not work (notification)?
   test(
-    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page on success',
+    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page on success, route shows "/dokumentationseinheit/"',
     { tag: ['@RISDEV-9887'] },
     async ({ page }) => {
       // given
@@ -34,6 +33,7 @@ test.describe('StartPage ULI', () => {
 
       // then
       await expect(page.getByRole('heading', { name: /KALU\d{10}/ })).toHaveCount(1)
+      expect(page.url()).toContain('/dokumentationseinheit/')
     },
   )
 })

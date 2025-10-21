@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
           .license(
             new License()
               .name("GPL-3.0 license")
-              .url("https://github.com/digitalservicebund/ris-adm-vwv/blob/main/LICENSE")
+              .url("https://github.com/digitalservicebund/ris-adm-literature/blob/main/LICENSE")
           )
       );
   }

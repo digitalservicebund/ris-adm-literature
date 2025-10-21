@@ -3,17 +3,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-#  datasource:
-#   url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm_vwv}
 
-database:
-  host: ${DB_HOST:your-staging-db-host.com}
-  port: ${DB_PORT:5432}
-  database: ${DB_NAME:ris_adm_literature_staging}
-  user: ${DB_USER:staging_user}
-  password: ${DB_PASS:staging_password}
-  adm_schema: ${ADM_SCHEMA:adm_vwv}
-  lit_schema: ${LIT_SCHEMA:lit_vwv}
+  datasource:
+    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
 
 management:
   endpoint:
