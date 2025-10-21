@@ -10,7 +10,7 @@ Accepted
 
 _[The issue motivating this decision, and any context that influences or constrains the decision.}_
 
-With the introduction of ahttps://github.com/digitalservicebund/ris-adm-vwv/pull/221 backend, our code setup has changed significantly and we need to agree to how we approach testing.
+With the introduction of a backend, our code setup has changed significantly and we need to agree to how we approach testing.
 
 The needs of our team wrt. testing are as follows:
 
