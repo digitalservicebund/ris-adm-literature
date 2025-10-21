@@ -44,11 +44,15 @@ class ApplicationRoleTest {
 
     private static Stream<Arguments> provideRoleAndItsProperties() {
       return Stream.of(
-        Arguments.of(ApplicationRole.ADMINISTRATIVE, "adm_user", DocumentTypeCode.ADMINISTRATIVE),
+        Arguments.of(
+          ApplicationRole.ADMINISTRATIVE,
+          "adm_user",
+          DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
+        ),
         Arguments.of(
           ApplicationRole.LITERATURE,
           "literature_user",
-          DocumentTypeCode.LITERATURE_DEPENDENT
+          DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
         )
       );
     }

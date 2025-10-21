@@ -17,7 +17,7 @@ public class WithMockAdmUserSecurityContextFactory
 
     var principal = new UserDocumentDetails(
       DocumentationOffice.BSG,
-      DocumentTypeCode.ADMINISTRATIVE
+      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
     );
 
     var auth = new UsernamePasswordAuthenticationToken(principal, "password");

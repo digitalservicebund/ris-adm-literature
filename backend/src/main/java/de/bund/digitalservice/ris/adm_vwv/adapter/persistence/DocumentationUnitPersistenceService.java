@@ -263,6 +263,12 @@ public class DocumentationUnitPersistenceService {
         documentationUnitIndex.documentationUnitEntity
       );
     }
+    documentationUnitIndexEntity.setDocumentationUnitType(
+      documentationUnitIndex.getDocumentationUnitType()
+    );
+    documentationUnitIndexEntity.setDocumentationOffice(
+      documentationUnitIndex.getDocumentationOffice()
+    );
     documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
     documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
     documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
@@ -292,6 +298,10 @@ public class DocumentationUnitPersistenceService {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
+    documentationUnitIndex.setDocumentationUnitType(
+      documentationUnitEntity.getDocumentationUnitType()
+    );
+    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     if (documentationUnitEntity.isEmpty()) {
       // We save an empty entry so the document still appears on overview page
       return documentationUnitIndex;
@@ -330,6 +340,10 @@ public class DocumentationUnitPersistenceService {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
+    documentationUnitIndex.setDocumentationUnitType(
+      documentationUnitEntity.getDocumentationUnitType()
+    );
+    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     documentationUnitIndex.setLangueberschrift(documentationUnitContent.langueberschrift());
     if (documentationUnitContent.fundstellen() != null) {
       documentationUnitIndex.setFundstellen(
@@ -369,6 +383,8 @@ public class DocumentationUnitPersistenceService {
   private static class DocumentationUnitIndex {
 
     private final DocumentationUnitEntity documentationUnitEntity;
+    private DocumentTypeCode documentationUnitType;
+    private DocumentationOffice documentationOffice;
     private String langueberschrift;
     private String fundstellen;
     private String zitierdaten;

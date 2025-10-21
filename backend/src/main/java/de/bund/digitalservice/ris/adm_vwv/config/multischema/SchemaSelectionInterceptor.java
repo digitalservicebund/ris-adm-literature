@@ -26,8 +26,8 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
       authentication != null && authentication.getPrincipal() instanceof UserDocumentDetails details
     ) {
       schemaToUse = switch (details.type()) {
-        case ADMINISTRATIVE -> SchemaType.ADM;
-        case LITERATURE_DEPENDENT, LITERATURE_INDEPENDENT -> SchemaType.LIT;
+        case VERWALTUNGSVORSCHRIFTEN -> SchemaType.ADM;
+        case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
       };
     }
 

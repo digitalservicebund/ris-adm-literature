@@ -49,7 +49,7 @@ class SecurityConfigurationTest {
 
     UserDocumentDetails details = (UserDocumentDetails) token.getPrincipal();
     assertThat(details.office()).isEqualTo(DocumentationOffice.BSG);
-    assertThat(details.type()).isEqualTo(DocumentTypeCode.ADMINISTRATIVE);
+    assertThat(details.type()).isEqualTo(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
   }
 
   @Test

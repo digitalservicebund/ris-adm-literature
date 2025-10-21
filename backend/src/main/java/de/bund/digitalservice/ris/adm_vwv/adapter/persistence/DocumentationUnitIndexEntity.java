@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
@@ -31,4 +33,13 @@ public class DocumentationUnitIndexEntity {
 
   @Basic
   private String zitierdaten;
+
+  @Enumerated(EnumType.STRING)
+  @Basic(optional = false)
+  private DocumentTypeCode documentationUnitType;
+
+  @Enumerated(EnumType.STRING)
+  @Basic(optional = false)
+  @Column(name = "documentation_office")
+  private DocumentationOffice documentationOffice;
 }
