@@ -18,10 +18,6 @@ spring:
     init:
       mode: never
 
-logging:
-  level:
-    org.flywaydb: DEBUG
-
 cronjob.DocumentationUnitIndexJob: "-"
 
 frontend:
