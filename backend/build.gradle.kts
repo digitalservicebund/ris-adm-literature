@@ -81,11 +81,7 @@ dependencies {
   implementation("io.sentry:sentry-logback:$sentryVersion")
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
-  implementation("software.amazon.awssdk:s3") {
-    // CVE-2025-58057
-    exclude("io.netty", "netty-codec")
-  }
-  implementation("io.netty:netty-codec:4.2.7.Final")
+  implementation("software.amazon.awssdk:s3")
   implementation("org.jsoup:jsoup:$jsoupVersion")
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
