@@ -289,7 +289,11 @@ public class DocumentationUnitPersistenceService {
       log.debug("Stacktrace:", e);
     }
     // We save an empty entry so the document still appears on overview page
-    return new DocumentationUnitIndex(documentationUnitEntity);
+    DocumentationUnitIndex fallbackIndex = new DocumentationUnitIndex(documentationUnitEntity);
+    fallbackIndex.setDocumentationUnitType(documentationUnitEntity.getDocumentationUnitType());
+    fallbackIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
+    // Content fields (langueberschrift, etc.) remain null as intended on error
+    return fallbackIndex;
   }
 
   private DocumentationUnitIndex createIndex(
