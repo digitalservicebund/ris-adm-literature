@@ -3,59 +3,65 @@ CREATE SCHEMA IF NOT EXISTS adm;
 CREATE SCHEMA IF NOT EXISTS lit;
 
 -- === Create Tables for ADM Schema ===
-CREATE TABLE IF NOT EXISTS adm.documentation_unit (
-                                                      id UUID PRIMARY KEY,
-                                                      document_number VARCHAR(255) NOT NULL UNIQUE,
-                                                      json TEXT,
-                                                      xml TEXT,
-                                                      documentation_unit_type VARCHAR(255) NOT NULL,
-                                                      documentation_office VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS adm.documentation_unit
+(
+    id                      UUID PRIMARY KEY,
+    document_number         VARCHAR(255) NOT NULL UNIQUE,
+    json                    TEXT,
+    xml                     TEXT,
+    documentation_unit_type VARCHAR(255) NOT NULL,
+    documentation_office    VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS adm.documentation_unit_index (
-                                                            id UUID PRIMARY KEY,
-                                                            documentation_unit_id UUID NOT NULL UNIQUE REFERENCES adm.documentation_unit(id),
-                                                            langueberschrift TEXT,
-                                                            fundstellen TEXT,
-                                                            zitierdaten TEXT,
-                                                            documentation_unit_type VARCHAR(255) NOT NULL,
-                                                            documentation_office VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS adm.documentation_unit_index
+(
+    id                      UUID PRIMARY KEY,
+    documentation_unit_id   UUID         NOT NULL UNIQUE REFERENCES adm.documentation_unit (id),
+    langueberschrift        TEXT,
+    fundstellen             TEXT,
+    zitierdaten             TEXT,
+    documentation_unit_type VARCHAR(255) NOT NULL,
+    documentation_office    VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS adm.document_number (
-                                                   id UUID PRIMARY KEY,
-                                                   latest VARCHAR(255) NOT NULL,
-                                                   year SMALLINT NOT NULL,
-                                                   prefix VARCHAR(16) NOT NULL,
-                                                   CONSTRAINT uk_adm_document_number_prefix_year UNIQUE (prefix, year)
+CREATE TABLE IF NOT EXISTS adm.document_number
+(
+    id     UUID PRIMARY KEY,
+    latest VARCHAR(255) NOT NULL,
+    year   SMALLINT     NOT NULL,
+    prefix VARCHAR(16)  NOT NULL,
+    CONSTRAINT uk_adm_document_number_prefix_year UNIQUE (prefix, year)
 );
 
 -- === Create Identical Tables for LIT Schema ===
-CREATE TABLE IF NOT EXISTS lit.documentation_unit (
-                                                      id UUID PRIMARY KEY,
-                                                      document_number VARCHAR(255) NOT NULL UNIQUE,
-                                                      json TEXT,
-                                                      xml TEXT,
-                                                      documentation_unit_type VARCHAR(255) NOT NULL,
-                                                      documentation_office VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS lit.documentation_unit
+(
+    id                      UUID PRIMARY KEY,
+    document_number         VARCHAR(255) NOT NULL UNIQUE,
+    json                    TEXT,
+    xml                     TEXT,
+    documentation_unit_type VARCHAR(255) NOT NULL,
+    documentation_office    VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS lit.documentation_unit_index (
-                                                            id UUID PRIMARY KEY,
-                                                            documentation_unit_id UUID NOT NULL UNIQUE REFERENCES lit.documentation_unit(id),
-                                                            langueberschrift TEXT,
-                                                            fundstellen TEXT,
-                                                            zitierdaten TEXT,
-                                                            documentation_unit_type VARCHAR(255) NOT NULL,
-                                                            documentation_office VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS lit.documentation_unit_index
+(
+    id                      UUID PRIMARY KEY,
+    documentation_unit_id   UUID         NOT NULL UNIQUE REFERENCES lit.documentation_unit (id),
+    langueberschrift        TEXT,
+    fundstellen             TEXT,
+    zitierdaten             TEXT,
+    documentation_unit_type VARCHAR(255) NOT NULL,
+    documentation_office    VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS lit.document_number (
-                                                   id UUID PRIMARY KEY,
-                                                   latest VARCHAR(255) NOT NULL,
-                                                   year SMALLINT NOT NULL,
-                                                   prefix VARCHAR(16) NOT NULL,
-                                                   CONSTRAINT uk_lit_document_number_prefix_year UNIQUE (prefix, year)
+CREATE TABLE IF NOT EXISTS lit.document_number
+(
+    id     UUID PRIMARY KEY,
+    latest VARCHAR(255) NOT NULL,
+    year   SMALLINT     NOT NULL,
+    prefix VARCHAR(16)  NOT NULL,
+    CONSTRAINT uk_lit_document_number_prefix_year UNIQUE (prefix, year)
 );
 
 
@@ -122,7 +128,7 @@ WITH created as (
                   <ris:referenceNumbers>
                     <ris:referenceNumber>AX-Y12345</ris:referenceNumber>
                     <ris:referenceNumber>XX</ris:referenceNumber>
-                  </TOC>ris:referenceNumbers>
+                  </ris:referenceNumbers>
                   <ris:activeReferences>
                     <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 1a" position="Abs 1"/>
                     <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 2" position="Abs 6"/>
@@ -154,12 +160,18 @@ WITH created as (
           </akn:doc>
         </akn:akomaNtoso>',
                'VERWALTUNGSVORSCHRIFTEN', -- documentation_unit_type
-               'BSG'             -- documentation_office (based on KS prefix)
+               'BSG'                      -- documentation_office (based on KS prefix)
         FROM generate_series(999999999, 999999899, -1) AS s(running_number)
         ON conflict do nothing
         returning id as created_documentation_unit_id)
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten, documentation_unit_type, documentation_office)
-SELECT gen_random_uuid(), created.created_documentation_unit_id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01',
+INSERT
+INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                   documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       created.created_documentation_unit_id,
+       '1. Bekanntmachung zum XML-Testen in NeuRIS VwV',
+       'Das Periodikum 2021, Seite 15',
+       '2025-05-05$µµµµµ$2025-06-01',
        'VERWALTUNGSVORSCHRIFTEN',
        'BSG'
 FROM created
@@ -171,37 +183,33 @@ INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit
 SELECT gen_random_uuid(), 'KSNR000000001', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
 WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000001');
 
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten, documentation_unit_type, documentation_office)
-SELECT
-    gen_random_uuid(),
-    du.id,
-    'Alpha Global Setup Document',
-    'BGB 123$µµµµµ$VWV xyz',
-    '2024-06-17$µµµµµ$1950-01-01',
-    'VERWALTUNGSVORSCHRIFTEN',
-    'BSG'
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                          documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       du.id,
+       'Alpha Global Setup Document',
+       'BGB 123$µµµµµ$VWV xyz',
+       '2024-06-17$µµµµµ$1950-01-01',
+       'VERWALTUNGSVORSCHRIFTEN',
+       'BSG'
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000001'
-  AND NOT EXISTS (
-    SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
-);
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
 
 
 INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
 SELECT gen_random_uuid(), 'KSNR000000002', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
 WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000002');
 
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten, documentation_unit_type, documentation_office)
-SELECT
-    gen_random_uuid(),
-    du.id,
-    'Beta Global Setup Document',
-    'BGB 456',
-    '2024-06-18',
-    'VERWALTUNGSVORSCHRIFTEN',
-    'BSG'
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                          documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       du.id,
+       'Beta Global Setup Document',
+       'BGB 456',
+       '2024-06-18',
+       'VERWALTUNGSVORSCHRIFTEN',
+       'BSG'
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000002'
-  AND NOT EXISTS (
-    SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
-);
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
