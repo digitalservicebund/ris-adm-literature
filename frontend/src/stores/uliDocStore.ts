@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { defineDocumentUnitStore } from './documentUnitStoreFactory'
 import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
-import { useGetUliDocUnit, usePutUliDocUnit } from '@/services/documentUnitService'
+import { DocumentTypeCode } from '@/domain/documentType'
 
 export const useUliDocumentUnitStore = defineStore('uliDocumentUnit', () => {
-  return defineDocumentUnitStore<UliDocumentationUnit>(useGetUliDocUnit, usePutUliDocUnit)
+  return defineDocumentUnitStore<UliDocumentationUnit>(DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG)
 })
