@@ -69,8 +69,8 @@ You can manually deploy a feature branch to the Staging environment for testing.
 
 1.  **Build the Image:** Add the **`dev-env`** label to your pull request. This triggers a workflow to build and push a container image.
 
-2.  **Find the Image Tag:** In the completed GitHub Actions run, find the full image tag in the logs of the `build-frontend-image` or `build-backend-image` job. It will look similar to this: `ris-adm-vwv-frontend:65969a5aa2935dc8f7cdeffffdb0f8ca823b3ec3`.
+2.  **Find the Image Tag:** In the completed GitHub Actions run, find the full image tag in the logs of the `build-frontend-image` or `build-backend-image` job. It will look similar to this: `ris-adm-literature-backend:b33189fda5c7819df197a78e146fc20a75b65e64`.
 
 3.  **Deploy the Image:**
-  * Go to the [kustomization.yaml](https://github.com/digitalservicebund/ris-adm-vwv-infra/blob/main/manifests/overlays/staging/kustomization.yaml) file in the infrastructure repository.
+  * Go to the [kustomization.yaml](https://github.com/digitalservicebund/ris-adm-literature-infra/blob/main/manifests/overlays/staging/kustomization.yaml) file in the infrastructure repository.
   * Update the `newTag` value for the corresponding image with the tag you copied and commit the change.
