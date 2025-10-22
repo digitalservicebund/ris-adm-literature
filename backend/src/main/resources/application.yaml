@@ -17,7 +17,7 @@ spring:
       password: ${database.password:test}
       driver-class-name: org.postgresql.Driver
     literature:
-      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${literature.database.schema:literature}
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${literature.database.schema:lit}
       username: ${database.user:test}
       password: ${database.password:test}
       driver-class-name: org.postgresql.Driver
