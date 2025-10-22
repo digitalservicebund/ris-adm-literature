@@ -109,7 +109,7 @@ ALTER TABLE documentation_unit_index
 -- Update constraints on 'document_number' table
 -- Drop the old unique constraints
 ALTER TABLE document_number
-    DROP CONSTRAINT document_number_uc;
+DROP CONSTRAINT IF EXISTS document_number_uc;
 
 -- Unique constraint on 'prefix' and 'year'
 ALTER TABLE document_number
