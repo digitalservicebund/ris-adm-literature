@@ -1,11 +1,14 @@
 package de.bund.digitalservice.ris.adm_vwv.config;
 
+import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -64,17 +67,35 @@ public class LoggingConfig implements WebMvcConfigurer, HandlerInterceptor {
     @Nonnull Object handler,
     Exception ex
   ) {
-    String logMessage = String.format(
-      "method=%s uri=%s status=%d",
-      request.getMethod(),
-      request.getRequestURI(),
-      response.getStatus()
+    StringBuilder logMessage = new StringBuilder();
+    logMessage.append(
+      String.format(
+        "method=%s uri=%s status=%d",
+        request.getMethod(),
+        request.getRequestURI(),
+        response.getStatus()
+      )
     );
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (
+      authentication != null &&
+      authentication.getPrincipal() instanceof UserDocumentDetails(var office, var type)
+    ) {
+      if (type != null) {
+        logMessage.append(" documentationType=").append(type);
+      }
+      if (office != null) {
+        logMessage.append(" documentationOffice=").append(office);
+      }
+    }
+
+    String finalLogMessage = logMessage.toString();
 
     if (ex != null) {
       log.error("{} error='{}'", logMessage, ex.getMessage(), ex);
     } else {
-      log.info(logMessage);
+      log.info(finalLogMessage);
     }
   }
 }
