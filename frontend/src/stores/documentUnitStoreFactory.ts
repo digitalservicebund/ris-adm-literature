@@ -6,8 +6,7 @@ import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
  * Generic factory function for creating a document-unit store.
  *
  * This abstracts common CRUD logic (load, update, unload) so it can be reused
- * for different document types (e.g. ADM, ULI, SLI). It expects two composable
- * functions (`getFn` and `updateFn`) that perform the actual API operations.
+ * for different document types (e.g. ADM, ULI, SLI).
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
