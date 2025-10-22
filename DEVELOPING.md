@@ -58,7 +58,7 @@ For the required emails/passwords, please refer to the local keycloak configuati
 The backend uses a PostgreSQL database containing multiple schemas:
 * adm: Stores data related to administrative directives.
 * literature:  Stores data related to literature documents.
-* lookup_tables: Contains shared reference data (like institutions, regions, document types) accessed via views from the adm and lit schemas.
+* lookup_tables: Contains shared reference data (like institutions, regions) accessed via views from the adm and literature schemas.
 
 Both the adm and literature schemas have identical table structures but hold distinct sets of documents. The application dynamically routes database operations to the correct schema based on the logged-in user's context.
 
