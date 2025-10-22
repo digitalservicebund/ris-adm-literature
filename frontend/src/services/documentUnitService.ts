@@ -28,10 +28,8 @@ function useDocUnitFetch(url: MaybeRefOrGetter<string>, docTypeCode: DocumentTyp
     { headers: { 'X-Document-Type': docTypeCode as string } },
     {
       afterFetch: ({ data }) => {
-        if (!data) return { data }
-
         return {
-          data: transformers[docTypeCode](data),
+          data: data ? transformers[docTypeCode](data) : null,
         }
       },
       immediate: false,
@@ -44,10 +42,8 @@ export function usePutPublishAdmDocUnit(
 ): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`, {
     afterFetch: async ({ data }) => {
-      if (!data) return { data }
-
       return {
-        data: mapResponseToAdmDocUnit(data),
+        data: data ? mapResponseToAdmDocUnit(data) : null,
       }
     },
     immediate: false,
