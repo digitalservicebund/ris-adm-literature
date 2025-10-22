@@ -95,8 +95,8 @@ WITH created as (
             </akn:mainBody>
           </akn:doc>
         </akn:akomaNtoso>',
-               'VERWALTUNGSVORSCHRIFTEN', -- documentation_unit_type
-               'BSG'                      -- documentation_office (based on KS prefix)
+               'VERWALTUNGSVORSCHRIFTEN',
+               'BSG'
         FROM generate_series(999999999, 999999899, -1) AS s(running_number)
         ON conflict do nothing
         returning id as created_documentation_unit_id)
