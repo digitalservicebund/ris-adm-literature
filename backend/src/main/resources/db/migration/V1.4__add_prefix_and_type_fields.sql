@@ -35,6 +35,17 @@ UPDATE documentation_unit
 SET documentation_unit_type = 'LITERATUR_SELBSTSTAENDIG'
 WHERE SUBSTRING(document_number FROM 3 FOR 2) = 'LS' AND documentation_unit_type IS NULL;
 
+-- Log and default unmatched types
+DO $$
+DECLARE
+    rec RECORD;
+BEGIN
+    FOR rec IN SELECT id, document_number FROM documentation_unit WHERE documentation_unit_type IS NULL LOOP
+            RAISE NOTICE 'Defaulting documentation_unit_type to VERWALTUNGSVORSCHRIFTEN for document_number: % (ID: %)', rec.document_number, rec.id;
+        END LOOP;
+    UPDATE documentation_unit SET documentation_unit_type = 'VERWALTUNGSVORSCHRIFTEN' WHERE documentation_unit_type IS NULL;
+END $$;
+
 -- Backfill office
 UPDATE documentation_unit
 SET documentation_office = 'BAG'
@@ -56,6 +67,17 @@ UPDATE documentation_unit
 SET documentation_office = 'BVERWG'
 WHERE SUBSTRING(document_number FROM 1 FOR 2) = 'WB' AND documentation_office IS NULL;
 
+-- Log and default unmatched offices
+DO $$
+DECLARE
+    rec RECORD;
+BEGIN
+    FOR rec IN SELECT id, document_number FROM documentation_unit WHERE documentation_office IS NULL LOOP
+            RAISE NOTICE 'Defaulting documentation_office to BSG for document_number: % (ID: %)', rec.document_number, rec.id;
+        END LOOP;
+    UPDATE documentation_unit SET documentation_office = 'BSG' WHERE documentation_office IS NULL;
+END $$;
+
 
 -- Backfill 'documentation_unit_index' table
 UPDATE documentation_unit_index dui
@@ -67,7 +89,7 @@ WHERE dui.documentation_unit_id = du.id
   AND (dui.documentation_unit_type IS NULL OR dui.documentation_office IS NULL);
 
 
--- Add NOT NULL constraints
+-- Add constraints
 ALTER TABLE document_number
     ALTER COLUMN prefix SET NOT NULL;
 
@@ -84,7 +106,7 @@ ALTER TABLE documentation_unit_index
     ALTER COLUMN documentation_office SET NOT NULL;
 
 
--- ### Update constraints on 'document_number' table ###
+-- Update constraints on 'document_number' table
 -- Drop the old unique constraints
 ALTER TABLE document_number
     DROP CONSTRAINT document_number_uc;
