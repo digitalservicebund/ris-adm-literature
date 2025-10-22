@@ -12,14 +12,14 @@ spring:
 
   datasource:
     adm:
-      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
-      username: ${database.user:test}
-      password: ${database.password:test}
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm}
+      username: ${adm.database.user:test}
+      password: ${adm.database.password:test}
       driver-class-name: org.postgresql.Driver
     literature:
       url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${literature.database.schema:literature}
-      username: ${database.user:test}
-      password: ${database.password:test}
+      username: ${literature.database.user:test}
+      password: ${literature.database.password:test}
       driver-class-name: org.postgresql.Driver
   security:
     oauth2:
