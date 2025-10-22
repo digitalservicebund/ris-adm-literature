@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  *
  */
 @Component
+@Slf4j
 public class SchemaSelectionInterceptor implements HandlerInterceptor {
 
   /**
@@ -45,7 +47,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
         case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
       };
     }
-
+    log.info("Using schema {} for request", schemaToUse);
     SchemaContextHolder.setSchema(schemaToUse);
     return true;
   }
