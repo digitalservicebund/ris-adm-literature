@@ -22,7 +22,7 @@ function renderComponent(normReferences?: NormReference[]) {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: <AdmDocumentationUnit>{
                     documentNumber: '1234567891234',
                     normReferences: normReferences ?? [],

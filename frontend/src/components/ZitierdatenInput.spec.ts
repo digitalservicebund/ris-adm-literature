@@ -18,7 +18,7 @@ function renderComponent() {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',
@@ -85,7 +85,7 @@ describe('Zitierdatum', () => {
           [
             createTestingPinia({
               initialState: {
-                admDocUnitStore: {
+                admDocumentUnit: {
                   documentUnit: {
                     id: '123',
                     documentNumber: '1234567891234',

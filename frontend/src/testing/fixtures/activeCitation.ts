@@ -1,6 +1,7 @@
 export const activeCitationFixture = {
   uuid: crypto.randomUUID(),
   court: {
+    id: 'courtTestId',
     type: 'type1',
     location: 'location1',
     label: 'label1',

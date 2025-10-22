@@ -4,13 +4,14 @@ import { useAuthentication } from '@/services/auth'
 import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
 import AbgabePage from './routes/adm/documentUnit/[documentNumber]/AbgabePage.vue'
-import RubrikenPage from './routes/adm/documentUnit/[documentNumber]/RubrikenPage.vue'
+import AdmRubriken from './routes/adm/documentUnit/[documentNumber]/RubrikenPage.vue'
 import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/FundstellenPage.vue'
 import NewDocument from '@/routes/NewDocument.vue'
 import Forbidden from '@/routes/Forbidden.vue'
 import StartPageTemplate from './routes/StartPage.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
+import UliRubriken from './routes/uli/RubrikenPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -59,6 +60,7 @@ const router = createRouter({
           path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.EDIT,
           name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.EDIT,
           component: EditDocument,
+          meta: { storeId: 'admDocumentUnit' },
           props: true,
           redirect: { name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN },
           children: [
@@ -72,7 +74,7 @@ const router = createRouter({
               path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.RUBRIKEN,
               name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
               props: true,
-              component: RubrikenPage,
+              component: AdmRubriken,
             },
             {
               path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.ABGABE,
@@ -105,13 +107,14 @@ const router = createRouter({
           path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.EDIT,
           name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.EDIT,
           component: EditDocument,
+          meta: { storeId: 'uliDocumentUnit' },
           props: true,
           redirect: { name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN },
           children: [
             {
               path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.RUBRIKEN,
               name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN,
-              component: { template: '<div />' },
+              component: UliRubriken,
             },
           ],
         },
