@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
@@ -41,8 +41,8 @@ class SchemaSelectionInterceptorTest {
 
     boolean proceed = interceptor.preHandle(request, response, new Object());
 
-    assertTrue(proceed);
-    assertEquals(SchemaType.ADM, SchemaContextHolder.getSchema());
+    assertThat(proceed).isTrue();
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.ADM);
   }
 
   @Test
@@ -51,7 +51,7 @@ class SchemaSelectionInterceptorTest {
 
     interceptor.preHandle(request, response, new Object());
 
-    assertEquals(SchemaType.ADM, SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.ADM);
   }
 
   @Test
@@ -60,7 +60,7 @@ class SchemaSelectionInterceptorTest {
 
     interceptor.preHandle(request, response, new Object());
 
-    assertEquals(SchemaType.LIT, SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.LIT);
   }
 
   @Test
@@ -69,7 +69,7 @@ class SchemaSelectionInterceptorTest {
 
     interceptor.preHandle(request, response, new Object());
 
-    assertEquals(SchemaType.LIT, SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.LIT);
   }
 
   @Test
@@ -78,7 +78,7 @@ class SchemaSelectionInterceptorTest {
 
     interceptor.afterCompletion(request, response, new Object(), null);
 
-    assertNull(SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isNull();
   }
 
   private void mockAuthWithType(DocumentTypeCode type) {

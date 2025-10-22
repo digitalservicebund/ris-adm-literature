@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,9 @@ class SchemaRoutingDataSourceTest {
     SchemaRoutingDataSource ds = new SchemaRoutingDataSource();
 
     SchemaContextHolder.setSchema(SchemaType.ADM);
-    assertEquals(SchemaType.ADM, ds.determineCurrentLookupKey());
+    assertThat(ds.determineCurrentLookupKey()).isEqualTo(SchemaType.ADM);
 
     SchemaContextHolder.setSchema(SchemaType.LIT);
-    assertEquals(SchemaType.LIT, ds.determineCurrentLookupKey());
+    assertThat(ds.determineCurrentLookupKey()).isEqualTo(SchemaType.LIT);
   }
 }

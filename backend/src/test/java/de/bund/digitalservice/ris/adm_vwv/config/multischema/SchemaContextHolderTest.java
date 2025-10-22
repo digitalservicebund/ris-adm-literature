@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -15,23 +16,25 @@ class SchemaContextHolderTest {
   @Test
   void setAndGetSchema_returnsTheSameValue() {
     SchemaContextHolder.setSchema(SchemaType.ADM);
-    assertEquals(SchemaType.ADM, SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.ADM);
 
     SchemaContextHolder.setSchema(SchemaType.LIT);
-    assertEquals(SchemaType.LIT, SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.LIT);
   }
 
   @Test
   void clear_removesSchemaFromThreadLocal() {
     SchemaContextHolder.setSchema(SchemaType.ADM);
-    assertNotNull(SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isNotNull();
 
     SchemaContextHolder.clear();
-    assertNull(SchemaContextHolder.getSchema());
+    assertThat(SchemaContextHolder.getSchema()).isNull();
   }
 
   @Test
   void setSchema_null_throwsNPE() {
-    assertThrows(NullPointerException.class, () -> SchemaContextHolder.setSchema(null));
+    assertThatThrownBy(() -> SchemaContextHolder.setSchema(null)).isInstanceOf(
+      NullPointerException.class
+    );
   }
 }
