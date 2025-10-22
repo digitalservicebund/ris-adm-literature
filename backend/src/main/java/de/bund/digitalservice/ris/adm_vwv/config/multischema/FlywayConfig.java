@@ -75,7 +75,7 @@ public class FlywayConfig {
     @Qualifier("admDataSource") DataSource admDataSource,
     @Value("${adm.database.schema:adm}") String admSchema,
     @Qualifier("litDataSource") DataSource litDataSource,
-    @Value("${literature.database.schema:lit}") String litSchema
+    @Value("${literature.database.schema:literature}") String litSchema
   ) {
     // Call the private methods to get the Flyway instances and migrate
     createFlywayAdm(admDataSource, admSchema).migrate();
