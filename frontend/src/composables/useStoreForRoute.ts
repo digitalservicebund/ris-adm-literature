@@ -1,24 +1,26 @@
 import { useRoute } from 'vue-router'
 import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { useUliDocumentUnitStore } from '@/stores/uliDocStore'
+import { DocumentTypeCode } from '@/domain/documentType'
 
 const storeMap = {
-  admDocumentUnit: useAdmDocUnitStore,
-  uliDocumentUnit: useUliDocumentUnitStore,
+  [DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN]: useAdmDocUnitStore,
+  [DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG]: useUliDocumentUnitStore,
 } as const
 
-type StoreId = keyof typeof storeMap
+type StoreMap = typeof storeMap
 
 /**
  * Returns the Pinia store associated with the current route.
- * Requires route.meta.storeId to be set.
+ * Requires route.meta.documentTypeCode to be set.
  */
 export function useStoreForRoute<T>() {
   const route = useRoute()
-  const storeId = route.meta.storeId as StoreId
-  const factory = storeMap[storeId]
+  const documentTypeCode = route.meta.documentTypeCode as keyof StoreMap
+  const factory = storeMap[documentTypeCode]
 
-  if (!factory) throw new Error(`No store found for route meta.storeId="${storeId}"`)
+  if (!factory)
+    throw new Error(`No store found for route meta.documentTypeCode="${documentTypeCode}"`)
 
   return factory() as T
 }
