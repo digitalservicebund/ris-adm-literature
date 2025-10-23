@@ -62,9 +62,9 @@ spring:
     activate:
       on-profile: default
 
-sql:
-  init:
-    mode: always
+  sql:
+    init:
+      mode: always
 
 
 
