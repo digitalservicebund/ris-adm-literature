@@ -5,8 +5,9 @@ package de.bund.digitalservice.ris.adm_vwv.application;
  * each with a unique string prefix used for identification.
  */
 public enum DocumentTypeCode {
-  LITERATURE_DEPENDENT("LU"),
-  ADMINISTRATIVE("NR");
+  LITERATUR_SELBSTSTAENDIG("LS"),
+  LITERATUR_UNSELBSTSTAENDIG("LU"),
+  VERWALTUNGSVORSCHRIFTEN("NR");
 
   public final String prefix;
 

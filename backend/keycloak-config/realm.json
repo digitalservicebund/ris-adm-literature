@@ -111,6 +111,28 @@
       "groups": [
         "/literature/BAG"
       ]
+    },
+    {
+      "id": "test-sli-bsg",
+      "email": "testbsg@example.com",
+      "username": "testbsg",
+      "firstName": "bsg",
+      "lastName": "nachname",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "literature_user"
+      ],
+      "groups": [
+        "/literature/BSG"
+      ]
     }
   ],
   "groups": [

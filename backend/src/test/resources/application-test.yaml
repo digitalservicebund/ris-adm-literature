@@ -11,6 +11,12 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8443/realms/ris
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
 
 cronjob.DocumentationUnitIndexJob: "-"
 
@@ -29,3 +35,19 @@ s3:
         access-key-id: test
         access-key: test
         bucket-name: test
+
+
+database:
+  host: localhost
+  port: 5432
+  database: ris_adm_literature
+  user: test
+  password: test
+
+adm:
+  database:
+    schema: adm
+
+literature:
+  database:
+    schema: literature

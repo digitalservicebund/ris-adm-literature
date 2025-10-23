@@ -1,7 +1,10 @@
+CREATE SCHEMA IF NOT EXISTS adm;
+CREATE SCHEMA IF NOT EXISTS literature;
+
 -- Insert a test documentation unit xml. This file is only used in Spring Boot Profile "default".
 -- This inserts 100 documentation units for e2e tests to check on the search pagination
 WITH created as (
-    INSERT INTO documentation_unit (id, document_number, xml)
+    INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
         SELECT gen_random_uuid(),
                'KSNR' || s.running_number::text,
                '<?xml version="1.0" encoding="UTF-8"?>
@@ -10,8 +13,7 @@ WITH created as (
           <akn:doc name="offene-struktur">
             <akn:meta>
               <akn:identification source="attributsemantik-noch-undefiniert">
-                <!-- omitted -->
-              </akn:identification>
+                </akn:identification>
               <akn:classification source="attributsemantik-noch-undefiniert">
                 <akn:keyword showAs="Schlag" dictionary="attributsemantik-noch-undefiniert" value="Schlag"/>
                 <akn:keyword showAs="Wort" dictionary="attributsemantik-noch-undefiniert" value="Wort"/>
@@ -92,47 +94,58 @@ WITH created as (
               </akn:div>
             </akn:mainBody>
           </akn:doc>
-        </akn:akomaNtoso>'
+        </akn:akomaNtoso>',
+               'VERWALTUNGSVORSCHRIFTEN',
+               'BSG'
         FROM generate_series(999999999, 999999899, -1) AS s(running_number)
         ON conflict do nothing
         returning id as created_documentation_unit_id)
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT gen_random_uuid(), created.created_documentation_unit_id, '1. Bekanntmachung zum XML-Testen in NeuRIS VwV', 'Das Periodikum 2021, Seite 15', '2025-05-05$µµµµµ$2025-06-01' FROM created
+INSERT
+INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                   documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       created.created_documentation_unit_id,
+       '1. Bekanntmachung zum XML-Testen in NeuRIS VwV',
+       'Das Periodikum 2021, Seite 15',
+       '2025-05-05$µµµµµ$2025-06-01',
+       'VERWALTUNGSVORSCHRIFTEN',
+       'BSG'
+FROM created
 ON conflict do nothing;
 
 -- Insert specific documentation units for filtering tests
 
-INSERT INTO documentation_unit (id, document_number, xml)
-SELECT gen_random_uuid(), 'KSNR000000001', ''
-WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000001');
+INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(), 'KSNR000000001', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000001');
 
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT
-    gen_random_uuid(),
-    du.id,
-    'Alpha Global Setup Document',
-    'BGB 123$µµµµµ$VWV xyz',
-    '2024-06-17$µµµµµ$1950-01-01'
-FROM documentation_unit du
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                          documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       du.id,
+       'Alpha Global Setup Document',
+       'BGB 123$µµµµµ$VWV xyz',
+       '2024-06-17$µµµµµ$1950-01-01',
+       'VERWALTUNGSVORSCHRIFTEN',
+       'BSG'
+FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000001'
-  AND NOT EXISTS (
-    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
-);
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
 
 
-INSERT INTO documentation_unit (id, document_number, xml)
-SELECT gen_random_uuid(), 'KSNR000000002', ''
-WHERE NOT EXISTS (SELECT 1 FROM documentation_unit WHERE document_number = 'KSNR000000002');
+INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(), 'KSNR000000002', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000002');
 
-INSERT INTO documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
-SELECT
-    gen_random_uuid(),
-    du.id,
-    'Beta Global Setup Document',
-    'BGB 456',
-    '2024-06-18'
-FROM documentation_unit du
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten,
+                                          documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(),
+       du.id,
+       'Beta Global Setup Document',
+       'BGB 456',
+       '2024-06-18',
+       'VERWALTUNGSVORSCHRIFTEN',
+       'BSG'
+FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000002'
-  AND NOT EXISTS (
-    SELECT 1 FROM documentation_unit_index dui WHERE dui.documentation_unit_id = du.id
-);
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);

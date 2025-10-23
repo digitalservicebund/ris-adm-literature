@@ -30,4 +30,10 @@ public class DocumentNumberEntity {
 
   @Basic(optional = false)
   private Year year;
+
+  /**
+   * The document series prefix, e.g., "KALU", "KSNR".
+   */
+  @Basic(optional = false)
+  private String prefix;
 }

@@ -16,5 +16,5 @@ interface DocumentNumberRepository extends JpaRepository<DocumentNumberEntity, U
    * @return Document number with the given year or an empty optional if not found
    */
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  Optional<DocumentNumberEntity> findByYear(@Nonnull Year year);
+  Optional<DocumentNumberEntity> findByPrefixAndYear(@Nonnull String prefix, @Nonnull Year year);
 }

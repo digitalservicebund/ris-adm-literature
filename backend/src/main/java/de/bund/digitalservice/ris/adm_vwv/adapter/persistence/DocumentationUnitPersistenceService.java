@@ -263,6 +263,12 @@ public class DocumentationUnitPersistenceService {
         documentationUnitIndex.documentationUnitEntity
       );
     }
+    documentationUnitIndexEntity.setDocumentationUnitType(
+      documentationUnitIndex.getDocumentationUnitType()
+    );
+    documentationUnitIndexEntity.setDocumentationOffice(
+      documentationUnitIndex.getDocumentationOffice()
+    );
     documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
     documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
     documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
@@ -283,7 +289,11 @@ public class DocumentationUnitPersistenceService {
       log.debug("Stacktrace:", e);
     }
     // We save an empty entry so the document still appears on overview page
-    return new DocumentationUnitIndex(documentationUnitEntity);
+    DocumentationUnitIndex fallbackIndex = new DocumentationUnitIndex(documentationUnitEntity);
+    fallbackIndex.setDocumentationUnitType(documentationUnitEntity.getDocumentationUnitType());
+    fallbackIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
+    // Content fields (langueberschrift, etc.) remain null as intended on error
+    return fallbackIndex;
   }
 
   private DocumentationUnitIndex createIndex(
@@ -292,6 +302,10 @@ public class DocumentationUnitPersistenceService {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
+    documentationUnitIndex.setDocumentationUnitType(
+      documentationUnitEntity.getDocumentationUnitType()
+    );
+    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     if (documentationUnitEntity.isEmpty()) {
       // We save an empty entry so the document still appears on overview page
       return documentationUnitIndex;
@@ -330,6 +344,10 @@ public class DocumentationUnitPersistenceService {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
+    documentationUnitIndex.setDocumentationUnitType(
+      documentationUnitEntity.getDocumentationUnitType()
+    );
+    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     documentationUnitIndex.setLangueberschrift(documentationUnitContent.langueberschrift());
     if (documentationUnitContent.fundstellen() != null) {
       documentationUnitIndex.setFundstellen(
@@ -369,6 +387,8 @@ public class DocumentationUnitPersistenceService {
   private static class DocumentationUnitIndex {
 
     private final DocumentationUnitEntity documentationUnitEntity;
+    private DocumentTypeCode documentationUnitType;
+    private DocumentationOffice documentationOffice;
     private String langueberschrift;
     private String fundstellen;
     private String zitierdaten;

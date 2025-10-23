@@ -61,3 +61,15 @@ Field of law.
 ### Zitierdatum
 
 Date of quote.
+
+## Abbreviations
+We use the following abbreviations in our codebase, e.g. to refer to a document type
+
+### ADM
+Administrative Directive, German: Verwaltungsvorschriften
+
+### ULI
+Unselbständige Literatur, English: independent literature
+
+### SLI
+Selbständige Literatur, English: dependent literature

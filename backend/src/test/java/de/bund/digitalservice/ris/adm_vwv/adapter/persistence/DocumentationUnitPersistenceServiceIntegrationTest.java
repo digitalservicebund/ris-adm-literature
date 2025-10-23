@@ -42,6 +42,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   ) {
     var unit = new DocumentationUnitEntity();
     unit.setDocumentNumber(documentNumber);
+    unit.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    unit.setDocumentationOffice(DocumentationOffice.BSG);
     entityManager.persist(unit);
 
     var index = new DocumentationUnitIndexEntity();
@@ -50,6 +52,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     index.setLangueberschrift(langueberschrift);
     index.setFundstellen(fundstellen);
     index.setZitierdaten(zitierdaten);
+    index.setDocumentationOffice(DocumentationOffice.BSG);
+    index.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
     entityManager.persistAndFlush(index);
   }
 
@@ -60,6 +64,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     Year thisYear = Year.now();
     documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000002", thisYear));
     documentationUnitEntity.setJson("{\"test\":\"content\"");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     entityManager.persistAndFlush(documentationUnitEntity);
 
     // when
@@ -93,6 +99,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR2025000001");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
@@ -112,12 +120,16 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR111111111");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
     DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     documentationUnitIndexEntity.setLangueberschrift("Lang");
     documentationUnitIndexEntity.setFundstellen("Fund");
     documentationUnitIndexEntity.setZitierdaten("2012-12-12");
+    documentationUnitIndexEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     documentationUnitEntity = entityManager.merge(documentationUnitEntity);
@@ -165,6 +177,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR2025000001p");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
@@ -205,6 +219,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR2025100001");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity.setJson(
       """
       {
@@ -247,6 +263,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
     );
     documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    documentationUnitIndexEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
@@ -286,6 +304,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR2025100002");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity.setJson(
       """
       {
@@ -301,6 +321,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
     documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    documentationUnitIndexEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
@@ -435,6 +457,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR9999999999");
     documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
@@ -463,6 +487,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR777777777");
     documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
@@ -498,6 +524,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       }
       """
     );
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
@@ -524,6 +552,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setDocumentNumber("KSNR555555555");
     documentationUnitEntity.setJson(json);
     documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
@@ -550,6 +580,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR333333333");
+    documentationUnitEntity.setDocumentationUnitType(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when

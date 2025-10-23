@@ -54,6 +54,15 @@ When visiting the app with your browser, you'll be asked to log in. Depending on
 
 For the required emails/passwords, please refer to the local keycloak configuation file at [./backend/keycloak-config/realm.json](./backend/keycloak-config/realm.json).
 
+## Database Schemas
+The backend uses a PostgreSQL database containing multiple schemas:
+* adm: Stores data related to administrative directives.
+* literature:  Stores data related to literature documents.
+* lookup_tables: Contains shared reference data (like institutions, regions) accessed via views from the adm and literature schemas.
+
+Both the adm and literature schemas have identical table structures but hold distinct sets of documents. The application dynamically routes database operations to the correct schema based on the logged-in user's context.
+
+
 ## CI/CD Workflow
 
 This project uses GitHub Actions to automate testing, builds, and deployments.

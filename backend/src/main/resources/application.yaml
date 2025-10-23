@@ -1,10 +1,26 @@
 spring:
   application.name: ris-adm-literature-backend
+  jpa:
+    # Run Hibernate DDL BEFORE data.sql
+    defer-datasource-initialization: true
+    # Disable Hibernate's automatic table creation.
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+
   datasource:
-    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm}
-    username: ${adm.database.user:test}
-    password: ${adm.database.password:test}
-    driver-class-name: org.postgresql.Driver
+    adm:
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${database.schema:adm}
+      username: ${adm.database.user:test}
+      password: ${adm.database.password:test}
+      driver-class-name: org.postgresql.Driver
+    literature:
+      url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${literature.database.schema:literature}
+      username: ${literature.database.user:test}
+      password: ${literature.database.password:test}
+      driver-class-name: org.postgresql.Driver
   security:
     oauth2:
       resourceserver:
@@ -48,8 +64,5 @@ spring:
   config:
     activate:
       on-profile: default
-  sql:
-    init:
-      mode: always
 
 

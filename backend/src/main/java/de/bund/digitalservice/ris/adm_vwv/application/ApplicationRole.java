@@ -15,7 +15,7 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public enum ApplicationRole {
   // TODO: Remove adm_vwv_user once roles are defined in bareId // NOSONAR
-  ADMINISTRATIVE(List.of("adm_user", "adm_vwv_user"), DocumentTypeCode.ADMINISTRATIVE) {
+  ADMINISTRATIVE(List.of("adm_user", "adm_vwv_user"), DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       // For administrative users, the office is always BSG.
@@ -23,7 +23,7 @@ public enum ApplicationRole {
     }
   },
 
-  LITERATURE(List.of("literature_user"), DocumentTypeCode.LITERATURE_DEPENDENT) {
+  LITERATURE(List.of("literature_user"), DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       List<String> groups = jwt.getClaimAsStringList("groups");

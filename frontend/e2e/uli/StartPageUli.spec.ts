@@ -7,7 +7,6 @@ test.describe('StartPage ULI', () => {
     async ({ page }) => {
       // Action
       await page.goto('/literatur-unselbstaendig')
-
       // Assert
       await expect(page.getByText('Rechtsinformationen')).toBeVisible()
       await expect(page.getByText('des Bundes')).toBeVisible()

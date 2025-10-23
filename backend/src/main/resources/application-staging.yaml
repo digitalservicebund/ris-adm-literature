@@ -1,7 +1,8 @@
 spring:
   application.name: ris-adm-literature-backend
-  datasource:
-    url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 management:
   endpoint:
