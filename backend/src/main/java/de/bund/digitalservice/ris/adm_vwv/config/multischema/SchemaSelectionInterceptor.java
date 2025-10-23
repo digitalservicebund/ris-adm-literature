@@ -1,5 +1,9 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
+// Import the static method needed for logging
+import static de.bund.digitalservice.ris.adm_vwv.util.DocumentTypeUtils.getDocumentTypeCode;
+
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * Intercepts incoming HTTP requests to select the appropriate database schema for the current request.
- *
+ * Intercepts incoming HTTP requests to select the appropriate database schema
+ * and log request completion.
  */
 @Component
 @Slf4j
@@ -35,28 +39,39 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     @NonNull HttpServletResponse response,
     @NonNull Object handler
   ) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    SchemaType schemaToUse = SchemaType.ADM;
-
-    if (
-      authentication != null && authentication.getPrincipal() instanceof UserDocumentDetails details
-    ) {
-      schemaToUse = switch (details.type()) {
-        case VERWALTUNGSVORSCHRIFTEN -> SchemaType.ADM;
-        case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
-      };
+    if ("/environment".equals(request.getRequestURI())) {
+      log.debug("Skipping schema logic for /environment path");
+      return true;
     }
+    SchemaType schemaToUse = null;
+    String headerDocumentType = request.getHeader("X-Document-Type");
+
+    if (headerDocumentType != null) {
+      try {
+        DocumentTypeCode documentType = DocumentTypeCode.valueOf(headerDocumentType);
+        schemaToUse = switch (documentType) {
+          case VERWALTUNGSVORSCHRIFTEN -> SchemaType.ADM;
+          case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
+        };
+      } catch (IllegalArgumentException _) {
+        log.warn("Invalid X-Document-Type header value: {}", headerDocumentType);
+      }
+    } else {
+      log.warn("Missing X-Document-Type header, defaulting to ADM");
+      schemaToUse = SchemaType.ADM;
+    }
+
     log.info("Using schema {} for request", schemaToUse);
     SchemaContextHolder.setSchema(schemaToUse);
     return true;
   }
 
   /**
-   * Cleans up the schema context after the request has been processed.
+   * Logs request completion details and cleans up the schema context.
    *
-   * <p>Removes the schema from {@link SchemaContextHolder} to prevent leaking ThreadLocal state
-   * across requests.</p>
+   * <p>Logs the request method, URI, response status, and context-specific details.
+   * Also removes the schema from {@link SchemaContextHolder} to prevent leaking
+   * ThreadLocal state across requests.</p>
    *
    * @param request the current HTTP request
    * @param response the current HTTP response
@@ -70,6 +85,41 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     @NonNull Object handler,
     Exception ex
   ) {
+    if (!request.getRequestURI().startsWith("/actuator")) {
+      StringBuilder logMessage = new StringBuilder();
+      logMessage.append(
+        String.format(
+          "method=%s uri=%s status=%d",
+          request.getMethod(),
+          request.getRequestURI(),
+          response.getStatus()
+        )
+      );
+
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      DocumentTypeCode documentType = getDocumentTypeCode();
+      if (documentType != null) {
+        logMessage.append(" documentationType=").append(documentType);
+      }
+      if (
+        authentication != null &&
+        authentication.getPrincipal() instanceof UserDocumentDetails details &&
+        details.office() != null
+      ) {
+        logMessage.append(" documentationOffice=").append(details.office());
+      }
+
+      String finalLogMessage = logMessage.toString();
+
+      if (ex != null) {
+        // Log with the full context, including the exception
+        log.error("{} error='{}'", logMessage, ex.getMessage(), ex);
+      } else {
+        // Log summary on success
+        log.info(finalLogMessage);
+      }
+    }
+
     // Clean up the ThreadLocal after the request is complete
     SchemaContextHolder.clear();
   }
