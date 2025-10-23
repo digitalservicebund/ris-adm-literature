@@ -1,6 +1,3 @@
-CREATE SCHEMA IF NOT EXISTS adm;
-CREATE SCHEMA IF NOT EXISTS literature;
-
 -- Insert a test documentation unit xml. This file is only used in Spring Boot Profile "default".
 -- This inserts 100 documentation units for e2e tests to check on the search pagination
 WITH created as (
