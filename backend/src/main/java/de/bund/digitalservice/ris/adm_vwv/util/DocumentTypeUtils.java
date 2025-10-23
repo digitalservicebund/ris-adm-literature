@@ -7,9 +7,16 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ * Utility class for document type related operations.
+ */
 @UtilityClass
 public class DocumentTypeUtils {
 
+  /**
+   * Get the document type from the request header.
+   * @return The document type.
+   */
   public static DocumentTypeCode getDocumentTypeCode() {
     String documentTypeHeader = null;
     RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();

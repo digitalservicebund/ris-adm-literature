@@ -46,6 +46,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     SchemaType schemaToUse = null;
     String headerDocumentType = request.getHeader("X-Document-Type");
 
+    // TODO: Remove fallback adm logic once SchemaSelectionInterceptor is finalized ==> RISDEV-9947 // NOSONAR
     if (headerDocumentType != null) {
       try {
         DocumentTypeCode documentType = DocumentTypeCode.valueOf(headerDocumentType);
@@ -55,6 +56,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
         };
       } catch (IllegalArgumentException _) {
         log.warn("Invalid X-Document-Type header value: {}", headerDocumentType);
+        schemaToUse = SchemaType.ADM;
       }
     } else {
       log.warn("Missing X-Document-Type header, defaulting to ADM");
