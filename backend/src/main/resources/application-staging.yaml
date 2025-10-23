@@ -1,8 +1,5 @@
 spring:
   application.name: ris-adm-literature-backend
-  jpa:
-    hibernate:
-      ddl-auto: validate
 
 management:
   endpoint:
