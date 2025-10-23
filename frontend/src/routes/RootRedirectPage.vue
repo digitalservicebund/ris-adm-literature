@@ -18,7 +18,7 @@ import Button from 'primevue/button'
       <router-link :to="{ name: ROUTE_NAMES.ULI.START_PAGE }">
         <Button label="Zur Übersicht Literatur" />
       </router-link>
-      <router-link :to="{ name: ROUTE_NAMES.ULI.START_PAGE }">
+      <router-link :to="{ name: ROUTE_NAMES.ADM.START_PAGE }">
         <Button label="Zur Übersicht Verwaltungsvorschriften" />
       </router-link>
     </div>
