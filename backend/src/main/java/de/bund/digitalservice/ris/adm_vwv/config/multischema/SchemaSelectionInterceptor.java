@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-// Import the static method needed for logging
 import static de.bund.digitalservice.ris.adm_vwv.util.DocumentTypeUtils.getDocumentTypeCode;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
@@ -24,9 +23,6 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
 
   /**
    * Selects and sets the database schema for the current request based on the authenticated user's document type.
-   *
-   * <p>If the user is authenticated and the principal is an instance of {@link UserDocumentDetails}, the schema is
-   * derived from the document type. Otherwise, it defaults to {@link SchemaType#ADM}.</p>
    *
    * @param request the current HTTP request
    * @param response the current HTTP response
