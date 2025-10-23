@@ -95,13 +95,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         working-directory: ./backend
         run: ./gradlew build test --profile sonar --info -x checkstyleMain -x checkstyleTest
-#      - name: Check SonarQube Quality Gate
-#        uses: sonarsource/sonarqube-quality-gate-action@df914238f99aa5d81f4490aeea80f205c7ed9600
-#        with:
-#          scanMetadataReportFile: backend/build/sonar/report-task.txt
-#        timeout-minutes: 3 # Force to fail step after specific time
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+      - name: Check SonarQube Quality Gate
+        uses: sonarsource/sonarqube-quality-gate-action@df914238f99aa5d81f4490aeea80f205c7ed9600
+        with:
+          scanMetadataReportFile: backend/build/sonar/report-task.txt
+        timeout-minutes: 3 # Force to fail step after specific time
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
       #
       # Upload reports as pipeline artifacts
       #
