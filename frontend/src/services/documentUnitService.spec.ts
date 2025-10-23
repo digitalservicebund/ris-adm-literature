@@ -231,7 +231,9 @@ describe('documentUnitService', () => {
       new Response(JSON.stringify(createResp), { status: 201 }),
     )
 
-    const { data, error, isFetching, isFinished } = usePostDocUnit()
+    const { data, error, isFetching, isFinished } = usePostDocUnit(
+      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+    )
     await until(isFinished).toBe(true)
 
     expect(isFetching.value).toBe(false)
@@ -242,7 +244,9 @@ describe('documentUnitService', () => {
   it('returns an error on failed creation', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
-    const { data, error, isFetching, execute } = usePostDocUnit()
+    const { data, error, isFetching, execute } = usePostDocUnit(
+      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+    )
     await execute()
 
     expect(isFetching.value).toBe(false)
