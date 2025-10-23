@@ -1,20 +1,16 @@
 import { ref } from 'vue'
-import type { UseFetchReturn } from '@vueuse/core'
+import type { DocumentTypeCode } from '@/domain/documentType'
+import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
 
 /**
  * Generic factory function for creating a document-unit store.
  *
  * This abstracts common CRUD logic (load, update, unload) so it can be reused
- * for different document types (e.g. ADM, ULI, SLI). It expects two composable
- * functions (`getFn` and `updateFn`) that perform the actual API operations.
+ * for different document types (e.g. ADM, ULI, SLI).
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
- * @param getFn - A function that retrieves a document by its number.
- *                Must return an object conforming to `UseFetchReturn<T>`.
- *
- * @param updateFn - A function that updates an existing document.
- *                   Must return an object conforming to `UseFetchReturn<T>`.
+ * @param docTypeCode - A DocumentTypeCode enum e.g. VERWALTUNGSVORSCHRIFTEN.
  *
  * @returns An object containing reactive state and CRUD operations:
  *  - `documentUnit`: the currently loaded document (or `null`)
@@ -24,10 +20,7 @@ import type { UseFetchReturn } from '@vueuse/core'
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
-export function defineDocumentUnitStore<DocumentationUnit>(
-  getFn: (documentNumber: string) => UseFetchReturn<DocumentationUnit>,
-  updateFn: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>,
-) {
+export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: DocumentTypeCode) {
   const documentUnit = ref<DocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
@@ -36,7 +29,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(
     isLoading.value = true
     error.value = null
 
-    const { data, error: fetchError, execute } = getFn(documentNumber)
+    const { data, error: fetchError, execute } = useGetDocUnit(documentNumber, docTypeCode)
     await execute()
 
     if (fetchError.value) {
@@ -55,7 +48,12 @@ export function defineDocumentUnitStore<DocumentationUnit>(
     isLoading.value = true
     error.value = null
 
-    const { data, error: putError, statusCode, execute } = updateFn(documentUnit.value)
+    const {
+      data,
+      error: putError,
+      statusCode,
+      execute,
+    } = usePutDocUnit(documentUnit.value, docTypeCode)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {

@@ -12,6 +12,7 @@ import StartPageTemplate from './routes/StartPage.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
 import UliRubriken from './routes/uli/RubrikenPage.vue'
+import { DocumentTypeCode } from './domain/documentType'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -37,6 +38,7 @@ const router = createRouter({
       path: ROUTE_PATHS.ADM.BASE,
       meta: {
         requiresRole: [USER_ROLES.ADM_USER, USER_ROLES.ADM_VWV_USER],
+        documentTypeCode: DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
       },
       children: [
         {
@@ -60,7 +62,6 @@ const router = createRouter({
           path: ROUTE_PATHS.ADM.DOCUMENT_UNIT.EDIT,
           name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.EDIT,
           component: EditDocument,
-          meta: { storeId: 'admDocumentUnit' },
           props: true,
           redirect: { name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN },
           children: [
@@ -90,6 +91,7 @@ const router = createRouter({
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
+        documentTypeCode: DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG,
       },
       children: [
         {
@@ -107,7 +109,6 @@ const router = createRouter({
           path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.EDIT,
           name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.EDIT,
           component: EditDocument,
-          meta: { storeId: 'uliDocumentUnit' },
           props: true,
           redirect: { name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN },
           children: [
