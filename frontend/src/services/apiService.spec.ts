@@ -30,6 +30,7 @@ describe('useApiFetch', () => {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            'X-Document-Type': 'VERWALTUNGSVORSCHRIFTEN',
           },
         }),
       ),
@@ -58,6 +59,7 @@ describe('useApiFetch', () => {
           headers: {
             Accept: 'text/html',
             'Content-Type': 'text/html',
+            'X-Document-Type': 'VERWALTUNGSVORSCHRIFTEN',
           },
         }),
       ),
