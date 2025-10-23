@@ -43,7 +43,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
       log.debug("Skipping schema logic for /environment path");
       return true;
     }
-    SchemaType schemaToUse = null;
+    SchemaType schemaToUse;
     String headerDocumentType = request.getHeader("X-Document-Type");
 
     // TODO: Remove fallback adm logic once SchemaSelectionInterceptor is finalized ==> RISDEV-9947 // NOSONAR
@@ -87,7 +87,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     @NonNull Object handler,
     Exception ex
   ) {
-    if (!request.getRequestURI().startsWith("/actuator")) {
+    if (request.getRequestURI() != null && !request.getRequestURI().startsWith("/actuator")) {
       StringBuilder logMessage = new StringBuilder();
       logMessage.append(
         String.format(
