@@ -6,16 +6,13 @@ import { until } from '@vueuse/core'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
 import { ROUTE_PATHS } from '@/constants/routes'
-import type { DocumentTypeCode } from '@/domain/documentType'
 
 const toast = useToast()
 const router = useRouter()
 const route = useRoute()
 
 onBeforeMount(async () => {
-  const { data, error, isFinished } = usePostDocUnit(
-    route.meta.documentTypeCode as DocumentTypeCode,
-  )
+  const { data, error, isFinished } = usePostDocUnit(route.meta.documentTypeCode)
   await until(isFinished).toBe(true)
 
   if (error.value) {

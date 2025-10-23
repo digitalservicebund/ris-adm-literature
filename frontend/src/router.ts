@@ -8,11 +8,12 @@ import AdmRubriken from './routes/adm/documentUnit/[documentNumber]/RubrikenPage
 import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/FundstellenPage.vue'
 import NewDocument from '@/routes/NewDocument.vue'
 import Forbidden from '@/routes/Forbidden.vue'
-import StartPageTemplate from './routes/StartPage.vue'
+import StartPageTemplate from './routes/OverviewPage.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
 import UliRubriken from './routes/uli/RubrikenPage.vue'
 import { DocumentTypeCode } from './domain/documentType'
+import RootRedirectPage from './routes/RootRedirectPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,18 +21,30 @@ const router = createRouter({
     {
       path: ROUTE_PATHS.ROOT,
       name: ROUTE_NAMES.ROOT_REDIRECT,
-      redirect: () => {
+      component: RootRedirectPage,
+      beforeEnter: (to, from, next) => {
         const auth = useAuthentication()
         const userRoles = auth.getRealmRoles()
-        // Implementation logic if user has multiple roles will be implemented with RISDEV-9446
-        for (const role of userRoles) {
-          const routeName = roleToHomeRouteMap[role]
-          if (routeName) {
-            return { name: routeName }
-          }
+
+        // Not authenticated or no roles
+        if (!auth.isAuthenticated() || userRoles.length === 0) {
+          next({ path: ROUTE_PATHS.FORBIDDEN })
+          return
         }
-        // Fallback for users with no matching role or anonymous users
-        return { path: ROUTE_PATHS.FORBIDDEN }
+
+        // Exactly one role: redirect
+        if (userRoles.length === 1 && userRoles[0]) {
+          const routeName = roleToHomeRouteMap[userRoles[0]]
+          if (routeName) {
+            next({ name: routeName })
+          } else {
+            next({ path: ROUTE_PATHS.FORBIDDEN })
+          }
+          return
+        }
+
+        // Multiple roles: stay on RootRedirectPage
+        next()
       },
     },
     {
