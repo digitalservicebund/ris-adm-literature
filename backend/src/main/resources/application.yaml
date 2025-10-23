@@ -6,9 +6,6 @@ spring:
     # Disable Hibernate's automatic table creation.
     hibernate:
       ddl-auto: none
-  sql:
-    init:
-      mode: always
 
   datasource:
     adm:
@@ -64,5 +61,10 @@ spring:
   config:
     activate:
       on-profile: default
+
+  sql:
+    init:
+      mode: always
+
 
 
