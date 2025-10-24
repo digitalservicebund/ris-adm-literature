@@ -1,19 +1,33 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import NavbarTop from '@/components/NavbarTop.vue'
+import { USER_ROLES } from '@/config/roles'
+import { DocumentTypeCode } from '@/domain/documentType'
+import { ROUTE_NAMES } from '@/constants/routes'
 
 const mockAuth: {
   logout: () => void
   getUsername: () => string | undefined
   getGroup: () => string
+  getRealmRoles: () => string[]
 } = {
   logout: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
   getGroup: vi.fn(() => 'BAG'),
+  getRealmRoles: vi.fn(() => [USER_ROLES.ADM_USER]),
 }
 
 vi.mock('@/services/auth', () => ({
   useAuthentication: () => mockAuth,
+}))
+
+const mockRoute = {
+  meta: { documentTypeCode: 'LITERATUR_UNSELBSTSTAENDIG' },
+  name: 'SomeRoute',
+}
+
+vi.mock('vue-router', () => ({
+  useRoute: vi.fn(() => mockRoute),
 }))
 
 const renderComponent = () => {
@@ -42,7 +56,6 @@ describe('NavbarTop', () => {
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
     expect(screen.getByText('BAG | Staging')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
 
   it('Log out calls logout when the logout icon is clicked', async () => {
@@ -54,13 +67,37 @@ describe('NavbarTop', () => {
     expect(mockAuth.logout).toHaveBeenCalledTimes(1)
   })
 
-  it('Suche is a link that navigates to the main page', () => {
+  it('Multiple roles: Suche link redirects to ULI startpage in literature context', () => {
+    mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
+    mockRoute.meta.documentTypeCode = DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+
     renderComponent()
 
     const searchLink = screen.getByRole('link', { name: 'Suche' })
 
     expect(searchLink).toBeInTheDocument()
-    expect(searchLink).toHaveAttribute('href', '/')
+    expect(searchLink).toHaveAttribute('href', '/literatur-unselbststaendig')
+  })
+
+  it('Multiple roles: Suche link redirects to ADM startpage in adm context', () => {
+    mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
+    mockRoute.meta.documentTypeCode = DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
+
+    renderComponent()
+
+    const searchLink = screen.getByRole('link', { name: 'Suche' })
+
+    expect(searchLink).toBeInTheDocument()
+    expect(searchLink).toHaveAttribute('href', '/verwaltungsvorschriften')
+  })
+
+  it('Suche link is not shown if user has multiple roles and we are on root page', () => {
+    mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
+    mockRoute.name = ROUTE_NAMES.ROOT_REDIRECT
+    renderComponent()
+
+    const searchLink = screen.queryByRole('link', { name: 'Suche' })
+    expect(searchLink).not.toBeInTheDocument()
   })
 
   it('renders default user infos if not available', () => {
