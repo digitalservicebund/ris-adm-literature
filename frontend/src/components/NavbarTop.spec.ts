@@ -76,7 +76,7 @@ describe('NavbarTop', () => {
     const searchLink = screen.getByRole('link', { name: 'Suche' })
 
     expect(searchLink).toBeInTheDocument()
-    expect(searchLink).toHaveAttribute('href', '/literatur-unselbstaendig')
+    expect(searchLink).toHaveAttribute('href', '/literatur-unselbststaendig')
   })
 
   it('Multiple roles: Suche link redirects to ADM startpage in adm context', () => {
