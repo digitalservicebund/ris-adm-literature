@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "**/*.md"
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened]
   # Allow to run this workflow manually
   workflow_dispatch:
 
