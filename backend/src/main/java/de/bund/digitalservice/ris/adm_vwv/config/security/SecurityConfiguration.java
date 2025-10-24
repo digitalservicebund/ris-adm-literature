@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.config.security;
 
+import de.bund.digitalservice.ris.adm_vwv.config.multischema.TenantContextFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
@@ -21,7 +24,10 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
+
+  private final TenantContextFilter tenantContextFilter;
 
   /**
    * Configures security settings for specific HTTP requests.
@@ -90,7 +96,8 @@ public class SecurityConfiguration {
             )
           )
       );
-
+    // Sets the DocumentTypeCode and schema to use from the header
+    http.addFilterAfter(tenantContextFilter, BearerTokenAuthenticationFilter.class);
     return http.build();
   }
 
