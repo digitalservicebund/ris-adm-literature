@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config;
 
+import de.bund.digitalservice.ris.adm_vwv.config.multischema.RequestCompletionInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Logs incoming request payloads.
- * Response logging is handled by {@link de.bund.digitalservice.ris.adm_vwv.config.multischema.SchemaSelectionInterceptor}.
+ * Response logging is handled by {@link RequestCompletionInterceptor}.
  */
 @Slf4j
 @Configuration

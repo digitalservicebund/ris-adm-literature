@@ -1,8 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import static de.bund.digitalservice.ris.adm_vwv.util.DocumentTypeUtils.getDocumentTypeCode;
-
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,15 +13,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * Intercepts incoming HTTP requests to select the appropriate database schema
- * and log request completion.
+ * Intercepts requests to log completion details and clean up the schema context.
+ *
+ * <p>This interceptor's primary logic is in {@link #afterCompletion},
+ * where it logs the request outcome (status, user) and ensures {@link SchemaContextHolder} is cleared.
+ * The actual schema selection and principal correction is handled earlier by
+ * {@link TenantContextFilter}.</p>
  */
 @Component
 @Slf4j
-public class SchemaSelectionInterceptor implements HandlerInterceptor {
+public class RequestCompletionInterceptor implements HandlerInterceptor {
 
   /**
-   * Selects and sets the database schema for the current request based on the authenticated user's document type.
+   * Passes the request through.
+   *
+   * <p>All pre-request logic, including schema selection and principal correction,
+   * is now handled by {@link TenantContextFilter},
+   * which runs earlier in the security filter chain.</p>
    *
    * @param request the current HTTP request
    * @param response the current HTTP response
@@ -35,32 +42,7 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
     @NonNull HttpServletResponse response,
     @NonNull Object handler
   ) {
-    if ("/environment".equals(request.getRequestURI())) {
-      log.debug("Skipping schema logic for /environment path");
-      return true;
-    }
-    SchemaType schemaToUse;
-    String headerDocumentType = request.getHeader("X-Document-Type");
-
-    // TODO: Remove fallback adm logic once SchemaSelectionInterceptor is finalized ==> RISDEV-9947 // NOSONAR
-    if (headerDocumentType != null) {
-      try {
-        DocumentTypeCode documentType = DocumentTypeCode.valueOf(headerDocumentType);
-        schemaToUse = switch (documentType) {
-          case VERWALTUNGSVORSCHRIFTEN -> SchemaType.ADM;
-          case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
-        };
-      } catch (IllegalArgumentException _) {
-        log.warn("Invalid X-Document-Type header value: {}", headerDocumentType);
-        schemaToUse = SchemaType.ADM;
-      }
-    } else {
-      log.warn("Missing X-Document-Type header, defaulting to ADM");
-      schemaToUse = SchemaType.ADM;
-    }
-
-    log.info("Using schema {} for request", schemaToUse);
-    SchemaContextHolder.setSchema(schemaToUse);
+    // Logic was moved to TenantContextFilter
     return true;
   }
 
@@ -95,27 +77,26 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
       );
 
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (!request.getRequestURI().startsWith("/environment")) {
-        DocumentTypeCode documentType = getDocumentTypeCode();
-        if (documentType != null) {
-          logMessage.append(" documentationType=").append(documentType);
+      // skip public endpoints
+      if (
+        !request.getRequestURI().startsWith("/environment") &&
+        authentication != null &&
+        authentication.getPrincipal() instanceof
+        UserDocumentDetails(DocumentationOffice office, DocumentTypeCode type)
+      ) {
+        if (type != null) {
+          logMessage.append(" documentationType=").append(type);
         }
-        if (
-          authentication != null &&
-          authentication.getPrincipal() instanceof UserDocumentDetails details &&
-          details.office() != null
-        ) {
-          logMessage.append(" documentationOffice=").append(details.office());
+        if (office != null) {
+          logMessage.append(" documentationOffice=").append(office);
         }
       }
 
       String finalLogMessage = logMessage.toString();
 
       if (ex != null) {
-        // Log with the full context, including the exception
         log.error("{} error='{}'", logMessage, ex.getMessage(), ex);
       } else {
-        // Log summary on success
         log.info(finalLogMessage);
       }
     }

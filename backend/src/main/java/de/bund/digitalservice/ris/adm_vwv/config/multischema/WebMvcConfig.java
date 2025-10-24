@@ -12,15 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
-  private final SchemaSelectionInterceptor schemaSelectionInterceptor;
+  private final RequestCompletionInterceptor requestCompletionInterceptor;
 
   /**
-   * Registers the {@link SchemaSelectionInterceptor} to be applied to all incoming web requests.
+   * Registers the {@link RequestCompletionInterceptor} to be applied to all incoming web requests.
    *
    * @param registry The interceptor registry to add the new interceptor to.
    */
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(schemaSelectionInterceptor);
+    registry.addInterceptor(requestCompletionInterceptor);
   }
 }

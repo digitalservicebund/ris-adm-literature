@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import static de.bund.digitalservice.ris.adm_vwv.util.DocumentTypeUtils.getDocumentTypeCode;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
@@ -92,10 +90,8 @@ public class DocumentationUnitPersistenceService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
 
-    DocumentTypeCode documentType = getDocumentTypeCode();
-
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create(details.office(), documentType)
+      documentationUnitCreationService.create(details.office(), details.type())
     );
     log.info(
       "New documentation unit created with document number: {}",
