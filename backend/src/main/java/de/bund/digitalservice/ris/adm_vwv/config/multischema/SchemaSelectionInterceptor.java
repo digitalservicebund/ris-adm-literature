@@ -95,16 +95,18 @@ public class SchemaSelectionInterceptor implements HandlerInterceptor {
       );
 
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      DocumentTypeCode documentType = getDocumentTypeCode();
-      if (documentType != null) {
-        logMessage.append(" documentationType=").append(documentType);
-      }
-      if (
-        authentication != null &&
-        authentication.getPrincipal() instanceof UserDocumentDetails details &&
-        details.office() != null
-      ) {
-        logMessage.append(" documentationOffice=").append(details.office());
+      if (!request.getRequestURI().startsWith("/environment")) {
+        DocumentTypeCode documentType = getDocumentTypeCode();
+        if (documentType != null) {
+          logMessage.append(" documentationType=").append(documentType);
+        }
+        if (
+          authentication != null &&
+          authentication.getPrincipal() instanceof UserDocumentDetails details &&
+          details.office() != null
+        ) {
+          logMessage.append(" documentationOffice=").append(details.office());
+        }
       }
 
       String finalLogMessage = logMessage.toString();
