@@ -42,7 +42,7 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr (with mocked api route)', (
     { tag: ['@RISDEV-9372'] },
     async ({ page }) => {
       // when
-      await page.goto('/literatur-unselbstaendig/dokumentationseinheit/KALU123456789/rubriken')
+      await page.goto('/literatur-unselbststaendig/dokumentationseinheit/KALU123456789/rubriken')
       const yearInput = page.getByRole('textbox', { name: 'Veröffentlichungsjahr' })
       await yearInput.fill('20')
       await yearInput.blur()

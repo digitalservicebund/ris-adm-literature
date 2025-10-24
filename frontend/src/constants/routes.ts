@@ -43,7 +43,7 @@ export const ROUTE_PATHS = {
     },
   },
   ULI: {
-    BASE: '/literatur-unselbstaendig',
+    BASE: '/literatur-unselbststaendig',
     DOCUMENT_UNIT: {
       NEW: `${DOCUMENT_UNIT_BASE}/new`,
       EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
