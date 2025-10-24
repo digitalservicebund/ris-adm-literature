@@ -7,7 +7,7 @@ on:
         required: true
 
 jobs:
-  check-formatting-backend:
+  quality-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -31,42 +31,14 @@ jobs:
             backend/*.gradle*
             backend/**/gradle-wrapper.properties
 
-      - name: Run spotlessCheck
+      - name: Run quality checks
         working-directory: ./backend
-        run: ./gradlew spotlessCheck
-
-      - name: On failure send status to Slack
-        # only on failure and if on "main" branch
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
-        with:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  check-style-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-        with:
-          submodules: true
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: "25.0"
-          distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
-
-      - name: Run checkstyleMain
-        working-directory: ./backend
-        run: ./gradlew checkstyleMain
-
-      - name: Run checkstyleTest
-        working-directory: ./backend
-        run: ./gradlew checkstyleTest
+        run: |
+          ./gradlew spotlessCheck checkstyleMain checkstyleTest \
+            --parallel \
+            --configuration-cache \
+            --build-cache \
+            --no-daemon
 
       - name: On failure send status to Slack
         # only on failure and if on "main" branch
