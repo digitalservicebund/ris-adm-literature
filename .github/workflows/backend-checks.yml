@@ -75,19 +75,29 @@ jobs:
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
+          restore-keys: |
+            ${{ runner.os }}-sonar
 
       - name: Build, test, sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         working-directory: ./backend
-        run: ./gradlew build test --profile sonar --info -x checkstyleMain -x checkstyleTest
+        run: |
+          ./gradlew build test \
+            --profile sonar \
+            --parallel \
+            --configuration-cache \
+            --build-cache \
+            --no-daemon \
+            -x checkstyleMain \
+            -x checkstyleTest
 
       - name: Check SonarQube Quality Gate
         uses: sonarsource/sonarqube-quality-gate-action@df914238f99aa5d81f4490aeea80f205c7ed9600
         with:
           scanMetadataReportFile: backend/build/sonar/report-task.txt
-        timeout-minutes: 3 # Force to fail step after specific time
+        timeout-minutes: 3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
       #
@@ -105,11 +115,8 @@ jobs:
           name: backend-test-report
           path: backend/build/reports/tests/test
           if-no-files-found: warn
-      #
-      # Let the team know on failure on `main`
-      #
+
       - name: On failure send status to Slack
-        # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
