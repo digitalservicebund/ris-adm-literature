@@ -133,6 +133,47 @@
       "groups": [
         "/literature/BSG"
       ]
+    },
+    {
+      "id": "test-both",
+      "email": "testboth@example.com",
+      "username": "testboth",
+      "firstName": "both",
+      "lastName": "userson",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "adm_user",
+        "literature_user"
+      ],
+      "groups": [
+        "/literature/BAG"
+      ]
+    },
+    {
+      "id": "test-no-access",
+      "email": "testnoaccess@example.com",
+      "username": "testnoaccess",
+      "firstName": "no",
+      "lastName": "access",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [],
+      "groups": []
     }
   ],
   "groups": [
