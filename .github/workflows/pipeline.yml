@@ -28,25 +28,18 @@ jobs:
   # Backend jobs
   ##############
 
-  backend-setup-gradle:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Setup and validate Gradle
-        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2
-
   backend-checks:
-    needs:
-      - backend-setup-gradle
     uses: ./.github/workflows/backend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       SONAR_TOKEN_BACKEND: ${{ secrets.SONAR_TOKEN_BACKEND }}
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   backend-build-image-and-scan:
     uses: ./.github/workflows/backend-build-image-and-scan.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
     permissions:
       contents: read
       security-events: write
@@ -142,6 +135,7 @@ jobs:
     uses: ./.github/workflows/e2e-tests.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   e2e-compile-html-report:
     needs:

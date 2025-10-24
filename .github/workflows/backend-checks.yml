@@ -5,9 +5,11 @@ on:
         required: true
       SONAR_TOKEN_BACKEND:
         required: true
+      GRADLE_ENCRYPTION_KEY:
+        required: true
 
 jobs:
-  check-formatting-backend:
+  quality-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -20,49 +22,31 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: ./backend/.node-version
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: "25.0"
-          distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
-      - name: Run spotlessCheck
-        working-directory: ./backend
-        run: ./gradlew spotlessCheck
-      - name: On failure send status to Slack
-        # only on failure and if on "main" branch
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
-        with:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  check-style-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v5
-        with:
-          submodules: true
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
-      - name: Run checkstyleMain
+
+      # let setup-gradle handle caching
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: false
+          # Enables configuration cache and build cache persistence
+
+      - name: Run quality checks
         working-directory: ./backend
-        run: ./gradlew checkstyleMain
-      - name: Run checkstyleTest
-        working-directory: ./backend
-        run: ./gradlew checkstyleTest
+        run: |
+          ./gradlew spotlessCheck checkstyleMain checkstyleTest \
+            --parallel \
+            --configuration-cache \
+            --build-cache \
+            --no-daemon
+
       - name: On failure send status to Slack
-        # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
@@ -75,31 +59,47 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: false
+
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
+          restore-keys: |
+            ${{ runner.os }}-sonar
+
       - name: Build, test, sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         working-directory: ./backend
-        run: ./gradlew build test --profile sonar --info -x checkstyleMain -x checkstyleTest
+        run: |
+          ./gradlew build test \
+            --profile sonar \
+            --parallel \
+            --configuration-cache \
+            --build-cache \
+            --no-daemon \
+            -x checkstyleMain \
+            -x checkstyleTest
+
       - name: Check SonarQube Quality Gate
         uses: sonarsource/sonarqube-quality-gate-action@df914238f99aa5d81f4490aeea80f205c7ed9600
         with:
           scanMetadataReportFile: backend/build/sonar/report-task.txt
-        timeout-minutes: 3 # Force to fail step after specific time
+        timeout-minutes: 3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
       #
@@ -110,17 +110,15 @@ jobs:
         with:
           name: backend-build-performance-report
           path: backend/build/reports/profile/profile*.html
+
       - name: Upload test report artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-report
           path: backend/build/reports/tests/test
           if-no-files-found: warn
-      #
-      # Let the team know on failure on `main`
-      #
+
       - name: On failure send status to Slack
-        # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
@@ -130,24 +128,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: false
+
       - name: Check licenses
         working-directory: ./backend
         run: ./gradlew checkLicense
+
       - name: Upload licence report
         uses: actions/upload-artifact@v4
         with:
           name: backend-license-report
           retention-days: 3
           path: ./backend/build/reports/dependency-license/index.html
+
       - name: Send status to Slack
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         if: ${{ failure() && github.ref == 'refs/heads/main'}}
@@ -158,18 +162,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Copy ADRs
         run: |
           pwd
           mkdir -p tmp/adr-source
           find doc/adr/ -type f ! -name '0000-template.md' -exec cp {} tmp/adr-source/ \;
           ls -l tmp/adr-source
+
       - name: Upload ADRs
         uses: actions/upload-artifact@v4
         with:
           name: adr-list
           retention-days: 3
           path: tmp/adr-source
+
       - name: Send status to Slack
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         if: ${{ failure() && github.ref == 'refs/heads/main'}}
@@ -180,24 +187,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: false
+
       - name: Generate javadocs
         working-directory: ./backend
         run: ./gradlew javadoc
+
       - name: Upload javadocs
         uses: actions/upload-artifact@v4
         with:
           name: backend-code-documentation
           retention-days: 3
           path: backend/build/docs/javadoc/
+
       - name: Send status to Slack
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         if: ${{ failure() && github.ref == 'refs/heads/main'}}
