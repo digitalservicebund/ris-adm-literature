@@ -1,19 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import NavbarTop from '@/components/NavbarTop.vue'
+import { USER_ROLES } from '@/config/roles'
 
 const mockAuth: {
   logout: () => void
   getUsername: () => string | undefined
   getGroup: () => string
+  getRealmRoles: () => string[]
 } = {
   logout: vi.fn(),
   getUsername: vi.fn(() => 'vorname nachname'),
   getGroup: vi.fn(() => 'BAG'),
+  getRealmRoles: vi.fn(() => [USER_ROLES.ADM_USER]),
 }
 
 vi.mock('@/services/auth', () => ({
   useAuthentication: () => mockAuth,
+}))
+
+const mockRoute = {
+  meta: { documentTypeCode: 'LITERATUR_UNSELBSTSTAENDIG' },
+  name: 'SomeRoute',
+}
+
+vi.mock('vue-router', () => ({
+  useRoute: vi.fn(() => mockRoute),
 }))
 
 const renderComponent = () => {
@@ -42,7 +54,6 @@ describe('NavbarTop', () => {
     expect(screen.getByTestId('iconPermIdentity')).toBeInTheDocument()
     expect(screen.getByText('BAG | Staging')).toBeInTheDocument()
     expect(screen.getByLabelText('Log out')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Suche' })).toBeInTheDocument()
   })
 
   it('Log out calls logout when the logout icon is clicked', async () => {

@@ -6,8 +6,22 @@ import IconPermIdentity from '~icons/ic/baseline-perm-identity'
 import IconLogout from '~icons/ic/baseline-logout'
 import FlexContainer from '@/components/FlexContainer.vue'
 import FlexItem from '@/components/FlexItem.vue'
+import { useRoute } from 'vue-router'
+import { ROUTE_NAMES } from '@/constants/routes'
+import { DocumentTypeCode } from '@/domain/documentType'
 
-const { getUsername, logout, getGroup } = useAuthentication()
+const { getUsername, logout, getGroup, getRealmRoles } = useAuthentication()
+const route = useRoute()
+
+const searchPath = computed(() => {
+  const roles = getRealmRoles()
+  if (roles.length > 1) {
+    return route.meta.documentTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+      ? { name: ROUTE_NAMES.ULI.START_PAGE }
+      : { name: ROUTE_NAMES.ADM.START_PAGE }
+  }
+  return '/'
+})
 
 const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`))
 </script>
@@ -21,7 +35,10 @@ const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`
         <span class="ris-body1-bold">Rechtsinformationen</span>
         <span class="leading-none text-gray-900">des Bundes</span>
       </div>
-      <router-link to="/" class="ris-label1-regular p-8 hover:bg-yellow-500 hover:underline"
+      <router-link
+        v-if="route.name !== ROUTE_NAMES.ROOT_REDIRECT"
+        :to="searchPath"
+        class="ris-label1-regular p-8 hover:bg-yellow-500 hover:underline"
         >Suche</router-link
       >
     </div>
