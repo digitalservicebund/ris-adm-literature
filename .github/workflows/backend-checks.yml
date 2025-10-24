@@ -5,6 +5,8 @@ on:
         required: true
       SONAR_TOKEN_BACKEND:
         required: true
+      GRADLE_ENCRYPTION_KEY:
+        required: true
 
 jobs:
   quality-checks:
@@ -26,10 +28,13 @@ jobs:
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      # let setup-gradle handle caching
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          # Enables configuration cache and build cache persistence
 
       - name: Run quality checks
         working-directory: ./backend
@@ -41,7 +46,6 @@ jobs:
             --no-daemon
 
       - name: On failure send status to Slack
-        # only on failure and if on "main" branch
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
         with:
@@ -60,10 +64,11 @@ jobs:
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -120,10 +125,11 @@ jobs:
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Check licenses
         working-directory: ./backend
@@ -177,10 +183,11 @@ jobs:
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Generate javadocs
         working-directory: ./backend

@@ -4,6 +4,10 @@ on:
   workflow_dispatch: # Manual trigger
   schedule:
     - cron: "0 3 * * 1" # Mondays at 4am (winter) or 5am (summer) Berlin time
+  workflow_call:
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
 
 jobs:
   test-unpinning-libraries:
@@ -19,10 +23,11 @@ jobs:
         with:
           java-version: "25.0"
           distribution: "temurin"
-          cache: gradle
-          cache-dependency-path: | # optional
-            backend/*.gradle*
-            backend/**/gradle-wrapper.properties
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       # Step 1: Unpin pinned libraries:
       # 1. the libraries are unpinned in build.gradle.kts
