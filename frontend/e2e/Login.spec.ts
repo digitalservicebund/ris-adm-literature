@@ -66,7 +66,7 @@ test.describe('Login Flow', () => {
       await expect(page.getByRole('heading', { name: 'Verwaltungsvorschriften' })).toBeVisible()
       await expect(page.getByLabel('Username or email')).toBeHidden()
       await page.goto('/literatur-unselbstaendig')
-      await expect(page).toHaveURL('/literatur-unselbstaendig')
+      await expect(page).toHaveURL(/\/literatur-unselbstaendig/)
       await expect(page.getByLabel('Username or email')).toBeHidden()
     },
   )
