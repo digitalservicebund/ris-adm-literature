@@ -19,7 +19,7 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr', () => {
       await page.getByText('Speichern').click()
 
       // then
-      await expect(page.getByText(/Zuletzt .* Uhr/)).toBeVisible()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
 
       // when
       await page.reload()

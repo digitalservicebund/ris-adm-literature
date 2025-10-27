@@ -54,7 +54,7 @@ describe('documentUnit InfoPanel', () => {
     await user.click(screen.getByRole('button', { name: 'Speichern' }))
 
     // then
-    expect(await screen.findByText('Zuletzt', { exact: false })).toBeInTheDocument()
+    expect(await screen.findByText('Gespeichert', { exact: false })).toBeInTheDocument()
   })
 
   it('click on save renders error information', async () => {

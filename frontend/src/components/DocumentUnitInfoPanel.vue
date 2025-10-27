@@ -61,7 +61,7 @@ const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError
       </p>
       <p v-else-if="saveIsInProgress === true" class="ris-label1-regular">speichern...</p>
       <p v-else-if="formattedLastSavedOn != undefined" class="ris-label1-regular">
-        Zuletzt
+        Gespeichert:
         <span>{{ formattedLastSavedOn }}</span>
         Uhr
       </p>
