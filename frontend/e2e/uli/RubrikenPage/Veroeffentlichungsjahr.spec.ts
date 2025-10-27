@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.describe('ULI Rubriken - Veroeffentlichungsjahr', () => {
   test(
     'Veroeffentlichungsjahr is a mandatory field and its value persists after saving and reloading',
-    { tag: ['@RISDEV-9372'] },
+    { tag: ['@RISDEV-9372', '@RISDEV-9373'] },
     async ({ page }) => {
       // when
       await page.goto('/')
@@ -17,6 +17,11 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr', () => {
       const yearInput = page.getByRole('textbox', { name: 'Veröffentlichungsjahr' })
       await yearInput.fill('2025')
       await page.getByText('Speichern').click()
+
+      // then
+      await expect(page.getByText(/Zuletzt .* Uhr/)).toBeVisible()
+
+      // when
       await page.reload()
 
       // then
