@@ -198,7 +198,11 @@ jobs:
 
       - name: Generate javadocs
         working-directory: ./backend
-        run: ./gradlew javadoc
+        run: |
+          ./gradlew javadoc \
+            --configuration-cache \
+            --build-cache \
+            --no-daemon
 
       - name: Upload javadocs
         uses: actions/upload-artifact@v4
