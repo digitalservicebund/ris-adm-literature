@@ -33,6 +33,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Disable man-db auto update (until fixed in Ubuntu) # we be fixed by 10.11.25 https://github.com/actions/runner-images/issues/13213
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          echo "set man-db/auto-update false" | sudo debconf-communicate
+          sudo dpkg-reconfigure -f noninteractive man-db
+
       - uses: actions/checkout@v5
       # setup backend
       - name: Set up JDK
