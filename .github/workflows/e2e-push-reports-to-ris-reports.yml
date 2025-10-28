@@ -25,7 +25,7 @@ jobs:
       ########################################################################
 
       - name: Download artifact frontend e2e test report
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: frontend-e2e-test-report-html
           path: tmp/frontend-e2e-test-report-html
