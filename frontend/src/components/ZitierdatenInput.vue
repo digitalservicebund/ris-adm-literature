@@ -28,13 +28,16 @@ function onUpdate(dates: string[]) {
 
 function validate(dates: string[]): boolean {
   const messages = [getInvalidDateErrMessage(dates), getFutureDateErrMessage(dates)].filter(Boolean)
-  if (messages.length > 0) {
-    validationStore.add(messages[0], 'zitierdaten')
+
+  const [firstMessage] = messages
+
+  if (firstMessage) {
+    validationStore.add(firstMessage, 'zitierdaten')
     return false
-  } else {
-    validationStore.remove('zitierdaten')
-    return true
   }
+
+  validationStore.remove('zitierdaten')
+  return true
 }
 </script>
 
@@ -47,7 +50,7 @@ function validate(dates: string[]): boolean {
     v-slot="slotProps"
   >
     <RisChipsInput
-      id="zitierdaten"
+      inputId="zitierdaten"
       :model-value="zitierdaten"
       @update:model-value="onUpdate"
       aria-label="Zitierdatum"

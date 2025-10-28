@@ -200,7 +200,7 @@ watch(
         <div class="flex flex-col w-full">
           <InputField id="aktenzeichen" label="Aktenzeichen">
             <RisChipsInput
-              id="aktenzeichen"
+              inputId="aktenzeichen"
               v-model="aktenzeichen"
               aria-label="Aktenzeichen"
             ></RisChipsInput>

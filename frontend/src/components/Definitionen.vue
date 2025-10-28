@@ -21,7 +21,11 @@ const showChips = ref(false)
 
 <template>
   <InputField v-if="definitionen.length > 0 || showChips" id="definition" label="Definition">
-    <RisChipsInput id="definition" v-model="definitionen" aria-label="Definition"></RisChipsInput>
+    <RisChipsInput
+      inputId="definition"
+      v-model="definitionen"
+      aria-label="Definition"
+    ></RisChipsInput>
   </InputField>
   <Button
     v-else
