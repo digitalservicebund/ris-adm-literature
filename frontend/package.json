@@ -33,7 +33,7 @@
     "@sentry/vite-plugin": "^4.5.0",
     "@sentry/vue": "^10.22.0",
     "@tailwindcss/postcss": "^4.1.14",
-    "@tiptap/extension-blockquote": "^3.8.0",
+    "@tiptap/extension-blockquote": "^3.9.0",
     "@tiptap/extension-document": "^3.8.0",
     "@tiptap/extension-image": "^3.8.0",
     "@tiptap/extension-list": "^3.8.0",
