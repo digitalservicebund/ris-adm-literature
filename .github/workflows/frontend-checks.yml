@@ -104,14 +104,14 @@ jobs:
         working-directory: ./frontend
       - name: Upload unit test JSON report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: frontend-unit-test-report.json
           retention-days: 3
           path: frontend/frontend-unit-test-report.json
       - name: Upload unit test HTML report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: frontend-unit-test-report-html
           retention-days: 3
@@ -191,7 +191,7 @@ jobs:
         working-directory: ./frontend
       - name: Upload licence report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: frontend-license-report
           retention-days: 3

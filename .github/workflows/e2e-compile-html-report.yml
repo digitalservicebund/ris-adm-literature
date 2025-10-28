@@ -61,7 +61,7 @@ jobs:
           npx playwright merge-reports --reporter html ../tmp/e2e-test-report
       - name: Upload e2e HTML test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: frontend-e2e-test-report-html
           retention-days: 3

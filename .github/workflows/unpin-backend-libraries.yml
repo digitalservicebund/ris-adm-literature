@@ -68,7 +68,7 @@ jobs:
           exit-code: 0
       - name: Upload trivy results as artifact
         if: env.PINNED_DEPS_FOUND == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: backend-trivy-image-results.sarif
           retention-days: 3
@@ -127,7 +127,7 @@ jobs:
           exit-code: 1 # if any level of CVE is found, break the pipeline
       - name: Upload new trivy results as artifact
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: backend-trivy-image-results-2.sarif
           retention-days: 3
