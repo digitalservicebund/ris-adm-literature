@@ -8,14 +8,14 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Defines application roles, each mapping to a document type and providing logic
+ * Defines application roles, each mapping to a document documentCategory and providing logic
  * to determine a user's {@link DocumentationOffice} from their JWT claims.
  */
 @Getter
 @RequiredArgsConstructor
 public enum ApplicationRole {
   // TODO: Remove adm_vwv_user once roles are defined in bareId // NOSONAR
-  ADMINISTRATIVE(List.of("adm_user", "adm_vwv_user"), DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN) {
+  ADMINISTRATIVE(List.of("adm_user", "adm_vwv_user"), DocumentCategory.VERWALTUNGSVORSCHRIFTEN) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       // For administrative users, the office is always BSG.
@@ -23,7 +23,7 @@ public enum ApplicationRole {
     }
   },
 
-  LITERATURE(List.of("literature_user"), DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG) {
+  LITERATURE(List.of("literature_user"), DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       List<String> groups = jwt.getClaimAsStringList("groups");
@@ -39,7 +39,7 @@ public enum ApplicationRole {
   };
 
   private final List<String> roleNames;
-  private final DocumentTypeCode documentTypeCode;
+  private final DocumentCategory documentCategory;
 
   /**
    * Determines the documentation office based on the specific logic for each role.

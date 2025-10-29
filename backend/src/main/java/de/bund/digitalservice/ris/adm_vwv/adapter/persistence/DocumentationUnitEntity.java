@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import jakarta.persistence.*;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class DocumentationUnitEntity {
 
   @Enumerated(EnumType.STRING)
   @Basic(optional = false)
-  private DocumentTypeCode documentationUnitType;
+  private DocumentCategory documentationUnitType;
 
   @Enumerated(EnumType.STRING)
   @Basic(optional = false)

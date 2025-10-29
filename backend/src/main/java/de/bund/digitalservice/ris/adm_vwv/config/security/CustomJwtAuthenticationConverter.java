@@ -1,8 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config.security;
 
 import de.bund.digitalservice.ris.adm_vwv.application.ApplicationRole;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -67,11 +65,10 @@ public class CustomJwtAuthenticationConverter
       throw new IllegalStateException("User does not have a required application role.");
     }
 
-    DocumentTypeCode type = applicationRole.getDocumentTypeCode();
-    DocumentationOffice office = applicationRole.getDocumentationOffice(jwt);
-
-    var userDetails = new UserDocumentDetails(office, type);
-
+    var userDetails = new UserDocumentDetails(
+      applicationRole.getDocumentationOffice(jwt),
+      applicationRole.getDocumentCategory()
+    );
     return new UserDetailsAuthenticationToken(userDetails, jwt, authorities);
   }
 }

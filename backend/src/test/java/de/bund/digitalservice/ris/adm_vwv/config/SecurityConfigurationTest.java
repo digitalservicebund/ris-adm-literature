@@ -3,7 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.config;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.CustomJwtAuthenticationConverter;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
@@ -49,7 +49,7 @@ class SecurityConfigurationTest {
 
     UserDocumentDetails details = (UserDocumentDetails) token.getPrincipal();
     assertThat(details.office()).isEqualTo(DocumentationOffice.BSG);
-    assertThat(details.type()).isEqualTo(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+    assertThat(details.documentCategory()).isEqualTo(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
   }
 
   @Test

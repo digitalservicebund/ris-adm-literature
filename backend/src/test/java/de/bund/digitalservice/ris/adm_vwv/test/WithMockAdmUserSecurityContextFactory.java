@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.test;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +17,7 @@ public class WithMockAdmUserSecurityContextFactory
 
     var principal = new UserDocumentDetails(
       DocumentationOffice.BSG,
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
     );
 
     var auth = new UsernamePasswordAuthenticationToken(principal, "password");
