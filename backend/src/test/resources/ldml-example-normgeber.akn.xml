@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-  xmlns:ris="http://ldml.neuris.de/metadata/">
+  xmlns:ris="http://ldml.neuris.de/meta/">
   <akn:doc name="offene-struktur">
     <akn:meta>
       <akn:identification source="attributsemantik-noch-undefiniert">
@@ -33,7 +33,7 @@
         </akn:otherReferences>
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
-        <ris:metadata>
+        <ris:meta>
           <ris:normgeber staat="JurpnOrgan"/>
           <ris:normgeber staat="AA" organ="JurpnOrgan"/>
           <ris:fieldsOfLaw>
@@ -58,7 +58,7 @@
             <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 1a" position="Abs 1"/>
             <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 2" position="Abs 6"/>
           </ris:activeReferences>
-        </ris:metadata>
+        </ris:meta>
       </akn:proprietary>
     </akn:meta>
     <akn:preface>

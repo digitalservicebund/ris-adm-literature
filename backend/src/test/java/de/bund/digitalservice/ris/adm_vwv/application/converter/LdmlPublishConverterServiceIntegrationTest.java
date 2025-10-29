@@ -36,7 +36,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     // then
     assertThat(xml).contains(
       """
-      <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
+      <akn:FRBRalias name="dokumentnummer" value="KSNR00000011"/>
       """
     );
   }
@@ -63,14 +63,14 @@ class LdmlPublishConverterServiceIntegrationTest {
     // then
     assertThat(xml).contains(
       """
-      <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
+      <akn:FRBRalias name="dokumentnummer" value="KSNR00000011"/>
       """
     );
   }
 
   @Test
   @DisplayName(
-    "Converts Inkrafttretedatum, Ausserkrafttretedatum and Zitierdaten to tags in ris:metadata"
+    "Converts Inkrafttretedatum, Ausserkrafttretedatum and Zitierdaten to tags in ris:meta"
   )
   void convertToLdml_dates() {
     // given
@@ -298,7 +298,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
-  @DisplayName("Converts two 'Normgeber' to two ris:normgeber in ris:metadata")
+  @DisplayName("Converts two 'Normgeber' to two ris:normgeber in ris:meta")
   void convertToLdml_normgeber() {
     // given
     DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
@@ -387,7 +387,7 @@ class LdmlPublishConverterServiceIntegrationTest {
 
   @Test
   @DisplayName(
-    "Converts 'Sachgebiete', 'Dokumenttyp', 'Dokumenttypzusatz', and 'Aktenzeichen' into ris:metadata"
+    "Converts 'Sachgebiete', 'Dokumenttyp', 'Dokumenttypzusatz', and 'Aktenzeichen' into ris:meta"
   )
   void convertToLdml_classifications() {
     // given
@@ -440,9 +440,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
-  @DisplayName(
-    "Converts 'Dokumenttyp' without 'Dokumenttypzusatz' to ris:documentType in ris:metadata"
-  )
+  @DisplayName("Converts 'Dokumenttyp' without 'Dokumenttypzusatz' to ris:documentType in ris:meta")
   void convertToLdml_noDokumenttypZusatz() {
     // given
     DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
@@ -629,7 +627,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
-  @DisplayName("Converts 'Aktivverweisungen' into ris:activeReferences in ris:metadata")
+  @DisplayName("Converts 'Aktivverweisungen' into ris:activeReferences in ris:meta")
   void convertToLdml_activeReferences() {
     // given
     DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
@@ -712,7 +710,7 @@ class LdmlPublishConverterServiceIntegrationTest {
 
   @Test
   @DisplayName(
-    "Keeps 'Zuordnungen', 'Verwaltungsdaten', 'Juris-Abkürzung', and 'Region' from previous document version in ris:metadata"
+    "Keeps 'Zuordnungen', 'Verwaltungsdaten', 'Juris-Abkürzung', and 'Region' from previous document version in ris:meta"
   )
   void convertToLdml_previousVersionContent() {
     // given
@@ -768,7 +766,9 @@ class LdmlPublishConverterServiceIntegrationTest {
           </dokstelle>
       </ris:historicAdministrativeData>""".indent(20),
       """
-      <ris:region>DEU</ris:region>
+      <ris:regionen>
+          <ris:region>DEU</ris:region>
+      </ris:regionen>
       <ris:historicAbbreviation>VR Bundesausschuss 2025-01-01 12345</ris:historicAbbreviation>""".indent(
           20
         )
@@ -815,6 +815,7 @@ class LdmlPublishConverterServiceIntegrationTest {
           <akn:FRBRWork>
               <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
               <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
+              <akn:FRBRalias name="dokumentnummer" value="KSNR1234567890"/>
               <akn:FRBRdate date="${generierung}" name="erfassungsdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRcountry value="de"/>
@@ -825,7 +826,6 @@ class LdmlPublishConverterServiceIntegrationTest {
           <akn:FRBRExpression>
               <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu"/>
               <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9/2025-02-02/deu"/>
-              <akn:FRBRalias name="documentNumber" value="KSNR1234567890"/>
               <akn:FRBRdate date="2025-02-02" name="zitierdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRlanguage language="deu"/>
@@ -964,7 +964,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   }
 
   @Test
-  @DisplayName("Converts berufsbilder, titelAspekte and definitionen in ris:metadata")
+  @DisplayName("Converts berufsbilder, titelAspekte and definitionen in ris:meta")
   void convertToLdml_berufsbilder_titelAspekte_definitionen() {
     // given
     DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(

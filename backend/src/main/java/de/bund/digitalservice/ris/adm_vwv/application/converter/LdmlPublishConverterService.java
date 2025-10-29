@@ -52,19 +52,13 @@ public class LdmlPublishConverterService {
       // If there is a previous version it could be a migrated documented. In that case we have to hold some
       // historic data.
       akomaNtoso = xmlReader.readXml(previousXmlVersion);
-      RisMetadata previousRisMetadata = akomaNtoso
-        .getDoc()
-        .getMeta()
-        .getProprietary()
-        .getMetadata();
+      RisMeta previousRisMeta = akomaNtoso.getDoc().getMeta().getProprietary().getMeta();
       Meta meta = createMeta(documentationUnitContent.documentNumber());
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setHistoricAdministrativeData(
-        previousRisMetadata.getHistoricAdministrativeData()
-      );
-      risMetadata.setHistoricAbbreviation(previousRisMetadata.getHistoricAbbreviation());
-      risMetadata.setZuordnungen(previousRisMetadata.getZuordnungen());
-      risMetadata.setRegion(previousRisMetadata.getRegion());
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setHistoricAdministrativeData(previousRisMeta.getHistoricAdministrativeData());
+      risMeta.setHistoricAbbreviation(previousRisMeta.getHistoricAbbreviation());
+      risMeta.setZuordnungen(previousRisMeta.getZuordnungen());
+      risMeta.setRegionen(previousRisMeta.getRegionen());
       normalizeHistoricAdministrativeData(meta);
       akomaNtoso.getDoc().setMeta(meta);
       akomaNtoso.getDoc().setPreface(new Preface());
@@ -121,34 +115,34 @@ public class LdmlPublishConverterService {
   private Meta createMeta(String documentNumber) {
     Meta meta = new Meta();
     Identification identification = new Identification();
-    FrbrElement frbrExpression = new FrbrElement();
+    FrbrElement frbrWork = new FrbrElement();
     FrbrAlias frbrAlias = new FrbrAlias();
-    frbrAlias.setName("documentNumber");
+    frbrAlias.setName("Dokumentnummer");
     frbrAlias.setValue(documentNumber);
-    frbrExpression.setFrbrAlias(List.of(frbrAlias));
-    identification.setFrbrExpression(frbrExpression);
+    frbrWork.setFrbrAlias(List.of(frbrAlias));
+    identification.setFrbrWork(frbrWork);
     meta.setIdentification(identification);
     return meta;
   }
 
   private void setInkrafttretedatum(Meta meta, String inkrafttretedatum) {
     if (inkrafttretedatum != null) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setEntryIntoEffectDate(inkrafttretedatum);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setEntryIntoEffectDate(inkrafttretedatum);
     }
   }
 
   private void setAusserkrafttretedatum(Meta meta, String ausserkrafttretedatum) {
     if (ausserkrafttretedatum != null) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setExpiryDate(ausserkrafttretedatum);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setExpiryDate(ausserkrafttretedatum);
     }
   }
 
   private void setZitierdaten(Meta meta, List<String> zitierdaten) {
     if (CollectionUtils.isNotEmpty(zitierdaten)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setDateToQuoteList(zitierdaten);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setDateToQuoteList(zitierdaten);
     }
   }
 
@@ -168,8 +162,8 @@ public class LdmlPublishConverterService {
         .results()
         .map(matchResult -> unescapeHtml(matchResult.group(1)))
         .toList();
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setTableOfContentsEntries(entries);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setTableOfContentsEntries(entries);
     }
   }
 
@@ -224,7 +218,7 @@ public class LdmlPublishConverterService {
 
   private void setNormgeber(Meta meta, List<Normgeber> normgeberList) {
     if (CollectionUtils.isNotEmpty(normgeberList)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
       List<RisNormgeber> risNormgeberList = normgeberList
         .stream()
         .map(normgeber -> {
@@ -238,7 +232,7 @@ public class LdmlPublishConverterService {
           return risNormgeber;
         })
         .toList();
-      risMetadata.setNormgeber(risNormgeberList);
+      risMeta.setNormgeber(risNormgeberList);
     }
   }
 
@@ -263,8 +257,8 @@ public class LdmlPublishConverterService {
 
   private void setSachgebiete(Meta meta, List<FieldOfLaw> fieldsOfLaw) {
     if (CollectionUtils.isNotEmpty(fieldsOfLaw)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setFieldsOfLaw(
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setFieldsOfLaw(
         fieldsOfLaw
           .stream()
           .map(fieldOfLaw -> {
@@ -288,13 +282,13 @@ public class LdmlPublishConverterService {
       value += " " + sanitizedZusatz;
     }
     risDocumentType.setValue(value);
-    meta.getOrCreateProprietary().getMetadata().setDocumentType(risDocumentType);
+    meta.getOrCreateProprietary().getMeta().setDocumentType(risDocumentType);
   }
 
   private void setAktenzeichen(Meta meta, List<String> aktenzeichen) {
     if (CollectionUtils.isNotEmpty(aktenzeichen)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setReferenceNumbers(aktenzeichen.stream().map(this::unescapeHtml).toList());
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setReferenceNumbers(aktenzeichen.stream().map(this::unescapeHtml).toList());
     }
   }
 
@@ -405,8 +399,8 @@ public class LdmlPublishConverterService {
 
   private void setActiveReferences(Meta meta, List<ActiveReference> activeReferences) {
     if (CollectionUtils.isNotEmpty(activeReferences)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setActiveReferences(
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setActiveReferences(
         activeReferences
           .stream()
           .flatMap(activeReference -> {
@@ -439,15 +433,15 @@ public class LdmlPublishConverterService {
 
   private void setBerufsbilder(Meta meta, List<String> berufsbilder) {
     if (CollectionUtils.isNotEmpty(berufsbilder)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setBerufsbilder(berufsbilder);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setBerufsbilder(berufsbilder);
     }
   }
 
   private void setTitelAspekte(Meta meta, List<String> titelAspekte) {
     if (CollectionUtils.isNotEmpty(titelAspekte)) {
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setTitelAspekte(titelAspekte);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setTitelAspekte(titelAspekte);
     }
   }
 
@@ -462,8 +456,8 @@ public class LdmlPublishConverterService {
         })
         .toList();
 
-      RisMetadata risMetadata = meta.getOrCreateProprietary().getMetadata();
-      risMetadata.setDefinitionen(risDefinitionen);
+      RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
+      risMeta.setDefinitionen(risDefinitionen);
     }
   }
 
@@ -482,7 +476,7 @@ public class LdmlPublishConverterService {
   private void normalizeHistoricAdministrativeData(Meta meta) {
     JaxbHtml historicAdministrativeData = meta
       .getOrCreateProprietary()
-      .getMetadata()
+      .getMeta()
       .getHistoricAdministrativeData();
     if (historicAdministrativeData != null) {
       List<?> nodes = historicAdministrativeData.getHtml();
@@ -509,10 +503,7 @@ public class LdmlPublishConverterService {
 
   private void setIdentification(Meta meta, DocumentationUnitContent documentationUnitContent) {
     Identification identification = new IdentificationConverter()
-      .convert(
-        documentationUnitContent,
-        meta.getOrCreateProprietary().getMetadata().getZuordnungen()
-      );
+      .convert(documentationUnitContent, meta.getOrCreateProprietary().getMeta().getZuordnungen());
     meta.setIdentification(identification);
   }
 }

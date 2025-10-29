@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://ldml.neuris.de/metadata/"
+<xs:schema xmlns="http://ldml.neuris.de/meta/"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified"
-           targetNamespace="http://ldml.neuris.de/metadata/"
+           targetNamespace="http://ldml.neuris.de/meta/"
            version="1.0">
-    <xs:element name="metadata">
+    <xs:element name="meta">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="normgeber" minOccurs="0" maxOccurs="unbounded">
@@ -105,7 +105,22 @@
                         </xs:choice>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="region" minOccurs="0" type="xs:string"/>
+                <xs:element name="regionen" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="region" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="domainTerm" type="xs:string" use="required"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="domainTerm" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="historicAbbreviation" minOccurs="0" type="xs:string"/>
                 <xs:element name="activeReferences" minOccurs="0">
                     <xs:complexType>
