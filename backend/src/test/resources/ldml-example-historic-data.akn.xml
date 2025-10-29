@@ -8,7 +8,7 @@
         <akn:FRBRWork>
           <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
           <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
-          <akn:FRBRalias name="dokumentnummer" value="KSNR1234567890"/>
+          <akn:FRBRalias name="Dokumentnummer" value="KSNR1234567890"/>
           <akn:FRBRdate date="2025-01-01" name="erfassungsdatum" />
           <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
           <akn:FRBRcountry value="de"/>

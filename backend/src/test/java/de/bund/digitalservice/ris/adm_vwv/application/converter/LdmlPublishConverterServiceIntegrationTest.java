@@ -36,7 +36,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     // then
     assertThat(xml).contains(
       """
-      <akn:FRBRalias name="dokumentnummer" value="KSNR00000011"/>
+      <akn:FRBRalias name="Dokumentnummer" value="KSNR00000011"/>
       """
     );
   }
@@ -63,7 +63,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     // then
     assertThat(xml).contains(
       """
-      <akn:FRBRalias name="dokumentnummer" value="KSNR00000011"/>
+      <akn:FRBRalias name="Dokumentnummer" value="KSNR00000011"/>
       """
     );
   }
@@ -815,7 +815,7 @@ class LdmlPublishConverterServiceIntegrationTest {
           <akn:FRBRWork>
               <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
               <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss-uet-1/2025/x-43-i-9"/>
-              <akn:FRBRalias name="dokumentnummer" value="KSNR1234567890"/>
+              <akn:FRBRalias name="Dokumentnummer" value="KSNR1234567890"/>
               <akn:FRBRdate date="${generierung}" name="erfassungsdatum"/>
               <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
               <akn:FRBRcountry value="de"/>

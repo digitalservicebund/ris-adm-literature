@@ -38,7 +38,7 @@ class IdentificationConverter {
     frbrWork.setFrbrThis(new FrbrThis(eli.toWork()));
     frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
     FrbrAlias frbrAlias = new FrbrAlias();
-    frbrAlias.setName("dokumentnummer");
+    frbrAlias.setName("Dokumentnummer");
     frbrAlias.setValue(documentationUnitContent.documentNumber());
     frbrWork.setFrbrAlias(List.of(frbrAlias));
     FrbrDate erfassungsdatum = new FrbrDate();
