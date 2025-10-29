@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.http.HttpServletRequest;
@@ -82,10 +82,10 @@ public class RequestCompletionInterceptor implements HandlerInterceptor {
         !request.getRequestURI().startsWith("/environment") &&
         authentication != null &&
         authentication.getPrincipal() instanceof
-        UserDocumentDetails(DocumentationOffice office, DocumentTypeCode type)
+        UserDocumentDetails(DocumentationOffice office, DocumentCategory documentCategory)
       ) {
-        if (type != null) {
-          logMessage.append(" documentationType=").append(type);
+        if (documentCategory != null) {
+          logMessage.append(" documentationType=").append(documentCategory);
         }
         if (office != null) {
           logMessage.append(" documentationOffice=").append(office);

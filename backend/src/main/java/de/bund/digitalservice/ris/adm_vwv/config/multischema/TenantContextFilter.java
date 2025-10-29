@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,12 +46,12 @@ public class TenantContextFilter extends OncePerRequestFilter {
     try {
       String headerDocumentType = request.getHeader("X-Document-Type");
       SchemaType schemaToUse;
-      DocumentTypeCode activeDocumentType = null;
+      DocumentCategory activeDocumentCategory = null;
 
       if (headerDocumentType != null) {
         try {
-          activeDocumentType = DocumentTypeCode.valueOf(headerDocumentType);
-          schemaToUse = switch (activeDocumentType) {
+          activeDocumentCategory = DocumentCategory.valueOf(headerDocumentType);
+          schemaToUse = switch (activeDocumentCategory) {
             case VERWALTUNGSVORSCHRIFTEN -> SchemaType.ADM;
             case LITERATUR_SELBSTSTAENDIG, LITERATUR_UNSELBSTSTAENDIG -> SchemaType.LIT;
           };
@@ -65,7 +65,7 @@ public class TenantContextFilter extends OncePerRequestFilter {
       }
 
       // Update the Security Principal
-      if (activeDocumentType != null) {
+      if (activeDocumentCategory != null) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication oldAuth = context.getAuthentication();
 
@@ -76,7 +76,7 @@ public class TenantContextFilter extends OncePerRequestFilter {
         ) {
           UserDocumentDetails newDetails = new UserDocumentDetails(
             oldDetails.office(),
-            activeDocumentType
+            activeDocumentCategory
           );
 
           Authentication newAuth = new UsernamePasswordAuthenticationToken(
@@ -88,7 +88,7 @@ public class TenantContextFilter extends OncePerRequestFilter {
           context.setAuthentication(newAuth);
           log.debug(
             "Updated SecurityContext principal with active DocumentType: {}",
-            activeDocumentType
+            activeDocumentCategory
           );
         }
       }

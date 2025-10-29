@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.persistence;
 
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
@@ -26,4 +27,7 @@ public class DocumentTypeEntity {
   private String abbreviation;
 
   private String name;
+
+  @Enumerated(EnumType.STRING)
+  private DocumentCategory documentCategory;
 }

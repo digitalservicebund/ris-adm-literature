@@ -91,7 +91,7 @@ public class DocumentationUnitPersistenceService {
     UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
 
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create(details.office(), details.type())
+      documentationUnitCreationService.create(details.office(), details.documentCategory())
     );
     log.info(
       "New documentation unit created with document number: {}",
@@ -387,7 +387,7 @@ public class DocumentationUnitPersistenceService {
   private static class DocumentationUnitIndex {
 
     private final DocumentationUnitEntity documentationUnitEntity;
-    private DocumentTypeCode documentationUnitType;
+    private DocumentCategory documentationUnitType;
     private DocumentationOffice documentationOffice;
     private String langueberschrift;
     private String fundstellen;

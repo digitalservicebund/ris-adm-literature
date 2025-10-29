@@ -6,7 +6,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentTypeCode;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.servlet.FilterChain;
@@ -80,7 +80,7 @@ class TenantContextFilterTest {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       UserDocumentDetails principal = (UserDocumentDetails) auth.getPrincipal();
       assertThat(principal.office()).isEqualTo(DocumentationOffice.BSG);
-      assertThat(principal.type()).isEqualTo(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN);
+      assertThat(principal.documentCategory()).isEqualTo(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
 
       return null;
     })
@@ -110,7 +110,7 @@ class TenantContextFilterTest {
         .getAuthentication()
         .getPrincipal();
       assertThat(principal.office()).isEqualTo(DocumentationOffice.BAG);
-      assertThat(principal.type()).isEqualTo(DocumentTypeCode.LITERATUR_SELBSTSTAENDIG);
+      assertThat(principal.documentCategory()).isEqualTo(DocumentCategory.LITERATUR_SELBSTSTAENDIG);
 
       return null;
     })
@@ -163,7 +163,7 @@ class TenantContextFilterTest {
       UserDocumentDetails principal = (UserDocumentDetails) SecurityContextHolder.getContext()
         .getAuthentication()
         .getPrincipal();
-      assertThat(principal.type()).isNull();
+      assertThat(principal.documentCategory()).isNull();
 
       return null;
     })
@@ -191,7 +191,7 @@ class TenantContextFilterTest {
       UserDocumentDetails principal = (UserDocumentDetails) SecurityContextHolder.getContext()
         .getAuthentication()
         .getPrincipal();
-      assertThat(principal.type()).isNull();
+      assertThat(principal.documentCategory()).isNull();
 
       return null;
     })

@@ -31,15 +31,15 @@ class ApplicationRoleTest {
 
     @ParameterizedTest
     @MethodSource("provideRoleAndItsProperties")
-    @DisplayName("should have the correct role name and document type")
+    @DisplayName("should have the correct role name and document documentCategory")
     void shouldHaveCorrectProperties(
       ApplicationRole role,
       String expectedRoleName,
-      DocumentTypeCode expectedType
+      DocumentCategory expectedType
     ) {
       // Then
       assertThat(role.getRoleNames().getFirst()).isEqualTo(expectedRoleName);
-      assertThat(role.getDocumentTypeCode()).isEqualTo(expectedType);
+      assertThat(role.getDocumentCategory()).isEqualTo(expectedType);
     }
 
     private static Stream<Arguments> provideRoleAndItsProperties() {
@@ -47,12 +47,12 @@ class ApplicationRoleTest {
         Arguments.of(
           ApplicationRole.ADMINISTRATIVE,
           "adm_user",
-          DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
+          DocumentCategory.VERWALTUNGSVORSCHRIFTEN
         ),
         Arguments.of(
           ApplicationRole.LITERATURE,
           "literature_user",
-          DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+          DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
         )
       );
     }
