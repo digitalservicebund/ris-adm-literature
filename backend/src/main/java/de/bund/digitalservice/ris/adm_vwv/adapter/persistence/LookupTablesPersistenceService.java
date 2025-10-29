@@ -50,7 +50,8 @@ public class LookupTablesPersistenceService {
       : Pageable.unpaged(sort);
     var documentTypes = StringUtils.isBlank(searchTerm)
       ? documentTypeRepository.findAll(pageable)
-      : documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+      : documentTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+        query.documentCategory(),
         searchTerm,
         searchTerm,
         pageable
@@ -62,11 +63,17 @@ public class LookupTablesPersistenceService {
    * Finds a single document type by its abbreviation.
    *
    * @param abbreviation The abbreviation of the document type to find.
+   * @param documentCategory The documentation category of the document type to find
    * @return An {@link Optional} containing the found {@link DocumentType}, or empty if not found.
    */
   @Transactional(readOnly = true)
-  public Optional<DocumentType> findDocumentTypeByAbbreviation(@Nonnull String abbreviation) {
-    return documentTypeRepository.findByAbbreviation(abbreviation).map(mapDocumentTypeEntity());
+  public Optional<DocumentType> findDocumentTypeByAbbreviation(
+    @Nonnull String abbreviation,
+    @Nonnull DocumentCategory documentCategory
+  ) {
+    return documentTypeRepository
+      .findByAbbreviationAndDocumentCategory(abbreviation, documentCategory)
+      .map(mapDocumentTypeEntity());
   }
 
   private Function<DocumentTypeEntity, DocumentType> mapDocumentTypeEntity() {
@@ -314,7 +321,7 @@ public class LookupTablesPersistenceService {
   /**
    * Finds a single institution by its name and type.
    *
-   * @param name The name of the institution.
+   * @param name            The name of the institution.
    * @param institutionType The type of the institution.
    * @return An {@link Optional} containing the found {@link Institution}, or empty if not found.
    */
