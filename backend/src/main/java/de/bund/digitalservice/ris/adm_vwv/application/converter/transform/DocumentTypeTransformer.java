@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersistenceService;
+import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
@@ -31,7 +32,10 @@ public class DocumentTypeTransformer {
       .map(Proprietary::getMetadata)
       .map(RisMetadata::getDocumentType)
       .flatMap(risDocumentType ->
-        lookupTablesPersistenceService.findDocumentTypeByAbbreviation(risDocumentType.getCategory())
+        lookupTablesPersistenceService.findDocumentTypeByAbbreviation(
+          risDocumentType.getCategory(),
+          DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+        )
       )
       .orElse(null);
   }

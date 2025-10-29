@@ -54,13 +54,18 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
+    documentTypeEntity.setDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     given(documentTypeRepository.findAll(any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(documentTypeEntity))
     );
 
     // when
     var documentTypes = lookupTablesPersistenceService.findDocumentTypes(
-      new DocumentTypeQuery(null, new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+      new DocumentTypeQuery(
+        null,
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        new QueryOptions(0, 10, "name", Sort.Direction.ASC, true)
+      )
     );
 
     // then
@@ -73,8 +78,10 @@ class LookupTablesPersistenceServiceTest {
     DocumentTypeEntity documentTypeEntity = new DocumentTypeEntity();
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
+    documentTypeEntity.setDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     given(
-      documentTypeRepository.findByAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+      documentTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
+        eq(DocumentCategory.VERWALTUNGSVORSCHRIFTEN),
         eq("something"),
         eq("something"),
         any(Pageable.class)
@@ -83,7 +90,11 @@ class LookupTablesPersistenceServiceTest {
 
     // when
     var documentTypes = lookupTablesPersistenceService.findDocumentTypes(
-      new DocumentTypeQuery("something", new QueryOptions(0, 10, "name", Sort.Direction.ASC, true))
+      new DocumentTypeQuery(
+        "something",
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        new QueryOptions(0, 10, "name", Sort.Direction.ASC, true)
+      )
     );
 
     // then

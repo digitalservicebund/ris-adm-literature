@@ -36,7 +36,11 @@ class DocumentTypeControllerTest {
     String searchTerm = "verwaltungs";
     given(
       lookupTablesService.findDocumentTypes(
-        new DocumentTypeQuery(searchTerm, new QueryOptions(0, 2, "name", Sort.Direction.ASC, true))
+        new DocumentTypeQuery(
+          searchTerm,
+          DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+          new QueryOptions(0, 2, "name", Sort.Direction.ASC, true)
+        )
       )
     ).willReturn(
       TestPage.create(
@@ -52,6 +56,7 @@ class DocumentTypeControllerTest {
       .perform(
         get("/api/lookup-tables/document-types")
           .param("searchTerm", searchTerm)
+          .param("documentCategory", "VERWALTUNGSVORSCHRIFTEN")
           .param("pageSize", "2")
       )
       // then

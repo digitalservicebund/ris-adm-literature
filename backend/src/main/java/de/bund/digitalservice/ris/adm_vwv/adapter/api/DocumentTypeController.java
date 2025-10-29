@@ -21,6 +21,7 @@ public class DocumentTypeController {
    * Return document types (optionally with search term, pagination, sorting)
    *
    * @param searchTerm Keyword to restrict results to.
+   * @param documentCategory The document category to filter document types
    * @param pageNumber Which page of pagination to return?
    * @param pageSize How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
@@ -32,6 +33,10 @@ public class DocumentTypeController {
   @GetMapping("api/lookup-tables/document-types")
   public ResponseEntity<DocumentTypeResponse> getDocumentTypes(
     @RequestParam(required = false) String searchTerm,
+    @RequestParam(
+      required = false,
+      defaultValue = "VERWALTUNGSVORSCHRIFTEN"
+    ) DocumentCategory documentCategory,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "4") int pageSize,
     @RequestParam(defaultValue = "name") String sortByProperty,
@@ -46,7 +51,7 @@ public class DocumentTypeController {
       usePagination
     );
     var paginatedDocumentTypes = lookupTablesService.findDocumentTypes(
-      new DocumentTypeQuery(searchTerm, queryOptions)
+      new DocumentTypeQuery(searchTerm, documentCategory, queryOptions)
     );
     return ResponseEntity.ok(
       new DocumentTypeResponse(
