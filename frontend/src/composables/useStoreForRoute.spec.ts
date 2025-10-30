@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 // Mocks for stores
 const mockAdmStore = { name: 'admStore' }
@@ -15,7 +15,7 @@ vi.mock('@/stores/uliDocStore', () => ({
 }))
 
 // Mock vue-router useRoute
-let mockRoute: { meta: { documentTypeCode?: string } }
+let mockRoute: { meta: { documentCategory?: string } }
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
 }))
@@ -25,33 +25,33 @@ describe('useStoreForRoute', () => {
     vi.clearAllMocks()
   })
 
-  it('returns admDocumentUnit store when route.meta.documentTypeCode="VERWALTUNGSVORSCHRIFTEN"', () => {
-    mockRoute = { meta: { documentTypeCode: DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN } }
+  it('returns admDocumentUnit store when route.meta.documentCategory="VERWALTUNGSVORSCHRIFTEN"', () => {
+    mockRoute = { meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN } }
 
     const store = useStoreForRoute()
     expect(store).toEqual(mockAdmStore)
   })
 
-  it('returns uliDocumentUnit store when route.meta.documentTypeCode="LITERATUR_UNSELBSTSTAENDIG"', () => {
-    mockRoute = { meta: { documentTypeCode: DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG } }
+  it('returns uliDocumentUnit store when route.meta.documentCategory="LITERATUR_UNSELBSTSTAENDIG"', () => {
+    mockRoute = { meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG } }
 
     const store = useStoreForRoute()
     expect(store).toEqual(mockUliStore)
   })
 
-  it('throws an error when route.meta.documentTypeCode is invalid', () => {
-    mockRoute = { meta: { documentTypeCode: 'invalidDocType' } }
+  it('throws an error when route.meta.documentCategory is invalid', () => {
+    mockRoute = { meta: { documentCategory: 'invalidDocType' } }
 
     expect(() => useStoreForRoute()).toThrowError(
-      'No store found for route meta.documentTypeCode="invalidDocType"',
+      'No store found for route meta.documentCategory="invalidDocType"',
     )
   })
 
-  it('throws an error when route.meta.documentTypeCode is missing', () => {
+  it('throws an error when route.meta.documentCategory is missing', () => {
     mockRoute = { meta: {} }
 
     expect(() => useStoreForRoute()).toThrowError(
-      'No store found for route meta.documentTypeCode="undefined"',
+      'No store found for route meta.documentCategory="undefined"',
     )
   })
 })

@@ -1,7 +1,7 @@
 import type { UseFetchReturn } from '@vueuse/core'
 import { createFetch } from '@vueuse/core'
 import { useAuthentication } from '@/services/auth.ts'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 /**
  * The same as UseFetchReturn, but without the methods to get more specific useFetch instances.
@@ -58,7 +58,7 @@ export const useApiFetch = createFetch({
 
       // Add a default X-Document-Type if not set by the caller
       options.headers = {
-        'X-Document-Type': DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+        'X-Document-Type': DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
         ...options.headers,
       }
 

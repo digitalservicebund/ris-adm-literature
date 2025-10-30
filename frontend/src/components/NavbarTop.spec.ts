@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/vue'
 import NavbarTop from '@/components/NavbarTop.vue'
 import { USER_ROLES } from '@/config/roles'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 import { ROUTE_NAMES } from '@/constants/routes'
 
 const mockAuth: {
@@ -22,7 +22,7 @@ vi.mock('@/services/auth', () => ({
 }))
 
 const mockRoute = {
-  meta: { documentTypeCode: 'LITERATUR_UNSELBSTSTAENDIG' },
+  meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG },
   name: 'SomeRoute',
 }
 
@@ -69,7 +69,7 @@ describe('NavbarTop', () => {
 
   it('Multiple roles: Suche link redirects to ULI startpage in literature context', () => {
     mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
-    mockRoute.meta.documentTypeCode = DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+    mockRoute.meta.documentCategory = DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
 
     renderComponent()
 
@@ -81,7 +81,7 @@ describe('NavbarTop', () => {
 
   it('Multiple roles: Suche link redirects to ADM startpage in adm context', () => {
     mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
-    mockRoute.meta.documentTypeCode = DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN
+    mockRoute.meta.documentCategory = DocumentCategory.VERWALTUNGSVORSCHRIFTEN
 
     renderComponent()
 

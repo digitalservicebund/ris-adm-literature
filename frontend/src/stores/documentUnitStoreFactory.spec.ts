@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 import { defineDocumentUnitStore } from './documentUnitStoreFactory'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 import * as documentUnitService from '@/services/documentUnitService'
 import type { UseFetchReturn } from '@vueuse/core'
 
@@ -28,7 +28,7 @@ describe('defineDocumentUnitStore', () => {
       execute: executeMock,
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     // when
     await store.load('123')
@@ -51,7 +51,7 @@ describe('defineDocumentUnitStore', () => {
       execute: vi.fn(),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     // when
     await store.load('does-not-exist')
@@ -81,7 +81,7 @@ describe('defineDocumentUnitStore', () => {
       execute: vi.fn(),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
     await store.load('123')
 
     // when
@@ -113,7 +113,7 @@ describe('defineDocumentUnitStore', () => {
       execute: vi.fn(),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
     await store.load('123')
 
     // when
@@ -127,7 +127,7 @@ describe('defineDocumentUnitStore', () => {
   })
 
   it('calling update returns false when no document is stored and state remains unchanged', async () => {
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     const success = await store.update()
 
@@ -148,7 +148,7 @@ describe('defineDocumentUnitStore', () => {
       execute: vi.fn().mockResolvedValue(undefined),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    const store = defineDocumentUnitStore(DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     // when
     await store.load('1')
