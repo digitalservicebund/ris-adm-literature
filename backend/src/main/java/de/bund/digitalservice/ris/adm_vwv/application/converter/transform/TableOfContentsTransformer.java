@@ -27,7 +27,7 @@ public class TableOfContentsTransformer {
     List<String> tableOfContents = Optional.ofNullable(
       akomaNtoso.getDoc().getMeta().getProprietary()
     )
-      .map(proprietary -> proprietary.getMetadata().getTableOfContentsEntries())
+      .map(proprietary -> proprietary.getMeta().getTableOfContentsEntries())
       .orElse(List.of());
     return tableOfContents
       .stream()

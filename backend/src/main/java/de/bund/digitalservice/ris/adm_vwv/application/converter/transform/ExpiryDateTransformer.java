@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +21,8 @@ public class ExpiryDateTransformer {
    */
   public String transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getExpiryDate)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getExpiryDate)
       .orElse(null);
   }
 }

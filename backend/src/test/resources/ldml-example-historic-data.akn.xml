@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <akn:akomaNtoso
   xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-  xmlns:ris="http://ldml.neuris.de/metadata/">
+  xmlns:ris="http://ldml.neuris.de/meta/">
   <akn:doc name="offene-struktur">
     <akn:meta>
       <akn:identification source="attributsemantik-noch-undefiniert">
         <akn:FRBRWork>
           <akn:FRBRthis value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
           <akn:FRBRuri value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345"/>
-          <akn:FRBRdate date="2025-01-01" name="erfassungsdatum"/>
+          <akn:FRBRalias name="Dokumentnummer" value="KSNR1234567890"/>
+          <akn:FRBRdate date="2025-01-01" name="erfassungsdatum" />
           <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
           <akn:FRBRcountry value="de"/>
           <akn:FRBRsubtype value="VR"/>
@@ -20,7 +21,6 @@
             value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
           <akn:FRBRuri
             value="/eli/bund/verwaltungsvorschriften/vr/bundesausschuss/2025/12345/2025-02-02/deu"/>
-          <akn:FRBRalias name="documentNumber" value="KSNR1234567890"/>
           <akn:FRBRdate date="2025-02-02" name="zitierdatum"/>
           <akn:FRBRauthor href="recht.bund.de/institution/bundessozialgericht"/>
           <akn:FRBRlanguage language="deu"/>
@@ -36,7 +36,7 @@
         </akn:FRBRManifestation>
       </akn:identification>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
-        <ris:metadata>
+        <ris:meta>
           <ris:documentType category="VR" longTitle="Bekanntmachung">VR Bekanntmachung</ris:documentType>
           <ris:zuordnungen>
             <ris:zuordnung aspekt="Titel" begriff="Bundesausschuss"/>
@@ -59,9 +59,11 @@
               </publiziert>
             </dokstelle>
           </ris:historicAdministrativeData>
-          <ris:region>DEU</ris:region>
+          <ris:regionen domainTerm="Regionen">
+            <ris:region domainTerm="Region">DEU</ris:region>
+          </ris:regionen>
           <ris:historicAbbreviation>VR Bundesausschuss 2025-01-01 12345</ris:historicAbbreviation>
-        </ris:metadata>
+        </ris:meta>
       </akn:proprietary>
     </akn:meta>
     <akn:preface>
@@ -70,9 +72,7 @@
       </akn:longTitle>
     </akn:preface>
     <akn:mainBody>
-      <akn:div>
         <akn:hcontainer name="crossheading"/>
-      </akn:div>
     </akn:mainBody>
   </akn:doc>
 </akn:akomaNtoso>

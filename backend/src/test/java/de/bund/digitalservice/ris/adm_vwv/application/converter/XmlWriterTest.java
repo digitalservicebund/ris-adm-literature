@@ -45,7 +45,7 @@ class XmlWriterTest {
       .isEqualTo(
         """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/metadata/">
+        <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/meta/">
             <akn:doc name="offene-struktur">
                 <akn:preface>
                     <akn:longTitle>
@@ -81,7 +81,7 @@ class XmlWriterTest {
       .isNotNull()
       .isEqualTo(
         """
-        <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/metadata/">
+        <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="http://ldml.neuris.de/meta/">
             <akn:doc name="offene-struktur">
                 <akn:preface>
                     <akn:longTitle>

@@ -28,14 +28,14 @@ public class Meta {
 
   /**
    * Returns the set proprietary instance or creates and sets a new one including an instance
-   * of {@link RisMetadata}.
+   * of {@link RisMeta}.
    *
    * @return Instance of {@code Proprietary}
    */
   public Proprietary getOrCreateProprietary() {
     if (proprietary == null) {
       proprietary = new Proprietary();
-      proprietary.setMetadata(new RisMetadata());
+      proprietary.setMeta(new RisMeta());
     }
     return proprietary;
   }

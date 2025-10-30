@@ -37,6 +37,10 @@ class IdentificationConverter {
     FrbrElement frbrWork = new FrbrElement();
     frbrWork.setFrbrThis(new FrbrThis(eli.toWork()));
     frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
+    FrbrAlias frbrAlias = new FrbrAlias();
+    frbrAlias.setName("Dokumentnummer");
+    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrWork.setFrbrAlias(List.of(frbrAlias));
     FrbrDate erfassungsdatum = new FrbrDate();
     erfassungsdatum.setDate(eli.createdDate().toString());
     erfassungsdatum.setName("erfassungsdatum");
@@ -56,10 +60,6 @@ class IdentificationConverter {
     FrbrElement frbrExpression = new FrbrElement();
     frbrExpression.setFrbrThis(new FrbrThis(eli.toExpression()));
     frbrExpression.setFrbrUri(new FrbrUri(eli.toExpression()));
-    FrbrAlias frbrAlias = new FrbrAlias();
-    frbrAlias.setName("documentNumber");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
-    frbrExpression.setFrbrAlias(List.of(frbrAlias));
     FrbrDate zitierdatum = new FrbrDate();
     zitierdatum.setDate(documentationUnitContent.zitierdaten().getFirst());
     zitierdatum.setName("zitierdatum");

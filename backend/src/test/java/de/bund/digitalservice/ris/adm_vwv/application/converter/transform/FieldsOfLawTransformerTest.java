@@ -35,9 +35,9 @@ class FieldsOfLawTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setFieldsOfLaw(List.of(createRisFieldOfLaw("PR-05-01")));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setFieldsOfLaw(List.of(createRisFieldOfLaw("PR-05-01")));
     given(lookupTablesPersistenceService.findFieldOfLaw("PR-05-01")).willReturn(
       Optional.of(
         new FieldOfLaw(
@@ -90,9 +90,9 @@ class FieldsOfLawTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setFieldsOfLaw(List.of(createRisFieldOfLaw("RR-00-11")));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setFieldsOfLaw(List.of(createRisFieldOfLaw("RR-00-11")));
     given(lookupTablesPersistenceService.findFieldOfLaw("RR-00-11")).willReturn(
       Optional.of(
         new FieldOfLaw(
@@ -166,8 +166,8 @@ class FieldsOfLawTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

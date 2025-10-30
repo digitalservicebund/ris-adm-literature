@@ -21,9 +21,9 @@ public class DateToQuoteTransformer {
    */
   public List<String> transform() {
     Proprietary proprietary = akomaNtoso.getDoc().getMeta().getProprietary();
-    if (proprietary == null || proprietary.getMetadata().getDateToQuoteList() == null) {
+    if (proprietary == null || proprietary.getMeta().getDateToQuoteList() == null) {
       return List.of();
     }
-    return proprietary.getMetadata().getDateToQuoteList();
+    return proprietary.getMeta().getDateToQuoteList();
   }
 }

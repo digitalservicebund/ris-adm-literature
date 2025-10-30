@@ -18,9 +18,9 @@ class ReferenceNumbersTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setReferenceNumbers(List.of("AX-Y12345", "XX"));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setReferenceNumbers(List.of("AX-Y12345", "XX"));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -75,8 +75,8 @@ class ReferenceNumbersTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

@@ -18,9 +18,9 @@ class DateToQuoteTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setDateToQuoteList(List.of("2021-12-12", "2021-12-31"));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setDateToQuoteList(List.of("2021-12-12", "2021-12-31"));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -75,8 +75,8 @@ class DateToQuoteTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

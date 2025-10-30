@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-  xmlns:ris="http://ldml.neuris.de/metadata/">
+  xmlns:ris="http://ldml.neuris.de/meta/">
   <akn:doc name="offene-struktur">
     <akn:meta>
       <akn:identification source="attributsemantik-noch-undefiniert">
         <!-- mostly omitted -->
-        <akn:FRBRExpression>
-          <akn:FRBRalias name="documentNumber" value="KSNR00000011"/>
-        </akn:FRBRExpression>
+        <akn:FRBRWork>
+          <akn:FRBRalias name="Dokumentnummer" value="KSNR00000011"/>
+        </akn:FRBRWork>
       </akn:identification>
       <akn:classification source="attributsemantik-noch-undefiniert">
         <akn:keyword showAs="Schlag" dictionary="attributsemantik-noch-undefiniert" value="Schlag"/>
@@ -36,7 +36,7 @@
         </akn:otherReferences>
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
-        <ris:metadata>
+        <ris:meta>
           <ris:normgeber staat="Erste Jurpn"/>
           <ris:normgeber staat="AA" organ="Erstes Organ"/>
           <ris:fieldsOfLaw>
@@ -50,6 +50,16 @@
             <ris:tableOfContentsEntry>TOC entry 2</ris:tableOfContentsEntry>
           </ris:tableOfContentsEntries>
           <ris:documentType category="VR" longTitle="Bekanntmachung">VR Bekanntmachung</ris:documentType>
+          <ris:berufsbilder>
+            <ris:berufsbild>Brillenschleifer</ris:berufsbild>
+          </ris:berufsbilder>
+          <ris:titelAspekte>
+            <ris:titelAspekt>Gemeinsamer Bundesausschuss</ris:titelAspekt>
+            <ris:titelAspekt>GBA</ris:titelAspekt>
+          </ris:titelAspekte>
+          <ris:definitionen>
+            <ris:definition begriff="Sachgesamtheit" />
+          </ris:definitionen>
           <ris:dateToQuoteList>
             <ris:dateToQuoteEntry>2025-05-05</ris:dateToQuoteEntry>
             <ris:dateToQuoteEntry>2025-06-01</ris:dateToQuoteEntry>
@@ -62,17 +72,7 @@
             <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 1a" position="Abs 1"/>
             <ris:activeReference typeNumber="82" reference="PhanGB" paragraph="§ 2" position="Abs 6"/>
           </ris:activeReferences>
-          <ris:berufsbilder>
-            <ris:berufsbild>Brillenschleifer</ris:berufsbild>
-          </ris:berufsbilder>
-          <ris:titelAspekte>
-            <ris:titelAspekt>Gemeinsamer Bundesausschuss</ris:titelAspekt>
-            <ris:titelAspekt>GBA</ris:titelAspekt>
-          </ris:titelAspekte>
-          <ris:definitionen>
-            <ris:definition begriff="Sachgesamtheit" />
-          </ris:definitionen>
-        </ris:metadata>
+        </ris:meta>
       </akn:proprietary>
     </akn:meta>
     <akn:preface>

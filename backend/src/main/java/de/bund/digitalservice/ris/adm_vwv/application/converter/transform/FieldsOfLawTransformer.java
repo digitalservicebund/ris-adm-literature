@@ -4,7 +4,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.LookupTablesPersis
 import de.bund.digitalservice.ris.adm_vwv.application.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,8 +29,8 @@ public class FieldsOfLawTransformer {
    */
   public List<FieldOfLaw> transform(AkomaNtoso akomaNtoso) {
     var fieldsOfLaw = Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getFieldsOfLaw)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getFieldsOfLaw)
       .orElse(List.of());
     return fieldsOfLaw
       .stream()

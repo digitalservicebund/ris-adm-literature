@@ -7,7 +7,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.Region;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.Normgeber;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisNormgeber;
 import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class NormgeberTransformer {
     List<RisNormgeber> risNormgeberList = Optional.ofNullable(
       akomaNtoso.getDoc().getMeta().getProprietary()
     )
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getNormgeber)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getNormgeber)
       .orElse(List.of());
     return risNormgeberList
       .stream()

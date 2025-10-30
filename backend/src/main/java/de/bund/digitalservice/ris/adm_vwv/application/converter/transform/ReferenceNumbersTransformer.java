@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.transform;
 
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class ReferenceNumbersTransformer {
    */
   public List<String> transform() {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getReferenceNumbers)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getReferenceNumbers)
       .orElse(List.of());
   }
 }
