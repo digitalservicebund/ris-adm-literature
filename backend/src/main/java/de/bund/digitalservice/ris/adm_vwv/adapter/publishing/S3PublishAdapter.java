@@ -5,7 +5,6 @@ import de.bund.digitalservice.ris.adm_vwv.application.ValidationFailedException;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,7 @@ public class S3PublishAdapter implements Publisher {
    * Example: 2025-08-21T07_25_07Z
    */
   private static final DateTimeFormatter CHANGELOG_TIMESTAMP_FORMATTER =
-    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH_mm_ss'Z'").withZone(ZoneOffset.UTC);
+    DateTimeFormatter.ISO_INSTANT;
 
   @Override
   public String getName() {
@@ -67,7 +66,7 @@ public class S3PublishAdapter implements Publisher {
         timestamp,
         publicationDetails.documentNumber().substring(0, 4)
       );
-      String changelogContent = "{\"change_all\": true}";
+      String changelogContent = String.format("{\"changed\":[\"%s\"]}", xmlKey);
 
       PutObjectRequest changelogRequest = PutObjectRequest.builder()
         .bucket(bucketName)
