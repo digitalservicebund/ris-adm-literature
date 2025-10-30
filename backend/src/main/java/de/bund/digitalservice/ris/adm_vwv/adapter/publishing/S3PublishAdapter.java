@@ -61,11 +61,7 @@ public class S3PublishAdapter implements Publisher {
       // Publish a new changelog file
       log.info("Publishing changelog file to S3 bucket '{}'", bucketName);
       String timestamp = CHANGELOG_TIMESTAMP_FORMATTER.format(Instant.now());
-      String changelogKey = String.format(
-        "changelogs/%s-%s.json",
-        timestamp,
-        publicationDetails.documentNumber().substring(0, 4)
-      );
+      String changelogKey = String.format("changelogs/%s.json", timestamp);
       String changelogContent = String.format("{\"changed\":[\"%s\"]}", xmlKey);
 
       PutObjectRequest changelogRequest = PutObjectRequest.builder()
