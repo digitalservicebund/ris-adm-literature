@@ -156,7 +156,7 @@ tasks.bootBuildImage {
   val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
 
   imageName.set(containerImageRef)
-  builder.set("paketobuildpacks/builder-jammy-base:latest")
+  builder.set("paketobuildpacks/ubuntu-noble-builder:latest")
   publish.set(false)
 
   docker {
