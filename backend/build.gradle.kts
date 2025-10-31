@@ -167,6 +167,9 @@ tasks.bootBuildImage {
     }
   }
 }
+tasks.bootJar {
+  includeTools.set(false)
+}
 
 licenseReport {
 // If there's a new dependency with a yet unknown license causing this task to fail
