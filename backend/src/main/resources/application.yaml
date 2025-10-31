@@ -51,9 +51,9 @@ local:
 s3:
   bucket:
     adm:
-      private:
-        access-key: ${s3.adm.private.access-key:test}
-        access-key-id: ${s3.adm.private.access-key-id:test}
+      public:
+        access-key: ${s3.adm.public.access-key:test}
+        access-key-id: ${s3.adm.public.access-key-id:test}
         bucket-name: local-mock-bucket
 
 
