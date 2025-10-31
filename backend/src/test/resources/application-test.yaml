@@ -31,7 +31,7 @@ s3:
     region: eu-de
     endpoint: https://example.com
     adm:
-      private:
+      public:
         access-key-id: test
         access-key: test
         bucket-name: test

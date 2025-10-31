@@ -38,8 +38,8 @@ public class S3Config {
   public S3Client privateBsgS3Client(
     @Value("${s3.bucket.region}") String region,
     @Value("${s3.bucket.endpoint}") String endpoint,
-    @Value("${s3.bucket.adm.private.access-key-id}") String accessKeyId,
-    @Value("${s3.bucket.adm.private.access-key}") String secretAccessKey
+    @Value("${s3.bucket.adm.public.access-key-id}") String accessKeyId,
+    @Value("${s3.bucket.adm.public.access-key}") String secretAccessKey
   ) throws URISyntaxException {
     log.info("Endpoint {}", endpoint);
 
