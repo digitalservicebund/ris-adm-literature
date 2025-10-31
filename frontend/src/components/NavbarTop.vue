@@ -8,7 +8,7 @@ import FlexContainer from '@/components/FlexContainer.vue'
 import FlexItem from '@/components/FlexItem.vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 const { getUsername, logout, getGroup, getRealmRoles } = useAuthentication()
 const route = useRoute()
@@ -16,7 +16,7 @@ const route = useRoute()
 const searchPath = computed(() => {
   const roles = getRealmRoles()
   if (roles.length > 1) {
-    return route.meta.documentTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+    return route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
       ? ROUTE_PATHS.ULI.BASE
       : ROUTE_PATHS.ADM.BASE
   }

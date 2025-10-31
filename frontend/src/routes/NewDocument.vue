@@ -12,7 +12,7 @@ const router = useRouter()
 const route = useRoute()
 
 onBeforeMount(async () => {
-  const { data, error, isFinished } = usePostDocUnit(route.meta.documentTypeCode)
+  const { data, error, isFinished } = usePostDocUnit(route.meta.documentCategory)
   await until(isFinished).toBe(true)
 
   if (error.value) {

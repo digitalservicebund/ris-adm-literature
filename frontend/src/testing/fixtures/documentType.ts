@@ -1,6 +1,11 @@
 import type { DocumentType } from '@/domain/documentType'
 
-export const docTypeFixture: DocumentType = {
-  abbreviation: 'testAbbr',
-  name: 'testDokTyp',
+export const docTypeAnordnungFixture: DocumentType = {
+  abbreviation: 'Anordnung',
+  name: 'Anordnung',
+}
+
+export const docTypeBekanntmachungFixture: DocumentType = {
+  abbreviation: 'Bekanntmachung',
+  name: 'Bekanntmachung',
 }

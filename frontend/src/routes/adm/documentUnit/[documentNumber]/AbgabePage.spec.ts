@@ -5,7 +5,7 @@ import { describe, expect, test, vi } from 'vitest'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import AbgabePage from './AbgabePage.vue'
 import { normgeberFixture } from '@/testing/fixtures/normgeber'
-import { docTypeFixture } from '@/testing/fixtures/documentType'
+import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType'
 
 function renderComponent(documentUnit: AdmDocumentationUnit) {
   const user = userEvent.setup()
@@ -69,7 +69,7 @@ describe('AbgabePage', () => {
       langueberschrift: 'my langueberschrift',
       inkrafttretedatum: '2025-01-01',
       zitierdaten: ['2025-01-01'],
-      dokumenttyp: docTypeFixture,
+      dokumenttyp: docTypeAnordnungFixture,
       normgeberList: [normgeberFixture],
     })
 
@@ -92,7 +92,7 @@ describe('AbgabePage', () => {
       langueberschrift: 'my langueberschrift',
       inkrafttretedatum: '2025-01-01',
       zitierdaten: ['2025-01-01'],
-      dokumenttyp: docTypeFixture,
+      dokumenttyp: docTypeAnordnungFixture,
       normgeberList: [normgeberFixture],
     })
 

@@ -13,7 +13,7 @@ import { ref } from 'vue'
 import { until } from '@vueuse/core'
 import ActiveCitation from '@/domain/activeCitation'
 import { activeCitationFixture } from '@/testing/fixtures/activeCitation'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 describe('documentUnitService', () => {
   beforeEach(() => {
@@ -47,7 +47,7 @@ describe('documentUnitService', () => {
 
     const { data, error, isFetching, execute } = useGetDocUnit(
       'KSNR054920707',
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -61,7 +61,7 @@ describe('documentUnitService', () => {
 
     const { data, execute } = useGetDocUnit(
       'KSNR054920707',
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -73,7 +73,7 @@ describe('documentUnitService', () => {
 
     const { data, error, isFetching, execute } = useGetDocUnit(
       'KSNR054920708',
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -111,7 +111,7 @@ describe('documentUnitService', () => {
 
     const { data, error, isFetching, execute } = usePutDocUnit(
       docUnit,
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -129,7 +129,7 @@ describe('documentUnitService', () => {
         documentNumber: 'KSNR054920707',
         note: '',
       },
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -147,7 +147,7 @@ describe('documentUnitService', () => {
         documentNumber: 'KSNR054920707',
         note: '',
       },
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
@@ -232,7 +232,7 @@ describe('documentUnitService', () => {
     )
 
     const { data, error, isFetching, isFinished } = usePostDocUnit(
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await until(isFinished).toBe(true)
 
@@ -245,7 +245,7 @@ describe('documentUnitService', () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
     const { data, error, isFetching, execute } = usePostDocUnit(
-      DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
     )
     await execute()
 
