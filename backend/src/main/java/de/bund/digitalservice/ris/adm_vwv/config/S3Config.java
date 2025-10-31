@@ -56,6 +56,38 @@ public class S3Config {
   }
 
   /**
+   * Creates and configures the S3Client bean for the private Literature bucket on OTC for the 'staging'
+   * profile.
+   *
+   * @param region          The OTC region.
+   * @param endpoint        The endpoint URI for the OTC Object Storage Service.
+   * @param accessKeyId     The access key ID for authentication.
+   * @param secretAccessKey The secret access key for authentication.
+   * @return A configured {@link S3Client} instance for the staging environment.
+   */
+  @Bean("publicLiteratureS3Client")
+  @Profile("staging")
+  public S3Client publicLiteratureS3Client(
+    @Value("${s3.bucket.region}") String region,
+    @Value("${s3.bucket.endpoint}") String endpoint,
+    @Value("${s3.bucket.literature.public.access-key-id}") String accessKeyId,
+    @Value("${s3.bucket.literature.public.access-key}") String secretAccessKey
+  ) throws URISyntaxException {
+    log.info("Endpoint {}", endpoint);
+
+    return S3Client.builder()
+      .region(Region.of(region))
+      .endpointOverride(new URI(endpoint))
+      .credentialsProvider(
+        StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey))
+      )
+      .responseChecksumValidation(ResponseChecksumValidation.WHEN_REQUIRED)
+      .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
+      .forcePathStyle(true)
+      .build();
+  }
+
+  /**
    * Creates a mock S3Client bean that writes to the local filesystem.
    * <p>
    *

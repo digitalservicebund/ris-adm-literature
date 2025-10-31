@@ -32,6 +32,15 @@ public class PublisherConfig {
     return new S3PublishAdapter(s3Client, validator, bucketName, "publicBsgPublisher");
   }
 
+  @Bean("publicLiteraturePublisher")
+  public Publisher publicLiteraturePublisher(
+    @Qualifier("publicLiteratureS3Client") S3Client s3Client,
+    @Qualifier("bsgLiteratureValidator") XmlValidator validator,
+    @Value("${s3.bucket.literature.public.bucket-name}") String bucketName
+  ) {
+    return new S3PublishAdapter(s3Client, validator, bucketName, "publicLiteraturePublisher");
+  }
+
   /**
    * Creates a composite {@link Publisher} bean that acts as a central dispatcher.
    * <p>
