@@ -113,7 +113,7 @@ public class DocumentationUnitService {
     // publish to portal
     // later when we want to publish to other publishers, we can receive them form the method param and select them here
     // If the publishing or validation fails, the transaction is rolled back
-    final String BSG_PUBLISHER_NAME = "privateBsgPublisher";
+    final String BSG_PUBLISHER_NAME = "publicBsgPublisher";
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, BSG_PUBLISHER_NAME);
     publisher.publish(publishOptions);
     return convertLdml(publishedDocumentationUnit);

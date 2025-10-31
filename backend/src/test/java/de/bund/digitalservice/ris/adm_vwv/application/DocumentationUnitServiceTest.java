@@ -174,7 +174,7 @@ class DocumentationUnitServiceTest {
   void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
     String docNumber = "doc123";
     String fakeXml = "<test>xml</test>";
-    String bsgPublisherName = "privateBsgPublisher";
+    String bsgPublisherName = "publicBsgPublisher";
     String fakeJson = "{\"test\":\"json\"}";
 
     var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);

@@ -47,7 +47,7 @@ import software.amazon.awssdk.services.s3.model.*;
 class S3PublishAdapterIntegrationTest {
 
   private static final String FIRST_BUCKET_NAME = "test-bucket-1";
-  private static final String FIRST_PUBLISHER_NAME = "privateBsgPublisher";
+  private static final String FIRST_PUBLISHER_NAME = "publicBsgPublisher";
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
   private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
   private static final String CHANGELOG_DIR = "changelogs/";
@@ -68,7 +68,7 @@ class S3PublishAdapterIntegrationTest {
       return mock(XmlValidator.class);
     }
 
-    @Bean("privateBsgS3Client")
+    @Bean("publicBsgS3Client")
     @Primary
     public S3Client s3Client() {
       return S3Client.builder()
