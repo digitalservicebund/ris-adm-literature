@@ -40,9 +40,9 @@ describe('useSaveToRemote', () => {
 
   it('does not call the callback if a call is still in progress', async () => {
     let resolveCallback: (data: unknown) => void = vi.fn()
-    const callback = vi
-      .fn()
-      .mockImplementation(() => new Promise((resolve) => (resolveCallback = resolve)))
+    const callback = vi.fn().mockImplementation(function () {
+      return new Promise((resolve) => (resolveCallback = resolve))
+    })
 
     const documentUnitStore = mockDocumentUnitStore(callback)
     const { triggerSave } = useSaveToRemote(documentUnitStore)
@@ -58,9 +58,9 @@ describe('useSaveToRemote', () => {
 
   it('toggles the in progress state while callback runs', async () => {
     let resolveCallback: (data: unknown) => void = vi.fn()
-    const callback = vi
-      .fn()
-      .mockImplementation(() => new Promise((resolve) => (resolveCallback = resolve)))
+    const callback = vi.fn().mockImplementation(function () {
+      return new Promise((resolve) => (resolveCallback = resolve))
+    })
 
     const documentUnitStore = mockDocumentUnitStore(callback)
     const { triggerSave, saveIsInProgress } = useSaveToRemote(documentUnitStore)

@@ -5,7 +5,9 @@ import * as Auth from '@/services/auth'
 
 vi.mock('@/services/auth', () => ({
   useAuthentication: () => ({
-    addAuthorizationHeader: vi.fn().mockImplementation((init) => init),
+    addAuthorizationHeader: vi.fn().mockImplementation(function (init) {
+      return init
+    }),
     tryRefresh: vi.fn().mockResolvedValue(true),
   }),
 }))

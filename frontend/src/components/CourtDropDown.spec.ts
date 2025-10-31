@@ -12,8 +12,9 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 describe('CourtDropDown', () => {
+  const fetchSpy = vi.spyOn(window, 'fetch')
   it('renders correctly', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+    fetchSpy.mockResolvedValueOnce(
       new Response(JSON.stringify({ courts: [agAachenFixture, berufsgerichtBremenFixture] }), {
         status: 200,
       }),
@@ -34,7 +35,7 @@ describe('CourtDropDown', () => {
   })
 
   it('renders correctly on fetching error', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockRejectedValue('fetch error')
+    fetchSpy.mockResolvedValueOnce('fetch error')
 
     const wrapper = mount(CourtDropDown, {
       props: {
@@ -51,7 +52,7 @@ describe('CourtDropDown', () => {
   })
 
   it('emits updated model value when selection changes', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+    fetchSpy.mockResolvedValueOnce(
       new Response(JSON.stringify({ courts: [agAachenFixture, berufsgerichtBremenFixture] }), {
         status: 200,
       }),

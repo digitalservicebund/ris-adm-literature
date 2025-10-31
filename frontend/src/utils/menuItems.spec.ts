@@ -3,7 +3,7 @@ import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
 import { ROUTE_NAMES } from '@/constants/routes'
 import type MenuItem from '@/domain/menuItem'
 
-vi.spyOn(console, 'warn').mockImplementation(() => {})
+vi.spyOn(console, 'warn').mockImplementation(function () {})
 
 describe('getAdmVwvMenuItems', () => {
   const mockDocumentNumber = '12345'

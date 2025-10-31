@@ -44,7 +44,9 @@ function renderSearchResults(
 
 describe('Search result list', () => {
   beforeEach(() => {
-    vi.spyOn(window, 'scrollTo').mockImplementation(() => vi.fn())
+    vi.spyOn(window, 'scrollTo').mockImplementation(function () {
+      vi.fn()
+    })
   })
   afterEach(() => {
     vi.restoreAllMocks()

@@ -6,7 +6,7 @@ import { config } from '@vue/test-utils'
 // Simple mock to satisfy devtools and any browser storage users
 Object.defineProperty(globalThis, 'localStorage', {
   value: {
-    getItem: vi.fn(() => null),
+    getItem: vi.fn(function() { return null }),
     setItem: vi.fn(),
     removeItem: vi.fn(),
     clear: vi.fn(),
