@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 import java.time.LocalDate;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 class IdentificationConverter {
@@ -48,7 +49,9 @@ class IdentificationConverter {
     frbrWork.setFrbrAuthor(new FrbrAuthor());
     frbrWork.setFrbrCountry(new FrbrCountry());
     frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
-    frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
+    if (StringUtils.isNotBlank(aktenzeichen)) {
+      frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
+    }
     frbrWork.setFrbrName(new FrbrName(eli.normgeber().format()));
     return frbrWork;
   }
