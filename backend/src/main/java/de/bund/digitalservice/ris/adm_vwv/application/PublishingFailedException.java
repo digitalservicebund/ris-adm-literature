@@ -7,7 +7,7 @@ import org.springframework.web.ErrorResponseException;
 /**
  * Exception thrown when publishing a document to an external system fails.
  * <p>
- * Automatically results in an HTTP 503 (Service Unavailable) response with a standardized
+ * Automatically results in an HTTP 503 response with a standardized
  * {@link ProblemDetail} body.
  */
 public class PublishingFailedException extends ErrorResponseException {
