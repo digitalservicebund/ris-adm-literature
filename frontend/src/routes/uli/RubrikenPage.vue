@@ -5,6 +5,8 @@ import InputField from '@/components/input/InputField.vue'
 import YearInput from '@/components/input/YearInput.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
+import DokumentTyp from '@/components/DokumentTyp.vue'
+import { DocumentCategory } from '@/domain/documentType'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 
@@ -14,6 +16,13 @@ const veroeffentlichungsjahr = computed({
     store.documentUnit!.veroeffentlichungsjahr = newValue
   },
 })
+
+const dokumentTyp = computed({
+  get: () => store.documentUnit?.dokumentTyp || [],
+  set: (newValue) => {
+    store.documentUnit!.dokumentTyp = newValue
+  },
+})
 </script>
 
 <template>
@@ -21,6 +30,15 @@ const veroeffentlichungsjahr = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
+        <InputField id="dokumentTyp" v-slot="slotProps" label="DokumentTyp *">
+          <DokumentTyp
+            inputId="dokumentTyp"
+            v-model="dokumentTyp"
+            aria-label="DokumentTyp"
+            :invalid="slotProps.hasError"
+            :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
+          />
+        </InputField>
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <YearInput
             id="veroeffentlichungsjahr"

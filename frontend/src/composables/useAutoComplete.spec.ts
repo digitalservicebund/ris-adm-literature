@@ -7,6 +7,7 @@ import {
   useVerweisTypSearch,
   useRegionSearch,
   type AutoCompleteSuggestion,
+  useDokumentTypSearch,
 } from '@/composables/useAutoComplete'
 import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
 import { InstitutionType, type Institution, type Region } from '@/domain/normgeber'
@@ -17,6 +18,11 @@ import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
 import type { VerweisTyp } from '@/domain/verweisTyp'
 import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp'
+import {
+  docTypeAnordnungFixture,
+  docTypeBekanntmachungFixture,
+} from '@/testing/fixtures/documentType'
+import type { DocumentType } from '@/domain/documentType'
 
 describe('useAutoComplete', () => {
   // Mock debounce to avoid delay
@@ -282,6 +288,38 @@ describe('useVerweisTypSearch', () => {
       {
         id: anwendungFixture.id,
         label: 'Anwendung',
+      },
+    ])
+  })
+})
+
+describe('useDokumentTypSearch', () => {
+  const mockDocTypes = ref<DocumentType[]>([docTypeAnordnungFixture, docTypeBekanntmachungFixture])
+
+  it('returns all doctypes when query is empty', () => {
+    const search = useDokumentTypSearch(mockDocTypes)
+    const results = search('')
+    expect(results).toHaveLength(2)
+  })
+
+  it('returns an empty array if no matches', () => {
+    const search = useDokumentTypSearch(mockDocTypes)
+    const results = search('xyz')
+    expect(results).toEqual([])
+  })
+
+  it.each([
+    ['name', 'ano'],
+    ['name', 'Anor'],
+    ['name', 'Anordnung'],
+  ])('returns filtered doctypes by %s', (_, query) => {
+    const search = useDokumentTypSearch(mockDocTypes)
+    const results = search(query)
+    expect(results).toEqual([
+      {
+        id: docTypeAnordnungFixture.abbreviation,
+        label: 'Anordnung',
+        secondaryLabel: 'Anordnung',
       },
     ])
   })

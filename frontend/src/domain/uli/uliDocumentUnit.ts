@@ -1,3 +1,5 @@
+import type { DocumentType } from '../documentType'
+
 export interface UliDocumentationUnit {
   readonly id: string
   readonly documentNumber: string
