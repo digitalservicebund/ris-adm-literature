@@ -156,7 +156,7 @@ tasks.bootBuildImage {
   val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
 
   imageName.set(containerImageRef)
-  builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
+  builder.set("paketobuildpacks/ubuntu-noble-builder:latest")
   publish.set(false)
 
   docker {
@@ -166,6 +166,9 @@ tasks.bootBuildImage {
       url.set("https://$containerRegistry")
     }
   }
+}
+tasks.bootJar {
+  includeTools.set(false)
 }
 
 licenseReport {
