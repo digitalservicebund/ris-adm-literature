@@ -1,9 +1,8 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import NormReferenceInput from '@/components/norm-reference/NormReferenceInput.vue'
 import NormReference from '@/domain/normReference'
-import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 
@@ -12,19 +11,20 @@ function renderComponent(options?: { modelValue?: NormReference }) {
   const props = {
     modelValue: new NormReference({ ...options?.modelValue }),
   }
-  const utils = render(NormReferenceInput, { props })
+  const utils = render(NormReferenceInput, {
+    props,
+    global: {
+      stubs: {
+        InputMask: InputText,
+      },
+    },
+  })
   return { user, props, ...utils }
 }
 
 describe('NormReferenceEntry', () => {
-  beforeAll(() => {
-    config.global.stubs = {
-      InputMask: InputText,
-    }
-  })
-
-  afterAll(() => {
-    config.global.stubs = {}
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('render empty norm input group on initial load', async () => {

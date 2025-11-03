@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
 import FieldOfLawTreeVue from '@/components/field-of-law/FieldOfLawTree.vue'
@@ -175,6 +175,10 @@ const pr0501Fixture = {
 }
 
 describe('FieldOfLawTree', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('Tree is fully closed upon at start', async () => {
     vi.spyOn(window, 'fetch')
     renderComponent()
