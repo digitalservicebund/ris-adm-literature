@@ -181,7 +181,7 @@ describe('auth', () => {
   })
 
   it('returns false when the token refresh throws', async () => {
-    vi.spyOn(Keycloak.default.prototype, 'updateToken').mockImplementation(() => {
+    vi.spyOn(Keycloak.default.prototype, 'updateToken').mockImplementation(function () {
       throw new Error()
     })
 
@@ -325,9 +325,11 @@ describe('auth', () => {
   })
 
   it('returns true if the user has the specified realm role', async () => {
-    vi.spyOn(Keycloak.default.prototype, 'hasRealmRole').mockImplementation(
-      (role: string) => role === 'admin',
-    )
+    vi.spyOn(Keycloak.default.prototype, 'hasRealmRole').mockImplementation(function (
+      role: string,
+    ) {
+      return role === 'admin'
+    })
     const { useAuthentication } = await import('./auth.ts')
     const { configure, hasRealmRole } = useAuthentication()
 

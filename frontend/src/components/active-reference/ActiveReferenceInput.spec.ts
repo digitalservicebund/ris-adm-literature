@@ -1,9 +1,8 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import ActiveReference, { VerweisTypEnum } from '@/domain/activeReference.ts'
 import ActiveReferenceInput from '@/components/active-reference/ActiveReferenceInput.vue'
-import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 import {
@@ -17,19 +16,20 @@ function renderComponent(options?: { modelValue?: ActiveReference }) {
   const props = {
     modelValue: new ActiveReference({ ...options?.modelValue }),
   }
-  const utils = render(ActiveReferenceInput, { props })
+  const utils = render(ActiveReferenceInput, {
+    props,
+    global: {
+      stubs: {
+        InputMask: InputText,
+      },
+    },
+  })
   return { user, props, ...utils }
 }
 
 describe('ActiveReferenceInput', () => {
-  beforeAll(() => {
-    config.global.stubs = {
-      InputMask: InputText,
-    }
-  })
-
-  afterAll(() => {
-    config.global.stubs = {}
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('render empty norm input group on initial load', async () => {

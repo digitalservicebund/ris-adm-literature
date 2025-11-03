@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.ts'
 import CourtDropDown from '@/components/CourtDropDown.vue'
@@ -12,8 +12,13 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 describe('CourtDropDown', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders correctly', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+    const fetchSpy = vi.spyOn(window, 'fetch')
+    fetchSpy.mockResolvedValueOnce(
       new Response(JSON.stringify({ courts: [agAachenFixture, berufsgerichtBremenFixture] }), {
         status: 200,
       }),
@@ -34,7 +39,8 @@ describe('CourtDropDown', () => {
   })
 
   it('renders correctly on fetching error', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockRejectedValue('fetch error')
+    const fetchSpy = vi.spyOn(window, 'fetch')
+    fetchSpy.mockRejectedValueOnce('fetch error')
 
     const wrapper = mount(CourtDropDown, {
       props: {
@@ -51,7 +57,8 @@ describe('CourtDropDown', () => {
   })
 
   it('emits updated model value when selection changes', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
+    const fetchSpy = vi.spyOn(window, 'fetch')
+    fetchSpy.mockResolvedValueOnce(
       new Response(JSON.stringify({ courts: [agAachenFixture, berufsgerichtBremenFixture] }), {
         status: 200,
       }),

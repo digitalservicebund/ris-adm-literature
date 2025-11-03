@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum'
 import PeriodikumDropDown from './PeriodikumDropDown.vue'
@@ -12,6 +12,10 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 describe('PeriodikumDropDown', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders correctly', async () => {
     const fetchSpy = vi
       .spyOn(window, 'fetch')
