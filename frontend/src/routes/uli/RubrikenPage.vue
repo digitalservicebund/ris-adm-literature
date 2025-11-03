@@ -7,6 +7,7 @@ import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/components/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
+import { Textarea } from 'primevue'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 
@@ -20,7 +21,13 @@ const veroeffentlichungsjahr = computed({
 const dokumentTyp = computed({
   get: () => store.documentUnit?.dokumentTyp || [],
   set: (newValue) => {
-    store.documentUnit!.dokumentTyp = newValue
+    store.documentUnit!.dokumentTyp = newValue}
+  })
+
+const hauptsachtitel = computed({
+  get: () => store.documentUnit?.hauptsachtitel,
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitel = newValue
   },
 })
 </script>
@@ -46,6 +53,19 @@ const dokumentTyp = computed({
             aria-label="Veröffentlichungsjahr"
             :has-error="slotProps.hasError"
             @update:validation-error="slotProps.updateValidationError"
+          />
+        </InputField>
+      </div>
+      <div class="flex flex-row gap-24">
+        <InputField id="hauptsachtitel" v-slot="slotProps" label="Hauptsachtitel *">
+          <Textarea
+            id="hauptsachtitel"
+            v-model="hauptsachtitel"
+            aria-label="Hauptsachtitel"
+            :has-error="slotProps.hasError"
+            @update:validation-error="slotProps.updateValidationError"
+            rows="5"
+            fluid
           />
         </InputField>
       </div>

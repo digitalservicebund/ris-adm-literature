@@ -5,6 +5,7 @@ export interface UliDocumentationUnit {
   readonly documentNumber: string
   veroeffentlichungsjahr?: string
   dokumentTyp?: DocumentType[]
+  hauptsachtitel?: string
   note: string
 }
 
@@ -14,4 +15,4 @@ export interface UliDocumentUnitResponse {
   json: UliDocumentationUnit
 }
 
-export const requiredUliDocUnitFields = ['veroeffentlichungsjahr'] as const
+export const requiredUliDocUnitFields = ['veroeffentlichungsjahr', 'hauptsachtitel'] as const
