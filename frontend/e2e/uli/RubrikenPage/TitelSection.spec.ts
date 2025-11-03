@@ -29,7 +29,7 @@ test.describe('ULI Rubriken - titles', () => {
     },
   )
 
-  test.skip(
+  test(
     'Dokumentarischer Titel: its value persists after saving and reloading',
     { tag: ['@RISDEV-9867'] },
     async ({ page }) => {

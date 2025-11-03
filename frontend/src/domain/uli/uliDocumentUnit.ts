@@ -6,6 +6,7 @@ export interface UliDocumentationUnit {
   veroeffentlichungsjahr?: string
   dokumentTyp?: DocumentType[]
   hauptsachtitel?: string
+  dokumentarischerTitel?: string
   note: string
 }
 
@@ -15,4 +16,4 @@ export interface UliDocumentUnitResponse {
   json: UliDocumentationUnit
 }
 
-export const requiredUliDocUnitFields = ['veroeffentlichungsjahr', 'hauptsachtitel'] as const
+export const requiredUliDocUnitFields = ['veroeffentlichungsjahr'] as const
