@@ -6,7 +6,7 @@ WITH created as (
                'KSNR' || s.running_number::text,
                '<?xml version="1.0" encoding="UTF-8"?>
         <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-          xmlns:ris="http://ldml.neuris.de/metadata/">
+          xmlns:ris="http://ldml.neuris.de/meta/">
           <akn:doc name="offene-struktur">
             <akn:meta>
               <akn:identification source="attributsemantik-noch-undefiniert">
@@ -38,7 +38,7 @@ WITH created as (
                 </akn:otherReferences>
               </akn:analysis>
               <akn:proprietary source="attributsemantik-noch-undefiniert">
-                <ris:metadata>
+                <ris:meta>
                   <ris:normgeber staat="Erste Jurpn"/>
                   <ris:normgeber staat="AA" organ="Erstes Organ"/>
                   <ris:fieldsOfLaw>
@@ -76,7 +76,7 @@ WITH created as (
                   <ris:definitionen>
                     <ris:definition begriff="Sachgesamtheit" />
                   </ris:definitionen>
-                </ris:metadata>
+                </ris:meta>
               </akn:proprietary>
             </akn:meta>
             <akn:preface>

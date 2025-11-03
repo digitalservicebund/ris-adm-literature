@@ -58,13 +58,13 @@ class DocumentationUnitServiceTest {
       <?xml version="1.0" encoding="UTF-8"?>
       <akn:akomaNtoso
         xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
+        xmlns:ris="http://ldml.neuris.de/meta/">
         <akn:doc name="offene-struktur">
           <akn:meta>
             <akn:proprietary>
-              <ris:metadata>
+              <ris:meta>
                 <ris:documentType category="VV" longTitle="Verwaltungsvorschrift">VV Verwaltungsvorschrift</ris:documentType>
-              </ris:metadata>
+              </ris:meta>
             </akn:proprietary>
           </akn:meta>
         </akn:doc>
@@ -174,7 +174,7 @@ class DocumentationUnitServiceTest {
   void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
     String docNumber = "doc123";
     String fakeXml = "<test>xml</test>";
-    String bsgPublisherName = "privateBsgPublisher";
+    String bsgPublisherName = "publicBsgPublisher";
     String fakeJson = "{\"test\":\"json\"}";
 
     var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);

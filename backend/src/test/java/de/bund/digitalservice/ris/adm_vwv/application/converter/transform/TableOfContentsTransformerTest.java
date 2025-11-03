@@ -20,9 +20,9 @@ class TableOfContentsTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setTableOfContentsEntries(List.of("Kapitel 1", "Kapitel 2"));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setTableOfContentsEntries(List.of("Kapitel 1", "Kapitel 2"));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -83,8 +83,8 @@ class TableOfContentsTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

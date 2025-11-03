@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,8 @@ public class DocumentTypeTransformer {
    */
   public DocumentType transform(@Nonnull AkomaNtoso akomaNtoso) {
     return Optional.ofNullable(akomaNtoso.getDoc().getMeta().getProprietary())
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getDocumentType)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getDocumentType)
       .flatMap(risDocumentType ->
         lookupTablesPersistenceService.findDocumentTypeByAbbreviation(
           risDocumentType.getCategory(),

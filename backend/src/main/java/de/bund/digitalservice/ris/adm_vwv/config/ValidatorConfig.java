@@ -20,7 +20,7 @@ public class ValidatorConfig {
     return new XmlValidator(
       List.of(
         "/schemas/akomaNtoso/akomantoso30.xsd",
-        "/schemas/proprietary/bsg-vwv/ldml-ris-metadata.xsd"
+        "/schemas/proprietary/bsg-vwv/ldml-ris-meta.xsd"
       )
     );
   }

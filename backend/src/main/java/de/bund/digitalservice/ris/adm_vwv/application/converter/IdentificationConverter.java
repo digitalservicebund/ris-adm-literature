@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 import java.time.LocalDate;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 class IdentificationConverter {
@@ -37,6 +38,10 @@ class IdentificationConverter {
     FrbrElement frbrWork = new FrbrElement();
     frbrWork.setFrbrThis(new FrbrThis(eli.toWork()));
     frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
+    FrbrAlias frbrAlias = new FrbrAlias();
+    frbrAlias.setName("Dokumentnummer");
+    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrWork.setFrbrAlias(List.of(frbrAlias));
     FrbrDate erfassungsdatum = new FrbrDate();
     erfassungsdatum.setDate(eli.createdDate().toString());
     erfassungsdatum.setName("erfassungsdatum");
@@ -44,7 +49,9 @@ class IdentificationConverter {
     frbrWork.setFrbrAuthor(new FrbrAuthor());
     frbrWork.setFrbrCountry(new FrbrCountry());
     frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
-    frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
+    if (StringUtils.isNotBlank(aktenzeichen)) {
+      frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
+    }
     frbrWork.setFrbrName(new FrbrName(eli.normgeber().format()));
     return frbrWork;
   }
@@ -56,10 +63,6 @@ class IdentificationConverter {
     FrbrElement frbrExpression = new FrbrElement();
     frbrExpression.setFrbrThis(new FrbrThis(eli.toExpression()));
     frbrExpression.setFrbrUri(new FrbrUri(eli.toExpression()));
-    FrbrAlias frbrAlias = new FrbrAlias();
-    frbrAlias.setName("documentNumber");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
-    frbrExpression.setFrbrAlias(List.of(frbrAlias));
     FrbrDate zitierdatum = new FrbrDate();
     zitierdatum.setDate(documentationUnitContent.zitierdaten().getFirst());
     zitierdatum.setName("zitierdatum");

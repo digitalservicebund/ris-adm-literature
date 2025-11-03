@@ -38,9 +38,9 @@ class NormgeberTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setNormgeber(
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setNormgeber(
       List.of(
         createRisNormgeber("DS", null),
         createRisNormgeber("BRD", "Ministerium für Digitales")
@@ -103,9 +103,9 @@ class NormgeberTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setNormgeber(List.of(createRisNormgeber("EU", "Europäische Kommission")));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setNormgeber(List.of(createRisNormgeber("EU", "Europäische Kommission")));
     given(
       lookupTablesPersistenceService.findInstitutionByNameAndType(
         "Europäische Kommission",
@@ -153,9 +153,9 @@ class NormgeberTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
-    risMetadata.setNormgeber(List.of(createRisNormgeber("Zaubereikammer Berlin", null)));
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
+    risMeta.setNormgeber(List.of(createRisNormgeber("Zaubereikammer Berlin", null)));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -209,8 +209,8 @@ class NormgeberTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

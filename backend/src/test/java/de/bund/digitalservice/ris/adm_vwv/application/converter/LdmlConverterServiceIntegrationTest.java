@@ -215,7 +215,7 @@ class LdmlConverterServiceIntegrationTest {
       <?xml version="1.0" encoding="UTF-8"?>
       <akn:akomaNtoso
         xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
+        xmlns:ris="http://ldml.neuris.de/meta/">
         <akn:doc name="offene-struktur">
           <akn:meta>
           </akn:meta>
@@ -278,7 +278,7 @@ class LdmlConverterServiceIntegrationTest {
       <?xml version="1.0" encoding="UTF-8"?>
       <akn:akomaNtoso
         xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
+        xmlns:ris="http://ldml.neuris.de/meta/">
         <akn:doc name="offene-struktur">
           <akn:meta>
           </akn:meta>
@@ -359,12 +359,12 @@ class LdmlConverterServiceIntegrationTest {
       <?xml version="1.0" encoding="UTF-8"?>
       <akn:akomaNtoso
         xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
-        xmlns:ris="http://ldml.neuris.de/metadata/">
+        xmlns:ris="http://ldml.neuris.de/meta/">
         <akn:doc name="offene-struktur">
           <akn:meta>
             <akn:proprietary>
-              <ris:metadata>
-              </ris:metadata>
+              <ris:meta>
+              </ris:meta>
             </akn:proprietary>
           </akn:meta>
         </akn:doc>

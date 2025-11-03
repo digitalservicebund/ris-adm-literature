@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.business;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.ZitierArt;
 import java.util.UUID;
@@ -24,5 +25,5 @@ public record ActiveCitation(
   String decisionDate,
   String fileNumber,
   DocumentType documentType,
-  ZitierArt zitierArt
+  @JsonAlias("citationType") ZitierArt zitierArt
 ) {}

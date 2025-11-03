@@ -6,7 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.SingleN
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.Proprietary;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisActiveReference;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMetadata;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.RisMeta;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,8 @@ public class ActiveReferencesTransformer {
     List<RisActiveReference> risActiveReferences = Optional.ofNullable(
       akomaNtoso.getDoc().getMeta().getProprietary()
     )
-      .map(Proprietary::getMetadata)
-      .map(RisMetadata::getActiveReferences)
+      .map(Proprietary::getMeta)
+      .map(RisMeta::getActiveReferences)
       .orElse(List.of());
     return risActiveReferences
       .stream()

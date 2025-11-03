@@ -33,13 +33,13 @@ public class S3Config {
    * @param secretAccessKey The secret access key for authentication.
    * @return A configured {@link S3Client} instance for the staging environment.
    */
-  @Bean("privateBsgS3Client")
+  @Bean("publicBsgS3Client")
   @Profile("staging")
-  public S3Client privateBsgS3Client(
+  public S3Client publicBsgS3Client(
     @Value("${s3.bucket.region}") String region,
     @Value("${s3.bucket.endpoint}") String endpoint,
-    @Value("${s3.bucket.adm.private.access-key-id}") String accessKeyId,
-    @Value("${s3.bucket.adm.private.access-key}") String secretAccessKey
+    @Value("${s3.bucket.adm.public.access-key-id}") String accessKeyId,
+    @Value("${s3.bucket.adm.public.access-key}") String secretAccessKey
   ) throws URISyntaxException {
     log.info("Endpoint {}", endpoint);
 
@@ -61,9 +61,9 @@ public class S3Config {
    *
    * @return An {@link S3MockClient} instance that simulates S3 operations locally.
    */
-  @Bean("privateBsgS3Client")
+  @Bean("publicBsgS3Client")
   @Profile("!staging & !production & !uat")
-  public S3Client privateBsgS3MockClient() {
+  public S3Client publicBsgS3MockClient() {
     return new S3MockClient();
   }
 }

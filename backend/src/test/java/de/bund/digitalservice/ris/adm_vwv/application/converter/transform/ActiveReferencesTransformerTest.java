@@ -23,15 +23,15 @@ class ActiveReferencesTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     RisActiveReference activeReference = new RisActiveReference();
     activeReference.setReference("PhanG");
     activeReference.setParagraph("§ 1");
     activeReference.setPosition("Abs. 2");
     activeReference.setTypeNumber("82");
     activeReference.setDateOfVersion("2025-07-07");
-    risMetadata.setActiveReferences(List.of(activeReference));
+    risMeta.setActiveReferences(List.of(activeReference));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -86,12 +86,12 @@ class ActiveReferencesTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     RisActiveReference activeReference = new RisActiveReference();
     activeReference.setReference("PhanG");
     activeReference.setTypeNumber(typeNumber);
-    risMetadata.setActiveReferences(List.of(activeReference));
+    risMeta.setActiveReferences(List.of(activeReference));
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -153,8 +153,8 @@ class ActiveReferencesTransformerTest {
     doc.setMeta(meta);
     Proprietary proprietary = new Proprietary();
     meta.setProprietary(proprietary);
-    RisMetadata risMetadata = new RisMetadata();
-    proprietary.setMetadata(risMetadata);
+    RisMeta risMeta = new RisMeta();
+    proprietary.setMeta(risMeta);
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>

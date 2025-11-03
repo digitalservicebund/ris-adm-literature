@@ -23,13 +23,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Slf4j
 public class PublisherConfig {
 
-  @Bean("privateBsgPublisher")
-  public Publisher privateBsgPublisher(
-    @Qualifier("privateBsgS3Client") S3Client s3Client,
+  @Bean("publicBsgPublisher")
+  public Publisher publicBsgPublisher(
+    @Qualifier("publicBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
-    @Value("${s3.bucket.adm.private.bucket-name}") String bucketName
+    @Value("${s3.bucket.adm.public.bucket-name}") String bucketName
   ) {
-    return new S3PublishAdapter(s3Client, validator, bucketName, "privateBsgPublisher");
+    return new S3PublishAdapter(s3Client, validator, bucketName, "publicBsgPublisher");
   }
 
   /**
@@ -42,7 +42,7 @@ public class PublisherConfig {
    *
    * @param allPublishers A list of all other beans that implement the {@link Publisher} interface,
    *                      automatically injected by Spring. These publisher beans are defined as a bean like
-   *                     {@link PublisherConfig#privateBsgPublisher} where each is configured with a specific S3 client
+   *                     {@link PublisherConfig#publicBsgPublisher} where each is configured with a specific S3 client
    *                      and bucket name.
    * @return A single {@link Publisher} instance that handles the routing logic.
    */

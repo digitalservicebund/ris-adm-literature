@@ -47,7 +47,7 @@ import software.amazon.awssdk.services.s3.model.*;
 class S3PublishAdapterIntegrationTest {
 
   private static final String FIRST_BUCKET_NAME = "test-bucket-1";
-  private static final String FIRST_PUBLISHER_NAME = "privateBsgPublisher";
+  private static final String FIRST_PUBLISHER_NAME = "publicBsgPublisher";
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
   private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
   private static final String CHANGELOG_DIR = "changelogs/";
@@ -68,7 +68,7 @@ class S3PublishAdapterIntegrationTest {
       return mock(XmlValidator.class);
     }
 
-    @Bean("privateBsgS3Client")
+    @Bean("publicBsgS3Client")
     @Primary
     public S3Client s3Client() {
       return S3Client.builder()
@@ -184,9 +184,8 @@ class S3PublishAdapterIntegrationTest {
     List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
     assertThat(firstBucketChangelogs).hasSize(1);
     S3Object changelog = firstBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(FIRST_BUCKET_NAME, changelog.key())).isEqualTo(
-      "{\"change_all\": true}"
+      "{\"changed\":[\"KSNR456.akn.xml\"]}"
     );
 
     // Verify the changelog file does NOT exist in the SECOND bucket
@@ -232,9 +231,8 @@ class S3PublishAdapterIntegrationTest {
     );
     assertThat(secondBucketChangelogs).hasSize(1);
     S3Object changelog = secondBucketChangelogs.getFirst();
-    assertThat(changelog.key()).endsWith(String.format("-%s.json", docNumber.substring(0, 4)));
     assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
-      "{\"change_all\": true}"
+      "{\"changed\":[\"doc-xyz-789.akn.xml\"]}"
     );
 
     // Verify the changelog file does NOT exist in the FIRST bucket

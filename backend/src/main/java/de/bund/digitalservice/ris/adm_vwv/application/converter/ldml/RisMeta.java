@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.*;
 
 /**
- * Jaxb ris:metadata element.
+ * Jaxb ris:meta element.
  */
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,12 +24,12 @@ import lombok.*;
     "dateToQuoteList",
     "referenceNumbers",
     "historicAdministrativeData",
-    "region",
+    "regionen",
     "historicAbbreviation",
     "activeReferences",
   }
 )
-public class RisMetadata {
+public class RisMeta {
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private List<RisNormgeber> normgeber;
@@ -66,8 +66,9 @@ public class RisMetadata {
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private JaxbHtml historicAdministrativeData;
 
-  @XmlElement(namespace = XmlNamespace.RIS_NS)
-  private String region;
+  @XmlElementWrapper(name = "regionen", namespace = XmlNamespace.RIS_NS)
+  @XmlElement(name = "region", namespace = XmlNamespace.RIS_NS)
+  private List<String> regionen;
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String historicAbbreviation;
