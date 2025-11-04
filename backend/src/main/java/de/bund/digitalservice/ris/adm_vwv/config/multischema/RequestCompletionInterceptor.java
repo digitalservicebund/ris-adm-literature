@@ -40,7 +40,7 @@ public class RequestCompletionInterceptor implements HandlerInterceptor {
   ) {
     String requestUri = request.getRequestURI();
     SchemaType schemaToUse = SchemaType.ADM;
-    if (requestUri.startsWith("/api/literature/documentation-units")) {
+    if (requestUri.startsWith("/api/literature/")) {
       schemaToUse = SchemaType.LIT;
     }
     SchemaContextHolder.setSchema(schemaToUse);
