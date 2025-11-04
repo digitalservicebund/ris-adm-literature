@@ -2,9 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   useGetAdmDocUnit,
   useGetAdmPaginatedDocUnits,
+  useGetUliDocUnit,
   usePostAdmDocUnit,
+  usePostUliDocUnit,
   usePutAdmDocUnit,
   usePutPublishAdmDocUnit,
+  usePutUliDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
@@ -52,6 +55,31 @@ describe('documentUnitService', () => {
     expect(data.value).toEqual(docUnit)
   })
 
+  it('fetches a ULI doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      note: '',
+    }
+
+    const docUnitResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSNR054920707',
+      json: docUnit,
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(docUnitResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = useGetUliDocUnit('KSLU054920707')
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value).toEqual(docUnit)
+  })
+
   it('data is null when adm fetch returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
@@ -61,10 +89,30 @@ describe('documentUnitService', () => {
     expect(data.value).toEqual(null)
   })
 
-  it('returns an error on failed fetch ', async () => {
+  it('data is null when ULI fetch returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = useGetUliDocUnit('KSLU054920707')
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('returns an error on failed adm fetch ', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
     const { data, error, isFetching, execute } = useGetAdmDocUnit('KSNR054920708')
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('returns an error on failed ULI fetch ', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = useGetUliDocUnit('KSLU054920708')
     await execute()
 
     expect(isFetching.value).toBe(false)
@@ -107,6 +155,34 @@ describe('documentUnitService', () => {
     expect(data.value?.id).toBe(docUnit.id)
   })
 
+  it('updates a ULI doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      note: '',
+    }
+
+    const updatedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      json: {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(updatedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutUliDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+  })
+
   it('returns an error on failed adm update', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
@@ -122,12 +198,40 @@ describe('documentUnitService', () => {
     expect(data.value).toBeNull()
   })
 
-  it('data is null when update call returns a null body', async () => {
+  it('returns an error on failed ULI update', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutUliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('data is null when adm update call returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
     const { data, execute } = usePutAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('data is null when ULI update call returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutUliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
       note: '',
     })
     await execute()
@@ -220,10 +324,21 @@ describe('documentUnitService', () => {
     expect(data.value?.id).toBe(createResp.id)
   })
 
-  it('returns an error on failed creation', async () => {
+  it('returns an error on failed adm creation', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
     const { data, error, isFetching, execute } = usePostAdmDocUnit()
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('returns an error on failed ULI creation', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePostUliDocUnit()
     await execute()
 
     expect(isFetching.value).toBe(false)
