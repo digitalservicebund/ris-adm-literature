@@ -75,6 +75,9 @@ When running e2e tests locally you need to have the backend running already.
 # Install browsers for the first run
 npx playwright install
 
+# Create test-data.json
+npm run test:e2e -- e2e/seed-data.ts
+
 # Not required locally, but when testing on CI we must build the project first
 npm run build
 

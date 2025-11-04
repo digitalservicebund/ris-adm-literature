@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import VerweisTypDropDown from '@/components/active-reference/VerweisTypDropDown.vue'
 import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp'
@@ -12,6 +12,10 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 describe('VerweisTypDropDown', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders correctly', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(JSON.stringify({ verweisTypen: [anwendungFixture, neuregelungFixture] }), {

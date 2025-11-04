@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import NormAbbreviationsDropDown from '@/components/NormAbbreviationsDropDown.vue'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
@@ -12,6 +12,10 @@ vi.mock('@digitalservicebund/ris-ui/components', () => ({
 }))
 
 describe('NormAbbreviationsDropDown', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders correctly', async () => {
     const fetchSpy = vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(JSON.stringify({ courts: [sgb5Fixture, kvlgFixture] }), {

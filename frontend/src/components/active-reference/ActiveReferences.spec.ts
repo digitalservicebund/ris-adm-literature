@@ -1,6 +1,6 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/vue'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import ActiveReferences from '@/components/active-reference/ActiveReferences.vue'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
@@ -10,7 +10,6 @@ import ActiveReference, {
 } from '@/domain/activeReference.ts'
 import { createTestingPinia } from '@pinia/testing'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
 import {
@@ -40,7 +39,10 @@ function renderComponent(activeReferences?: ActiveReference[]) {
             }),
           ],
         ],
-        stubs: { routerLink: { template: '<a><slot/></a>' } },
+        stubs: {
+          routerLink: { template: '<a><slot/></a>' },
+          InputMask: InputText,
+        },
       },
     }),
   }
@@ -61,14 +63,8 @@ function generateActiveReference(options?: {
 }
 
 describe('ActiveReferences', () => {
-  beforeAll(() => {
-    config.global.stubs = {
-      InputMask: InputText,
-    }
-  })
-
-  afterAll(() => {
-    config.global.stubs = {}
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('renders empty active reference in edit mode, when no active references in list', async () => {
