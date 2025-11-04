@@ -68,7 +68,7 @@ class S3PublishAdapterIntegrationTest {
       return mock(XmlValidator.class);
     }
 
-    @Bean("publicBsgClient")
+    @Bean("publicBsgS3Client")
     @Primary
     public S3Client s3Client() {
       return S3Client.builder()

@@ -25,7 +25,7 @@ public class PublisherConfig {
 
   @Bean("publicBsgPublisher")
   public Publisher publicBsgPublisher(
-    @Qualifier("publicBsgClient") S3Client s3Client,
+    @Qualifier("publicBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
     @Value("${s3.bucket.adm.public.bucket-name-ref}") String bucketName
   ) {

@@ -34,9 +34,9 @@ public class S3Config {
    * @param secretAccessKey The secret access key for authentication.
    * @return A configured {@link S3Client} instance for the staging environment.
    */
-  @Bean("publicBsgClient")
+  @Bean("publicBsgS3Client")
   @Profile("staging")
-  public S3Client publicBsgClient(
+  public S3Client publicBsgS3Client(
     @Value("${s3.bucket.region}") String region,
     @Value("${s3.bucket.endpoint}") String endpoint,
     @Value("${s3.bucket.adm.public.access-key-id}") String accessKeyId,
@@ -71,10 +71,10 @@ public class S3Config {
    *
    * @return An {@link S3MockClient} instance that simulates S3 operations locally.
    */
-  @Bean("publicBsgClient")
+  @Bean("publicBsgS3Client")
   @Profile(MOCK_PROFILE)
   public S3Client publicBsgMockClient() {
-    log.warn("Using S3MockClient for 'publicBsgClient'");
+    log.warn("Using S3MockClient for 'publicBsgS3Client'");
     return new S3MockClient();
   }
 
@@ -110,5 +110,5 @@ public class S3Config {
       .forcePathStyle(true)
       .build();
   }
-  // TODO: Use correct publisher in DUS, json conversion, test on env
+  // TODO: json conversion, test on env
 }
