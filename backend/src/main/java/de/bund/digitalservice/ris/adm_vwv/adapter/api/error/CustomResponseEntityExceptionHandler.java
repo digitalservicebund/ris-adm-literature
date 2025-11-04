@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_vwv.adapter.api.error;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -22,9 +21,9 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
     MethodArgumentNotValidException exception,
-    @Nonnull HttpHeaders headers,
-    @Nonnull HttpStatusCode status,
-    @Nonnull WebRequest request
+    HttpHeaders headers,
+    HttpStatusCode status,
+    WebRequest request
   ) {
     List<String> fieldErrors = exception
       .getBindingResult()
