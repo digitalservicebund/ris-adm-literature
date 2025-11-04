@@ -65,8 +65,8 @@ public class DocumentationUnitService {
     }
   }
 
-  public DocumentationUnit create() {
-    return documentationUnitPersistenceService.create();
+  public DocumentationUnit create(@Nonnull DocumentCategory documentCategory) {
+    return documentationUnitPersistenceService.create(documentCategory);
   }
 
   public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {

@@ -1,12 +1,11 @@
 package de.bund.digitalservice.ris.adm_vwv.config.multischema;
 
-import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  *
  * <p>This interceptor's primary logic is in {@link #afterCompletion},
  * where it logs the request outcome (status, user) and ensures {@link SchemaContextHolder} is cleared.
- * The actual schema selection and principal correction is handled earlier by
- * {@link TenantContextFilter}.</p>
+ * </p>
  */
 @Component
 @Slf4j
@@ -27,22 +25,26 @@ public class RequestCompletionInterceptor implements HandlerInterceptor {
   /**
    * Passes the request through.
    *
-   * <p>All pre-request logic, including schema selection and principal correction,
-   * is now handled by {@link TenantContextFilter},
-   * which runs earlier in the security filter chain.</p>
+   * <p>Sets the current database schema to use based on the requested endpoint.</p>
    *
-   * @param request the current HTTP request
+   * @param request  the current HTTP request
    * @param response the current HTTP response
-   * @param handler the chosen handler to execute
+   * @param handler  the chosen handler to execute
    * @return always {@code true} to continue the processing chain
    */
   @Override
   public boolean preHandle(
-    @NonNull HttpServletRequest request,
-    @NonNull HttpServletResponse response,
-    @NonNull Object handler
+    @Nonnull HttpServletRequest request,
+    @Nonnull HttpServletResponse response,
+    @Nonnull Object handler
   ) {
-    // Logic was moved to TenantContextFilter
+    String requestUri = request.getRequestURI();
+    SchemaType schemaToUse = SchemaType.ADM;
+    if (requestUri.startsWith("/api/literature/documentation-units")) {
+      schemaToUse = SchemaType.LIT;
+    }
+    SchemaContextHolder.setSchema(schemaToUse);
+    log.info("Using schema {} for request: {}", schemaToUse, requestUri);
     return true;
   }
 
@@ -53,16 +55,16 @@ public class RequestCompletionInterceptor implements HandlerInterceptor {
    * Also removes the schema from {@link SchemaContextHolder} to prevent leaking
    * ThreadLocal state across requests.</p>
    *
-   * @param request the current HTTP request
+   * @param request  the current HTTP request
    * @param response the current HTTP response
-   * @param handler the executed handler
-   * @param ex any exception thrown on handler execution, if any
+   * @param handler  the executed handler
+   * @param ex       any exception thrown on handler execution, if any
    */
   @Override
   public void afterCompletion(
-    @NonNull HttpServletRequest request,
-    @NonNull HttpServletResponse response,
-    @NonNull Object handler,
+    @Nonnull HttpServletRequest request,
+    @Nonnull HttpServletResponse response,
+    @Nonnull Object handler,
     Exception ex
   ) {
     if (request.getRequestURI() != null && !request.getRequestURI().startsWith("/actuator")) {
@@ -77,23 +79,19 @@ public class RequestCompletionInterceptor implements HandlerInterceptor {
       );
 
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      // skip public endpoints
       if (
         !request.getRequestURI().startsWith("/environment") &&
         authentication != null &&
-        authentication.getPrincipal() instanceof
-        UserDocumentDetails(DocumentationOffice office, DocumentCategory documentCategory)
+        authentication.getPrincipal() instanceof UserDocumentDetails(DocumentationOffice office, _)
       ) {
-        if (documentCategory != null) {
-          logMessage.append(" documentationType=").append(documentCategory);
-        }
+        // Skip public endpoints
+        logMessage.append(" documentationCategory=").append(SchemaContextHolder.getSchema());
         if (office != null) {
           logMessage.append(" documentationOffice=").append(office);
         }
       }
 
       String finalLogMessage = logMessage.toString();
-
       if (ex != null) {
         log.error("{} error='{}'", logMessage, ex.getMessage(), ex);
       } else {

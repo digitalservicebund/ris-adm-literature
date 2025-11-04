@@ -21,7 +21,7 @@ describe('defineDocumentUnitStore', () => {
     const mockData: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Sample Doc' }
     const executeMock = vi.fn()
 
-    vi.spyOn(documentUnitService, 'useGetDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
       data: ref(mockData),
       error: ref(null),
       statusCode: ref(200),
@@ -44,7 +44,7 @@ describe('defineDocumentUnitStore', () => {
     // given
     const fetchError = new Error('Fetch failed')
 
-    vi.spyOn(documentUnitService, 'useGetDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
       data: ref(null),
       error: ref(fetchError),
       statusCode: ref(500),
@@ -67,14 +67,14 @@ describe('defineDocumentUnitStore', () => {
     const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
     const updatedDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Updated' }
 
-    vi.spyOn(documentUnitService, 'useGetDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
       data: ref(originalDoc),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn(),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    vi.spyOn(documentUnitService, 'usePutDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
       data: ref(updatedDoc),
       error: ref(null),
       statusCode: ref(200),
@@ -99,14 +99,14 @@ describe('defineDocumentUnitStore', () => {
     const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
     const putError = new Error('PUT failed')
 
-    vi.spyOn(documentUnitService, 'useGetDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
       data: ref(originalDoc),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn().mockResolvedValue(undefined),
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
-    vi.spyOn(documentUnitService, 'usePutDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
       data: ref(null),
       error: ref(putError),
       statusCode: ref(500),
@@ -141,7 +141,7 @@ describe('defineDocumentUnitStore', () => {
     // given
     const mockDoc: MockDocument = { documentNumber: '1', id: 'docTestId', json: 'Doc' }
 
-    vi.spyOn(documentUnitService, 'useGetDocUnit').mockReturnValue({
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
       data: ref(mockDoc),
       error: ref(null),
       statusCode: ref(200),

@@ -205,12 +205,16 @@ class DocumentationUnitServiceTest {
     );
 
     // when
-    when(documentationUnitPersistenceService.create()).thenReturn(sampleDocUnit);
+    when(
+      documentationUnitPersistenceService.create(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    ).thenReturn(sampleDocUnit);
     when(documentationUnitPersistenceService.findByDocumentNumber(anyString())).thenReturn(
       Optional.of(sampleDocUnit)
     );
 
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
     String documentNumber = documentationUnit.documentNumber();
     assertThat(documentationUnit.json()).isNull();
 

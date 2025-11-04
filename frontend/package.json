@@ -13,6 +13,7 @@
     "test:unit": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e:preparation": "playwright test -- e2e/seed-data.ts",
     "test:e2e": "playwright test",
     "test:e2e:debug": "PWDEBUG=1 playwright test --ui",
     "build-only": "vite build",

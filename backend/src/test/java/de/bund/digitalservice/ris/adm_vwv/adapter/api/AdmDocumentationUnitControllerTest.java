@@ -31,10 +31,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = DocumentationUnitController.class)
+@WebMvcTest(controllers = AdmDocumentationUnitController.class)
 @WithMockUser(roles = "adm_user")
 @Import(SecurityConfiguration.class)
-class DocumentationUnitControllerTest {
+class AdmDocumentationUnitControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -54,7 +54,7 @@ class DocumentationUnitControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/documentation-units/{documentNumber}", documentNumber))
+      .perform(get("/api/adm/documentation-units/{documentNumber}", documentNumber))
       // then
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.documentNumber").value(documentNumber))
@@ -74,7 +74,7 @@ class DocumentationUnitControllerTest {
 
     // when
     mockMvc
-      .perform(get("/api/documentation-units/{documentNumber}", documentNumber))
+      .perform(get("/api/adm/documentation-units/{documentNumber}", documentNumber))
       // then
       .andExpect(status().isNotFound());
   }
@@ -84,13 +84,13 @@ class DocumentationUnitControllerTest {
   void create() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitService.create()).willReturn(
+    given(documentationUnitService.create(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)).willReturn(
       new DocumentationUnit("KSNR054920707", id, null)
     );
 
     // when
     mockMvc
-      .perform(post("/api/documentation-units"))
+      .perform(post("/api/adm/documentation-units"))
       // then
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id").value(id.toString()))
@@ -110,7 +110,7 @@ class DocumentationUnitControllerTest {
     // when
     mockMvc
       .perform(
-        put("/api/documentation-units/{documentNumber}", documentNumber)
+        put("/api/adm/documentation-units/{documentNumber}", documentNumber)
           .content(json)
           .contentType(MediaType.APPLICATION_JSON)
       )
@@ -133,7 +133,7 @@ class DocumentationUnitControllerTest {
     // when
     mockMvc
       .perform(
-        put("/api/documentation-units/{documentNumber}", documentNumber)
+        put("/api/adm/documentation-units/{documentNumber}", documentNumber)
           .content(json)
           .contentType(MediaType.APPLICATION_JSON)
       )
@@ -175,7 +175,7 @@ class DocumentationUnitControllerTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
+        .perform(get("/api/adm/documentation-units"))
         // then
         .andExpect(status().isOk())
         .andExpect(
@@ -215,7 +215,7 @@ class DocumentationUnitControllerTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units"))
+        .perform(get("/api/adm/documentation-units"))
         // then
         .andExpect(jsonPath("$.documentationUnitsOverview[0].fundstellen").isNotEmpty())
         .andExpect(
@@ -273,7 +273,7 @@ class DocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          get("/api/documentation-units")
+          get("/api/adm/documentation-units")
             .param("documentNumber", documentNumber)
             .param("langueberschrift", langueberschrift)
             .param("fundstellen", fundstellen)
@@ -303,7 +303,7 @@ class DocumentationUnitControllerTest {
 
       // when
       mockMvc
-        .perform(get("/api/documentation-units").param("sortByProperty", requestSortProperty))
+        .perform(get("/api/adm/documentation-units").param("sortByProperty", requestSortProperty))
         .andExpect(status().isOk());
 
       // then
@@ -361,7 +361,7 @@ class DocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/adm/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -380,7 +380,7 @@ class DocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/adm/documentation-units/{documentNumber}/publish", documentNumber)
             .content(payload)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -474,7 +474,7 @@ class DocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/adm/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -512,7 +512,7 @@ class DocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/adm/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
