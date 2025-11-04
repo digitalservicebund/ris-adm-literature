@@ -23,6 +23,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Slf4j
 public class S3Config {
 
+  private static final String MOCK_PROFILE = "!staging & !production & !uat";
+
   /**
    * Creates and configures the S3Client bean for the public BSG bucket.
    *
@@ -69,9 +71,23 @@ public class S3Config {
    *
    * @return An {@link S3MockClient} instance that simulates S3 operations locally.
    */
-  @Bean("mockS3Client")
-  @Profile("!staging & !production & !uat")
-  public S3Client mockClient() {
+  @Bean("publicBsgClient")
+  @Profile(MOCK_PROFILE)
+  public S3Client publicBsgMockClient() {
+    log.warn("Using S3MockClient for 'publicBsgClient'");
+    return new S3MockClient();
+  }
+
+  /**
+   * Creates a mock S3Client bean that writes to the local filesystem.
+   * <p>
+   *
+   * @return An {@link S3MockClient} instance that simulates S3 operations locally.
+   */
+  @Bean("publicLiteratureS3Client")
+  @Profile(MOCK_PROFILE)
+  public S3Client publicLiteratureMockClient() {
+    log.warn("Using S3MockClient for 'publicLiteratureS3Client'");
     return new S3MockClient();
   }
 
