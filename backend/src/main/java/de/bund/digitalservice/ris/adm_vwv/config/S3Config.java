@@ -110,4 +110,5 @@ public class S3Config {
       .forcePathStyle(true)
       .build();
   }
+  // TODO: Use correct publisher in DUS, json conversion, test on env
 }
