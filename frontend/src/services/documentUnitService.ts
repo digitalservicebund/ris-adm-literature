@@ -14,6 +14,7 @@ import { computed, type Ref } from 'vue'
 import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
 
 const ADM_DOCUMENTATION_UNITS_URL = '/adm/documentation-units'
+const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
 
 export function usePutPublishAdmDocUnit(
@@ -80,7 +81,7 @@ export function useGetAdmDocUnit<DocumentationUnit>(
 export function useGetUliDocUnit<DocumentationUnit>(
   documentNumber: string,
 ): UseFetchReturn<DocumentationUnit> {
-  return useApiFetch(`${ULI_LITERATURE_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToUliDocUnit(data) : null,
@@ -108,7 +109,7 @@ export function usePutAdmDocUnit<AdmDocumentationUnit>(
 export function usePutUliDocUnit<UliDocumentationUnit>(
   documentUnit: UliDocumentationUnit,
 ): UseFetchReturn<UliDocumentationUnit> {
-  return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToUliDocUnit(data) : null,
