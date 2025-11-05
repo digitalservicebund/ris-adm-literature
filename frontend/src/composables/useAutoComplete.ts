@@ -7,6 +7,7 @@ import type { Court } from '@/domain/court.ts'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
 import type { VerweisTyp } from '@/domain/verweisTyp'
 import { verweisTypToLabel } from '@/domain/activeReference'
+import type { DocumentType } from '@/domain/documentType'
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
@@ -173,6 +174,23 @@ export function useVerweisTypSearch(verweisTypen: Ref<VerweisTyp[]>) {
       .map((type) => ({
         id: type.id,
         label: verweisTypToLabel[type.name],
+      }))
+  }
+}
+
+export function useDokumentTypSearch(docTypes: Ref<DocumentType[]>) {
+  return function searchFn(query?: string) {
+    return docTypes.value
+      .filter(
+        (docType) =>
+          !query ||
+          docType.abbreviation.toLowerCase().includes(query.trim().toLowerCase()) ||
+          docType.name.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+      .map((docType) => ({
+        id: docType.abbreviation, // or return id from BE
+        label: docType.abbreviation,
+        secondaryLabel: docType.name,
       }))
   }
 }

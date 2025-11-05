@@ -66,11 +66,12 @@ public class DocumentationUnitPersistenceService {
   }
 
   /**
-   * Creates a new DocumentationUnit based on the authenticated user's details.
+   * Creates a new documentation unit based on the authenticated user's details.
    *
+   * @param documentCategory The document category of the documentation unit
    * @return The newly created and persisted {@link DocumentationUnit}.
    */
-  public DocumentationUnit create() {
+  public DocumentationUnit create(DocumentCategory documentCategory) {
     // Issue for the very first documentation unit of a new year: If for this year
     // there is no
     // document number stored, then concurrent threads can lead to an
@@ -78,7 +79,7 @@ public class DocumentationUnitPersistenceService {
     // unique constraint violation (try to persist same document number twice).
     // In that case the creation process is retried. Note, that even though the
     // exception is handled, there will
-    // be a warn and an error message logged by Hibernate, which cannot be avoided.
+    // be a warning and an error message logged by Hibernate, which cannot be avoided.
     // The used retry template can only handle a database exception if the
     // underlying transaction completes
     // with a commit; therefore a secondary bean (DocumentationUnitCreationService)
@@ -91,7 +92,7 @@ public class DocumentationUnitPersistenceService {
     UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
 
     DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create(details.office(), details.documentCategory())
+      documentationUnitCreationService.create(details.office(), documentCategory)
     );
     log.info(
       "New documentation unit created with document number: {}",

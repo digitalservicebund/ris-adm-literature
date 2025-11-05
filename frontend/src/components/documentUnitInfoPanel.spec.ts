@@ -6,11 +6,11 @@ import { createTestingPinia } from '@pinia/testing'
 import userEvent from '@testing-library/user-event'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { DocumentUnitStore } from '@/stores/types'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
-    meta: { documentTypeCode: DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN },
+    meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
   }),
 }))
 

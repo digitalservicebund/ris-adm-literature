@@ -1,6 +1,11 @@
 import { ref } from 'vue'
-import type { DocumentTypeCode } from '@/domain/documentType'
-import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
+import { DocumentCategory } from '@/domain/documentType'
+import {
+  useGetAdmDocUnit,
+  useGetUliDocUnit,
+  usePutAdmDocUnit,
+  usePutUliDocUnit,
+} from '@/services/documentUnitService'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -10,7 +15,7 @@ import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
- * @param docTypeCode - A DocumentTypeCode enum e.g. VERWALTUNGSVORSCHRIFTEN.
+ * @param documentCategory - A DocumentCategory enum e.g. VERWALTUNGSVORSCHRIFTEN.
  *
  * @returns An object containing reactive state and CRUD operations:
  *  - `documentUnit`: the currently loaded document (or `null`)
@@ -20,7 +25,7 @@ import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
-export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: DocumentTypeCode) {
+export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: DocumentCategory) {
   const documentUnit = ref<DocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
@@ -29,7 +34,13 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
     isLoading.value = true
     error.value = null
 
-    const { data, error: fetchError, execute } = useGetDocUnit(documentNumber, docTypeCode)
+    const {
+      data,
+      error: fetchError,
+      execute,
+    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+      ? useGetUliDocUnit(documentNumber)
+      : useGetAdmDocUnit(documentNumber)
     await execute()
 
     if (fetchError.value) {
@@ -53,7 +64,9 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
       error: putError,
       statusCode,
       execute,
-    } = usePutDocUnit(documentUnit.value, docTypeCode)
+    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+      ? usePutUliDocUnit(documentUnit.value)
+      : usePutAdmDocUnit(documentUnit.value)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
