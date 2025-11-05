@@ -12,7 +12,7 @@ import StartPageTemplate from './routes/OverviewPage.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
 import UliRubriken from './routes/uli/RubrikenPage.vue'
-import { DocumentTypeCode } from './domain/documentType'
+import { DocumentCategory } from './domain/documentType'
 import RootRedirectPage from './routes/RootRedirectPage.vue'
 
 const router = createRouter({
@@ -51,7 +51,7 @@ const router = createRouter({
       path: ROUTE_PATHS.ADM.BASE,
       meta: {
         requiresRole: [USER_ROLES.ADM_USER, USER_ROLES.ADM_VWV_USER],
-        documentTypeCode: DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
+        documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
       },
       children: [
         {
@@ -112,7 +112,7 @@ const router = createRouter({
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
-        documentTypeCode: DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG,
+        documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
       },
       children: [
         {

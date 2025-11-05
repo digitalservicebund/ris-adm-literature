@@ -5,6 +5,9 @@ import InputField from '@/components/input/InputField.vue'
 import YearInput from '@/components/input/YearInput.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
+import DokumentTyp from '@/components/DokumentTyp.vue'
+import { DocumentCategory } from '@/domain/documentType'
+import TitelSection from '@/components/uli/TitelSection.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 
@@ -14,6 +17,34 @@ const veroeffentlichungsjahr = computed({
     store.documentUnit!.veroeffentlichungsjahr = newValue
   },
 })
+
+const dokumentTyp = computed({
+  get: () => store.documentUnit?.dokumentTyp || [],
+  set: (newValue) => {
+    store.documentUnit!.dokumentTyp = newValue
+  },
+})
+
+const hauptsachtitel = computed({
+  get: () => store.documentUnit?.hauptsachtitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitel = newValue
+  },
+})
+
+const hauptsachtitelZusatz = computed({
+  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitelZusatz = newValue
+  },
+})
+
+const dokumentarischerTitel = computed({
+  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.dokumentarischerTitel = newValue
+  },
+})
 </script>
 
 <template>
@@ -21,6 +52,15 @@ const veroeffentlichungsjahr = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
+        <InputField id="dokumentTyp" v-slot="slotProps" label="Dokumenttyp *">
+          <DokumentTyp
+            inputId="dokumentTyp"
+            v-model="dokumentTyp"
+            aria-label="Dokumenttyp"
+            :invalid="slotProps.hasError"
+            :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
+          />
+        </InputField>
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <YearInput
             id="veroeffentlichungsjahr"
@@ -30,6 +70,20 @@ const veroeffentlichungsjahr = computed({
             @update:validation-error="slotProps.updateValidationError"
           />
         </InputField>
+      </div>
+      <TitelSection
+        v-model:hauptsachtitel="hauptsachtitel"
+        v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
+        v-model:dokumentarischer-titel="dokumentarischerTitel"
+      />
+      <div>
+        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+          Pflichtfelder für die Veröffentlichung
+        </p>
+        <p class="pl-12">
+          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
+          werden
+        </p>
       </div>
     </div>
   </div>
