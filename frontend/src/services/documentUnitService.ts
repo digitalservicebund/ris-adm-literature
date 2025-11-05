@@ -8,60 +8,49 @@ import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
 import NormReference from '@/domain/normReference'
 import { useApiFetch } from './apiService'
-import { type UseFetchOptions, type UseFetchReturn } from '@vueuse/core'
+import { type UseFetchReturn } from '@vueuse/core'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
-import { computed, type MaybeRefOrGetter, type Ref } from 'vue'
+import { computed, type Ref } from 'vue'
 import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
-import { DocumentTypeCode } from '@/domain/documentType'
 
-const DOCUMENTATION_UNITS_URL = '/documentation-units'
-
-const transformers = {
-  [DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN]: mapResponseToAdmDocUnit,
-  [DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG]: mapResponseToUliDocUnit,
-  [DocumentTypeCode.LITERATUR_SELBSTSTAENDIG]: () => {},
-} as const
-
-function useDocUnitFetch(
-  url: MaybeRefOrGetter<string>,
-  docTypeCode: DocumentTypeCode,
-  fetchOptions?: UseFetchOptions,
-) {
-  return useApiFetch(url, { headers: { 'X-Document-Type': docTypeCode as string } }, fetchOptions)
-}
+const ADM_DOCUMENTATION_UNITS_URL = '/adm/documentation-units'
+const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
+const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
 
 export function usePutPublishAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
 ): UseFetchReturn<AdmDocumentationUnit> {
-  return useDocUnitFetch(
-    `${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`,
-    DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN,
-    {
-      afterFetch: ({ data }) => {
-        return {
-          data: data ? transformers[DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN](data) : null,
-        }
-      },
-      immediate: false,
+  return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToAdmDocUnit(data) : null,
+      }
     },
-  )
+    immediate: false,
+  })
     .json()
     .put(documentUnit)
 }
 
-export function usePostDocUnit<T extends { id: string; documentNumber: string }>(
-  documentType: DocumentTypeCode,
-): UseFetchReturn<T> {
-  return useDocUnitFetch(`${DOCUMENTATION_UNITS_URL}`, documentType).json().post()
+export function usePostAdmDocUnit<
+  T extends { id: string; documentNumber: string },
+>(): UseFetchReturn<T> {
+  return useApiFetch(ADM_DOCUMENTATION_UNITS_URL).json().post()
 }
 
-export function useGetPaginatedDocUnits(
+export function usePostUliDocUnit<
+  T extends { id: string; documentNumber: string },
+>(): UseFetchReturn<T> {
+  return useApiFetch(ULI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
+}
+
+export function useGetAdmPaginatedDocUnits(
   pageNumber: Ref<number>,
   pageSize: number,
   search: Ref<AdmDocUnitSearchParams | undefined>,
 ): UseFetchReturn<AdmDocumentationUnit> {
   const urlWithParams = computed(() =>
-    buildUrlWithParams(`${DOCUMENTATION_UNITS_URL}`, {
+    buildUrlWithParams(`${ADM_DOCUMENTATION_UNITS_URL}`, {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       documentNumber: search?.value?.documentNumber?.toString(),
@@ -73,39 +62,61 @@ export function useGetPaginatedDocUnits(
     }),
   )
 
-  return useDocUnitFetch(urlWithParams, DocumentTypeCode.VERWALTUNGSVORSCHRIFTEN).json()
+  return useApiFetch(urlWithParams).json()
 }
 
-export function useGetDocUnit<DocumentationUnit>(
+export function useGetAdmDocUnit<DocumentationUnit>(
   documentNumber: string,
-  documentType: DocumentTypeCode,
 ): UseFetchReturn<DocumentationUnit> {
-  return useDocUnitFetch(`${DOCUMENTATION_UNITS_URL}/${documentNumber}`, documentType, {
+  return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       return {
-        data: data ? transformers[documentType](data) : null,
+        data: data ? mapResponseToAdmDocUnit(data) : null,
       }
     },
     immediate: false,
   }).json()
 }
 
-export function usePutDocUnit<DocumentationUnit>(
-  documentUnit: DocumentationUnit & { documentNumber: string },
-  documentType: DocumentTypeCode,
+export function useGetUliDocUnit<DocumentationUnit>(
+  documentNumber: string,
 ): UseFetchReturn<DocumentationUnit> {
-  return useDocUnitFetch(
-    `${DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`,
-    documentType,
-    {
-      afterFetch: ({ data }) => {
-        return {
-          data: data ? transformers[documentType](data) : null,
-        }
-      },
-      immediate: false,
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToUliDocUnit(data) : null,
+      }
     },
-  )
+    immediate: false,
+  }).json()
+}
+
+export function usePutAdmDocUnit<AdmDocumentationUnit>(
+  documentUnit: AdmDocumentationUnit,
+): UseFetchReturn<AdmDocumentationUnit> {
+  return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToAdmDocUnit(data) : null,
+      }
+    },
+    immediate: false,
+  })
+    .json()
+    .put(documentUnit)
+}
+
+export function usePutUliDocUnit<UliDocumentationUnit>(
+  documentUnit: UliDocumentationUnit,
+): UseFetchReturn<UliDocumentationUnit> {
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToUliDocUnit(data) : null,
+      }
+    },
+    immediate: false,
+  })
     .json()
     .put(documentUnit)
 }

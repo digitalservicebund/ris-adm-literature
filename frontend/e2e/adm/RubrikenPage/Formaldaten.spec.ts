@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 test.describe('RubrikenPage - Formatdaten', () => {
   test.describe('With mocked responses', () => {
     test.beforeEach(async ({ page }) => {
-      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+      await page.route('/api/adm/documentation-units/KSNR054920707', async (route) => {
         const json = {
           documentNumber: 'KSNR054920707',
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',

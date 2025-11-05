@@ -7,7 +7,7 @@ plugins {
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "7.0.1.6134"
-  id("com.github.jk1.dependency-license-report") version "2.9"
+  id("com.github.jk1.dependency-license-report") version "3.0.1"
   id("com.diffplug.spotless") version "8.0.0"
   id("checkstyle")
   id("io.freefair.lombok") version "9.0.0"
@@ -36,7 +36,7 @@ repositories {
 
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
-val springdocVersion = "2.8.13"
+val springdocVersion = "2.8.14"
 val sentryVersion = "8.25.0"
 val hypersistenceVersion = "3.11.0"
 val postgresVersion = "42.7.8"

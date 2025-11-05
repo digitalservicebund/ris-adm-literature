@@ -11,7 +11,7 @@ test.describe('StartPage Adm', () => {
     { tag: ['@RISDEV-6041', '@RISDEV-8587', '@RISDEV-9370'] },
     async ({ page }) => {
       // Arrange
-      await page.route('/api/documentation-units', async (route) => {
+      await page.route('/api/adm/documentation-units', async (route) => {
         await route.fulfill({
           json: {
             id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
@@ -43,7 +43,7 @@ test.describe('StartPage Adm', () => {
     { tag: ['@RISDEV-6041'] },
     async ({ page }) => {
       // Arrange
-      await page.route('/api/documentation-units', async (route) => {
+      await page.route('/api/adm/documentation-units', async (route) => {
         await route.fulfill({
           json: {
             id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',

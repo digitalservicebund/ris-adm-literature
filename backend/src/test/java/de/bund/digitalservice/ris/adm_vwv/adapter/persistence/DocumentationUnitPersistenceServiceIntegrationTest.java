@@ -88,7 +88,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // given
 
     // when
-    DocumentationUnit documentationUnit = documentationUnitPersistenceService.create();
+    DocumentationUnit documentationUnit = documentationUnitPersistenceService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
 
     // then
     assertThat(
