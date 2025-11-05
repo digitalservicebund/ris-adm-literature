@@ -7,7 +7,6 @@ import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/components/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
-import { Textarea } from 'primevue'
 import TitelSection from '@/components/uli/TitelSection.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
@@ -22,8 +21,9 @@ const veroeffentlichungsjahr = computed({
 const dokumentTyp = computed({
   get: () => store.documentUnit?.dokumentTyp || [],
   set: (newValue) => {
-    store.documentUnit!.dokumentTyp = newValue}
-  })
+    store.documentUnit!.dokumentTyp = newValue
+  },
+})
 
 const hauptsachtitel = computed({
   get: () => store.documentUnit?.hauptsachtitel ?? '',
@@ -51,15 +51,26 @@ const dokumentarischerTitel = computed({
   <div class="flex w-full flex-1 grow flex-col gap-24 p-24">
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
-      <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
-        <YearInput
-          id="veroeffentlichungsjahr"
-          v-model="veroeffentlichungsjahr"
-          aria-label="Veröffentlichungsjahr"
-          :has-error="slotProps.hasError"
-          @update:validation-error="slotProps.updateValidationError"
-        />
-      </InputField>
+      <div class="flex flex-row gap-24">
+        <InputField id="dokumentTyp" v-slot="slotProps" label="DokumentTyp *">
+          <DokumentTyp
+            inputId="dokumentTyp"
+            v-model="dokumentTyp"
+            aria-label="DokumentTyp"
+            :invalid="slotProps.hasError"
+            :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
+          />
+        </InputField>
+        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
+          <YearInput
+            id="veroeffentlichungsjahr"
+            v-model="veroeffentlichungsjahr"
+            aria-label="Veröffentlichungsjahr"
+            :has-error="slotProps.hasError"
+            @update:validation-error="slotProps.updateValidationError"
+          />
+        </InputField>
+      </div>
       <TitelSection
         v-model:hauptsachtitel="hauptsachtitel"
         v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
