@@ -12,7 +12,7 @@ import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { DocumentUnitStore } from '@/stores/types'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 
 const props = defineProps<{
   documentNumber: string
@@ -26,7 +26,7 @@ const { documentUnit, error } = storeToRefs(store)
 
 const route = useRoute()
 const menuItems = computed(() =>
-  route.meta.documentTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+  route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
     ? getUliMenuItems(props.documentNumber, route.query)
     : getAdmVwvMenuItems(props.documentNumber, route.query),
 )

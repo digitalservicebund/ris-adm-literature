@@ -6,7 +6,7 @@ import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
 import { ROUTE_PATHS } from '@/constants/routes'
 import { usePostAdmDocUnit, usePostUliDocUnit } from '@/services/documentUnitService.ts'
-import { DocumentTypeCode } from '@/domain/documentType.ts'
+import { DocumentCategory } from '@/domain/documentType'
 
 const toast = useToast()
 const router = useRouter()
@@ -14,7 +14,7 @@ const route = useRoute()
 
 onBeforeMount(async () => {
   const { data, error, isFinished } =
-    route.meta.documentTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+    route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
       ? usePostUliDocUnit()
       : usePostAdmDocUnit()
   await until(isFinished).toBe(true)
