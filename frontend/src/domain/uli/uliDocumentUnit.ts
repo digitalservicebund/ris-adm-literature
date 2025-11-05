@@ -6,6 +6,7 @@ export interface UliDocumentationUnit {
   veroeffentlichungsjahr?: string
   dokumentTyp?: DocumentType[]
   hauptsachtitel?: string
+  hauptsachtitelZusatz?: string
   dokumentarischerTitel?: string
   note: string
 }
