@@ -7,6 +7,7 @@ import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/components/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
+import TitelSection from '@/components/uli/TitelSection.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 
@@ -21,6 +22,27 @@ const dokumentTyp = computed({
   get: () => store.documentUnit?.dokumentTyp || [],
   set: (newValue) => {
     store.documentUnit!.dokumentTyp = newValue
+  },
+})
+
+const hauptsachtitel = computed({
+  get: () => store.documentUnit?.hauptsachtitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitel = newValue
+  },
+})
+
+const hauptsachtitelZusatz = computed({
+  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitelZusatz = newValue
+  },
+})
+
+const dokumentarischerTitel = computed({
+  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.dokumentarischerTitel = newValue
   },
 })
 </script>
@@ -48,6 +70,20 @@ const dokumentTyp = computed({
             @update:validation-error="slotProps.updateValidationError"
           />
         </InputField>
+      </div>
+      <TitelSection
+        v-model:hauptsachtitel="hauptsachtitel"
+        v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
+        v-model:dokumentarischer-titel="dokumentarischerTitel"
+      />
+      <div>
+        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+          Pflichtfelder für die Veröffentlichung
+        </p>
+        <p class="pl-12">
+          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
+          werden
+        </p>
       </div>
     </div>
   </div>

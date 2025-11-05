@@ -5,6 +5,9 @@ export interface UliDocumentationUnit {
   readonly documentNumber: string
   veroeffentlichungsjahr?: string
   dokumentTyp?: DocumentType[]
+  hauptsachtitel?: string
+  hauptsachtitelZusatz?: string
+  dokumentarischerTitel?: string
   note: string
 }
 
