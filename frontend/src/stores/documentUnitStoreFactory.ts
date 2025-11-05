@@ -4,13 +4,15 @@ import {
   useGetAdmDocUnit,
   useGetUliDocUnit,
   usePutAdmDocUnit,
+  usePutPublishAdmDocUnit,
+  usePutPublishUliDocUnit,
   usePutUliDocUnit,
 } from '@/services/documentUnitService'
 
 /**
  * Generic factory function for creating a document-unit store.
  *
- * This abstracts common CRUD logic (load, update, unload) so it can be reused
+ * This abstracts common CRUD logic (load, update, publish, unload) so it can be reused
  * for different document types (e.g. ADM, ULI, SLI).
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
@@ -23,6 +25,7 @@ import {
  *  - `error`: holds any error that occurred during load or update
  *  - `load(documentNumber)`: loads a document by number
  *  - `update()`: updates the current document and returns `true`/`false`
+ *  - `publish()`: publish the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
 export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: DocumentCategory) {
@@ -80,6 +83,33 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     return false
   }
 
+  async function publish(): Promise<boolean> {
+    if (!documentUnit.value) return false
+
+    isLoading.value = true
+    error.value = null
+
+    const {
+      data,
+      error: putError,
+      statusCode,
+      execute,
+    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+      ? usePutPublishUliDocUnit(documentUnit.value)
+      : usePutPublishAdmDocUnit(documentUnit.value)
+    await execute()
+
+    if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
+      documentUnit.value = data.value
+      isLoading.value = false
+      return true
+    }
+
+    error.value = putError.value || new Error('Publish failed')
+    isLoading.value = false
+    return false
+  }
+
   function unload() {
     documentUnit.value = null
   }
@@ -90,6 +120,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     error,
     load,
     update,
+    publish,
     unload,
   }
 }

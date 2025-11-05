@@ -1,4 +1,5 @@
 import { requiredAdmDocUnitFields, type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
+import { requiredUliDocUnitFields, type UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
@@ -22,9 +23,17 @@ export function getFutureDateErrMessage(dates: string[]): string {
     : ''
 }
 
-// Returns a list of missing required fields
-export function missingDocumentUnitFields(doc: AdmDocumentationUnit): string[] {
+// Returns a list of missing adm required fields
+export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[] {
   return requiredAdmDocUnitFields.filter((field) => {
+    const value = doc[field]
+    return !value || (Array.isArray(value) && value.length === 0)
+  })
+}
+
+// Returns a list of missing uli required fields
+export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
+  return requiredUliDocUnitFields.filter((field) => {
     const value = doc[field]
     return !value || (Array.isArray(value) && value.length === 0)
   })

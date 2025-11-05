@@ -3,7 +3,7 @@ import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
 import { useAuthentication } from '@/services/auth'
 import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles'
 import ErrorNotFound from './routes/ErrorNotFound.vue'
-import AbgabePage from './routes/adm/documentUnit/[documentNumber]/AbgabePage.vue'
+import AbgabePage from './routes/AbgabePage.vue'
 import AdmRubriken from './routes/adm/documentUnit/[documentNumber]/RubrikenPage.vue'
 import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/FundstellenPage.vue'
 import NewDocument from '@/routes/NewDocument.vue'
@@ -137,6 +137,12 @@ const router = createRouter({
               path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.RUBRIKEN,
               name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN,
               component: UliRubriken,
+            },
+            {
+              path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.ABGABE,
+              name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.ABGABE,
+              props: true,
+              component: AbgabePage,
             },
           ],
         },
