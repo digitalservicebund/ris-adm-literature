@@ -6,11 +6,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-public class WithMockAdmUserSecurityContextFactory
-  implements WithSecurityContextFactory<WithMockAdmUser> {
+public class WithMockUserSecurityContextFactory
+  implements WithSecurityContextFactory<WithMockUser> {
 
   @Override
-  public SecurityContext createSecurityContext(WithMockAdmUser annotation) {
+  public SecurityContext createSecurityContext(WithMockUser annotation) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
 
     var principal = new UserDocumentDetails(annotation.office(), annotation.category());
