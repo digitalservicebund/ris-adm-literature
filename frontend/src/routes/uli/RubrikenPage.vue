@@ -52,11 +52,11 @@ const dokumentarischerTitel = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="dokumentTyp" v-slot="slotProps" label="DokumentTyp *">
+        <InputField id="dokumentTyp" v-slot="slotProps" label="Dokumenttyp *">
           <DokumentTyp
             inputId="dokumentTyp"
             v-model="dokumentTyp"
-            aria-label="DokumentTyp"
+            aria-label="Dokumenttyp"
             :invalid="slotProps.hasError"
             :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
           />
