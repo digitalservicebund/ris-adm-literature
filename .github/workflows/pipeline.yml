@@ -137,10 +137,10 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-  e2e-compile-html-report:
-    needs:
-      - e2e-tests
-    uses: ./.github/workflows/e2e-compile-html-report.yml
+  # e2e-compile-html-report:
+  #   needs:
+  #     - e2e-tests
+  #   uses: ./.github/workflows/e2e-compile-html-report.yml
 
   # e2e-push-reports-to-ris-reports:
   #   if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
