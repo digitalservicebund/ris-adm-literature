@@ -3,7 +3,7 @@ import {
   areDatesValid,
   getFutureDateErrMessage,
   getInvalidDateErrMessage,
-  missingDocumentUnitFields,
+  missingAdmDocumentUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
@@ -87,7 +87,7 @@ describe('Validators functions', () => {
         zitierdaten: [],
       }
 
-      const actual = missingDocumentUnitFields(doc)
+      const actual = missingAdmDocumentUnitFields(doc)
       const expected = ['inkrafttretedatum', 'dokumenttyp', 'zitierdaten', 'normgeberList']
 
       expect(expected.sort()).toEqual(actual.sort())

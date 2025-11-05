@@ -4,12 +4,10 @@ import { defineDocumentUnitStore } from './documentUnitStoreFactory'
 import { DocumentCategory } from '@/domain/documentType'
 import * as documentUnitService from '@/services/documentUnitService'
 import type { UseFetchReturn } from '@vueuse/core'
-
-interface MockDocument {
-  documentNumber: string
-  id: string
-  json: string
-}
+import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
+import { admDocumentUnitFixture } from '@/testing/fixtures/admDocumentUnit'
+import { uliDocumentUnitFixture } from '@/testing/fixtures/uliDocumentUnit'
+import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 
 describe('defineDocumentUnitStore', () => {
   beforeEach(() => {
@@ -18,48 +16,45 @@ describe('defineDocumentUnitStore', () => {
 
   it('loads a adm document unit successfully', async () => {
     // given
-    const mockData: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Sample Doc' }
     const executeMock = vi.fn()
-
     vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(mockData),
+      data: ref(admDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: executeMock,
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     // when
-    await store.load('123')
+    await store.load('KSNR054920707')
 
     // then
     expect(executeMock).toHaveBeenCalledTimes(1)
-    expect(store.documentUnit.value).toEqual(mockData)
+    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
     expect(store.error.value).toBeNull()
     expect(store.isLoading.value).toBe(false)
   })
 
   it('loads a uli document unit successfully', async () => {
     // given
-    const mockData: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Sample Doc' }
     const executeMock = vi.fn()
 
     vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
-      data: ref(mockData),
+      data: ref(uliDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: executeMock,
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
 
     // when
-    await store.load('123')
+    await store.load('KSLU054920707')
 
     // then
     expect(executeMock).toHaveBeenCalledTimes(1)
-    expect(store.documentUnit.value).toEqual(mockData)
+    expect(store.documentUnit.value).toEqual(uliDocumentUnitFixture)
     expect(store.error.value).toBeNull()
     expect(store.isLoading.value).toBe(false)
   })
@@ -73,7 +68,7 @@ describe('defineDocumentUnitStore', () => {
       error: ref(fetchError),
       statusCode: ref(500),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
@@ -88,25 +83,24 @@ describe('defineDocumentUnitStore', () => {
 
   it('updates a adm document unit successfully', async () => {
     // given
-    const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
-    const updatedDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Updated' }
+    const updatedDoc: AdmDocumentationUnit = { ...admDocumentUnitFixture, note: 'updated' }
 
     vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(originalDoc),
+      data: ref(admDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
       data: ref(updatedDoc),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('123')
+    await store.load('KSNR054920707')
 
     // when
     const success = await store.update()
@@ -120,25 +114,24 @@ describe('defineDocumentUnitStore', () => {
 
   it('updates a uli document unit successfully', async () => {
     // given
-    const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
-    const updatedDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Updated' }
+    const updatedDoc: AdmDocumentationUnit = { ...uliDocumentUnitFixture, note: 'updated' }
 
     vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
-      data: ref(originalDoc),
+      data: ref(uliDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
 
     vi.spyOn(documentUnitService, 'usePutUliDocUnit').mockReturnValue({
       data: ref(updatedDoc),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-    await store.load('123')
+    await store.load('KSLU054920707')
 
     // when
     const success = await store.update()
@@ -150,27 +143,88 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
   })
 
+  it('publishes a adm document unit successfully', async () => {
+    // given
+    const updatedDoc: AdmDocumentationUnit = { ...admDocumentUnitFixture, note: 'updated' }
+
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
+      data: ref(admDocumentUnitFixture),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
+
+    vi.spyOn(documentUnitService, 'usePutPublishAdmDocUnit').mockReturnValue({
+      data: ref(updatedDoc),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
+
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    await store.load('KSNR054920707')
+
+    // when
+    const success = await store.publish()
+
+    // then
+    expect(success).toBe(true)
+    expect(store.documentUnit.value).toEqual(updatedDoc)
+    expect(store.error.value).toBeNull()
+    expect(store.isLoading.value).toBe(false)
+  })
+
+  it('publishes a uli document unit successfully', async () => {
+    // given
+    const updatedDoc: AdmDocumentationUnit = { ...uliDocumentUnitFixture, note: 'updated' }
+
+    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
+      data: ref(uliDocumentUnitFixture),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
+
+    vi.spyOn(documentUnitService, 'usePutPublishUliDocUnit').mockReturnValue({
+      data: ref(updatedDoc),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
+
+    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
+    await store.load('KSLU054920707')
+
+    // when
+    const success = await store.publish()
+
+    // then
+    expect(success).toBe(true)
+    expect(store.documentUnit.value).toEqual(updatedDoc)
+    expect(store.error.value).toBeNull()
+    expect(store.isLoading.value).toBe(false)
+  })
+
   it('updates the error state and leaves the original document untouched on a failed update', async () => {
     // given
-    const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
     const putError = new Error('PUT failed')
 
     vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(originalDoc),
+      data: ref(admDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn().mockResolvedValue(undefined),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
       data: ref(null),
       error: ref(putError),
       statusCode: ref(500),
       execute: vi.fn(),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('123')
+    await store.load('KSNR054920707')
 
     // when
     const success = await store.update()
@@ -178,7 +232,7 @@ describe('defineDocumentUnitStore', () => {
     // then
     expect(success).toBe(false)
     expect(store.error.value).toEqual(putError)
-    expect(store.documentUnit.value).toEqual(originalDoc)
+    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
     expect(store.isLoading.value).toBe(false)
   })
 
@@ -195,22 +249,20 @@ describe('defineDocumentUnitStore', () => {
 
   it('clears document unit on unload', async () => {
     // given
-    const mockDoc: MockDocument = { documentNumber: '1', id: 'docTestId', json: 'Doc' }
-
     vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(mockDoc),
+      data: ref(admDocumentUnitFixture),
       error: ref(null),
       statusCode: ref(200),
       execute: vi.fn().mockResolvedValue(undefined),
-    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
 
     // when
-    await store.load('1')
+    await store.load('KSNR054920707')
 
     // then
-    expect(store.documentUnit.value).toEqual(mockDoc)
+    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
 
     // when
     store.unload()
