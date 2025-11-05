@@ -1,176 +1,126 @@
 on:
-  workflow_call:
-    secrets:
-      RIS_REPORTS_DEPLOY_PRIVATE_KEY:
-        required: true
+    workflow_call:
+        secrets:
+            RIS_REPORTS_DEPLOY_PRIVATE_KEY:
+                required: true
 
 jobs:
-  push-reports-to-ris-reports:
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    env:
-      reports-repo: digitalservicebund/ris-reports
-    steps:
-      # This step needs to happen before any "add-ris-report" action
-      # (otherwise the folder is no git repository and does not support git commands)
-      - name: Checkout ris-reports
-        uses: actions/checkout@v5
-        with:
-          repository: ${{ env.reports-repo }}
-          ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
+    push-reports-to-ris-reports:
+        continue-on-error: true
+        runs-on: ubuntu-latest
+        env:
+            reports-repo: digitalservicebund/ris-reports
+        steps:
+            # This step needs to happen before any "add-ris-report" action
+            # (otherwise the folder is no git repository and does not support git commands)
+            - name: Checkout ris-reports
+              uses: actions/checkout@v5
+              with:
+                  repository: ${{ env.reports-repo }}
+                  ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
-      ########################################################################
-      # Fetching reports and adding for push
-      # Note: actually pushing the reports is a separate step after all these
-      ########################################################################
+            ########################################################################
+            # Fetching reports and adding for push
+            # Note: actually pushing the reports is a separate step after all these
+            ########################################################################
 
-      ## ADRs
-      - name: Download ADRs
-        uses: actions/download-artifact@v6
-        with:
-          name: adr-list
-          path: tmp/adr-source
-      - name: Add ADRs to report
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/adr-source
-          destinationDir: adr/ris-adm-literature
-          reportIsDirectory: true
-          keepAllVersions: false # don't need the timestamped snapshots of the whole folder
+            ## ADRs
+            - name: Download ADRs
+              uses: actions/download-artifact@v6
+              with:
+                  name: adr-list
+                  path: tmp/adr-source
+            - name: Add ADRs to report
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/adr-source
+                  destinationDir: adr/ris-adm-literature
+                  reportIsDirectory: true
+                  keepAllVersions: false # don't need the timestamped snapshots of the whole folder
 
-      ## Backend unit test report
-      - name: Download artifact backend test report
-        uses: actions/download-artifact@v6
-        with:
-          name: backend-test-report
-          path: tmp/backend-test-report/
-      - name: Add backend test report for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/backend-test-report
-          destinationDir: test-reports/ris-adm-literature/backend/tests
-          reportIsDirectory: true
+            ## Backend unit test report
+            - name: Download artifact backend test report
+              uses: actions/download-artifact@v6
+              with:
+                  name: backend-test-report
+                  path: tmp/backend-test-report/
+            - name: Add backend test report for push
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/backend-test-report
+                  destinationDir: test-reports/ris-adm-literature/backend/tests
+                  reportIsDirectory: true
 
-      ## Backend license report
-      - name: Download artifact backend license report
-        uses: actions/download-artifact@v6
-        with:
-          name: backend-license-report
-          path: tmp/backend-license-report/
-      - name: Add backend license report for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/backend-license-report/index.html
-          destinationDir: licence-reports/backend/ris-adm-literature
+            ## Backend license report
+            - name: Download artifact backend license report
+              uses: actions/download-artifact@v6
+              with:
+                  name: backend-license-report
+                  path: tmp/backend-license-report/
+            - name: Add backend license report for push
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/backend-license-report/index.html
+                  destinationDir: licence-reports/backend/ris-adm-literature
 
-      ## Backend code documentation
-      - name: Download backend code documentation
-        uses: actions/download-artifact@v6
-        with:
-          name: backend-license-report
-          path: tmp/backend-code-documentation/
-      - name: Add backend code documentation for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/backend-code-documentation
-          destinationDir: code-documentation/backend/ris-adm-literature
-          reportIsDirectory: true
+            ## Backend code documentation
+            - name: Download backend code documentation
+              uses: actions/download-artifact@v6
+              with:
+                  name: backend-license-report
+                  path: tmp/backend-code-documentation/
+            - name: Add backend code documentation for push
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/backend-code-documentation
+                  destinationDir: code-documentation/backend/ris-adm-literature
+                  reportIsDirectory: true
 
-      ## Frontend unit test report
-      - name: Download artifact frontend unit test report
-        uses: actions/download-artifact@v6
-        with:
-          name: frontend-unit-test-report-html
-          path: tmp/frontend-unit-test-report-html/
-      - name: Add frontend unit test report for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/frontend-unit-test-report-html
-          destinationDir: test-reports/ris-adm-literature/frontend/unit-tests
-          reportIsDirectory: true
+            ## Frontend unit test report
+            - name: Download artifact frontend unit test report
+              uses: actions/download-artifact@v6
+              with:
+                  name: frontend-unit-test-report-html
+                  path: tmp/frontend-unit-test-report-html/
+            - name: Add frontend unit test report for push
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/frontend-unit-test-report-html
+                  destinationDir: test-reports/ris-adm-literature/frontend/unit-tests
+                  reportIsDirectory: true
 
-      ## Frontend licence report
-      - name: Download artifact frontend license report
-        uses: actions/download-artifact@v6
-        with:
-          name: frontend-license-report
-          path: tmp/frontend-license-report/
-      - name: Add frontend license report for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/frontend-license-report/frontend-licence-report.csv
-          destinationDir: licence-reports/frontend/ris-adm-literature
+            ## Frontend licence report
+            - name: Download artifact frontend license report
+              uses: actions/download-artifact@v6
+              with:
+                  name: frontend-license-report
+                  path: tmp/frontend-license-report/
+            - name: Add frontend license report for push
+              uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
+              with:
+                  filePath: tmp/frontend-license-report/frontend-licence-report.csv
+                  destinationDir: licence-reports/frontend/ris-adm-literature
 
-      ## e2e test reports
-      - uses: actions/checkout@v5
-      - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v6
-        with:
-            path: tmp/e2e-test-report
-            pattern: frontend-e2e-test-report.blob*
-            merge-multiple: true
-      - name: Setup Node for playwright's merge-report feature
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend    
-      - name: Generate e2e HTML report out of all the blobs (playwright merge-reports)
-        working-directory: ./frontend
-        run: |
-          npx playwright merge-reports --reporter html ../tmp/e2e-test-report
-      - name: Upload merged e2e HTML test report
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: frontend-e2e-test-report-html
-          retention-days: 3
-          path: frontend/playwright-report
-      - name: Download artifact frontend e2e test report
-        uses: actions/download-artifact@v6
-        with:
-          name: frontend-e2e-test-report-html
-          path: tmp/frontend-e2e-test-report-html
-      - name: Add frontend e2e test report for push
-        uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
-        with:
-          filePath: tmp/frontend-e2e-test-report-html
-          destinationDir: test-reports/ris-adm-literature/frontend/e2e-tests
-          reportIsDirectory: true
-      
+            ##############################################
+            # Finally: pushing the reports to ris-reports
+            ##############################################
+            - name: Setup git config
+              run: |
+                  git config user.name "${{ github.repository }}"
+                  # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            - name:
+                  Push reports
+                  # we use `toJSON(...)` below to escape double quotation marks
+              run: |
+                  git diff-index --cached --quiet HEAD ||
+                    git commit \
+                      -m ${{ toJSON(github.event.head_commit.message) }} \
+                      -m "From commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" &&
+                    git pull origin main --rebase &&
+                    git push origin main &&
+                    echo "Pushed reports to ${{ github.server_url }}/${{ env.REPORTS_REPOSITORY }}" >> $GITHUB_STEP_SUMMARY
 
-      ##############################################
-      # Finally: pushing the reports to ris-reports
-      ##############################################
-      - name: Setup git config
-        run: |
-          git config user.name "${{ github.repository }}"
-          # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name:
-          Push reports
-          # we use `toJSON(...)` below to escape double quotation marks
-        run: |
-          git diff-index --cached --quiet HEAD ||
-            git commit \
-              -m ${{ toJSON(github.event.head_commit.message) }} \
-              -m "From commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" &&
-            git pull origin main --rebase &&
-            git push origin main &&
-            echo "Pushed reports to ${{ github.server_url }}/${{ env.REPORTS_REPOSITORY }}" >> $GITHUB_STEP_SUMMARY
-
-      # - name: Send status to Slack
-      # we don't handle a failure as a problem (that's why we set "continue-on-error")
-      # hence it's certainly not worthy of sending an alarm message
+            # - name: Send status to Slack
+            # we don't handle a failure as a problem (that's why we set "continue-on-error")
+            # hence it's certainly not worthy of sending an alarm message

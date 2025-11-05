@@ -123,6 +123,18 @@ jobs:
   #######################################
   # Push reports
   #######################################
+  push-e2e-reports-to-ris-reports:
+    # todo: restrict to main
+    # if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() }}
+    needs:
+      - e2e-tests
+      # so these pushes don't block each other (should not delay as e2e is slowest)
+      - push-reports-to-ris-reports
+    uses: ./.github/workflows/push-e2e-reports-to-ris-reports.yml
+    secrets:
+      RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
+
   push-reports-to-ris-reports:
     # todo: restrict to main
     # if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
@@ -130,7 +142,6 @@ jobs:
     needs:
       - backend-checks
       - frontend-checks
-      - e2e-tests
     uses: ./.github/workflows/push-all-reports-to-ris-reports.yml
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
