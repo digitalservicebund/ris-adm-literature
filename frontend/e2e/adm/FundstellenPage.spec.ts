@@ -158,7 +158,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
     async ({ page }) => {
       // Arrange
       // Mock the POST request (create)
-      await page.route('/api/documentation-units', async (route) => {
+      await page.route('/api/adm/documentation-units', async (route) => {
         await route.fulfill({
           json: {
             id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
