@@ -161,6 +161,7 @@ jobs:
     needs:
       - backend-checks
       - frontend-checks
+      - e2e-tests
     uses: ./.github/workflows/push-all-reports-to-ris-reports.yml
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
