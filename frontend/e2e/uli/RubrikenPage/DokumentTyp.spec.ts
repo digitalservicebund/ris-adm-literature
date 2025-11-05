@@ -55,7 +55,7 @@ test.describe('ULI Rubriken - DokumentTyp', () => {
       await page.waitForURL(/dokumentationseinheit/)
       const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Ebs')
-      await page.getByText('Verwaltungsregelung').click()
+      await page.getByText('Entscheidungsbesprechung').click()
       await page.getByText('Speichern').click()
       await page.reload()
       await expect(page.getByText('Ebs')).toBeVisible()
