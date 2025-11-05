@@ -16,7 +16,7 @@ describe('defineDocumentUnitStore', () => {
     vi.clearAllMocks()
   })
 
-  it('loads a document unit successfully', async () => {
+  it('loads a adm document unit successfully', async () => {
     // given
     const mockData: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Sample Doc' }
     const executeMock = vi.fn()
@@ -29,6 +29,30 @@ describe('defineDocumentUnitStore', () => {
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+
+    // when
+    await store.load('123')
+
+    // then
+    expect(executeMock).toHaveBeenCalledTimes(1)
+    expect(store.documentUnit.value).toEqual(mockData)
+    expect(store.error.value).toBeNull()
+    expect(store.isLoading.value).toBe(false)
+  })
+
+  it('loads a uli document unit successfully', async () => {
+    // given
+    const mockData: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Sample Doc' }
+    const executeMock = vi.fn()
+
+    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
+      data: ref(mockData),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: executeMock,
+    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+
+    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
 
     // when
     await store.load('123')
@@ -62,7 +86,7 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
   })
 
-  it('updates document unit successfully', async () => {
+  it('updates a adm document unit successfully', async () => {
     // given
     const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
     const updatedDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Updated' }
@@ -82,6 +106,38 @@ describe('defineDocumentUnitStore', () => {
     } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
 
     const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    await store.load('123')
+
+    // when
+    const success = await store.update()
+
+    // then
+    expect(success).toBe(true)
+    expect(store.documentUnit.value).toEqual(updatedDoc)
+    expect(store.error.value).toBeNull()
+    expect(store.isLoading.value).toBe(false)
+  })
+
+  it('updates a uli document unit successfully', async () => {
+    // given
+    const originalDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Original' }
+    const updatedDoc: MockDocument = { documentNumber: '123', id: 'docTestId', json: 'Updated' }
+
+    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
+      data: ref(originalDoc),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+
+    vi.spyOn(documentUnitService, 'usePutUliDocUnit').mockReturnValue({
+      data: ref(updatedDoc),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<MockDocument>> as UseFetchReturn<MockDocument>)
+
+    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
     await store.load('123')
 
     // when
