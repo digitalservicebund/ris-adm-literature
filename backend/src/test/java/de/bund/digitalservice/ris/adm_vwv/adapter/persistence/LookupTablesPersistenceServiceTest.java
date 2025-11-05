@@ -55,7 +55,8 @@ class LookupTablesPersistenceServiceTest {
     documentTypeEntity.setAbbreviation("VR");
     documentTypeEntity.setName("Verwaltungsregelung");
     documentTypeEntity.setDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
-    given(documentTypeRepository.findAll(any(Pageable.class))).willReturn(
+    //noinspection unchecked
+    given(documentTypeRepository.findAll(any(Example.class), any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(documentTypeEntity))
     );
 

@@ -48,8 +48,11 @@ public class LookupTablesPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
+    DocumentTypeEntity probe = new DocumentTypeEntity();
+    probe.setDocumentCategory(query.documentCategory());
+    Example<DocumentTypeEntity> example = Example.of(probe);
     var documentTypes = StringUtils.isBlank(searchTerm)
-      ? documentTypeRepository.findAll(pageable)
+      ? documentTypeRepository.findAll(example, pageable)
       : documentTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrNameContainingIgnoreCase(
         query.documentCategory(),
         searchTerm,
