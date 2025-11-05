@@ -18,11 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST controller for CRUD on documentation units.
+ * REST controller for CRUD on ADM documentation units.
  */
 @RestController
 @RequiredArgsConstructor
-public class DocumentationUnitController {
+public class AdmDocumentationUnitController {
 
   private static final Set<String> INDEX_ALIASES = Set.of(
     "langueberschrift",
@@ -47,7 +47,7 @@ public class DocumentationUnitController {
    * @param usePagination    Search with pagination?
    * @return Paginated list of document units
    */
-  @GetMapping("api/documentation-units")
+  @GetMapping("api/adm/documentation-units")
   public ResponseEntity<DocumentationUnitsOverviewResponse> find(
     @RequestParam(value = "documentNumber", required = false) String documentNumber,
     @RequestParam(value = "langueberschrift", required = false) String langueberschrift,
@@ -95,7 +95,7 @@ public class DocumentationUnitController {
    * @param documentNumber The document number of the document unit to be returned
    * @return The document unit or HTTP 404 if not found
    */
-  @GetMapping("api/documentation-units/{documentNumber}")
+  @GetMapping("api/adm/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> find(@PathVariable String documentNumber) {
     return documentationUnitService
       .findByDocumentNumber(documentNumber)
@@ -109,10 +109,10 @@ public class DocumentationUnitController {
    *
    * @return Created documentation unit
    */
-  @PostMapping("api/documentation-units")
+  @PostMapping("api/adm/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
   public DocumentationUnit create() {
-    return documentationUnitService.create();
+    return documentationUnitService.create(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
   }
 
   /**
@@ -122,7 +122,7 @@ public class DocumentationUnitController {
    * @param documentationUnit The JSON of the documentation unit to update
    * @return The updated documentation unit or HTTP 404 if not found
    */
-  @PutMapping("api/documentation-units/{documentNumber}")
+  @PutMapping("api/adm/documentation-units/{documentNumber}")
   public ResponseEntity<DocumentationUnit> update(
     @PathVariable String documentNumber,
     @RequestBody JsonNode documentationUnit
@@ -172,7 +172,7 @@ public class DocumentationUnitController {
       ),
     }
   )
-  @PutMapping("api/documentation-units/{documentNumber}/publish")
+  @PutMapping("api/adm/documentation-units/{documentNumber}/publish")
   public ResponseEntity<DocumentationUnit> publish(
     @PathVariable String documentNumber,
     @RequestBody @Valid DocumentationUnitContent documentationUnitContent

@@ -31,7 +31,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void find() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
     String documentNumber = documentationUnit.documentNumber();
 
     // when
@@ -52,7 +54,9 @@ class DocumentationUnitServiceIntegrationTest {
     // given
 
     // when
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
 
     // then
     assertThat(documentationUnit)
@@ -64,7 +68,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void update() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
 
     // when
     Optional<DocumentationUnit> updated = documentationUnitService.update(
@@ -93,7 +99,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void publish() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
 
     // when
     Optional<DocumentationUnit> published = documentationUnitService.publish(
@@ -129,7 +137,9 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void publish_shouldRollbackTransaction_whenExternalPublishingFails() {
     // given
-    DocumentationUnit documentationUnit = documentationUnitService.create();
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
     String documentNumber = documentationUnit.documentNumber();
     assertThat(documentationUnit.json()).isNull();
 

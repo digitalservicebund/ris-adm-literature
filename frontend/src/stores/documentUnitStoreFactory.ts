@@ -1,6 +1,11 @@
 import { ref } from 'vue'
-import type { DocumentTypeCode } from '@/domain/documentType'
-import { useGetDocUnit, usePutDocUnit } from '@/services/documentUnitService'
+import { DocumentTypeCode } from '@/domain/documentType'
+import {
+  useGetAdmDocUnit,
+  useGetUliDocUnit,
+  usePutAdmDocUnit,
+  usePutUliDocUnit,
+} from '@/services/documentUnitService'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -29,7 +34,13 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
     isLoading.value = true
     error.value = null
 
-    const { data, error: fetchError, execute } = useGetDocUnit(documentNumber, docTypeCode)
+    const {
+      data,
+      error: fetchError,
+      execute,
+    } = docTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+      ? useGetUliDocUnit(documentNumber)
+      : useGetAdmDocUnit(documentNumber)
     await execute()
 
     if (fetchError.value) {
@@ -53,7 +64,9 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
       error: putError,
       statusCode,
       execute,
-    } = usePutDocUnit(documentUnit.value, docTypeCode)
+    } = docTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+      ? usePutUliDocUnit(documentUnit.value)
+      : usePutAdmDocUnit(documentUnit.value)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {

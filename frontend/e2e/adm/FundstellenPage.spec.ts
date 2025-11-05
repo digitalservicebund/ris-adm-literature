@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 // https://playwright.dev/docs/intro
 test.describe('FundstellenPage', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+    await page.route('/api/adm/documentation-units/KSNR054920707', async (route) => {
       const json = {
         documentNumber: 'KSNR054920707',
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
@@ -158,7 +158,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
     async ({ page }) => {
       // Arrange
       // Mock the POST request (create)
-      await page.route('/api/documentation-units', async (route) => {
+      await page.route('/api/adm/documentation-units', async (route) => {
         await route.fulfill({
           json: {
             id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
@@ -167,7 +167,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
         })
       })
       // Mock the GET request
-      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+      await page.route('/api/adm/documentation-units/KSNR054920707', async (route) => {
         const documentUnit = {
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           documentNumber: 'KSNR054920707',
@@ -192,7 +192,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
       await page.getByText('Übernehmen').click()
       // Mock the PUT and GET requests again
       await page.unrouteAll()
-      await page.route('/api/documentation-units/KSNR054920707', async (route) => {
+      await page.route('/api/adm/documentation-units/KSNR054920707', async (route) => {
         const documentUnit = {
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           documentNumber: 'KSNR054920707',
