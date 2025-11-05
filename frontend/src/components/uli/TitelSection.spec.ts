@@ -65,4 +65,25 @@ describe('TitelSection', () => {
     expect(screen.getByLabelText('Zusatz zum Hauptsachtitel')).toBeEnabled()
     expect(screen.getByLabelText('Dokumentarischer Titel')).toBeEnabled()
   })
+
+  test('typing into each field emits the correct update events', async () => {
+    const user = userEvent.setup()
+
+    const { emitted } = renderComponent()
+
+    const haupt = screen.getByLabelText('Hauptsachtitel')
+    const zusatz = screen.getByLabelText('Zusatz zum Hauptsachtitel')
+    const doku = screen.getByLabelText('Dokumentarischer Titel')
+
+    await user.type(haupt, 'H')
+    expect((emitted()['update:hauptsachtitel'] as [string[]])?.[0][0]).toBe('H')
+
+    await user.type(zusatz, 'Z')
+    expect((emitted()['update:hauptsachtitelZusatz'] as [string[]])?.[0][0]).toBe('Z')
+
+    await user.clear(haupt)
+    await user.clear(zusatz)
+    await user.type(doku, 'D')
+    expect((emitted()['update:dokumentarischerTitel'] as [string[]])?.[0][0]).toBe('D')
+  })
 })
