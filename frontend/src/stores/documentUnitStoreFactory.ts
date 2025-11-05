@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { DocumentTypeCode } from '@/domain/documentType'
+import { DocumentCategory } from '@/domain/documentType'
 import {
   useGetAdmDocUnit,
   useGetUliDocUnit,
@@ -15,7 +15,7 @@ import {
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
- * @param docTypeCode - A DocumentTypeCode enum e.g. VERWALTUNGSVORSCHRIFTEN.
+ * @param documentCategory - A DocumentCategory enum e.g. VERWALTUNGSVORSCHRIFTEN.
  *
  * @returns An object containing reactive state and CRUD operations:
  *  - `documentUnit`: the currently loaded document (or `null`)
@@ -25,7 +25,7 @@ import {
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
  */
-export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: DocumentTypeCode) {
+export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: DocumentCategory) {
   const documentUnit = ref<DocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
@@ -38,7 +38,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
       data,
       error: fetchError,
       execute,
-    } = docTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
       ? useGetUliDocUnit(documentNumber)
       : useGetAdmDocUnit(documentNumber)
     await execute()
@@ -64,7 +64,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(docTypeCode: Document
       error: putError,
       statusCode,
       execute,
-    } = docTypeCode === DocumentTypeCode.LITERATUR_UNSELBSTSTAENDIG
+    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
       ? usePutUliDocUnit(documentUnit.value)
       : usePutAdmDocUnit(documentUnit.value)
     await execute()
