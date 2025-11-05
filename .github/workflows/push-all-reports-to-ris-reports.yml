@@ -102,7 +102,7 @@ jobs:
           destinationDir: licence-reports/frontend/ris-adm-literature
 
       ## e2e test reports
-      #- uses: actions/checkout@v5
+      - uses: actions/checkout@v5
       - name: Download blob reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v6
         with:
