@@ -32,7 +32,7 @@ test.describe('ULI Rubriken - Veroeffentlichungsjahr', () => {
 
 test.describe('ULI Rubriken - Veroeffentlichungsjahr (with mocked api route)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('/api/literature/uli/documentation-units/KALU123456789', async (route) => {
+    await page.route('/api/literature/documentation-units/KALU123456789', async (route) => {
       const json = {
         documentNumber: 'KALU123456789',
         id: 'de469be9-4401-485a-9e54-a43dee00cbbe',
