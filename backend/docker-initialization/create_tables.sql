@@ -16,6 +16,11 @@ INSERT INTO lookup_tables.document_type VALUES ('b678b77b-ffc4-4756-825d-a4376b9
 INSERT INTO lookup_tables.document_type VALUES ('8de5e4a0-6b67-4d65-98db-efe877a260c4', 'VR', 'Verwaltungsregelung', 'N');
 INSERT INTO lookup_tables.document_type VALUES ('77da35f0-aa4c-4ed3-9048-59b8e10f7478', 'VV', 'Verwaltungsvorschrift', 'N');
 
+INSERT INTO lookup_tables.document_type VALUES ('244d68ee-eb3a-430b-81ec-3d8b4ed624d4', 'Auf', 'Aufsatz', 'U');
+INSERT INTO lookup_tables.document_type VALUES ('07d9b107-d875-4eb0-a52b-b2abd8bff899', 'Ebs', 'Entscheidungsbesprechung', 'U');
+INSERT INTO lookup_tables.document_type VALUES ('244db3dd-e2f3-4a84-a058-589572be9a71', 'Kon', 'Kongressvortrag', 'U');
+
+
 CREATE TABLE
     IF NOT EXISTS
     lookup_tables.field_of_law
