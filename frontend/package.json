@@ -35,7 +35,7 @@
     "@sentry/vue": "^10.22.0",
     "@tailwindcss/postcss": "^4.1.14",
     "@tiptap/extension-blockquote": "^3.10.2",
-    "@tiptap/extension-document": "^3.10.1",
+    "@tiptap/extension-document": "^3.10.2",
     "@tiptap/extension-image": "^3.10.2",
     "@tiptap/extension-list": "^3.9.1",
     "@tiptap/extension-paragraph": "^3.10.1",
