@@ -133,8 +133,6 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
     return uliMeta;
   }
 
-  // === W3C DOM Helper Methods (based on XmlItemProcessor) ===
-
   private void mapDocumentNumber(Document doc, Element meta, String documentNumber) {
     Element identification = getOrCreateChild(doc, meta, AKN_NS, "identification");
     Element frbrWork = getOrCreateChild(doc, identification, AKN_NS, "FRBRWork");
@@ -201,8 +199,6 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       meta.appendChild(notes);
     }
   }
-
-  // === W3C DOM Utilities ===
 
   private Element getOrCreateChild(
     Document doc,
