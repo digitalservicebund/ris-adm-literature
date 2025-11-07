@@ -22,6 +22,7 @@ export const ROUTE_NAMES = {
       NEW: 'uli-documentUnit-new',
       EDIT: 'uli-documentUnit-documentNumber',
       RUBRIKEN: 'uli-documentUnit-documentNumber-rubriken',
+      ABGABE: 'uli-documentUnit-documentNumber-abgabe',
     },
   },
 } as const
@@ -48,6 +49,7 @@ export const ROUTE_PATHS = {
       NEW: `${DOCUMENT_UNIT_BASE}/new`,
       EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
       RUBRIKEN: 'rubriken',
+      ABGABE: 'abgabe',
     },
   },
 } as const
