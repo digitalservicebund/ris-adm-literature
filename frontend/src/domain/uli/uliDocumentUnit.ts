@@ -16,5 +16,3 @@ export interface UliDocumentUnitResponse {
   documentNumber: string
   json: UliDocumentationUnit
 }
-
-export const requiredUliDocUnitFields = ['veroeffentlichungsjahr'] as const

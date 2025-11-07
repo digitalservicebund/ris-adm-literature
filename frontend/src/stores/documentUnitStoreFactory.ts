@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { DocumentCategory } from '@/domain/documentType'
 import {
   useGetAdmDocUnit,
@@ -8,6 +8,7 @@ import {
   usePutPublishUliDocUnit,
   usePutUliDocUnit,
 } from '@/services/documentUnitService'
+import { missingAdmDocumentUnitFields, missingUliDocumentUnitFields } from '@/utils/validators'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -90,7 +91,6 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     error.value = null
 
     const {
-      data,
       error: putError,
       statusCode,
       execute,
@@ -99,8 +99,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
       : usePutPublishAdmDocUnit(documentUnit.value)
     await execute()
 
-    if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
-      documentUnit.value = data.value
+    if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300) {
       isLoading.value = false
       return true
     }
@@ -114,6 +113,15 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     documentUnit.value = null
   }
 
+  const missingRequiredFields = computed<string[]>(() => {
+    const docUnit = documentUnit.value
+    if (!docUnit) return []
+
+    return documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+      ? missingUliDocumentUnitFields(docUnit)
+      : missingAdmDocumentUnitFields(docUnit)
+  })
+
   return {
     documentUnit,
     isLoading,
@@ -122,5 +130,6 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     update,
     publish,
     unload,
+    missingRequiredFields,
   }
 }

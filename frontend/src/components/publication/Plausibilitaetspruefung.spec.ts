@@ -4,14 +4,20 @@ import Plausibilitaetspruefung from './Plausibilitaetspruefung.vue'
 import { DocumentCategory } from '@/domain/documentType'
 
 // Mock vue-router useRoute
-let mockRoute: { meta: { documentCategory?: string } }
+let mockRoute: {
+  meta: { documentCategory?: string }
+  path: string
+}
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
 }))
 
 describe('Plausibilitaetspruefung', () => {
   it('renders positive message when there is no missing fields', () => {
-    mockRoute = { meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN } }
+    mockRoute = {
+      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
+      path: '/abgabe',
+    }
 
     render(Plausibilitaetspruefung, {
       props: {
@@ -24,7 +30,10 @@ describe('Plausibilitaetspruefung', () => {
   })
 
   it('renders 5 missing fields and a link to rubriken', () => {
-    mockRoute = { meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN } }
+    mockRoute = {
+      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
+      path: '/abgabe',
+    }
 
     render(Plausibilitaetspruefung, {
       props: {
@@ -49,7 +58,10 @@ describe('Plausibilitaetspruefung', () => {
   })
 
   it('renders the field key if not mapped', () => {
-    mockRoute = { meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN } }
+    mockRoute = {
+      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
+      path: '/abgabe',
+    }
 
     render(Plausibilitaetspruefung, {
       props: {

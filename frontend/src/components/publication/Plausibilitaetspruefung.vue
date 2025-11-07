@@ -21,6 +21,8 @@ function getLabel(field: string): string {
       normgeberList: 'Normgeber',
       zitierdaten: 'Zitierdatum',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
+      hauptsachtitel: 'Hauptsachtitel',
+      dokumentarischerTitel: 'Dokumentarischer Titel',
     }[field] || field
   )
 }

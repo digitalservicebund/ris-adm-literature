@@ -1,5 +1,5 @@
 import { requiredAdmDocUnitFields, type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import { requiredUliDocUnitFields, type UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
+import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
@@ -33,8 +33,19 @@ export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[
 
 // Returns a list of missing uli required fields
 export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
-  return requiredUliDocUnitFields.filter((field) => {
-    const value = doc[field]
-    return !value || (Array.isArray(value) && value.length === 0)
-  })
+  const missingFields: string[] = []
+
+  if (!doc.veroeffentlichungsjahr) {
+    missingFields.push('veroeffentlichungsjahr')
+  }
+
+  if (!doc.dokumentTyp?.length) {
+    missingFields.push('dokumentTyp')
+  }
+
+  if (!doc.hauptsachtitel && !doc.dokumentarischerTitel) {
+    missingFields.push('hauptsachtitel', 'dokumentarischerTitel')
+  }
+
+  return missingFields
 }
