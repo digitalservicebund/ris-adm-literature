@@ -129,8 +129,7 @@ public class LiteratureDocumentationUnitController {
       documentNumber,
       documentationUnitContent
     );
-    return optionalDocumentationUnit
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+    // TODO: change depending on publish impl
+    return optionalDocumentationUnit.map(ResponseEntity::ok).orElse(ResponseEntity.ok().build());
   }
 }

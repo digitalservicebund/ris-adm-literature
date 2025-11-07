@@ -105,12 +105,6 @@ public class DocumentationUnitService {
       documentationUnitContent,
       documentationUnit.xml()
     );
-    String json = convertToJson(documentationUnitContent);
-    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-      documentNumber,
-      json,
-      xml
-    );
 
     // publish to portal
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -120,7 +114,16 @@ public class DocumentationUnitService {
 
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
     publisher.publish(publishOptions);
-    return convertLdml(publishedDocumentationUnit);
+
+    // TODO: return 204 or converted doc
+    /*String json = convertToJson(documentationUnitContent);
+
+    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+      documentNumber,
+      json,
+      xml
+    );*/
+    return Optional.empty();
   }
 
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(

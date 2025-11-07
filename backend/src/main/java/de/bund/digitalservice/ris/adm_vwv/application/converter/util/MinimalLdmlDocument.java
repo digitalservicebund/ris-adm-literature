@@ -15,8 +15,10 @@ import org.xml.sax.SAXException;
 @Slf4j
 public class MinimalLdmlDocument {
 
-  // TODO: Add a check to remove all default values if there are other values set for the elements //NOSONAR
-  private static final String MINIMAL_LDML =
+  // TODO: Check which values should be in
+  // bei <akn:FRBRdate date="$CURRENT_DATE" name="migration" ris:domainTerm="migration"/>
+  // see https://digitalservicebund.atlassian.net/wiki/spaces/VER/pages/2089189440/LDML+Harmonization+LDML+as+Created+by+NeuRIS+Streams#Datum
+  public static final String MINIMAL_LDML =
     """
     <?xml version="1.0" encoding="UTF-8"?>
     <akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:ris="$RIS_NAMESPACE">
@@ -26,6 +28,7 @@ public class MinimalLdmlDocument {
                     <akn:FRBRWork>
                         <akn:FRBRthis value="TODO"/>
                         <akn:FRBRuri value="TODO"/>
+                        <akn:FRBRdate date="$CURRENT_DATE" name="TODO"/>
                         <akn:FRBRauthor href="TODO"/>
                         <akn:FRBRcountry value="de"/>
                         <akn:FRBRnumber value="TODO"/>
@@ -34,13 +37,14 @@ public class MinimalLdmlDocument {
                     <akn:FRBRExpression>
                         <akn:FRBRthis value="TODO"/>
                         <akn:FRBRuri value="TODO"/>
-                        <akn:FRBRdate date="$CURRENT_DATE" name="Migration" ris:domainTerm="Migration"/>
+                        <akn:FRBRdate date="$CURRENT_DATE" name="TODO"/>
                         <akn:FRBRauthor href="TODO"/>
+                        <akn:FRBRlanguage language="deu"/>
                     </akn:FRBRExpression>
                     <akn:FRBRManifestation>
                         <akn:FRBRthis value="TODO"/>
                         <akn:FRBRuri value="TODO"/>
-                        <akn:FRBRdate date="$CURRENT_DATE" name="Migration" ris:domainTerm="Migration"/>
+                        <akn:FRBRdate date="$CURRENT_DATE" name="TODO"/>
                         <akn:FRBRauthor href="TODO"/>
                         <akn:FRBRformat value="xml"/>
                     </akn:FRBRManifestation>
@@ -49,6 +53,7 @@ public class MinimalLdmlDocument {
             <akn:preface>
             </akn:preface>
             <akn:mainBody>
+            <akn:hcontainer name="crossheading"/>
             </akn:mainBody>
         </akn:doc>
     </akn:akomaNtoso>""".lines()
@@ -57,7 +62,7 @@ public class MinimalLdmlDocument {
 
   private final DocumentBuilder documentBuilder;
 
-  MinimalLdmlDocument() {
+  public MinimalLdmlDocument() {
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -68,7 +73,7 @@ public class MinimalLdmlDocument {
     }
   }
 
-  LdmlDocument create(DocumentType documentType) throws IOException, SAXException {
+  public LdmlDocument create(LitDocumentType documentType) throws IOException, SAXException {
     String currentDate = LocalDate.now().toString();
     String populatedLdml = MINIMAL_LDML.replace("$CURRENT_DATE", currentDate).replace(
       "$RIS_NAMESPACE",

@@ -12,9 +12,9 @@ import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 
 @UtilityClass
-class XmlWriter {
+public class LitXmlWriter {
 
-  static String xmlToString(Document xmlDocument) throws TransformerException {
+  public static String xmlToString(Document xmlDocument) throws TransformerException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     transformerFactory.setAttribute(ACCESS_EXTERNAL_DTD, "");
     var transformer = transformerFactory.newTransformer();

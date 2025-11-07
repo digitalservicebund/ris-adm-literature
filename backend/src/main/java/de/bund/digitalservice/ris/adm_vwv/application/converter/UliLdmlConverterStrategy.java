@@ -4,54 +4,31 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.util.*;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.util.LitDocumentType;
 import jakarta.annotation.Nonnull;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
+import org.w3c.dom.NodeList;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
 
-  private final DocumentBuilder documentBuilder;
-  private final Transformer transformer;
+  private final MinimalLdmlDocument minimalLdmlDocument = new MinimalLdmlDocument();
 
-  // Namespaces
+  private static final String VALUE = "value";
+  private static final String SOURCE = "source";
+  private static final String UNDEFINED = "attributsemantik-noch-undefiniert";
   private static final String AKN_NS = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0";
-  private static final String RIS_NS = "http://ldml.neuris.de/ris/meta/";
-  private static final String ULI_NS = "http://ldml.neuris.de/literature/unselbstaendig/meta/";
-
-  public UliLdmlConverterStrategy() {
-    try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setNamespaceAware(true);
-      this.documentBuilder = factory.newDocumentBuilder();
-
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      this.transformer = transformerFactory.newTransformer();
-      this.transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      this.transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-    } catch (ParserConfigurationException | TransformerException e) {
-      // This could be converted into a yet to be implemented TransformationFailedExpection
-      throw new PublishingFailedException("Failed to initialize ULI converter strategy", e);
-    }
-  }
 
   @Override
   public boolean supports(IDocumentationContent content) {
@@ -59,177 +36,193 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
   }
 
   @Override
-  public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) { // FIX: Rename parameter type
+  public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) {
     UliDocumentationUnitContent uliContent = (UliDocumentationUnitContent) content;
-    Document doc;
+    LdmlDocument ldmlDocument;
 
-    if (previousXmlVersion != null) {
-      try {
-        // Parse the previous XML
-        doc = documentBuilder.parse(new InputSource(new StringReader(previousXmlVersion)));
-        // Clear existing meta, preface, and mainBody for repopulation
-        clearChildElements(doc.getElementsByTagNameNS(AKN_NS, "meta").item(0));
-        clearChildElements(doc.getElementsByTagNameNS(AKN_NS, "preface").item(0));
-        clearChildElements(doc.getElementsByTagNameNS(AKN_NS, "mainBody").item(0));
-      } catch (Exception e) {
-        log.warn("Failed to parse previous XML, creating new document.", e);
-        doc = createMinimalLdmlDocument();
+    try {
+      if (previousXmlVersion != null) {
+        // We'd need an LdmlDocument parser here if we want to edit
+        // For now, just create a new one
+        log.warn(
+          "Editing previous XML version is not fully implemented in UliLdmlConverterStrategy; creating new document."
+        );
       }
-    } else {
-      doc = createMinimalLdmlDocument();
-    }
+      // We create a default ULI doc type.
+      ldmlDocument = minimalLdmlDocument.create(LitDocumentType.ULI);
 
-    // === Populate Akoma Ntoso structure based on XmlItemProcessor logic ===
+      // === Populate structure based on XmlItemProcessor logic ===
 
-    Element docElement = (Element) doc.getElementsByTagNameNS(AKN_NS, "doc").item(0);
-    docElement.setAttribute("name", uliContent.documentNumber());
-    Element meta = (Element) doc.getElementsByTagNameNS(AKN_NS, "meta").item(0);
-    Element preface = (Element) doc.getElementsByTagNameNS(AKN_NS, "preface").item(0);
-    mapDocumentNumber(doc, meta, uliContent.documentNumber());
-    mapHauptsachtitel(doc, preface, uliContent.hauptsachtitel());
-    mapDokumentTypen(doc, meta, uliContent.dokumentTyp());
-    mapFrbrAlias(doc, meta, "haupttitelZusatz", uliContent.hauptsachtitelZusatz());
-    mapFrbrAlias(doc, meta, "dokumentarischerTitel", uliContent.dokumentarischerTitel());
-    mapNote(doc, meta, uliContent.note());
-    Element uliMetaElement = createUliMetaDomElement(doc, uliContent);
-    Element proprietary = getOrCreateChild(doc, meta, AKN_NS, "proprietary");
-    proprietary.appendChild(uliMetaElement);
+      ((Element) ldmlDocument.getDocument().getElementsByTagName("akn:doc").item(0)).setAttribute(
+          "name",
+          uliContent.documentNumber()
+        );
 
-    return serializeDocument(doc);
-  }
+      mapDocumentNumber(ldmlDocument, uliContent.documentNumber());
+      mapDokumentart(ldmlDocument, uliContent.dokumentTyp());
+      mapVeroeffentlichungsJahre(ldmlDocument, uliContent.veroeffentlichungsjahr());
+      mapTitles(ldmlDocument, uliContent);
+      mapClassifications(ldmlDocument, uliContent.dokumentTyp());
+      mapNote(ldmlDocument, uliContent.note());
 
-  private Document createMinimalLdmlDocument() {
-    Document doc = documentBuilder.newDocument();
-    Element akomaNtoso = doc.createElementNS(AKN_NS, "akn:akomaNtoso");
-    doc.appendChild(akomaNtoso);
+      // this needs to be the last method to be called
+      removePlaceholderValues(ldmlDocument);
 
-    Element docElement = doc.createElementNS(AKN_NS, "akn:doc");
-    docElement.setAttribute("name", "placeholder"); // Will be overwritten
-    akomaNtoso.appendChild(docElement);
-
-    docElement.appendChild(doc.createElementNS(AKN_NS, "akn:meta"));
-    docElement.appendChild(doc.createElementNS(AKN_NS, "akn:preface"));
-    docElement.appendChild(doc.createElementNS(AKN_NS, "akn:mainBody"));
-
-    return doc;
-  }
-
-  /**
-   * Manually constructs the ULI proprietary meta block using W3C DOM.
-   */
-  private Element createUliMetaDomElement(Document doc, UliDocumentationUnitContent uliContent) {
-    Element uliMeta = doc.createElementNS(ULI_NS, "meta");
-    uliMeta.setPrefix("ris-uli");
-    uliMeta.setAttribute("xmlns:ris-uli", ULI_NS);
-
-    if (StringUtils.isNotBlank(uliContent.veroeffentlichungsjahr())) {
-      Element jahre = doc.createElementNS(ULI_NS, "veroeffentlichungsJahre");
-      Element jahr = doc.createElementNS(ULI_NS, "veroeffentlichungsJahr");
-      jahr.setTextContent(uliContent.veroeffentlichungsjahr());
-      jahre.appendChild(jahr);
-      uliMeta.appendChild(jahre);
-    }
-
-    return uliMeta;
-  }
-
-  private void mapDocumentNumber(Document doc, Element meta, String documentNumber) {
-    Element identification = getOrCreateChild(doc, meta, AKN_NS, "identification");
-    Element frbrWork = getOrCreateChild(doc, identification, AKN_NS, "FRBRWork");
-
-    Element frbrAlias = doc.createElementNS(AKN_NS, "akn:FRBRalias");
-    frbrAlias.setAttribute("name", "Dokumentnummer");
-    frbrAlias.setAttribute("value", documentNumber);
-    frbrWork.appendChild(frbrAlias);
-
-    Element frbrCountry = doc.createElementNS(AKN_NS, "akn:FRBRcountry");
-    frbrCountry.setAttribute("value", "de");
-    frbrWork.appendChild(frbrCountry);
-  }
-
-  private void mapHauptsachtitel(Document doc, Element preface, String hauptsachtitel) {
-    if (StringUtils.isNotBlank(hauptsachtitel)) {
-      Element longTitle = doc.createElementNS(AKN_NS, "akn:longTitle");
-      Element block = doc.createElementNS(AKN_NS, "akn:block");
-      block.setAttribute("name", "longTitle");
-      block.setTextContent(hauptsachtitel); // unescapeHtml is not needed for setTextContent
-      longTitle.appendChild(block);
-      preface.appendChild(longTitle);
+      return LitXmlWriter.xmlToString(ldmlDocument.getDocument());
+    } catch (Exception e) {
+      log.error("Failed to convert ULI content to LDML", e);
+      throw new PublishingFailedException("Failed to convert ULI content to LDML", e);
     }
   }
 
-  private void mapDokumentTypen(Document doc, Element meta, List<DocumentType> dokumentTypen) {
+  // === Mapping Methods from XmlItemProcessor ===
+
+  private void mapClassifications(LdmlDocument ldmlDocument, List<DocumentType> dokumentTypen) {
+    if (dokumentTypen != null && !dokumentTypen.isEmpty()) {
+      List<String> values = dokumentTypen.stream().map(DocumentType::abbreviation).toList();
+      mapToClassification(ldmlDocument, "doktyp", values);
+    }
+  }
+
+  private void mapToClassification(
+    LdmlDocument ldmlDocument,
+    String sourceAttributeValue,
+    List<String> values
+  ) {
+    if (values == null || values.isEmpty()) {
+      return;
+    }
+    LdmlElement classificationElement = ldmlDocument.addClassification(sourceAttributeValue);
+    for (String value : values) {
+      if (StringUtils.isNotBlank(value)) {
+        mapToKeyword(classificationElement, value);
+      }
+    }
+  }
+
+  private void mapToKeyword(LdmlElement classificationElement, String value) {
+    classificationElement
+      .appendElementAndGet("akn:keyword")
+      .addAttribute("showAs", value)
+      .addAttribute(VALUE, value)
+      .addAttribute("dictionary", UNDEFINED);
+  }
+
+  private void mapDocumentNumber(LdmlDocument ldmlDocument, String documentNumber) {
+    ldmlDocument
+      .frbrWork()
+      .appendElementAndGet("akn:FRBRalias")
+      .addAttribute("name", "Dokumentnummer")
+      .addAttribute(VALUE, documentNumber);
+  }
+
+  private void mapDokumentart(LdmlDocument ldmlDocument, List<DocumentType> dokumentTypen) {
     if (dokumentTypen == null || dokumentTypen.isEmpty()) {
       return;
     }
-    Element identification = getOrCreateChild(doc, meta, AKN_NS, "identification");
-    Element frbrWork = getOrCreateChild(doc, identification, AKN_NS, "FRBRWork");
-
+    LdmlElement frbrWork = ldmlDocument.frbrWork();
     for (DocumentType typ : dokumentTypen) {
-      Element subtype = doc.createElementNS(AKN_NS, "akn:FRBRsubtype");
-      subtype.setAttribute("value", typ.abbreviation());
-      frbrWork.appendChild(subtype);
+      frbrWork.appendElementAndGet("akn:FRBRsubtype").addAttribute(VALUE, typ.abbreviation());
     }
   }
 
-  private void mapFrbrAlias(Document doc, Element meta, String name, String value) {
-    if (StringUtils.isNotBlank(value)) {
-      Element identification = getOrCreateChild(doc, meta, AKN_NS, "identification");
-      Element frbrWork = getOrCreateChild(doc, identification, AKN_NS, "FRBRWork");
+  private void mapTitles(LdmlDocument ldmlDocument, UliDocumentationUnitContent uliContent) {
+    // 1. mapHauptsachtitel
+    if (StringUtils.isNotBlank(uliContent.hauptsachtitel())) {
+      mapToLongTitle(uliContent.hauptsachtitel(), ldmlDocument);
+      mapToFBRBWorkAlias(uliContent.hauptsachtitel(), ldmlDocument, "haupttitel");
+    } else {
+      mapToLongTitle("", ldmlDocument);
+    }
 
-      Element frbrAlias = doc.createElementNS(AKN_NS, "akn:FRBRalias");
-      frbrAlias.setAttribute("name", name);
-      frbrAlias.setAttribute("value", value);
-      frbrWork.appendChild(frbrAlias);
+    // 2. mapTitelzusatz
+    if (StringUtils.isNotBlank(uliContent.hauptsachtitelZusatz())) {
+      mapToFBRBWorkAlias(uliContent.hauptsachtitelZusatz(), ldmlDocument, "haupttitelZusatz");
+    }
+
+    // 3. mapFingtitel
+    if (StringUtils.isNotBlank(uliContent.dokumentarischerTitel())) {
+      mapToFBRBWorkAlias(uliContent.dokumentarischerTitel(), ldmlDocument, "dokumentarischerTitel");
     }
   }
 
-  private void mapNote(Document doc, Element meta, String noteText) {
-    if (StringUtils.isNotBlank(noteText)) {
-      Element notes = doc.createElementNS(AKN_NS, "akn:notes");
-      notes.setAttribute("source", "gesamtfussnoten");
-
-      Element note = doc.createElementNS(AKN_NS, "akn:note");
-      Element block = doc.createElementNS(AKN_NS, "akn:block");
-      block.setAttribute("name", "gesamtfussnote");
-      block.setTextContent(noteText.strip());
-
-      note.appendChild(block);
-      notes.appendChild(note);
-      meta.appendChild(notes);
-    }
-  }
-
-  private Element getOrCreateChild(
-    Document doc,
-    Element parent,
-    String namespaceURI,
-    String tagName
+  private void mapVeroeffentlichungsJahre(
+    LdmlDocument ldmlDocument,
+    String veroeffentlichungsjahr
   ) {
-    Node existing = parent.getElementsByTagNameNS(namespaceURI, tagName).item(0);
-    if (existing != null) {
-      return (Element) existing;
-    }
-    Element child = doc.createElementNS(namespaceURI, "akn:" + tagName);
-    parent.appendChild(child);
-    return child;
+    LdmlElement risVeroeffentlichungsJahre = ldmlDocument
+      .addProprietary()
+      .appendElementAndGet("ris:meta")
+      .appendElementAndGet("ris:veroeffentlichungsJahre");
+
+    risVeroeffentlichungsJahre
+      .appendElementAndGet("ris:veroeffentlichungsJahr")
+      .appendText(StringUtils.defaultString(veroeffentlichungsjahr));
   }
 
-  private void clearChildElements(Node node) {
-    if (node == null) return;
-    while (node.hasChildNodes()) {
-      node.removeChild(node.getFirstChild());
+  // This corresponds to mapGesamtfussnoten
+  private void mapNote(LdmlDocument ldmlDocument, String noteText) {
+    if (StringUtils.isBlank(noteText)) {
+      return;
     }
+
+    LdmlElement metaElement = new LdmlElement(ldmlDocument.getMeta());
+    LdmlElement notesElement = metaElement
+      .appendElementAndGet("akn:notes")
+      .addAttribute(SOURCE, "gesamtfussnoten");
+
+    notesElement
+      .appendElementAndGet("akn:note")
+      .appendElementAndGet("akn:block")
+      .addAttribute("name", "gesamtfussnote")
+      .appendText(noteText.strip());
   }
 
-  private String serializeDocument(Document doc) {
-    try {
-      StringWriter writer = new StringWriter();
-      transformer.transform(new DOMSource(doc), new StreamResult(writer));
-      return writer.toString();
-    } catch (TransformerException e) {
-      log.error("Failed to serialize W3C Document", e);
-      return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><error>" + e.getMessage() + "</error>";
+  // === Helper methods from XmlItemProcessor ===
+
+  private void mapToLongTitle(String value, LdmlDocument ldmlDocument) {
+    ldmlDocument
+      .preface()
+      .appendElementAndGet("akn:longTitle")
+      .appendElementAndGet("akn:block")
+      .addAttribute("name", "longTitle")
+      .appendText(value);
+  }
+
+  private void mapToFBRBWorkAlias(String value, LdmlDocument ldmlDocument, String name) {
+    ldmlDocument
+      .frbrWork()
+      .appendElementAndGet("akn:FRBRalias")
+      .addAttribute("name", name)
+      .addAttribute(VALUE, value);
+  }
+
+  private void removePlaceholderValues(LdmlDocument ldmlDocument) {
+    Document doc = ldmlDocument.getDocument();
+    NodeList identification = doc.getElementsByTagNameNS(AKN_NS, "identification");
+    if (identification.getLength() == 0) {
+      return;
     }
+
+    String[] attributes = { "value", "href" };
+    String[] tags = { "FRBRthis", "FRBRuri", "FRBRauthor", "FRBRnumber", "FRBRname" };
+    List<Element> toRemove = new ArrayList<>();
+
+    for (String tag : tags) {
+      NodeList nodes = ((Element) identification.item(0)).getElementsByTagNameNS(AKN_NS, tag);
+      for (int i = 0; i < nodes.getLength(); i++) {
+        if (nodes.item(i).getNodeType() != Node.ELEMENT_NODE) {
+          continue;
+        }
+        Element elem = (Element) nodes.item(i);
+        for (String attr : attributes) {
+          if ("TODO".equals(elem.getAttribute(attr))) {
+            toRemove.add(elem);
+            break;
+          }
+        }
+      }
+    }
+    toRemove.forEach(elem -> elem.getParentNode().removeChild(elem));
   }
 }

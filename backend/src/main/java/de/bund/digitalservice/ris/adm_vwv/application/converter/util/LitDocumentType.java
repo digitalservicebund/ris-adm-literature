@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum DocumentType {
+public enum LitDocumentType {
   ULI("http://ldml.neuris.de/literature/unselbstaendig/meta/"),
   SLI("http://ldml.neuris.de/literature/selbstaendig/meta/");
 
