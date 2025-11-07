@@ -58,7 +58,8 @@ test.describe('ULI Rubriken - DokumentTyp', () => {
       await page.getByText('Entscheidungsbesprechung').click()
       await page.getByText('Speichern').click()
       await page.reload()
-      await expect(page.getByText('Ebs')).toBeVisible()
+      const chipItem = page.getByRole('option', { name: 'Ebs' }).getByLabel('Ebs')
+      await expect(chipItem).toBeVisible()
 
       // when
       // eslint-disable-next-line playwright/no-raw-locators
@@ -67,7 +68,7 @@ test.describe('ULI Rubriken - DokumentTyp', () => {
       await removeIcon.click()
 
       // then
-      await expect(page.getByText('Ebs')).toBeHidden()
+      await expect(chipItem).toBeHidden()
     },
   )
 })
