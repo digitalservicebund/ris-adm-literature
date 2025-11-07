@@ -7,6 +7,15 @@ import java.util.UUID;
 
 /**
  * Business model for ULI documentation unit content.
+ *
+ * @param id The unique identifier.
+ * @param documentNumber The document number.
+ * @param veroeffentlichungsjahr The publication year.
+ * @param dokumentTyp The list of document types.
+ * @param hauptsachtitel The main title.
+ * @param hauptsachtitelZusatz Additional information for the main title.
+ * @param dokumentarischerTitel The documentary title.
+ * @param note An additional note.
  */
 public record UliDocumentationUnitContent(
   UUID id,

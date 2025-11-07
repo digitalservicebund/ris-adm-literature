@@ -3,6 +3,9 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
 import jakarta.annotation.Nonnull;
 
+/**
+ * A strategy for converting business models into LDML XML.
+ */
 public interface LdmlConverterStrategy {
   /**
    * Converts the given business model to its LDML XML representation.
