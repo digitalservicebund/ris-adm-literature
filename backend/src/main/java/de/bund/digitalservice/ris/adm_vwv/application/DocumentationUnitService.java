@@ -6,7 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
@@ -59,9 +59,9 @@ public class DocumentationUnitService {
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
 
-  private String convertToJson(DocumentationUnitContent documentationUnitContent) {
+  private String convertToJson(IDocumentationContent iDocumentationContent) { // <-- Changed type
     try {
-      return objectMapper.writeValueAsString(documentationUnitContent);
+      return objectMapper.writeValueAsString(iDocumentationContent); // <-- Works for any object
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -90,7 +90,7 @@ public class DocumentationUnitService {
   @Transactional
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
-    @Nonnull DocumentationUnitContent documentationUnitContent
+    @Nonnull IDocumentationContent documentationUnitContent
   ) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber

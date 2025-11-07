@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.transform.*;
 import jakarta.annotation.Nonnull;
@@ -32,13 +32,13 @@ public class LdmlConverterService {
    * @param documentationUnit The documentation unit to convert
    * @return Business model representation of given documentation unit's xml
    */
-  public DocumentationUnitContent convertToBusinessModel(
+  public AdmDocumentationUnitContent convertToBusinessModel(
     @Nonnull DocumentationUnit documentationUnit
   ) {
     AkomaNtoso akomaNtoso = xmlReader.readXml(documentationUnit.xml());
     log.debug("Read Akoma Ntoso from XML: {}.", akomaNtoso);
     List<String> referenceNumbers = new ReferenceNumbersTransformer(akomaNtoso).transform();
-    return new DocumentationUnitContent(
+    return new AdmDocumentationUnitContent(
       documentationUnit.id(),
       documentationUnit.documentNumber(),
       fundstellenTransformer.transform(akomaNtoso),

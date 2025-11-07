@@ -4,12 +4,12 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import java.util.List;
 
 /**
- * Test class for easily creating instances of {@link DocumentationUnitContent}.
+ * Test class for easily creating instances of {@link AdmDocumentationUnitContent}.
  */
 public class TestDocumentationUnitContent {
 
-  public static DocumentationUnitContent create(String documentNumber, String langueberschrift) {
-    return new DocumentationUnitContent(
+  public static AdmDocumentationUnitContent create(String documentNumber, String langueberschrift) {
+    return new AdmDocumentationUnitContent(
       null,
       documentNumber,
       List.of(),
@@ -36,11 +36,11 @@ public class TestDocumentationUnitContent {
     );
   }
 
-  public static DocumentationUnitContent createEmpty(
+  public static AdmDocumentationUnitContent createEmpty(
     String documentNumber,
     String langueberschrift
   ) {
-    return new DocumentationUnitContent(
+    return new AdmDocumentationUnitContent(
       null,
       documentNumber,
       List.of(),

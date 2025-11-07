@@ -13,7 +13,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockLitUser;
@@ -151,8 +151,8 @@ class DocumentationUnitServiceTest {
     assertThat(actual).isEmpty();
   }
 
-  private static DocumentationUnitContent createDocumentationUnitContent() {
-    return new DocumentationUnitContent(
+  private static AdmDocumentationUnitContent createDocumentationUnitContent() {
+    return new AdmDocumentationUnitContent(
       UUID.randomUUID(),
       "KSNR2025000001",
       List.of(),
@@ -260,7 +260,7 @@ class DocumentationUnitServiceTest {
       TEST_JSON,
       TEST_NEW_XML
     );
-    DocumentationUnitContent contentToPublish = createDocumentationUnitContent();
+    AdmDocumentationUnitContent contentToPublish = createDocumentationUnitContent();
 
     when(documentationUnitPersistenceService.findByDocumentNumber(TEST_DOC_NUMBER)).thenReturn(
       Optional.of(existingUnit)
@@ -301,7 +301,7 @@ class DocumentationUnitServiceTest {
       TEST_JSON,
       TEST_NEW_XML
     );
-    DocumentationUnitContent contentToPublish = createDocumentationUnitContent();
+    AdmDocumentationUnitContent contentToPublish = createDocumentationUnitContent();
 
     when(documentationUnitPersistenceService.findByDocumentNumber(TEST_DOC_NUMBER)).thenReturn(
       Optional.of(existingUnit)

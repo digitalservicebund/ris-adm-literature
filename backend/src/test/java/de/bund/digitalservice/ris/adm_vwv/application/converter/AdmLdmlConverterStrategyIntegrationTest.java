@@ -16,22 +16,22 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class LdmlPublishConverterServiceIntegrationTest {
+class AdmLdmlConverterStrategyIntegrationTest {
 
   @Autowired
-  private LdmlPublishConverterService ldmlPublishConverterService;
+  private AdmLdmlConverterStrategy admLdmlConverterStrategy;
 
   @Test
   @DisplayName("Conversion of document with document number results into xml with FRBRalias")
   void convertToLdml() {
     // given
-    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+    AdmDocumentationUnitContent admDocumentationUnitContent = TestDocumentationUnitContent.create(
       "KSNR00000011",
       "Lange Überschrift"
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -49,14 +49,14 @@ class LdmlPublishConverterServiceIntegrationTest {
   void convertToLdml_withExistingVersion() {
     // given
     String previousXmlVersion = TestFile.readFileToString("ldml-example.akn.xml");
-    DocumentationUnitContent documentationUnitContent = TestDocumentationUnitContent.create(
+    AdmDocumentationUnitContent admDocumentationUnitContent = TestDocumentationUnitContent.create(
       "KSNR00000011",
       "Lange Überschrift"
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(
-      documentationUnitContent,
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
       previousXmlVersion
     );
 
@@ -74,7 +74,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   )
   void convertToLdml_dates() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -101,7 +101,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -120,7 +120,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Langüberschrift' to akn:longTitle in akn:preface")
   void convertToLdml_langueberschrift() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -147,7 +147,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -164,7 +164,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Gliederung' to ris:tableOfContentEntries")
   void convertToLdml_gliederung() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -194,7 +194,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -210,7 +210,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Kurzreferat' to akn:div in akn:mainBody and transforms p to akn:p")
   void convertToLdml_kurzreferat() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -240,7 +240,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -259,7 +259,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts an empty 'Kurzreferat' to akn:hcontainer in akn:mainBody")
   void convertToLdml_emptyKurzreferat() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -286,7 +286,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -301,7 +301,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts two 'Normgeber' to two ris:normgeber in ris:meta")
   void convertToLdml_normgeber() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -331,7 +331,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -345,7 +345,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts three keywords to three akn:keyword in akn:classification")
   void convertToLdml_keywords() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -372,7 +372,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -391,7 +391,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   )
   void convertToLdml_classifications() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -421,7 +421,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -443,7 +443,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Dokumenttyp' without 'Dokumenttypzusatz' to ris:documentType in ris:meta")
   void convertToLdml_noDokumenttypZusatz() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -470,7 +470,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -485,7 +485,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   )
   void convertToLdml_references() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(
@@ -550,7 +550,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -582,7 +582,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Fundstelle' with two ambiguous periodika into akn:analysis")
   void convertToLdml_fundstelleWithAmbiguousPeriodikum() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(
@@ -612,7 +612,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -630,7 +630,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts 'Aktivverweisungen' into ris:activeReferences in ris:meta")
   void convertToLdml_activeReferences() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -692,7 +692,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -714,7 +714,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   )
   void convertToLdml_previousVersionContent() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR1234567890",
       List.of(),
@@ -742,7 +742,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     String previousXml = TestFile.readFileToString("ldml-example-historic-data.akn.xml");
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, previousXml);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, previousXml);
 
     // then
     assertThat(xml).contains(
@@ -779,7 +779,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Convert ldml identification in akn:meta")
   void convertToLdml_identification() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR1234567890",
       List.of(),
@@ -806,7 +806,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -846,7 +846,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Correctly sanitizes various HTML entities across multiple text fields")
   void convertToLdml_withVariousHtmlEntitiesInMultipleFields() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR_HTML_TEST",
       List.of(),
@@ -878,7 +878,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then: Assert that all HTML entities were correctly converted or escaped.
     assertThat(xml)
@@ -914,7 +914,7 @@ class LdmlPublishConverterServiceIntegrationTest {
       <p><span>Der Bundesvorstand der Deutschen Rentenversicherung Bund hat folgende verbindliche Entscheidung getroffen:</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>1. Bei Erziehung eines Kindes in einem anderen Mitgliedstaat werden bei Eintritt des Leistungsfalls Kindererziehungszeiten und Berücksichtigungszeiten nach den §§ 56, 57 bzw 249 SGB 6 anerkannt, wenn für die erziehende Person vor, während oder nach der Erziehung des Kindes in Deutschland Versicherungszeiten nach Art 1 Buchst t EGV 883/2004 zurückgelegt wurden, und für die erziehende Person in keinem anderen Mitgliedstaat Versicherungszeiten nach Maßgabe des Art 1 Buchst t EGV 883/2004 anzurechnen sind.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>2. Wohnzeiten nach Art 1 Buchst v EGV 883/2004, die im Erziehungsmitgliedstaat oder einem anderen Mitgliedstaat vor, während oder nach einer Kindererziehungszeit zurückgelegt wurden, stehen der Anrechnung von Kindererziehungszeiten nicht entgegen.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>3. Die Anrechnung der Kindererziehungszeit und der Berücksichtigungszeit wegen Kindererziehung ist nicht auf einzelne Rentenarten beschränkt.</span></p><p style="text-align: left" class="MsoNormal"><span>&nbsp;</span></p><p style="text-align: left" class="MsoNormal"><span>Gleichzeitig tritt die bisherige verbindliche Entscheidung vom Januar 2013, veröffentlicht am 31.5.2013, außer Kraft.</span></p>
       """;
 
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR_REAL_PAYLOAD_TEST",
       List.of(),
@@ -941,7 +941,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     String expectedXmlFragment =
@@ -967,7 +967,7 @@ class LdmlPublishConverterServiceIntegrationTest {
   @DisplayName("Converts berufsbilder, titelAspekte and definitionen in ris:meta")
   void convertToLdml_berufsbilder_titelAspekte_definitionen() {
     // given
-    DocumentationUnitContent documentationUnitContent = new DocumentationUnitContent(
+    AdmDocumentationUnitContent admDocumentationUnitContent = new AdmDocumentationUnitContent(
       null,
       "KSNR00000011",
       List.of(),
@@ -994,7 +994,7 @@ class LdmlPublishConverterServiceIntegrationTest {
     );
 
     // when
-    String xml = ldmlPublishConverterService.convertToLdml(documentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(

@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.List;
 import java.util.Optional;
@@ -353,7 +353,7 @@ class AdmDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willReturn(
         Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), validJsonRequest))
       );
@@ -468,7 +468,7 @@ class AdmDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willReturn(Optional.empty());
 
       // when
@@ -504,7 +504,7 @@ class AdmDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willThrow(
         new PublishingFailedException("External system unavailable", new RuntimeException())
       );

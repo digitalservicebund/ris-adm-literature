@@ -10,7 +10,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitService;
 import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.Optional;
 import java.util.UUID;
@@ -183,7 +183,7 @@ class LiteratureDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willReturn(
         Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), validJsonRequest))
       );
@@ -298,7 +298,7 @@ class LiteratureDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willReturn(Optional.empty());
 
       // when
@@ -334,7 +334,7 @@ class LiteratureDocumentationUnitControllerTest {
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(DocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
       ).willThrow(
         new PublishingFailedException("External system unavailable", new RuntimeException())
       );
