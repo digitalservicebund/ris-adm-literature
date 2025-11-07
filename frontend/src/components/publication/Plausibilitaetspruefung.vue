@@ -3,8 +3,8 @@
 import IconCheck from '~icons/material-symbols/check'
 import IconErrorOutline from '~icons/ic/baseline-error-outline'
 import { Button } from 'primevue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { DocumentCategory } from '@/domain/documentType'
 
 defineProps<{
   missingFields: string[]
@@ -21,9 +21,15 @@ function getLabel(field: string): string {
       normgeberList: 'Normgeber',
       zitierdaten: 'Zitierdatum',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
+      hauptsachtitel: 'Hauptsachtitel',
+      dokumentarischerTitel: 'Dokumentarischer Titel',
     }[field] || field
   )
 }
+
+const rubrikenPath = computed(() => {
+  return route.path.replace(/[^/]+$/, 'rubriken')
+})
 </script>
 <template>
   <h2 class="ris-label1-bold">Plausibilitätsprüfung</h2>
@@ -36,13 +42,7 @@ function getLabel(field: string): string {
       <ul class="list-disc list-inside ml-16 mb-24">
         <li v-for="field in missingFields" :key="field">{{ getLabel(field) }}</li>
       </ul>
-      <router-link
-        :to="
-          route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-            ? { name: 'uli-documentUnit-documentNumber-rubriken' }
-            : { name: 'adm-documentUnit-documentNumber-rubriken' }
-        "
-      >
+      <router-link :to="rubrikenPath">
         <Button label="Rubriken bearbeiten" aria-label="Rubriken bearbeiten" severity="secondary" />
       </router-link>
     </div>

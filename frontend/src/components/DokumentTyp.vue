@@ -35,7 +35,7 @@ const selectedItems = computed<AutoCompleteSuggestion[]>({
   },
 })
 
-const autoComplete = ref<typeof RisAutoCompleteMultiple | null>(null)
+const autoCompleteMultipleRef = ref<typeof RisAutoCompleteMultiple | null>(null)
 const documentTypeOptions = ref<DocumentType[]>([])
 
 const searchFn = useDokumentTypSearch(documentTypeOptions)
@@ -46,11 +46,18 @@ onMounted(async () => {
   const { data } = await useFetchDocumentTypes(props.documentCategory)
   documentTypeOptions.value = data.value?.documentTypes || []
 })
+
+const openOverlay = () => {
+  onComplete({ query: undefined })
+  if (autoCompleteMultipleRef?.value?.autoCompleteRef) {
+    autoCompleteMultipleRef.value.autoCompleteRef.show()
+  }
+}
 </script>
 
 <template>
   <RisAutoCompleteMultiple
-    ref="autoComplete"
+    ref="autoCompleteMultipleRef"
     v-model="selectedItems"
     :suggestions="suggestions"
     :input-id="inputId"
@@ -60,8 +67,8 @@ onMounted(async () => {
     typeahead
     dropdown
     fluid
-    complete-on-focus
-    auto-option-focus
+    force-selection
     @complete="onComplete"
+    @focus="openOverlay"
   />
 </template>

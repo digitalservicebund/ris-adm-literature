@@ -121,10 +121,10 @@ describe('Pagination', () => {
     const user = userEvent.setup()
     await user.click(await screen.findByLabelText('nächste Ergebnisse'))
     expect(emitted()['updatePage']).toHaveLength(1)
-    expect(emitted()['updatePage'][0]).toEqual([4])
+    expect(emitted()['updatePage']![0]).toEqual([4])
 
     await user.click(await screen.findByLabelText('vorherige Ergebnisse'))
     expect(emitted()['updatePage']).toHaveLength(2)
-    expect(emitted()['updatePage'][1]).toEqual([2])
+    expect(emitted()['updatePage']![1]).toEqual([2])
   })
 })

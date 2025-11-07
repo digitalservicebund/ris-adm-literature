@@ -4,9 +4,11 @@ import {
   getFutureDateErrMessage,
   getInvalidDateErrMessage,
   missingAdmDocumentUnitFields,
+  missingUliDocumentUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
+import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType'
 
 describe('Validators functions', () => {
   describe('areDatesValid', () => {
@@ -91,6 +93,78 @@ describe('Validators functions', () => {
       const expected = ['inkrafttretedatum', 'dokumenttyp', 'zitierdaten', 'normgeberList']
 
       expect(expected.sort()).toEqual(actual.sort())
+    })
+  })
+
+  describe('missingUliDocumentUnitFields', () => {
+    it('returns empty array if all fields are present', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumentTyp: [docTypeAnordnungFixture],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual([])
+    })
+
+    it('detects missing veroeffentlichungsjahr', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '',
+        dokumentTyp: [docTypeAnordnungFixture],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+    })
+
+    it('detects missing dokumentTyp', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumentTyp: [],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['dokumentTyp'])
+    })
+
+    it('detects missing hauptsachtitel and dokumentarischerTitel', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumentTyp: [docTypeAnordnungFixture],
+        hauptsachtitel: '',
+        dokumentarischerTitel: '',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['hauptsachtitel', 'dokumentarischerTitel'])
+    })
+
+    it('detects multiple missing fields', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '',
+        dokumentTyp: [],
+        hauptsachtitel: '',
+        dokumentarischerTitel: '',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual([
+        'veroeffentlichungsjahr',
+        'dokumentTyp',
+        'hauptsachtitel',
+        'dokumentarischerTitel',
+      ])
     })
   })
 })

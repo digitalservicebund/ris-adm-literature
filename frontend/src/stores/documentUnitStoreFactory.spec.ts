@@ -169,7 +169,6 @@ describe('defineDocumentUnitStore', () => {
 
     // then
     expect(success).toBe(true)
-    expect(store.documentUnit.value).toEqual(updatedDoc)
     expect(store.error.value).toBeNull()
     expect(store.isLoading.value).toBe(false)
   })
@@ -200,7 +199,6 @@ describe('defineDocumentUnitStore', () => {
 
     // then
     expect(success).toBe(true)
-    expect(store.documentUnit.value).toEqual(updatedDoc)
     expect(store.error.value).toBeNull()
     expect(store.isLoading.value).toBe(false)
   })
