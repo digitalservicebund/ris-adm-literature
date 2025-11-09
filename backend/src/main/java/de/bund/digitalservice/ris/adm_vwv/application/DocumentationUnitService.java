@@ -116,17 +116,17 @@ public class DocumentationUnitService {
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
     publisher.publish(publishOptions);
 
-    String json = convertToJson(documentationUnitContent);
-
-    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-      documentNumber,
-      json,
-      xml
-    );
     if (documentationUnitContent instanceof UliDocumentationUnitContent) {
       // TODO: return 204 or converted doc
       return Optional.empty();
     } else {
+      String json = convertToJson(documentationUnitContent);
+
+      DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+        documentNumber,
+        json,
+        xml
+      );
       return convertLdml(publishedDocumentationUnit);
     }
   }
