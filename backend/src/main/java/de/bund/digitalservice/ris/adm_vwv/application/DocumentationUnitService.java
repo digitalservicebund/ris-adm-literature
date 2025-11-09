@@ -13,6 +13,7 @@ import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -108,16 +109,10 @@ public class DocumentationUnitService {
     );
 
     // publish to portal
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
-
-    final String publisherName = details.documentCategory().getPublisherName();
-
-    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
-    publisher.publish(publishOptions);
 
     if (documentationUnitContent instanceof UliDocumentationUnitContent) {
       // TODO: return 204 or converted doc
+      publishToPortal(documentNumber, xml);
       return Optional.empty();
     } else {
       String json = convertToJson(documentationUnitContent);
@@ -127,8 +122,19 @@ public class DocumentationUnitService {
         json,
         xml
       );
+      publishToPortal(documentNumber, xml);
       return convertLdml(publishedDocumentationUnit);
     }
+  }
+
+  private void publishToPortal(@NotNull String documentNumber, String xml) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
+
+    final String publisherName = details.documentCategory().getPublisherName();
+
+    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
+    publisher.publish(publishOptions);
   }
 
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
