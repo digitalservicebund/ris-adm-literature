@@ -7,16 +7,11 @@ import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocu
 import de.bund.digitalservice.ris.adm_vwv.application.converter.util.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.util.LitDocumentType;
 import jakarta.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 @Component
 @Slf4j
@@ -60,17 +55,12 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       mapClassifications(ldmlDocument, uliContent.dokumentTyp());
       mapNote(ldmlDocument, uliContent.note());
 
-      // this needs to be the last method to be called
-      removePlaceholderValues(ldmlDocument);
-
       return LitXmlWriter.xmlToString(ldmlDocument.getDocument());
     } catch (Exception e) {
       log.error("Failed to convert ULI content to LDML", e);
       throw new PublishingFailedException("Failed to convert ULI content to LDML", e);
     }
   }
-
-  // === Mapping Methods from XmlItemProcessor ===
 
   private void mapClassifications(LdmlDocument ldmlDocument, List<DocumentType> dokumentTypen) {
     if (dokumentTypen != null && !dokumentTypen.isEmpty()) {
@@ -173,8 +163,6 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       .appendText(noteText.strip());
   }
 
-  // === Helper methods from XmlItemProcessor ===
-
   private void mapToLongTitle(String value, LdmlDocument ldmlDocument) {
     ldmlDocument
       .preface()
@@ -190,34 +178,5 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       .appendElementAndGet("akn:FRBRalias")
       .addAttribute("name", name)
       .addAttribute(VALUE, value);
-  }
-
-  private void removePlaceholderValues(LdmlDocument ldmlDocument) {
-    Document doc = ldmlDocument.getDocument();
-    NodeList identification = doc.getElementsByTagNameNS(AKN_NS, "identification");
-    if (identification.getLength() == 0) {
-      return;
-    }
-
-    String[] attributes = { VALUE, "href" };
-    String[] tags = { "FRBRthis", "FRBRuri", "FRBRauthor", "FRBRnumber", "FRBRname" };
-    List<Element> toRemove = new ArrayList<>();
-
-    for (String tag : tags) {
-      NodeList nodes = ((Element) identification.item(0)).getElementsByTagNameNS(AKN_NS, tag);
-      for (int i = 0; i < nodes.getLength(); i++) {
-        if (nodes.item(i).getNodeType() != Node.ELEMENT_NODE) {
-          continue;
-        }
-        Element elem = (Element) nodes.item(i);
-        for (String attr : attributes) {
-          if ("TODO".equals(elem.getAttribute(attr))) {
-            toRemove.add(elem);
-            break;
-          }
-        }
-      }
-    }
-    toRemove.forEach(elem -> elem.getParentNode().removeChild(elem));
   }
 }
