@@ -7,6 +7,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
@@ -59,9 +60,9 @@ public class DocumentationUnitService {
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
 
-  private String convertToJson(IDocumentationContent iDocumentationContent) { // <-- Changed type
+  private String convertToJson(IDocumentationContent iDocumentationContent) {
     try {
-      return objectMapper.writeValueAsString(iDocumentationContent); // <-- Works for any object
+      return objectMapper.writeValueAsString(iDocumentationContent);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -115,15 +116,19 @@ public class DocumentationUnitService {
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
     publisher.publish(publishOptions);
 
-    // TODO: return 204 or converted doc
-    /*String json = convertToJson(documentationUnitContent);
+    String json = convertToJson(documentationUnitContent);
 
     DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
       documentNumber,
       json,
       xml
-    );*/
-    return Optional.empty();
+    );
+    if (documentationUnitContent instanceof UliDocumentationUnitContent) {
+      // TODO: return 204 or converted doc
+      return Optional.empty();
+    } else {
+      return convertLdml(publishedDocumentationUnit);
+    }
   }
 
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(

@@ -181,7 +181,8 @@ public class AdmDocumentationUnitController {
       documentNumber,
       admDocumentationUnitContent
     );
-    // TODO: change depending on publish impl
-    return optionalDocumentationUnit.map(ResponseEntity::ok).orElse(ResponseEntity.ok().build());
+    return optionalDocumentationUnit
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
   }
 }
