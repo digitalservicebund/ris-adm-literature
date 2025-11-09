@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
  * Mock lit user (BAG and ULI)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@WithMockUser(
+@WithMockDocumentUser(
   office = DocumentationOffice.BAG,
   category = DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
 )

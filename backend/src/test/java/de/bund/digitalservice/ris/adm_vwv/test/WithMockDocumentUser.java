@@ -13,7 +13,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithMockUserSecurityContextFactory.class)
-public @interface WithMockUser {
+public @interface WithMockDocumentUser {
   /**
    * The documentation office for the mock user.
    */

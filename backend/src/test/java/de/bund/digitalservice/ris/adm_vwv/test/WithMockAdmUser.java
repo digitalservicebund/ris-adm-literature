@@ -9,6 +9,9 @@ import java.lang.annotation.RetentionPolicy;
  * Mock adm user (BSG and ADM)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@WithMockUser(office = DocumentationOffice.BSG, category = DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+@WithMockDocumentUser(
+  office = DocumentationOffice.BSG,
+  category = DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+)
 public @interface WithMockAdmUser {
 }
