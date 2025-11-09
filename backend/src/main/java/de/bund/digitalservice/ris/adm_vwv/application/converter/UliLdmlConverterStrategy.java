@@ -53,11 +53,6 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
 
       // === Populate structure based on XmlItemProcessor logic ===
 
-      ((Element) ldmlDocument.getDocument().getElementsByTagName("akn:doc").item(0)).setAttribute(
-          "name",
-          uliContent.documentNumber()
-        );
-
       mapDocumentNumber(ldmlDocument, uliContent.documentNumber());
       mapDokumentart(ldmlDocument, uliContent.dokumentTyp());
       mapVeroeffentlichungsJahre(ldmlDocument, uliContent.veroeffentlichungsjahr());
@@ -204,7 +199,7 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       return;
     }
 
-    String[] attributes = { "value", "href" };
+    String[] attributes = { VALUE, "href" };
     String[] tags = { "FRBRthis", "FRBRuri", "FRBRauthor", "FRBRnumber", "FRBRname" };
     List<Element> toRemove = new ArrayList<>();
 
