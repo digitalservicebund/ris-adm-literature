@@ -315,17 +315,14 @@ class DocumentationUnitServiceTest {
     ).thenReturn(publishedUnit);
     when(ldmlConverterService.convertToBusinessModel(publishedUnit)).thenReturn(contentToPublish);
 
-    // ACT
     Optional<DocumentationUnit> result = documentationUnitService.publish(
       TEST_DOC_NUMBER,
       contentToPublish
     );
 
-    // ASSERT
     verify(publisher).publish(publicationDetailsCaptor.capture());
     Publisher.PublicationDetails details = publicationDetailsCaptor.getValue();
 
-    // The logic correctly uses the literature client
     assertThat(details.targetPublisher()).isEqualTo("publicLiteraturePublisher");
     assertThat(result).isPresent();
   }
