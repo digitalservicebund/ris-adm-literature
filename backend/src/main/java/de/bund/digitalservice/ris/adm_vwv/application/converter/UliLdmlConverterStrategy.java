@@ -23,7 +23,6 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
   private static final String VALUE = "value";
   private static final String SOURCE = "source";
   private static final String UNDEFINED = "attributsemantik-noch-undefiniert";
-  private static final String AKN_NS = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0";
 
   @Override
   public boolean supports(IDocumentationContent content) {
