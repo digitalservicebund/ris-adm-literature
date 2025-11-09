@@ -108,8 +108,6 @@ public class DocumentationUnitService {
       documentationUnit.xml()
     );
 
-    // publish to portal
-
     if (documentationUnitContent instanceof UliDocumentationUnitContent) {
       // TODO: return 204 or converted doc
       publishToPortal(documentNumber, xml);
