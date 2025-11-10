@@ -52,10 +52,10 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       // === Populate structure based on XmlItemProcessor logic ===
 
       mapDocumentNumber(ldmlDocument, uliContent.documentNumber());
-      mapDokumentart(ldmlDocument, uliContent.dokumentTyp());
+      mapDokumentart(ldmlDocument, uliContent.dokumenttypen());
       mapVeroeffentlichungsJahre(ldmlDocument, uliContent.veroeffentlichungsjahr());
       mapTitles(ldmlDocument, uliContent);
-      mapClassifications(ldmlDocument, uliContent.dokumentTyp());
+      mapClassifications(ldmlDocument, uliContent.dokumenttypen());
       mapNote(ldmlDocument, uliContent.note());
 
       return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());

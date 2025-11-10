@@ -11,7 +11,7 @@ import java.util.UUID;
  * @param id The unique identifier.
  * @param documentNumber The document number.
  * @param veroeffentlichungsjahr The publication year.
- * @param dokumentTyp The list of document types.
+ * @param dokumenttypen The list of document types.
  * @param hauptsachtitel The main title.
  * @param hauptsachtitelZusatz Additional information for the main title.
  * @param dokumentarischerTitel The documentary title.
@@ -21,7 +21,7 @@ public record UliDocumentationUnitContent(
   UUID id,
   @NotBlank String documentNumber,
   @NotBlank String veroeffentlichungsjahr,
-  List<DocumentType> dokumentTyp,
+  List<DocumentType> dokumenttypen,
   String hauptsachtitel,
   String hauptsachtitelZusatz,
   String dokumentarischerTitel,
