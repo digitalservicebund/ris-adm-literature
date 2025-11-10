@@ -20,9 +20,9 @@ function getLabel(field: string): string {
       dokumenttyp: 'Dokumenttyp',
       normgeberList: 'Normgeber',
       zitierdaten: 'Zitierdatum',
+      dokumentTyp: 'Dokumenttyp',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
-      hauptsachtitel: 'Hauptsachtitel',
-      dokumentarischerTitel: 'Dokumentarischer Titel',
+      titel: 'Hauptsachtitel / Dokumentarischer Titel',
     }[field] || field
   )
 }

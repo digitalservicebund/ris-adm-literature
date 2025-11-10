@@ -35,16 +35,16 @@ export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[
 export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
   const missingFields: string[] = []
 
-  if (!doc.veroeffentlichungsjahr) {
-    missingFields.push('veroeffentlichungsjahr')
-  }
-
   if (!doc.dokumentTyp?.length) {
     missingFields.push('dokumentTyp')
   }
 
+  if (!doc.veroeffentlichungsjahr) {
+    missingFields.push('veroeffentlichungsjahr')
+  }
+
   if (!doc.hauptsachtitel && !doc.dokumentarischerTitel) {
-    missingFields.push('hauptsachtitel', 'dokumentarischerTitel')
+    missingFields.push('titel')
   }
 
   return missingFields
