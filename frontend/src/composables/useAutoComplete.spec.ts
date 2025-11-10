@@ -302,6 +302,14 @@ describe('useDokumentTypSearch', () => {
     expect(results).toHaveLength(2)
   })
 
+  it('sorts items by abbreviation alphabetically', () => {
+    const search = useDokumentTypSearch(
+      ref<DocumentType[]>([docTypeBekanntmachungFixture, docTypeAnordnungFixture]),
+    )
+    const results = search('')
+    expect(results[0]?.label).toBe(docTypeAnordnungFixture.abbreviation)
+  })
+
   it('returns an empty array if no matches', () => {
     const search = useDokumentTypSearch(mockDocTypes)
     const results = search('xyz')

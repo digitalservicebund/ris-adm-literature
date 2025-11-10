@@ -187,6 +187,7 @@ export function useDokumentTypSearch(docTypes: Ref<DocumentType[]>) {
           docType.abbreviation.toLowerCase().includes(query.trim().toLowerCase()) ||
           docType.name.toLowerCase().includes(query.trim().toLowerCase()),
       )
+      .sort((a, b) => a.abbreviation.localeCompare(b.abbreviation))
       .map((docType) => ({
         id: docType.abbreviation, // or return id from BE
         label: docType.abbreviation,
