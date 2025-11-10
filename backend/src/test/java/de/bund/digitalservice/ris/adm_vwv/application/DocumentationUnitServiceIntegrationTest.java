@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockDocumentType;
 import java.util.Optional;
@@ -106,7 +106,7 @@ class DocumentationUnitServiceIntegrationTest {
     // when
     Optional<DocumentationUnit> published = documentationUnitService.publish(
       documentationUnit.documentNumber(),
-      TestDocumentationUnitContent.create(documentationUnit.documentNumber(), "Lang")
+      TestAdmDocumentationUnitContent.create(documentationUnit.documentNumber(), "Lang")
     );
 
     // then
@@ -127,7 +127,7 @@ class DocumentationUnitServiceIntegrationTest {
     // when
     Optional<DocumentationUnit> published = documentationUnitService.publish(
       documentNumber,
-      TestDocumentationUnitContent.create(null, null)
+      TestAdmDocumentationUnitContent.create(null, null)
     );
 
     // then
@@ -152,7 +152,7 @@ class DocumentationUnitServiceIntegrationTest {
     Throwable thrown = catchThrowable(() ->
       documentationUnitService.publish(
         documentNumber,
-        TestDocumentationUnitContent.create(documentNumber, "Some Content")
+        TestAdmDocumentationUnitContent.create(documentNumber, "Some Content")
       )
     );
 

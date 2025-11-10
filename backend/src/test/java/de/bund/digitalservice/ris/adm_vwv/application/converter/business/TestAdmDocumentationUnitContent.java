@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Test class for easily creating instances of {@link AdmDocumentationUnitContent}.
  */
-public class TestDocumentationUnitContent {
+public class TestAdmDocumentationUnitContent {
 
   public static AdmDocumentationUnitContent create(String documentNumber, String langueberschrift) {
     return new AdmDocumentationUnitContent(
@@ -30,37 +30,6 @@ public class TestDocumentationUnitContent {
       List.of(),
       null,
       List.of(TestNormgeber.createByLegalEntity("Erste Jurpn")),
-      List.of(),
-      List.of(),
-      List.of()
-    );
-  }
-
-  public static AdmDocumentationUnitContent createEmpty(
-    String documentNumber,
-    String langueberschrift
-  ) {
-    return new AdmDocumentationUnitContent(
-      null,
-      documentNumber,
-      List.of(),
-      List.of(),
-      langueberschrift,
-      List.of(),
-      List.of(),
-      null,
-      null,
-      null,
-      null,
-      List.of(),
-      true,
-      null,
-      null,
-      List.of(),
-      List.of(),
-      List.of(),
-      null,
-      List.of(),
       List.of(),
       List.of(),
       List.of()

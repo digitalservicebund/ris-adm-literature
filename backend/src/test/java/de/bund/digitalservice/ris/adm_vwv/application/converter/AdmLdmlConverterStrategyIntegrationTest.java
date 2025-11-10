@@ -25,10 +25,8 @@ class AdmLdmlConverterStrategyIntegrationTest {
   @DisplayName("Conversion of document with document number results into xml with FRBRalias")
   void convertToLdml() {
     // given
-    AdmDocumentationUnitContent admDocumentationUnitContent = TestDocumentationUnitContent.create(
-      "KSNR00000011",
-      "Lange Überschrift"
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      TestAdmDocumentationUnitContent.create("KSNR00000011", "Lange Überschrift");
 
     // when
     String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
@@ -49,10 +47,8 @@ class AdmLdmlConverterStrategyIntegrationTest {
   void convertToLdml_withExistingVersion() {
     // given
     String previousXmlVersion = TestFile.readFileToString("ldml-example.akn.xml");
-    AdmDocumentationUnitContent admDocumentationUnitContent = TestDocumentationUnitContent.create(
-      "KSNR00000011",
-      "Lange Überschrift"
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      TestAdmDocumentationUnitContent.create("KSNR00000011", "Lange Überschrift");
 
     // when
     String xml = admLdmlConverterStrategy.convertToLdml(

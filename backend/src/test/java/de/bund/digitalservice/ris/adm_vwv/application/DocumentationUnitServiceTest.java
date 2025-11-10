@@ -14,7 +14,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import de.bund.digitalservice.ris.adm_vwv.test.WithMockLitUser;
 import java.util.List;
@@ -187,7 +187,7 @@ class DocumentationUnitServiceTest {
     String fakeJson = "{\"test\":\"json\"}";
 
     var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
-    var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
+    var content = TestAdmDocumentationUnitContent.create(docNumber, "Lange Überschrift");
     var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
 
     when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
@@ -235,7 +235,7 @@ class DocumentationUnitServiceTest {
     assertThatThrownBy(() ->
       documentationUnitService.publish(
         documentNumber,
-        TestDocumentationUnitContent.create(documentNumber, "Some Content")
+        TestAdmDocumentationUnitContent.create(documentNumber, "Some Content")
       )
     ).isInstanceOf(PublishingFailedException.class);
 
