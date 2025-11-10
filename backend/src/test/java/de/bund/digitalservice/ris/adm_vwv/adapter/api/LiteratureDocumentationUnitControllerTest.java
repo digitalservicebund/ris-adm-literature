@@ -10,7 +10,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitService;
 import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.SecurityConfiguration;
 import java.util.Optional;
 import java.util.UUID;
@@ -169,21 +169,12 @@ class LiteratureDocumentationUnitControllerTest {
       String validJsonRequest =
         """
         {
-          "langueberschrift": "Gültige Überschrift",
-          "zitierdaten": ["2023-01-01"],
-          "inkrafttretedatum": "2023-01-01",
-          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normgeberList": [
-              {
-                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
-                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
-                "regions": [{ "code": "DE" }]
-              }
-          ]
+          "documentNumber": "KSLU054920710",
+          "veroeffentlichungsjahr": "2025"
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(UliDocumentationUnitContent.class))
       ).willReturn(
         Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), validJsonRequest))
       );
@@ -280,25 +271,16 @@ class LiteratureDocumentationUnitControllerTest {
     )
     void publish_notFound() throws Exception {
       // given
-      String documentNumber = "KSNR000000001";
+      String documentNumber = "KSLU054920710";
       String validJsonRequest =
         """
         {
-          "langueberschrift": "Gültige Überschrift",
-          "zitierdaten": ["2023-01-01"],
-          "inkrafttretedatum": "2023-01-01",
-          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normgeberList": [
-              {
-                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
-                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
-                "regions": [{ "code": "DE" }]
-              }
-          ]
+          "documentNumber": "KSLU054920710",
+          "veroeffentlichungsjahr": "2025"
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(UliDocumentationUnitContent.class))
       ).willReturn(Optional.empty());
 
       // when
@@ -320,21 +302,12 @@ class LiteratureDocumentationUnitControllerTest {
       String validJsonRequest =
         """
         {
-          "langueberschrift": "Gültige Überschrift",
-          "zitierdaten": ["2023-01-01"],
-          "inkrafttretedatum": "2023-01-01",
-          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normgeberList": [
-              {
-                "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
-                "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
-                "regions": [{ "code": "DE" }]
-              }
-          ]
+          "documentNumber": "KSLU054920710",
+          "veroeffentlichungsjahr": "2025"
         }""";
 
       given(
-        documentationUnitService.publish(any(String.class), any(AdmDocumentationUnitContent.class))
+        documentationUnitService.publish(any(String.class), any(UliDocumentationUnitContent.class))
       ).willThrow(
         new PublishingFailedException("External system unavailable", new RuntimeException())
       );
