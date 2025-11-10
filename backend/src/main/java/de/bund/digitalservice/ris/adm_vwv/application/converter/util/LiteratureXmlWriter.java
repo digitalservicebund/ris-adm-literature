@@ -11,8 +11,11 @@ import javax.xml.transform.stream.StreamResult;
 import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 
+/**
+ * Literature XML writer.
+ */
 @UtilityClass
-public class LitXmlWriter {
+public class LiteratureXmlWriter {
 
   public static String xmlToString(Document xmlDocument) throws TransformerException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();

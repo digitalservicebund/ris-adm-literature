@@ -73,7 +73,8 @@ public class MinimalLdmlDocument {
     }
   }
 
-  public LdmlDocument create(LitDocumentType documentType) throws IOException, SAXException {
+  public LdmlDocument create(LiteratureDocumentCategory documentType)
+    throws IOException, SAXException {
     String currentDate = LocalDate.now().toString();
     String populatedLdml = MINIMAL_LDML.replace("$CURRENT_DATE", currentDate).replace(
       "$RIS_NAMESPACE",

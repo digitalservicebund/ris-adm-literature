@@ -6,6 +6,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+/**
+ * LDML document class provides methods for writing LDML elements.
+ */
 @RequiredArgsConstructor
 public class LdmlDocument {
 

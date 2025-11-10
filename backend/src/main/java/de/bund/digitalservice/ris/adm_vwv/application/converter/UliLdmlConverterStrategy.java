@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_vwv.application.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.util.*;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.util.LitDocumentType;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.util.LiteratureDocumentCategory;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+/**
+ * LDML publish converter service for transforming business models into XML/LDML keeping migrated content
+ * not included in the business model like 'Verwaltungsdaten'.
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +47,7 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
         );
       }
       // We create a default ULI doc type.
-      ldmlDocument = minimalLdmlDocument.create(LitDocumentType.ULI);
+      ldmlDocument = minimalLdmlDocument.create(LiteratureDocumentCategory.ULI);
 
       // === Populate structure based on XmlItemProcessor logic ===
 
@@ -54,7 +58,7 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       mapClassifications(ldmlDocument, uliContent.dokumentTyp());
       mapNote(ldmlDocument, uliContent.note());
 
-      return LitXmlWriter.xmlToString(ldmlDocument.getDocument());
+      return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());
     } catch (Exception e) {
       log.error("Failed to convert ULI content to LDML", e);
       throw new PublishingFailedException("Failed to convert ULI content to LDML", e);

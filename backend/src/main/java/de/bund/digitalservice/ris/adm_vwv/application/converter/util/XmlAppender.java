@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter.util;
 
+import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.adapter.NodeToList;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Utility class for append xml elements on W3C DOM nodes.
+ */
 @UtilityClass
 class XmlAppender {
 
