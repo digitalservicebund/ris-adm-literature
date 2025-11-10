@@ -35,8 +35,8 @@ export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[
 export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
   const missingFields: string[] = []
 
-  if (!doc.dokumentTyp?.length) {
-    missingFields.push('dokumentTyp')
+  if (!doc.dokumenttypen?.length) {
+    missingFields.push('dokumenttypen')
   }
 
   if (!doc.veroeffentlichungsjahr) {
