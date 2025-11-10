@@ -109,9 +109,9 @@ public class DocumentationUnitService {
     );
 
     if (documentationUnitContent instanceof UliDocumentationUnitContent) {
-      // TODO: return 204 or converted doc NOSONAR
       publishToPortal(documentNumber, xml);
-      return Optional.empty();
+      // TODO: Return converted doc like for adm NOSONAR
+      return optionalDocumentationUnit;
     } else {
       String json = convertToJson(documentationUnitContent);
 
