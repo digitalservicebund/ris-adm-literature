@@ -28,7 +28,10 @@ function getLabel(field: string): string {
 }
 
 const rubrikenPath = computed(() => {
-  return route.path.replace(/[^/]+$/, 'rubriken')
+  const segments = route.path.split('/').filter(Boolean)
+  if (segments.length === 0) return '/rubriken'
+  segments[segments.length - 1] = 'rubriken'
+  return '/' + segments.join('/')
 })
 </script>
 <template>
