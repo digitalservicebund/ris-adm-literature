@@ -17,6 +17,12 @@ import org.w3c.dom.Document;
 @UtilityClass
 public class LiteratureXmlWriter {
 
+  /**
+   * Returns the given W3C document as string.
+   * @param xmlDocument The W3C document instance
+   * @return String representation of the given document
+   * @throws TransformerException If the transformation fails
+   */
   public static String xmlToString(Document xmlDocument) throws TransformerException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     transformerFactory.setAttribute(ACCESS_EXTERNAL_DTD, "");

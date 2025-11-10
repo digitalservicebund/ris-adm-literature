@@ -30,29 +30,55 @@ public class LdmlElement {
     element = ldmlElement.getElement().getOwnerDocument().createElement(tagName);
   }
 
+  /**
+   * Creates a new element with the given tag name, appends it to this element and returns it.
+   * @param tagName The tag name of the element to create
+   * @return The newly created element
+   */
   public LdmlElement appendElementAndGet(String tagName) {
     Element newChild = element.getOwnerDocument().createElement(tagName);
     XmlAppender.insertOrderedElement(element, newChild);
     return new LdmlElement(newChild);
   }
 
+  /**
+   * Appends the given ldml element instance as child to this element, if it is not already existing.
+   * @param newChild The ldml element to append
+   * @return The given ldml element
+   */
   public LdmlElement appendElementOnceAndGet(LdmlElement newChild) {
     return new LdmlElement(
       XmlAppender.insertOrderedElementIfNotExists(element, newChild.getElement())
     );
   }
 
+  /**
+   * Appends the given node to this ldml element.
+   * @param node the node to append
+   * @return This ldml element
+   */
   public LdmlElement appendNode(Node node) {
     element.appendChild(node);
     return this;
   }
 
+  /**
+   * Appends the given text to this ldml element.
+   * @param text The text to append
+   * @return This ldml element
+   */
   public LdmlElement appendText(String text) {
     Text newChildText = element.getOwnerDocument().createTextNode(text);
     element.appendChild(newChildText);
     return this;
   }
 
+  /**
+   * Adds the specified attribute to this ldml element, if {@code attributeValue} is not blank.
+   * @param attributeName The attribute name
+   * @param attributeValue The attribute value
+   * @return This ldml element
+   */
   public LdmlElement addAttribute(@Nonnull String attributeName, String attributeValue) {
     if (StringUtils.isNotBlank(attributeValue)) {
       XmlAppender.addAttributeToNode(element, attributeName, attributeValue);
@@ -81,6 +107,12 @@ public class LdmlElement {
     private final String tagName;
     private final Map<String, String> attributes = new HashMap<>();
 
+    /**
+     * Adds the specified attribute to this ldml element template, if {@code attributeValue} is not blank.
+     * @param attributeName The attribute name
+     * @param attributeValue The attribute value
+     * @return This ldml element template
+     */
     public LdmlElementTemplate addAttribute(@Nonnull String attributeName, String attributeValue) {
       if (StringUtils.isNotBlank(attributeValue)) {
         attributes.put(attributeName, attributeValue);

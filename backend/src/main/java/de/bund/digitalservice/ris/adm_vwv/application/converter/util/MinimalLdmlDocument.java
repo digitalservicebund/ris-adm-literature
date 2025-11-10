@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * Class for creating an instance of {@link LdmlDocument} with a basic structure.
+ */
 @Slf4j
 public class MinimalLdmlDocument {
 
@@ -62,6 +65,9 @@ public class MinimalLdmlDocument {
 
   private final DocumentBuilder documentBuilder;
 
+  /**
+   * Creates a new instance of this class.
+   */
   public MinimalLdmlDocument() {
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -73,12 +79,19 @@ public class MinimalLdmlDocument {
     }
   }
 
-  public LdmlDocument create(LiteratureDocumentCategory documentType)
+  /**
+   * Creates a new instance of {@link LdmlDocument} and returns it.
+   * @param literatureDocumentCategory The literature documentation category
+   * @return New instance of ldml document
+   * @throws IOException If an I/O error occurs
+   * @throws SAXException If a parse error occurs
+   */
+  public LdmlDocument create(LiteratureDocumentCategory literatureDocumentCategory)
     throws IOException, SAXException {
     String currentDate = LocalDate.now().toString();
     String populatedLdml = MINIMAL_LDML.replace("$CURRENT_DATE", currentDate).replace(
       "$RIS_NAMESPACE",
-      documentType.getNamespace()
+      literatureDocumentCategory.getNamespace()
     );
     return new LdmlDocument(
       documentBuilder.parse(new InputSource(new StringReader(populatedLdml)))
