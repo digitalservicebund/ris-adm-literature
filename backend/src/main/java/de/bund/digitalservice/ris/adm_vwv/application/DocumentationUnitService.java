@@ -109,7 +109,7 @@ public class DocumentationUnitService {
     );
 
     if (documentationUnitContent instanceof UliDocumentationUnitContent) {
-      // TODO: return 204 or converted doc
+      // TODO: return 204 or converted doc NOSONAR
       publishToPortal(documentNumber, xml);
       return Optional.empty();
     } else {

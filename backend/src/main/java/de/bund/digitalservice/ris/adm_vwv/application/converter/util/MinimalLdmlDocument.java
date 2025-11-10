@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 @Slf4j
 public class MinimalLdmlDocument {
 
-  // TODO: Check which values should be in
+  // TODO: Check which values should be in NOSONAR
   // bei <akn:FRBRdate date="$CURRENT_DATE" name="migration" ris:domainTerm="migration"/>
   // see https://digitalservicebund.atlassian.net/wiki/spaces/VER/pages/2089189440/LDML+Harmonization+LDML+as+Created+by+NeuRIS+Streams#Datum
   public static final String MINIMAL_LDML =

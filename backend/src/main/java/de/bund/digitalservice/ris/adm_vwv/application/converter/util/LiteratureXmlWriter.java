@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter.util;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
 
 import java.io.StringWriter;
+import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -25,6 +26,7 @@ public class LiteratureXmlWriter {
    */
   public static String xmlToString(Document xmlDocument) throws TransformerException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     transformerFactory.setAttribute(ACCESS_EXTERNAL_DTD, "");
     var transformer = transformerFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
