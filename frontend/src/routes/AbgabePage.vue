@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TitleElement from '@/components/TitleElement.vue'
-import { ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import Plausibilitaetspruefung from '@/components/publication/Plausibilitaetspruefung.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { DocumentUnitStore } from '@/stores/types'
@@ -15,6 +15,8 @@ const isPublished = ref(false)
 async function onClickPublish() {
   isPublished.value = await store.publish()
 }
+
+onUnmounted(() => (error.value = null))
 </script>
 
 <template>

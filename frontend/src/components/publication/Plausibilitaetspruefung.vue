@@ -20,15 +20,18 @@ function getLabel(field: string): string {
       dokumenttyp: 'Dokumenttyp',
       normgeberList: 'Normgeber',
       zitierdaten: 'Zitierdatum',
+      dokumenttypen: 'Dokumenttyp',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
-      hauptsachtitel: 'Hauptsachtitel',
-      dokumentarischerTitel: 'Dokumentarischer Titel',
+      titel: 'Hauptsachtitel / Dokumentarischer Titel',
     }[field] || field
   )
 }
 
 const rubrikenPath = computed(() => {
-  return route.path.replace(/[^/]+$/, 'rubriken')
+  const segments = route.path.split('/').filter(Boolean)
+  if (segments.length === 0) return '/rubriken'
+  segments[segments.length - 1] = 'rubriken'
+  return '/' + segments.join('/')
 })
 </script>
 <template>

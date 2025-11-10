@@ -103,7 +103,7 @@ describe('Validators functions', () => {
         documentNumber: 'KSLU054920707',
         note: '',
         veroeffentlichungsjahr: '2025',
-        dokumentTyp: [docTypeAnordnungFixture],
+        dokumenttypen: [docTypeAnordnungFixture],
         hauptsachtitel: 'Title',
         dokumentarischerTitel: 'DocTitle',
       }
@@ -116,24 +116,24 @@ describe('Validators functions', () => {
         documentNumber: 'KSLU054920707',
         note: '',
         veroeffentlichungsjahr: '',
-        dokumentTyp: [docTypeAnordnungFixture],
+        dokumenttypen: [docTypeAnordnungFixture],
         hauptsachtitel: 'Title',
         dokumentarischerTitel: 'DocTitle',
       }
       expect(missingUliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
     })
 
-    it('detects missing dokumentTyp', () => {
+    it('detects missing dokumenttypen', () => {
       const doc = {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSLU054920707',
         note: '',
         veroeffentlichungsjahr: '2025',
-        dokumentTyp: [],
+        dokumenttypen: [],
         hauptsachtitel: 'Title',
         dokumentarischerTitel: 'DocTitle',
       }
-      expect(missingUliDocumentUnitFields(doc)).toEqual(['dokumentTyp'])
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['dokumenttypen'])
     })
 
     it('detects missing hauptsachtitel and dokumentarischerTitel', () => {
@@ -142,11 +142,11 @@ describe('Validators functions', () => {
         documentNumber: 'KSLU054920707',
         note: '',
         veroeffentlichungsjahr: '2025',
-        dokumentTyp: [docTypeAnordnungFixture],
+        dokumenttypen: [docTypeAnordnungFixture],
         hauptsachtitel: '',
         dokumentarischerTitel: '',
       }
-      expect(missingUliDocumentUnitFields(doc)).toEqual(['hauptsachtitel', 'dokumentarischerTitel'])
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['titel'])
     })
 
     it('detects multiple missing fields', () => {
@@ -155,15 +155,14 @@ describe('Validators functions', () => {
         documentNumber: 'KSLU054920707',
         note: '',
         veroeffentlichungsjahr: '',
-        dokumentTyp: [],
+        dokumenttypen: [],
         hauptsachtitel: '',
         dokumentarischerTitel: '',
       }
       expect(missingUliDocumentUnitFields(doc)).toEqual([
+        'dokumenttypen',
         'veroeffentlichungsjahr',
-        'dokumentTyp',
-        'hauptsachtitel',
-        'dokumentarischerTitel',
+        'titel',
       ])
     })
   })
