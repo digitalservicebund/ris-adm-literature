@@ -35,7 +35,7 @@ defineEmits<{
     <Message v-if="isPublished && !error" class="mb-24" severity="success">
       <p>Freigabe ist abgeschlossen.</p>
     </Message>
-    <Message v-if="isPublished && error" class="mb-24" severity="error">
+    <Message v-if="error" class="mb-24" severity="error">
       <p>Die Freigabe ist aus technischen Gründen nicht durchgeführt worden.</p>
     </Message>
     <div class="flex flex-row">

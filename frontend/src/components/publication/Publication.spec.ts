@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
 import Publication from './Publication.vue'
 
-describe('PublicationButton', () => {
+describe('Publication', () => {
   it('renders info message', () => {
     render(Publication, {
       props: {

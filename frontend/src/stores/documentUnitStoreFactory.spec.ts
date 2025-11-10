@@ -8,6 +8,7 @@ import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { admDocumentUnitFixture } from '@/testing/fixtures/admDocumentUnit'
 import { uliDocumentUnitFixture } from '@/testing/fixtures/uliDocumentUnit'
 import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
+import * as validators from '@/utils/validators'
 
 describe('defineDocumentUnitStore', () => {
   beforeEach(() => {
@@ -203,6 +204,37 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
   })
 
+  it('updates the error state and leaves the original document untouched on a failed publish', async () => {
+    // given
+    const putError = new Error('PUT failed')
+
+    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
+      data: ref(admDocumentUnitFixture),
+      error: ref(null),
+      statusCode: ref(200),
+      execute: vi.fn().mockResolvedValue(undefined),
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
+
+    vi.spyOn(documentUnitService, 'usePutPublishAdmDocUnit').mockReturnValue({
+      data: ref(null),
+      error: ref(putError),
+      statusCode: ref(500),
+      execute: vi.fn(),
+    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
+
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    await store.load('KSNR054920707')
+
+    // when
+    const success = await store.publish()
+
+    // then
+    expect(success).toBe(false)
+    expect(store.error.value).toEqual(putError)
+    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
+    expect(store.isLoading.value).toBe(false)
+  })
+
   it('updates the error state and leaves the original document untouched on a failed update', async () => {
     // given
     const putError = new Error('PUT failed')
@@ -243,6 +275,43 @@ describe('defineDocumentUnitStore', () => {
     expect(store.isLoading.value).toBe(false)
     expect(store.error.value).toBeNull()
     expect(store.documentUnit.value).toBeNull()
+  })
+
+  it('returns the missing fields for a ULI doc', async () => {
+    const spy = vi.spyOn(validators, 'missingUliDocumentUnitFields')
+    spy.mockReturnValue(['foo', 'bar'])
+
+    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
+    const fakeDoc = { title: 'Test' }
+    store.documentUnit.value = fakeDoc
+
+    const result = store.missingRequiredFields.value
+
+    expect(spy).toHaveBeenCalledWith(fakeDoc)
+    expect(result).toEqual(['foo', 'bar'])
+  })
+
+  it('returns the missing fields for a ADM doc', async () => {
+    const spy = vi.spyOn(validators, 'missingAdmDocumentUnitFields')
+    spy.mockReturnValue(['foo', 'bar'])
+
+    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    const fakeDoc = { title: 'Test' }
+    store.documentUnit.value = fakeDoc
+
+    const result = store.missingRequiredFields.value
+
+    expect(spy).toHaveBeenCalledWith(fakeDoc)
+    expect(result).toEqual(['foo', 'bar'])
+  })
+
+  it('returns empty array when document is null', () => {
+    const spy = vi.spyOn(validators, 'missingUliDocumentUnitFields')
+    spy.mockReturnValue(['foo', 'bar'])
+    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
+
+    expect(store.missingRequiredFields.value).toEqual([])
+    expect(spy).not.toHaveBeenCalled()
   })
 
   it('clears document unit on unload', async () => {
