@@ -6,12 +6,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Mock adm user (BSG and ADM)
+ * Mock lit user (BAG and ULI)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @WithMockDocumentUser(
-  office = DocumentationOffice.BSG,
-  category = DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+  office = DocumentationOffice.BAG,
+  category = DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
 )
-public @interface WithMockAdmUser {
+public @interface WithMockLitUser {
 }

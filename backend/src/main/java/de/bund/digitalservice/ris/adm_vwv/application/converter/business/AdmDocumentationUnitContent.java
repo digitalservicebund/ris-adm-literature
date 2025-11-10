@@ -37,7 +37,7 @@ import java.util.UUID;
  * @param titelAspekte          List of titelAspekt
  * @param definitionen          List of definition
  */
-public record DocumentationUnitContent(
+public record AdmDocumentationUnitContent(
   UUID id,
   String documentNumber,
   List<Fundstelle> fundstellen,
@@ -61,4 +61,5 @@ public record DocumentationUnitContent(
   List<String> berufsbilder,
   List<String> titelAspekte,
   List<Definition> definitionen
-) {}
+)
+  implements IDocumentationContent {}

@@ -34,7 +34,7 @@ s3:
       public:
         access-key-id: test
         access-key: test
-        bucket-name: test
+        bucket-name-ref: test
 
 
 database:

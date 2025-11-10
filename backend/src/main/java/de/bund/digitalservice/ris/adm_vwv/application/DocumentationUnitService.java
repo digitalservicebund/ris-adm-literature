@@ -6,12 +6,16 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +61,9 @@ public class DocumentationUnitService {
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
 
-  private String convertToJson(DocumentationUnitContent documentationUnitContent) {
+  private String convertToJson(IDocumentationContent iDocumentationContent) {
     try {
-      return objectMapper.writeValueAsString(documentationUnitContent);
+      return objectMapper.writeValueAsString(iDocumentationContent);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -88,7 +92,7 @@ public class DocumentationUnitService {
   @Transactional
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
-    @Nonnull DocumentationUnitContent documentationUnitContent
+    @Nonnull IDocumentationContent documentationUnitContent
   ) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
@@ -103,20 +107,32 @@ public class DocumentationUnitService {
       documentationUnitContent,
       documentationUnit.xml()
     );
-    String json = convertToJson(documentationUnitContent);
-    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-      documentNumber,
-      json,
-      xml
-    );
 
-    // publish to portal
-    // later when we want to publish to other publishers, we can receive them form the method param and select them here
-    // If the publishing or validation fails, the transaction is rolled back
-    final String BSG_PUBLISHER_NAME = "publicBsgPublisher";
-    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, BSG_PUBLISHER_NAME);
+    if (documentationUnitContent instanceof UliDocumentationUnitContent) {
+      // TODO: return 204 or converted doc NOSONAR
+      publishToPortal(documentNumber, xml);
+      return Optional.empty();
+    } else {
+      String json = convertToJson(documentationUnitContent);
+
+      DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+        documentNumber,
+        json,
+        xml
+      );
+      publishToPortal(documentNumber, xml);
+      return convertLdml(publishedDocumentationUnit);
+    }
+  }
+
+  private void publishToPortal(@NotNull String documentNumber, String xml) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
+
+    final String publisherName = details.documentCategory().getPublisherName();
+
+    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
     publisher.publish(publishOptions);
-    return convertLdml(publishedDocumentationUnit);
   }
 
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(

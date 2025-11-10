@@ -107,5 +107,12 @@ export function getUliMenuItems(
         },
       ],
     },
+    {
+      label: 'Abgabe',
+      route: {
+        ...baseRoute,
+        name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.ABGABE,
+      },
+    },
   ]
 }

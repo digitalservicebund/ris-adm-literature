@@ -24,4 +24,19 @@ public class ValidatorConfig {
       )
     );
   }
+
+  /**
+   * Bean for bsg vwv validation
+   * @return Configured bsg validator
+   */
+  @Bean("uliLiteratureValidator")
+  public XmlValidator uliLiteratureValidator() {
+    return new XmlValidator(
+      List.of(
+        "/schemas/akomaNtoso/akomantoso30.xsd",
+        "/schemas/proprietary/uli/ldml-ris-literature.xsd",
+        "/schemas/proprietary/uli/ldml-ris-literature-unselbstaendig-meta.xsd"
+      )
+    );
+  }
 }

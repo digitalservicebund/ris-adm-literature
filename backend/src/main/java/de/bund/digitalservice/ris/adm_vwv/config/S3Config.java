@@ -23,9 +23,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Slf4j
 public class S3Config {
 
+  private static final String MOCK_PROFILE = "!staging & !production & !uat";
+
   /**
-   * Creates and configures the S3Client bean for the private BSG bucket on OTC for the 'staging'
-   * profile.
+   * Creates and configures the S3Client bean for the public BSG bucket.
    *
    * @param region          The OTC region.
    * @param endpoint        The endpoint URI for the OTC Object Storage Service.
@@ -41,6 +42,61 @@ public class S3Config {
     @Value("${s3.bucket.adm.public.access-key-id}") String accessKeyId,
     @Value("${s3.bucket.adm.public.access-key}") String secretAccessKey
   ) throws URISyntaxException {
+    return getS3Client(region, endpoint, accessKeyId, secretAccessKey);
+  }
+
+  /**
+   * Creates and configures the S3Client bean for the public Literature bucket.
+   *
+   * @param region          The OTC region.
+   * @param endpoint        The endpoint URI for the OTC Object Storage Service.
+   * @param accessKeyId     The access key ID for authentication.
+   * @param secretAccessKey The secret access key for authentication.
+   * @return A configured {@link S3Client} instance for the staging environment.
+   */
+  @Bean("publicLiteratureS3Client")
+  @Profile("staging")
+  public S3Client publicLiteratureS3Client(
+    @Value("${s3.bucket.region}") String region,
+    @Value("${s3.bucket.endpoint}") String endpoint,
+    @Value("${s3.bucket.literature.public.access-key-id}") String accessKeyId,
+    @Value("${s3.bucket.literature.public.access-key}") String secretAccessKey
+  ) throws URISyntaxException {
+    return getS3Client(region, endpoint, accessKeyId, secretAccessKey);
+  }
+
+  /**
+   * Creates a mock S3Client bean that writes to the local filesystem.
+   * <p>
+   *
+   * @return An {@link S3MockClient} instance that simulates S3 operations locally.
+   */
+  @Bean("publicBsgS3Client")
+  @Profile(MOCK_PROFILE)
+  public S3Client publicBsgMockClient() {
+    log.warn("Using S3MockClient for 'publicBsgS3Client'");
+    return new S3MockClient();
+  }
+
+  /**
+   * Creates a mock S3Client bean that writes to the local filesystem.
+   * <p>
+   *
+   * @return An {@link S3MockClient} instance that simulates S3 operations locally.
+   */
+  @Bean("publicLiteratureS3Client")
+  @Profile(MOCK_PROFILE)
+  public S3Client publicLiteratureMockClient() {
+    log.warn("Using S3MockClient for 'publicLiteratureS3Client'");
+    return new S3MockClient();
+  }
+
+  private static S3Client getS3Client(
+    String region,
+    String endpoint,
+    String accessKeyId,
+    String secretAccessKey
+  ) throws URISyntaxException {
     log.info("Endpoint {}", endpoint);
 
     return S3Client.builder()
@@ -53,17 +109,5 @@ public class S3Config {
       .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
       .forcePathStyle(true)
       .build();
-  }
-
-  /**
-   * Creates a mock S3Client bean that writes to the local filesystem.
-   * <p>
-   *
-   * @return An {@link S3MockClient} instance that simulates S3 operations locally.
-   */
-  @Bean("publicBsgS3Client")
-  @Profile("!staging & !production & !uat")
-  public S3Client publicBsgS3MockClient() {
-    return new S3MockClient();
   }
 }

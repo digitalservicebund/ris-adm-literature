@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
@@ -327,12 +327,12 @@ public class DocumentationUnitPersistenceService {
       );
     } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
-      DocumentationUnitContent documentationUnitContent = transformJson(
+      AdmDocumentationUnitContent admDocumentationUnitContent = transformJson(
         documentationUnitEntity.getJson()
       );
       documentationUnitIndex = createDocumentationUnitIndex(
         documentationUnitEntity,
-        documentationUnitContent
+        admDocumentationUnitContent
       );
     }
     return documentationUnitIndex;
@@ -340,7 +340,7 @@ public class DocumentationUnitPersistenceService {
 
   private DocumentationUnitIndex createDocumentationUnitIndex(
     DocumentationUnitEntity documentationUnitEntity,
-    DocumentationUnitContent documentationUnitContent
+    AdmDocumentationUnitContent admDocumentationUnitContent
   ) {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
@@ -349,10 +349,10 @@ public class DocumentationUnitPersistenceService {
       documentationUnitEntity.getDocumentationUnitType()
     );
     documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
-    documentationUnitIndex.setLangueberschrift(documentationUnitContent.langueberschrift());
-    if (documentationUnitContent.fundstellen() != null) {
+    documentationUnitIndex.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
+    if (admDocumentationUnitContent.fundstellen() != null) {
       documentationUnitIndex.setFundstellen(
-        documentationUnitContent
+        admDocumentationUnitContent
           .fundstellen()
           .stream()
           .map(
@@ -366,17 +366,17 @@ public class DocumentationUnitPersistenceService {
           .collect(Collectors.joining(ENTRY_SEPARATOR))
       );
     }
-    if (documentationUnitContent.zitierdaten() != null) {
+    if (admDocumentationUnitContent.zitierdaten() != null) {
       documentationUnitIndex.setZitierdaten(
-        String.join(ENTRY_SEPARATOR, documentationUnitContent.zitierdaten())
+        String.join(ENTRY_SEPARATOR, admDocumentationUnitContent.zitierdaten())
       );
     }
     return documentationUnitIndex;
   }
 
-  private DocumentationUnitContent transformJson(@Nonnull String json) {
+  private AdmDocumentationUnitContent transformJson(@Nonnull String json) {
     try {
-      return objectMapper.readValue(json, DocumentationUnitContent.class);
+      return objectMapper.readValue(json, AdmDocumentationUnitContent.class);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("Exception during transforming json: " + json, e);
     }

@@ -99,7 +99,7 @@ describe('getUliMenuItems', () => {
   it('returns an array with a single "Rubriken" menu item if documentNumber is provided', () => {
     const result = getUliMenuItems(mockDocumentNumber, mockRouteQuery)
     expect(Array.isArray(result)).toBe(true)
-    expect(result.length).toBe(1)
+    expect(result.length).toBe(2)
     expect(result[0]?.label).toBe('Rubriken')
   })
 
