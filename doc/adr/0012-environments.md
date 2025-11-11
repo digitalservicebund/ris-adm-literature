@@ -33,7 +33,7 @@ The term "environment" is meant to indicate that these components (code and data
 
 ### Rules and Purposes
 
-Note: The following is how we will set up the environments. It does not mean that all environments
+Note: The following is how we aim to set up the environments. It does not mean that all the aspects do exist already (e.g. our goal of how migration should work does not imply that there is a migration already).
 
 * Staging:
     * Purpose: Supporting the product development team.
@@ -41,7 +41,7 @@ Note: The following is how we will set up the environments. It does not mean tha
     * Codebase: Staging runs the current `main` branch of `ris-adm-literature` (continuous deployment).
     * Uptime: Staging may be down any time due to any reason and for any amount of time.
     * Data: Staging data may come into existence, disappear or be changed any time.
-    * Migration: Staging data gets new migrations "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
 * UAT:
     * Purpose: Giving testers a predictable system that is only affected by the testers' actions.
     * Access: UAT may be accessed by testers and by product team members in order to cooperate with the testers.
@@ -49,7 +49,7 @@ Note: The following is how we will set up the environments. It does not mean tha
     * Uptime: UAT is expected to be up "all the time".
         * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
     * Data: Data in UAT is expected to persist and only change on user interaction.
-    * ❓ Migration: UAT data gets new migrations "upserted" only outside 8:00-17:00.
+    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
 * Production:
     * Primary goal: To be used by documentalists performing their documentation duties.
     * Access: Production may be accessed by documentalists and by product team members in order to cooperate with the testers.
@@ -57,7 +57,7 @@ Note: The following is how we will set up the environments. It does not mean tha
     * Uptime: Production is expected to be up "all the time".
         * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
     * Data: Data in production is expected to persist and only change on user interaction.
-    * ❓ Migration: Production data gets new migrations "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
 
 
 ## Consequences
@@ -65,3 +65,4 @@ Note: The following is how we will set up the environments. It does not mean tha
 ❗What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
 * Operating three environments adds complexity.
+* By running three environments, we hope to better address the uses cases and expectations of end users just as well as testers and developers.
