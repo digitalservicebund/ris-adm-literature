@@ -1,8 +1,18 @@
 import { defineStore } from 'pinia'
 import { defineDocumentUnitStore } from './documentUnitStoreFactory'
 import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
-import { DocumentCategory } from '@/domain/documentType'
+import {
+  useGetUliDocUnit,
+  usePutPublishUliDocUnit,
+  usePutUliDocUnit,
+} from '@/services/documentUnitService'
+import { missingUliDocumentUnitFields } from '@/utils/validators'
 
 export const useUliDocumentUnitStore = defineStore('uliDocumentUnit', () => {
-  return defineDocumentUnitStore<UliDocumentationUnit>(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
+  return defineDocumentUnitStore<UliDocumentationUnit>({
+    getDocument: useGetUliDocUnit,
+    putDocument: usePutUliDocUnit,
+    publishDocument: usePutPublishUliDocUnit,
+    missingFields: missingUliDocumentUnitFields,
+  })
 })
