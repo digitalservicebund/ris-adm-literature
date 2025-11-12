@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('AbgabePage', () => {
+test.describe('ADM AbgabePage', () => {
   test(
     'A document is publishable when its mandatory fields are non empty',
     { tag: ['@RISDEV-8436'] },
