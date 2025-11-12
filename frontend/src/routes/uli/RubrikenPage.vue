@@ -47,7 +47,7 @@ const dokumentarischerTitel = computed({
   },
 })
 
-useScrollToHash(120)
+useScrollToHash()
 </script>
 
 <template>

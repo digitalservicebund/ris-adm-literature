@@ -44,7 +44,7 @@ export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[
   }
 
   if (!doc.hauptsachtitel && !doc.dokumentarischerTitel) {
-    missingFields.push('titel')
+    missingFields.push('hauptsachtitel')
   }
 
   return missingFields

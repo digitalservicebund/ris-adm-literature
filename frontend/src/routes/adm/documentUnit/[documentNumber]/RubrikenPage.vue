@@ -88,7 +88,7 @@ const dokumenttypZusatz = computed({
   },
 })
 
-useScrollToHash(120)
+useScrollToHash()
 </script>
 
 <template>

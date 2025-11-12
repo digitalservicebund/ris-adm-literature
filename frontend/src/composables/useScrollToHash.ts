@@ -4,11 +4,11 @@ import { useRoute } from 'vue-router'
 /**
  * Handles smooth scrolling to hash anchors
  */
-export function useScrollToHash(offset = 80) {
+export function useScrollToHash(offset = 120) {
   const route = useRoute()
 
   async function scrollToHash() {
-    const hash = window.location.hash || route.hash
+    const hash = route.hash
     if (!hash) return
 
     await nextTick() // ensure DOM is ready

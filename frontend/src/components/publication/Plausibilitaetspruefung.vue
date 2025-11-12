@@ -22,7 +22,7 @@ function getLabel(field: string): string {
       zitierdaten: 'Zitierdatum',
       dokumenttypen: 'Dokumenttyp',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
-      titel: 'Hauptsachtitel / Dokumentarischer Titel',
+      hauptsachtitel: 'Hauptsachtitel / Dokumentarischer Titel',
     }[field] || field
   )
 }
