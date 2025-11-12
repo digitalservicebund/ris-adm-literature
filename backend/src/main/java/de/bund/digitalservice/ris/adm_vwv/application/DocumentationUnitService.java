@@ -6,6 +6,7 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
@@ -14,8 +15,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,30 +107,38 @@ public class DocumentationUnitService {
       documentationUnit.xml()
     );
 
-    if (documentationUnitContent instanceof UliDocumentationUnitContent) {
-      publishToPortal(documentNumber, xml);
-      // TODO: Return converted doc like for adm NOSONAR
-      return optionalDocumentationUnit;
-    } else {
-      String json = convertToJson(documentationUnitContent);
-
-      DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-        documentNumber,
-        json,
-        xml
+    return switch (documentationUnitContent) {
+      case UliDocumentationUnitContent _ -> {
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTSTAENDIG);
+        // TODO: Return converted doc like for adm NOSONAR
+        yield optionalDocumentationUnit;
+      }
+      case AdmDocumentationUnitContent adm -> {
+        String json = convertToJson(adm);
+        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+          documentNumber,
+          json,
+          xml
+        );
+        publishToPortal(documentNumber, xml, DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+        yield convertLdml(publishedDocumentationUnit);
+      }
+      default -> throw new IllegalStateException(
+        "Unsupported document category: " + documentationUnitContent.getClass().getSimpleName()
       );
-      publishToPortal(documentNumber, xml);
-      return convertLdml(publishedDocumentationUnit);
-    }
+    };
   }
 
-  private void publishToPortal(@NotNull String documentNumber, String xml) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
-
-    final String publisherName = details.documentCategory().getPublisherName();
-
-    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, publisherName);
+  private void publishToPortal(
+    @NotNull String documentNumber,
+    String xml,
+    DocumentCategory documentCategory
+  ) {
+    var publishOptions = new Publisher.PublicationDetails(
+      documentNumber,
+      xml,
+      documentCategory.getPublisherName()
+    );
     publisher.publish(publishOptions);
   }
 
