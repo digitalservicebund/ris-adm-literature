@@ -10,7 +10,7 @@ plugins {
   id("com.github.jk1.dependency-license-report") version "3.0.1"
   id("com.diffplug.spotless") version "8.0.0"
   id("checkstyle")
-  id("io.freefair.lombok") version "9.0.0"
+  id("io.freefair.lombok") version "9.1.0"
 }
 
 group = "de.bund.digitalservice"
@@ -37,8 +37,8 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0-RC1"
 
 val springdocVersion = "2.8.14"
-val sentryVersion = "8.25.0"
-val hypersistenceVersion = "3.11.0"
+val sentryVersion = "8.26.0"
+val hypersistenceVersion = "3.12.0"
 val postgresVersion = "42.7.8"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
@@ -147,7 +147,7 @@ sonar {
     property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.token", System.getenv("SONAR_TOKEN"))
     // we usually don't test config files
-    property("sonar.coverage.exclusions", "**/Application.java, **/config/**")
+    property("sonar.coverage.exclusions", "**/Application.java, **/config/**, **/converter/util/**")
   }
 }
 

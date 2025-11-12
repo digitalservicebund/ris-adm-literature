@@ -13,20 +13,21 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestDocumentationUnitContent;
-import java.util.List;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestAdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestUliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.test.WithMockAdmUser;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
+@WithMockAdmUser
 class DocumentationUnitServiceTest {
 
   @InjectMocks
@@ -49,6 +50,13 @@ class DocumentationUnitServiceTest {
 
   @Spy
   private ObjectMapper objectMapper;
+
+  @Captor
+  private ArgumentCaptor<Publisher.PublicationDetails> publicationDetailsCaptor;
+
+  private static final String TEST_OLD_XML = "<xml>old content</xml>";
+  private static final String TEST_NEW_XML = "<xml>new content</xml>";
+  private static final String TEST_JSON = "{\"key\":\"value\"}";
 
   @Test
   void findByDocumentNumber() {
@@ -79,7 +87,7 @@ class DocumentationUnitServiceTest {
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(
-      createDocumentationUnitContent()
+      TestAdmDocumentationUnitContent.create("KSNR2025000001", null)
     );
 
     // when
@@ -94,7 +102,7 @@ class DocumentationUnitServiceTest {
       .extracting(DocumentationUnit::json, InstanceOfAssertFactories.STRING)
       .contains(
         """
-        dokumenttyp":{"abbreviation":"VV","name":"Verwaltungsvorschrift"}"""
+        dokumenttyp":{"abbreviation":"VR","name":"Verwaltungsregelung"}"""
       );
   }
 
@@ -142,34 +150,6 @@ class DocumentationUnitServiceTest {
     assertThat(actual).isEmpty();
   }
 
-  private static DocumentationUnitContent createDocumentationUnitContent() {
-    return new DocumentationUnitContent(
-      UUID.randomUUID(),
-      "KSNR2025000001",
-      List.of(),
-      List.of(),
-      null,
-      List.of(),
-      List.of(),
-      null,
-      null,
-      null,
-      null,
-      List.of(),
-      false,
-      new DocumentType("VV", "Verwaltungsvorschrift"),
-      "Verwaltungsvorschrift",
-      List.of(),
-      List.of(),
-      List.of(),
-      null,
-      List.of(),
-      List.of(),
-      List.of(),
-      List.of()
-    );
-  }
-
   @Test
   void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
     String docNumber = "doc123";
@@ -178,7 +158,7 @@ class DocumentationUnitServiceTest {
     String fakeJson = "{\"test\":\"json\"}";
 
     var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
-    var content = TestDocumentationUnitContent.create(docNumber, "Lange Überschrift");
+    var content = TestAdmDocumentationUnitContent.create(docNumber, "Lange Überschrift");
     var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
 
     when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
@@ -226,7 +206,7 @@ class DocumentationUnitServiceTest {
     assertThatThrownBy(() ->
       documentationUnitService.publish(
         documentNumber,
-        TestDocumentationUnitContent.create(documentNumber, "Some Content")
+        TestAdmDocumentationUnitContent.create(documentNumber, "Some Content")
       )
     ).isInstanceOf(PublishingFailedException.class);
 
@@ -234,5 +214,94 @@ class DocumentationUnitServiceTest {
       documentNumber
     );
     assertThat(actual).isPresent().hasValueSatisfying(dun -> assertThat(dun.json()).isNull());
+  }
+
+  @Test
+  void publish_shouldUseBsgPublisher_whenCategoryIsVerwaltungsvorschriften() throws Exception {
+    // given
+    DocumentationUnit existingUnit = new DocumentationUnit(
+      "KSNR1234567890",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_OLD_XML
+    );
+    DocumentationUnit publishedUnit = new DocumentationUnit(
+      "KSNR1234567890",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_NEW_XML
+    );
+    AdmDocumentationUnitContent contentToPublish = TestAdmDocumentationUnitContent.create(
+      "KSNR1234567890",
+      null
+    );
+    given(documentationUnitPersistenceService.findByDocumentNumber("KSNR1234567890")).willReturn(
+      Optional.of(existingUnit)
+    );
+    given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
+      TEST_NEW_XML
+    );
+    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
+    given(
+      documentationUnitPersistenceService.publish("KSNR1234567890", TEST_JSON, TEST_NEW_XML)
+    ).willReturn(publishedUnit);
+    given(ldmlConverterService.convertToBusinessModel(publishedUnit)).willReturn(contentToPublish);
+
+    // when
+    Optional<DocumentationUnit> result = documentationUnitService.publish(
+      "KSNR1234567890",
+      contentToPublish
+    );
+
+    // then
+    assertThat(result).isPresent();
+    verify(publisher).publish(publicationDetailsCaptor.capture());
+    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+      "publicBsgPublisher"
+    );
+  }
+
+  @Test
+  void publish_shouldUseLiteraturePublisher_whenCategoryIsLiteratur() throws Exception {
+    // given
+    DocumentationUnit existingUnit = new DocumentationUnit(
+      "KALU123456789",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_OLD_XML
+    );
+    DocumentationUnit publishedUnit = new DocumentationUnit(
+      "KALU123456789",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_NEW_XML
+    );
+    UliDocumentationUnitContent contentToPublish = TestUliDocumentationUnitContent.create(
+      "KALU123456789",
+      "2025"
+    );
+    given(documentationUnitPersistenceService.findByDocumentNumber("KALU123456789")).willReturn(
+      Optional.of(existingUnit)
+    );
+    given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
+      TEST_NEW_XML
+    );
+    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
+    given(
+      documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
+    ).willReturn(publishedUnit);
+
+    // when
+    Optional<DocumentationUnit> result = documentationUnitService.publish(
+      "KALU123456789",
+      contentToPublish
+    );
+
+    // then
+    assertThat(result).isPresent();
+    verify(publisher).publish(publicationDetailsCaptor.capture());
+    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+      "publicLiteraturePublisher"
+    );
   }
 }

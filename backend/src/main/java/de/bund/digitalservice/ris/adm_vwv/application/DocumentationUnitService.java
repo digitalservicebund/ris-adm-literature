@@ -6,12 +6,15 @@ import de.bund.digitalservice.ris.adm_vwv.adapter.persistence.DocumentationUnitP
 import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.config.security.UserDocumentDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +60,9 @@ public class DocumentationUnitService {
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
 
-  private String convertToJson(DocumentationUnitContent documentationUnitContent) {
+  private String convertToJson(IDocumentationContent iDocumentationContent) {
     try {
-      return objectMapper.writeValueAsString(documentationUnitContent);
+      return objectMapper.writeValueAsString(iDocumentationContent);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -88,7 +91,7 @@ public class DocumentationUnitService {
   @Transactional
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
-    @Nonnull DocumentationUnitContent documentationUnitContent
+    @Nonnull IDocumentationContent documentationUnitContent
   ) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
@@ -103,20 +106,40 @@ public class DocumentationUnitService {
       documentationUnitContent,
       documentationUnit.xml()
     );
-    String json = convertToJson(documentationUnitContent);
-    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-      documentNumber,
-      json,
-      xml
-    );
 
-    // publish to portal
-    // later when we want to publish to other publishers, we can receive them form the method param and select them here
-    // If the publishing or validation fails, the transaction is rolled back
-    final String BSG_PUBLISHER_NAME = "publicBsgPublisher";
-    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, BSG_PUBLISHER_NAME);
+    return switch (documentationUnitContent) {
+      case UliDocumentationUnitContent _ -> {
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTSTAENDIG);
+        // TODO: Return converted doc like for adm NOSONAR
+        yield optionalDocumentationUnit;
+      }
+      case AdmDocumentationUnitContent adm -> {
+        String json = convertToJson(adm);
+        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+          documentNumber,
+          json,
+          xml
+        );
+        publishToPortal(documentNumber, xml, DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+        yield convertLdml(publishedDocumentationUnit);
+      }
+      default -> throw new IllegalStateException(
+        "Unsupported document category: " + documentationUnitContent.getClass().getSimpleName()
+      );
+    };
+  }
+
+  private void publishToPortal(
+    @NotNull String documentNumber,
+    String xml,
+    DocumentCategory documentCategory
+  ) {
+    var publishOptions = new Publisher.PublicationDetails(
+      documentNumber,
+      xml,
+      documentCategory.getPublisherName()
+    );
     publisher.publish(publishOptions);
-    return convertLdml(publishedDocumentationUnit);
   }
 
   public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(

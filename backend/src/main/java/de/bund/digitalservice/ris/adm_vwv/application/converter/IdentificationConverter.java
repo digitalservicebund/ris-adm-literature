@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.ldml.*;
 import jakarta.annotation.Nonnull;
 import java.time.LocalDate;
@@ -12,26 +12,26 @@ import org.jetbrains.annotations.NotNull;
 class IdentificationConverter {
 
   Identification convert(
-    @Nonnull DocumentationUnitContent documentationUnitContent,
+    @Nonnull AdmDocumentationUnitContent admDocumentationUnitContent,
     List<RisZuordnung> zuordnungen
   ) {
-    String aktenzeichen = findAktenzeichen(documentationUnitContent, zuordnungen);
+    String aktenzeichen = findAktenzeichen(admDocumentationUnitContent, zuordnungen);
     Eli eli = new Eli(
-      documentationUnitContent.dokumenttyp(),
-      documentationUnitContent.normgeberList().getFirst(),
+      admDocumentationUnitContent.dokumenttyp(),
+      admDocumentationUnitContent.normgeberList().getFirst(),
       aktenzeichen,
-      documentationUnitContent.zitierdaten().getFirst(),
+      admDocumentationUnitContent.zitierdaten().getFirst(),
       LocalDate.now()
     );
     Identification identification = new Identification();
-    identification.setFrbrWork(convertFrbrWork(documentationUnitContent, eli, aktenzeichen));
-    identification.setFrbrExpression(convertFrbrExpression(documentationUnitContent, eli));
+    identification.setFrbrWork(convertFrbrWork(admDocumentationUnitContent, eli, aktenzeichen));
+    identification.setFrbrExpression(convertFrbrExpression(admDocumentationUnitContent, eli));
     identification.setFrbrManifestation(createFrbrManifestation(eli));
     return identification;
   }
 
   private FrbrElement convertFrbrWork(
-    @NotNull DocumentationUnitContent documentationUnitContent,
+    @NotNull AdmDocumentationUnitContent admDocumentationUnitContent,
     Eli eli,
     String aktenzeichen
   ) {
@@ -40,7 +40,7 @@ class IdentificationConverter {
     frbrWork.setFrbrUri(new FrbrUri(eli.toWork()));
     FrbrAlias frbrAlias = new FrbrAlias();
     frbrAlias.setName("Dokumentnummer");
-    frbrAlias.setValue(documentationUnitContent.documentNumber());
+    frbrAlias.setValue(admDocumentationUnitContent.documentNumber());
     frbrWork.setFrbrAlias(List.of(frbrAlias));
     FrbrDate erfassungsdatum = new FrbrDate();
     erfassungsdatum.setDate(eli.createdDate().toString());
@@ -48,7 +48,9 @@ class IdentificationConverter {
     frbrWork.setFrbrDate(erfassungsdatum);
     frbrWork.setFrbrAuthor(new FrbrAuthor());
     frbrWork.setFrbrCountry(new FrbrCountry());
-    frbrWork.setFrbrSubtype(new FrbrSubtype(documentationUnitContent.dokumenttyp().abbreviation()));
+    frbrWork.setFrbrSubtype(
+      new FrbrSubtype(admDocumentationUnitContent.dokumenttyp().abbreviation())
+    );
     if (StringUtils.isNotBlank(aktenzeichen)) {
       frbrWork.setFrbrNumber(new FrbrNumber(aktenzeichen));
     }
@@ -57,14 +59,14 @@ class IdentificationConverter {
   }
 
   private FrbrElement convertFrbrExpression(
-    DocumentationUnitContent documentationUnitContent,
+    AdmDocumentationUnitContent admDocumentationUnitContent,
     Eli eli
   ) {
     FrbrElement frbrExpression = new FrbrElement();
     frbrExpression.setFrbrThis(new FrbrThis(eli.toExpression()));
     frbrExpression.setFrbrUri(new FrbrUri(eli.toExpression()));
     FrbrDate zitierdatum = new FrbrDate();
-    zitierdatum.setDate(documentationUnitContent.zitierdaten().getFirst());
+    zitierdatum.setDate(admDocumentationUnitContent.zitierdaten().getFirst());
     zitierdatum.setName("zitierdatum");
     frbrExpression.setFrbrDate(zitierdatum);
     frbrExpression.setFrbrAuthor(new FrbrAuthor());
@@ -86,12 +88,12 @@ class IdentificationConverter {
   }
 
   private String findAktenzeichen(
-    DocumentationUnitContent documentationUnitContent,
+    AdmDocumentationUnitContent admDocumentationUnitContent,
     List<RisZuordnung> zuordnungen
   ) {
     String aktenzeichen = null;
-    if (CollectionUtils.isNotEmpty(documentationUnitContent.aktenzeichen())) {
-      aktenzeichen = documentationUnitContent.aktenzeichen().getFirst();
+    if (CollectionUtils.isNotEmpty(admDocumentationUnitContent.aktenzeichen())) {
+      aktenzeichen = admDocumentationUnitContent.aktenzeichen().getFirst();
     } else {
       if (CollectionUtils.isNotEmpty(zuordnungen)) {
         aktenzeichen = zuordnungen

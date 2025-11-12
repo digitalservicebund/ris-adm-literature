@@ -27,9 +27,18 @@ public class PublisherConfig {
   public Publisher publicBsgPublisher(
     @Qualifier("publicBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
-    @Value("${s3.bucket.adm.public.bucket-name}") String bucketName
+    @Value("${s3.bucket.adm.public.bucket-name-ref}") String bucketName
   ) {
     return new S3PublishAdapter(s3Client, validator, bucketName, "publicBsgPublisher");
+  }
+
+  @Bean("publicLiteraturePublisher")
+  public Publisher publicLiteraturePublisher(
+    @Qualifier("publicLiteratureS3Client") S3Client s3Client,
+    @Qualifier("uliLiteratureValidator") XmlValidator validator,
+    @Value("${s3.bucket.literature.public.bucket-name-ref}") String bucketName
+  ) {
+    return new S3PublishAdapter(s3Client, validator, bucketName, "publicLiteraturePublisher");
   }
 
   /**

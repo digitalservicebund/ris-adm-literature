@@ -37,7 +37,7 @@ springdoc:
     path: /api/swagger-ui/v3/api-docs
 
 # At 08:00 every day between Monday and Friday
-cronjob.DocumentationUnitIndexJob: "0 0 15 * * Mon-Fri"
+cronjob.DocumentationUnitIndexJob: "0 0,30 13,14 * * Mon-Fri"
 
 frontend:
   auth:
@@ -54,8 +54,12 @@ s3:
       public:
         access-key: ${s3.adm.public.access-key:test}
         access-key-id: ${s3.adm.public.access-key-id:test}
-        bucket-name: local-mock-bucket
-
+        bucket-name-ref: ${s3.bucket.adm.public.bucket-name:local-mock-bucket-adm}
+    literature:
+      public:
+        access-key: ${s3.literature.public.access-key:test}
+        access-key-id: ${s3.literature.public.access-key-id:test}
+        bucket-name-ref: ${s3.bucket.literature.public.bucket-name:local-mock-bucket.literature}
 
 ---
 

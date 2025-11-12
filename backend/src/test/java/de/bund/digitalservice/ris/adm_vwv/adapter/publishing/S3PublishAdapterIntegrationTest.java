@@ -110,7 +110,7 @@ class S3PublishAdapterIntegrationTest {
 
   @DynamicPropertySource
   static void overrideProperties(DynamicPropertyRegistry registry) {
-    registry.add("otc.private-bsg-client.bucket-name", () -> FIRST_BUCKET_NAME);
+    registry.add("otc.private-bsg-client.bucket-name-ref", () -> FIRST_BUCKET_NAME);
   }
 
   @BeforeEach

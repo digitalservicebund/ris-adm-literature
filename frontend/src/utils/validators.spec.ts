@@ -3,10 +3,12 @@ import {
   areDatesValid,
   getFutureDateErrMessage,
   getInvalidDateErrMessage,
-  missingDocumentUnitFields,
+  missingAdmDocumentUnitFields,
+  missingUliDocumentUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
+import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType'
 
 describe('Validators functions', () => {
   describe('areDatesValid', () => {
@@ -87,10 +89,81 @@ describe('Validators functions', () => {
         zitierdaten: [],
       }
 
-      const actual = missingDocumentUnitFields(doc)
+      const actual = missingAdmDocumentUnitFields(doc)
       const expected = ['inkrafttretedatum', 'dokumenttyp', 'zitierdaten', 'normgeberList']
 
       expect(expected.sort()).toEqual(actual.sort())
+    })
+  })
+
+  describe('missingUliDocumentUnitFields', () => {
+    it('returns empty array if all fields are present', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumenttypen: [docTypeAnordnungFixture],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual([])
+    })
+
+    it('detects missing veroeffentlichungsjahr', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '',
+        dokumenttypen: [docTypeAnordnungFixture],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+    })
+
+    it('detects missing dokumenttypen', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumenttypen: [],
+        hauptsachtitel: 'Title',
+        dokumentarischerTitel: 'DocTitle',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['dokumenttypen'])
+    })
+
+    it('detects missing hauptsachtitel and dokumentarischerTitel', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+        dokumenttypen: [docTypeAnordnungFixture],
+        hauptsachtitel: '',
+        dokumentarischerTitel: '',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['titel'])
+    })
+
+    it('detects multiple missing fields', () => {
+      const doc = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+        note: '',
+        veroeffentlichungsjahr: '',
+        dokumenttypen: [],
+        hauptsachtitel: '',
+        dokumentarischerTitel: '',
+      }
+      expect(missingUliDocumentUnitFields(doc)).toEqual([
+        'dokumenttypen',
+        'veroeffentlichungsjahr',
+        'titel',
+      ])
     })
   })
 })
