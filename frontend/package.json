@@ -86,7 +86,7 @@
     "pinia": "^3.0.3",
     "prettier": "^3.6.2",
     "resize-observer-polyfill": "^1.5.1",
-    "tailwindcss": "~4.1.15",
+    "tailwindcss": "~4.1.17",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vitest": "^4.0.5",
