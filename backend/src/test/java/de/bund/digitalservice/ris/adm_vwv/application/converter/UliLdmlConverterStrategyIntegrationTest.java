@@ -2,13 +2,16 @@ package de.bund.digitalservice.ris.adm_vwv.application.converter;
 
 import static de.bund.digitalservice.ris.adm_vwv.application.converter.XmlNormalizer.NORMALIZE_FUNCTION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
+import de.bund.digitalservice.ris.adm_vwv.adapter.publishing.XmlValidator;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentType;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.TestUliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -18,6 +21,10 @@ class UliLdmlConverterStrategyIntegrationTest {
 
   @Autowired
   private UliLdmlConverterStrategy uliLdmlConverterStrategy;
+
+  @Autowired
+  @Qualifier("uliLiteratureValidator")
+  private XmlValidator uliLiteratureValidator;
 
   @Test
   void convertToLdml() {
@@ -33,6 +40,7 @@ class UliLdmlConverterStrategyIntegrationTest {
       """
       <akn:FRBRalias name="Dokumentnummer" value="KSLU00000011"/>"""
     );
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 
   @Test
@@ -51,6 +59,7 @@ class UliLdmlConverterStrategyIntegrationTest {
         <ris:veroeffentlichungsJahr>2025</ris:veroeffentlichungsJahr>
       </ris:veroeffentlichungsJahre>""".transform(NORMALIZE_FUNCTION)
     );
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 
   @Test
@@ -81,6 +90,7 @@ class UliLdmlConverterStrategyIntegrationTest {
         <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Ebs" value="Ebs"/>
       </akn:classification>""".transform(NORMALIZE_FUNCTION)
     );
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 
   @Test
@@ -106,6 +116,7 @@ class UliLdmlConverterStrategyIntegrationTest {
       <akn:FRBRalias name="haupttitel" value="Haupt"/>
       <akn:FRBRalias name="haupttitelZusatz" value="Zusatz"/>""".transform(NORMALIZE_FUNCTION)
     );
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 
   @Test
@@ -132,5 +143,6 @@ class UliLdmlConverterStrategyIntegrationTest {
           NORMALIZE_FUNCTION
         )
     );
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 }

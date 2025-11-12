@@ -52,7 +52,7 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       // === Populate structure based on XmlItemProcessor logic ===
 
       mapDocumentNumber(ldmlDocument, uliContent.documentNumber());
-      mapDokumentart(ldmlDocument, uliContent.dokumenttypen());
+      mapDokumentart(ldmlDocument);
       mapVeroeffentlichungsJahre(ldmlDocument, uliContent.veroeffentlichungsjahr());
       mapTitles(ldmlDocument, uliContent);
       mapClassifications(ldmlDocument, uliContent.dokumenttypen());
@@ -104,14 +104,9 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       .addAttribute(VALUE, documentNumber);
   }
 
-  private void mapDokumentart(LdmlDocument ldmlDocument, List<DocumentType> dokumentTypen) {
-    if (dokumentTypen == null || dokumentTypen.isEmpty()) {
-      return;
-    }
+  private void mapDokumentart(LdmlDocument ldmlDocument) {
     LdmlElement frbrWork = ldmlDocument.frbrWork();
-    for (DocumentType typ : dokumentTypen) {
-      frbrWork.appendElementAndGet("akn:FRBRsubtype").addAttribute(VALUE, typ.abbreviation());
-    }
+    frbrWork.appendElementAndGet("akn:FRBRsubtype").addAttribute(VALUE, "LU");
   }
 
   private void mapTitles(LdmlDocument ldmlDocument, UliDocumentationUnitContent uliContent) {
