@@ -57,7 +57,7 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       mapTitles(ldmlDocument, uliContent);
       mapClassifications(ldmlDocument, uliContent.dokumenttypen());
       mapNote(ldmlDocument, uliContent.note());
-
+      mapKurzreferat(ldmlDocument);
       return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());
     } catch (Exception e) {
       log.error("Failed to convert ULI content to LDML", e);
@@ -112,8 +112,8 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
   private void mapTitles(LdmlDocument ldmlDocument, UliDocumentationUnitContent uliContent) {
     // 1. mapHauptsachtitel
     if (StringUtils.isNotBlank(uliContent.hauptsachtitel())) {
-      mapToLongTitle(uliContent.hauptsachtitel(), ldmlDocument);
       mapToFBRBWorkAlias(uliContent.hauptsachtitel(), ldmlDocument, "haupttitel");
+      mapToLongTitle(uliContent.hauptsachtitel(), ldmlDocument);
     } else {
       mapToLongTitle("", ldmlDocument);
     }
@@ -176,5 +176,12 @@ public class UliLdmlConverterStrategy implements LdmlConverterStrategy {
       .appendElementAndGet("akn:FRBRalias")
       .addAttribute("name", name)
       .addAttribute(VALUE, value);
+  }
+
+  private void mapKurzreferat(LdmlDocument ldmlDocument) {
+    ldmlDocument
+      .mainBody()
+      .appendElementAndGet("akn:hcontainer")
+      .addAttribute("name", "crossheading");
   }
 }
