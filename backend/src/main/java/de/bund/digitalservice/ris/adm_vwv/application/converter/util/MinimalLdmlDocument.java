@@ -56,7 +56,6 @@ public class MinimalLdmlDocument {
             <akn:preface>
             </akn:preface>
             <akn:mainBody>
-            <akn:hcontainer name="crossheading"/>
             </akn:mainBody>
         </akn:doc>
     </akn:akomaNtoso>""".lines()
