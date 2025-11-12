@@ -25,7 +25,7 @@ The term "environment" is meant to indicate that these components (code and data
 
 ❗The change that we're proposing or have agreed to implement.
 
-* Our app gets deployed to:
+* Our app gets deployed to three environments:
     * Staging
     * UAT (user acceptance testing)
     * Production (or "prod" for short)
@@ -33,36 +33,92 @@ The term "environment" is meant to indicate that these components (code and data
 
 ### Rules and Purposes
 
-Note: The following is how we aim to set up the environments. It does not mean that all the aspects do exist already (e.g. our goal of how migration should work does not imply that there is a migration already).
+Note: The following is how we aim to set up the environments. It does not mean that all the aspects do exist already (e.g. our goal of how migration should behave does not imply that there is a migration already).
 
 * Staging:
-    * Purpose: Supporting the product development team.
-    * Access: Staging may be accessed by DigitalService staff, testers, documentalists and other stakeholders.
-    * Codebase: Staging runs the current `main` branch of `ris-adm-literature` (continuous deployment).
-    * Uptime: Staging may be down any time due to any reason and for any amount of time.
-    * Data: Staging data may come into existence, disappear or be changed any time.
-    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
-* UAT:
-    * Purpose: Giving testers a predictable system that is only affected by the testers' actions.
-    * Access: UAT may be accessed by testers and by product team members in order to cooperate with the testers.
-    * Codebase: UAT runs the current `main` branch of `ris-adm-literature` (continuous deployment).
-    * Uptime: UAT is expected to be up "all the time".
-        * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
-    * Data: Data in UAT is expected to persist and only change on user interaction.
-    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+    * Purpose
+        * Supporting the product development team's work.
+
+    * Access
+        * The product team (primarily)
+        * DigitalService staff
+        * Testers
+        * Documentalists
+        * Other stakeholders
+
+    * Features
+        * What's under development
+
+    * Uptime
+        * Staging may be down any time due to any reason and for any amount of time.
+
+    * Data 
+        * Staging data may come into existence, disappear or be changed any time.
+
+    * Repeated migrations
+        * Staging data gets newly migrated documents 🚧 "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+
+* UAT
+    * Purpose
+        * Have a production-like environment, but with a safety net: no publishing to public(production) portal.
+
+    * Access
+        * The product team
+        * DigitalService staff
+        * Testers (primarily)
+        * Documentalists (primarily)
+        * Other stakeholders
+
+    * Features
+        * What's "done", i.e implemented and has passed tech and functional review
+
+    * Uptime
+        * UAT is expected to be up "all the time" with the following caveats:
+            * We may announce downtimes.
+            * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
+
+    * Data
+        * Data in UAT is expected to persist and only change on user interaction.
+
+    * Repeated migration
+        * UAT data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+
 * Production:
-    * Primary goal: To be used by documentalists performing their documentation duties.
-    * Access: Production may be accessed by documentalists and by product team members in order to cooperate with the testers.
-    * Codebase: Production runs the current `main` branch of `ris-adm-literature` (continuous deployment).
-    * Uptime: Production is expected to be up "all the time".
-        * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
-    * Data: Data in production is expected to persist and only change on user interaction.
-    * ❓ Migration: Staging data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+    * Primary goal
+        * Production is used by documentalists for performing their documentation duties.
+        * What's published is made available to end users of the NeuRIS portal.
+
+    * Access
+        * Documentalists, only
+
+    * Features
+        * What's "done", i.e implemented and has passed tech and functional review
+
+    * Uptime
+        * UAT is expected to be up "all the time" with the following caveats:
+            * We may announce downtimes.
+            * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
+
+    * Data
+        * Data in UAT is expected to persist and only change on user (= documentalists, only; cf. above) interaction.
+
+    * ❓❓ Repeated migration
+        * This is unsolved. Especially how to handle or prevent the case of a document being changed in both the old and the new system at the same time
 
 
 ## Consequences
 
 ❗What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
+What we think will become more easy:
+
+* Supporting the needs of various user groups (product team, DigitalService staff, testers, other stakeholders, documentalists)
+
+* Managing risks wrt. data integrity and access controls.
+
+What we expect to become more difficult:
+
 * Operating three environments adds complexity.
-* By running three environments, we hope to better address the uses cases and expectations of end users just as well as testers and developers.
+* Separating code from releases (e.g. feature flags).
+
+
