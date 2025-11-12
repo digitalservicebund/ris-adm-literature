@@ -1,14 +1,13 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('ULI Publishing', () => {
+test.describe('ULI AbgabePage', () => {
   test(
     'Should enter mandatory data, validate fine and publish successfully',
     { tag: ['@RISDEV-9375'] },
     async ({ page }) => {
-      // when
+      // given
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
-      await page.waitForURL(/dokumentationseinheit/)
       const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Auf')
       await page.getByText('Aufsatz').click()
@@ -22,11 +21,13 @@ test.describe('ULI Publishing', () => {
 
       // when
       await page.getByText('Abgabe').click()
-      page.getByText('Alle Pflichtfelder sind korrekt ausgefüllt.')
-      await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
-
       // then
-      await page.getByText('Freigabe ist abgeschlossen.').click()
+      await expect(page.getByText('Alle Pflichtfelder sind korrekt ausgefüllt.')).toBeVisible()
+
+      // when
+      await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+      // then
+      await expect(page.getByText('Freigabe ist abgeschlossen.')).toBeVisible()
     },
   )
 })
