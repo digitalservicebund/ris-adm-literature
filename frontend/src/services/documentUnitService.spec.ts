@@ -7,6 +7,7 @@ import {
   usePostUliDocUnit,
   usePutAdmDocUnit,
   usePutPublishAdmDocUnit,
+  usePutPublishUliDocUnit,
   usePutUliDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
@@ -239,7 +240,7 @@ describe('documentUnitService', () => {
     expect(data.value).toEqual(null)
   })
 
-  it('publishes a doc unit', async () => {
+  it('publishes a adm doc unit', async () => {
     const docUnit = {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
@@ -274,7 +275,7 @@ describe('documentUnitService', () => {
     expect(data.value?.id).toBe(docUnit.id)
   })
 
-  it('returns an error on failed publication', async () => {
+  it('returns an error on failed adm publication', async () => {
     vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
 
     const { data, error, isFetching, execute } = usePutPublishAdmDocUnit({
@@ -289,12 +290,68 @@ describe('documentUnitService', () => {
     expect(data.value).toBeNull()
   })
 
-  it('data is null when publish returns a null body', async () => {
+  it('data is null when publish an adm doc returns a null body', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
 
     const { data, execute } = usePutPublishAdmDocUnit({
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('publishes a uli doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      note: '',
+    }
+
+    const publishedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      json: {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KSLU054920707',
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(publishedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutPublishAdmDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+  })
+
+  it('returns an error on failed uli publication', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutPublishUliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('data is null when publish a uli doc returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutPublishUliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KSLU054920707',
       note: '',
     })
     await execute()

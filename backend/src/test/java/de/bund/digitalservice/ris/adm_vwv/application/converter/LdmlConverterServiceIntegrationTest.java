@@ -31,14 +31,13 @@ class LdmlConverterServiceIntegrationTest {
     DocumentationUnit documentationUnit = new DocumentationUnit("KSNR20250000001", uuid, null, xml);
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::id, DocumentationUnitContent::documentNumber)
+      .extracting(AdmDocumentationUnitContent::id, AdmDocumentationUnitContent::documentNumber)
       .containsExactly(uuid, "KSNR20250000001");
   }
 
@@ -54,14 +53,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::fundstellen)
+      .extracting(AdmDocumentationUnitContent::fundstellen)
       .asInstanceOf(InstanceOfAssertFactories.list(Fundstelle.class))
       .extracting(Fundstelle::zitatstelle, Fundstelle::ambiguousPeriodikum)
       .containsOnly(tuple("2021, Seite 15", "Das Periodikum"));
@@ -79,14 +77,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::langueberschrift)
+      .extracting(AdmDocumentationUnitContent::langueberschrift)
       .isEqualTo("1. Bekanntmachung zum XML-Testen in NeuRIS VwV");
   }
 
@@ -102,12 +99,11 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent.kurzreferat())
+    assertThat(admDocumentationUnitContent.kurzreferat())
       .isNotNull()
       .startsWith("<p>Kurzreferat Zeile 1</p>")
       .endsWith("<p>Kurzreferat Zeile 2</p>");
@@ -126,12 +122,11 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent.kurzreferat()).isNull();
+    assertThat(admDocumentationUnitContent.kurzreferat()).isNull();
   }
 
   @Test
@@ -146,14 +141,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::inkrafttretedatum)
+      .extracting(AdmDocumentationUnitContent::inkrafttretedatum)
       .isEqualTo("2025-01-01");
   }
 
@@ -169,14 +163,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::ausserkrafttretedatum)
+      .extracting(AdmDocumentationUnitContent::ausserkrafttretedatum)
       .isEqualTo("2025-02-02");
   }
 
@@ -192,14 +185,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::gliederung)
+      .extracting(AdmDocumentationUnitContent::gliederung)
       .isEqualTo(
         """
         <p>TOC entry 1</p>
@@ -230,14 +222,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::gliederung)
+      .extracting(AdmDocumentationUnitContent::gliederung)
       .isNull();
   }
 
@@ -259,14 +250,13 @@ class LdmlConverterServiceIntegrationTest {
     ).toList();
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::keywords)
+      .extracting(AdmDocumentationUnitContent::keywords)
       .isEqualTo(expectedKeywords);
   }
 
@@ -293,14 +283,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::keywords)
+      .extracting(AdmDocumentationUnitContent::keywords)
       .isEqualTo(List.of());
   }
 
@@ -316,14 +305,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::zitierdaten)
+      .extracting(AdmDocumentationUnitContent::zitierdaten)
       .asInstanceOf(InstanceOfAssertFactories.list(String.class))
       .containsExactly("2025-05-05", "2025-06-01");
   }
@@ -340,14 +328,16 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::aktenzeichen, DocumentationUnitContent::noAktenzeichen)
+      .extracting(
+        AdmDocumentationUnitContent::aktenzeichen,
+        AdmDocumentationUnitContent::noAktenzeichen
+      )
       .containsExactly(List.of("AX-Y12345", "XX"), false);
   }
 
@@ -378,14 +368,16 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::aktenzeichen, DocumentationUnitContent::noAktenzeichen)
+      .extracting(
+        AdmDocumentationUnitContent::aktenzeichen,
+        AdmDocumentationUnitContent::noAktenzeichen
+      )
       .containsExactly(List.of(), true);
   }
 
@@ -401,12 +393,11 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent.fieldsOfLaw())
+    assertThat(admDocumentationUnitContent.fieldsOfLaw())
       .hasSize(2)
       .extracting(FieldOfLaw::identifier, FieldOfLaw::text)
       .containsExactly(
@@ -432,14 +423,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::dokumenttyp)
+      .extracting(AdmDocumentationUnitContent::dokumenttyp)
       .extracting(DocumentType::abbreviation, DocumentType::name)
       .containsExactly("VR", "Verwaltungsregelung");
   }
@@ -456,14 +446,13 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::dokumenttypZusatz)
+      .extracting(AdmDocumentationUnitContent::dokumenttypZusatz)
       .isEqualTo("Bekanntmachung");
   }
 
@@ -479,12 +468,11 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent.normReferences())
+    assertThat(admDocumentationUnitContent.normReferences())
       .hasSize(2)
       .first()
       .extracting(
@@ -509,15 +497,14 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
       .extracting(
-        DocumentationUnitContent::activeCitations,
+        AdmDocumentationUnitContent::activeCitations,
         InstanceOfAssertFactories.list(ActiveCitation.class)
       )
       .hasSize(1)
@@ -554,15 +541,14 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
       .extracting(
-        DocumentationUnitContent::activeReferences,
+        AdmDocumentationUnitContent::activeReferences,
         InstanceOfAssertFactories.list(ActiveReference.class)
       )
       .hasSize(2)
@@ -591,15 +577,14 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
       .extracting(
-        DocumentationUnitContent::normgeberList,
+        AdmDocumentationUnitContent::normgeberList,
         InstanceOfAssertFactories.list(Normgeber.class)
       )
       .hasSize(2)
@@ -627,15 +612,14 @@ class LdmlConverterServiceIntegrationTest {
     );
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
       .extracting(
-        DocumentationUnitContent::normgeberList,
+        AdmDocumentationUnitContent::normgeberList,
         InstanceOfAssertFactories.list(Normgeber.class)
       )
       .hasSize(2)
@@ -664,14 +648,13 @@ class LdmlConverterServiceIntegrationTest {
     List<String> expectedBerufsbilder = Stream.of("Brillenschleifer").toList();
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::berufsbilder)
+      .extracting(AdmDocumentationUnitContent::berufsbilder)
       .isEqualTo(expectedBerufsbilder);
   }
 
@@ -689,14 +672,13 @@ class LdmlConverterServiceIntegrationTest {
     List<String> expectedTitelAspekte = Stream.of("Gemeinsamer Bundesausschuss", "GBA").toList();
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::titelAspekte)
+      .extracting(AdmDocumentationUnitContent::titelAspekte)
       .isEqualTo(expectedTitelAspekte);
   }
 
@@ -714,14 +696,13 @@ class LdmlConverterServiceIntegrationTest {
     List<Definition> expectedDefinitionen = Stream.of(new Definition("Sachgesamtheit")).toList();
 
     // when
-    DocumentationUnitContent documentationUnitContent = ldmlConverterService.convertToBusinessModel(
-      documentationUnit
-    );
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      ldmlConverterService.convertToBusinessModel(documentationUnit);
 
     // then
-    assertThat(documentationUnitContent)
+    assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(DocumentationUnitContent::definitionen)
+      .extracting(AdmDocumentationUnitContent::definitionen)
       .isEqualTo(expectedDefinitionen);
   }
 }

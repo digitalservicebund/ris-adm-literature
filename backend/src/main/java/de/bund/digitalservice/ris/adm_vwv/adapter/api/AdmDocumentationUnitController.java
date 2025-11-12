@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_vwv.adapter.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.*;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.AdmDocumentationUnitContent;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -137,7 +137,7 @@ public class AdmDocumentationUnitController {
    * Publishes the documentation unit with the given document number and content.
    *
    * @param documentNumber           The document number of the document to publish
-   * @param documentationUnitContent The documentation unit content to publish
+   * @param admDocumentationUnitContent The documentation unit content to publish
    * @return The published documentation unit or
    *         <br>- HTTP 400 if input not valid
    *         <br>- HTTP 404 if not found
@@ -175,11 +175,11 @@ public class AdmDocumentationUnitController {
   @PutMapping("api/adm/documentation-units/{documentNumber}/publish")
   public ResponseEntity<DocumentationUnit> publish(
     @PathVariable String documentNumber,
-    @RequestBody @Valid DocumentationUnitContent documentationUnitContent
+    @RequestBody @Valid AdmDocumentationUnitContent admDocumentationUnitContent
   ) {
     Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitService.publish(
       documentNumber,
-      documentationUnitContent
+      admDocumentationUnitContent
     );
     return optionalDocumentationUnit
       .map(ResponseEntity::ok)

@@ -32,15 +32,29 @@ export function usePutPublishAdmDocUnit(
     .put(documentUnit)
 }
 
-export function usePostAdmDocUnit<
-  T extends { id: string; documentNumber: string },
->(): UseFetchReturn<T> {
+export function usePutPublishUliDocUnit(
+  documentUnit: UliDocumentationUnit,
+): UseFetchReturn<UliDocumentationUnit> {
+  return useApiFetch(
+    `${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`,
+    {
+      afterFetch: ({ data }) => {
+        return {
+          data: data ? mapResponseToUliDocUnit(data) : null,
+        }
+      },
+      immediate: false,
+    },
+  )
+    .json()
+    .put(documentUnit)
+}
+
+export function usePostAdmDocUnit(): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(ADM_DOCUMENTATION_UNITS_URL).json().post()
 }
 
-export function usePostUliDocUnit<
-  T extends { id: string; documentNumber: string },
->(): UseFetchReturn<T> {
+export function usePostUliDocUnit(): UseFetchReturn<UliDocumentationUnit> {
   return useApiFetch(ULI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
 }
 
@@ -65,9 +79,7 @@ export function useGetAdmPaginatedDocUnits(
   return useApiFetch(urlWithParams).json()
 }
 
-export function useGetAdmDocUnit<DocumentationUnit>(
-  documentNumber: string,
-): UseFetchReturn<DocumentationUnit> {
+export function useGetAdmDocUnit(documentNumber: string): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       return {
@@ -78,9 +90,7 @@ export function useGetAdmDocUnit<DocumentationUnit>(
   }).json()
 }
 
-export function useGetUliDocUnit<DocumentationUnit>(
-  documentNumber: string,
-): UseFetchReturn<DocumentationUnit> {
+export function useGetUliDocUnit(documentNumber: string): UseFetchReturn<UliDocumentationUnit> {
   return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
     afterFetch: ({ data }) => {
       return {
@@ -91,7 +101,7 @@ export function useGetUliDocUnit<DocumentationUnit>(
   }).json()
 }
 
-export function usePutAdmDocUnit<AdmDocumentationUnit>(
+export function usePutAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
 ): UseFetchReturn<AdmDocumentationUnit> {
   return useApiFetch(`${ADM_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
@@ -106,7 +116,7 @@ export function usePutAdmDocUnit<AdmDocumentationUnit>(
     .put(documentUnit)
 }
 
-export function usePutUliDocUnit<UliDocumentationUnit>(
+export function usePutUliDocUnit(
   documentUnit: UliDocumentationUnit,
 ): UseFetchReturn<UliDocumentationUnit> {
   return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {

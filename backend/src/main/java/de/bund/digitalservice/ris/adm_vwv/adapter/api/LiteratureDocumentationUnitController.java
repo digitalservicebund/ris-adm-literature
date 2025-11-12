@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentCategory;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_vwv.application.DocumentationUnitService;
-import de.bund.digitalservice.ris.adm_vwv.application.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_vwv.application.converter.business.UliDocumentationUnitContent;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -123,7 +123,7 @@ public class LiteratureDocumentationUnitController {
   @PutMapping("api/literature/documentation-units/{documentNumber}/publish")
   public ResponseEntity<DocumentationUnit> publish(
     @PathVariable String documentNumber,
-    @RequestBody @Valid DocumentationUnitContent documentationUnitContent
+    @RequestBody @Valid UliDocumentationUnitContent documentationUnitContent
   ) {
     Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitService.publish(
       documentNumber,

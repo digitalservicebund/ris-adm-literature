@@ -68,6 +68,7 @@ const openOverlay = () => {
     dropdown
     fluid
     force-selection
+    auto-option-focus
     @complete="onComplete"
     @focus="openOverlay"
   />
