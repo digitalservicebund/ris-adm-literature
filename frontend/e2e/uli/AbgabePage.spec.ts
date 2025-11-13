@@ -79,6 +79,34 @@ test.describe('ULI AbgabePage', () => {
   )
 
   test(
+    'Should show links to the mandatory fields; when clicking on a link, navigates to the corresponding field in Rubriken page',
+    { tag: ['@RISDEV-9374'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Dokumenttyp' }).click()
+      // then
+      await expect(page.getByText('Dokumenttyp')).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Veröffentlichungsjahr' }).click()
+      // then
+      await expect(page.getByText('Veröffentlichungsjahr')).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Hauptsachtitel / Dokumentarischer Titel' }).click()
+      // then
+      await expect(page.getByText('Hauptsachtitel *', { exact: true })).toBeInViewport()
+    },
+  )
+
+  test(
     'Should show a publication error on backend error 500',
     { tag: ['@RISDEV-9375'] },
     async ({ page }) => {

@@ -22,7 +22,7 @@ test.describe('ADM AbgabePage', () => {
   )
 
   test(
-    `A document is not publishable when at least one of its mandatory fields is empty, 
+    `A document is not publishable when at least one of its mandatory fields is empty,
     shows the required fields and a link to the rubriken page`,
     { tag: ['@RISDEV-8436'] },
     async ({ page }) => {
@@ -51,6 +51,46 @@ test.describe('ADM AbgabePage', () => {
 
       // then
       await expect(page.getByRole('heading', { name: 'Formaldaten' })).toBeVisible()
+    },
+  )
+
+  test(
+    'Should show links to the mandatory fields; when clicking on a link, navigates to the corresponding field in Rubriken page',
+    { tag: ['@RISDEV-9374'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Amtl. Langüberschrift' }).click()
+      // then
+      await expect(page.getByText('Amtl. Langüberschrift *')).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Datum des Inkrafttretens' }).click()
+      // then
+      await expect(page.getByText('Datum des Inkrafttretens *')).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Dokumenttyp' }).click()
+      // then
+      await expect(page.getByText('Dokumenttyp *', { exact: true })).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Normgeber' }).click()
+      // then
+      await expect(page.getByText('Normgeber *', { exact: true })).toBeInViewport()
+
+      // when
+      await page.getByText('Abgabe').click()
+      await page.getByRole('link', { name: 'Zitierdatum' }).click()
+      // then
+      await expect(page.getByText('Zitierdatum *', { exact: true })).toBeInViewport()
     },
   )
 })
