@@ -53,6 +53,32 @@ test.describe('ULI AbgabePage', () => {
   )
 
   test(
+    'Should show validation error when mandatory fields contain whitespaces only',
+    { tag: ['@RISDEV-10123'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/')
+      await page.getByText('Neue Dokumentationseinheit').click()
+      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      await input.fill('Auf')
+      await page.getByText('Aufsatz').click()
+      await page.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(' ')
+      await page.getByRole('textbox', { name: 'Hauptsachtitel', exact: true }).fill('     ')
+
+      // when
+      await page.getByText('Abgabe').click()
+
+      // then
+      await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeVisible()
+      await expect(page.getByText('Veröffentlichungsjahr')).toBeVisible()
+      await expect(page.getByText('Hauptsachtitel / Dokumentarischer Titel')).toBeVisible()
+      await expect(
+        page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }),
+      ).toBeDisabled()
+    },
+  )
+
+  test(
     'Should show a publication error on backend error 500',
     { tag: ['@RISDEV-9375'] },
     async ({ page }) => {

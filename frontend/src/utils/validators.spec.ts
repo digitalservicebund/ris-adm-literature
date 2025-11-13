@@ -115,7 +115,7 @@ describe('Validators functions', () => {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSLU054920707',
         note: '',
-        veroeffentlichungsjahr: '',
+        veroeffentlichungsjahr: '   ',
         dokumenttypen: [docTypeAnordnungFixture],
         hauptsachtitel: 'Title',
         dokumentarischerTitel: 'DocTitle',
@@ -143,7 +143,7 @@ describe('Validators functions', () => {
         note: '',
         veroeffentlichungsjahr: '2025',
         dokumenttypen: [docTypeAnordnungFixture],
-        hauptsachtitel: '',
+        hauptsachtitel: ' ',
         dokumentarischerTitel: '',
       }
       expect(missingUliDocumentUnitFields(doc)).toEqual(['titel'])

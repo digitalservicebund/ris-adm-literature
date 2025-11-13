@@ -23,6 +23,10 @@ export function getFutureDateErrMessage(dates: string[]): string {
     : ''
 }
 
+export function isBlank(text?: string): boolean {
+  return !text || text.trim() === ''
+}
+
 // Returns a list of missing adm required fields
 export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[] {
   return requiredAdmDocUnitFields.filter((field) => {
@@ -39,11 +43,11 @@ export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[
     missingFields.push('dokumenttypen')
   }
 
-  if (!doc.veroeffentlichungsjahr) {
+  if (isBlank(doc.veroeffentlichungsjahr)) {
     missingFields.push('veroeffentlichungsjahr')
   }
 
-  if (!doc.hauptsachtitel && !doc.dokumentarischerTitel) {
+  if (isBlank(doc.hauptsachtitel) && isBlank(doc.dokumentarischerTitel)) {
     missingFields.push('titel')
   }
 
