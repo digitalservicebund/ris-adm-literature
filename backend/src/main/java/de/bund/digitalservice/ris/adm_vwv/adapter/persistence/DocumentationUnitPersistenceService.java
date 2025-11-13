@@ -228,17 +228,13 @@ public class DocumentationUnitPersistenceService {
   public long indexAll() {
     PageRequest pageable = PageRequest.of(0, INDEX_BATCH_SIZE);
     long totalNumberOfElements = 0;
+    int pageNumber = 0;
     Slice<DocumentationUnitEntity> documentationUnitEntities;
     do {
       // Note that we always select the first page (0) because the algorithm is changing the selection result
       // and breaks linear paging.
       documentationUnitEntities = documentationUnitRepository.findByDocumentationUnitIndexIsNull(
         pageable
-      );
-      log.info(
-        "Found {} documentation units for indexing, page {}.",
-        documentationUnitEntities.getSize(),
-        documentationUnitEntities.getNumber()
       );
       List<DocumentationUnitIndexEntity> documentationUnitIndexEntities = documentationUnitEntities
         .stream()
@@ -248,6 +244,12 @@ public class DocumentationUnitPersistenceService {
         .toList();
       documentationUnitIndexRepository.saveAll(documentationUnitIndexEntities);
       totalNumberOfElements += documentationUnitEntities.getNumberOfElements();
+      log.info(
+        "Indexing {} documentation units, page {}. Sum: {}.",
+        documentationUnitEntities.getNumberOfElements(),
+        pageNumber++,
+        totalNumberOfElements
+      );
     } while (documentationUnitEntities.hasNext());
     return totalNumberOfElements;
   }
