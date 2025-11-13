@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import NormAbbreviationsDropDown from '@/components/NormAbbreviationsDropDown.vue'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({
   RisAutoComplete: {

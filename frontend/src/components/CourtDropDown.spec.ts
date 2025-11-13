@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.ts'
+import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.fixture'
 import CourtDropDown from '@/components/CourtDropDown.vue'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({

@@ -1,5 +1,5 @@
 import type { Fundstelle } from '@/domain/fundstelle'
-import { bundesanzeigerFixture } from './periodikum'
+import { bundesanzeigerFixture } from './periodikum.fixture'
 
 export const fundstelleFixture: Fundstelle = {
   id: 'fundstelleTestId',

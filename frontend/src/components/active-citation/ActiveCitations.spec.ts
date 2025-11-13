@@ -11,7 +11,7 @@ import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
 import type { Court } from '@/domain/court'
 import type { DocumentType } from '@/domain/documentType'
-import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.ts'
+import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.fixture'
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
