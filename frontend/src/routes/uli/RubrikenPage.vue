@@ -2,13 +2,13 @@
 import { computed } from 'vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
-import YearInput from '@/components/input/YearInput.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/components/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
 import TitelSection from '@/components/uli/TitelSection.vue'
 import { useScrollToHash } from '@/composables/useScrollToHash'
+import InputText from 'primevue/inputtext'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 
@@ -64,13 +64,13 @@ useScrollToHash()
             :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
           />
         </InputField>
-        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
-          <YearInput
+        <InputField id="veroeffentlichungsjahr" label="Veröffentlichungsjahr *">
+          <InputText
             id="veroeffentlichungsjahr"
             v-model="veroeffentlichungsjahr"
             aria-label="Veröffentlichungsjahr"
-            :has-error="slotProps.hasError"
-            @update:validation-error="slotProps.updateValidationError"
+            :invalid="false"
+            fluid
           />
         </InputField>
       </div>
