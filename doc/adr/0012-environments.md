@@ -96,18 +96,18 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Documentalists, only
 
     * Features
-        * What's "done", i.e implemented and has passed tech and functional review
+        * Anything that's "done" (i.e implemented and has passed tech and functional reviews)
 
     * Uptime
-        * UAT is expected to be up "all the time" with the following caveats:
+        * Production is expected to be up "all the time" with the following caveats:
             * We may announce downtimes.
             * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
 
     * Data
-        * Data in UAT is expected to persist and only change on user (= documentalists, only; cf. above) interaction.
+        * Data in UAT is expected to persist and only created, updated or deleted on user interaction.
 
     * ❓❓ Repeated migration
-        * This is unsolved. Especially how to handle or prevent the case of a document being changed in both the old and the new system at the same time
+        * This is unsolved. Especially how to handle or prevent the case of a document being changed in both the old and the new system at the same time (=> how to resolve the conflict?)
 
 
 ## Consequences
@@ -116,13 +116,13 @@ _Note: The following is how we aim to set up and use the environments. It does n
 
 What we think will become more easy:
 
-* Supporting the needs of various user groups (product team, DigitalService staff, testers, other stakeholders, documentalists)
+* Supporting the needs of various user groups besides documentalists (product team, DigitalService staff, testers, other stakeholders)
 
 * Managing risks wrt. data integrity and access controls.
 
 What we expect to become more difficult:
 
-* Operating three environments adds complexity.
+* Operating three environments.
 * Separating code from releases (e.g. feature flags).
 
 
