@@ -1,4 +1,4 @@
-import { test, expect, Logger } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
 test.describe('ADM AbgabePage', () => {
   test(
