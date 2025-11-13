@@ -83,7 +83,7 @@
     "eslint-plugin-vue": "^10.5.1",
     "jsdom": "^26.1.0",
     "license-checker-rseidelsohn": "^4.4.2",
-    "pinia": "^3.0.3",
+    "pinia": "^3.0.4",
     "prettier": "^3.6.2",
     "resize-observer-polyfill": "^1.5.1",
     "tailwindcss": "~4.1.17",
