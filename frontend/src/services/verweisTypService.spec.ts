@@ -4,7 +4,7 @@ import {
   anwendungFixture,
   neuregelungFixture,
   rechtsgrundlageFixture,
-} from '@/testing/fixtures/verweisTyp'
+} from '@/testing/fixtures/verweisTyp.fixture'
 
 describe('reference type service', () => {
   it('returns reference types', async () => {

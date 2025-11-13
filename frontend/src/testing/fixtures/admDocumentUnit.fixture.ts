@@ -2,7 +2,7 @@ import ActiveCitation from '@/domain/activeCitation'
 import ActiveReference from '@/domain/activeReference'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import SingleNorm from '@/domain/singleNorm'
-import { activeCitationFixture } from './activeCitation'
+import { activeCitationFixture } from './activeCitation.fixture'
 import NormReference from '@/domain/normReference'
 
 export const admDocumentUnitFixture: AdmDocumentationUnit = {

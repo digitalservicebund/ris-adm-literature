@@ -3,7 +3,10 @@ import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import FundstelleListItem from './FundstelleListItem.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { ambiguousFundstelleFixture, fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import {
+  ambiguousFundstelleFixture,
+  fundstelleFixture,
+} from '@/testing/fixtures/fundstelle.fixture'
 import type { Fundstelle } from '@/domain/fundstelle'
 
 function renderComponent(fundstelle: Fundstelle) {

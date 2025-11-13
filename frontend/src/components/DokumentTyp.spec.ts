@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   docTypeAnordnungFixture,
   docTypeBekanntmachungFixture,
-} from '@/testing/fixtures/documentType'
+} from '@/testing/fixtures/documentType.fixture'
 import DokumentTyp from './DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
 import { render, screen } from '@testing-library/vue'

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import NormReferenceInput from '@/components/norm-reference/NormReferenceInput.vue'
 import NormReference from '@/domain/normReference'
 import InputText from 'primevue/inputtext'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 
 function renderComponent(options?: { modelValue?: NormReference }) {
   const user = userEvent.setup()

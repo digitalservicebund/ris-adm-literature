@@ -12,16 +12,16 @@ import {
 import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
 import { InstitutionType, type Institution, type Region } from '@/domain/normgeber'
 import { ref } from 'vue'
-import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum'
+import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
 import type { Periodikum } from '@/domain/fundstelle'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
 import type { VerweisTyp } from '@/domain/verweisTyp'
-import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp'
+import { anwendungFixture, neuregelungFixture } from '@/testing/fixtures/verweisTyp.fixture'
 import {
   docTypeAnordnungFixture,
   docTypeBekanntmachungFixture,
-} from '@/testing/fixtures/documentType'
+} from '@/testing/fixtures/documentType.fixture'
 import type { DocumentType } from '@/domain/documentType'
 
 describe('useAutoComplete', () => {

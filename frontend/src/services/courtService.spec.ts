@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.ts'
+import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.fixture'
 import { useFetchCourts } from '@/services/courtService.ts'
 
 describe('court service', () => {

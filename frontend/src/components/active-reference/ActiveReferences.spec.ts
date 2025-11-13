@@ -11,12 +11,12 @@ import ActiveReference, {
 import { createTestingPinia } from '@pinia/testing'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import InputText from 'primevue/inputtext'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 import {
   anwendungFixture,
   neuregelungFixture,
   rechtsgrundlageFixture,
-} from '@/testing/fixtures/verweisTyp'
+} from '@/testing/fixtures/verweisTyp.fixture'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()

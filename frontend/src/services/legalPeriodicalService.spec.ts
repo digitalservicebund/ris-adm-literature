@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { useFetchLegalPeriodicals } from './legalPeriodicalService'
-import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum'
+import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
 
 describe('legal periodicals service', () => {
   it('returns legal periodicals', async () => {

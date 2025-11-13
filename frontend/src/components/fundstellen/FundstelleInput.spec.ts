@@ -4,7 +4,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { type Fundstelle } from '@/domain/fundstelle'
 import FundstelleInput from './FundstelleInput.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { ambiguousFundstelleFixture, fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import {
+  ambiguousFundstelleFixture,
+  fundstelleFixture,
+} from '@/testing/fixtures/fundstelle.fixture'
 
 // Stubbing complex dropdown components with simple input fields to:
 // - Hide their internal implementation during testing

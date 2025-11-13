@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import NormReferenceInput from './norm-reference/NormReferenceInput.vue'
 import NormReferenceSummary from './norm-reference/NormReferenceSummary.vue'
 import NormReference from '@/domain/normReference'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 
 const items = [
   { abbreviation: 'SGB 5', officialLongTitle: 'Sozialgesetzbuch (SGB) Fünftes Buch (V)' },
