@@ -1,6 +1,6 @@
 # 12. Environments (staging, UAT, production)
 
-Date: ❗202x-xx-xx
+Date: ❗2025-11-xx
 
 ## Status
 
@@ -10,34 +10,35 @@ Proposed ❗ (should become "accepted")
 
 ❗ The issue motivating this decision, and any context that influences or constrains the decision.
 
-Until now all of development and testing took place in a single environment called `staging`.<br>
-Now we have introduced two new enviroments, `UAT` and `production` and need to clarify what roles they play and what to expect from them.
+Due to stakeholder needs we will introduce two new environments in which our application will be running.
 
-Our environments consist of the following components:
+The term "environment" is meant to indicate that while each of them runs all components of our application (details below), they share none of them. Any component may behave differently in each environment.
+
+Our applicaction's components are:
 * The `ris-adm-literature` application code running in two services (frontend, backend)
 * The NeuRIS database (shared across streams in NeuRIS)
 * Several S3 compatible buckets for exchanging data with the Portal (for publishing)
 * A 3rd party authentication service instance
 
-The term "environment" is meant to indicate that these components (code and data) are not shared across `staging`, `UAT` and `production`.
-
 ## Decision
 
 ❗The change that we're proposing or have agreed to implement.
 
-* Our app gets deployed to three environments:
-    * Staging
-    * UAT (user acceptance testing)
-    * Production (or "prod" for short)
-* Each environment has its own rules and purposes
+* Our app gets deployed to three environments for three main use cases:
+    * Staging - Used by the product team. Highly volatile: features and data may show up, change or disappear at any time.
+    * UAT - Used by anyone "trying out our app". Behaves like production, but with a safety net: nothing in here becomes visible to the public.
+    * Production (or "prod") - Used by documentalists, only. This is the product our end users in the documentation offices are using to perform their duties.
+
+* Each of these purposes comes with its own sets of rules that are described below.
 
 ### Rules and Purposes
 
-Note: The following is how we aim to set up the environments. It does not mean that all the aspects do exist already (e.g. our goal of how migration should behave does not imply that there is a migration already).
+_Note: The following is how we aim to set up and use the environments. It does not mean that all the aspects do exist already. E.g. our description of how repeated migrations should behave does __not__ imply that there are repeated migrations already._
 
 * Staging:
     * Purpose
         * Supporting the product development team's work.
+        * Use cases include: UX or functional or infrastructure experiments, half-done features
 
     * Access
         * The product team (primarily)
@@ -47,30 +48,33 @@ Note: The following is how we aim to set up the environments. It does not mean t
         * Other stakeholders
 
     * Features
-        * What's under development
+        * Anything that's done
+        * Anything that's under development
 
     * Uptime
-        * Staging may be down any time due to any reason and for any amount of time.
+        * Staging may be down any time. 
+        * Must not be used for product demos.
 
     * Data 
         * Staging data may come into existence, disappear or be changed any time.
 
     * Repeated migrations
-        * Staging data gets newly migrated documents 🚧 "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+        * Migrations may add, remove or change the documents in staging at any time.
 
 * UAT
     * Purpose
-        * Have a production-like environment, but with a safety net: no publishing to public(production) portal.
+        * Have a production-like environment, but with a safety net: nothing in here becomes visible to the public.
+        * Use cases include: product demos, training sessions, user research, manual tests
 
     * Access
         * The product team
         * DigitalService staff
-        * Testers (primarily)
-        * Documentalists (primarily)
+        * Testers
+        * Documentalists
         * Other stakeholders
 
     * Features
-        * What's "done", i.e implemented and has passed tech and functional review
+        * Anything that's "done" (i.e. implemented and has passed tech and functional reviews)
 
     * Uptime
         * UAT is expected to be up "all the time" with the following caveats:
@@ -78,10 +82,10 @@ Note: The following is how we aim to set up the environments. It does not mean t
             * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
 
     * Data
-        * Data in UAT is expected to persist and only change on user interaction.
+        * Data in UAT is expected to persist and only be created, updated or deleted on user interaction.
 
     * Repeated migration
-        * UAT data gets newly migrated documents "upserted" (i.e. added new documents, update LDML if document exists) in irregular intervals.
+        * Migrations may add, remove or change the documents in staging at any time.
 
 * Production:
     * Primary goal
