@@ -123,7 +123,7 @@ test.describe('FundstellenPage', () => {
   test(
     'Periodikum and Zitatstelle are mandatory fields',
     { tag: ['@RISDEV-7978'] },
-    async ({ page }) => {
+    async ({ page, browserName }) => {
       // Arrange
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
 
@@ -142,7 +142,13 @@ test.describe('FundstellenPage', () => {
       // When
       await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2001, Seite 21')
       await page.getByRole('button', { name: 'Entfernen' }).click()
-      await page.keyboard.press('Escape')
+      // eslint-disable-next-line playwright/no-conditional-in-test
+      if (browserName === 'firefox') {
+        // Pleasing Firefox
+        await page.getByRole('combobox', { name: 'Periodikum' }).press('Escape')
+      } else {
+        await page.keyboard.press('Escape')
+      }
       await page.getByRole('button', { name: 'Fundstelle übernehmen' }).click()
 
       // Then
