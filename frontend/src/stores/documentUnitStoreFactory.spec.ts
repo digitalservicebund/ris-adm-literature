@@ -1,342 +1,204 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 import { defineDocumentUnitStore } from './documentUnitStoreFactory'
-import { DocumentCategory } from '@/domain/documentType'
-import * as documentUnitService from '@/services/documentUnitService'
-import type { UseFetchReturn } from '@vueuse/core'
-import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import { admDocumentUnitFixture } from '@/testing/fixtures/admDocumentUnit'
-import { uliDocumentUnitFixture } from '@/testing/fixtures/uliDocumentUnit'
-import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
-import * as validators from '@/utils/validators'
+
+// Mock the composables and missing fields function
+const mockGetDocument = vi.fn()
+const mockPutDocument = vi.fn()
+const mockPublishDocument = vi.fn()
+const mockMissingFields = vi.fn()
+
+// Mock UseFetchReturn
+const mockUseFetchReturn = {
+  data: ref(null),
+  error: ref(null),
+  statusCode: ref(200),
+  execute: vi.fn(),
+}
 
 describe('defineDocumentUnitStore', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseFetchReturn.data.value = null
+    mockUseFetchReturn.error.value = null
+    mockUseFetchReturn.statusCode.value = 200
+    mockUseFetchReturn.execute.mockResolvedValue(undefined)
   })
 
-  it('loads a adm document unit successfully', async () => {
-    // given
-    const executeMock = vi.fn()
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: executeMock,
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-
-    // when
-    await store.load('KSNR054920707')
-
-    // then
-    expect(executeMock).toHaveBeenCalledTimes(1)
-    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('loads a uli document unit successfully', async () => {
-    // given
-    const executeMock = vi.fn()
-
-    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
-      data: ref(uliDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: executeMock,
-    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-
-    // when
-    await store.load('KSLU054920707')
-
-    // then
-    expect(executeMock).toHaveBeenCalledTimes(1)
-    expect(store.documentUnit.value).toEqual(uliDocumentUnitFixture)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('sets error when loading fails', async () => {
-    // given
-    const fetchError = new Error('Fetch failed')
-
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(null),
-      error: ref(fetchError),
-      statusCode: ref(500),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-
-    // when
-    await store.load('does-not-exist')
-
-    // then
+  it('should initialize with null documentUnit and default state', () => {
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
     expect(store.documentUnit.value).toBeNull()
-    expect(store.error.value).toEqual(fetchError)
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('updates a adm document unit successfully', async () => {
-    // given
-    const updatedDoc: AdmDocumentationUnit = { ...admDocumentUnitFixture, note: 'updated' }
-
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
-      data: ref(updatedDoc),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('KSNR054920707')
-
-    // when
-    const success = await store.update()
-
-    // then
-    expect(success).toBe(true)
-    expect(store.documentUnit.value).toEqual(updatedDoc)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('updates a uli document unit successfully', async () => {
-    // given
-    const updatedDoc: AdmDocumentationUnit = { ...uliDocumentUnitFixture, note: 'updated' }
-
-    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
-      data: ref(uliDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutUliDocUnit').mockReturnValue({
-      data: ref(updatedDoc),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-    await store.load('KSLU054920707')
-
-    // when
-    const success = await store.update()
-
-    // then
-    expect(success).toBe(true)
-    expect(store.documentUnit.value).toEqual(updatedDoc)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('publishes a adm document unit successfully', async () => {
-    // given
-    const updatedDoc: AdmDocumentationUnit = { ...admDocumentUnitFixture, note: 'updated' }
-
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutPublishAdmDocUnit').mockReturnValue({
-      data: ref(updatedDoc),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('KSNR054920707')
-
-    // when
-    const success = await store.publish()
-
-    // then
-    expect(success).toBe(true)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('publishes a uli document unit successfully', async () => {
-    // given
-    const updatedDoc: AdmDocumentationUnit = { ...uliDocumentUnitFixture, note: 'updated' }
-
-    vi.spyOn(documentUnitService, 'useGetUliDocUnit').mockReturnValue({
-      data: ref(uliDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutPublishUliDocUnit').mockReturnValue({
-      data: ref(updatedDoc),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<UliDocumentationUnit>> as UseFetchReturn<UliDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-    await store.load('KSLU054920707')
-
-    // when
-    const success = await store.publish()
-
-    // then
-    expect(success).toBe(true)
-    expect(store.error.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('updates the error state and leaves the original document untouched on a failed publish', async () => {
-    // given
-    const putError = new Error('PUT failed')
-
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn().mockResolvedValue(undefined),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutPublishAdmDocUnit').mockReturnValue({
-      data: ref(null),
-      error: ref(putError),
-      statusCode: ref(500),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('KSNR054920707')
-
-    // when
-    const success = await store.publish()
-
-    // then
-    expect(success).toBe(false)
-    expect(store.error.value).toEqual(putError)
-    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('updates the error state and leaves the original document untouched on a failed update', async () => {
-    // given
-    const putError = new Error('PUT failed')
-
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
-      statusCode: ref(200),
-      execute: vi.fn().mockResolvedValue(undefined),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    vi.spyOn(documentUnitService, 'usePutAdmDocUnit').mockReturnValue({
-      data: ref(null),
-      error: ref(putError),
-      statusCode: ref(500),
-      execute: vi.fn(),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
-
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    await store.load('KSNR054920707')
-
-    // when
-    const success = await store.update()
-
-    // then
-    expect(success).toBe(false)
-    expect(store.error.value).toEqual(putError)
-    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
-    expect(store.isLoading.value).toBe(false)
-  })
-
-  it('calling update returns false when no document is stored and state remains unchanged', async () => {
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-
-    const success = await store.update()
-
-    expect(success).toBe(false)
     expect(store.isLoading.value).toBe(false)
     expect(store.error.value).toBeNull()
+  })
+
+  it('should load a document and update state', async () => {
+    const mockData = { id: '123', title: 'Test Document' }
+    mockGetDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      data: ref(mockData),
+    })
+
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
+
+    await store.load('123')
+
+    expect(mockGetDocument).toHaveBeenCalledWith('123')
+    expect(mockUseFetchReturn.execute).toHaveBeenCalled()
+    expect(store.documentUnit.value).toEqual(mockData)
+    expect(store.isLoading.value).toBe(false)
+    expect(store.error.value).toBeNull()
+  })
+
+  it('should set error if load fails', async () => {
+    const mockError = new Error('Load failed')
+    mockGetDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      error: ref(mockError),
+    })
+
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
+
+    await store.load('123')
+
+    expect(store.error.value).toEqual(mockError)
     expect(store.documentUnit.value).toBeNull()
   })
 
-  it('returns the missing fields for a ULI doc', async () => {
-    const spy = vi.spyOn(validators, 'missingUliDocumentUnitFields')
-    spy.mockReturnValue(['foo', 'bar'])
+  it('should update a document and return true on success', async () => {
+    const mockOriginal = { id: '123', title: 'Original Document' }
+    mockGetDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      data: ref(mockOriginal),
+    })
+    const mockData = { id: '1', title: 'Updated Document' }
+    mockPutDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      data: ref(mockData),
+    })
 
-    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-    const fakeDoc = { title: 'Test' }
-    store.documentUnit.value = fakeDoc
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
 
-    const result = store.missingRequiredFields.value
+    await store.load('1')
+    const result = await store.update()
 
-    expect(spy).toHaveBeenCalledWith(fakeDoc)
-    expect(result).toEqual(['foo', 'bar'])
+    expect(mockPutDocument).toHaveBeenCalledWith(mockOriginal)
+    expect(mockUseFetchReturn.execute).toHaveBeenCalled()
+    expect(store.documentUnit.value).toEqual(mockData)
+    expect(result).toBe(true)
   })
 
-  it('returns the missing fields for a ADM doc', async () => {
-    const spy = vi.spyOn(validators, 'missingAdmDocumentUnitFields')
-    spy.mockReturnValue(['foo', 'bar'])
+  it('should return false if update fails', async () => {
+    const mockError = new Error('Update failed')
+    mockPutDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      error: ref(mockError),
+      statusCode: ref(500),
+    })
 
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-    const fakeDoc = { title: 'Test' }
-    store.documentUnit.value = fakeDoc
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
 
-    const result = store.missingRequiredFields.value
+    store.documentUnit.value = { id: '1', title: 'Original Document' }
+    const result = await store.update()
 
-    expect(spy).toHaveBeenCalledWith(fakeDoc)
-    expect(result).toEqual(['foo', 'bar'])
+    expect(store.error.value).toEqual(mockError)
+    expect(result).toBe(false)
   })
 
-  it('returns empty array when document is null', () => {
-    const spy = vi.spyOn(validators, 'missingUliDocumentUnitFields')
-    spy.mockReturnValue(['foo', 'bar'])
-    const store = defineDocumentUnitStore(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)
-
-    expect(store.missingRequiredFields.value).toEqual([])
-    expect(spy).not.toHaveBeenCalled()
-  })
-
-  it('clears document unit on unload', async () => {
-    // given
-    vi.spyOn(documentUnitService, 'useGetAdmDocUnit').mockReturnValue({
-      data: ref(admDocumentUnitFixture),
-      error: ref(null),
+  it('should publish a document and return true on success', async () => {
+    mockPublishDocument.mockReturnValue({
+      ...mockUseFetchReturn,
       statusCode: ref(200),
-      execute: vi.fn().mockResolvedValue(undefined),
-    } as Partial<UseFetchReturn<AdmDocumentationUnit>> as UseFetchReturn<AdmDocumentationUnit>)
+    })
 
-    const store = defineDocumentUnitStore(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
 
-    // when
-    await store.load('KSNR054920707')
+    store.documentUnit.value = { id: '1', title: 'Document to Publish' }
+    const result = await store.publish()
 
-    // then
-    expect(store.documentUnit.value).toEqual(admDocumentUnitFixture)
+    expect(mockPublishDocument).toHaveBeenCalledWith(store.documentUnit.value)
+    expect(mockUseFetchReturn.execute).toHaveBeenCalled()
+    expect(result).toBe(true)
+  })
 
-    // when
+  it('should return false if publish fails', async () => {
+    const mockError = new Error('Publish failed')
+    mockPublishDocument.mockReturnValue({
+      ...mockUseFetchReturn,
+      error: ref(mockError),
+      statusCode: ref(500),
+    })
+
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
+
+    store.documentUnit.value = { id: '1', title: 'Document to Publish' }
+    const result = await store.publish()
+
+    expect(store.error.value).toEqual(mockError)
+    expect(result).toBe(false)
+  })
+
+  it('should unload the document', () => {
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
+
+    store.documentUnit.value = { id: '1', title: 'Document' }
     store.unload()
 
-    // then
     expect(store.documentUnit.value).toBeNull()
-    expect(store.isLoading.value).toBe(false)
-    expect(store.error.value).toBeNull()
+  })
+
+  it('should return missing fields for the current document', () => {
+    const mockMissing = ['field1', 'field2']
+    mockMissingFields.mockReturnValue(mockMissing)
+
+    const store = defineDocumentUnitStore({
+      getDocument: mockGetDocument,
+      putDocument: mockPutDocument,
+      publishDocument: mockPublishDocument,
+      missingFields: mockMissingFields,
+    })
+
+    store.documentUnit.value = { id: '1', title: 'Document' }
+    expect(store.missingRequiredFields.value).toEqual(mockMissing)
   })
 })
