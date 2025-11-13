@@ -7,6 +7,7 @@ import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/components/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
 import TitelSection from '@/components/uli/TitelSection.vue'
+import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
@@ -45,6 +46,8 @@ const dokumentarischerTitel = computed({
     store.documentUnit!.dokumentarischerTitel = newValue
   },
 })
+
+useScrollToHash()
 </script>
 
 <template>
@@ -52,9 +55,9 @@ const dokumentarischerTitel = computed({
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="documentTypes" v-slot="slotProps" label="Dokumenttyp *">
+        <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
           <DokumentTyp
-            inputId="documentTypes"
+            inputId="dokumenttypen"
             v-model="dokumenttypen"
             aria-label="Dokumenttyp"
             :invalid="slotProps.hasError"

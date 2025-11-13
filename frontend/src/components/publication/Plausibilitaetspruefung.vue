@@ -22,7 +22,7 @@ function getLabel(field: string): string {
       zitierdaten: 'Zitierdatum',
       dokumenttypen: 'Dokumenttyp',
       veroeffentlichungsjahr: 'Veröffentlichungsjahr',
-      titel: 'Hauptsachtitel / Dokumentarischer Titel',
+      hauptsachtitel: 'Hauptsachtitel / Dokumentarischer Titel',
     }[field] || field
   )
 }
@@ -43,7 +43,13 @@ const rubrikenPath = computed(() => {
     <div>
       <p class="mb-8">Folgende Pflichtfelder sind nicht befüllt:</p>
       <ul class="list-disc list-inside ml-16 mb-24">
-        <li v-for="field in missingFields" :key="field">{{ getLabel(field) }}</li>
+        <li v-for="field in missingFields" :key="field">
+          <router-link :to="`${rubrikenPath}#${field}`">
+            <Button class="h-auto border-none p-0!" text variant="link">{{
+              getLabel(field)
+            }}</Button>
+          </router-link>
+        </li>
       </ul>
       <router-link :to="rubrikenPath">
         <Button label="Rubriken bearbeiten" aria-label="Rubriken bearbeiten" severity="secondary" />

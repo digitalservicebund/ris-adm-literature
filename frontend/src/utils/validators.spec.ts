@@ -146,7 +146,7 @@ describe('Validators functions', () => {
         hauptsachtitel: '',
         dokumentarischerTitel: '',
       }
-      expect(missingUliDocumentUnitFields(doc)).toEqual(['titel'])
+      expect(missingUliDocumentUnitFields(doc)).toEqual(['hauptsachtitel'])
     })
 
     it('detects multiple missing fields', () => {
@@ -162,7 +162,7 @@ describe('Validators functions', () => {
       expect(missingUliDocumentUnitFields(doc)).toEqual([
         'dokumenttypen',
         'veroeffentlichungsjahr',
-        'titel',
+        'hauptsachtitel',
       ])
     })
   })

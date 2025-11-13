@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 import ComboboxInput from '@/components/ComboboxInput.vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
@@ -18,12 +18,11 @@ import NormgeberList from '@/components/normgeber/NormgeberList.vue'
 import type { DocumentType } from '@/domain/documentType'
 import ZitierdatenInput from '@/components/ZitierdatenInput.vue'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
-import { useRoute } from 'vue-router'
 import Berufsbild from '@/components/Berufsbild.vue'
 import TitelAspekt from '@/components/TitelAspekt.vue'
 import Definitionen from '@/components/Definitionen.vue'
+import { useScrollToHash } from '@/composables/useScrollToHash'
 
-const route = useRoute()
 const store = useAdmDocUnitStore()
 
 const langueberschrift = computed({
@@ -89,30 +88,7 @@ const dokumenttypZusatz = computed({
   },
 })
 
-function scrollToHash(offset = 80) {
-  if (!route.hash) return
-  const rawHash = '#' + route.hash.slice(1).split('&')[0]
-  const safeSelector = CSS.escape(rawHash.slice(1)) // remove "#" and escape
-  const cleanHash = '#' + safeSelector
-
-  const el = document.querySelector(cleanHash)
-
-  if (el) {
-    const top = el.getBoundingClientRect().top + window.pageYOffset - offset
-    window.scrollTo({ top, behavior: 'smooth' })
-  }
-}
-
-onMounted(() => {
-  scrollToHash()
-})
-
-watch(
-  () => route.hash,
-  () => {
-    scrollToHash()
-  },
-)
+useScrollToHash()
 </script>
 
 <template>
@@ -120,9 +96,9 @@ watch(
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="langue" label="Amtl. Langüberschrift *">
+        <InputField id="langueberschrift" label="Amtl. Langüberschrift *">
           <Textarea
-            id="langue"
+            id="langueberschrift"
             class="w-full"
             v-model="langueberschrift"
             v-bind="{
@@ -137,14 +113,14 @@ watch(
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <NormgeberList />
+          <NormgeberList id="normgeberList" />
         </div>
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24">
-        <InputField id="documentType" label="Dokumenttyp *">
+        <InputField id="dokumenttyp" label="Dokumenttyp *">
           <ComboboxInput
-            id="documentType"
+            id="dokumenttyp"
             v-model="dokumenttyp"
             aria-label="Dokumenttyp"
             :item-service="ComboboxItemService.getDocumentTypes"
