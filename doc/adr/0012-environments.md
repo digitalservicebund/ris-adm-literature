@@ -8,25 +8,21 @@ Proposed ❗ (should become "accepted")
 
 ## Context
 
-❗ The issue motivating this decision, and any context that influences or constrains the decision.
-
 Due to stakeholder needs we will introduce two new environments in which our application will be running.
 
 The term "environment" is meant to indicate that while each of them runs all components of our application (details below), they share none of them. Any component may behave differently in each environment.
 
 Our applicaction's components are:
 * The `ris-adm-literature` application code running in two services (frontend, backend)
-* The NeuRIS database (shared across streams in NeuRIS)
-* Several S3 compatible buckets for exchanging data with the Portal (for publishing)
+* Data persistence via the NeuRIS database
+* Several S3 compatible buckets for publishing documents (exchanging data with the portal)
 * A 3rd party authentication service instance
 
 ## Decision
 
-❗The change that we're proposing or have agreed to implement.
-
 * Our app gets deployed to three environments for three main use cases:
     * Staging - Used by the product team. Highly volatile: features and data may show up, change or disappear at any time.
-    * UAT - Used by anyone "trying out our app". Behaves like production, but with a safety net: nothing in here becomes visible to the public.
+    * UAT (user acceptance testing) - Used by anyone "trying out our app". Behaves like production, but nothing in here becomes visible to the public.
     * Production (or "prod") - Used by documentalists, only. This is the product our end users in the documentation offices are using to perform their duties.
 
 * Each of these purposes comes with its own sets of rules that are described below.
@@ -38,7 +34,7 @@ _Note: The following is how we aim to set up and use the environments. It does n
 * Staging:
     * Purpose
         * Supporting the product development team's work.
-        * Use cases include: UX or functional or infrastructure experiments, half-done features
+        * Use cases may include: UX or functional or infrastructure experiments, half-done features
 
     * Access
         * The product team (primarily)
@@ -49,9 +45,9 @@ _Note: The following is how we aim to set up and use the environments. It does n
 
     * Features
         * Anything that's done
-        * Anything that's under development
+        * Some things that are under development
 
-    * Uptime
+    * Stabilitiy
         * Staging may be down any time. 
         * Must not be used for product demos.
 
@@ -76,16 +72,14 @@ _Note: The following is how we aim to set up and use the environments. It does n
     * Features
         * Anything that's "done" (i.e. implemented and has passed tech and functional reviews)
 
-    * Uptime
-        * UAT is expected to be up "all the time" with the following caveats:
-            * We may announce downtimes.
-            * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
+    * Stability
+        * We aim at keeping UAT stable, so it can be a reliable tool for the given use cases.
 
     * Data
-        * Data in UAT is expected to persist and only be created, updated or deleted on user interaction.
+        * Data in UAT is expected to persist and only be created, updated or deleted by the users (or migration, cf. below).
 
     * Repeated migration
-        * Migrations may add, remove or change the documents in staging at any time.
+        * Migrations may add, remove or change the documents in UAT at any time.
 
 * Production:
     * Primary goal
@@ -98,21 +92,18 @@ _Note: The following is how we aim to set up and use the environments. It does n
     * Features
         * Anything that's "done" (i.e implemented and has passed tech and functional reviews)
 
-    * Uptime
-        * Production is expected to be up "all the time" with the following caveats:
-            * We may announce downtimes.
-            * We have no on call service, so it's reasonable to expect it to be up between 8:00 and 17:00 on working days.
+    * Stability
+        * Keeping production stable so it can be a reliable tool for the documentalists is important to us.
 
     * Data
-        * Data in UAT is expected to persist and only created, updated or deleted on user interaction.
+        * Data in production is expected to persist and only be created, updated or deleted by the users (or by migration, cf. below).
 
-    * ❓❓ Repeated migration
-        * This is unsolved. Especially how to handle or prevent the case of a document being changed in both the old and the new system at the same time (=> how to resolve the conflict?)
+    * Repeated migration
+        * **This is undecided and needs more thought.** 
+        * The most problematic is how to resolve if changes in the old system (that reach us via a migration) and changes through our app may conflict.
 
 
 ## Consequences
-
-❗What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
 
 What we think will become more easy:
 
@@ -123,6 +114,6 @@ What we think will become more easy:
 What we expect to become more difficult:
 
 * Operating three environments.
-* Separating code from releases (e.g. feature flags).
+* Release may become a more involved process (with or without feature flags)
 
 
