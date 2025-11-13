@@ -1,27 +1,16 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import Plausibilitaetspruefung from './Plausibilitaetspruefung.vue'
-import { DocumentCategory } from '@/domain/documentType'
-
-// Mock vue-router useRoute
-let mockRoute: {
-  meta: { documentCategory?: string }
-  path: string
-}
-vi.mock('vue-router', () => ({
-  useRoute: () => mockRoute,
-}))
+import router from '@/router'
 
 describe('Plausibilitaetspruefung', () => {
   it('renders positive message when there is no missing fields', () => {
-    mockRoute = {
-      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
-      path: '/abgabe',
-    }
-
     render(Plausibilitaetspruefung, {
       props: {
         missingFields: [],
+      },
+      global: {
+        plugins: [router],
       },
     })
 
@@ -30,11 +19,6 @@ describe('Plausibilitaetspruefung', () => {
   })
 
   it('renders 5 missing fields and a link to rubriken', () => {
-    mockRoute = {
-      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
-      path: '/abgabe',
-    }
-
     render(Plausibilitaetspruefung, {
       props: {
         missingFields: [
@@ -44,6 +28,9 @@ describe('Plausibilitaetspruefung', () => {
           'normgeberList',
           'zitierdaten',
         ],
+      },
+      global: {
+        plugins: [router],
       },
     })
 
@@ -58,17 +45,35 @@ describe('Plausibilitaetspruefung', () => {
   })
 
   it('renders the field key if not mapped', () => {
-    mockRoute = {
-      meta: { documentCategory: DocumentCategory.VERWALTUNGSVORSCHRIFTEN },
-      path: '/abgabe',
-    }
-
     render(Plausibilitaetspruefung, {
       props: {
         missingFields: ['unmappedField'],
       },
+      global: {
+        plugins: [router],
+      },
     })
 
     expect(screen.getByText('unmappedField')).toBeInTheDocument()
+  })
+
+  it('renders anchor links to the missing rubriken', () => {
+    render(Plausibilitaetspruefung, {
+      props: {
+        missingFields: ['langueberschrift', 'inkrafttretedatum'],
+      },
+      global: {
+        plugins: [router],
+      },
+    })
+
+    expect(screen.getByRole('link', { name: 'Amtl. Langüberschrift' })).toHaveAttribute(
+      'href',
+      '/rubriken#langueberschrift',
+    )
+    expect(screen.getByRole('link', { name: 'Datum des Inkrafttretens' })).toHaveAttribute(
+      'href',
+      '/rubriken#inkrafttretedatum',
+    )
   })
 })
