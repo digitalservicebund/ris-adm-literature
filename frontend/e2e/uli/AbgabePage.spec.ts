@@ -54,7 +54,7 @@ test.describe('ULI AbgabePage', () => {
 
   test(
     'Should show validation error when mandatory fields contain whitespaces only',
-    { tag: ['@RISDEV-10123'] },
+    { tag: ['@RISDEV-10137'] },
     async ({ page }) => {
       // given
       await page.goto('/')
