@@ -10,7 +10,7 @@ Proposed ❗ (should become "accepted")
 
 Due to stakeholder needs we will introduce two new environments in which our application will be running.
 
-The term "environment" is meant to indicate that while each of them runs all components of our application (details below), they share none of them. Any component may behave differently in each environment.
+The term "environment" is meant to indicate isolated deployments: while each of them runs all components of our application (details below), they share none of them. Any component may behave differently in each environment.
 
 Our applicaction's components are:
 * The `ris-adm-literature` application code running in two services (frontend, backend)
@@ -34,7 +34,7 @@ _Note: The following is how we aim to set up and use the environments. It does n
 * Staging:
     * Purpose
         * Supporting the product development team's work.
-        * Use cases may include: UX or functional or infrastructure experiments, half-done features
+        * Use cases include: UX or functional or infrastructure experiments, half-done features
 
     * Access
         * The product team (primarily)
@@ -44,8 +44,8 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Other stakeholders
 
     * Features
-        * Anything that's done
-        * Some things that are under development
+        * Features that are done (i.e. implemented and have passed tech and functional/product reviews)
+        * Features that are under development
 
     * Stabilitiy
         * Staging may be down any time. 
@@ -70,10 +70,10 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Other stakeholders
 
     * Features
-        * Anything that's "done" (i.e. implemented and has passed tech and functional reviews)
+        * * Features that are done (i.e. implemented and have passed tech and functional/product reviews)
 
     * Stability
-        * We aim at keeping UAT stable, so it can be a reliable tool for the given use cases.
+        * We aim at keeping UAT stable so it can be a reliable tool for the given use cases.
 
     * Data
         * Data in UAT is expected to persist and only be created, updated or deleted by the users (or migration, cf. below).
@@ -83,17 +83,17 @@ _Note: The following is how we aim to set up and use the environments. It does n
 
 * Production:
     * Primary goal
-        * Production is used by documentalists for performing their documentation duties.
-        * What's published is made available to end users of the NeuRIS portal.
+        * Production is used by documentalists for performing their documentation duties. It's the product we ship.
+        * Documents published in production are made available to end users of the NeuRIS portal.
 
     * Access
         * Documentalists, only
 
     * Features
-        * Anything that's "done" (i.e implemented and has passed tech and functional reviews)
+        * * Features that are done (i.e. implemented and have passed tech and functional/product reviews)
 
     * Stability
-        * Keeping production stable so it can be a reliable tool for the documentalists is important to us.
+        * Production needs to be kept most stable so the documentalists can rely on it.
 
     * Data
         * Data in production is expected to persist and only be created, updated or deleted by the users (or by migration, cf. below).
