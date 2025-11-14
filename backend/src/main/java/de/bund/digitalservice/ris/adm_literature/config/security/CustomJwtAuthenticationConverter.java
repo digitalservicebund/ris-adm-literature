@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.config.security;
 
-import de.bund.digitalservice.ris.adm_literature.application.ApplicationRole;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

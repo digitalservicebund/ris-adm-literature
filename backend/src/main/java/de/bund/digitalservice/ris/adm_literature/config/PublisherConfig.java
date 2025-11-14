@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
-import de.bund.digitalservice.ris.adm_literature.adapter.publishing.Publisher;
-import de.bund.digitalservice.ris.adm_literature.adapter.publishing.S3PublishAdapter;
-import de.bund.digitalservice.ris.adm_literature.adapter.publishing.XmlValidator;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.S3PublishAdapter;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;

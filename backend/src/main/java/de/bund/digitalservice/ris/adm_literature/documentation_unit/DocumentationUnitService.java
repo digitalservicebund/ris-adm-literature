@@ -1,0 +1,151 @@
+package de.bund.digitalservice.ris.adm_literature.documentation_unit;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
+import de.bund.digitalservice.ris.adm_literature.page.Page;
+import jakarta.annotation.Nonnull;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Application service for CRUD operations on document units.
+ */
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class DocumentationUnitService {
+
+  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
+  private final LdmlConverterService ldmlConverterService;
+  private final LdmlPublishConverterService ldmlPublishConverterService;
+  private final ObjectMapper objectMapper;
+  private final Publisher publisher;
+
+  /**
+   * Finds a DocumentationUnit by its document number.
+   * If the found unit exists with XML but no JSON, it is converted before being returned.
+   *
+   * @param documentNumber The document number to search for.
+   * @return An {@link Optional} containing the DocumentationUnit, or an empty Optional if not found.
+   */
+  public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
+    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
+      documentNumber
+    );
+    if (
+      optionalDocumentationUnit.isPresent() &&
+      optionalDocumentationUnit.map(DocumentationUnit::json).isEmpty() &&
+      optionalDocumentationUnit.map(DocumentationUnit::xml).isPresent()
+    ) {
+      // For an existing documentation unit without JSON but existing xml needs to be converted
+      return convertLdml(optionalDocumentationUnit.get());
+    }
+    return optionalDocumentationUnit;
+  }
+
+  private Optional<DocumentationUnit> convertLdml(DocumentationUnit documentationUnit) {
+    var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+    String json = convertToJson(documentationUnitContent);
+    return Optional.of(new DocumentationUnit(documentationUnit, json));
+  }
+
+  private String convertToJson(IDocumentationContent iDocumentationContent) {
+    try {
+      return objectMapper.writeValueAsString(iDocumentationContent);
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  public DocumentationUnit create(@Nonnull DocumentCategory documentCategory) {
+    return documentationUnitPersistenceService.create(documentCategory);
+  }
+
+  public Optional<DocumentationUnit> update(@Nonnull String documentNumber, @Nonnull String json) {
+    return Optional.ofNullable(documentationUnitPersistenceService.update(documentNumber, json));
+  }
+
+  /**
+   * Updates and publishes a DocumentationUnit with new content.
+   * <p>
+   * The update is persisted to the database and then published to an external bucket.
+   * The {@link UserDocumentDetails} decide to which bucket to publish (to be implemented):
+   * {@code UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal()}
+   * This entire operation is transactional and will be rolled back if any step fails.
+   *
+   * @param documentNumber The identifier of the documentation unit to publish.
+   * @param documentationUnitContent The new content for the unit.
+   * @return An {@link Optional} with the updated unit, or empty if the document number was not found.
+   */
+  @Transactional
+  public Optional<DocumentationUnit> publish(
+    @Nonnull String documentNumber,
+    @Nonnull IDocumentationContent documentationUnitContent
+  ) {
+    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
+      documentNumber
+    );
+
+    if (optionalDocumentationUnit.isEmpty()) {
+      return Optional.empty();
+    }
+
+    DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
+    String xml = ldmlPublishConverterService.convertToLdml(
+      documentationUnitContent,
+      documentationUnit.xml()
+    );
+
+    return switch (documentationUnitContent) {
+      case UliDocumentationUnitContent _ -> {
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTSTAENDIG);
+        // TODO: Return converted doc like for adm NOSONAR
+        yield optionalDocumentationUnit;
+      }
+      case AdmDocumentationUnitContent adm -> {
+        String json = convertToJson(adm);
+        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+          documentNumber,
+          json,
+          xml
+        );
+        publishToPortal(documentNumber, xml, DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+        yield convertLdml(publishedDocumentationUnit);
+      }
+      default -> throw new IllegalStateException(
+        "Unsupported document category: " + documentationUnitContent.getClass().getSimpleName()
+      );
+    };
+  }
+
+  private void publishToPortal(
+    @NotNull String documentNumber,
+    String xml,
+    DocumentCategory documentCategory
+  ) {
+    var publishOptions = new Publisher.PublicationDetails(
+      documentNumber,
+      xml,
+      documentCategory.getPublisherName()
+    );
+    publisher.publish(publishOptions);
+  }
+
+  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
+    @Nonnull DocumentationUnitQuery queryOptions
+  ) {
+    return documentationUnitPersistenceService.findDocumentationUnitOverviewElements(queryOptions);
+  }
+}

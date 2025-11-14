@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
-import de.bund.digitalservice.ris.adm_literature.adapter.publishing.S3MockClient;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.S3MockClient;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.extern.slf4j.Slf4j;

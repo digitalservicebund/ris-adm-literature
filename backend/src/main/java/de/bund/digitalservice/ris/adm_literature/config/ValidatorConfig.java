@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
-import de.bund.digitalservice.ris.adm_literature.adapter.publishing.XmlValidator;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
