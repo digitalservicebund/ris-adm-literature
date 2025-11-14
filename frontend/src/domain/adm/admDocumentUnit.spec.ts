@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { type AdmDocumentationUnit } from './admDocumentUnit'
-import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import { fundstelleFixture } from '@/testing/fixtures/fundstelle.fixture'
 
 describe('DocumentUnit', () => {
   it('instantiates with id and documentNumber', () => {

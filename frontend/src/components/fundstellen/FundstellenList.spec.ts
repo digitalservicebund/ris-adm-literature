@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { Fundstelle } from '@/domain/fundstelle'
-import { fundstelleFixture } from '@/testing/fixtures/fundstelle'
+import { fundstelleFixture } from '@/testing/fixtures/fundstelle.fixture'
 import FundstellenList from './FundstellenList.vue'
 
 function renderComponent(fundstellenList?: Fundstelle[]) {

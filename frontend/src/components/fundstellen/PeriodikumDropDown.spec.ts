@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum'
+import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
 import PeriodikumDropDown from './PeriodikumDropDown.vue'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({

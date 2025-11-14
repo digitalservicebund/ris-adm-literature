@@ -4,12 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import ActiveReference, { VerweisTypEnum } from '@/domain/activeReference.ts'
 import ActiveReferenceInput from '@/components/active-reference/ActiveReferenceInput.vue'
 import InputText from 'primevue/inputtext'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 import {
   anwendungFixture,
   neuregelungFixture,
   rechtsgrundlageFixture,
-} from '@/testing/fixtures/verweisTyp'
+} from '@/testing/fixtures/verweisTyp.fixture'
 
 function renderComponent(options?: { modelValue?: ActiveReference }) {
   const user = userEvent.setup()

@@ -16,7 +16,7 @@ import NormReference from '@/domain/normReference'
 import { ref } from 'vue'
 import { until } from '@vueuse/core'
 import ActiveCitation from '@/domain/activeCitation'
-import { activeCitationFixture } from '@/testing/fixtures/activeCitation'
+import { activeCitationFixture } from '@/testing/fixtures/activeCitation.fixture'
 
 describe('documentUnitService', () => {
   beforeEach(() => {

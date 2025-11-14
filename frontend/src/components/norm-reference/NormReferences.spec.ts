@@ -9,7 +9,7 @@ import { createTestingPinia } from '@pinia/testing'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { config } from '@vue/test-utils'
 import InputText from 'primevue/inputtext'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 
 function renderComponent(normReferences?: NormReference[]) {
   const user = userEvent.setup()

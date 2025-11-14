@@ -8,7 +8,6 @@ import static org.mockito.Mockito.doThrow;
 import de.bund.digitalservice.ris.adm_literature.adapter.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.application.converter.business.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
-import de.bund.digitalservice.ris.adm_literature.test.WithMockDocumentType;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest
 @ActiveProfiles("test")
 @WithMockAdmUser
-@WithMockDocumentType
 class DocumentationUnitServiceIntegrationTest {
 
   @Autowired

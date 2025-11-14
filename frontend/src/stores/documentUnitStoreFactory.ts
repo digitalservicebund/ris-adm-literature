@@ -1,14 +1,5 @@
 import { computed, ref } from 'vue'
-import { DocumentCategory } from '@/domain/documentType'
-import {
-  useGetAdmDocUnit,
-  useGetUliDocUnit,
-  usePutAdmDocUnit,
-  usePutPublishAdmDocUnit,
-  usePutPublishUliDocUnit,
-  usePutUliDocUnit,
-} from '@/services/documentUnitService'
-import { missingAdmDocumentUnitFields, missingUliDocumentUnitFields } from '@/utils/validators'
+import type { UseFetchReturn } from '@vueuse/core'
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -18,7 +9,11 @@ import { missingAdmDocumentUnitFields, missingUliDocumentUnitFields } from '@/ut
  *
  * @template DocumentationUnit - The document model (e.g. AdmDocumentationUnit).
  *
- * @param documentCategory - A DocumentCategory enum e.g. VERWALTUNGSVORSCHRIFTEN.
+ * @param options - An object containing:
+ *   - `getDocument`: Function to fetch a document by number.
+ *   - `putDocument`: Function to update a document.
+ *   - `publishDocument`: Function to publish a document.
+ *   - `missingFields`: Function to check for missing fields in the document.
  *
  * @returns An object containing reactive state and CRUD operations:
  *  - `documentUnit`: the currently loaded document (or `null`)
@@ -28,8 +23,19 @@ import { missingAdmDocumentUnitFields, missingUliDocumentUnitFields } from '@/ut
  *  - `update()`: updates the current document and returns `true`/`false`
  *  - `publish()`: publish the current document and returns `true`/`false`
  *  - `unload()`: clears the loaded document from memory
+ *  - `missingRequiredFields`: string[], a list of missing required fields in the document
  */
-export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: DocumentCategory) {
+export function defineDocumentUnitStore<DocumentationUnit>({
+  getDocument,
+  putDocument,
+  publishDocument,
+  missingFields,
+}: {
+  getDocument: (documentNumber: string) => UseFetchReturn<DocumentationUnit>
+  putDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>
+  publishDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>
+  missingFields: (doc: DocumentationUnit) => string[]
+}) {
   const documentUnit = ref<DocumentationUnit | null>(null)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
@@ -38,13 +44,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     isLoading.value = true
     error.value = null
 
-    const {
-      data,
-      error: fetchError,
-      execute,
-    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-      ? useGetUliDocUnit(documentNumber)
-      : useGetAdmDocUnit(documentNumber)
+    const { data, error: fetchError, execute } = getDocument(documentNumber)
     await execute()
 
     if (fetchError.value) {
@@ -63,14 +63,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     isLoading.value = true
     error.value = null
 
-    const {
-      data,
-      error: putError,
-      statusCode,
-      execute,
-    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-      ? usePutUliDocUnit(documentUnit.value)
-      : usePutAdmDocUnit(documentUnit.value)
+    const { data, error: putError, statusCode, execute } = putDocument(documentUnit.value)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
@@ -90,13 +83,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     isLoading.value = true
     error.value = null
 
-    const {
-      error: putError,
-      statusCode,
-      execute,
-    } = documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-      ? usePutPublishUliDocUnit(documentUnit.value)
-      : usePutPublishAdmDocUnit(documentUnit.value)
+    const { error: putError, statusCode, execute } = publishDocument(documentUnit.value)
     await execute()
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300) {
@@ -117,9 +104,7 @@ export function defineDocumentUnitStore<DocumentationUnit>(documentCategory: Doc
     const docUnit = documentUnit.value
     if (!docUnit) return []
 
-    return documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-      ? missingUliDocumentUnitFields(docUnit)
-      : missingAdmDocumentUnitFields(docUnit)
+    return missingFields(docUnit)
   })
 
   return {

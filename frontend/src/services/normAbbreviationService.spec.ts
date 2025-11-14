@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { useFetchNormAbbreviations } from './normAbbreviationService'
-import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation'
+import { kvlgFixture, sgb5Fixture } from '@/testing/fixtures/normAbbreviation.fixture'
 
 describe('norm abbreviation service', () => {
   it('returns norm abbreviations', async () => {

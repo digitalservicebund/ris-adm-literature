@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.bund.digitalservice.ris.adm_literature.application.*;
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
-import de.bund.digitalservice.ris.adm_literature.test.WithMockDocumentType;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
 import java.util.List;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureTestEntityManager
 @ActiveProfiles("test")
-@WithMockDocumentType
 class DocumentationUnitPersistenceServiceIntegrationTest {
 
   @Autowired

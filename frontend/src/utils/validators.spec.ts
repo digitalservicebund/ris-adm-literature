@@ -8,7 +8,7 @@ import {
 } from './validators'
 import dayjs from 'dayjs'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType'
+import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType.fixture'
 
 describe('Validators functions', () => {
   describe('areDatesValid', () => {
