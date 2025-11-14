@@ -55,7 +55,7 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Staging data may come into existence, disappear or be changed any time.
 
     * Repeated migrations
-        * Migrations may add, remove or change the documents in staging at any time.
+        * Migrations may add, remove or change imported documents in staging at any time.
 
 * UAT
     * Purpose
@@ -79,7 +79,7 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Data in UAT is expected to persist and only be created, updated or deleted by the users (or migration, cf. below).
 
     * Repeated migration
-        * Migrations may add, remove or change the documents in UAT at any time.
+        * Migrations may add, remove or change imported documents in UAT at any time.
 
 * Production:
     * Primary goal
@@ -99,8 +99,8 @@ _Note: The following is how we aim to set up and use the environments. It does n
         * Data in production is expected to persist and only be created, updated or deleted by the users (or by migration, cf. below).
 
     * Repeated migration
-        * **This is undecided and needs more thought.** 
-        * The most problematic is how to resolve if changes in the old system (that reach us via a migration) and changes through our app may conflict.
+        * Migrations may add, remove or change imported documents in production at any time.
+        * This will change once we have replaced the legacy system.
 
 
 ## Consequences
