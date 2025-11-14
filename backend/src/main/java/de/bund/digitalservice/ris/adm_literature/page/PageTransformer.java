@@ -11,6 +11,14 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class PageTransformer {
 
+  /**
+   * Transforms the given Spring Data page into a custom page object and returns it.7
+   * @param page Spring Data page to transform
+   * @param mappingFunction Optional mapping function for mapping the page content
+   * @return Transformed page record
+   * @param <T> Spring Data page type
+   * @param <R> Result page type
+   */
   public static <T, R> Page<R> transform(
     @Nonnull org.springframework.data.domain.Page<T> page,
     Function<T, R> mappingFunction
@@ -27,6 +35,12 @@ public class PageTransformer {
     );
   }
 
+  /**
+   * Transforms the given Spring Data page into a custom page object and returns it.7
+   * @param page Spring Data page to transform
+   * @return Transformed page record
+   * @param <T> Spring Data page type
+   */
   public static <T> Page<T> transform(@Nonnull org.springframework.data.domain.Page<T> page) {
     return transform(page, Function.identity());
   }
