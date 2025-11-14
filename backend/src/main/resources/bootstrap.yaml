@@ -4,8 +4,10 @@ spring:
       config:
         enabled: true
         fail-fast: true
-        labels:
-          spring-config: "true"
+        sources:
+          - name: database-config
+          - labels:
+              spring-config: "true"
       secrets:
         enabled: true
         fail-fast: true
