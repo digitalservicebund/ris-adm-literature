@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.test;
 
-import de.bund.digitalservice.ris.adm_literature.application.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.application.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationOffice;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import org.springframework.security.test.context.support.WithSecurityContext;
@@ -23,4 +23,6 @@ public @interface WithMockDocumentUser {
    * The document category of document the user works with.
    */
   DocumentCategory category() default DocumentCategory.VERWALTUNGSVORSCHRIFTEN;
+
+  String[] roles() default {};
 }

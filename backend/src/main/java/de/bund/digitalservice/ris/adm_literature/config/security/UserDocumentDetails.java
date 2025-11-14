@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.config.security;
 
-import de.bund.digitalservice.ris.adm_literature.application.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.application.DocumentationOffice;
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationOffice;
 import java.io.Serializable;
 
 /**

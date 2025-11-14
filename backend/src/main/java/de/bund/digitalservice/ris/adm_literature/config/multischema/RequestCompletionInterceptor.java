@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
-import de.bund.digitalservice.ris.adm_literature.application.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationOffice;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

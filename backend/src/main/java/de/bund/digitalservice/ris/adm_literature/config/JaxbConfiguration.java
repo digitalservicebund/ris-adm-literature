@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
-import de.bund.digitalservice.ris.adm_literature.application.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_literature.application.converter.ldml.JaxbHtml;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.JaxbHtml;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
