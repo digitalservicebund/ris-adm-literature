@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
-import { RisUiTheme, RisUiLocale } from '@digitalservicebund/ris-ui/primevue'
+import { RisUiLocale } from '@digitalservicebund/ris-ui/primevue'
+import RisValidUiTheme from '@/theme.ts'
 import '@digitalservicebund/ris-ui/fonts.css'
 import App from './App.vue'
 import * as Sentry from '@sentry/vue'
@@ -23,7 +24,7 @@ try {
   if (import.meta.env.PROD) {
     Sentry.init({
       app,
-      environment: window.location.host,
+      environment: globalThis.location.host,
       dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160',
       integrations: [],
     })
@@ -41,7 +42,7 @@ try {
     .use(createPinia())
     .use(PrimeVue, {
       unstyled: true,
-      pt: RisUiTheme,
+      pt: RisValidUiTheme,
       locale: RisUiLocale.deDE,
     })
     .use(router)
