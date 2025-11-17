@@ -5,10 +5,12 @@ import {
   getInvalidDateErrMessage,
   missingAdmDocumentUnitFields,
   missingUliDocumentUnitFields,
+  missingSliDocumentUnitFields,
 } from './validators'
 import dayjs from 'dayjs'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { docTypeAnordnungFixture } from '@/testing/fixtures/documentType.fixture'
+import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 
 describe('Validators functions', () => {
   describe('areDatesValid', () => {
@@ -164,6 +166,47 @@ describe('Validators functions', () => {
         'veroeffentlichungsjahr',
         'hauptsachtitel',
       ])
+    })
+  })
+
+  describe('missingSliDocumentUnitFields', () => {
+    it('returns empty array if veroeffentlichungsjahr is present', () => {
+      const doc: SliDocumentationUnit = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KALS2025000001',
+        note: '',
+        veroeffentlichungsjahr: '2025',
+      }
+      expect(missingSliDocumentUnitFields(doc)).toEqual([])
+    })
+
+    it('detects missing veroeffentlichungsjahr when empty string', () => {
+      const doc: SliDocumentationUnit = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KALS2025000001',
+        note: '',
+        veroeffentlichungsjahr: '',
+      }
+      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+    })
+
+    it('detects missing veroeffentlichungsjahr when whitespace only', () => {
+      const doc: SliDocumentationUnit = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KALS2025000001',
+        note: '',
+        veroeffentlichungsjahr: '   ',
+      }
+      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+    })
+
+    it('detects missing veroeffentlichungsjahr when undefined', () => {
+      const doc: SliDocumentationUnit = {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KALS2025000001',
+        note: '',
+      }
+      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
     })
   })
 })

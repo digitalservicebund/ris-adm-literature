@@ -116,3 +116,38 @@ export function getUliMenuItems(
     },
   ]
 }
+
+export function getSliMenuItems(
+  documentNumber: string | undefined,
+  routeQuery: LocationQuery,
+): MenuItem[] {
+  if (!documentNumber) {
+    console.warn('documentNumber is required to generate menu items.')
+    return []
+  }
+
+  const baseRoute = {
+    params: { documentNumber },
+    query: routeQuery,
+  }
+
+  return [
+    {
+      label: 'Rubriken',
+      route: {
+        name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
+        ...baseRoute,
+      },
+      children: [
+        {
+          label: 'Formaldaten',
+          route: {
+            ...baseRoute,
+            name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
+            hash: '#formaldaten',
+          },
+        },
+      ],
+    },
+  ]
+}

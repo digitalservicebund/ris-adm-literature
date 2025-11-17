@@ -15,10 +15,19 @@ const route = useRoute()
 
 const searchPath = computed(() => {
   const roles = getRealmRoles()
+
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+    return ROUTE_PATHS.ULI.BASE
+  }
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+    return ROUTE_PATHS.SLI.BASE
+  }
+  if (route.meta.documentCategory === DocumentCategory.VERWALTUNGSVORSCHRIFTEN) {
+    return ROUTE_PATHS.ADM.BASE
+  }
+
   if (roles.length > 1) {
-    return route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
-      ? ROUTE_PATHS.ULI.BASE
-      : ROUTE_PATHS.ADM.BASE
+    return ROUTE_PATHS.ULI.BASE
   }
   return '/'
 })

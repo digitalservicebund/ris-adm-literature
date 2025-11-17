@@ -13,6 +13,7 @@ import LiteratureOverviewPage from './routes/literature/Overview.view.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
 import UliRubriken from './routes/literature/uli/RubrikenPage.vue'
+import SliRubriken from './routes/literature/sli/Rubriken.view.vue'
 import { DocumentCategory } from './domain/documentType'
 import RootRedirectPage from './routes/RootRedirectPage.vue'
 
@@ -159,6 +160,25 @@ const router = createRouter({
           path: '',
           name: ROUTE_NAMES.SLI.START_PAGE,
           component: LiteratureOverviewPage,
+        },
+        {
+          path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.NEW,
+          name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.NEW,
+          component: NewDocument,
+        },
+        {
+          path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.EDIT,
+          name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.EDIT,
+          component: EditDocument,
+          props: true,
+          redirect: { name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN },
+          children: [
+            {
+              path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.RUBRIKEN,
+              name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
+              component: SliRubriken,
+            },
+          ],
         },
       ],
     },

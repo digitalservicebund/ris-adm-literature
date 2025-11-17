@@ -1,11 +1,13 @@
 import { useRoute } from 'vue-router'
 import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
 import { useUliDocumentUnitStore } from '@/stores/uliDocStore'
+import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import { DocumentCategory } from '@/domain/documentType'
 
 const storeMap = {
   [DocumentCategory.VERWALTUNGSVORSCHRIFTEN]: useAdmDocUnitStore,
   [DocumentCategory.LITERATUR_UNSELBSTSTAENDIG]: useUliDocumentUnitStore,
+  [DocumentCategory.LITERATUR_SELBSTSTAENDIG]: useSliDocumentUnitStore,
 } as const
 
 type StoreMap = typeof storeMap
