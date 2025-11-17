@@ -171,6 +171,22 @@ test.describe('Login Flow', () => {
     },
   )
 
+  test(
+    'User without permissions gets 403 on accessing SLI app',
+    { tag: ['@RISDEV-10109'] },
+    async ({ page }) => {
+      await page.goto('/literatur-selbststaendig')
+      await login(page, 'testnoaccess')
+      await expect(page).toHaveURL('/forbidden')
+    },
+  )
+
+  test('ADM-only user gets 403 on SLI app', { tag: ['@RISDEV-10109'] }, async ({ page }) => {
+    await page.goto('/literatur-selbststaendig')
+    await login(page, 'test')
+    await expect(page).toHaveURL('/forbidden')
+  })
+
   // --- General Test (Logout) ---
 
   test(
