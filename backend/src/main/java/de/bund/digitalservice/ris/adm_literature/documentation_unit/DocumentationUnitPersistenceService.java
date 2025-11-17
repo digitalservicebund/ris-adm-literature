@@ -110,7 +110,7 @@ public class DocumentationUnitPersistenceService {
    * @param documentNumber The document number to identify the documentation unit
    * @param json           The json string to update
    * @return The updated documentation unit or an empty optional, if there is no documentation unit
-   * with the given document number
+   *         with the given document number
    */
   @Transactional
   public DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json) {
