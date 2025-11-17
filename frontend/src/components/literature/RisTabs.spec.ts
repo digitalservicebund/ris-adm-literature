@@ -174,7 +174,7 @@ describe('RisTabs', () => {
     expect(tab1).toHaveAttribute('aria-selected', 'true')
   })
 
-  it('handles empty tabs array gracefully', async () => {
+  it('handles empty tabs array gracefully, i.e. not show the tabs', async () => {
     render(RisTabs, {
       props: { tabs: [] },
       global: {
