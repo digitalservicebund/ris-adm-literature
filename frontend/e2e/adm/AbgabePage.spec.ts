@@ -101,6 +101,7 @@ test.describe('ADM AbgabePage', () => {
 
     await page.getByRole('combobox', { name: 'Periodikum' }).fill('Die')
     await page.getByText('ABc | Die Beispieler').click()
+
     await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
     await page.getByText('Übernehmen').click()
 
@@ -113,5 +114,25 @@ test.describe('ADM AbgabePage', () => {
     await page.getByRole('combobox', { name: 'Region' }).fill('AA')
     await page.getByText('AA').click()
     await page.getByRole('button', { name: 'Normgeber übernehmen', exact: true }).click()
+
+    await page.getByText('Dokumenttyp *').click()
+    await page.getByText('Dokumenttyp *').fill('VV')
+    await page.getByText('VV').click()
+
+    await page.getByText('Dokumenttyp Zusatz').fill('Bekanntmachung')
+
+    await page.getByText('Datum des Inkrafttretens *').fill('15.01.2025')
+
+    await page.getByText('Datum des Ausserkrafttretens').fill('15.01.2025')
+
+    await page.getByRole('group', { name: 'Aktenzeichen' }).locator('input').fill('Az1')
+    await page.getByRole('group', { name: 'Aktenzeichen' }).locator('input').press('Enter')
+
+    await page.getByRole('button', { name: 'Titelaspekt hinzufügen' }).click()
+    await page
+      .getByRole('group', { name: 'Titelaspekt' })
+      .locator('input')
+      .fill('Gemeinsamer Bundesausschuss')
+    await page.getByRole('group', { name: 'Titelaspekt' }).locator('input').press('Enter')
   })
 })
