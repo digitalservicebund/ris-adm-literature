@@ -93,4 +93,15 @@ test.describe('ADM AbgabePage', () => {
       await expect(page.getByText('Zitierdatum *', { exact: true })).toBeInViewport()
     },
   )
+
+  test('Should fill in all fields and succeed in publishing', async ({ page }) => {
+    // Given
+    await page.goto('/')
+    await page.getByText('Neue Dokumentationseinheit').click()
+
+    await page.getByRole('combobox', { name: 'Periodikum' }).fill('Die')
+    await page.getByText('ABc | Die Beispieler').click()
+    await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
+    await page.getByText('Übernehmen').click()
+  })
 })
