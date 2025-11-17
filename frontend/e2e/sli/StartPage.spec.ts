@@ -30,10 +30,11 @@ test.describe('StartPage SLI', () => {
       // when - go back and create another
       await page.getByRole('link', { name: 'Suche' }).click()
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-      const secondDocNumber = page.getByText(/KALS\d{10}/)
+      const secondDocNumber = await page.getByText(/KALS\d{10}/).textContent()
 
       // then
-      await expect(secondDocNumber).not.toHaveText(firstDocNumber)
+      // eslint-disable-next-line playwright/prefer-web-first-assertions
+      expect(secondDocNumber).not.toBe(firstDocNumber)
       // Second should be alphanumerically larger
       expect(secondDocNumber! > firstDocNumber!).toBe(true)
     },
