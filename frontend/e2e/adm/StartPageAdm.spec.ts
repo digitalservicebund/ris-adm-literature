@@ -42,7 +42,7 @@ test.describe('StartPage Adm', () => {
     'clicking "Neue Dokumentationseinheit", routes to the Fundstellen of a new Dokumentationseinheit',
     { tag: ['@RISDEV-6041'] },
     async ({ page }) => {
-      // Arrange
+      // Given
       await page.route('/api/adm/documentation-units', async (route) => {
         await route.fulfill({
           json: {
@@ -52,11 +52,11 @@ test.describe('StartPage Adm', () => {
         })
       })
 
-      // Action
+      // When
       await page.goto('/')
       await page.getByText('Neue Dokumentationseinheit').click()
 
-      // Assert
+      // Then
       // this needs to change when KSNR are generated dynamically
       await expect(page).toHaveURL(
         '/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen',
