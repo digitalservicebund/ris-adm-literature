@@ -5,7 +5,11 @@ import { until } from '@vueuse/core'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
 import { ROUTE_PATHS } from '@/constants/routes'
-import { usePostAdmDocUnit, usePostUliDocUnit } from '@/services/documentUnitService.ts'
+import {
+  usePostAdmDocUnit,
+  usePostUliDocUnit,
+  usePostSliDocUnit,
+} from '@/services/documentUnitService.ts'
 import { DocumentCategory } from '@/domain/documentType'
 
 const toast = useToast()
@@ -13,10 +17,16 @@ const router = useRouter()
 const route = useRoute()
 
 onBeforeMount(async () => {
-  const { data, error, isFinished } =
-    route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
-      ? usePostUliDocUnit()
-      : usePostAdmDocUnit()
+  let data, error, isFinished
+
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+    ;({ data, error, isFinished } = usePostUliDocUnit())
+  } else if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+    ;({ data, error, isFinished } = usePostSliDocUnit())
+  } else {
+    ;({ data, error, isFinished } = usePostAdmDocUnit())
+  }
+
   await until(isFinished).toBe(true)
 
   if (error.value) {

@@ -28,6 +28,11 @@ export const ROUTE_NAMES = {
   // SLI (Selbständige Literatur)
   SLI: {
     START_PAGE: 'sli-start-page',
+    DOCUMENT_UNIT: {
+      NEW: 'sli-documentUnit-new',
+      EDIT: 'sli-documentUnit-documentNumber',
+      RUBRIKEN: 'sli-documentUnit-documentNumber-rubriken',
+    },
   },
 } as const
 
@@ -58,5 +63,10 @@ export const ROUTE_PATHS = {
   },
   SLI: {
     BASE: '/literatur-selbstaendig',
+    DOCUMENT_UNIT: {
+      NEW: `${DOCUMENT_UNIT_BASE}/new`,
+      EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
+      RUBRIKEN: 'rubriken',
+    },
   },
 } as const

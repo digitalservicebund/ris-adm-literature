@@ -10,15 +10,18 @@ import { useRoute } from 'vue-router'
 import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
 import { DocumentCategory } from '@/domain/documentType'
 
-const { getUsername, logout, getGroup, getRealmRoles } = useAuthentication()
+const { getUsername, logout, getGroup } = useAuthentication()
 const route = useRoute()
 
 const searchPath = computed(() => {
-  const roles = getRealmRoles()
-  if (roles.length > 1) {
-    return route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
-      ? ROUTE_PATHS.ULI.BASE
-      : ROUTE_PATHS.ADM.BASE
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+    return ROUTE_PATHS.ULI.BASE
+  }
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+    return ROUTE_PATHS.SLI.BASE
+  }
+  if (route.meta.documentCategory === DocumentCategory.VERWALTUNGSVORSCHRIFTEN) {
+    return ROUTE_PATHS.ADM.BASE
   }
   return '/'
 })
