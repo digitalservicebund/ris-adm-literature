@@ -134,5 +134,66 @@ test.describe('ADM AbgabePage', () => {
       .locator('input')
       .fill('Gemeinsamer Bundesausschuss')
     await page.getByRole('group', { name: 'Titelaspekt' }).locator('input').press('Enter')
+
+    await page.getByTestId('Gliederung Editor').click()
+    await page.keyboard.insertText('Gliederung: Neuer Text')
+
+    await page.getByRole('button', { name: 'Schlagwörter hinzufügen' }).click()
+    await page.getByTestId('Schlagwörter_ListInputEdit').click()
+    await page.getByTestId('Schlagwörter_ListInputEdit').fill('Schlagwort 1')
+    await page
+      .getByRole('button', {
+        name: 'Schlagwörter übernehmen',
+      })
+      .click()
+
+    await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
+    await page.getByLabel('Sachgebietsuche auswählen').click()
+    await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
+    await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
+    await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen').click()
+
+    await page
+      .getByTestId('normReferences') // normenkette
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
+      .click()
+    await page.getByText('KVLG').click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).fill('§ 2')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+    await page.getByTestId('list-entry-0').click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('27.01.2025')
+    await page.getByRole('textbox', { name: 'Jahr' }).fill('2025')
+    await page.getByRole('button', { name: 'Weitere Einzelnorm' }).click()
+    await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).nth(1).fill('§ 3')
+    await page.getByRole('button', { name: 'Norm speichern' }).click()
+
+    await page
+      .getByTestId('activeReferences')
+      .getByRole('combobox', { name: 'Art der Verweisung' })
+      .click()
+    await page.getByRole('option', { name: 'Anwendung' }).click()
+    await page
+      .getByTestId('activeReferences')
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
+      .click()
+    await page.getByRole('option', { name: 'SGB 5' }).click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
+    await page.getByLabel('Verweis speichern').click()
+
+    await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
+    await page
+      .getByTestId('activeReferences')
+      .getByRole('combobox', { name: 'Art der Verweisung' })
+      .click()
+    await page.getByRole('option', { name: 'Anwendung' }).click()
+    await page
+      .getByTestId('activeReferences')
+      .getByRole('combobox', { name: 'RIS-Abkürzung' })
+      .click()
+    await page.getByRole('option', { name: 'KVLG' }).click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum' }).click()
+    await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('12.12.2024')
+    await page.getByLabel('Verweis speichern').click()
   })
 })
