@@ -23,10 +23,11 @@
 hs_err_pid*
 replay_pid*
 
-### IntelliJ IDEA ###
+### IDE ###
 /.idea/
 *.iml
 /.vscode/
+ris-adm-literature.code-workspace
 
 # temp files
 cve-list.txt
