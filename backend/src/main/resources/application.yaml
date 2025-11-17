@@ -37,7 +37,7 @@ springdoc:
     path: /api/swagger-ui/v3/api-docs
 
 # At 08:00 every day between Monday and Friday
-cronjob.DocumentationUnitIndexJob: "0 50 17 * * Mon-Fri"
+cronjob.DocumentationUnitIndexJob: "0 0 17 * * Mon-Fri"
 
 frontend:
   auth:
