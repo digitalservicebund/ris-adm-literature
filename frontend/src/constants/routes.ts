@@ -25,6 +25,10 @@ export const ROUTE_NAMES = {
       ABGABE: 'uli-documentUnit-documentNumber-abgabe',
     },
   },
+  // SLI (Selbstständige Literatur)
+  SLI: {
+    START_PAGE: 'sli-start-page',
+  },
 } as const
 
 const DOCUMENT_UNIT_BASE = 'dokumentationseinheit'
@@ -51,5 +55,8 @@ export const ROUTE_PATHS = {
       RUBRIKEN: 'rubriken',
       ABGABE: 'abgabe',
     },
+  },
+  SLI: {
+    BASE: '/literatur-selbststaendig',
   },
 } as const

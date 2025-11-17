@@ -9,9 +9,10 @@ import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/Fundstel
 import NewDocument from '@/routes/NewDocument.vue'
 import Forbidden from '@/routes/Forbidden.vue'
 import StartPageTemplate from './routes/OverviewPage.vue'
+import LiteratureOverviewPage from './routes/literature/Overview.view.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
-import UliRubriken from './routes/uli/RubrikenPage.vue'
+import UliRubriken from './routes/literature/uli/RubrikenPage.vue'
 import { DocumentCategory } from './domain/documentType'
 import RootRedirectPage from './routes/RootRedirectPage.vue'
 
@@ -118,8 +119,7 @@ const router = createRouter({
         {
           path: '',
           name: ROUTE_NAMES.ULI.START_PAGE,
-          component: StartPageTemplate,
-          props: { title: 'Übersicht Unselbstständige Literatur' },
+          component: LiteratureOverviewPage,
         },
         {
           path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.NEW,
@@ -148,6 +148,21 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: ROUTE_PATHS.SLI.BASE,
+      meta: {
+        requiresRole: [USER_ROLES.LITERATURE_USER],
+        documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
+      },
+      children: [
+        {
+          path: '',
+          name: ROUTE_NAMES.SLI.START_PAGE,
+          component: LiteratureOverviewPage,
+        },
+      ],
+    },
+
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
       path: '/:pathMatch(.*)*',

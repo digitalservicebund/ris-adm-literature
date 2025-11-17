@@ -64,12 +64,12 @@ useScrollToHash()
             :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
           />
         </InputField>
-        <InputField id="veroeffentlichungsjahr" label="Veröffentlichungsjahr *">
+        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <InputText
-            id="veroeffentlichungsjahr"
+            :id="slotProps.id"
             v-model="veroeffentlichungsjahr"
             aria-label="Veröffentlichungsjahr"
-            :invalid="false"
+            :invalid="slotProps.hasError"
             fluid
           />
         </InputField>

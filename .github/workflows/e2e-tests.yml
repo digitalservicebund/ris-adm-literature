@@ -20,6 +20,9 @@ jobs:
             { name: "chromium-uli", install: "chromium" },
             { name: "firefox-uli", install: "firefox" },
             { name: "msedge-uli", install: "msedge chromium" },
+            { name: "chromium-sli", install: "chromium" },
+            { name: "firefox-sli", install: "firefox" },
+            { name: "msedge-sli", install: "msedge chromium" }
           ]
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]

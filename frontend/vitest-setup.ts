@@ -2,6 +2,10 @@ import '@testing-library/jest-dom/vitest'
 import { beforeAll, vi } from 'vitest'
 import PrimeVue from 'primevue/config'
 import { config } from '@vue/test-utils'
+import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+// Mock ResizeObserver for PrimeVue components (e.g., TabList)
+globalThis.ResizeObserver = ResizeObserverPolyfill
 
 // Simple mock to satisfy devtools and any browser storage users
 Object.defineProperty(globalThis, 'localStorage', {
