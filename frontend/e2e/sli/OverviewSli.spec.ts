@@ -26,7 +26,7 @@ test.describe('Overview SLI', () => {
         page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
 
-      await expect(page.getByRole('button', { name: 'Neue Dokumentationseinheit' })).toBeDisabled()
+      await expect(page.getByRole('button', { name: 'Neue Dokumentationseinheit' })).toBeVisible()
     },
   )
 

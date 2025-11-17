@@ -3,12 +3,15 @@ import {
   useGetAdmDocUnit,
   useGetAdmPaginatedDocUnits,
   useGetUliDocUnit,
+  useGetSliDocUnit,
   usePostAdmDocUnit,
   usePostUliDocUnit,
+  usePostSliDocUnit,
   usePutAdmDocUnit,
   usePutPublishAdmDocUnit,
   usePutPublishUliDocUnit,
   usePutUliDocUnit,
+  usePutSliDocUnit,
 } from '@/services/documentUnitService'
 import ActiveReference from '@/domain/activeReference.ts'
 import SingleNorm from '@/domain/singleNorm.ts'
@@ -417,5 +420,139 @@ describe('documentUnitService', () => {
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
+  })
+
+  it('fetches a SLI doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+      veroeffentlichungsjahr: '2025',
+    }
+
+    const docUnitResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      json: docUnit,
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(docUnitResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = useGetSliDocUnit('KALS2025000001')
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value).toEqual(docUnit)
+  })
+
+  it('data is null when SLI fetch returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = useGetSliDocUnit('KALS2025000001')
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('returns an error on failed SLI fetch', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = useGetSliDocUnit('KALS2025000001')
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('updates a SLI doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+      veroeffentlichungsjahr: '2025',
+    }
+
+    const updatedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      json: docUnit,
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(updatedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutSliDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+  })
+
+  it('returns an error on failed SLI update', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutSliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('data is null when SLI update call returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutSliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
+  })
+
+  it('creates a SLI doc unit', async () => {
+    const createResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      json: {
+        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+        documentNumber: 'KALS2025000001',
+        note: '',
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(createResp), { status: 201 }),
+    )
+
+    const { data, error, isFetching, isFinished } = usePostSliDocUnit()
+    await until(isFinished).toBe(true)
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(createResp.id)
+  })
+
+  it('returns an error on failed SLI creation', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePostSliDocUnit()
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
+import { getAdmVwvMenuItems, getUliMenuItems, getSliMenuItems } from '@/utils/menuItems'
 import { ROUTE_NAMES } from '@/constants/routes'
 import type MenuItem from '@/domain/menuItem'
 
@@ -129,6 +129,54 @@ describe('getUliMenuItems', () => {
 
   it('handles empty routeQuery gracefully', () => {
     const result = getUliMenuItems(mockDocumentNumber, {})
+    expect(result[0]?.route.query).toEqual({})
+    expect(result[0]?.children?.[0]?.route.query).toEqual({})
+  })
+})
+
+describe('getSliMenuItems', () => {
+  const mockDocumentNumber = '12345'
+  const mockRouteQuery = { tab: 'details' }
+
+  it('returns an empty array if documentNumber is undefined', () => {
+    const result = getSliMenuItems(undefined, mockRouteQuery)
+    expect(result).toEqual([])
+    expect(console.warn).toHaveBeenCalledWith('documentNumber is required to generate menu items.')
+  })
+
+  it('returns an array with a single "Rubriken" menu item if documentNumber is provided', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    expect(Array.isArray(result)).toBe(true)
+    expect(result.length).toBe(1)
+    expect(result[0]?.label).toBe('Rubriken')
+  })
+
+  it('sets the correct route for the "Rubriken" menu item', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    expect(result[0]?.route.name).toBe(ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN)
+    expect(result[0]?.route.params?.documentNumber).toBe(mockDocumentNumber)
+    expect(result[0]?.route.query).toEqual(mockRouteQuery)
+  })
+
+  it('includes a single "Formaldaten" child for the "Rubriken" menu item', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    const rubrikenItem = result[0]
+    expect(rubrikenItem?.children).toBeDefined()
+    expect(rubrikenItem?.children?.length).toBe(1)
+    expect(rubrikenItem?.children?.[0]?.label).toBe('Formaldaten')
+  })
+
+  it('sets the correct route and hash for the "Formaldaten" child', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    const formaldatenItem = result[0]?.children?.[0]
+    expect(formaldatenItem?.route.name).toBe(ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN)
+    expect(formaldatenItem?.route.params?.documentNumber).toBe(mockDocumentNumber)
+    expect(formaldatenItem?.route.query).toEqual(mockRouteQuery)
+    expect(formaldatenItem?.route.hash).toBe('#formaldaten')
+  })
+
+  it('handles empty routeQuery gracefully', () => {
+    const result = getSliMenuItems(mockDocumentNumber, {})
     expect(result[0]?.route.query).toEqual({})
     expect(result[0]?.children?.[0]?.route.query).toEqual({})
   })
