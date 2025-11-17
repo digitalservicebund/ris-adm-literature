@@ -167,8 +167,9 @@ test.describe('ADM AbgabePage', () => {
     await page.getByRole('textbox', { name: 'Einzelnorm der Norm' }).nth(1).fill('§ 3')
     await page.getByRole('button', { name: 'Norm speichern' }).click()
 
+    // Verweise
     await page
-      .getByTestId('activeReferences')
+      .getByTestId('activeReferences') // Norm
       .getByRole('combobox', { name: 'Art der Verweisung' })
       .click()
     await page.getByRole('option', { name: 'Anwendung' }).click()
@@ -181,7 +182,7 @@ test.describe('ADM AbgabePage', () => {
     await page.getByRole('textbox', { name: 'Fassungsdatum der Norm' }).fill('12.12.2024')
     await page.getByLabel('Verweis speichern').click()
 
-    await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click()
+    await page.getByRole('radio', { name: 'Verwaltungsvorschrift auswä' }).click() // verwaltungsvorschrift
     await page
       .getByTestId('activeReferences')
       .getByRole('combobox', { name: 'Art der Verweisung' })
@@ -195,5 +196,41 @@ test.describe('ADM AbgabePage', () => {
     await page.getByRole('textbox', { name: 'Fassungsdatum' }).click()
     await page.getByRole('textbox', { name: 'Fassungsdatum' }).fill('12.12.2024')
     await page.getByLabel('Verweis speichern').click()
+
+    // aktivzitierung rechtsprechung
+    await page.getByText('Art der Zitierung *').click()
+    await page
+      .getByRole('button', { name: 'dropdown-option' })
+      .filter({ hasText: 'Ablehnung' })
+      .click()
+    await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
+    await page.getByText('AG Aachen').click()
+    await page.getByText('Entscheidungsdatum *').fill('15.01.2025')
+    await page.getByText('Aktenzeichen *').fill('Az1')
+    await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
+
+    // Berufsbild
+    await page.getByRole('button', { name: 'Berufsbild hinzufügen' }).click()
+    await page.getByRole('group', { name: 'Berufsbild' }).locator('input').fill('Brillenschleifer')
+    await page.getByRole('group', { name: 'Berufsbild' }).locator('input').press('Enter')
+
+    // Definition
+    await page.getByRole('button', { name: 'Definition hinzufügen' }).click()
+    await page.getByRole('group', { name: 'Definition' }).locator('input').fill('Sachgesamtheit')
+    await page.getByRole('group', { name: 'Definition' }).locator('input').press('Enter')
+
+    // Kurzreferat
+    await page.getByTestId('Kurzreferat Editor').click()
+    await page.keyboard.insertText('Kurzreferat Eintrag 123')
+
+    // when
+    await page.getByText('Abgabe').click()
+    // then
+    await expect(page.getByText('Alle Pflichtfelder sind korrekt ausgefüllt.')).toBeVisible()
+
+    // when
+    await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+    // then
+    await expect(page.getByText('Freigabe ist abgeschlossen.')).toBeVisible()
   })
 })
