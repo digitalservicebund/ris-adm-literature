@@ -1,10 +1,10 @@
 # 12. Environments (staging, UAT, production)
 
-Date: ❗2025-11-xx
+Date: 2025-11-17
 
 ## Status
 
-Proposed ❗ (should become "accepted")
+Accepted
 
 ## Context
 
