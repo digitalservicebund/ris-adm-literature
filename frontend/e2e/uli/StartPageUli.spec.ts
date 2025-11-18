@@ -18,13 +18,13 @@ test.describe('StartPage ULI', () => {
       await expect(page.getByRole('button', { name: 'Log out' })).toHaveCount(1)
 
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Selbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
     },
   )
