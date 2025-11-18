@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 class UliLdmlConverterStrategyIntegrationTest {
 
   @Autowired
-  private UliLdmlConverterStrategy uliLdmlConverterStrategy;
+  private LiteratureLdmlConverterStrategy uliLdmlConverterStrategy;
 
   @Autowired
   @Qualifier("uliLiteratureValidator")
