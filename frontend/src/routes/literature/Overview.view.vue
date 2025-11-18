@@ -14,13 +14,13 @@ const tabs = [
   {
     id: '0',
     routeName: ROUTE_NAMES.ULI.START_PAGE,
-    label: 'Unselbstständige Literatur',
+    label: 'Unselbständige Literatur',
     documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
   },
   {
     id: '1',
     routeName: ROUTE_NAMES.SLI.START_PAGE,
-    label: 'Selbstständige Literatur',
+    label: 'Selbständige Literatur',
     documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
   },
 ]

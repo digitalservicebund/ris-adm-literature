@@ -17,13 +17,13 @@ test.describe('Overview SLI', () => {
       await expect(page.getByRole('button', { name: 'Log out' })).toHaveCount(1)
 
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Selbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Selbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
 
       await expect(page.getByRole('button', { name: 'Neue Dokumentationseinheit' })).toBeDisabled()
@@ -36,18 +36,18 @@ test.describe('Overview SLI', () => {
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbststaendig')
-      const sliTab = page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true })
+      const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
 
       // ensure initial state
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
 
       // when
-      await page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }).click()
+      await page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }).click()
 
       // then
       await expect(page).toHaveURL('/literatur-unselbststaendig')
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
     },
   )
@@ -58,7 +58,7 @@ test.describe('Overview SLI', () => {
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbststaendig')
-      const sliTab = page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true })
+      const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
 
       // when
