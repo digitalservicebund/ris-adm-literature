@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
 import ActiveCitations from '@/components/active-citation/ActiveCitations.vue'
 import ActiveCitation from '@/domain/activeCitation'
-import { type CitationType } from '@/domain/citationType'
+import { type ZitierArt } from '@/domain/zitierArt.ts'
 import { type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import { onSearchShortcutDirective } from '@/utils/onSearchShortcutDirective'
 import { createTestingPinia } from '@pinia/testing'
@@ -12,6 +12,10 @@ import InputText from 'primevue/inputtext'
 import type { Court } from '@/domain/court'
 import type { DocumentType } from '@/domain/documentType'
 import { agAachenFixture, berufsgerichtBremenFixture } from '@/testing/fixtures/court.fixture'
+import {
+  zitierArtAbgrenzungFixture,
+  zitierArtUebernahmeFixture,
+} from '@/testing/fixtures/zitierArt.fixture.ts'
 
 function renderComponent(activeCitations?: ActiveCitation[]) {
   const user = userEvent.setup()
@@ -54,7 +58,7 @@ function generateActiveCitation(options?: {
   decisionDate?: string
   fileNumber?: string
   documentType?: DocumentType
-  citationStyle?: CitationType
+  citationType?: ZitierArt
 }) {
   return new ActiveCitation({
     uuid: options?.uuid ?? crypto.randomUUID(),
@@ -70,9 +74,9 @@ function generateActiveCitation(options?: {
       abbreviation: 'documentTypeShortcut1',
       name: 'documentType1',
     },
-    citationType: options?.citationStyle ?? {
-      uuid: '123',
-      jurisShortcut: 'Änderung',
+    citationType: options?.citationType ?? {
+      id: '123',
+      abbreviation: 'Änderung',
       label: 'Änderung',
     },
   })
@@ -158,34 +162,39 @@ describe('active citations', () => {
     expect(screen.getByTestId('list-entry-0')).toBeInTheDocument()
   })
 
-  it('correctly updates value citation style input', async () => {
+  it('correctly updates value citation type input', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({ zitierArten: [zitierArtAbgrenzungFixture, zitierArtUebernahmeFixture] }),
+        {
+          status: 200,
+        },
+      ),
+    )
+
     const { user } = renderComponent([
       generateActiveCitation({
-        citationStyle: {
-          uuid: '123',
-          jurisShortcut: 'ABC',
-          label: 'ABC',
-        },
+        citationType: zitierArtAbgrenzungFixture,
       }),
     ])
 
-    expect(screen.queryByText(/Änderung/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Übernahme/)).not.toBeInTheDocument()
 
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 
     const activeCitationInput = await screen.findByLabelText('Art der Zitierung')
+    await user.click(screen.getAllByRole('button', { name: 'Entfernen' })[0]!)
     await user.click(activeCitationInput)
-    await user.type(activeCitationInput, 'Änderung')
+    await user.type(activeCitationInput, 'Über')
     await waitFor(() => {
-      expect(screen.getAllByLabelText('dropdown-option')[0]).toHaveTextContent('Änderung')
+      expect(screen.getByText('Übernahme')).toBeInTheDocument()
     })
-    const dropdownItems = screen.getAllByLabelText('dropdown-option')
-    await user.click(dropdownItems[0]!)
+    await user.click(screen.getByText('Übernahme'))
     const button = screen.getByLabelText('Aktivzitierung speichern')
     await user.click(button)
 
-    expect(screen.getByText(/Änderung/)).toBeVisible()
+    expect(screen.getByText(/Übernahme/)).toBeVisible()
   })
 
   it('correctly updates value document type input', async () => {
@@ -222,7 +231,7 @@ describe('active citations', () => {
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalled())
     const gerichtDropDown = screen.getByLabelText('Gericht *')
     await user.click(gerichtDropDown)
-    await user.click(screen.getByRole('button', { name: 'Entfernen' }))
+    await user.click(screen.getAllByRole('button', { name: 'Entfernen' })[1]!)
     await user.type(gerichtDropDown, 'AG')
     await waitFor(() => {
       expect(screen.getByText('AG Aachen')).toBeInTheDocument()
@@ -353,27 +362,25 @@ describe('active citations', () => {
     expect(screen.getAllByText(/Pflichtfeld nicht befüllt/).length).toBe(1)
   })
 
-  it('shows missing citationStyle validation on entry in other field', async () => {
+  it('shows missing citationType validation on entry in other field', async () => {
     const { user } = renderComponent()
 
-    const getStyleValidation = () => screen.queryByTestId('activeCitationPredicate-validationError')
+    const getCitationTypeValidation = () =>
+      screen.queryByTestId('activeCitationPredicate-validationError')
 
-    expect(getStyleValidation()).not.toBeInTheDocument()
+    expect(getCitationTypeValidation()).not.toBeInTheDocument()
 
     await user.type(await screen.findByLabelText('Aktenzeichen Aktivzitierung'), 'test')
 
-    expect(getStyleValidation()).toBeVisible()
+    expect(getCitationTypeValidation()).toBeVisible()
   })
 
-  it('shows missing citationStyle validation for linked decision', async () => {
-    const { user } = renderComponent([
-      generateActiveCitation({
-        documentNumber: '123',
-        citationStyle: {
-          label: 'invalid',
-        },
-      }),
-    ])
+  it('shows missing citationType validation for linked decision', async () => {
+    const activeCitation = generateActiveCitation({
+      documentNumber: '123',
+    })
+    activeCitation.citationType = undefined
+    const { user } = renderComponent([activeCitation])
     const itemHeader = screen.getByTestId('list-entry-0')
     await user.click(itemHeader)
 

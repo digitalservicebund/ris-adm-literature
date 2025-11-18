@@ -8,6 +8,7 @@ import type { NormAbbreviation } from '@/domain/normAbbreviation'
 import type { VerweisTyp } from '@/domain/verweisTyp'
 import { verweisTypToLabel } from '@/domain/activeReference'
 import type { DocumentType } from '@/domain/documentType'
+import type { ZitierArt } from '@/domain/zitierArt.ts'
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
@@ -192,6 +193,22 @@ export function useDokumentTypSearch(docTypes: Ref<DocumentType[]>) {
         id: docType.abbreviation, // or return id from BE
         label: docType.abbreviation,
         secondaryLabel: docType.name,
+      }))
+  }
+}
+
+export function useZitierArtSearch(zitierArten: Ref<ZitierArt[]>) {
+  return function searchFn(query?: string) {
+    return zitierArten.value
+      .filter(
+        (za) =>
+          !query ||
+          za.label?.toLowerCase().includes(query.trim().toLowerCase()) ||
+          za.abbreviation?.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+      .map((za) => ({
+        id: za.id,
+        label: za.label,
       }))
   }
 }

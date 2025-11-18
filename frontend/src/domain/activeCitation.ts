@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
-import type { CitationType } from './citationType'
+import type { ZitierArt } from './zitierArt.ts'
 import type EditableListItem from './editableListItem'
 import RelatedDocumentation from './relatedDocumentation'
 
 export default class ActiveCitation extends RelatedDocumentation implements EditableListItem {
-  public citationType?: CitationType
+  public citationType?: ZitierArt
 
   static readonly requiredFields = ['citationType', 'fileNumber', 'court', 'decisionDate'] as const
 
@@ -60,7 +60,7 @@ export default class ActiveCitation extends RelatedDocumentation implements Edit
   }
 
   get citationTypeIsSet(): boolean {
-    return !!this.citationType?.uuid
+    return !!this.citationType?.id
   }
 
   get showSummaryOnEdit(): boolean {

@@ -10,11 +10,12 @@ import InputText from 'primevue/inputtext'
 import Pagination, { type Page } from '@/components/Pagination.vue'
 import { useValidationStore } from '@/composables/useValidationStore'
 import ActiveCitation from '@/domain/activeCitation'
-import { type CitationType } from '@/domain/citationType'
+import { type ZitierArt } from '@/domain/zitierArt.ts'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
 import type { DocumentType } from '@/domain/documentType'
 import CourtDropDown from '@/components/CourtDropDown.vue'
+import ZitierArtDropDown from '@/components/active-citation/ZitierArtDropDown.vue'
 
 const props = defineProps<{
   modelValue?: ActiveCitation
@@ -34,25 +35,6 @@ const activeCitation = ref(new ActiveCitation({ ...props.modelValue }))
 
 const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>()
 const isLoading = ref(false)
-
-const activeCitationType = computed({
-  get: () =>
-    activeCitation?.value?.citationType
-      ? {
-          label: activeCitation.value.citationType.label,
-          value: activeCitation.value.citationType,
-          additionalInformation: activeCitation.value.citationType.jurisShortcut,
-        }
-      : undefined,
-  set: (newValue) => {
-    if (!newValue) validationStore.add('Pflichtfeld nicht befüllt', 'citationType')
-    if (newValue?.label) {
-      activeCitation.value.citationType = { ...newValue }
-    } else {
-      activeCitation.value.citationType = undefined
-    }
-  },
-})
 
 const activeCitationDocumentType = computed({
   get: () =>
@@ -149,8 +131,8 @@ async function addActiveCitation() {
 
 async function addActiveCitationFromSearch(decision: RelatedDocumentation) {
   const newActiveCitationType = {
-    ...activeCitationType.value?.value,
-  } as CitationType
+    ...activeCitation.value.citationType,
+  } as ZitierArt
   activeCitation.value = new ActiveCitation({
     ...decision,
     citationType: newActiveCitationType,
@@ -202,15 +184,12 @@ onMounted(() => {
       label="Art der Zitierung *"
       :validation-error="validationStore.getByField('citationType')"
     >
-      <ComboboxInput
-        id="activeCitationPredicate"
-        v-model="activeCitationType"
-        aria-label="Art der Zitierung"
-        clear-on-choosing-item
-        :has-error="slotProps.hasError"
-        :item-service="ComboboxItemService.getCitationTypes"
+      <ZitierArtDropDown
+        input-id="activeCitationPredicate"
+        v-model="activeCitation.citationType"
+        :invalid="slotProps.hasError"
         @focus="validationStore.remove('citationType')"
-      ></ComboboxInput>
+      />
     </InputField>
     <div class="flex flex-col gap-24">
       <div class="flex justify-between gap-24">
