@@ -42,7 +42,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     String zusatz,
     String dokumentarischerTitel
   ) {
-    // We should re-assess
+    // We should re-assess if we really need to different UnitContents for Uli and SLi once we have all attributes
     static LiteratureData from(IDocumentationContent content) {
       return switch (content) {
         case UliDocumentationUnitContent c -> new LiteratureData(
