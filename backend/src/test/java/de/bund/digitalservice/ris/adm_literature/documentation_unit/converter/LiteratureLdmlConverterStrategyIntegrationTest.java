@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class UliLdmlConverterStrategyIntegrationTest {
+class LiteratureLdmlConverterStrategyIntegrationTest {
 
   @Autowired
   private LiteratureLdmlConverterStrategy uliLdmlConverterStrategy;
