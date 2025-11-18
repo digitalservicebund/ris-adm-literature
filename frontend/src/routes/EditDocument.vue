@@ -26,10 +26,10 @@ const { documentUnit, error } = storeToRefs(store)
 
 const route = useRoute()
 const menuItems = computed(() => {
-  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
     return getUliMenuItems(props.documentNumber, route.query)
   }
-  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
     return getSliMenuItems(props.documentNumber, route.query)
   }
   return getAdmVwvMenuItems(props.documentNumber, route.query)

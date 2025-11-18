@@ -14,10 +14,10 @@ const { getUsername, logout, getGroup } = useAuthentication()
 const route = useRoute()
 
 const searchPath = computed(() => {
-  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
     return ROUTE_PATHS.ULI.BASE
   }
-  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
     return ROUTE_PATHS.SLI.BASE
   }
   if (route.meta.documentCategory === DocumentCategory.VERWALTUNGSVORSCHRIFTEN) {

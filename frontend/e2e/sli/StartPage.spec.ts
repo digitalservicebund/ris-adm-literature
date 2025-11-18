@@ -6,7 +6,7 @@ test.describe('StartPage SLI', () => {
     { tag: ['@RISDEV-10118'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
 
       // when
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
@@ -14,7 +14,7 @@ test.describe('StartPage SLI', () => {
       // then
       // testbag user belongs to BAG office, so document number should have KALS prefix
       await expect(page.getByRole('heading', { name: /KALS\d{10}/ })).toHaveCount(1)
-      expect(page.url()).toContain('/literatur-selbststaendig/dokumentationseinheit/')
+      expect(page.url()).toContain('/literatur-selbstaendig/dokumentationseinheit/')
     },
   )
 
@@ -23,7 +23,7 @@ test.describe('StartPage SLI', () => {
     { tag: ['@RISDEV-10118'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       const firstDocNumber = await page.getByText(/KALS\d{10}/).textContent()
 
@@ -45,16 +45,16 @@ test.describe('StartPage SLI', () => {
     { tag: ['@RISDEV-10118'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
 
       // when
       await page.getByRole('link', { name: 'Suche' }).click()
 
       // then
-      expect(page.url()).toContain('/literatur-selbststaendig')
+      expect(page.url()).toContain('/literatur-selbstaendig')
       await expect(
-        page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Selbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
     },
   )
@@ -64,7 +64,7 @@ test.describe('StartPage SLI', () => {
     { tag: ['@RISDEV-10142', '@RISDEV-10119'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.waitForURL(/dokumentationseinheit/)
 

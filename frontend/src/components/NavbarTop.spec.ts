@@ -93,14 +93,14 @@ describe('NavbarTop', () => {
 
   it('Multiple roles: Suche link redirects to SLI startpage in SLI context', () => {
     mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
-    mockRoute.meta.documentCategory = DocumentCategory.LITERATUR_SELBSTSTAENDIG
+    mockRoute.meta.documentCategory = DocumentCategory.LITERATUR_SELBSTAENDIG
 
     renderComponent()
 
     const searchLink = screen.getByRole('link', { name: 'Suche' })
 
     expect(searchLink).toBeInTheDocument()
-    expect(searchLink).toHaveAttribute('href', '/literatur-selbststaendig')
+    expect(searchLink).toHaveAttribute('href', '/literatur-selbstaendig')
   })
 
   it('Suche link is not shown if user has multiple roles and we are on root page', () => {

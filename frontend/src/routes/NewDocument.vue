@@ -19,9 +19,9 @@ const route = useRoute()
 onBeforeMount(async () => {
   let data, error, isFinished
 
-  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
     ;({ data, error, isFinished } = usePostUliDocUnit())
-  } else if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+  } else if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
     ;({ data, error, isFinished } = usePostSliDocUnit())
   } else {
     ;({ data, error, isFinished } = usePostAdmDocUnit())
