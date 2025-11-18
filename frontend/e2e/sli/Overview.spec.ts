@@ -57,7 +57,7 @@ test.describe('Overview SLI', () => {
     { tag: ['@RISDEV-10109'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
 
@@ -66,7 +66,7 @@ test.describe('Overview SLI', () => {
 
       // then
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
-      expect(page.url()).toContain('/literatur-selbststaendig')
+      expect(page.url()).toContain('/literatur-selbstaendig')
     },
   )
 })
