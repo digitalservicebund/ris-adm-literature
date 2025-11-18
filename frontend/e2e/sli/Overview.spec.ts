@@ -58,7 +58,7 @@ test.describe('Overview SLI', () => {
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbststaendig')
-      const sliTab = page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true })
+      const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
 
       // when
