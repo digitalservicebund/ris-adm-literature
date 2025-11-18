@@ -28,11 +28,11 @@ const route = useRoute()
 const menuItems = computed(() => {
   if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
     return getUliMenuItems(props.documentNumber, route.query)
-  } else if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
-    return getSliMenuItems(props.documentNumber, route.query)
-  } else {
-    return getAdmVwvMenuItems(props.documentNumber, route.query)
   }
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG) {
+    return getSliMenuItems(props.documentNumber, route.query)
+  }
+  return getAdmVwvMenuItems(props.documentNumber, route.query)
 })
 
 const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')

@@ -491,7 +491,7 @@ describe('documentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
-    expect(data.value?.id).toBe(docUnit.id)
+    expect(data.value).toEqual(docUnit)
   })
 
   it('returns an error on failed SLI update', async () => {
@@ -542,7 +542,7 @@ describe('documentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeFalsy()
-    expect(data.value?.id).toBe(createResp.id)
+    expect(data.value).toEqual(createResp)
   })
 
   it('returns an error on failed SLI creation', async () => {

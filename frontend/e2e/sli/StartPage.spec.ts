@@ -41,7 +41,7 @@ test.describe('StartPage SLI', () => {
   )
 
   test(
-    'clicking "Suche" button from SLI edit view navigates to ULI tab',
+    'clicking "Suche" button from SLI edit view navigates to SLI tab',
     { tag: ['@RISDEV-10118'] },
     async ({ page }) => {
       // given
@@ -75,7 +75,7 @@ test.describe('StartPage SLI', () => {
       const veroeffentlichungsjahrInput = page.getByRole('textbox', {
         name: 'Veröffentlichungsjahr',
       })
-      await veroeffentlichungsjahrInput.fill('2020 bis 2025 $%&abc123')
+      await veroeffentlichungsjahrInput.fill('2020 bis 2025 $%&abc123 🎇')
 
       // when - save
       await page.getByRole('button', { name: 'Speichern' }).click()
@@ -87,7 +87,7 @@ test.describe('StartPage SLI', () => {
       await page.reload()
 
       // then - value persists
-      await expect(veroeffentlichungsjahrInput).toHaveValue('2020 bis 2025 $%&abc123')
+      await expect(veroeffentlichungsjahrInput).toHaveValue('2020 bis 2025 $%&abc123 🎇')
     },
   )
 })
