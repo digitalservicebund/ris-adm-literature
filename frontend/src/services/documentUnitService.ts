@@ -12,10 +12,12 @@ import { type UseFetchReturn } from '@vueuse/core'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
 import { computed, type Ref } from 'vue'
 import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
+import type { SliDocumentationUnit, SliDocumentUnitResponse } from '@/domain/sli/sliDocumentUnit'
 
 const ADM_DOCUMENTATION_UNITS_URL = '/adm/documentation-units'
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
+const SLI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/sli/documentation-units'
 
 export function usePutPublishAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
@@ -56,6 +58,10 @@ export function usePostAdmDocUnit(): UseFetchReturn<AdmDocumentationUnit> {
 
 export function usePostUliDocUnit(): UseFetchReturn<UliDocumentationUnit> {
   return useApiFetch(ULI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
+}
+
+export function usePostSliDocUnit(): UseFetchReturn<SliDocumentationUnit> {
+  return useApiFetch(SLI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
 }
 
 export function useGetAdmPaginatedDocUnits(
@@ -101,6 +107,17 @@ export function useGetUliDocUnit(documentNumber: string): UseFetchReturn<UliDocu
   }).json()
 }
 
+export function useGetSliDocUnit(documentNumber: string): UseFetchReturn<SliDocumentationUnit> {
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentNumber}`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToSliDocUnit(data) : null,
+      }
+    },
+    immediate: false,
+  }).json()
+}
+
 export function usePutAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
 ): UseFetchReturn<AdmDocumentationUnit> {
@@ -129,6 +146,31 @@ export function usePutUliDocUnit(
   })
     .json()
     .put(documentUnit)
+}
+
+export function usePutSliDocUnit(
+  documentUnit: SliDocumentationUnit,
+): UseFetchReturn<SliDocumentationUnit> {
+  return useApiFetch(`${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}`, {
+    afterFetch: ({ data }) => {
+      return {
+        data: data ? mapResponseToSliDocUnit(data) : null,
+      }
+    },
+    immediate: false,
+  })
+    .json()
+    .put(documentUnit)
+}
+
+function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
+  const documentUnit: SliDocumentationUnit = {
+    ...data.json,
+    id: data.id,
+    documentNumber: data.documentNumber,
+  }
+  documentUnit.note = documentUnit.note || ''
+  return documentUnit
 }
 
 function mapResponseToUliDocUnit(data: UliDocumentUnitResponse): UliDocumentationUnit {

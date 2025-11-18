@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import Button from 'primevue/button'
-import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import IconAdd from '~icons/material-symbols/add'
 import RisTabs from '@/components/literature/RisTabs.vue'
@@ -24,10 +23,6 @@ const tabs = [
     documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
   },
 ]
-
-const isSliRoute = computed(() => {
-  return route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG
-})
 </script>
 
 <template>
@@ -35,18 +30,11 @@ const isSliRoute = computed(() => {
     <h1 class="sr-only">Literatur Übersicht</h1>
     <div class="flex items-start justify-between mb-0">
       <RisTabs :tabs="tabs" />
-
       <Button
-        v-if="!isSliRoute"
         label="Neue Dokumentationseinheit"
         class="ml-16"
         @click="router.push(`${route.path}/dokumentationseinheit/new`)"
       >
-        <template #icon>
-          <IconAdd aria-hidden="true" />
-        </template>
-      </Button>
-      <Button v-else label="Neue Dokumentationseinheit" disabled class="ml-16">
         <template #icon>
           <IconAdd aria-hidden="true" />
         </template>

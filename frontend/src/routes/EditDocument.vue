@@ -6,7 +6,7 @@ import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
 import FlexContainer from '@/components/FlexContainer.vue'
 import NavbarSide from '@/components/NavbarSide.vue'
 import SideToggle from '@/components/SideToggle.vue'
-import { getAdmVwvMenuItems, getUliMenuItems } from '@/utils/menuItems'
+import { getAdmVwvMenuItems, getUliMenuItems, getSliMenuItems } from '@/utils/menuItems'
 import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
 import { useToast } from 'primevue'
 import errorMessages from '@/i18n/errors.json'
@@ -25,11 +25,15 @@ const store = useStoreForRoute<DocumentUnitStore>()
 const { documentUnit, error } = storeToRefs(store)
 
 const route = useRoute()
-const menuItems = computed(() =>
-  route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
-    ? getUliMenuItems(props.documentNumber, route.query)
-    : getAdmVwvMenuItems(props.documentNumber, route.query),
-)
+const menuItems = computed(() => {
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
+    return getUliMenuItems(props.documentNumber, route.query)
+  }
+  if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
+    return getSliMenuItems(props.documentNumber, route.query)
+  }
+  return getAdmVwvMenuItems(props.documentNumber, route.query)
+})
 
 const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
 
