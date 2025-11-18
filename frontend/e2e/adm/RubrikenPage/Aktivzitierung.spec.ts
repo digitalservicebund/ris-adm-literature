@@ -244,28 +244,22 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
       await page.goto('/')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.getByRole('link', { name: 'Rubriken' }).click()
-      const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
-      await expect(artDerZitierungInput).toHaveCount(1)
-
-      await artDerZitierungInput.click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Ablehnung' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).fill('Abgr')
+      await page.getByText('Abgrenzung').click()
       await expect(page.getByText('Gericht *')).toBeVisible()
       await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
       await page.getByText('AG Aachen').click()
       await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
       await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
       await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
-      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+      await expect(page.getByText('Abgrenzung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
 
       // when
       await page.getByText('Speichern').click()
       await page.reload()
 
       // then
-      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+      await expect(page.getByText('Abgrenzung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
     },
   )
 })
