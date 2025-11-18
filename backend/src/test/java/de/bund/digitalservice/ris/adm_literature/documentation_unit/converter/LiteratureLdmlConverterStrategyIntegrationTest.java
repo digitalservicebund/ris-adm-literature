@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 class LiteratureLdmlConverterStrategyIntegrationTest {
 
   @Autowired
-  private LiteratureLdmlConverterStrategy uliLdmlConverterStrategy;
+  private LiteratureLdmlConverterStrategy literatureLdmlConverterStrategy;
 
   @Autowired
   @Qualifier("uliLiteratureValidator")
@@ -33,7 +33,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -50,7 +50,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -80,7 +80,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -108,7 +108,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -134,7 +134,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
