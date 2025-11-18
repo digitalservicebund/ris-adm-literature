@@ -38,7 +38,8 @@ export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[
 // Returns a list of missing uli required fields
 export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
   const missingFields: string[] = []
-
+  const s = 'sasa'
+  s.trim()
   if (!doc.dokumenttypen?.length) {
     missingFields.push('dokumenttypen')
   }

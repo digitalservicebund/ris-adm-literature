@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum DocumentCategory {
-  LITERATUR_SELBSTSTAENDIG("LS", "publicLiteraturePublisher"),
-  LITERATUR_UNSELBSTSTAENDIG("LU", "publicLiteraturePublisher"),
+  LITERATUR_SELBSTAENDIG("LS", "publicLiteraturePublisher"),
+  LITERATUR_UNSELBSTAENDIG("LU", "publicLiteraturePublisher"),
   VERWALTUNGSVORSCHRIFTEN("NR", "publicBsgPublisher");
 
   private final String prefix;

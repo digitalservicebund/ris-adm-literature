@@ -6,7 +6,7 @@ test.describe('StartPage ULI', () => {
     { tag: ['@RISDEV-9370'] },
     async ({ page }) => {
       // Action
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
       // Assert
       await expect(page.getByText('Rechtsinformationen')).toBeVisible()
       await expect(page.getByText('des Bundes')).toBeVisible()
@@ -18,13 +18,13 @@ test.describe('StartPage ULI', () => {
       await expect(page.getByRole('button', { name: 'Log out' })).toHaveCount(1)
 
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Selbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Selbständige Literatur', exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('tab', { name: 'Unselbstständige Literatur', exact: true }),
+        page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
     },
   )
@@ -34,7 +34,7 @@ test.describe('StartPage ULI', () => {
     { tag: ['@RISDEV-9887'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
 
       // when
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()

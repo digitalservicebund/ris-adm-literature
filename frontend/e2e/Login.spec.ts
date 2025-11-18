@@ -44,7 +44,7 @@ test.describe('Login Flow', () => {
     'User with both permissions is redirected to Lit deep-link after login',
     { tag: ['@RISDEV-9871'] },
     async ({ page }) => {
-      const protectedLitUrl = '/literatur-unselbststaendig/dokumentationseinheit/LIT123456'
+      const protectedLitUrl = '/literatur-unselbstaendig/dokumentationseinheit/LIT123456'
       const fullProtectedUrl = new RegExp(protectedLitUrl)
 
       await page.goto(protectedLitUrl)
@@ -65,8 +65,8 @@ test.describe('Login Flow', () => {
       await page.goto('/verwaltungsvorschriften')
       await expect(page.getByRole('heading', { name: 'Verwaltungsvorschriften' })).toBeVisible()
       await expect(page.getByLabel('Username or email')).toBeHidden()
-      await page.goto('/literatur-unselbststaendig')
-      await expect(page).toHaveURL(/\/literatur-unselbststaendig/)
+      await page.goto('/literatur-unselbstaendig')
+      await expect(page).toHaveURL(/\/literatur-unselbstaendig/)
       await expect(page.getByLabel('Username or email')).toBeHidden()
     },
   )
@@ -101,7 +101,7 @@ test.describe('Login Flow', () => {
     'User with VwV-only permission gets 403 on accessing Literature app',
     { tag: ['@RISDEV-9370', '@RISDEV-9871'] },
     async ({ page }) => {
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
 
       await login(page, 'test')
       await expect(
@@ -120,7 +120,7 @@ test.describe('Login Flow', () => {
     async ({ page }) => {
       await page.goto('/')
       await login(page, 'testbag')
-      await expect(page).toHaveURL('/literatur-unselbststaendig')
+      await expect(page).toHaveURL('/literatur-unselbstaendig')
     },
   )
 
@@ -160,7 +160,7 @@ test.describe('Login Flow', () => {
     'User without permissions gets 403 on accessing Lit app',
     { tag: ['@RISDEV-9871'] },
     async ({ page }) => {
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
       await login(page, 'testnoaccess')
       await expect(
         page.getByRole('heading', {
@@ -175,14 +175,14 @@ test.describe('Login Flow', () => {
     'User without permissions gets 403 on accessing SLI app',
     { tag: ['@RISDEV-10109'] },
     async ({ page }) => {
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       await login(page, 'testnoaccess')
       await expect(page).toHaveURL('/forbidden')
     },
   )
 
   test('ADM-only user gets 403 on SLI app', { tag: ['@RISDEV-10109'] }, async ({ page }) => {
-    await page.goto('/literatur-selbststaendig')
+    await page.goto('/literatur-selbstaendig')
     await login(page, 'test')
     await expect(page).toHaveURL('/forbidden')
   })

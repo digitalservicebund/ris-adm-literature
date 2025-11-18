@@ -26,7 +26,7 @@ const { documentUnit, error } = storeToRefs(store)
 
 const route = useRoute()
 const menuItems = computed(() =>
-  route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+  route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
     ? getUliMenuItems(props.documentNumber, route.query)
     : getAdmVwvMenuItems(props.documentNumber, route.query),
 )

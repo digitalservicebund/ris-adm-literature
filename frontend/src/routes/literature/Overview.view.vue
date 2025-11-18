@@ -14,19 +14,19 @@ const tabs = [
   {
     id: '0',
     routeName: ROUTE_NAMES.ULI.START_PAGE,
-    label: 'Unselbstständige Literatur',
-    documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+    label: 'Unselbständige Literatur',
+    documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
   },
   {
     id: '1',
     routeName: ROUTE_NAMES.SLI.START_PAGE,
-    label: 'Selbstständige Literatur',
-    documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
+    label: 'Selbständige Literatur',
+    documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
   },
 ]
 
 const isSliRoute = computed(() => {
-  return route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTSTAENDIG
+  return route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG
 })
 </script>
 

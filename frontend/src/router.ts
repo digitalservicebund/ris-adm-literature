@@ -102,7 +102,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/literatur-unselbstaendig/:pathMatch(.*)*',
+      path: '/literatur-unselbststaendig/:pathMatch(.*)*',
       redirect: (to) => {
         const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : ''
         const newPath = oldSuffix ? `${ROUTE_PATHS.ULI.BASE}/${oldSuffix}` : ROUTE_PATHS.ULI.BASE
@@ -113,7 +113,7 @@ const router = createRouter({
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
-        documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+        documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
       },
       children: [
         {
@@ -152,7 +152,7 @@ const router = createRouter({
       path: ROUTE_PATHS.SLI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
-        documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
+        documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
       },
       children: [
         {
