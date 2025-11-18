@@ -5,7 +5,7 @@ import { DocumentCategory } from '@/domain/documentType'
 
 const storeMap = {
   [DocumentCategory.VERWALTUNGSVORSCHRIFTEN]: useAdmDocUnitStore,
-  [DocumentCategory.LITERATUR_UNSELBSTSTAENDIG]: useUliDocumentUnitStore,
+  [DocumentCategory.LITERATUR_UNSELBSTAENDIG]: useUliDocumentUnitStore,
 } as const
 
 type StoreMap = typeof storeMap

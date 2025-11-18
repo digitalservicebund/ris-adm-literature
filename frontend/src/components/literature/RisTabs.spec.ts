@@ -25,8 +25,8 @@ describe('RisTabs', () => {
 
   it('renders tabs with labels', async () => {
     const tabs: RisTab[] = [
-      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbstständige Literatur' },
-      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbstständige Literatur' },
+      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbständige Literatur' },
+      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbständige Literatur' },
     ]
 
     render(RisTabs, {
@@ -39,25 +39,25 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    expect(screen.getByRole('tab', { name: 'Unselbstständige Literatur' })).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: 'Selbstständige Literatur' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Unselbständige Literatur' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Selbständige Literatur' })).toBeInTheDocument()
   })
 
   it('activates tab based on route.meta.documentCategory', async () => {
-    mockRoute.meta = { documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG }
+    mockRoute.meta = { documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG }
 
     const tabs: RisTab[] = [
       {
         id: '0',
         routeName: ROUTE_NAMES.ULI.START_PAGE,
-        label: 'Unselbstständige Literatur',
-        documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+        label: 'Unselbständige Literatur',
+        documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
       },
       {
         id: '1',
         routeName: ROUTE_NAMES.SLI.START_PAGE,
-        label: 'Selbstständige Literatur',
-        documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
+        label: 'Selbständige Literatur',
+        documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
       },
     ]
 
@@ -71,7 +71,7 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    const tab2 = screen.getByRole('tab', { name: 'Selbstständige Literatur' })
+    const tab2 = screen.getByRole('tab', { name: 'Selbständige Literatur' })
     expect(tab2).toHaveAttribute('aria-selected', 'true')
   })
 
@@ -79,8 +79,8 @@ describe('RisTabs', () => {
     mockRoute.meta = {}
 
     const tabs: RisTab[] = [
-      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbstständige Literatur' },
-      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbstständige Literatur' },
+      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbständige Literatur' },
+      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbständige Literatur' },
     ]
 
     render(RisTabs, {
@@ -93,14 +93,14 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    const tab2 = screen.getByRole('tab', { name: 'Selbstständige Literatur' })
+    const tab2 = screen.getByRole('tab', { name: 'Selbständige Literatur' })
     expect(tab2).toHaveAttribute('aria-selected', 'true')
   })
 
   it('falls back to first tab if no defaultTab and no matching documentCategory', async () => {
     const tabs: RisTab[] = [
-      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbstständige Literatur' },
-      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbstständige Literatur' },
+      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbständige Literatur' },
+      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbständige Literatur' },
     ]
 
     mockRoute.meta = {}
@@ -115,15 +115,15 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    const tab1 = screen.getByRole('tab', { name: 'Unselbstständige Literatur' })
+    const tab1 = screen.getByRole('tab', { name: 'Unselbständige Literatur' })
     expect(tab1).toHaveAttribute('aria-selected', 'true')
   })
 
   it('navigates to correct route when tab is clicked', async () => {
     const user = userEvent.setup()
     const tabs: RisTab[] = [
-      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbstständige Literatur' },
-      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbstständige Literatur' },
+      { id: '0', routeName: ROUTE_NAMES.ULI.START_PAGE, label: 'Unselbständige Literatur' },
+      { id: '1', routeName: ROUTE_NAMES.SLI.START_PAGE, label: 'Selbständige Literatur' },
     ]
 
     render(RisTabs, {
@@ -136,27 +136,27 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    const tab2 = screen.getByRole('tab', { name: 'Selbstständige Literatur' })
+    const tab2 = screen.getByRole('tab', { name: 'Selbständige Literatur' })
     await user.click(tab2)
 
     expect(mockPush).toHaveBeenCalledWith({ name: ROUTE_NAMES.SLI.START_PAGE })
   })
 
   it('prioritizes documentCategory over defaultTab', async () => {
-    mockRoute.meta = { documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG }
+    mockRoute.meta = { documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG }
 
     const tabs: RisTab[] = [
       {
         id: '0',
         routeName: ROUTE_NAMES.ULI.START_PAGE,
-        label: 'Unselbstständige Literatur',
-        documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+        label: 'Unselbständige Literatur',
+        documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
       },
       {
         id: '1',
         routeName: ROUTE_NAMES.SLI.START_PAGE,
-        label: 'Selbstständige Literatur',
-        documentCategory: DocumentCategory.LITERATUR_SELBSTSTAENDIG,
+        label: 'Selbständige Literatur',
+        documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
       },
     ]
 
@@ -170,7 +170,7 @@ describe('RisTabs', () => {
 
     await nextTick()
 
-    const tab1 = screen.getByRole('tab', { name: 'Unselbstständige Literatur' })
+    const tab1 = screen.getByRole('tab', { name: 'Unselbständige Literatur' })
     expect(tab1).toHaveAttribute('aria-selected', 'true')
   })
 

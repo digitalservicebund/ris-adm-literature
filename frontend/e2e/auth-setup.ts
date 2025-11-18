@@ -7,8 +7,8 @@ const baseURL = 'http://localhost:5173'
 
 type DocumentTypeCode =
   | 'VERWALTUNGSVORSCHRIFTEN'
-  | 'LITERATUR_SELBSTSTAENDIG'
-  | 'LITERATUR_UNSELBSTSTAENDIG'
+  | 'LITERATUR_SELBSTAENDIG'
+  | 'LITERATUR_UNSELBSTAENDIG'
 
 async function performLogin(
   page: Page,
@@ -51,7 +51,7 @@ setup('authenticate as adm user', async ({ page }) => {
 // Setup for uli user
 setup('authenticate as uli user', async ({ page }) => {
   console.info('--- Starting Setup: Authentication uli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_UNSELBSTSTAENDIG')
+  await performLogin(page, 'testbag', 'test', 'LITERATUR_UNSELBSTAENDIG')
   await page.context().storageState({ path: uliAuthFile })
   console.info('--- Authentication successful. State saved. ---')
 })
@@ -59,7 +59,7 @@ setup('authenticate as uli user', async ({ page }) => {
 // Setup for sli user
 setup('authenticate as sli user', async ({ page }) => {
   console.info('--- Starting Setup: Authentication sli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_SELBSTSTAENDIG')
+  await performLogin(page, 'testbag', 'test', 'LITERATUR_SELBSTAENDIG')
   await page.context().storageState({ path: sliAuthFile })
   console.info('--- Authentication successful. State saved. ---')
 })

@@ -16,7 +16,7 @@ const route = useRoute()
 const searchPath = computed(() => {
   const roles = getRealmRoles()
   if (roles.length > 1) {
-    return route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+    return route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
       ? ROUTE_PATHS.ULI.BASE
       : ROUTE_PATHS.ADM.BASE
   }

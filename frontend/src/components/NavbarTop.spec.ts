@@ -22,7 +22,7 @@ vi.mock('@/services/auth', () => ({
 }))
 
 const mockRoute = {
-  meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG },
+  meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG },
   name: 'SomeRoute',
 }
 
@@ -69,14 +69,14 @@ describe('NavbarTop', () => {
 
   it('Multiple roles: Suche link redirects to ULI startpage in literature context', () => {
     mockAuth.getRealmRoles = vi.fn(() => [USER_ROLES.ADM_USER, USER_ROLES.LITERATURE_USER])
-    mockRoute.meta.documentCategory = DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+    mockRoute.meta.documentCategory = DocumentCategory.LITERATUR_UNSELBSTAENDIG
 
     renderComponent()
 
     const searchLink = screen.getByRole('link', { name: 'Suche' })
 
     expect(searchLink).toBeInTheDocument()
-    expect(searchLink).toHaveAttribute('href', '/literatur-unselbststaendig')
+    expect(searchLink).toHaveAttribute('href', '/literatur-unselbstaendig')
   })
 
   it('Multiple roles: Suche link redirects to ADM startpage in adm context', () => {

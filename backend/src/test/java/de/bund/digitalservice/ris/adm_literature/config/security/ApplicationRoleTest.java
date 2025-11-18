@@ -54,7 +54,7 @@ class ApplicationRoleTest {
         Arguments.of(
           ApplicationRole.LITERATURE,
           "literature_user",
-          DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+          DocumentCategory.LITERATUR_UNSELBSTAENDIG
         )
       );
     }

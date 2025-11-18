@@ -61,7 +61,7 @@ useScrollToHash()
             v-model="dokumenttypen"
             aria-label="Dokumenttyp"
             :invalid="slotProps.hasError"
-            :document-category="DocumentCategory.LITERATUR_UNSELBSTSTAENDIG"
+            :document-category="DocumentCategory.LITERATUR_UNSELBSTAENDIG"
           />
         </InputField>
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">

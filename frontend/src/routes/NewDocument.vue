@@ -14,7 +14,7 @@ const route = useRoute()
 
 onBeforeMount(async () => {
   const { data, error, isFinished } =
-    route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTSTAENDIG
+    route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG
       ? usePostUliDocUnit()
       : usePostAdmDocUnit()
   await until(isFinished).toBe(true)

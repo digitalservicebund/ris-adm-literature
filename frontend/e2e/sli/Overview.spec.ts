@@ -6,7 +6,7 @@ test.describe('Overview SLI', () => {
     { tag: ['@RISDEV-10109'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
 
       // then
       await expect(page.getByText('Rechtsinformationen')).toBeVisible()
@@ -35,7 +35,7 @@ test.describe('Overview SLI', () => {
     { tag: ['@RISDEV-10109'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
 
       // ensure initial state
@@ -45,7 +45,7 @@ test.describe('Overview SLI', () => {
       await page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }).click()
 
       // then
-      await expect(page).toHaveURL('/literatur-unselbststaendig')
+      await expect(page).toHaveURL('/literatur-unselbstaendig')
       await expect(
         page.getByRole('tab', { name: 'Unselbständige Literatur', exact: true }),
       ).toHaveAttribute('aria-selected', 'true')
@@ -57,7 +57,7 @@ test.describe('Overview SLI', () => {
     { tag: ['@RISDEV-10109'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbststaendig')
+      await page.goto('/literatur-selbstaendig')
       const sliTab = page.getByRole('tab', { name: 'Selbständige Literatur', exact: true })
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
 
@@ -66,7 +66,7 @@ test.describe('Overview SLI', () => {
 
       // then
       await expect(sliTab).toHaveAttribute('aria-selected', 'true')
-      expect(page.url()).toContain('/literatur-selbststaendig')
+      expect(page.url()).toContain('/literatur-selbstaendig')
     },
   )
 })

@@ -6,7 +6,7 @@ test.describe('StartPage ULI', () => {
     { tag: ['@RISDEV-9370'] },
     async ({ page }) => {
       // Action
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
       // Assert
       await expect(page.getByText('Rechtsinformationen')).toBeVisible()
       await expect(page.getByText('des Bundes')).toBeVisible()
@@ -34,7 +34,7 @@ test.describe('StartPage ULI', () => {
     { tag: ['@RISDEV-9887'] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-unselbststaendig')
+      await page.goto('/literatur-unselbstaendig')
 
       // when
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()

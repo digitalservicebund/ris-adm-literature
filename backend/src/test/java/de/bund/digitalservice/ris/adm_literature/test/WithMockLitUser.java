@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @WithMockDocumentUser(
   office = DocumentationOffice.BAG,
-  category = DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+  category = DocumentCategory.LITERATUR_UNSELBSTAENDIG,
   roles = "ROLE_literature_user"
 )
 public @interface WithMockLitUser {
