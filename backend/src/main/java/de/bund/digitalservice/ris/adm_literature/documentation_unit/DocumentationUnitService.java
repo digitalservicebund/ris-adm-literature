@@ -111,7 +111,7 @@ public class DocumentationUnitService {
 
     return switch (documentationUnitContent) {
       case SliDocumentationUnitContent _ -> {
-        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTSTAENDIG);
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTAENDIG);
         // TODO: Return converted doc like for adm NOSONAR
         yield optionalDocumentationUnit;
       }
