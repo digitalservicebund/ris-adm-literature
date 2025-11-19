@@ -89,13 +89,10 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
         log.warn("Editing previous XML version is not fully implemented; creating new document.");
       }
 
-      // 1. Determine context & extract data
       LiteratureData data = LiteratureData.from(content);
 
-      // 2. Create minimal document based on type
       LdmlDocument ldmlDocument = minimalLdmlDocument.create(data.category());
 
-      // 3. Execute Transformation Pipeline
       transformToLdml(ldmlDocument, data);
 
       return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());
