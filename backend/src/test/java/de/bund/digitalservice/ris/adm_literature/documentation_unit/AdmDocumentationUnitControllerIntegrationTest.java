@@ -5,7 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_literature.config.security.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,14 +16,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 // MOCK environment for MockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@WithMockUser(roles = "adm_user")
+@WithMockAdmUser
 @Import(SecurityConfiguration.class)
 class AdmDocumentationUnitControllerIntegrationTest {
 
@@ -35,6 +37,9 @@ class AdmDocumentationUnitControllerIntegrationTest {
   // Real service; for confirming that the full application context was loaded
   @Autowired
   private DocumentationUnitService documentationUnitService;
+
+  @Autowired
+  private ObjectMapper objectMapper;
 
   /**
    * Setup MockMvc before each test to use the entire application context.
@@ -56,22 +61,32 @@ class AdmDocumentationUnitControllerIntegrationTest {
   @Test
   void documentSholdPublishFine() throws Exception {
     // given
-    mockMvc
+    MvcResult mvcResult = mockMvc
       .perform(post("/api/adm/documentation-units"))
       .andDo(print())
-      .andExpect(status().isCreated());
+      .andExpect(status().isCreated())
+      .andReturn();
+
+    String responseString = mvcResult.getResponse().getContentAsString();
+
+    DocumentationUnit documentationUnit = objectMapper.readValue(
+      responseString,
+      DocumentationUnit.class
+    );
+
+    String documentNumber = documentationUnit.documentNumber();
 
     // when
     mockMvc
       .perform(
-        put("/api/adm/documentation-units/KSNR2025000018/publish")
+        put("/api/adm/documentation-units/" + documentNumber + "/publish")
           .content(DOCUMENT_UNIT_JSON_TEXT_BLOCK)
           .contentType(MediaType.APPLICATION_JSON)
       )
       // then
       .andDo(print())
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.json.documentNumber").value("KSNR2025000018"));
+      .andExpect(jsonPath("$.json.documentNumber").value(documentNumber));
   }
 
   String DOCUMENT_UNIT_JSON_TEXT_BLOCK =
