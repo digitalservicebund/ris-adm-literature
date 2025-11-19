@@ -24,6 +24,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Slf4j
 public class PublisherConfig {
 
+  /**
+   * Creates a {@link Publisher} bean for publishing BSG documents.
+   * @param s3Client The S3 client to use for publishing.
+   * @param validator The validator to use for BSG documents.
+   * @param bucketName The name of the bucket to publish to.
+   * @return A configured {@link Publisher} instance.
+   */
   @Bean("publicBsgPublisher")
   public Publisher publicBsgPublisher(
     @Qualifier("publicBsgS3Client") S3Client s3Client,
@@ -38,6 +45,14 @@ public class PublisherConfig {
     );
   }
 
+  /**
+   * Creates a {@link Publisher} bean for publishing literature documents.
+   * @param s3Client The S3 client to use for publishing.
+   * @param uliValidator The validator to use for ULI documents.
+   * @param sliValidator The validator to use for SLI documents.
+   * @param bucketName The name of the bucket to publish to.
+   * @return A configured {@link Publisher} instance.
+   */
   @Bean("publicLiteraturePublisher")
   public Publisher publicLiteraturePublisher(
     @Qualifier("publicLiteratureS3Client") S3Client s3Client,
