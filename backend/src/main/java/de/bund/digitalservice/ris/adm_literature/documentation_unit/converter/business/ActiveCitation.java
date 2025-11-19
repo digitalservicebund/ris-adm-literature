@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.court.Court;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart.ZitierArt;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -22,9 +24,9 @@ public record ActiveCitation(
   UUID uuid,
   boolean newEntry,
   String documentNumber,
-  Court court,
-  String decisionDate,
-  String fileNumber,
+  @NotNull Court court,
+  @NotNull String decisionDate,
+  @NotNull String fileNumber,
   DocumentType documentType,
-  @JsonAlias("citationType") ZitierArt zitierArt
+  @NotNull @Valid @JsonAlias("citationType") ZitierArt zitierArt
 ) {}

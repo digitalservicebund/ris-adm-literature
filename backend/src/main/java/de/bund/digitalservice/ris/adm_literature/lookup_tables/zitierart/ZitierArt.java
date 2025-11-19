@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -9,4 +10,4 @@ import java.util.UUID;
  * @param abbreviation The abbreviation
  * @param label the label
  */
-public record ZitierArt(UUID id, String abbreviation, String label) {}
+public record ZitierArt(UUID id, @NotNull String abbreviation, @NotNull String label) {}

@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.b
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.Fundstelle;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -53,7 +54,7 @@ public record AdmDocumentationUnitContent(
   boolean noAktenzeichen,
   @NotNull DocumentType dokumenttyp,
   String dokumenttypZusatz,
-  List<ActiveCitation> activeCitations,
+  @Valid List<ActiveCitation> activeCitations,
   List<ActiveReference> activeReferences,
   List<NormReference> normReferences,
   String note,

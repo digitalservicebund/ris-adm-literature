@@ -382,7 +382,7 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
               ImplicitReference implicitReference = new ImplicitReference();
               String shortForm = StringUtils.joinWith(
                 " ",
-                activeCitation.zitierArt().label(),
+                activeCitation.zitierArt().abbreviation(),
                 activeCitation.court().type(),
                 activeCitation.court().location(),
                 activeCitation.fileNumber()
