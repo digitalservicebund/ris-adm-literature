@@ -257,7 +257,7 @@ class DocumentationUnitServiceTest {
     // then
     assertThat(result).isPresent();
     verify(publisher).publish(publicationDetailsCaptor.capture());
-    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+    assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
       "publicBsgPublisher"
     );
   }
@@ -301,7 +301,7 @@ class DocumentationUnitServiceTest {
     // then
     assertThat(result).isPresent();
     verify(publisher).publish(publicationDetailsCaptor.capture());
-    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+    assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
       "publicLiteraturePublisher"
     );
   }

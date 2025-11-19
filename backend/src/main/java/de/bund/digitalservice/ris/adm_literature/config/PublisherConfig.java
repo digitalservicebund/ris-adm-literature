@@ -64,7 +64,7 @@ public class PublisherConfig {
    * This bean is marked as {@link Primary} so that it becomes the default implementation
    * injected into services like {@code DocumentationUnitService}. Its role is to receive all
    * publish requests and delegate them to the appropriate concrete publisher instance
-   * based on the {@code targetPublisher} specified in the {@link Publisher.PublicationDetails}.
+   * based on the document.targetPublisher specified in the {@link Publisher.PublicationDetails}.
    *
    * @param allPublishers A list of all other beans that implement the {@link Publisher} interface,
    *                      automatically injected by Spring. These publisher beans are defined as a bean like
@@ -87,7 +87,7 @@ public class PublisherConfig {
 
       @Override
       public void publish(@Nonnull PublicationDetails publicationDetails) {
-        String target = publicationDetails.targetPublisher();
+        String target = publicationDetails.category().getPublisherName();
         Publisher selectedPublisher = publisherMap.get(target);
         if (selectedPublisher != null) {
           selectedPublisher.publish(publicationDetails);

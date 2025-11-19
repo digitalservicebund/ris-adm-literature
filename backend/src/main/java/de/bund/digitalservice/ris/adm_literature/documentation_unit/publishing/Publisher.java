@@ -25,12 +25,7 @@ public interface Publisher {
    *
    * @param documentNumber The unique identifier for the document, used as the storage key.
    * @param xmlContent The LDML XML content of the document to be stored.
-   * @param targetPublisher The target publisher
+   * @param category The document category
    */
-  record PublicationDetails(
-    String documentNumber,
-    String xmlContent,
-    String targetPublisher,
-    DocumentCategory category
-  ) {}
+  record PublicationDetails(String documentNumber, String xmlContent, DocumentCategory category) {}
 }
