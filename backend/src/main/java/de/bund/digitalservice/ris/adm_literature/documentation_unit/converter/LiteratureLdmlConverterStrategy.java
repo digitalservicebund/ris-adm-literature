@@ -86,6 +86,8 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) {
     try {
       if (previousXmlVersion != null) {
+        // We'd need an LdmlDocument parser here if we want to edit
+        // For now, just create a new one
         log.warn("Editing previous XML version is not fully implemented; creating new document.");
       }
 
