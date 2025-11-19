@@ -88,7 +88,6 @@ describe('Sli TitelSection', () => {
   })
 
   it('disables hauptsachtitel and zusatz when dokumentarischerTitel has content', async () => {
-    const user = userEvent.setup()
     renderComponent({ dokumentarischerTitel: 'Doc Title' })
 
     const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
@@ -164,5 +163,46 @@ describe('Sli TitelSection', () => {
     await user.clear(zusatzInput)
 
     expect(docInput).toBeEnabled()
+  })
+
+  it('does not disable dokumentarischerTitel when hauptsachtitel has only whitespace', async () => {
+    const user = userEvent.setup()
+    renderComponent({ hauptsachtitel: '   ' })
+
+    const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    await user.click(docButton)
+
+    const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
+    expect(docInput).toBeEnabled()
+  })
+
+  it('does not disable dokumentarischerTitel when hauptsachtitelZusatz has only whitespace', async () => {
+    const user = userEvent.setup()
+    renderComponent({ hauptsachtitelZusatz: '   ' })
+
+    const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    await user.click(docButton)
+
+    const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
+    expect(docInput).toBeEnabled()
+  })
+
+  it('trims whitespace on blur but keeps field open if content remains', async () => {
+    const user = userEvent.setup()
+    renderComponent()
+
+    await user.click(screen.getByRole('button', { name: 'Dokumentarischer Titel' }))
+    const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
+
+    await user.type(docInput, '  Title  ')
+    await user.tab()
+
+    expect(docInput).toBeVisible()
+    expect(docInput).toHaveValue('Title')
+  })
+
+  it('handles null/undefined dokumentarischerTitel value', () => {
+    renderComponent({ dokumentarischerTitel: undefined })
+    expect(screen.getByRole('button', { name: 'Dokumentarischer Titel' })).toBeVisible()
   })
 })
