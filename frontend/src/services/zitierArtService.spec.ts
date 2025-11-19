@@ -5,7 +5,7 @@ import {
   zitierArtUebernahmeFixture,
 } from '@/testing/fixtures/zitierArt.fixture.ts'
 
-describe('zitier arten service', () => {
+describe('ZitierArtService', () => {
   it('returns zitier arten', async () => {
     vi.spyOn(window, 'fetch').mockResolvedValue(
       new Response(
