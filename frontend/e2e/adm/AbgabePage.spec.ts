@@ -110,6 +110,7 @@ test.describe('ADM AbgabePage', () => {
 
     // Formaldaten
     await page.getByText('Amtl. Langüberschrift *').fill('This is my Langüberschrift')
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Zitierdatum' }).locator('input').fill('15.01.2025')
 
     // Normgeber
@@ -129,14 +130,18 @@ test.describe('ADM AbgabePage', () => {
 
     await page.getByText('Datum des Ausserkrafttretens').fill('15.01.2025')
 
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Aktenzeichen' }).locator('input').fill('Az1')
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Aktenzeichen' }).locator('input').press('Enter')
 
     await page.getByRole('button', { name: 'Titelaspekt hinzufügen' }).click()
+    // eslint-disable-next-line playwright/no-raw-locators
     await page
       .getByRole('group', { name: 'Titelaspekt' })
       .locator('input')
       .fill('Gemeinsamer Bundesausschuss')
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Titelaspekt' }).locator('input').press('Enter')
 
     // Gliederung
@@ -216,12 +221,16 @@ test.describe('ADM AbgabePage', () => {
 
     // Berufsbild
     await page.getByRole('button', { name: 'Berufsbild hinzufügen' }).click()
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Berufsbild' }).locator('input').fill('Brillenschleifer')
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Berufsbild' }).locator('input').press('Enter')
 
     // Definition
     await page.getByRole('button', { name: 'Definition hinzufügen' }).click()
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Definition' }).locator('input').fill('Sachgesamtheit')
+    // eslint-disable-next-line playwright/no-raw-locators
     await page.getByRole('group', { name: 'Definition' }).locator('input').press('Enter')
 
     // Kurzreferat
