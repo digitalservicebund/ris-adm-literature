@@ -56,7 +56,7 @@ class S3PublishAdapterIntegrationTest {
   private static final String FIRST_PUBLISHER_NAME = "publicBsgPublisher";
 
   private static final String SECOND_BUCKET_NAME = "test-bucket-2";
-  private static final String SECOND_PUBLISHER_NAME = "secondTestPublisher";
+  private static final String SECOND_PUBLISHER_NAME = "publicLiteraturePublisher";
 
   private static final String CHANGELOG_DIR = "changelogs/";
 
@@ -213,8 +213,7 @@ class S3PublishAdapterIntegrationTest {
     );
   }
 
-  // TODO: Fix test
-  /*  @Test
+  @Test
   void publish_shouldRouteToSecondPublisherAndUploadToCorrectBucket() {
     // given
     String docNumber = "doc-xyz-789";
@@ -257,7 +256,7 @@ class S3PublishAdapterIntegrationTest {
     assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"changed\":[\"doc-xyz-789.akn.xml\"]}"
     );
-  }*/
+  }
 
   @Test
   void publish_shouldThrowValidationFailedException_whenXmlIsInvalid() throws Exception {
