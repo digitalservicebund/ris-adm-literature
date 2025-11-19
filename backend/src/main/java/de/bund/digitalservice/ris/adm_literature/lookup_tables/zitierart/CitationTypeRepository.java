@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import jakarta.annotation.Nonnull;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -7,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 interface CitationTypeRepository extends JpaRepository<CitationTypeEntity, UUID> {
-  Page<CitationTypeEntity> findByAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+  Page<
+    CitationTypeEntity
+  > findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+    @Nonnull DocumentCategory documentCategory,
     @Nonnull String abbreviation,
     @Nonnull String label,
     @Nonnull Pageable pageable

@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -42,7 +43,8 @@ public class ZitierArtService {
       : Pageable.unpaged(sort);
     var citationTypes = StringUtils.isBlank(searchTerm)
       ? citationTypeRepository.findAll(pageable)
-      : citationTypeRepository.findByAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+      : citationTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+        query.documentCategory(),
         searchTerm,
         searchTerm,
         pageable
@@ -53,13 +55,18 @@ public class ZitierArtService {
   /**
    * Finds all citation types (ZitierArten) matching a given abbreviation.
    *
-   * @param abbreviation The exact abbreviation to search for.
+   * @param abbreviation The exact abbreviation to search for
+   * @param documentCategory The document category to filter for
    * @return A list of matching {@link ZitierArt}.
    */
   @Transactional(readOnly = true)
-  public List<ZitierArt> findZitierArtenByAbbreviation(@Nonnull String abbreviation) {
+  public List<ZitierArt> findZitierArtenByAbbreviation(
+    @Nonnull String abbreviation,
+    @Nonnull DocumentCategory documentCategory
+  ) {
     CitationTypeEntity probe = new CitationTypeEntity();
     probe.setAbbreviation(abbreviation);
+    probe.setDocumentCategory(documentCategory);
     return citationTypeRepository
       .findAll(Example.of(probe))
       .stream()

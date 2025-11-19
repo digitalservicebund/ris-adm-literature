@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import de.bund.digitalservice.ris.adm_literature.config.security.SecurityConfiguration;
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import de.bund.digitalservice.ris.adm_literature.page.TestPage;
 import java.util.List;
@@ -41,7 +42,11 @@ class ZitierArtControllerTest {
     var uebernahme = new ZitierArt(UUID.randomUUID(), "Übernahme", "Übernahme");
     given(
       zitierArtService.findZitierArten(
-        new ZitierArtQuery("", new QueryOptions(0, 4, "abbreviation", Sort.Direction.ASC, true))
+        new ZitierArtQuery(
+          "",
+          DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+          new QueryOptions(0, 4, "abbreviation", Sort.Direction.ASC, true)
+        )
       )
     ).willReturn(TestPage.create(List.of(abgrenzung, ablehnung, aenderung, uebernahme)));
 

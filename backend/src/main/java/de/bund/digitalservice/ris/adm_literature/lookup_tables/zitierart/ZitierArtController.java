@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class ZitierArtController {
    * Return 'Zitierarten' (optionally with search term, pagination, sorting)
    *
    * @param searchTerm Keyword to restrict results to.
+   * @param documentCategory The document category to filter 'Zitierarten'
    * @param pageNumber Which page of pagination to return?
    * @param pageSize How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
@@ -33,6 +35,10 @@ public class ZitierArtController {
   @GetMapping("api/lookup-tables/zitier-arten")
   public ResponseEntity<ZitierArtResponse> getZitierArten(
     @RequestParam(required = false) String searchTerm,
+    @RequestParam(
+      required = false,
+      defaultValue = "VERWALTUNGSVORSCHRIFTEN"
+    ) DocumentCategory documentCategory,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "3") int pageSize,
     @RequestParam(defaultValue = "abbreviation") String sortByProperty,
@@ -47,7 +53,7 @@ public class ZitierArtController {
       usePagination
     );
     var paginatedZitierArten = zitierArtService.findZitierArten(
-      new ZitierArtQuery(searchTerm, queryOptions)
+      new ZitierArtQuery(searchTerm, documentCategory, queryOptions)
     );
     return ResponseEntity.ok(
       new ZitierArtResponse(paginatedZitierArten.content(), new PageResponse(paginatedZitierArten))

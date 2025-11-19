@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +41,11 @@ class ZitierArtServiceTest {
 
     // when
     var zitierArten = zitierArtService.findZitierArten(
-      new ZitierArtQuery(null, new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true))
+      new ZitierArtQuery(
+        null,
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
+      )
     );
 
     // then
@@ -56,7 +61,8 @@ class ZitierArtServiceTest {
     citationTypeEntity.setAbbreviation("Änderung");
     citationTypeEntity.setLabel("Änderung");
     given(
-      citationTypeRepository.findByAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+      citationTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+        eq(DocumentCategory.VERWALTUNGSVORSCHRIFTEN),
         eq("something"),
         eq("something"),
         any(Pageable.class)
@@ -67,6 +73,7 @@ class ZitierArtServiceTest {
     var zitierArten = zitierArtService.findZitierArten(
       new ZitierArtQuery(
         "something",
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
       )
     );
@@ -80,6 +87,7 @@ class ZitierArtServiceTest {
     // given
     CitationTypeEntity probe = new CitationTypeEntity();
     probe.setAbbreviation("Änderung");
+    probe.setDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     CitationTypeEntity citationTypeEntity = new CitationTypeEntity();
     UUID uuid = UUID.randomUUID();
     citationTypeEntity.setId(uuid);
@@ -90,7 +98,10 @@ class ZitierArtServiceTest {
     );
 
     // when
-    var zitierArten = zitierArtService.findZitierArtenByAbbreviation("Änderung");
+    var zitierArten = zitierArtService.findZitierArtenByAbbreviation(
+      "Änderung",
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
 
     // then
     assertThat(zitierArten)
