@@ -99,16 +99,20 @@ test.describe('ADM AbgabePage', () => {
     await page.goto('/')
     await page.getByText('Neue Dokumentationseinheit').click()
 
+    // Fundstellen
     await page.getByRole('combobox', { name: 'Periodikum' }).fill('Die')
     await page.getByText('ABc | Die Beispieler').click()
-
     await page.getByRole('textbox', { name: 'Zitatstelle' }).fill('2024, Seite 24')
     await page.getByText('Übernehmen').click()
 
+    // Rubriken
     await page.getByRole('link', { name: 'Rubriken' }).click()
+
+    // Formaldaten
     await page.getByText('Amtl. Langüberschrift *').fill('This is my Langüberschrift')
     await page.getByRole('group', { name: 'Zitierdatum' }).locator('input').fill('15.01.2025')
 
+    // Normgeber
     await page.getByRole('combobox', { name: 'Normgeber' }).click()
     await page.getByText('Erstes Organ').click()
     await page.getByRole('combobox', { name: 'Region' }).fill('AA')
@@ -135,9 +139,11 @@ test.describe('ADM AbgabePage', () => {
       .fill('Gemeinsamer Bundesausschuss')
     await page.getByRole('group', { name: 'Titelaspekt' }).locator('input').press('Enter')
 
+    // Gliederung
     await page.getByTestId('Gliederung Editor').click()
     await page.keyboard.insertText('Gliederung: Neuer Text')
 
+    // Inhaltliche Erschließung
     await page.getByRole('button', { name: 'Schlagwörter hinzufügen' }).click()
     await page.getByTestId('Schlagwörter_ListInputEdit').click()
     await page.getByTestId('Schlagwörter_ListInputEdit').fill('Schlagwort 1')
@@ -147,14 +153,16 @@ test.describe('ADM AbgabePage', () => {
       })
       .click()
 
+    // Sachgebiete
     await page.getByRole('button', { name: 'Sachgebiete hinzufügen' }).click()
     await page.getByLabel('Sachgebietsuche auswählen').click()
     await page.getByRole('button', { name: 'Alle Sachgebiete aufklappen' }).click()
     await page.getByRole('button', { name: 'Phantasierecht aufklappen' }).click()
     await page.getByLabel('PR-05 Beendigung der Phantasieverhältnisse hinzufügen').click()
 
+    // Normenkette
     await page
-      .getByTestId('normReferences') // normenkette
+      .getByTestId('normReferences')
       .getByRole('combobox', { name: 'RIS-Abkürzung' })
       .click()
     await page.getByText('KVLG').click()
@@ -199,10 +207,7 @@ test.describe('ADM AbgabePage', () => {
 
     // aktivzitierung rechtsprechung
     await page.getByText('Art der Zitierung *').click()
-    await page
-      .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'Ablehnung' })
-      .click()
+    await page.getByText('Ablehnung').click()
     await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
     await page.getByText('AG Aachen').click()
     await page.getByText('Entscheidungsdatum *').fill('15.01.2025')
