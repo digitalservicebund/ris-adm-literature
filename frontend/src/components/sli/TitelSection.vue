@@ -2,9 +2,10 @@
 import LazyFieldToggle from '@/components/LazyFieldToggle.vue'
 import InputField from '@/components/input/InputField.vue'
 import { Textarea } from 'primevue'
-import { ref, watch, useId } from 'vue'
+import { ref, watch, useId, computed } from 'vue'
 
 const hauptsachtitel = defineModel<string>('hauptsachtitel')
+const hauptsachtitelZusatz = defineModel<string>('hauptsachtitelZusatz')
 const dokumentarischerTitel = defineModel<string>('dokumentarischerTitel')
 const showDokumentarischerTitel = ref(!!dokumentarischerTitel.value)
 
@@ -26,6 +27,11 @@ function handleDokumentarischerTitelBlur() {
 const baseId = useId()
 const hauptsachtitelId = `${baseId}-hauptsachtitel`
 const dokumentarischerTitelId = `${baseId}-dokumentarisch`
+const hauptsachtitelZusatzId = `${baseId}-hauptsachtitel-zusatz`
+
+const normalizedHauptsachtitel = computed(() => (hauptsachtitel.value ?? '').trim())
+const normalizedHauptsachtitelZusatz = computed(() => (hauptsachtitelZusatz.value ?? '').trim())
+const normalizedDokumentarischerTitel = computed(() => (dokumentarischerTitel.value ?? '').trim())
 </script>
 
 <template>
@@ -34,12 +40,21 @@ const dokumentarischerTitelId = `${baseId}-dokumentarisch`
       <Textarea
         :id="hauptsachtitelId"
         v-model="hauptsachtitel"
-        :disabled="showDokumentarischerTitel && dokumentarischerTitel !== ''"
+        :disabled="!!normalizedDokumentarischerTitel"
         auto-resize
         fluid
       />
     </InputField>
-
+    <InputField :id="hauptsachtitelZusatzId" label="Zusatz zum Hauptsachtitel">
+      <Textarea
+        :id="hauptsachtitelZusatzId"
+        v-model="hauptsachtitelZusatz"
+        :disabled="!!normalizedDokumentarischerTitel"
+        rows="1"
+        auto-resize
+        fluid
+      />
+    </InputField>
     <LazyFieldToggle
       :input-id="dokumentarischerTitelId"
       button-label="Dokumentarischer Titel"
@@ -49,7 +64,7 @@ const dokumentarischerTitelId = `${baseId}-dokumentarisch`
         <Textarea
           :id="dokumentarischerTitelId"
           v-model="dokumentarischerTitel"
-          :disabled="!!hauptsachtitel"
+          :disabled="!!normalizedHauptsachtitel || !!normalizedHauptsachtitelZusatz"
           auto-resize
           fluid
           @blur="handleDokumentarischerTitelBlur"

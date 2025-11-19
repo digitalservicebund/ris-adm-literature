@@ -100,8 +100,12 @@ test.describe('StartPage SLI', () => {
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.waitForURL(/dokumentationseinheit/)
 
-      const hauptInput = page.getByRole('textbox', { name: 'Hauptsachtitel' })
+      const hauptInput = page.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+      const zusatzInput = page.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+
       await expect(hauptInput).toBeEnabled()
+      await expect(zusatzInput).toBeEnabled()
+
       await expect(page.getByRole('button', { name: 'Dokumentarischer Titel' })).toBeVisible()
 
       // when – user opens documentary title and fills it
@@ -113,6 +117,8 @@ test.describe('StartPage SLI', () => {
 
       const docValue = 'Dokumentarischer Titel 123$%'
       await dokumentarischerInput.fill(docValue)
+      await expect(hauptInput).toBeDisabled()
+      await expect(zusatzInput).toBeDisabled()
       await page.getByRole('button', { name: 'Speichern' }).click()
       await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
 
@@ -121,7 +127,9 @@ test.describe('StartPage SLI', () => {
       await expect(page.getByRole('textbox', { name: 'Dokumentarischer Titel' })).toHaveValue(
         docValue,
       )
-      await expect(page.getByRole('textbox', { name: 'Hauptsachtitel' })).toBeDisabled()
+      await expect(page.getByRole('textbox', { name: /^Hauptsachtitel\b/ })).toBeDisabled()
+      await expect(page.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })).toBeDisabled()
+
       // when – user clears documentary title and saves again
       const dokumentarischerInputAfterReload = page.getByRole('textbox', {
         name: 'Dokumentarischer Titel',
@@ -135,7 +143,9 @@ test.describe('StartPage SLI', () => {
 
       await page.reload()
       await expect(page.getByRole('button', { name: 'Dokumentarischer Titel' })).toBeVisible()
-      await expect(page.getByRole('textbox', { name: 'Hauptsachtitel' })).toBeEnabled()
+      await expect(page.getByRole('textbox', { name: /^Hauptsachtitel\b/ })).toBeEnabled()
+      await expect(page.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })).toBeEnabled()
+
       await expect(page.getByRole('textbox', { name: 'Dokumentarischer Titel' })).toHaveCount(0)
     },
   )

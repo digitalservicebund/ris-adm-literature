@@ -31,6 +31,13 @@ const dokumentarischerTitel = computed({
   },
 })
 
+const hauptsachtitelZusatz = computed({
+  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitelZusatz = newValue
+  },
+})
+
 useScrollToHash()
 </script>
 
@@ -52,7 +59,17 @@ useScrollToHash()
       <TitelSection
         v-model:hauptsachtitel="hauptsachtitel"
         v-model:dokumentarischer-titel="dokumentarischerTitel"
+        v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
       />
+      <div>
+        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+          Pflichtfelder für die Veröffentlichung
+        </p>
+        <p class="pl-12">
+          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
+          werden
+        </p>
+      </div>
     </div>
   </div>
 </template>

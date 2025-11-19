@@ -4,6 +4,7 @@ export interface SliDocumentationUnit {
   veroeffentlichungsjahr?: string
   hauptsachtitel?: string
   dokumentarischerTitel?: string
+  hauptsachtitelZusatz?: string
   note: string
 }
 
