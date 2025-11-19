@@ -1,5 +1,6 @@
 -- View uses foreign schema "lookup_tables", therefore it is repeatable.
 -- This migration is executed every time this script is changed.
+DROP VIEW IF EXISTS citation_type_view;
 
 CREATE OR REPLACE VIEW citation_type_view AS
 SELECT ct.id,
