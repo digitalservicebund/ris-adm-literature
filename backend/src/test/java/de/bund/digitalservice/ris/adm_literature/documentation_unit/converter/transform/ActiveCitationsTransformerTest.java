@@ -3,8 +3,10 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.t
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart.ZitierArt;
@@ -39,7 +41,12 @@ class ActiveCitationsTransformerTest {
       List.of(createOtherReference("Änderung", "XY-01"), createOtherReference("Übernahme", "ZZ-02"))
     );
     //noinspection unchecked
-    given(zitierArtService.findZitierArtenByAbbreviation(anyString())).willReturn(
+    given(
+      zitierArtService.findZitierArtenByAbbreviation(
+        anyString(),
+        eq(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+      )
+    ).willReturn(
       List.of(new ZitierArt(UUID.randomUUID(), "Änderung", "Änderung")),
       List.of(new ZitierArt(UUID.randomUUID(), "Übernahme", "Übernahme"))
     );

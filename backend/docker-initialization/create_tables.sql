@@ -355,10 +355,10 @@ CREATE
     citation_type (documentation_unit_document_category_id);
 
 INSERT INTO citation_type (id, abbreviation, label, documentation_unit_document_category_id, citation_document_category_id, juris_id) VALUES
-(gen_random_uuid(), 'Abgrenzung', 'Abgrenzung', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '1'),
-(gen_random_uuid(), 'Ablehnung', 'Ablehnung', 'b46b4247-6869-4ab3-a357-806476195c76', '6e81f59d-3b24-485f-9e74-7c309db78682', '2'),
-(gen_random_uuid(), 'Änderung', 'Änderung', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '3'),
-(gen_random_uuid(), 'Übernahme', 'Übernahme', 'b46b4247-6869-4ab3-a357-806476195c76', 'b46b4247-6869-4ab3-a357-806476195c76', '4');
+(gen_random_uuid(), 'Abgrenzung', 'Abgrenzung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '1'),
+(gen_random_uuid(), 'Ablehnung', 'Ablehnung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '2'),
+(gen_random_uuid(), 'Änderung', 'Änderung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '3'),
+(gen_random_uuid(), 'Übernahme', 'Übernahme', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '4');
 
 
 set role test;

@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.transform;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.ActiveCitation;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.court.Court;
@@ -57,9 +58,14 @@ public class ActiveCitationsTransformer {
 
   private ZitierArt findZitierArt(RisCaselawReference caselawReference) {
     return zitierArtService
-      .findZitierArtenByAbbreviation(caselawReference.getAbbreviation())
+      .findZitierArtenByAbbreviation(
+        caselawReference.getAbbreviation(),
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+      )
       .stream()
       .findFirst()
-      .orElse(new ZitierArt(null, caselawReference.getAbbreviation(), null));
+      .orElse(
+        new ZitierArt(null, caselawReference.getAbbreviation(), caselawReference.getAbbreviation())
+      );
   }
 }

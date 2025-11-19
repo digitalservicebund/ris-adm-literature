@@ -1,8 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
 import org.springframework.data.annotation.Immutable;
@@ -28,4 +27,7 @@ public class CitationTypeEntity {
   private String abbreviation;
 
   private String label;
+
+  @Enumerated(EnumType.STRING)
+  private DocumentCategory documentCategory;
 }
