@@ -35,7 +35,8 @@ class ZitierArtServiceTest {
     citationTypeEntity.setId(uuid);
     citationTypeEntity.setAbbreviation("Änderung");
     citationTypeEntity.setLabel("Änderung");
-    given(citationTypeRepository.findAll(any(Pageable.class))).willReturn(
+    //noinspection unchecked
+    given(citationTypeRepository.findAll(any(Example.class), any(Pageable.class))).willReturn(
       new PageImpl<>(List.of(citationTypeEntity))
     );
 

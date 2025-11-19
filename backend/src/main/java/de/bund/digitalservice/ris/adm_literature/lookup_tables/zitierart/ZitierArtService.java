@@ -41,8 +41,11 @@ public class ZitierArtService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
+    CitationTypeEntity probe = new CitationTypeEntity();
+    probe.setDocumentCategory(query.documentCategory());
+    Example<CitationTypeEntity> example = Example.of(probe);
     var citationTypes = StringUtils.isBlank(searchTerm)
-      ? citationTypeRepository.findAll(pageable)
+      ? citationTypeRepository.findAll(example, pageable)
       : citationTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
         query.documentCategory(),
         searchTerm,
