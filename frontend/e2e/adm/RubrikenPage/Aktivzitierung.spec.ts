@@ -16,14 +16,8 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
   test('Add an active citation, edit and save', { tag: ['@RISDEV-6077'] }, async ({ page }) => {
     await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
     await page.getByRole('link', { name: 'Rubriken' }).click()
-    const artDerZitierungInput = page.getByText('Art der Zitierung *')
-    await expect(artDerZitierungInput).toHaveCount(1)
-
-    await artDerZitierungInput.click()
-    await page
-      .getByRole('button', { name: 'dropdown-option' })
-      .filter({ hasText: 'Ablehnung' })
-      .click()
+    await page.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+    await page.getByText('Übernahme').click()
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
     await expect(page.getByText('Fehlende Daten')).toBeVisible()
 
@@ -33,21 +27,21 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
     await page.getByText('AG Aachen').click()
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
-    await expect(page.getByText('Ablehnung, AG Aachen')).toBeVisible()
+    await expect(page.getByText('Übernahme, AG Aachen')).toBeVisible()
     await expect(page.getByText('Fehlende Daten')).toBeVisible()
 
     await page.getByTestId('list-entry-0').click()
     await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(2)
     await page.getByText('Entscheidungsdatum *').fill('15.01.2025')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
-    await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025')).toBeVisible()
+    await expect(page.getByText('Übernahme, AG Aachen, 15.01.2025')).toBeVisible()
     await expect(page.getByText('Fehlende Daten')).toBeVisible()
 
     await page.getByTestId('list-entry-0').click()
     await expect(page.getByText('Pflichtfeld nicht befüllt')).toHaveCount(1)
     await page.getByText('Aktenzeichen *').fill('Az1')
     await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
-    await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+    await expect(page.getByText('Übernahme, AG Aachen, 15.01.2025, Az1')).toBeVisible()
     await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
   })
 
@@ -94,12 +88,8 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
     async ({ page }) => {
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
-
-      await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Ablehnung' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      await page.getByText('Ablehnung').click()
       await expect(page.getByText('Gericht *')).toBeVisible()
       await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
       await page.getByText('AG Aachen').click()
@@ -109,11 +99,8 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
       await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
       await expect(page.getByText('Fehlende Daten')).toHaveCount(0)
 
-      await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Übernahme' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      await page.getByText('Übernahme').click()
       await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
       await page.getByText('Berufsgericht für Architekten Bremen').click()
       await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('31.12.2024')
@@ -140,11 +127,8 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
 
-      await page.getByRole('textbox', { name: 'Art der Zitierung' }).click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Übernahme' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      await page.getByText('Übernahme').click()
       await page.getByRole('button', { name: 'Nach Entscheidung suchen' }).click()
       await expect(
         page.getByText('type1 location1, 01.02.2022, test fileNumber1, Verwaltungsvorschrift'),
@@ -212,12 +196,8 @@ test.describe('RubrikenPage - Aktivzitierung - Mocked routes', () => {
       // given
       await page.goto('/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/fundstellen')
       await page.getByRole('link', { name: 'Rubriken' }).click()
-      const artDerZitierungInput = page.getByText('Art der Zitierung *')
-      await artDerZitierungInput.click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Ablehnung' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      await page.getByText('Ablehnung').click()
       await expect(page.getByText('Gericht *')).toBeVisible()
       await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
       await page.getByText('AG Aachen').click()
@@ -244,28 +224,22 @@ test.describe('RubrikenPage - Aktivzitierung', () => {
       await page.goto('/')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.getByRole('link', { name: 'Rubriken' }).click()
-      const artDerZitierungInput = page.getByRole('textbox', { name: 'Art der Zitierung' })
-      await expect(artDerZitierungInput).toHaveCount(1)
-
-      await artDerZitierungInput.click()
-      await page
-        .getByRole('button', { name: 'dropdown-option' })
-        .filter({ hasText: 'Ablehnung' })
-        .click()
+      await page.getByRole('combobox', { name: 'Art der Zitierung' }).fill('Abgr')
+      await page.getByText('Abgrenzung').click()
       await expect(page.getByText('Gericht *')).toBeVisible()
       await page.getByRole('combobox', { name: 'Gericht Aktivzitierung' }).click()
       await page.getByText('AG Aachen').click()
       await page.getByRole('textbox', { name: 'Entscheidungsdatum' }).fill('15.01.2025')
       await page.getByRole('textbox', { name: 'Aktenzeichen Aktivzitierung' }).fill('Az1')
       await page.getByRole('button', { name: 'Aktivzitierung speichern' }).click()
-      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+      await expect(page.getByText('Abgrenzung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
 
       // when
       await page.getByText('Speichern').click()
       await page.reload()
 
       // then
-      await expect(page.getByText('Ablehnung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
+      await expect(page.getByText('Abgrenzung, AG Aachen, 15.01.2025, Az1')).toBeVisible()
     },
   )
 })
