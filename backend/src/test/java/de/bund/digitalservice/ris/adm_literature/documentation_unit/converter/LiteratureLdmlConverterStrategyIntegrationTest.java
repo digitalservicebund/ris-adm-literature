@@ -4,10 +4,12 @@ import static de.bund.digitalservice.ris.adm_literature.documentation_unit.conve
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestUliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,10 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   @Autowired
   @Qualifier("uliLiteratureValidator")
   private XmlValidator uliLiteratureValidator;
+
+  @Autowired
+  @Qualifier("sliLiteratureValidator")
+  private XmlValidator sliLiteratureValidator;
 
   @Test
   void convertToLdml() {
@@ -144,5 +150,45 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
         )
     );
     assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void convertToLdml_sli_complete() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      "Dies ist eine Gesamtfussnote"
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:FRBRsubtype value="LS"/>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:notes source="gesamtfussnoten">
+        <akn:note>
+           <akn:block name="gesamtfussnote">Dies ist eine Gesamtfussnote</akn:block>
+        </akn:note>
+      </akn:notes>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:FRBRalias name="haupttitel" value="SliHauptTitel"/>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 }
