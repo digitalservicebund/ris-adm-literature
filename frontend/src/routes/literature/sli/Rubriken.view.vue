@@ -6,6 +6,7 @@ import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
+import TitelSection from '@/components/sli/TitelSection.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 
@@ -13,6 +14,20 @@ const veroeffentlichungsjahr = computed({
   get: () => store.documentUnit?.veroeffentlichungsjahr,
   set: (newValue) => {
     store.documentUnit!.veroeffentlichungsjahr = newValue
+  },
+})
+
+const hauptsachtitel = computed({
+  get: () => store.documentUnit?.hauptsachtitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitel = newValue
+  },
+})
+
+const dokumentarischerTitel = computed({
+  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.dokumentarischerTitel = newValue
   },
 })
 
@@ -34,6 +49,10 @@ useScrollToHash()
           />
         </InputField>
       </div>
+      <TitelSection
+        v-model:hauptsachtitel="hauptsachtitel"
+        v-model:dokumentarischer-titel="dokumentarischerTitel"
+      />
     </div>
   </div>
 </template>
