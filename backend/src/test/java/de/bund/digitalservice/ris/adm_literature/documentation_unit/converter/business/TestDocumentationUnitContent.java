@@ -6,13 +6,29 @@ import java.util.List;
 /**
  * Test class for easily creating instances of {@link UliDocumentationUnitContent}.
  */
-public class TestUliDocumentationUnitContent {
+public class TestDocumentationUnitContent {
 
-  public static UliDocumentationUnitContent create(
+  public static UliDocumentationUnitContent createUli(
     String documentNumber,
     String veroeffentlichungsjahr
   ) {
     return new UliDocumentationUnitContent(
+      null,
+      documentNumber,
+      veroeffentlichungsjahr,
+      List.of(new DocumentType("Auf", "Aufsatz")),
+      null,
+      null,
+      null,
+      null
+    );
+  }
+
+  public static SliDocumentationUnitContent createSli(
+    String documentNumber,
+    String veroeffentlichungsjahr
+  ) {
+    return new SliDocumentationUnitContent(
       null,
       documentNumber,
       veroeffentlichungsjahr,

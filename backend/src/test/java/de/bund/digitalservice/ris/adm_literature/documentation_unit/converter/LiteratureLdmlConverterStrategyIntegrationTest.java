@@ -3,15 +3,19 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 import static de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.XmlNormalizer.NORMALIZE_FUNCTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestUliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +40,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   void convertToLdml() {
     // given
     UliDocumentationUnitContent uliDocumentationUnitContent =
-      TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
+      TestDocumentationUnitContent.createUli("KSLU00000011", "2025");
 
     // when
     String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
@@ -53,7 +57,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   void convertToLdml_veroeffentlichungsjahr() {
     // given
     UliDocumentationUnitContent uliDocumentationUnitContent =
-      TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
+      TestDocumentationUnitContent.createUli("KSLU00000011", "2025");
 
     // when
     String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
@@ -190,5 +194,49 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
     );
 
     assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void supports_shouldReturnTrueForSupportedTypes() {
+    // given
+    var uliContent = TestDocumentationUnitContent.createUli("DOC1", "2024");
+    var sliContent = new SliDocumentationUnitContent(
+      null,
+      "DOC2",
+      "2024",
+      Collections.emptyList(),
+      "Title",
+      null,
+      null,
+      null
+    );
+
+    // then
+    assertThat(literatureLdmlConverterStrategy.supports(uliContent)).isTrue();
+    assertThat(literatureLdmlConverterStrategy.supports(sliContent)).isTrue();
+  }
+
+  @Test
+  void supports_shouldReturnFalseForUnsupportedTypes() {
+    // given
+    IDocumentationContent unsupportedContent = Mockito.mock(IDocumentationContent.class);
+
+    // then
+    assertThat(literatureLdmlConverterStrategy.supports(unsupportedContent)).isFalse();
+  }
+
+  @Test
+  void convertToLdml_shouldWrapExceptionsInPublishingFailedException() {
+    // given
+    IDocumentationContent unsupportedContent = Mockito.mock(IDocumentationContent.class);
+
+    // when and then
+    assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)
+    )
+      .isInstanceOf(PublishingFailedException.class)
+      // Use containing because the actual message includes status codes/ProblemDetail
+      .hasMessageContaining("Failed to convert Literature content to LDML")
+      .hasCauseInstanceOf(IllegalStateException.class)
+      .hasRootCauseMessage("Unexpected content type: " + unsupportedContent.getClass());
   }
 }
