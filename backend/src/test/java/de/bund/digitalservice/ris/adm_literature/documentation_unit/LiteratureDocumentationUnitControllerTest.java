@@ -80,7 +80,7 @@ class LiteratureDocumentationUnitControllerTest {
   void createUli() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG)).willReturn(
+    given(documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTAENDIG)).willReturn(
       new DocumentationUnit("KSLU054920710", id, null)
     );
 
@@ -98,7 +98,7 @@ class LiteratureDocumentationUnitControllerTest {
   void createSli() throws Exception {
     // given
     UUID id = UUID.randomUUID();
-    given(documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTSTAENDIG)).willReturn(
+    given(documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTAENDIG)).willReturn(
       new DocumentationUnit("KSLS054920710", id, null)
     );
 

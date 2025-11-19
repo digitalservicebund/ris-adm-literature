@@ -17,5 +17,9 @@ interface DocumentationUnitRepository
   Optional<DocumentationUnitEntity> findByDocumentNumber(@Nonnull String documentNumber);
 
   @EntityGraph(attributePaths = "documentationUnitIndex")
-  Slice<DocumentationUnitEntity> findByDocumentationUnitIndexIsNull(Pageable pageable);
+  Slice<DocumentationUnitEntity> findByDocumentationUnitIndexIsNullOrderByDocumentNumberDesc(
+    Pageable pageable
+  );
+
+  long countByDocumentationUnitIndexIsNull();
 }

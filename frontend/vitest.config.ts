@@ -32,6 +32,9 @@ export default mergeConfig(
           '**/*.d.ts',
           'src/components/input/types.ts',
 
+         // This file only contains styles and can't meaninfully be tested
+         "src/lib/theme.ts",
+
           // Assets
           'html/assets/*',
 

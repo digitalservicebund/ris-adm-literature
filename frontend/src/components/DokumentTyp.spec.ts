@@ -12,7 +12,7 @@ describe('DokumentTyp', () => {
   const baseProps = {
     inputId: 'foo',
     invalid: false,
-    documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+    documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
   }
 
   beforeEach(() => {

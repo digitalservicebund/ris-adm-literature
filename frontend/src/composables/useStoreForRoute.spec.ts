@@ -32,8 +32,8 @@ describe('useStoreForRoute', () => {
     expect(store).toEqual(mockAdmStore)
   })
 
-  it('returns uliDocumentUnit store when route.meta.documentCategory="LITERATUR_UNSELBSTSTAENDIG"', () => {
-    mockRoute = { meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG } }
+  it('returns uliDocumentUnit store when route.meta.documentCategory="LITERATUR_UNSELBSTAENDIG"', () => {
+    mockRoute = { meta: { documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG } }
 
     const store = useStoreForRoute()
     expect(store).toEqual(mockUliStore)

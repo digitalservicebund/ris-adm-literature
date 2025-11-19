@@ -110,7 +110,7 @@ public class DocumentationUnitService {
 
     return switch (documentationUnitContent) {
       case UliDocumentationUnitContent _ -> {
-        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTSTAENDIG);
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTAENDIG);
         // TODO: Return converted doc like for adm NOSONAR
         yield optionalDocumentationUnit;
       }

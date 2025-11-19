@@ -9,7 +9,7 @@ SELECT id,
        label   as name,
        case
            when (category = 'N') then 'VERWALTUNGSVORSCHRIFTEN'
-           when (category = 'U') then 'LITERATUR_UNSELBSTSTAENDIG'
-           when (category = 'S') then 'LITERATUR_SELBSTSTAENDIG'
+           when (category = 'U') then 'LITERATUR_UNSELBSTAENDIG'
+           when (category = 'S') then 'LITERATUR_SELBSTAENDIG'
            end as document_category
 FROM lookup_tables.document_type;

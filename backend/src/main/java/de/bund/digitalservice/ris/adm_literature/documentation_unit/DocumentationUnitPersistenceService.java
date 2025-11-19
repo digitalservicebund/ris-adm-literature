@@ -108,9 +108,9 @@ public class DocumentationUnitPersistenceService {
    * Updates a documentation unit by document number and returns the updated documentation unit.
    *
    * @param documentNumber The document number to identify the documentation unit
-   * @param json The json string to update
+   * @param json           The json string to update
    * @return The updated documentation unit or an empty optional, if there is no documentation unit
-   *     with the given document number
+   *         with the given document number
    */
   @Transactional
   public DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json) {
@@ -135,8 +135,8 @@ public class DocumentationUnitPersistenceService {
    * this method returns {@code null}.
    *
    * @param documentNumber The unique identifier of the documentation unit to update.
-   * @param json The new JSON content for the unit.
-   * @param xml The new XML content for the unit.
+   * @param json           The new JSON content for the unit.
+   * @param xml            The new XML content for the unit.
    * @return The updated {@link DocumentationUnit}, or {@code null} if the document number does not exist.
    */
   @Transactional
@@ -162,6 +162,7 @@ public class DocumentationUnitPersistenceService {
 
   /**
    * Returns paginated documentation units overview elements.
+   *
    * @param query The query
    * @return Page object with documentation unit overview elements and pagination data
    */
@@ -227,18 +228,22 @@ public class DocumentationUnitPersistenceService {
    *
    * @return Number of indexed documents
    */
-  @Transactional
   public long indexAll() {
     PageRequest pageable = PageRequest.of(0, INDEX_BATCH_SIZE);
     long totalNumberOfElements = 0;
     int pageNumber = 0;
     Slice<DocumentationUnitEntity> documentationUnitEntities;
+    log.info(
+      "Found {} documentation units without index.",
+      documentationUnitRepository.countByDocumentationUnitIndexIsNull()
+    );
     do {
       // Note that we always select the first page (0) because the algorithm is changing the selection result
       // and breaks linear paging.
-      documentationUnitEntities = documentationUnitRepository.findByDocumentationUnitIndexIsNull(
-        pageable
-      );
+      documentationUnitEntities =
+        documentationUnitRepository.findByDocumentationUnitIndexIsNullOrderByDocumentNumberDesc(
+          pageable
+        );
       List<DocumentationUnitIndexEntity> documentationUnitIndexEntities = documentationUnitEntities
         .stream()
         .parallel()

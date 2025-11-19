@@ -9,9 +9,11 @@ import FundstellenPage from '@/routes/adm/documentUnit/[documentNumber]/Fundstel
 import NewDocument from '@/routes/NewDocument.vue'
 import Forbidden from '@/routes/Forbidden.vue'
 import StartPageTemplate from './routes/OverviewPage.vue'
+import LiteratureOverviewPage from './routes/literature/Overview.view.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from './routes/EditDocument.vue'
-import UliRubriken from './routes/uli/RubrikenPage.vue'
+import UliRubriken from './routes/literature/uli/RubrikenPage.vue'
+import SliRubriken from './routes/literature/sli/Rubriken.view.vue'
 import { DocumentCategory } from './domain/documentType'
 import RootRedirectPage from './routes/RootRedirectPage.vue'
 
@@ -101,7 +103,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/literatur-unselbstaendig/:pathMatch(.*)*',
+      path: '/literatur-unselbststaendig/:pathMatch(.*)*',
       redirect: (to) => {
         const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : ''
         const newPath = oldSuffix ? `${ROUTE_PATHS.ULI.BASE}/${oldSuffix}` : ROUTE_PATHS.ULI.BASE
@@ -112,14 +114,13 @@ const router = createRouter({
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
-        documentCategory: DocumentCategory.LITERATUR_UNSELBSTSTAENDIG,
+        documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
       },
       children: [
         {
           path: '',
           name: ROUTE_NAMES.ULI.START_PAGE,
-          component: StartPageTemplate,
-          props: { title: 'Übersicht Unselbstständige Literatur' },
+          component: LiteratureOverviewPage,
         },
         {
           path: ROUTE_PATHS.ULI.DOCUMENT_UNIT.NEW,
@@ -148,6 +149,40 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: ROUTE_PATHS.SLI.BASE,
+      meta: {
+        requiresRole: [USER_ROLES.LITERATURE_USER],
+        documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
+      },
+      children: [
+        {
+          path: '',
+          name: ROUTE_NAMES.SLI.START_PAGE,
+          component: LiteratureOverviewPage,
+        },
+        {
+          path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.NEW,
+          name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.NEW,
+          component: NewDocument,
+        },
+        {
+          path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.EDIT,
+          name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.EDIT,
+          component: EditDocument,
+          props: true,
+          redirect: { name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN },
+          children: [
+            {
+              path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.RUBRIKEN,
+              name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
+              component: SliRubriken,
+            },
+          ],
+        },
+      ],
+    },
+
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
       path: '/:pathMatch(.*)*',

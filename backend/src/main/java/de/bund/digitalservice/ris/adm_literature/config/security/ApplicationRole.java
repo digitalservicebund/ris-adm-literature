@@ -25,7 +25,7 @@ public enum ApplicationRole {
     }
   },
 
-  LITERATURE(List.of("literature_user"), DocumentCategory.LITERATUR_UNSELBSTSTAENDIG) {
+  LITERATURE(List.of("literature_user"), DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
     @Override
     public DocumentationOffice getDocumentationOffice(Jwt jwt) {
       List<String> groups = jwt.getClaimAsStringList("groups");

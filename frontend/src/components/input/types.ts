@@ -1,6 +1,6 @@
 import type { UseFetchReturn } from '@vueuse/core'
 import { LabelPosition } from '@/components/input/InputField.vue'
-import type { CitationType } from '@/domain/citationType'
+import type { ZitierArt } from '@/domain/zitierArt.ts'
 import type { Ref } from 'vue'
 import type { ComboboxResult } from '@/domain/comboboxResult.ts'
 import type { VerweisTypEnum } from '@/domain/activeReference.ts'
@@ -93,7 +93,7 @@ export type ComboboxInputModelType =
   | FieldOfLaw
   | Court
   | DocumentType
-  | CitationType
+  | ZitierArt
   | VerweisTypEnum
   | Institution
   | Region

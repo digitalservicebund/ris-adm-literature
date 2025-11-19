@@ -1,16 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  type AutoCompleteSuggestion,
   useAutoComplete,
+  useDokumentTypSearch,
   useInstitutionSearch,
   useNormAbbreviationsSearch,
   usePeriodikumSearch,
-  useVerweisTypSearch,
   useRegionSearch,
-  type AutoCompleteSuggestion,
-  useDokumentTypSearch,
+  useVerweisTypSearch,
+  useZitierArtSearch,
 } from '@/composables/useAutoComplete'
 import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
-import { InstitutionType, type Institution, type Region } from '@/domain/normgeber'
+import { type Institution, InstitutionType, type Region } from '@/domain/normgeber'
 import { ref } from 'vue'
 import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
 import type { Periodikum } from '@/domain/fundstelle'
@@ -23,6 +24,11 @@ import {
   docTypeBekanntmachungFixture,
 } from '@/testing/fixtures/documentType.fixture'
 import type { DocumentType } from '@/domain/documentType'
+import type { ZitierArt } from '@/domain/zitierArt.ts'
+import {
+  zitierArtAbgrenzungFixture,
+  zitierArtUebernahmeFixture,
+} from '@/testing/fixtures/zitierArt.fixture.ts'
 
 describe('useAutoComplete', () => {
   // Mock debounce to avoid delay
@@ -328,6 +334,45 @@ describe('useDokumentTypSearch', () => {
         id: docTypeAnordnungFixture.abbreviation,
         label: 'Anordnung',
         secondaryLabel: 'Anordnung',
+      },
+    ])
+  })
+})
+
+describe('useZitierArtSearch', () => {
+  const mockZitierArten = ref<ZitierArt[]>([zitierArtAbgrenzungFixture, zitierArtUebernahmeFixture])
+
+  it('returns all zitier aren when query is empty', () => {
+    const search = useZitierArtSearch(mockZitierArten)
+    const results = search('')
+    expect(results).toHaveLength(2)
+  })
+
+  it('sorts items by abbreviation alphabetically', () => {
+    const search = useZitierArtSearch(
+      ref<ZitierArt[]>([zitierArtAbgrenzungFixture, zitierArtUebernahmeFixture]),
+    )
+    const results = search('')
+    expect(results[0]?.label).toBe(zitierArtAbgrenzungFixture.label)
+  })
+
+  it('returns an empty array if no matches', () => {
+    const search = useZitierArtSearch(mockZitierArten)
+    const results = search('xyz')
+    expect(results).toEqual([])
+  })
+
+  it.each([
+    ['label', 'abg'],
+    ['label', 'abgr'],
+    ['label', 'Abgrenzung'],
+  ])('returns filtered zitier arten by %s', (_, query) => {
+    const search = useZitierArtSearch(mockZitierArten)
+    const results = search(query)
+    expect(results).toEqual([
+      {
+        id: zitierArtAbgrenzungFixture.id,
+        label: zitierArtAbgrenzungFixture.label,
       },
     ])
   })

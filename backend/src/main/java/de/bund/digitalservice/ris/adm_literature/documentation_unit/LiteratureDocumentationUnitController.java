@@ -46,7 +46,7 @@ public class LiteratureDocumentationUnitController {
   @PostMapping("api/literature/uli/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
   public DocumentationUnit createUli() {
-    return documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTSTAENDIG);
+    return documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
   }
 
   /**
@@ -58,7 +58,7 @@ public class LiteratureDocumentationUnitController {
   @PostMapping("api/literature/sli/documentation-units")
   @ResponseStatus(HttpStatus.CREATED)
   public DocumentationUnit createSli() {
-    return documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTSTAENDIG);
+    return documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTAENDIG);
   }
 
   /**

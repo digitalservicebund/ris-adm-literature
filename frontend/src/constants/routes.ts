@@ -15,7 +15,7 @@ export const ROUTE_NAMES = {
     },
   },
 
-  // ULI (Unselbstständige Literatur)
+  // ULI (Unselbständige Literatur)
   ULI: {
     START_PAGE: 'uli-start-page',
     DOCUMENT_UNIT: {
@@ -23,6 +23,15 @@ export const ROUTE_NAMES = {
       EDIT: 'uli-documentUnit-documentNumber',
       RUBRIKEN: 'uli-documentUnit-documentNumber-rubriken',
       ABGABE: 'uli-documentUnit-documentNumber-abgabe',
+    },
+  },
+  // SLI (Selbständige Literatur)
+  SLI: {
+    START_PAGE: 'sli-start-page',
+    DOCUMENT_UNIT: {
+      NEW: 'sli-documentUnit-new',
+      EDIT: 'sli-documentUnit-documentNumber',
+      RUBRIKEN: 'sli-documentUnit-documentNumber-rubriken',
     },
   },
 } as const
@@ -44,12 +53,20 @@ export const ROUTE_PATHS = {
     },
   },
   ULI: {
-    BASE: '/literatur-unselbststaendig',
+    BASE: '/literatur-unselbstaendig',
     DOCUMENT_UNIT: {
       NEW: `${DOCUMENT_UNIT_BASE}/new`,
       EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
       RUBRIKEN: 'rubriken',
       ABGABE: 'abgabe',
+    },
+  },
+  SLI: {
+    BASE: '/literatur-selbstaendig',
+    DOCUMENT_UNIT: {
+      NEW: `${DOCUMENT_UNIT_BASE}/new`,
+      EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
+      RUBRIKEN: 'rubriken',
     },
   },
 } as const
