@@ -1,9 +1,11 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.SAXException;
@@ -21,7 +23,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 public class S3PublishAdapter implements Publisher {
 
   private final S3Client s3Client;
-  private final XmlValidator xmlValidator;
+  private final Map<DocumentCategory, XmlValidator> validators;
   private final String bucketName;
   private final String publisherName;
 
@@ -40,13 +42,24 @@ public class S3PublishAdapter implements Publisher {
   @Override
   public void publish(@Nonnull PublicationDetails publicationDetails) {
     String documentNumber = publicationDetails.documentNumber();
+    DocumentCategory category = publicationDetails.category();
     String xmlKey = String.format("%s.akn.xml", documentNumber);
 
     try {
-      log.info("Validating XML for document {}", documentNumber);
-      xmlValidator.validate(publicationDetails.xmlContent());
-      log.info("XML validation successful for document {}", documentNumber);
+      // Select Validator and validate based on category
+      XmlValidator validator = validators.get(category);
 
+      if (validator != null) {
+        log.info("Validating XML for document {} (Category: {})", documentNumber, category);
+        validator.validate(publicationDetails.xmlContent());
+        log.info("XML validation successful for document {}", documentNumber);
+      } else {
+        String message = String.format("No XML Validator configured for category '%s'", category);
+        log.error(message);
+        throw new ValidationFailedException(message, new IllegalArgumentException(message));
+      }
+
+      // Publish the document
       log.info("Publishing document {} to S3 bucket '{}'", documentNumber, bucketName);
       PutObjectRequest xmlRequest = PutObjectRequest.builder()
         .bucket(bucketName)

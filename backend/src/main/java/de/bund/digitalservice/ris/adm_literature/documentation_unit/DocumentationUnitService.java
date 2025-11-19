@@ -144,7 +144,8 @@ public class DocumentationUnitService {
     var publishOptions = new Publisher.PublicationDetails(
       documentNumber,
       xml,
-      documentCategory.getPublisherName()
+      documentCategory.getPublisherName(),
+      documentCategory
     );
     publisher.publish(publishOptions);
   }

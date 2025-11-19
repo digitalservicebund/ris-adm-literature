@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.S3PublishAdapter;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
@@ -29,16 +30,32 @@ public class PublisherConfig {
     @Qualifier("bsgVwvValidator") XmlValidator validator,
     @Value("${s3.bucket.adm.public.bucket-name-ref}") String bucketName
   ) {
-    return new S3PublishAdapter(s3Client, validator, bucketName, "publicBsgPublisher");
+    return new S3PublishAdapter(
+      s3Client,
+      Map.of(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, validator),
+      bucketName,
+      "publicBsgPublisher"
+    );
   }
 
   @Bean("publicLiteraturePublisher")
   public Publisher publicLiteraturePublisher(
     @Qualifier("publicLiteratureS3Client") S3Client s3Client,
-    @Qualifier("uliLiteratureValidator") XmlValidator validator,
+    @Qualifier("uliLiteratureValidator") XmlValidator uliValidator,
+    @Qualifier("sliLiteratureValidator") XmlValidator sliValidator,
     @Value("${s3.bucket.literature.public.bucket-name-ref}") String bucketName
   ) {
-    return new S3PublishAdapter(s3Client, validator, bucketName, "publicLiteraturePublisher");
+    return new S3PublishAdapter(
+      s3Client,
+      Map.of(
+        DocumentCategory.LITERATUR_UNSELBSTAENDIG,
+        uliValidator,
+        DocumentCategory.LITERATUR_SELBSTAENDIG,
+        sliValidator
+      ),
+      bucketName,
+      "publicLiteraturePublisher"
+    );
   }
 
   /**

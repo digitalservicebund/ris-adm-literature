@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import javax.annotation.Nonnull;
 
 /**
@@ -26,5 +27,10 @@ public interface Publisher {
    * @param xmlContent The LDML XML content of the document to be stored.
    * @param targetPublisher The target publisher
    */
-  record PublicationDetails(String documentNumber, String xmlContent, String targetPublisher) {}
+  record PublicationDetails(
+    String documentNumber,
+    String xmlContent,
+    String targetPublisher,
+    DocumentCategory category
+  ) {}
 }
