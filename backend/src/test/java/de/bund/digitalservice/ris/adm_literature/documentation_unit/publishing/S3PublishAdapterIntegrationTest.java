@@ -211,6 +211,13 @@ class S3PublishAdapterIntegrationTest {
     assertThat(getObjectContent(FIRST_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"changed\":[\"KSNR456.akn.xml\"]}"
     );
+
+    // Verify the changelog file does NOT exist in the SECOND bucket
+    List<S3Object> secondBucketChangelogs = listObjectsInDirectory(
+      SECOND_BUCKET_NAME,
+      CHANGELOG_DIR
+    );
+    assertThat(secondBucketChangelogs).isEmpty();
   }
 
   @Test
@@ -256,6 +263,9 @@ class S3PublishAdapterIntegrationTest {
     assertThat(getObjectContent(SECOND_BUCKET_NAME, changelog.key())).isEqualTo(
       "{\"changed\":[\"doc-xyz-789.akn.xml\"]}"
     );
+    // Verify the changelog file does NOT exist in the FIRST bucket
+    List<S3Object> firstBucketChangelogs = listObjectsInDirectory(FIRST_BUCKET_NAME, CHANGELOG_DIR);
+    assertThat(firstBucketChangelogs).isEmpty();
   }
 
   @Test
