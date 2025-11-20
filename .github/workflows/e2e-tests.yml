@@ -7,29 +7,43 @@ on:
         required: true
 
 jobs:
+  set-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix_config: ${{ steps.set_output.outputs.matrix_config }}
+    steps:
+      - name: Decide on matrix based on workflow trigger / event, store in $GITHUB_OUTPUT
+        id: set_output
+        run: |
+          # Simplified matrix on push events, chromium only
+          PUSH_MATRIX='[{ name: "chromium-adm", install: "chromium" }, { name: "chromium-uli", install: "chromium" }, { name: "chromium-sli", install: "chromium" }]'
+          
+          # Complex matrix for scheduled events (chromium, firefox, msedge)
+          SCHEDULE_MATRIX='[{ name: "chromium-adm", install: "chromium" },{ name: "firefox-adm", install: "firefox" },{ name: "msedge-adm", install: "msedge chromium" },{ name: "chromium-uli", install: "chromium" },{ name: "firefox-uli", install: "firefox" },{ name: "msedge-uli", install: "msedge chromium" },{ name: "chromium-sli", install: "chromium" },{ name: "firefox-sli", install: "firefox" },{ name: "msedge-sli", install: "msedge chromium" }]'
+
+          echo "Event: ${{ github.event_name }}"
+          
+          # Use the conditional logic to choose which matrix to output
+          if [ "${{ github.event_name }}" == "schedule" ]; then
+            echo "matrix_config=$SCHEDULE_MATRIX" >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix_config=$PUSH_MATRIX" >> "$GITHUB_OUTPUT"
+          fi
+
   e2e-tests:
+    needs: set-matrix
     strategy:
       fail-fast: false
       matrix:
         # Standard, sharded runs
-        playwright-project:
-          [
-            { name: "chromium-adm", install: "chromium" },
-            { name: "firefox-adm", install: "firefox" },
-            { name: "msedge-adm", install: "msedge chromium" },
-            { name: "chromium-uli", install: "chromium" },
-            { name: "firefox-uli", install: "firefox" },
-            { name: "msedge-uli", install: "msedge chromium" },
-            { name: "chromium-sli", install: "chromium" },
-            { name: "firefox-sli", install: "firefox" },
-            { name: "msedge-sli", install: "msedge chromium" }
-          ]
+        playwright-project: ${{ fromJSON(needs.set-matrix.outputs.matrix_config) }}
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
 
         # Non-sharded login tests
         include:
           - playwright-project: { name: "loginChromium", install: "chromium" }
+          # not relevant for the PUSH_MATRIX - no idea how to make this conditional
           - playwright-project: { name: "loginFirefox", install: "firefox" }
           - playwright-project: { name: "loginEdge", install: "msedge chromium" }
 
