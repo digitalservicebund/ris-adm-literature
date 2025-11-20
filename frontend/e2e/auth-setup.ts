@@ -3,12 +3,21 @@ import { test as setup, expect, Page } from '@playwright/test'
 const admAuthFile = '../frontend/e2e/.auth/adm.json'
 const uliAuthFile = '../frontend/e2e/.auth/uli.json'
 const sliAuthFile = '../frontend/e2e/.auth/sli.json'
+const multiAuthFile = '../frontend/e2e/.auth/multi-office.json'
 const baseURL = 'http://localhost:5173'
 
 type DocumentTypeCode =
   | 'VERWALTUNGSVORSCHRIFTEN'
   | 'LITERATUR_SELBSTAENDIG'
   | 'LITERATUR_UNSELBSTAENDIG'
+
+const USER_CONFIGS = [
+  { username: 'testbag', authFile: '../frontend/e2e/.auth/user-bag.json' },
+  { username: 'testbfh', authFile: '../frontend/e2e/.auth/user-bfh.json' },
+  { username: 'testbsg', authFile: '../frontend/e2e/.auth/user-bsg.json' },
+  { username: 'testbverfg', authFile: '../frontend/e2e/.auth/user-bverfg.json' },
+  { username: 'testbverwg', authFile: '../frontend/e2e/.auth/user-bverwg.json' },
+]
 
 async function performLogin(
   page: Page,
@@ -49,11 +58,14 @@ setup('authenticate as adm user', async ({ page }) => {
 })
 
 // Setup for uli user
-setup('authenticate as uli user', async ({ page }) => {
-  console.info('--- Starting Setup: Authentication uli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_UNSELBSTAENDIG')
-  await page.context().storageState({ path: uliAuthFile })
-  console.info('--- Authentication successful. State saved. ---')
+USER_CONFIGS.forEach(({ username, authFile }) => {
+  setup(`authenticate as ${username}`, async ({ page }) => {
+    console.info(`--- Starting Setup: Authentication for ${username} ---`)
+    await performLogin(page, username, 'test', 'LITERATUR_UNSELBSTAENDIG')
+
+    await page.context().storageState({ path: authFile })
+    console.info(`--- Authentication for ${username} successful. State saved. ---`)
+  })
 })
 
 // Setup for sli user

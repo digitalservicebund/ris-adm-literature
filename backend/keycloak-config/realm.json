@@ -135,6 +135,72 @@
       ]
     },
     {
+      "id": "test-bfh",
+      "email": "testbfh@example.com",
+      "username": "testbfh",
+      "firstName": "bfh",
+      "lastName": "nachname",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "literature_user"
+      ],
+      "groups": [
+        "/literature/BFH"
+      ]
+    },
+    {
+      "id": "test-bverfg",
+      "email": "testbvrfg@example.com",
+      "username": "testbverfg",
+      "firstName": "bverfg",
+      "lastName": "nachname",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "literature_user"
+      ],
+      "groups": [
+        "/literature/BVERFG"
+      ]
+    },
+    {
+      "id": "test-bverwg",
+      "email": "testbverwg@example.com",
+      "username": "testbverwg",
+      "firstName": "bverwg",
+      "lastName": "nachname",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "temporary": false,
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "literature_user"
+      ],
+      "groups": [
+        "/literature/BVERWG"
+      ]
+    },
+    {
       "id": "test-both",
       "email": "testboth@example.com",
       "username": "testboth",
@@ -215,7 +281,10 @@
           "name": "BSG",
           "path": "/literature/BSG",
           "subGroups": []
-        }
+        },
+        { "name": "BFH", "path": "/literature/BFH", "subGroups": [] },
+        { "name": "BVERFG", "path": "/literature/BVERFG", "subGroups": [] },
+        { "name": "BVERWG", "path": "/literature/BVERWG", "subGroups": [] }
       ]
     }
   ]
