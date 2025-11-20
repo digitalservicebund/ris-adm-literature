@@ -16,24 +16,10 @@ jobs:
         id: set_output
         run: |
           # Simplified matrix on push events, chromium only
-          PUSH_MATRIX='[
-            { name: "chromium-adm", install: "chromium" },
-            { name: "chromium-uli", install: "chromium" },
-            { name: "chromium-sli", install: "chromium" },
-          ]'
+          PUSH_MATRIX='[{ name: "chromium-adm", install: "chromium" }, { name: "chromium-uli", install: "chromium" }, { name: "chromium-sli", install: "chromium" }]'
           
           # Complex matrix for scheduled events (chromium, firefox, msedge)
-          SCHEDULE_MATRIX='[
-            { name: "chromium-adm", install: "chromium" },
-            { name: "firefox-adm", install: "firefox" },
-            { name: "msedge-adm", install: "msedge chromium" },
-            { name: "chromium-uli", install: "chromium" },
-            { name: "firefox-uli", install: "firefox" },
-            { name: "msedge-uli", install: "msedge chromium" },
-            { name: "chromium-sli", install: "chromium" },
-            { name: "firefox-sli", install: "firefox" },
-            { name: "msedge-sli", install: "msedge chromium" }
-          ]'
+          SCHEDULE_MATRIX='[{ name: "chromium-adm", install: "chromium" },{ name: "firefox-adm", install: "firefox" },{ name: "msedge-adm", install: "msedge chromium" },{ name: "chromium-uli", install: "chromium" },{ name: "firefox-uli", install: "firefox" },{ name: "msedge-uli", install: "msedge chromium" },{ name: "chromium-sli", install: "chromium" },{ name: "firefox-sli", install: "firefox" },{ name: "msedge-sli", install: "msedge chromium" }]'
 
           echo "Event: ${{ github.event_name }}"
           
