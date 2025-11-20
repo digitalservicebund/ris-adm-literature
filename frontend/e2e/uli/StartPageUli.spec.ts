@@ -45,8 +45,8 @@ test.describe('StartPage ULI', () => {
     { office: 'BVERWG', prefix: 'WB', authFile: '../frontend/e2e/.auth/user-bverwg.json' },
   ]
 
-  test.describe('Documentation Unit Creation - Cross Office Check', () => {
-    // 2. Iterate over scenarios
+  test.describe('Documentation Unit Creation ULI - Cross Office Check', () => {
+    // Iterate over scenarios
     SCENARIOS.forEach(({ office, prefix, authFile }) => {
       test.describe(`Office: ${office}`, () => {
         // Load the specific user session for this office
@@ -54,9 +54,9 @@ test.describe('StartPage ULI', () => {
 
         test(
           `creates sequential document numbers (Increment check)`,
-          { tag: ['@RISDEV-9887'] },
+          { tag: ['@RISDEV-9887', '@RISDEV-9371'] },
           async ({ page }) => {
-            // Create First Document
+            // Create first document
             await page.goto('/literatur-unselbstaendig')
             await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
 
@@ -68,7 +68,7 @@ test.describe('StartPage ULI', () => {
 
             expect(firstDocId).toMatch(expectedPattern)
 
-            // Create Second Document
+            // Create second document
             await page.goto('/literatur-unselbstaendig')
             await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
 
@@ -76,8 +76,8 @@ test.describe('StartPage ULI', () => {
             const secondDocId = await headingLocator.textContent()
 
             // Compare
-            const firstSeq = extractSequenceNumber(firstDocId)
-            const secondSeq = extractSequenceNumber(secondDocId)
+            const firstSeq = extractSequenceNumber(firstDocId!)
+            const secondSeq = extractSequenceNumber(secondDocId!)
 
             // The second number must be exactly one higher
             expect(secondSeq).toBe(firstSeq + 1)
