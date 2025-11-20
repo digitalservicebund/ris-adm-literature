@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,9 @@ public interface LiteratureDocumentationUnitContent extends IDocumentationConten
   @NotBlank
   String veroeffentlichungsjahr();
 
+  @NotEmpty
   List<DocumentType> dokumenttypen();
+
   String hauptsachtitel();
   String hauptsachtitelZusatz();
   String dokumentarischerTitel();
