@@ -1,9 +1,7 @@
 import { test as setup, expect, Page } from '@playwright/test'
 
 const admAuthFile = '../frontend/e2e/.auth/adm.json'
-const uliAuthFile = '../frontend/e2e/.auth/uli.json'
 const sliAuthFile = '../frontend/e2e/.auth/sli.json'
-const multiAuthFile = '../frontend/e2e/.auth/multi-office.json'
 const baseURL = 'http://localhost:5173'
 
 type DocumentTypeCode =
