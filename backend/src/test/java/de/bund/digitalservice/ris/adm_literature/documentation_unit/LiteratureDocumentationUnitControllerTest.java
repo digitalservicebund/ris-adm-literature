@@ -168,7 +168,8 @@ class LiteratureDocumentationUnitControllerTest {
         """
         {
           "documentNumber": "KSLU054920710",
-          "veroeffentlichungsjahr": "2025"
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
         }""";
 
       given(
@@ -274,7 +275,8 @@ class LiteratureDocumentationUnitControllerTest {
         """
         {
           "documentNumber": "KSLU054920710",
-          "veroeffentlichungsjahr": "2025"
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
         }""";
 
       given(
@@ -301,7 +303,8 @@ class LiteratureDocumentationUnitControllerTest {
         """
         {
           "documentNumber": "KSLU054920710",
-          "veroeffentlichungsjahr": "2025"
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
         }""";
 
       given(

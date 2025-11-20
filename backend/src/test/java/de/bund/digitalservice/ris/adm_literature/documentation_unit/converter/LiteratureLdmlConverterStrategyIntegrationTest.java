@@ -5,10 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
@@ -228,7 +225,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   @Test
   void convertToLdml_shouldWrapExceptionsInPublishingFailedException() {
     // given
-    IDocumentationContent unsupportedContent = Mockito.mock(IDocumentationContent.class);
+    IDocumentationContent unsupportedContent = Mockito.mock(AdmDocumentationUnitContent.class);
 
     // when and then
     assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)

@@ -52,15 +52,21 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
         // For now, just create a new one
         log.warn("Editing previous XML version is not fully implemented; creating new document.");
       }
+
+      LiteratureDocumentCategory category =
+        switch (iDocumentationContent) {
+          case UliDocumentationUnitContent _ -> LiteratureDocumentCategory.ULI;
+          case SliDocumentationUnitContent _ -> LiteratureDocumentCategory.SLI;
+          default -> throw new IllegalStateException(
+            "Unexpected content type: " + iDocumentationContent.getClass()
+          );
+        };
+
       LiteratureDocumentationUnitContent content =
         (LiteratureDocumentationUnitContent) iDocumentationContent;
-      LdmlDocument ldmlDocument = minimalLdmlDocument.create(
-        content instanceof UliDocumentationUnitContent
-          ? LiteratureDocumentCategory.ULI
-          : LiteratureDocumentCategory.SLI
-      );
 
-      transformToLdml(ldmlDocument, content);
+      LdmlDocument ldmlDocument = minimalLdmlDocument.create(category);
+      transformToLdml(ldmlDocument, content, category);
 
       return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());
     } catch (Exception e) {
@@ -69,11 +75,15 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     }
   }
 
-  // Order should be the same as in migration project
-  private void transformToLdml(LdmlDocument ldmlDocument, LiteratureDocumentationUnitContent data) {
+  // Order should be the same as in the migration project
+  private void transformToLdml(
+    LdmlDocument ldmlDocument,
+    LiteratureDocumentationUnitContent data,
+    LiteratureDocumentCategory category
+  ) {
     // shared logic
     mapDocumentNumber(ldmlDocument, data.documentNumber());
-    mapDokumentart(ldmlDocument, data);
+    mapDokumentart(ldmlDocument, category);
     mapVeroeffentlichungsJahre(ldmlDocument, data.veroeffentlichungsjahr());
     mapTitles(ldmlDocument, data);
     mapClassifications(ldmlDocument, data.dokumenttypen());
@@ -89,8 +99,8 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       .addAttribute(VALUE, documentNumber);
   }
 
-  private void mapDokumentart(LdmlDocument ldmlDocument, LiteratureDocumentationUnitContent data) {
-    DocumentCategory documentCategory = data instanceof SliDocumentationUnitContent
+  private void mapDokumentart(LdmlDocument ldmlDocument, LiteratureDocumentCategory category) {
+    DocumentCategory documentCategory = (category == LiteratureDocumentCategory.SLI)
       ? DocumentCategory.LITERATUR_SELBSTAENDIG
       : DocumentCategory.LITERATUR_UNSELBSTAENDIG;
     ldmlDocument

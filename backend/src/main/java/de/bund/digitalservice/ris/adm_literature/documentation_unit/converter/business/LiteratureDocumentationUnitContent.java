@@ -5,12 +5,15 @@ import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.Doc
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Shared interface for ULI and SLI documentation units.
  * Defines common fields and shared validation logic.
  */
 public interface LiteratureDocumentationUnitContent extends IDocumentationContent {
+  UUID id();
+
   @NotBlank
   String documentNumber();
 
