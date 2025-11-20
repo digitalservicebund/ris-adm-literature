@@ -320,7 +320,7 @@ INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'L') ON CON
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'N') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES ('b46b4247-6869-4ab3-a357-806476195c76', 'R') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'S') ON CONFLICT DO NOTHING;
-INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'U') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES ('9de5cf2d-edae-4dc3-be05-3806c86cc97b', 'U') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES ('6e81f59d-3b24-485f-9e74-7c309db78682', 'V') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'X') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'Z') ON CONFLICT DO NOTHING;
@@ -358,7 +358,8 @@ INSERT INTO citation_type (id, abbreviation, label, documentation_unit_document_
 (gen_random_uuid(), 'Abgrenzung', 'Abgrenzung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '1'),
 (gen_random_uuid(), 'Ablehnung', 'Ablehnung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '2'),
 (gen_random_uuid(), 'Änderung', 'Änderung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '3'),
-(gen_random_uuid(), 'Übernahme', 'Übernahme', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '4');
+(gen_random_uuid(), 'Übernahme', 'Übernahme', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '4'),
+(gen_random_uuid(), 'XX', 'XX', '9de5cf2d-edae-4dc3-be05-3806c86cc97b', 'b46b4247-6869-4ab3-a357-806476195c76', '5');
 
 
 set role test;
