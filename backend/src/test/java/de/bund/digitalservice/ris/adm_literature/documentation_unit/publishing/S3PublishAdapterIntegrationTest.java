@@ -48,6 +48,9 @@ import software.amazon.awssdk.services.s3.model.S3Object;
  * and verifies that the composite publisher correctly routes requests based on DocumentCategory.
  */
 @Testcontainers
+// This property is needed because our main S3Config provides a mock S3Client bean
+// for the "test" profile, but this test needs to override it with a real one
+// from the inner @TestConfiguration. This property allows that override to happen.
 @SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
 @ActiveProfiles("test")
 class S3PublishAdapterIntegrationTest {
