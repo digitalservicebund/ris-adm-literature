@@ -141,6 +141,12 @@ test.describe('StartPage SLI', () => {
             const firstSeq = extractSequenceNumber(firstDocId!)
             const secondSeq = extractSequenceNumber(secondDocId!)
 
+            // Check if it starts with the current year
+            const currentYear = new Date().getFullYear().toString()
+            const yearRegex = new RegExp(`^${currentYear}`)
+            expect(firstSeq.toString()).toMatch(yearRegex)
+            expect(secondSeq.toString()).toMatch(yearRegex)
+
             // The second number must be exactly one higher
             expect(secondSeq).toBe(firstSeq + 1)
           },
