@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test'
 const docTypeToAuthFile = {
   adm: '../frontend/e2e/.auth/adm.json',
   uli: '../frontend/e2e/.auth/user-bag.json',
-  sli: '../frontend/e2e/.auth/sli.json',
+  sli: '../frontend/e2e/.auth/user-bsg.json',
 }
 
 // Map browsers to their devices

@@ -1,7 +1,6 @@
 import { test as setup, expect, Page } from '@playwright/test'
 
 const admAuthFile = '../frontend/e2e/.auth/adm.json'
-const sliAuthFile = '../frontend/e2e/.auth/sli.json'
 const baseURL = 'http://localhost:5173'
 
 type DocumentTypeCode =
@@ -64,12 +63,4 @@ USER_CONFIGS.forEach(({ username, authFile }) => {
     await page.context().storageState({ path: authFile })
     console.info(`--- Authentication for ${username} successful. State saved. ---`)
   })
-})
-
-// Setup for sli user
-setup('authenticate as sli user', async ({ page }) => {
-  console.info('--- Starting Setup: Authentication sli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_SELBSTAENDIG')
-  await page.context().storageState({ path: sliAuthFile })
-  console.info('--- Authentication successful. State saved. ---')
 })
