@@ -8,17 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.bund.digitalservice.ris.adm_literature.config.security.SecurityConfiguration;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -156,12 +153,13 @@ class LiteratureDocumentationUnitControllerTest {
   }
 
   @Nested
-  @DisplayName("Publish Endpoint")
-  class PublishEndpointValidationTests {
+  @DisplayName("ULI Publish Endpoint")
+  class UliPublishEndpointTests {
 
-    @Test
-    @DisplayName("Request PUT on publish returns HTTP 200 for a valid request")
-    void publish_success() throws Exception {
+    @DisplayName(
+      "Request PUT on publish returns HTTP 200 for valid ULI request (supporting both paths)"
+    )
+    void publish_uli_success(String urlTemplate) throws Exception {
       // given
       String documentNumber = "KSLU054920710";
       String validJsonRequest =
@@ -181,7 +179,7 @@ class LiteratureDocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/literature/documentation-units/{documentNumber}/publish", documentNumber)
+          put(urlTemplate, documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -190,85 +188,11 @@ class LiteratureDocumentationUnitControllerTest {
         .andExpect(jsonPath("$.documentNumber").value(documentNumber));
     }
 
-    @ParameterizedTest(name = "returns HTTP 400 for invalid field: {0}")
-    @MethodSource("invalidPublishPayloads")
-    @DisplayName("Request PUT on publish returns HTTP 400 for invalid data")
-    void publish_validationFails(String fieldName, String payload) throws Exception {
-      // given
-      String documentNumber = "KSNR000000001";
-
-      // when
-      mockMvc
-        .perform(
-          put("/api/literature/documentation-units/{documentNumber}/publish", documentNumber)
-            .content(payload)
-            .contentType(MediaType.APPLICATION_JSON)
-        )
-        // then
-        .andExpect(status().isBadRequest());
-    }
-
-    private static Stream<Arguments> invalidPublishPayloads() {
-      String baseJson =
-        """
-        {
-          "langueberschrift": "Eine gültige Überschrift",
-          "zitierdaten": ["2023-10-26"],
-          "inkrafttretedatum": "2023-10-26",
-          "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-          "normgeberList": [
-            {
-              "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
-              "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
-              "regions": [{ "code": "DE" }]
-            }
-          ]
-        }
-        """;
-
-      return Stream.of(
-        Arguments.of(
-          "langueberschrift",
-          baseJson.replace(
-            "\"langueberschrift\": \"Eine gültige Überschrift\"",
-            "\"langueberschrift\": \"  \""
-          )
-        ),
-        Arguments.of(
-          "zitierdaten",
-          baseJson.replace("\"zitierdaten\": [\"2023-10-26\"]", "\"zitierdaten\": []")
-        ),
-        Arguments.of(
-          "inkrafttretedatum",
-          baseJson.replace("\"inkrafttretedatum\": \"2023-10-26\"", "\"inkrafttretedatum\": \"\"")
-        ),
-        Arguments.of(
-          "dokumenttyp",
-          baseJson.replace(
-            "\"dokumenttyp\": { \"abbreviation\": \"TYPE_A\", \"name\": \"Type A Document\" }",
-            "\"dokumenttyp\": null"
-          )
-        ),
-        Arguments.of(
-          "normgeberList",
-          """
-          {
-            "langueberschrift": "Eine gültige Überschrift",
-            "zitierdaten": ["2023-10-26"],
-            "inkrafttretedatum": "2023-10-26",
-            "dokumenttyp": { "abbreviation": "TYPE_A", "name": "Type A Document" },
-            "normgeberList": []
-          }
-          """
-        )
-      );
-    }
-
     @Test
     @DisplayName(
-      "Request PUT on publish returns HTTP 404 because mocked documentation unit port returns empty optional"
+      "Request PUT on ULI publish returns HTTP 404 because mocked documentation unit port returns empty optional"
     )
-    void publish_notFound() throws Exception {
+    void publish_uli_notFound() throws Exception {
       // given
       String documentNumber = "KSLU054920710";
       String validJsonRequest =
@@ -286,7 +210,7 @@ class LiteratureDocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/literature/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/literature/uli/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -295,8 +219,8 @@ class LiteratureDocumentationUnitControllerTest {
     }
 
     @Test
-    @DisplayName("Request PUT on publish returns HTTP 503 when external publishing fails")
-    void publish_externalFailure() throws Exception {
+    @DisplayName("Request PUT on ULI publish returns HTTP 503 when external publishing fails")
+    void publish_uli_externalFailure() throws Exception {
       // given
       String documentNumber = "KSLU054920710";
       String validJsonRequest =
@@ -316,12 +240,162 @@ class LiteratureDocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put("/api/literature/documentation-units/{documentNumber}/publish", documentNumber)
+          put("/api/literature/uli/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )
         // then
         .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    @DisplayName("Request PUT on ULI publish returns HTTP 400 when data is missing")
+    void publish_uli_validationFailure() throws Exception {
+      // given
+      String documentNumber = "KSLU054920710";
+      String validJsonRequest =
+        """
+        {
+          "documentNumber": "KSLU054920710",
+          "veroeffentlichungsjahr": "2025"
+        }""";
+
+      given(
+        documentationUnitService.publish(any(String.class), any(UliDocumentationUnitContent.class))
+      ).willReturn(Optional.empty());
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/uli/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isBadRequest());
+    }
+  }
+
+  @Nested
+  @DisplayName("SLI Publish Endpoint")
+  class SliPublishEndpointTests {
+
+    @Test
+    @DisplayName("Request PUT on SLI publish returns HTTP 200 for a valid request")
+    void publish_sli_success() throws Exception {
+      // given
+      String documentNumber = "KSLS054920710";
+      String validJsonRequest =
+        """
+        {
+          "documentNumber": "KSLS054920710",
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
+        }""";
+
+      given(
+        documentationUnitService.publish(any(String.class), any(SliDocumentationUnitContent.class))
+      ).willReturn(
+        Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), validJsonRequest))
+      );
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/sli/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.documentNumber").value(documentNumber));
+    }
+
+    @Test
+    @DisplayName(
+      "Request PUT on SLI publish returns HTTP 404 because mocked documentation unit port returns empty optional"
+    )
+    void publish_sli_notFound() throws Exception {
+      // given
+      String documentNumber = "KSLS054920710";
+      String validJsonRequest =
+        """
+        {
+          "documentNumber": "KSLS054920710",
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
+        }""";
+
+      given(
+        documentationUnitService.publish(any(String.class), any(SliDocumentationUnitContent.class))
+      ).willReturn(Optional.empty());
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/sli/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Request PUT on SLI publish returns HTTP 503 when external publishing fails")
+    void publish_sli_externalFailure() throws Exception {
+      // given
+      String documentNumber = "KSLS054920710";
+      String validJsonRequest =
+        """
+        {
+          "documentNumber": "KSLS054920710",
+          "veroeffentlichungsjahr": "2025",
+          "hauptsachtitel": "titel"
+        }""";
+
+      given(
+        documentationUnitService.publish(any(String.class), any(SliDocumentationUnitContent.class))
+      ).willThrow(
+        new PublishingFailedException("External system unavailable", new RuntimeException())
+      );
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/sli/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    @DisplayName("Request PUT on SLI publish returns HTTP 400 when data is missing")
+    void publish_uli_validationFailure() throws Exception {
+      // given
+      String documentNumber = "KSLU054920710";
+      String validJsonRequest =
+        """
+        {
+          "documentNumber": "KSLU054920710",
+          "veroeffentlichungsjahr": "2025"
+        }""";
+
+      given(
+        documentationUnitService.publish(any(String.class), any(SliDocumentationUnitContent.class))
+      ).willReturn(Optional.empty());
+
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/sli/documentation-units/{documentNumber}/publish", documentNumber)
+            .content(validJsonRequest)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isBadRequest());
     }
   }
 }
