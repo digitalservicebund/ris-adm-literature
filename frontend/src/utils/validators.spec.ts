@@ -170,43 +170,172 @@ describe('Validators functions', () => {
   })
 
   describe('missingSliDocumentUnitFields', () => {
-    it('returns empty array if veroeffentlichungsjahr is present', () => {
-      const doc: SliDocumentationUnit = {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KALS2025000001',
-        note: '',
-        veroeffentlichungsjahr: '2025',
-      }
-      expect(missingSliDocumentUnitFields(doc)).toEqual([])
+    describe('veroeffentlichungsjahr', () => {
+      it('returns empty array if veroeffentlichungsjahr is present', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual([])
+      })
+
+      it('detects missing veroeffentlichungsjahr when empty string', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+      })
+
+      it('detects missing veroeffentlichungsjahr when whitespace only', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '   ',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+      })
+
+      it('detects missing veroeffentlichungsjahr when undefined', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+      })
     })
 
-    it('detects missing veroeffentlichungsjahr when empty string', () => {
+    describe('dokumenttypen', () => {
+      it('detects missing dokumenttypen when empty array', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['dokumenttypen'])
+      })
+
+      it('detects missing dokumenttypen when undefined', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['dokumenttypen'])
+      })
+
+      it('returns empty array if dokumenttypen is present', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual([])
+      })
+    })
+
+    describe('hauptsachtitel and dokumentarischerTitel', () => {
+      it('detects missing when both are empty', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: '',
+          dokumentarischerTitel: '',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['hauptsachtitel'])
+      })
+
+      it('detects missing when both are whitespace only', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: '   ',
+          dokumentarischerTitel: '  ',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual(['hauptsachtitel'])
+      })
+
+      it('returns empty array if hauptsachtitel is present', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual([])
+      })
+
+      it('returns empty array if dokumentarischerTitel is present', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          dokumentarischerTitel: 'Doc Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual([])
+      })
+
+      it('returns empty array if both are present', () => {
+        const doc: SliDocumentationUnit = {
+          id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+          documentNumber: 'KALS2025000001',
+          note: '',
+          veroeffentlichungsjahr: '2025',
+          dokumenttypen: [docTypeAnordnungFixture],
+          hauptsachtitel: 'Title',
+          dokumentarischerTitel: 'Doc Title',
+        }
+        expect(missingSliDocumentUnitFields(doc)).toEqual([])
+      })
+    })
+
+    it('detects multiple missing fields', () => {
       const doc: SliDocumentationUnit = {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KALS2025000001',
         note: '',
         veroeffentlichungsjahr: '',
+        dokumenttypen: [],
+        hauptsachtitel: '',
+        dokumentarischerTitel: '',
       }
-      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
-    })
-
-    it('detects missing veroeffentlichungsjahr when whitespace only', () => {
-      const doc: SliDocumentationUnit = {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KALS2025000001',
-        note: '',
-        veroeffentlichungsjahr: '   ',
-      }
-      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
-    })
-
-    it('detects missing veroeffentlichungsjahr when undefined', () => {
-      const doc: SliDocumentationUnit = {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KALS2025000001',
-        note: '',
-      }
-      expect(missingSliDocumentUnitFields(doc)).toEqual(['veroeffentlichungsjahr'])
+      expect(missingSliDocumentUnitFields(doc)).toEqual([
+        'dokumenttypen',
+        'veroeffentlichungsjahr',
+        'hauptsachtitel',
+      ])
     })
   })
 })

@@ -1,6 +1,7 @@
 import { requiredAdmDocUnitFields, type AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import type { UliDocumentationUnit } from '@/domain/uli/uliDocumentUnit'
 import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
+import type { DocumentType } from '@/domain/documentType'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
@@ -38,6 +39,21 @@ export function missingAdmDocumentUnitFields(doc: AdmDocumentationUnit): string[
 
 // Returns a list of missing uli required fields
 export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[] {
+  return missingLiteratureDocumentUnitFields(doc)
+}
+
+// Returns a list of missing SLI required fields
+export function missingSliDocumentUnitFields(doc: SliDocumentationUnit): string[] {
+  return missingLiteratureDocumentUnitFields(doc)
+}
+
+// Shared validation logic for literature document units (ULI and SLI)
+function missingLiteratureDocumentUnitFields(doc: {
+  dokumenttypen?: DocumentType[]
+  veroeffentlichungsjahr?: string
+  hauptsachtitel?: string
+  dokumentarischerTitel?: string
+}): string[] {
   const missingFields: string[] = []
   if (!doc.dokumenttypen?.length) {
     missingFields.push('dokumenttypen')
@@ -49,17 +65,6 @@ export function missingUliDocumentUnitFields(doc: UliDocumentationUnit): string[
 
   if (isBlank(doc.hauptsachtitel) && isBlank(doc.dokumentarischerTitel)) {
     missingFields.push('hauptsachtitel')
-  }
-
-  return missingFields
-}
-
-// Returns a list of missing SLI required fields
-export function missingSliDocumentUnitFields(doc: SliDocumentationUnit): string[] {
-  const missingFields: string[] = []
-
-  if (isBlank(doc.veroeffentlichungsjahr)) {
-    missingFields.push('veroeffentlichungsjahr')
   }
 
   return missingFields
