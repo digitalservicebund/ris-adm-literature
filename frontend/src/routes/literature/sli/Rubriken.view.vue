@@ -6,6 +6,7 @@ import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
+import TitelSection from '@/components/sli/TitelSection.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 
@@ -13,6 +14,27 @@ const veroeffentlichungsjahr = computed({
   get: () => store.documentUnit?.veroeffentlichungsjahr,
   set: (newValue) => {
     store.documentUnit!.veroeffentlichungsjahr = newValue
+  },
+})
+
+const hauptsachtitel = computed({
+  get: () => store.documentUnit?.hauptsachtitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitel = newValue
+  },
+})
+
+const dokumentarischerTitel = computed({
+  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
+  set: (newValue) => {
+    store.documentUnit!.dokumentarischerTitel = newValue
+  },
+})
+
+const hauptsachtitelZusatz = computed({
+  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
+  set: (newValue) => {
+    store.documentUnit!.hauptsachtitelZusatz = newValue
   },
 })
 
@@ -33,6 +55,20 @@ useScrollToHash()
             fluid
           />
         </InputField>
+      </div>
+      <TitelSection
+        v-model:hauptsachtitel="hauptsachtitel"
+        v-model:dokumentarischer-titel="dokumentarischerTitel"
+        v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
+      />
+      <div>
+        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+          Pflichtfelder für die Veröffentlichung
+        </p>
+        <p class="pl-12">
+          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
+          werden
+        </p>
       </div>
     </div>
   </div>
