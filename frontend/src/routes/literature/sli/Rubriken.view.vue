@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
@@ -9,43 +8,16 @@ import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
 import TitelSection from '@/components/sli/TitelSection.vue'
 import DokumentTyp from '@/components/DokumentTyp.vue'
+import { useLiteratureRubriken } from '@/composables/useLiteratureRubriken'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
-
-const veroeffentlichungsjahr = computed({
-  get: () => store.documentUnit?.veroeffentlichungsjahr,
-  set: (newValue) => {
-    store.documentUnit!.veroeffentlichungsjahr = newValue
-  },
-})
-
-const dokumenttypen = computed({
-  get: () => store.documentUnit?.dokumenttypen || [],
-  set: (newValue) => {
-    store.documentUnit!.dokumenttypen = newValue
-  },
-})
-
-const hauptsachtitel = computed({
-  get: () => store.documentUnit?.hauptsachtitel ?? '',
-  set: (newValue) => {
-    store.documentUnit!.hauptsachtitel = newValue
-  },
-})
-
-const dokumentarischerTitel = computed({
-  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
-  set: (newValue) => {
-    store.documentUnit!.dokumentarischerTitel = newValue
-  },
-})
-
-const hauptsachtitelZusatz = computed({
-  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
-  set: (newValue) => {
-    store.documentUnit!.hauptsachtitelZusatz = newValue
-  },
-})
+const {
+  veroeffentlichungsjahr,
+  dokumenttypen,
+  hauptsachtitel,
+  dokumentarischerTitel,
+  hauptsachtitelZusatz,
+} = useLiteratureRubriken(store)
 
 useScrollToHash()
 </script>
