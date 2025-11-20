@@ -30,8 +30,6 @@ jobs:
             echo "matrix_config=$PUSH_MATRIX" >> "$GITHUB_OUTPUT"
           fi
 
-          echo "matrix: ${{ set-matrix.outputs.matrix_config }}"
-
   e2e-tests:
     needs: set-matrix
     strategy:
