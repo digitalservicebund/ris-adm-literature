@@ -6,7 +6,8 @@ on:
     paths-ignore:
       - "**/*.md"
   schedule:
-    # schedule once per night; scheduled run runs e2e tests across all browsers, cf. ./e2e-tests.yml
+    # once per night
+    # Note: scheduled run runs e2e tests across all browsers, cf. ./e2e-tests.yml for details
      - cron: "0 6 * * *"
   pull_request:
     types: [opened, synchronize, reopened]
