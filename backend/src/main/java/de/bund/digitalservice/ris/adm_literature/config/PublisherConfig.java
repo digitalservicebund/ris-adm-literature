@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.config;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.S3PublishAdapter;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
@@ -23,22 +24,53 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Slf4j
 public class PublisherConfig {
 
+  /**
+   * Creates a {@link Publisher} bean for publishing BSG documents.
+   * @param s3Client The S3 client to use for publishing.
+   * @param validator The validator to use for BSG documents.
+   * @param bucketName The name of the bucket to publish to.
+   * @return A configured {@link Publisher} instance.
+   */
   @Bean("publicBsgPublisher")
   public Publisher publicBsgPublisher(
     @Qualifier("publicBsgS3Client") S3Client s3Client,
     @Qualifier("bsgVwvValidator") XmlValidator validator,
     @Value("${s3.bucket.adm.public.bucket-name-ref}") String bucketName
   ) {
-    return new S3PublishAdapter(s3Client, validator, bucketName, "publicBsgPublisher");
+    return new S3PublishAdapter(
+      s3Client,
+      Map.of(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, validator),
+      bucketName,
+      "publicBsgPublisher"
+    );
   }
 
+  /**
+   * Creates a {@link Publisher} bean for publishing literature documents.
+   * @param s3Client The S3 client to use for publishing.
+   * @param uliValidator The validator to use for ULI documents.
+   * @param sliValidator The validator to use for SLI documents.
+   * @param bucketName The name of the bucket to publish to.
+   * @return A configured {@link Publisher} instance.
+   */
   @Bean("publicLiteraturePublisher")
   public Publisher publicLiteraturePublisher(
     @Qualifier("publicLiteratureS3Client") S3Client s3Client,
-    @Qualifier("uliLiteratureValidator") XmlValidator validator,
+    @Qualifier("uliLiteratureValidator") XmlValidator uliValidator,
+    @Qualifier("sliLiteratureValidator") XmlValidator sliValidator,
     @Value("${s3.bucket.literature.public.bucket-name-ref}") String bucketName
   ) {
-    return new S3PublishAdapter(s3Client, validator, bucketName, "publicLiteraturePublisher");
+    return new S3PublishAdapter(
+      s3Client,
+      Map.of(
+        DocumentCategory.LITERATUR_UNSELBSTAENDIG,
+        uliValidator,
+        DocumentCategory.LITERATUR_SELBSTAENDIG,
+        sliValidator
+      ),
+      bucketName,
+      "publicLiteraturePublisher"
+    );
   }
 
   /**
@@ -47,7 +79,7 @@ public class PublisherConfig {
    * This bean is marked as {@link Primary} so that it becomes the default implementation
    * injected into services like {@code DocumentationUnitService}. Its role is to receive all
    * publish requests and delegate them to the appropriate concrete publisher instance
-   * based on the {@code targetPublisher} specified in the {@link Publisher.PublicationDetails}.
+   * based on the document.targetPublisher specified in the {@link Publisher.PublicationDetails}.
    *
    * @param allPublishers A list of all other beans that implement the {@link Publisher} interface,
    *                      automatically injected by Spring. These publisher beans are defined as a bean like
@@ -70,7 +102,7 @@ public class PublisherConfig {
 
       @Override
       public void publish(@Nonnull PublicationDetails publicationDetails) {
-        String target = publicationDetails.targetPublisher();
+        String target = publicationDetails.category().getPublisherName();
         Publisher selectedPublisher = publisherMap.get(target);
         if (selectedPublisher != null) {
           selectedPublisher.publish(publicationDetails);

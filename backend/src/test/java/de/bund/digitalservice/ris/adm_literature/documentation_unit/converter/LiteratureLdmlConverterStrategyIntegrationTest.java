@@ -3,13 +3,16 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 import static de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.XmlNormalizer.NORMALIZE_FUNCTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestUliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.XmlValidator;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,23 +20,27 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class UliLdmlConverterStrategyIntegrationTest {
+class LiteratureLdmlConverterStrategyIntegrationTest {
 
   @Autowired
-  private UliLdmlConverterStrategy uliLdmlConverterStrategy;
+  private LiteratureLdmlConverterStrategy literatureLdmlConverterStrategy;
 
   @Autowired
   @Qualifier("uliLiteratureValidator")
   private XmlValidator uliLiteratureValidator;
 
+  @Autowired
+  @Qualifier("sliLiteratureValidator")
+  private XmlValidator sliLiteratureValidator;
+
   @Test
   void convertToLdml() {
     // given
     UliDocumentationUnitContent uliDocumentationUnitContent =
-      TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
+      TestDocumentationUnitContent.createUli("KSLU00000011", "2025");
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml).contains(
@@ -47,10 +54,10 @@ class UliLdmlConverterStrategyIntegrationTest {
   void convertToLdml_veroeffentlichungsjahr() {
     // given
     UliDocumentationUnitContent uliDocumentationUnitContent =
-      TestUliDocumentationUnitContent.create("KSLU00000011", "2025");
+      TestDocumentationUnitContent.createUli("KSLU00000011", "2025");
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -80,7 +87,7 @@ class UliLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -108,7 +115,7 @@ class UliLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -134,7 +141,7 @@ class UliLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = uliLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -144,5 +151,88 @@ class UliLdmlConverterStrategyIntegrationTest {
         )
     );
     assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void convertToLdml_sli_complete() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      "Dies ist eine Gesamtfussnote"
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:FRBRsubtype value="LS"/>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:notes source="gesamtfussnoten">
+        <akn:note>
+           <akn:block name="gesamtfussnote">Dies ist eine Gesamtfussnote</akn:block>
+        </akn:note>
+      </akn:notes>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:FRBRalias name="haupttitel" value="SliHauptTitel"/>""".transform(NORMALIZE_FUNCTION)
+    );
+
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void supports_shouldReturnTrueForSupportedTypes() {
+    // given
+    var uliContent = TestDocumentationUnitContent.createUli("DOC1", "2024");
+    var sliContent = new SliDocumentationUnitContent(
+      null,
+      "DOC2",
+      "2024",
+      Collections.emptyList(),
+      "Title",
+      null,
+      null,
+      null
+    );
+
+    // then
+    assertThat(literatureLdmlConverterStrategy.supports(uliContent)).isTrue();
+    assertThat(literatureLdmlConverterStrategy.supports(sliContent)).isTrue();
+  }
+
+  @Test
+  void supports_shouldReturnFalseForUnsupportedTypes() {
+    // given
+    IDocumentationContent unsupportedContent = Mockito.mock(IDocumentationContent.class);
+
+    // then
+    assertThat(literatureLdmlConverterStrategy.supports(unsupportedContent)).isFalse();
+  }
+
+  @Test
+  void convertToLdml_shouldWrapExceptionsInPublishingFailedException() {
+    // given
+    IDocumentationContent unsupportedContent = Mockito.mock(AdmDocumentationUnitContent.class);
+
+    // when and then
+    assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)
+    )
+      .isInstanceOf(PublishingFailedException.class)
+      .hasMessageContaining("Failed to convert Literature content to LDML")
+      .hasCauseInstanceOf(IllegalStateException.class)
+      .hasRootCauseMessage("Unexpected content type: " + unsupportedContent.getClass());
   }
 }

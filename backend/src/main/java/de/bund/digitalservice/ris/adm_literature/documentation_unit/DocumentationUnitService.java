@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.Ld
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
@@ -109,6 +110,11 @@ public class DocumentationUnitService {
     );
 
     return switch (documentationUnitContent) {
+      case SliDocumentationUnitContent _ -> {
+        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTAENDIG);
+        // TODO: Return converted doc like for adm NOSONAR
+        yield optionalDocumentationUnit;
+      }
       case UliDocumentationUnitContent _ -> {
         publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTAENDIG);
         // TODO: Return converted doc like for adm NOSONAR
@@ -135,11 +141,7 @@ public class DocumentationUnitService {
     String xml,
     DocumentCategory documentCategory
   ) {
-    var publishOptions = new Publisher.PublicationDetails(
-      documentNumber,
-      xml,
-      documentCategory.getPublisherName()
-    );
+    var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, documentCategory);
     publisher.publish(publishOptions);
   }
 

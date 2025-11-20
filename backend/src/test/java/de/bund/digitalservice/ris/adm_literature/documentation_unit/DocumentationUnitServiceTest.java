@@ -12,10 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestAdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestUliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
@@ -257,7 +254,7 @@ class DocumentationUnitServiceTest {
     // then
     assertThat(result).isPresent();
     verify(publisher).publish(publicationDetailsCaptor.capture());
-    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+    assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
       "publicBsgPublisher"
     );
   }
@@ -277,7 +274,7 @@ class DocumentationUnitServiceTest {
       TEST_JSON,
       TEST_NEW_XML
     );
-    UliDocumentationUnitContent contentToPublish = TestUliDocumentationUnitContent.create(
+    UliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createUli(
       "KALU123456789",
       "2025"
     );
@@ -301,7 +298,51 @@ class DocumentationUnitServiceTest {
     // then
     assertThat(result).isPresent();
     verify(publisher).publish(publicationDetailsCaptor.capture());
-    assertThat(publicationDetailsCaptor.getValue().targetPublisher()).isEqualTo(
+    assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
+      "publicLiteraturePublisher"
+    );
+  }
+
+  @Test
+  void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() throws Exception {
+    // given
+    DocumentationUnit existingUnit = new DocumentationUnit(
+      "KALU123456789",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_OLD_XML
+    );
+    DocumentationUnit publishedUnit = new DocumentationUnit(
+      "KALU123456789",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_NEW_XML
+    );
+    SliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createSli(
+      "KALU123456789",
+      "2025"
+    );
+    given(documentationUnitPersistenceService.findByDocumentNumber("KALU123456789")).willReturn(
+      Optional.of(existingUnit)
+    );
+    given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
+      TEST_NEW_XML
+    );
+    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
+    given(
+      documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
+    ).willReturn(publishedUnit);
+
+    // when
+    Optional<DocumentationUnit> result = documentationUnitService.publish(
+      "KALU123456789",
+      contentToPublish
+    );
+
+    // then
+    assertThat(result).isPresent();
+    verify(publisher).publish(publicationDetailsCaptor.capture());
+    assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
       "publicLiteraturePublisher"
     );
   }

@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -118,10 +119,68 @@ public class LiteratureDocumentationUnitController {
       ),
     }
   )
-  @PutMapping("api/literature/documentation-units/{documentNumber}/publish")
-  public ResponseEntity<DocumentationUnit> publish(
+  @PutMapping(
+    {
+      "api/literature/uli/documentation-units/{documentNumber}/publish",
+      "api/literature/documentation-units/{documentNumber}/publish",
+    }
+  )
+  public ResponseEntity<DocumentationUnit> publishUli(
     @PathVariable String documentNumber,
     @RequestBody @Valid UliDocumentationUnitContent documentationUnitContent
+  ) {
+    Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitService.publish(
+      documentNumber,
+      documentationUnitContent
+    );
+    return optionalDocumentationUnit
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+
+  /**
+   * Publishes the documentation unit with the given document number and content.
+   *
+   * @param documentNumber           The document number of the document to publish
+   * @param documentationUnitContent The documentation unit content to publish
+   * @return The published documentation unit or
+   *         <br>- HTTP 400 if input not valid
+   *         <br>- HTTP 404 if not found
+   *         <br>- HTTP 503 if the external publishing service is unavailable
+   */
+  @ApiResponses(
+    value = {
+      @ApiResponse(
+        responseCode = "200",
+        description = "Successfully published the documentation unit",
+        content = {
+          @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = DocumentationUnit.class)
+          ),
+        }
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid input, validation failed for the request body",
+        content = @Content
+      ),
+      @ApiResponse(
+        responseCode = "404",
+        description = "Documentation unit with the given number was not found",
+        content = @Content
+      ),
+      @ApiResponse(
+        responseCode = "503",
+        description = "The external publishing service is unavailable",
+        content = @Content
+      ),
+    }
+  )
+  @PutMapping("api/literature/sli/documentation-units/{documentNumber}/publish")
+  public ResponseEntity<DocumentationUnit> publishSli(
+    @PathVariable String documentNumber,
+    @RequestBody @Valid SliDocumentationUnitContent documentationUnitContent
   ) {
     Optional<DocumentationUnit> optionalDocumentationUnit = documentationUnitService.publish(
       documentNumber,

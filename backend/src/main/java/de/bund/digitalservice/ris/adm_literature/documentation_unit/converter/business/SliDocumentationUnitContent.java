@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Business model for ULI documentation unit content.
+ * Business model for SLI documentation unit content.
  *
  * @param id The unique identifier.
  * @param documentNumber The document number.
@@ -16,7 +16,7 @@ import java.util.UUID;
  * @param dokumentarischerTitel The documentary title.
  * @param note An additional note.
  */
-public record UliDocumentationUnitContent(
+public record SliDocumentationUnitContent(
   UUID id,
   String documentNumber,
   String veroeffentlichungsjahr,
