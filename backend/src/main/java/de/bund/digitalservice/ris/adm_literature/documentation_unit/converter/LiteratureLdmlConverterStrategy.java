@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
  * Unified LDML publish converter service for Literature (SLI and ULI).
  * <p>
  * Matches the architecture of XmlItemProcessor:
- * 1. Extracts/Normalizes context into a Record (LiteratureData).
- * 2. Runs a linear transformation pipeline (transformToLdml).
+ * 1. Extracts/Normalizes context into a Record
+ * 2. Runs a transformation pipeline
  */
 @Component
 @Slf4j
