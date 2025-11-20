@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths-ignore:
       - "**/*.md"
+  schedule:
+    # schedule once per night; scheduled run runs e2e tests across all browsers, cf. ./e2e-tests.yml
+     - cron: "0 6 * * *"
   pull_request:
     types: [opened, synchronize, reopened]
   # Allow to run this workflow manually
