@@ -234,7 +234,6 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
     assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)
     )
       .isInstanceOf(PublishingFailedException.class)
-      // Use containing because the actual message includes status codes/ProblemDetail
       .hasMessageContaining("Failed to convert Literature content to LDML")
       .hasCauseInstanceOf(IllegalStateException.class)
       .hasRootCauseMessage("Unexpected content type: " + unsupportedContent.getClass());
