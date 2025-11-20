@@ -1,6 +1,8 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.LiteratureDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.util.*;
@@ -31,49 +33,6 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   private static final String SOURCE = "source";
   private static final String UNDEFINED = "attributsemantik-noch-undefiniert";
 
-  private record LiteratureData(
-    LiteratureDocumentCategory category,
-    String subType,
-    String documentNumber,
-    String veroeffentlichungsjahr,
-    String note,
-    List<DocumentType> dokumentTypen,
-    String haupttitel,
-    String zusatz,
-    String dokumentarischerTitel
-  ) {
-    // We should re-assess if we really need to different UnitContents for Uli and SLi once we have all attributes
-    static LiteratureData from(IDocumentationContent content) {
-      return switch (content) {
-        case UliDocumentationUnitContent c -> new LiteratureData(
-          LiteratureDocumentCategory.ULI,
-          "LU",
-          c.documentNumber(),
-          c.veroeffentlichungsjahr(),
-          c.note(),
-          c.dokumenttypen(),
-          c.hauptsachtitel(),
-          c.hauptsachtitelZusatz(),
-          c.dokumentarischerTitel()
-        );
-        case SliDocumentationUnitContent c -> new LiteratureData(
-          LiteratureDocumentCategory.SLI,
-          "LS",
-          c.documentNumber(),
-          c.veroeffentlichungsjahr(),
-          c.note(),
-          c.dokumenttypen(),
-          c.hauptsachtitel(),
-          c.hauptsachtitelZusatz(),
-          c.dokumentarischerTitel()
-        );
-        default -> throw new IllegalStateException(
-          "Unexpected content type: " + content.getClass()
-        );
-      };
-    }
-  }
-
   @Override
   public boolean supports(IDocumentationContent content) {
     return (
@@ -83,19 +42,25 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   }
 
   @Override
-  public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) {
+  public String convertToLdml(
+    @Nonnull IDocumentationContent iDocumentationContent,
+    String previousXmlVersion
+  ) {
     try {
       if (previousXmlVersion != null) {
         // We'd need an LdmlDocument parser here if we want to edit
         // For now, just create a new one
         log.warn("Editing previous XML version is not fully implemented; creating new document.");
       }
+      LiteratureDocumentationUnitContent content =
+        (LiteratureDocumentationUnitContent) iDocumentationContent;
+      LdmlDocument ldmlDocument = minimalLdmlDocument.create(
+        content instanceof UliDocumentationUnitContent
+          ? LiteratureDocumentCategory.ULI
+          : LiteratureDocumentCategory.SLI
+      );
 
-      LiteratureData data = LiteratureData.from(content);
-
-      LdmlDocument ldmlDocument = minimalLdmlDocument.create(data.category());
-
-      transformToLdml(ldmlDocument, data);
+      transformToLdml(ldmlDocument, content);
 
       return LiteratureXmlWriter.xmlToString(ldmlDocument.getDocument());
     } catch (Exception e) {
@@ -105,12 +70,13 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   }
 
   // Order should be the same as in migration project
-  private void transformToLdml(LdmlDocument ldmlDocument, LiteratureData data) {
+  private void transformToLdml(LdmlDocument ldmlDocument, LiteratureDocumentationUnitContent data) {
+    // shared logic
     mapDocumentNumber(ldmlDocument, data.documentNumber());
-    mapDokumentart(ldmlDocument, data.subType());
+    mapDokumentart(ldmlDocument, data);
     mapVeroeffentlichungsJahre(ldmlDocument, data.veroeffentlichungsjahr());
     mapTitles(ldmlDocument, data);
-    mapClassifications(ldmlDocument, data.dokumentTypen());
+    mapClassifications(ldmlDocument, data.dokumenttypen());
     mapNote(ldmlDocument, data.note());
     mapKurzreferat(ldmlDocument);
   }
@@ -123,8 +89,14 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       .addAttribute(VALUE, documentNumber);
   }
 
-  private void mapDokumentart(LdmlDocument ldmlDocument, String subType) {
-    ldmlDocument.frbrWork().appendElementAndGet("akn:FRBRsubtype").addAttribute(VALUE, subType);
+  private void mapDokumentart(LdmlDocument ldmlDocument, LiteratureDocumentationUnitContent data) {
+    DocumentCategory documentCategory = data instanceof SliDocumentationUnitContent
+      ? DocumentCategory.LITERATUR_SELBSTAENDIG
+      : DocumentCategory.LITERATUR_UNSELBSTAENDIG;
+    ldmlDocument
+      .frbrWork()
+      .appendElementAndGet("akn:FRBRsubtype")
+      .addAttribute(VALUE, documentCategory.getPrefix());
   }
 
   private void mapVeroeffentlichungsJahre(
@@ -139,18 +111,18 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       .appendText(StringUtils.defaultString(veroeffentlichungsjahr));
   }
 
-  private void mapTitles(LdmlDocument ldmlDocument, LiteratureData data) {
+  private void mapTitles(LdmlDocument ldmlDocument, LiteratureDocumentationUnitContent data) {
     // 1. mapHauptsachtitel
-    if (StringUtils.isNotBlank(data.haupttitel())) {
-      mapToFBRBWorkAlias(data.haupttitel(), ldmlDocument, "haupttitel");
-      mapToLongTitle(data.haupttitel(), ldmlDocument);
+    if (StringUtils.isNotBlank(data.hauptsachtitel())) {
+      mapToFBRBWorkAlias(data.hauptsachtitel(), ldmlDocument, "haupttitel");
+      mapToLongTitle(data.hauptsachtitel(), ldmlDocument);
     } else {
       mapToLongTitle("", ldmlDocument);
     }
 
     // 2. mapTitelzusatz
-    if (StringUtils.isNotBlank(data.zusatz())) {
-      mapToFBRBWorkAlias(data.zusatz(), ldmlDocument, "haupttitelZusatz");
+    if (StringUtils.isNotBlank(data.hauptsachtitelZusatz())) {
+      mapToFBRBWorkAlias(data.hauptsachtitelZusatz(), ldmlDocument, "haupttitelZusatz");
     }
 
     // 3. mapFingtitel

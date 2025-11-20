@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business;
 
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,12 +18,12 @@ import java.util.UUID;
  */
 public record SliDocumentationUnitContent(
   UUID id,
-  @NotBlank String documentNumber,
-  @NotBlank String veroeffentlichungsjahr,
+  String documentNumber,
+  String veroeffentlichungsjahr,
   List<DocumentType> dokumenttypen,
   String hauptsachtitel,
   String hauptsachtitelZusatz,
   String dokumentarischerTitel,
   String note
 )
-  implements IDocumentationContent {}
+  implements LiteratureDocumentationUnitContent {}
