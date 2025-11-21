@@ -48,7 +48,7 @@
     "@tiptap/vue-3": "^3.10.2",
     "@tsconfig/node23": "^23.0.4",
     "@vitejs/plugin-vue": "^6.0.1",
-    "@vitejs/plugin-vue-jsx": "^5.1.1",
+    "@vitejs/plugin-vue-jsx": "^5.1.2",
     "@vue/tsconfig": "^0.8.1",
     "@vueuse/core": "^14.0.0",
     "dayjs": "^1.11.19",
