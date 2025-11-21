@@ -42,6 +42,7 @@ const normalizedDokumentarischerTitel = computed(() => (dokumentarischerTitel.va
         v-model="hauptsachtitel"
         :disabled="!!normalizedDokumentarischerTitel"
         auto-resize
+        rows="1"
         fluid
       />
     </InputField>
@@ -59,6 +60,7 @@ const normalizedDokumentarischerTitel = computed(() => (dokumentarischerTitel.va
       :input-id="dokumentarischerTitelId"
       button-label="Dokumentarischer Titel"
       v-model:visible="showDokumentarischerTitel"
+      :disabled="!!normalizedHauptsachtitel || !!normalizedHauptsachtitelZusatz"
     >
       <InputField :id="dokumentarischerTitelId" label="Dokumentarischer Titel *">
         <Textarea
@@ -66,6 +68,7 @@ const normalizedDokumentarischerTitel = computed(() => (dokumentarischerTitel.va
           v-model="dokumentarischerTitel"
           :disabled="!!normalizedHauptsachtitel || !!normalizedHauptsachtitelZusatz"
           auto-resize
+          rows="1"
           fluid
           @blur="handleDokumentarischerTitelBlur"
         />

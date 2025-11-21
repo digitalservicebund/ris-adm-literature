@@ -5,7 +5,8 @@ import IconAdd from '~icons/material-symbols/add'
 
 const visibleModel = defineModel<boolean>('visible', { default: false })
 const show = computed(() => visibleModel.value)
-const props = defineProps<{ buttonLabel: string }>()
+
+const props = defineProps<{ buttonLabel: string; disabled?: boolean }>()
 
 function open() {
   visibleModel.value = true
@@ -18,6 +19,7 @@ function open() {
       <Button
         :aria-label="props.buttonLabel"
         class="self-start"
+        :disabled="props.disabled"
         :label="props.buttonLabel"
         size="small"
         severity="secondary"
