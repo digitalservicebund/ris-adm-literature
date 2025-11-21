@@ -20,6 +20,10 @@ INSERT INTO lookup_tables.document_type VALUES ('244d68ee-eb3a-430b-81ec-3d8b4ed
 INSERT INTO lookup_tables.document_type VALUES ('07d9b107-d875-4eb0-a52b-b2abd8bff899', 'Ebs', 'Entscheidungsbesprechung', 'U');
 INSERT INTO lookup_tables.document_type VALUES ('244db3dd-e2f3-4a84-a058-589572be9a71', 'Kon', 'Kongressvortrag', 'U');
 
+INSERT INTO lookup_tables.document_type VALUES ('4c5a7a2f-88ee-4ec0-9c05-aa2b7f0b8a2e', 'Bib', 'Bibliographie', 'S');
+INSERT INTO lookup_tables.document_type VALUES ('9f27d6df-4b6b-4bf5-8d49-6798ef5c0d3c', 'Ebs', 'Entscheidungsbesprechung', 'S');
+INSERT INTO lookup_tables.document_type VALUES ('c2b4fd17-90bb-4c5d-87e2-1d2b018b4f0a', 'Dis', 'Dissertation', 'S');
+
 
 CREATE TABLE
     IF NOT EXISTS

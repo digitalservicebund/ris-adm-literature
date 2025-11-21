@@ -58,6 +58,7 @@ const openOverlay = () => {
 <template>
   <RisAutoCompleteMultiple
     ref="autoCompleteMultipleRef"
+    :data-testid="'document-type-autocomplete'"
     v-model="selectedItems"
     :suggestions="suggestions"
     :input-id="inputId"
