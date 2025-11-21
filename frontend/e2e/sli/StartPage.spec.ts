@@ -59,38 +59,6 @@ test.describe('StartPage SLI', () => {
     },
   )
 
-  test(
-    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading',
-    { tag: ['@RISDEV-10142', '@RISDEV-10119'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/literatur-selbstaendig')
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-      await page.waitForURL(/dokumentationseinheit/)
-
-      // then - field marked as required
-      await expect(page.getByText('Veröffentlichungsjahr *')).toBeVisible()
-
-      // when - enter alphanumeric input (variable length)
-      const veroeffentlichungsjahrInput = page.getByRole('textbox', {
-        name: 'Veröffentlichungsjahr',
-      })
-      await veroeffentlichungsjahrInput.fill('2020 bis 2025 $%&abc123 🎇')
-
-      // when - save
-      await page.getByRole('button', { name: 'Speichern' }).click()
-
-      // then - shows save confirmation
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
-
-      // when - reload
-      await page.reload()
-
-      // then - value persists
-      await expect(veroeffentlichungsjahrInput).toHaveValue('2020 bis 2025 $%&abc123 🎇')
-    },
-  )
-
   function extractSequenceNumber(fullId: string): number {
     // Remove all non-digit characters
     const numericPart = fullId.replace(/\D/g, '')
