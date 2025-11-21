@@ -17,7 +17,7 @@ jobs:
   frontend-build-image-and-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Build frontend image
         run: docker build --tag ${{ inputs.image-ref }} --secret id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN -f prod.Dockerfile .
         env:

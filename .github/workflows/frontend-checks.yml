@@ -10,7 +10,7 @@ jobs:
   lint-and-format-check-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -46,7 +46,7 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -79,7 +79,7 @@ jobs:
   unit-test-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -128,7 +128,7 @@ jobs:
   code-quality-check-with-sonarqube-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Setup Node
@@ -169,7 +169,7 @@ jobs:
   license-audit-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Node
         uses: actions/setup-node@v6
         with:

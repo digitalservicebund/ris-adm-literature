@@ -14,7 +14,7 @@ jobs:
       # This step needs to happen before any "add-ris-report" action
       # (otherwise the folder is no git repository and does not support git commands)
       - name: Checkout ris-reports
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: ${{ env.reports-repo }}
           ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
