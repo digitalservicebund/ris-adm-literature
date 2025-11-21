@@ -126,7 +126,7 @@ test.describe('ULI AbgabePage', () => {
       await page.getByText('Abgabe').click()
 
       // mock an error 500 response on publishing
-      await page.route('*/**/api/literature/documentation-units/*/publish', async (route) => {
+      await page.route('*/**/api/literature/uli/documentation-units/*/publish', async (route) => {
         const response = await route.fetch()
         await route.fulfill({ status: 500, response })
       })

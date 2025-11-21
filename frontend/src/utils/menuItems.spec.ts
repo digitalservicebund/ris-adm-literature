@@ -144,11 +144,12 @@ describe('getSliMenuItems', () => {
     expect(console.warn).toHaveBeenCalledWith('documentNumber is required to generate menu items.')
   })
 
-  it('returns an array with a single "Rubriken" menu item if documentNumber is provided', () => {
+  it('returns "Rubriken" and "Abgabe" menu items if documentNumber is provided', () => {
     const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
     expect(Array.isArray(result)).toBe(true)
-    expect(result.length).toBe(1)
+    expect(result).toHaveLength(2)
     expect(result[0]?.label).toBe('Rubriken')
+    expect(result[1]?.label).toBe('Abgabe')
   })
 
   it('sets the correct route for the "Rubriken" menu item', () => {
@@ -179,5 +180,14 @@ describe('getSliMenuItems', () => {
     const result = getSliMenuItems(mockDocumentNumber, {})
     expect(result[0]?.route.query).toEqual({})
     expect(result[0]?.children?.[0]?.route.query).toEqual({})
+  })
+
+  it('sets the correct route for the "Abgabe" menu item', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    const abgabeItem = result[1]
+    expect(abgabeItem?.label).toBe('Abgabe')
+    expect(abgabeItem?.route.name).toBe(ROUTE_NAMES.SLI.DOCUMENT_UNIT.ABGABE)
+    expect(abgabeItem?.route.params?.documentNumber).toBe(mockDocumentNumber)
+    expect(abgabeItem?.route.query).toEqual(mockRouteQuery)
   })
 })

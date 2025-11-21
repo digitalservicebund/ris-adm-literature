@@ -178,6 +178,12 @@ const router = createRouter({
               name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
               component: SliRubriken,
             },
+            {
+              path: ROUTE_PATHS.SLI.DOCUMENT_UNIT.ABGABE,
+              name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.ABGABE,
+              props: true,
+              component: AbgabePage,
+            },
           ],
         },
       ],

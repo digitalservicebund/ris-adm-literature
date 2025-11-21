@@ -10,6 +10,7 @@ import {
   usePutAdmDocUnit,
   usePutPublishAdmDocUnit,
   usePutPublishUliDocUnit,
+  usePutPublishSliDocUnit,
   usePutUliDocUnit,
   usePutSliDocUnit,
 } from '@/services/documentUnitService'
@@ -554,5 +555,58 @@ describe('documentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(error.value).toBeTruthy()
     expect(data.value).toBeNull()
+  })
+
+  it('publishes a sli doc unit', async () => {
+    const docUnit = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+    }
+
+    const publishedResp = {
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      json: { id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', documentNumber: 'KALS2025000001' },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(publishedResp), { status: 200 }),
+    )
+
+    const { data, error, isFetching, execute } = usePutPublishSliDocUnit(docUnit)
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeFalsy()
+    expect(data.value?.id).toBe(docUnit.id)
+  })
+
+  it('returns an error on failed sli publication', async () => {
+    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+
+    const { data, error, isFetching, execute } = usePutPublishSliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+    })
+    await execute()
+
+    expect(isFetching.value).toBe(false)
+    expect(error.value).toBeTruthy()
+    expect(data.value).toBeNull()
+  })
+
+  it('data is null when publish a sli doc returns a null body', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = usePutPublishSliDocUnit({
+      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
+      documentNumber: 'KALS2025000001',
+      note: '',
+    })
+    await execute()
+
+    expect(data.value).toEqual(null)
   })
 })

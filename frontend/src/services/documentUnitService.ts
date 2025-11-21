@@ -38,11 +38,29 @@ export function usePutPublishUliDocUnit(
   documentUnit: UliDocumentationUnit,
 ): UseFetchReturn<UliDocumentationUnit> {
   return useApiFetch(
-    `${LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`,
+    `${ULI_LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`,
     {
       afterFetch: ({ data }) => {
         return {
           data: data ? mapResponseToUliDocUnit(data) : null,
+        }
+      },
+      immediate: false,
+    },
+  )
+    .json()
+    .put(documentUnit)
+}
+
+export function usePutPublishSliDocUnit(
+  documentUnit: SliDocumentationUnit,
+): UseFetchReturn<SliDocumentationUnit> {
+  return useApiFetch(
+    `${SLI_LITERATURE_DOCUMENTATION_UNITS_URL}/${documentUnit.documentNumber}/publish`,
+    {
+      afterFetch: ({ data }) => {
+        return {
+          data: data ? mapResponseToSliDocUnit(data) : null,
         }
       },
       immediate: false,
