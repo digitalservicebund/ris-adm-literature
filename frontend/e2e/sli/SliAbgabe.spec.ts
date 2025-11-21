@@ -74,6 +74,54 @@ test.describe('SLI AbgabePage', () => {
   )
 
   test(
+    'Should publish successfully when all mandatory fields are filled',
+    { tag: ['@RISDEV-10125', '@RISDEV-10126'] },
+    async ({ page }) => {
+      const input = page.getByRole('combobox', { name: /^Dokumenttyp/ })
+      await input.fill('Bi')
+      const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      await overlay.getByRole('option', { name: 'Bib' }).click()
+
+      await page
+        .getByRole('textbox', { name: /^Hauptsachtitel/ })
+        .fill('Die unendliche Verhandlung')
+      await page.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+      await page.getByRole('button', { name: 'Speichern' }).click()
+
+      await page.getByText('Abgabe').click()
+      await expect(page.getByText('Alle Pflichtfelder sind korrekt ausgefüllt.')).toBeVisible()
+
+      await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+      await expect(page.getByText('Freigabe ist abgeschlossen.')).toBeVisible()
+    },
+  )
+
+  test(
+    'Should show a publication error on backend error 500',
+    { tag: ['@RISDEV-10126'] },
+    async ({ page }) => {
+      const input = page.getByRole('combobox', { name: /^Dokumenttyp/ })
+      await input.fill('Bi')
+      const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      await overlay.getByRole('option', { name: 'Bib' }).click()
+      await page.getByRole('textbox', { name: /^Hauptsachtitel/ }).fill('Testtitel')
+      await page.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+      await page.getByRole('button', { name: 'Speichern' }).click()
+      await page.getByText('Abgabe').click()
+
+      await page.route('*/**/api/literature/sli/documentation-units/*/publish', async (route) => {
+        const response = await route.fetch()
+        await route.fulfill({ status: 500, response })
+      })
+
+      await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+      await expect(
+        page.getByText('Die Freigabe ist aus technischen Gründen nicht durchgeführt worden.'),
+      ).toBeVisible()
+    },
+  )
+
+  test(
     'Should show links to the mandatory fields; when clicking on a link, navigates to the corresponding field in Rubriken page',
     { tag: ['@RISDEV-10125'] },
     async ({ page }) => {
