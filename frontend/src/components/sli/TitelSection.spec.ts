@@ -182,7 +182,6 @@ describe('Sli TitelSection', () => {
   })
 
   it('does not disable dokumentarischerTitel when hauptsachtitel has only whitespace', async () => {
-    const user = userEvent.setup()
     renderComponent({ hauptsachtitel: '   ' })
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
@@ -190,7 +189,6 @@ describe('Sli TitelSection', () => {
   })
 
   it('does not disable dokumentarischerTitel when hauptsachtitelZusatz has only whitespace', async () => {
-    const user = userEvent.setup()
     renderComponent({ hauptsachtitelZusatz: '   ' })
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
