@@ -56,32 +56,44 @@ describe('Sli TitelSection', () => {
 
   it('disables dokumentarischerTitel when hauptsachtitel has content', async () => {
     const user = userEvent.setup()
-    renderComponent({ hauptsachtitel: 'Main Title' })
+    renderComponent()
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
     await user.click(docButton)
-
     const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
+
+    const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+    await user.type(hauptInput, 'Main Title')
+
     await expect(docInput).toBeDisabled()
   })
 
   it('disables dokumentarischerTitel when hauptsachtitelZusatz has content', async () => {
     const user = userEvent.setup()
-    renderComponent({ hauptsachtitelZusatz: 'Zusatz' })
+    renderComponent()
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
     await user.click(docButton)
-
     const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
+
+    const zusatzInput = screen.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+    await user.type(zusatzInput, 'Zusatz')
+
     await expect(docInput).toBeDisabled()
   })
 
   it('disables dokumentarischerTitel when both hauptsachtitel and zusatz have content', async () => {
     const user = userEvent.setup()
-    renderComponent({ hauptsachtitel: 'Main', hauptsachtitelZusatz: 'Zusatz' })
+    renderComponent()
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
     await user.click(docButton)
+
+    const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+    await user.type(hauptInput, 'Main Title')
+
+    const zusatzInput = screen.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+    await user.type(zusatzInput, 'Zusatz')
 
     const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
     await expect(docInput).toBeDisabled()
@@ -149,15 +161,19 @@ describe('Sli TitelSection', () => {
 
   it('re-enables dokumentarischerTitel when both hauptsachtitel and zusatz are cleared', async () => {
     const user = userEvent.setup()
-    renderComponent({ hauptsachtitel: 'Main', hauptsachtitelZusatz: 'Zusatz' })
+    renderComponent()
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
     await user.click(docButton)
     const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
-    expect(docInput).toBeDisabled()
 
     const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
     const zusatzInput = screen.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+
+    await user.type(hauptInput, 'Main')
+    await user.type(zusatzInput, 'Zusatz')
+
+    expect(docInput).toBeDisabled()
 
     await user.clear(hauptInput)
     await user.clear(zusatzInput)
@@ -170,10 +186,7 @@ describe('Sli TitelSection', () => {
     renderComponent({ hauptsachtitel: '   ' })
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
-    await user.click(docButton)
-
-    const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
-    expect(docInput).toBeEnabled()
+    expect(docButton).toBeEnabled()
   })
 
   it('does not disable dokumentarischerTitel when hauptsachtitelZusatz has only whitespace', async () => {
@@ -181,10 +194,7 @@ describe('Sli TitelSection', () => {
     renderComponent({ hauptsachtitelZusatz: '   ' })
 
     const docButton = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
-    await user.click(docButton)
-
-    const docInput = screen.getByRole('textbox', { name: /Dokumentarischer Titel/ })
-    expect(docInput).toBeEnabled()
+    expect(docButton).toBeEnabled()
   })
 
   it('trims whitespace on blur but keeps field open if content remains', async () => {
@@ -204,5 +214,68 @@ describe('Sli TitelSection', () => {
   it('handles null/undefined dokumentarischerTitel value', () => {
     renderComponent({ dokumentarischerTitel: undefined })
     expect(screen.getByRole('button', { name: 'Dokumentarischer Titel' })).toBeVisible()
+  })
+
+  it('disables button when hauptsachtitel has content', async () => {
+    const user = userEvent.setup()
+    renderComponent()
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeEnabled()
+
+    const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+    await user.type(hauptInput, 'Main Title')
+
+    expect(button).toBeDisabled()
+  })
+
+  it('disables button when hauptsachtitelZusatz has content', async () => {
+    const user = userEvent.setup()
+    renderComponent()
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeEnabled()
+
+    const zusatzInput = screen.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+    await user.type(zusatzInput, 'Zusatz')
+
+    expect(button).toBeDisabled()
+  })
+
+  it('disables button when both hauptsachtitel and zusatz have content', () => {
+    renderComponent({ hauptsachtitel: 'Main', hauptsachtitelZusatz: 'Zusatz' })
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeDisabled()
+  })
+
+  it('re-enables button when both hauptsachtitel and zusatz are cleared', async () => {
+    const user = userEvent.setup()
+    renderComponent({ hauptsachtitel: 'Main', hauptsachtitelZusatz: 'Zusatz' })
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeDisabled()
+
+    const hauptInput = screen.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+    const zusatzInput = screen.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+
+    await user.clear(hauptInput)
+    await user.clear(zusatzInput)
+
+    expect(button).toBeEnabled()
+  })
+
+  it('does not disable button when hauptsachtitel has only whitespace', () => {
+    renderComponent({ hauptsachtitel: '   ' })
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeEnabled()
+  })
+
+  it('does not disable button when hauptsachtitelZusatz has only whitespace', () => {
+    renderComponent({ hauptsachtitelZusatz: '   ' })
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeEnabled()
   })
 })

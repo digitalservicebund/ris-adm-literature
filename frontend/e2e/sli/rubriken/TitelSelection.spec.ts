@@ -59,4 +59,71 @@ test.describe('SLI Rubriken - Titelauswahl', () => {
       await expect(page.getByRole('textbox', { name: 'Dokumentarischer Titel' })).toHaveCount(0)
     },
   )
+
+  test(
+    'disables button when typing in Hauptsachtitel',
+    { tag: ['@RISDEV-10121'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/literatur-selbstaendig')
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.waitForURL(/dokumentationseinheit/)
+
+      const button = page.getByRole('button', { name: 'Dokumentarischer Titel' })
+      await expect(button).toBeEnabled()
+
+      // when
+      const hauptInput = page.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+      await hauptInput.fill('Main Title')
+
+      // then
+      await expect(button).toBeDisabled()
+    },
+  )
+
+  test(
+    'disables button when typing in Zusatz zum Hauptsachtitel',
+    { tag: ['@RISDEV-10121'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/literatur-selbstaendig')
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.waitForURL(/dokumentationseinheit/)
+
+      const button = page.getByRole('button', { name: 'Dokumentarischer Titel' })
+      await expect(button).toBeEnabled()
+
+      // when
+      const zusatzInput = page.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+      await zusatzInput.fill('Zusatz')
+
+      // then
+      await expect(button).toBeDisabled()
+    },
+  )
+
+  test(
+    're-enables button when both fields are cleared',
+    { tag: ['@RISDEV-10121'] },
+    async ({ page }) => {
+      // given
+      await page.goto('/literatur-selbstaendig')
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.waitForURL(/dokumentationseinheit/)
+
+      const hauptInput = page.getByRole('textbox', { name: /^Hauptsachtitel\b/ })
+      const zusatzInput = page.getByRole('textbox', { name: 'Zusatz zum Hauptsachtitel' })
+      const button = page.getByRole('button', { name: 'Dokumentarischer Titel' })
+
+      await hauptInput.fill('Main')
+      await expect(button).toBeDisabled()
+
+      // when
+      await hauptInput.clear()
+      await zusatzInput.clear()
+
+      // then
+      await expect(button).toBeEnabled()
+    },
+  )
 })

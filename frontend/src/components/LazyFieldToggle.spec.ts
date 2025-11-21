@@ -44,4 +44,17 @@ describe('LazyFieldToggle', () => {
     expect(screen.queryByRole('button', { name: 'Dokumentarischer Titel' })).not.toBeInTheDocument()
     expect(screen.getByText('inner content')).toBeVisible()
   })
+
+  it('disables button when disabled prop is true', () => {
+    render(LazyFieldToggle, {
+      props: {
+        buttonLabel: 'Dokumentarischer Titel',
+        disabled: true,
+      },
+      slots: { default: '<div>inner content</div>' },
+    })
+
+    const button = screen.getByRole('button', { name: 'Dokumentarischer Titel' })
+    expect(button).toBeDisabled()
+  })
 })
