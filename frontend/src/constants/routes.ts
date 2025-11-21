@@ -32,6 +32,7 @@ export const ROUTE_NAMES = {
       NEW: 'sli-documentUnit-new',
       EDIT: 'sli-documentUnit-documentNumber',
       RUBRIKEN: 'sli-documentUnit-documentNumber-rubriken',
+      ABGABE: 'sli-documentUnit-documentNumber-abgabe',
     },
   },
 } as const
@@ -67,6 +68,7 @@ export const ROUTE_PATHS = {
       NEW: `${DOCUMENT_UNIT_BASE}/new`,
       EDIT: `${DOCUMENT_UNIT_BASE}/:documentNumber`,
       RUBRIKEN: 'rubriken',
+      ABGABE: 'abgabe',
     },
   },
 } as const
