@@ -3,8 +3,8 @@ import { defineConfig, devices } from '@playwright/test'
 
 const docTypeToAuthFile = {
   adm: '../frontend/e2e/.auth/adm.json',
-  uli: '../frontend/e2e/.auth/uli.json',
-  sli: '../frontend/e2e/.auth/sli.json',
+  uli: '../frontend/e2e/.auth/user-bag.json',
+  sli: '../frontend/e2e/.auth/user-bag.json',
 }
 
 // Map browsers to their devices
@@ -15,7 +15,7 @@ const browsers = {
   // Safari intentionally excluded because of storageState issues
   // https://github.com/microsoft/playwright/issues/20301
   // https://github.com/microsoft/playwright/issues/35712
-};
+}
 
 const docTypeProjects = Object.entries(docTypeToAuthFile).flatMap(([docType, authFile]) =>
   Object.entries(browsers).map(([browserName, browserDevice]) => ({
@@ -27,8 +27,8 @@ const docTypeProjects = Object.entries(docTypeToAuthFile).flatMap(([docType, aut
       storageState: authFile,
     },
     testIgnore: 'Login.spec.ts',
-  }))
-);
+  })),
+)
 
 /**
  * See https://playwright.dev/docs/test-configuration.

@@ -29,19 +29,67 @@ test.describe('StartPage ULI', () => {
     },
   )
 
-  test(
-    'clicking on button "Neue Dokumentationseinheit" creates a document and redirects to the edit page on success, route shows "/dokumentationseinheit/"',
-    { tag: ['@RISDEV-9887'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/literatur-unselbstaendig')
+  function extractSequenceNumber(fullId: string): number {
+    // Remove all non-digit characters
+    const numericPart = fullId.replace(/\D/g, '')
 
-      // when
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    // return the number as an integer
+    return parseInt(numericPart, 10)
+  }
 
-      // then
-      await expect(page.getByRole('heading', { name: /KALU\d{10}/ })).toHaveCount(1)
-      expect(page.url()).toContain('/dokumentationseinheit/')
-    },
-  )
+  const SCENARIOS = [
+    { office: 'BAG', prefix: 'KA', authFile: '../frontend/e2e/.auth/user-bag.json' },
+    { office: 'BFH', prefix: 'ST', authFile: '../frontend/e2e/.auth/user-bfh.json' },
+    { office: 'BSG', prefix: 'KS', authFile: '../frontend/e2e/.auth/user-bsg.json' },
+    { office: 'BVERFG', prefix: 'KV', authFile: '../frontend/e2e/.auth/user-bverfg.json' },
+    { office: 'BVERWG', prefix: 'WB', authFile: '../frontend/e2e/.auth/user-bverwg.json' },
+  ]
+
+  test.describe('Documentation Unit Creation ULI - Cross Office Check', () => {
+    // Iterate over scenarios
+    SCENARIOS.forEach(({ office, prefix, authFile }) => {
+      test.describe(`Office: ${office}`, () => {
+        // Load the specific user session for this office
+        test.use({ storageState: authFile })
+
+        test(
+          `creates sequential document numbers (Increment check)`,
+          { tag: ['@RISDEV-9887', '@RISDEV-9371'] },
+          async ({ page }) => {
+            // Create first document
+            await page.goto('/literatur-unselbstaendig')
+            await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+
+            const expectedPattern = new RegExp(`${prefix}LU\\d{10}`)
+            const headingLocator = page.getByRole('heading', { name: expectedPattern })
+
+            await expect(headingLocator).toBeVisible()
+            const firstDocId = await headingLocator.textContent()
+
+            expect(firstDocId).toMatch(expectedPattern)
+
+            // Create second document
+            await page.goto('/literatur-unselbstaendig')
+            await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+
+            await expect(headingLocator).toBeVisible()
+            const secondDocId = await headingLocator.textContent()
+
+            // Compare
+            const firstSeq = extractSequenceNumber(firstDocId!)
+            const secondSeq = extractSequenceNumber(secondDocId!)
+
+            // Check if it starts with the current year
+            const currentYear = new Date().getFullYear().toString()
+            const yearRegex = new RegExp(`^${currentYear}`)
+            expect(firstSeq.toString()).toMatch(yearRegex)
+            expect(secondSeq.toString()).toMatch(yearRegex)
+
+            // The second number must be exactly one higher
+            expect(secondSeq).toBe(firstSeq + 1)
+          },
+        )
+      })
+    })
+  })
 })

@@ -1,26 +1,17 @@
 import { test as setup, expect, Page } from '@playwright/test'
 
 const admAuthFile = '../frontend/e2e/.auth/adm.json'
-const uliAuthFile = '../frontend/e2e/.auth/uli.json'
-const sliAuthFile = '../frontend/e2e/.auth/sli.json'
 const baseURL = 'http://localhost:5173'
 
-type DocumentTypeCode =
-  | 'VERWALTUNGSVORSCHRIFTEN'
-  | 'LITERATUR_SELBSTAENDIG'
-  | 'LITERATUR_UNSELBSTAENDIG'
+const USER_CONFIGS = [
+  { username: 'testbag', authFile: '../frontend/e2e/.auth/user-bag.json' },
+  { username: 'testbfh', authFile: '../frontend/e2e/.auth/user-bfh.json' },
+  { username: 'testbsg', authFile: '../frontend/e2e/.auth/user-bsg.json' },
+  { username: 'testbverfg', authFile: '../frontend/e2e/.auth/user-bverfg.json' },
+  { username: 'testbverwg', authFile: '../frontend/e2e/.auth/user-bverwg.json' },
+]
 
-async function performLogin(
-  page: Page,
-  username: string,
-  password: string,
-  documentType: DocumentTypeCode,
-) {
-  await page.route('/api/**', (route) => {
-    const headers = route.request().headers()
-    headers['x-document-type'] = documentType
-    route.continue({ headers })
-  })
+async function performLogin(page: Page, username: string, password: string) {
   await page.goto(baseURL)
 
   const loginFormLocator = page.getByLabel('Username or email')
@@ -43,23 +34,18 @@ async function performLogin(
 // Setup for adm user
 setup('authenticate as adm user', async ({ page }) => {
   console.info('--- Starting Setup: Authentication adm user ---')
-  await performLogin(page, 'test', 'test', 'VERWALTUNGSVORSCHRIFTEN')
+  await performLogin(page, 'test', 'test')
   await page.context().storageState({ path: admAuthFile })
   console.info('--- Authentication successful. State saved. ---')
 })
 
 // Setup for uli user
-setup('authenticate as uli user', async ({ page }) => {
-  console.info('--- Starting Setup: Authentication uli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_UNSELBSTAENDIG')
-  await page.context().storageState({ path: uliAuthFile })
-  console.info('--- Authentication successful. State saved. ---')
-})
+USER_CONFIGS.forEach(({ username, authFile }) => {
+  setup(`authenticate as ${username}`, async ({ page }) => {
+    console.info(`--- Starting Setup: Authentication for ${username} ---`)
+    await performLogin(page, username, 'test')
 
-// Setup for sli user
-setup('authenticate as sli user', async ({ page }) => {
-  console.info('--- Starting Setup: Authentication sli user ---')
-  await performLogin(page, 'testbag', 'test', 'LITERATUR_SELBSTAENDIG')
-  await page.context().storageState({ path: sliAuthFile })
-  console.info('--- Authentication successful. State saved. ---')
+    await page.context().storageState({ path: authFile })
+    console.info(`--- Authentication for ${username} successful. State saved. ---`)
+  })
 })
