@@ -1,42 +1,23 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
 import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useSliDocumentUnitStore } from '@/stores/sliDocStore'
+import { DocumentCategory } from '@/domain/documentType'
 import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
 import TitelSection from '@/components/sli/TitelSection.vue'
+import DokumentTyp from '@/components/DokumentTyp.vue'
+import { useLiteratureRubriken } from '@/composables/useLiteratureRubriken'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
-
-const veroeffentlichungsjahr = computed({
-  get: () => store.documentUnit?.veroeffentlichungsjahr,
-  set: (newValue) => {
-    store.documentUnit!.veroeffentlichungsjahr = newValue
-  },
-})
-
-const hauptsachtitel = computed({
-  get: () => store.documentUnit?.hauptsachtitel ?? '',
-  set: (newValue) => {
-    store.documentUnit!.hauptsachtitel = newValue
-  },
-})
-
-const dokumentarischerTitel = computed({
-  get: () => store.documentUnit?.dokumentarischerTitel ?? '',
-  set: (newValue) => {
-    store.documentUnit!.dokumentarischerTitel = newValue
-  },
-})
-
-const hauptsachtitelZusatz = computed({
-  get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
-  set: (newValue) => {
-    store.documentUnit!.hauptsachtitelZusatz = newValue
-  },
-})
+const {
+  veroeffentlichungsjahr,
+  dokumenttypen,
+  hauptsachtitel,
+  dokumentarischerTitel,
+  hauptsachtitelZusatz,
+} = useLiteratureRubriken(store)
 
 useScrollToHash()
 </script>
@@ -46,6 +27,15 @@ useScrollToHash()
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
+        <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
+          <DokumentTyp
+            inputId="dokumenttypen"
+            v-model="dokumenttypen"
+            aria-label="Dokumenttyp"
+            :invalid="slotProps.hasError"
+            :document-category="DocumentCategory.LITERATUR_SELBSTAENDIG"
+          />
+        </InputField>
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <InputText
             :id="slotProps.id"
