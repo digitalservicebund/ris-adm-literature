@@ -55,7 +55,7 @@ jobs:
           echo "set man-db/auto-update false" | sudo debconf-communicate
           sudo dpkg-reconfigure -f noninteractive man-db
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       # setup backend
       - name: Set up JDK
         uses: actions/setup-java@v5
