@@ -4,10 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import ActiveReferences from '@/components/active-reference/ActiveReferences.vue'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
-import ActiveReference, {
-  ActiveReferenceDocumentType,
-  VerweisTypEnum,
-} from '@/domain/activeReference.ts'
+import ActiveReference, { ActiveReferenceDocumentType } from '@/domain/activeReference.ts'
 import { createTestingPinia } from '@pinia/testing'
 import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
 import InputText from 'primevue/inputtext'
@@ -17,6 +14,7 @@ import {
   neuregelungFixture,
   rechtsgrundlageFixture,
 } from '@/testing/fixtures/verweisTyp.fixture'
+import type { VerweisTyp } from '@/domain/verweisTyp.ts'
 
 function renderComponent(activeReferences?: ActiveReference[]) {
   const user = userEvent.setup()
@@ -50,13 +48,13 @@ function renderComponent(activeReferences?: ActiveReference[]) {
 
 function generateActiveReference(options?: {
   referenceDocumentType?: ActiveReferenceDocumentType
-  verweisTyp?: VerweisTypEnum
+  verweisTyp?: VerweisTyp
   normAbbreviation?: NormAbbreviation
   singleNorms?: SingleNorm[]
 }) {
   return new ActiveReference({
     referenceDocumentType: options?.referenceDocumentType ?? ActiveReferenceDocumentType.NORM,
-    verweisTyp: options?.verweisTyp ?? VerweisTypEnum.ANWENDUNG,
+    verweisTyp: options?.verweisTyp ?? anwendungFixture,
     normAbbreviation: options?.normAbbreviation ?? sgb5Fixture,
     singleNorms: options?.singleNorms ?? [],
   })
@@ -246,7 +244,7 @@ describe('ActiveReferences', () => {
   it('render summary with one single norms', async () => {
     renderComponent([
       generateActiveReference({
-        verweisTyp: VerweisTypEnum.RECHTSGRUNDLAGE,
+        verweisTyp: rechtsgrundlageFixture,
         normAbbreviation: {
           id: 'normAbbrTestId',
           abbreviation: '1000g-BefV',

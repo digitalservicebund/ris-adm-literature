@@ -6,7 +6,6 @@ import type { Periodikum } from '@/domain/fundstelle'
 import type { Court } from '@/domain/court.ts'
 import type { NormAbbreviation } from '@/domain/normAbbreviation'
 import type { VerweisTyp } from '@/domain/verweisTyp'
-import { verweisTypToLabel } from '@/domain/activeReference'
 import type { DocumentType } from '@/domain/documentType'
 import type { ZitierArt } from '@/domain/zitierArt.ts'
 
@@ -174,7 +173,7 @@ export function useVerweisTypSearch(verweisTypen: Ref<VerweisTyp[]>) {
       .filter((type) => !query || type.name.toLowerCase().includes(query.trim().toLowerCase()))
       .map((type) => ({
         id: type.id,
-        label: verweisTypToLabel[type.name],
+        label: type.name,
       }))
   }
 }
