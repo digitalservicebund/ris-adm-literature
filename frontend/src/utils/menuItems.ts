@@ -149,5 +149,12 @@ export function getSliMenuItems(
         },
       ],
     },
+    {
+      label: 'Abgabe',
+      route: {
+        ...baseRoute,
+        name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.ABGABE,
+      },
+    },
   ]
 }
