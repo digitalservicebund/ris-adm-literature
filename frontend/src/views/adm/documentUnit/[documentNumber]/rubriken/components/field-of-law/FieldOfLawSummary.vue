@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import TokenizeText from '@/components/TokenizeText.vue'
-import Tooltip from '@/components/ToolTip.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import MaterialSymbolsClose from '~icons/material-symbols/close'
 
@@ -55,16 +54,15 @@ function isNotationNew(fieldOfLaw: FieldOfLaw) {
           />
         </div>
 
-        <Tooltip text="Entfernen">
-          <button
-            :aria-label="fieldOfLaw.identifier + ' ' + fieldOfLaw.text + ' aus Liste entfernen'"
-            class="flex items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
-            @click="removeFieldOfLaw(fieldOfLaw)"
-            @keypress.enter="removeFieldOfLaw(fieldOfLaw)"
-          >
-            <MaterialSymbolsClose />
-          </button>
-        </Tooltip>
+        <button
+          v-tooltip.bottom="'Entfernen'"
+          :aria-label="fieldOfLaw.identifier + ' ' + fieldOfLaw.text + ' aus Liste entfernen'"
+          class="flex items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
+          @click="removeFieldOfLaw(fieldOfLaw)"
+          @keypress.enter="removeFieldOfLaw(fieldOfLaw)"
+        >
+          <MaterialSymbolsClose />
+        </button>
       </div>
     </div>
   </div>

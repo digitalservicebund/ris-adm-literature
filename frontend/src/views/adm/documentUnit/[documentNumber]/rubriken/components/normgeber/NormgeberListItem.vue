@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import ToolTip from '@/components/ToolTip.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import { type Normgeber } from '@/domain/normgeber'
 import NormgeberInput from './NormgeberInput.vue'
@@ -58,14 +57,13 @@ const label = computed(() =>
     <div class="ris-label1-regular">
       {{ label }}
     </div>
-    <ToolTip class="ml-auto" text="Aufklappen">
-      <button
-        aria-label="Normgeber Editieren"
-        class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
-        @click="onExpandAccordion"
-      >
-        <IconArrowDown />
-      </button>
-    </ToolTip>
+    <button
+      v-tooltip.bottom="'Aufklappen'"
+      aria-label="Normgeber Editieren"
+      class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer ml-auto"
+      @click="onExpandAccordion"
+    >
+      <IconArrowDown />
+    </button>
   </div>
 </template>

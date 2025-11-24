@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import ToolTip from '@/components/ToolTip.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import { type Fundstelle } from '@/domain/fundstelle'
 import FundstelleInput from './FundstelleInput.vue'
@@ -60,14 +59,13 @@ const onDeleteFundstelle = (fundstelleId: string) => {
       color="text-red-900"
       label="Mehrdeutiger Verweis"
     />
-    <ToolTip class="ml-auto" text="Aufklappen">
-      <button
-        aria-label="Fundstelle Editieren"
-        class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
-        @click="onExpandAccordion"
-      >
-        <IconArrowDown />
-      </button>
-    </ToolTip>
+    <button
+      v-tooltip.bottom="'Aufklappen'"
+      aria-label="Fundstelle Editieren"
+      class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer ml-auto"
+      @click="onExpandAccordion"
+    >
+      <IconArrowDown />
+    </button>
   </div>
 </template>
