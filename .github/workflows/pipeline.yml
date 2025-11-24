@@ -8,7 +8,7 @@ on:
   schedule:
     # once per night
     # Note: scheduled run runs e2e tests across all browsers, cf. ./e2e-tests.yml for details
-     - cron: "0 6 * * *"
+    - cron: "0 6 * * *"
   pull_request:
     types: [opened, synchronize, reopened]
   # Allow to run this workflow manually
@@ -33,6 +33,7 @@ jobs:
   ##############
 
   backend-checks:
+    if: ${{ github.event_name != 'schedule' }}
     uses: ./.github/workflows/backend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -40,6 +41,7 @@ jobs:
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   backend-build-image-and-scan:
+    if: ${{ github.event_name != 'schedule' }}
     uses: ./.github/workflows/backend-build-image-and-scan.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -53,7 +55,7 @@ jobs:
       container-registry: ghcr.io
 
   backend-push-image-to-registry:
-    if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') }}
+    if: ${{ github.event_name != 'schedule' && ( github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env')) }}
     # For PR releases, labels could be used like this:
     # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     needs:
@@ -73,7 +75,7 @@ jobs:
       image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
 
   backend-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - backend-checks
       - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
@@ -86,12 +88,14 @@ jobs:
   ###############
 
   frontend-checks:
+    if: ${{ github.event_name != 'schedule' }}
     uses: ./.github/workflows/frontend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       SONAR_TOKEN_FRONTEND: ${{ secrets.SONAR_TOKEN_FRONTEND }}
 
   frontend-build-image-and-scan:
+    if: ${{ github.event_name != 'schedule' }}
     uses: ./.github/workflows/frontend-build-image-and-scan.yml
     secrets:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -104,7 +108,7 @@ jobs:
       image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-push-image-to-registry:
-    if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') }}
+    if: ${{ github.event_name != 'schedule' && ( github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env')) }}
     # For PR releases, labels could be used like this:
     # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
     needs:
@@ -124,7 +128,7 @@ jobs:
       image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
   frontend-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - frontend-checks
     uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
@@ -142,12 +146,13 @@ jobs:
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   e2e-compile-html-report:
+    if: ${{ github.event_name != 'schedule' }}
     needs:
       - e2e-tests
     uses: ./.github/workflows/e2e-compile-html-report.yml
 
   e2e-push-reports-to-ris-reports:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - e2e-compile-html-report
       - backend-push-reports-to-ris-reports # don't push at the same time
@@ -163,7 +168,7 @@ jobs:
     runs-on: ubuntu-latest
     # the ${{ success() }} is required for the "if" not to override the "needs" below
     # (we did run into this problem and saw auto-merges even as "frontend-checks" failed)
-    if: ${{ success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
     permissions: write-all
     needs:
       - frontend-checks
@@ -189,7 +194,7 @@ jobs:
   #################
 
   deploy-staging:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && github.ref == 'refs/heads/main' }}
     needs:
       - security-jobs
       - e2e-tests
