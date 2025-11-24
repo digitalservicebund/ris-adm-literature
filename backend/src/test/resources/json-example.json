@@ -102,7 +102,11 @@
   "activeReferences": [
     {
       "referenceDocumentType": "administrative_regulation",
-      "verweisTyp": "rechtsgrundlage",
+      "verweisTyp": {
+        "id": null,
+        "name": "Rechtsgrundlage",
+        "typNummer": "82"
+      },
       "normAbbreviation": {
         "id": null,
         "abbreviation": "PhanGB",
@@ -120,7 +124,11 @@
     },
     {
       "referenceDocumentType": "administrative_regulation",
-      "verweisTyp": "rechtsgrundlage",
+      "verweisTyp": {
+        "id": null,
+        "name": "Rechtsgrundlage",
+        "typNummer": "82"
+      },
       "normAbbreviation": {
         "id": null,
         "abbreviation": "PhanGB",

@@ -9,6 +9,7 @@ import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.Doc
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.legal_periodical.LegalPeriodical;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.norm_abbreviation.NormAbbreviation;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp.VerweisTyp;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart.ZitierArt;
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
 import java.time.LocalDate;
@@ -652,7 +653,7 @@ class AdmLdmlConverterStrategyIntegrationTest {
       List.of(
         new ActiveReference(
           "administrative_regulation",
-          "anwendung",
+          new VerweisTyp(UUID.randomUUID(), "Anwendung", "01"),
           new NormAbbreviation(UUID.randomUUID(), "VR XML-Erzeugung", null),
           null,
           List.of(
@@ -662,7 +663,7 @@ class AdmLdmlConverterStrategyIntegrationTest {
         ),
         new ActiveReference(
           "norm",
-          "rechtsgrundlage",
+          new VerweisTyp(UUID.randomUUID(), "Rechtsgrundlage", "82"),
           new NormAbbreviation(UUID.randomUUID(), "BGB", null),
           null,
           List.of(
@@ -672,14 +673,14 @@ class AdmLdmlConverterStrategyIntegrationTest {
         ),
         new ActiveReference(
           "administrative_regulation",
-          "neuregelung",
+          new VerweisTyp(UUID.randomUUID(), "Neuregelung", "31"),
           new NormAbbreviation(UUID.randomUUID(), "VV RIS-Abkürzungen", null),
           null,
           List.of()
         ),
         new ActiveReference(
           "administrative_regulation",
-          "unbekannt",
+          new VerweisTyp(UUID.randomUUID(), "unbekannt", "unbekannt"),
           new NormAbbreviation(UUID.randomUUID(), "unbekannt", null),
           null,
           List.of()
