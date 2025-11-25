@@ -198,17 +198,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   void supports_shouldReturnTrueForSupportedTypes() {
     // given
     var uliContent = TestDocumentationUnitContent.createUli("DOC1", "2024");
-    var sliContent = new SliDocumentationUnitContent(
-      null,
-      "DOC2",
-      "2024",
-      Collections.emptyList(),
-      "Title",
-      null,
-      null,
-      null,
-      null
-    );
+    var sliContent = TestDocumentationUnitContent.createSli("DOC2", "2024");
 
     // then
     assertThat(literatureLdmlConverterStrategy.supports(uliContent)).isTrue();
