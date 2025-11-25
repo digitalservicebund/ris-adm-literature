@@ -36,6 +36,7 @@ public class TestDocumentationUnitContent {
       null,
       null,
       null,
+      null,
       null
     );
   }
