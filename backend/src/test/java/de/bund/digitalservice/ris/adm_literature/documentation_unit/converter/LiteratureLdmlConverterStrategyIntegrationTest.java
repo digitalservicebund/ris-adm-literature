@@ -164,7 +164,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       "SliHauptTitel",
       null,
       null,
-      "Dies ist eine Gesamtfussnote"
+      "Dies ist eine Gesamtfussnote",
+      null
     );
 
     // when
@@ -203,6 +204,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       "2024",
       Collections.emptyList(),
       "Title",
+      null,
       null,
       null,
       null
