@@ -111,6 +111,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/literatur-selbststaendig/:pathMatch(.*)*',
+      redirect: (to) => {
+        const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : ''
+        const newPath = oldSuffix ? `${ROUTE_PATHS.SLI.BASE}/${oldSuffix}` : ROUTE_PATHS.SLI.BASE
+        return { path: newPath }
+      },
+    },
+    {
       path: ROUTE_PATHS.ULI.BASE,
       meta: {
         requiresRole: [USER_ROLES.LITERATURE_USER],
