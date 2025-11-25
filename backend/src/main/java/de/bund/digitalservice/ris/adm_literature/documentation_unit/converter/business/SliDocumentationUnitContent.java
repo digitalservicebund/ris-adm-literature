@@ -24,6 +24,14 @@ public record SliDocumentationUnitContent(
   String hauptsachtitel,
   String hauptsachtitelZusatz,
   String dokumentarischerTitel,
-  String note
+  String note,
+  List<ActiveSliReference> activeSliReferences
 )
-  implements LiteratureDocumentationUnitContent {}
+  implements LiteratureDocumentationUnitContent {
+  public record ActiveSliReference(
+    String documentNumber,
+    String veroeffentlichungsJahr,
+    String hauptsachtitel,
+    String isbn
+  ) {}
+}

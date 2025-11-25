@@ -10,6 +10,8 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.P
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,10 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   private static final String VALUE = "value";
   private static final String SOURCE = "source";
   private static final String UNDEFINED = "attributsemantik-noch-undefiniert";
+  private static final String ACTIVE = "active";
+  private static final String SHOW_AS = "showAs";
+  private static final String OTHER_REFERENCES = "akn:otherReferences";
+  private static final String IMPLICIT_REFERENCE = "akn:implicitReference";
 
   @Override
   public boolean supports(IDocumentationContent content) {
@@ -89,6 +95,11 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     mapClassifications(ldmlDocument, data.dokumenttypen());
     mapNote(ldmlDocument, data.note());
     mapKurzreferat(ldmlDocument);
+
+    // SLI specific logic
+    if (data instanceof SliDocumentationUnitContent sliData) {
+      mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.activeSliReferences());
+    }
   }
 
   private void mapDocumentNumber(LdmlDocument ldmlDocument, String documentNumber) {
@@ -189,7 +200,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   private void mapToKeyword(LdmlElement classificationElement, String value) {
     classificationElement
       .appendElementAndGet("akn:keyword")
-      .addAttribute("showAs", value)
+      .addAttribute(SHOW_AS, value)
       .addAttribute(VALUE, value)
       .addAttribute("dictionary", UNDEFINED);
   }
@@ -209,5 +220,39 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       .appendElementAndGet("akn:FRBRalias")
       .addAttribute("name", name)
       .addAttribute(VALUE, value);
+  }
+
+  private void mapAktivzitierungSelbstaendigeLiteratur(
+    LdmlDocument ldmlDocument,
+    List<SliDocumentationUnitContent.ActiveSliReference> activeSliReferences
+  ) {
+    if (activeSliReferences != null && !activeSliReferences.isEmpty()) {
+      LdmlElement otherReferencesElement = ldmlDocument
+        .addAnalysis()
+        .prepareElement(OTHER_REFERENCES)
+        .addAttribute(SOURCE, ACTIVE)
+        .appendOnce();
+
+      for (SliDocumentationUnitContent.ActiveSliReference reference : activeSliReferences) {
+        String documentNumber = reference.documentNumber();
+        String veroeffentlichungsJahr = reference.veroeffentlichungsJahr();
+        String title = reference.hauptsachtitel();
+        String isbn = reference.isbn();
+        // urheber/ typ / verfasser need to be clarified
+
+        String showAsValue = Stream.of(documentNumber, title, veroeffentlichungsJahr, isbn)
+          .filter(StringUtils::isNotBlank)
+          .collect(Collectors.joining(", "));
+
+        otherReferencesElement
+          .appendElementAndGet(IMPLICIT_REFERENCE)
+          .addAttribute(SHOW_AS, showAsValue)
+          .appendElementAndGet("ris:selbstaendigeLiteraturReference")
+          .addAttribute("documentNumber", documentNumber)
+          .addAttribute("veroeffentlichungsJahr", veroeffentlichungsJahr)
+          .addAttribute("haupttitel", title)
+          .addAttribute("isbn", isbn);
+      }
+    }
   }
 }
