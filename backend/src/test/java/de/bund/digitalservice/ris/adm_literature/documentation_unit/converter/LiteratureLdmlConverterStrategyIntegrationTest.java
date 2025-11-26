@@ -11,6 +11,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.X
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -226,5 +227,39 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       .hasMessageContaining("Failed to convert Literature content to LDML")
       .hasCauseInstanceOf(IllegalStateException.class)
       .hasRootCauseMessage("Unexpected content type: " + unsupportedContent.getClass());
+  }
+
+  @Test
+  @DisplayName(
+    "Elements of <aktivsli> are processed into a <ris:selbstaendigeLiteraturReference> in <akn:implicitReference> in <akn:otherReferences>"
+  )
+  void process_aktivzitierungSelbstaendigeLiteratur() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      "Dies ist eine Gesamtfussnote",
+      List.of(new SliDocumentationUnitContent.ActiveSliReference("docnum", "jahr", "titel", "isbn"))
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="docnum, titel, jahr, isbn">
+            <ris:selbstaendigeLiteraturReference documentNumber="docnum" haupttitel="titel" isbn="isbn" veroeffentlichungsJahr="jahr"/>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
   }
 }
