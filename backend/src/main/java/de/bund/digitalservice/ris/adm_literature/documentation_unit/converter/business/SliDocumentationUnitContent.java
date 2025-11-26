@@ -41,5 +41,6 @@ public record SliDocumentationUnitContent(
     String veroeffentlichungsJahr,
     String hauptsachtitel,
     String isbn
+    // urheber/ typ / verfasser need to be clarified
   ) {}
 }
