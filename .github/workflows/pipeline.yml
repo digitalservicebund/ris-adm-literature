@@ -22,7 +22,7 @@ jobs:
   security-jobs:
     uses: ./.github/workflows/security-jobs.yml
     secrets:
-      GH_SECRET_SCANNING_TOKEN: ${{ secrets.GH_SECRET_SCANNING_TOKEN }}
+      CONFIRM_SECRET_SCANNING_PUSH_PROTECTION: ${{ secrets.CONFIRM_SECRET_SCANNING_PUSH_PROTECTION }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
       contents: read
