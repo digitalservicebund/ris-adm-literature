@@ -33,14 +33,14 @@ public record SliDocumentationUnitContent(
    * A reference to an active SLI.
    * @param documentNumber The document number of the SLI.
    * @param veroeffentlichungsJahr The publication year of the SLI.
-   * @param hauptsachtitel The main title of the SLI.
+   * @param buchtitel The main title of the SLI.
    * @param isbn The ISBN of the SLI.
    */
   public record ActiveSliReference(
     String documentNumber,
     String veroeffentlichungsJahr,
-    String hauptsachtitel,
-    String isbn
-    // urheber/ typ / verfasser need to be clarified
+    String buchtitel,
+    String isbn,
+    String autor // urheber/ typ / verfasser need to be clarified
   ) {}
 }
