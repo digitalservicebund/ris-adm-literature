@@ -25,8 +25,6 @@ import java.util.UUID;
  * @param gliederung            Table of contents
  * @param kurzreferat           Preface
  * @param aktenzeichen          List of reference numbers
- * @param noAktenzeichen        {@code true} if no reference number is set,
- *                              {@code false} otherwise
  * @param dokumenttyp           The document type
  * @param dokumenttypZusatz     Document type description
  * @param activeCitations       List of active citations
@@ -51,7 +49,6 @@ public record AdmDocumentationUnitContent(
   String gliederung,
   String kurzreferat,
   List<String> aktenzeichen,
-  boolean noAktenzeichen,
   @NotNull DocumentType dokumenttyp,
   String dokumenttypZusatz,
   @Valid List<ActiveCitation> activeCitations,

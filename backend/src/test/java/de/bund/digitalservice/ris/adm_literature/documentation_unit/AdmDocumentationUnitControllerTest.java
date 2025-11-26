@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -350,7 +350,7 @@ class AdmDocumentationUnitControllerTest {
               {
                 "id": "c1d2e3f4-a5b6-7890-1234-567890abcdef",
                 "institution": { "name": "Bundesministerium der Justiz", "type": "INSTITUTION" },
-                "regions": [{ "code": "DE" }]
+                "regions": [{ "id": "9aeceb7d-3b11-4db5-a121-8ff1a80cd5de", "code": "DE", "longText": "Deutschland" }]
               }
           ]
         }""";

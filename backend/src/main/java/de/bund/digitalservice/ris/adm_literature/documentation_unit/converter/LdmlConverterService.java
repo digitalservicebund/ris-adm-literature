@@ -5,7 +5,6 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.bu
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.transform.*;
 import jakarta.annotation.Nonnull;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,6 @@ public class LdmlConverterService {
   ) {
     AkomaNtoso akomaNtoso = xmlReader.readXml(documentationUnit.xml());
     log.debug("Read Akoma Ntoso from XML: {}.", akomaNtoso);
-    List<String> referenceNumbers = new ReferenceNumbersTransformer(akomaNtoso).transform();
     return new AdmDocumentationUnitContent(
       documentationUnit.id(),
       documentationUnit.documentNumber(),
@@ -50,8 +48,7 @@ public class LdmlConverterService {
       new ExpiryDateTransformer(akomaNtoso).transform(),
       new TableOfContentsTransformer().transform(akomaNtoso),
       kurzreferatTransformer.transform(akomaNtoso),
-      referenceNumbers,
-      referenceNumbers.isEmpty(),
+      new ReferenceNumbersTransformer(akomaNtoso).transform(),
       documentTypeTransformer.transform(akomaNtoso),
       new DocumentTypeZusatzTransformer(akomaNtoso).transform(),
       activeCitationsTransformer.transform(akomaNtoso),

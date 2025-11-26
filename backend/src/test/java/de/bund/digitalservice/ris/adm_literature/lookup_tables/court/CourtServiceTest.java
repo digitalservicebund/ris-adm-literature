@@ -5,11 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class CourtServiceTest {
 
   @InjectMocks

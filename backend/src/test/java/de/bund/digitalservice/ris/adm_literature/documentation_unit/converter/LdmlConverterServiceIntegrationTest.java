@@ -339,11 +339,9 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(
-        AdmDocumentationUnitContent::aktenzeichen,
-        AdmDocumentationUnitContent::noAktenzeichen
-      )
-      .containsExactly(List.of("AX-Y12345", "XX"), false);
+      .extracting(AdmDocumentationUnitContent::aktenzeichen)
+      .asInstanceOf(InstanceOfAssertFactories.list(String.class))
+      .containsExactly("AX-Y12345", "XX");
   }
 
   @Test
@@ -379,11 +377,9 @@ class LdmlConverterServiceIntegrationTest {
     // then
     assertThat(admDocumentationUnitContent)
       .isNotNull()
-      .extracting(
-        AdmDocumentationUnitContent::aktenzeichen,
-        AdmDocumentationUnitContent::noAktenzeichen
-      )
-      .containsExactly(List.of(), true);
+      .extracting(AdmDocumentationUnitContent::aktenzeichen)
+      .asInstanceOf(InstanceOfAssertFactories.list(String.class))
+      .isEmpty();
   }
 
   @Test

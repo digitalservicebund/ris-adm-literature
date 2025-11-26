@@ -14,11 +14,12 @@ import de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart.ZitierA
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class ActiveCitationsTransformerTest {
 
   @InjectMocks
