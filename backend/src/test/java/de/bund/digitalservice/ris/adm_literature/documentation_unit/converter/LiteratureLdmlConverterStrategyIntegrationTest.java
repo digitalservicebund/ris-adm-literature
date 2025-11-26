@@ -264,7 +264,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       """
       <akn:analysis source="attributsemantik-noch-undefiniert">
         <akn:otherReferences source="active">
-          <akn:implicitReference showAs="autor, docnum, VR, isbn, titel, jahr">
+          <akn:implicitReference showAs="autor, titel, docnum, VR, isbn, jahr">
             <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
           </akn:implicitReference>
         </akn:otherReferences>

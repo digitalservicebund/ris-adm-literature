@@ -236,7 +236,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       for (SliDocumentationUnitContent.ActiveSliReference reference : activeSliReferences) {
         String documentNumber = reference.documentNumber();
         String veroeffentlichungsJahr = reference.veroeffentlichungsJahr();
-        String title = reference.buchtitel();
+        String buchtitel = reference.buchtitel();
         String isbn = reference.isbn();
         String autor = reference.autor();
         DocumentType dokumentTyp = reference.dokumenttyp();
@@ -244,10 +244,10 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
 
         String showAsValue = Stream.of(
           autor,
+          buchtitel,
           documentNumber,
           dokumentTyp.abbreviation(),
           isbn,
-          title,
           veroeffentlichungsJahr
         )
           .filter(StringUtils::isNotBlank)
@@ -259,7 +259,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
           .appendElementAndGet("ris:selbstaendigeLiteraturReference")
           .addAttribute("documentNumber", documentNumber)
           .addAttribute("veroeffentlichungsJahr", veroeffentlichungsJahr)
-          .addAttribute("buchtitel", title)
+          .addAttribute("buchtitel", buchtitel)
           .addAttribute("isbn", isbn)
           .addAttribute("autor", autor)
           .addAttribute("dokumenttyp", dokumentTyp.abbreviation());
