@@ -34,7 +34,7 @@ repositories {
   maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springCloudVersion"] = "2025.1.0-RC1"
+extra["springCloudVersion"] = "2025.1.0"
 
 val springdocVersion = "3.0.0"
 val sentryVersion = "8.27.1"
