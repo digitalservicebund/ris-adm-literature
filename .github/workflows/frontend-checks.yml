@@ -3,7 +3,7 @@ on:
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
-      SONAR_TOKEN_FRONTEND:
+      SONAR_TOKEN:
         required: true
 
 jobs:
@@ -153,7 +153,7 @@ jobs:
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ./frontend
           args: >

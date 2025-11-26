@@ -3,7 +3,7 @@ on:
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
-      SONAR_TOKEN_BACKEND:
+      SONAR_TOKEN:
         required: true
       GRADLE_ENCRYPTION_KEY:
         required: true
@@ -81,7 +81,7 @@ jobs:
       - name: Build, test, sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./backend
         run: |
           ./gradlew build test \
@@ -99,7 +99,7 @@ jobs:
           scanMetadataReportFile: backend/build/sonar/report-task.txt
         timeout-minutes: 3
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #
       # Upload reports as pipeline artifacts
       #

@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/backend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SONAR_TOKEN_BACKEND: ${{ secrets.SONAR_TOKEN_BACKEND }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   backend-build-image-and-scan:
@@ -92,7 +92,7 @@ jobs:
     uses: ./.github/workflows/frontend-checks.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SONAR_TOKEN_FRONTEND: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   frontend-build-image-and-scan:
     if: ${{ github.event_name != 'schedule' }}
