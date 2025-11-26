@@ -244,7 +244,16 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       null,
       null,
       "Dies ist eine Gesamtfussnote",
-      List.of(new SliDocumentationUnitContent.ActiveSliReference("docnum", "jahr", "titel", "isbn"))
+      List.of(
+        new SliDocumentationUnitContent.ActiveSliReference(
+          "docnum",
+          "jahr",
+          "titel",
+          "isbn",
+          "autor",
+          new DocumentType("VR", "Verwaltungsregelung")
+        )
+      )
     );
 
     // when
