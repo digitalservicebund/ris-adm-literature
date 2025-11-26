@@ -239,9 +239,17 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
         String title = reference.buchtitel();
         String isbn = reference.isbn();
         String autor = reference.autor();
+        DocumentType dokumentTyp = reference.dokumenttyp();
         // urheber/ typ / verfasser need to be clarified
 
-        String showAsValue = Stream.of(autor, documentNumber, isbn, title, veroeffentlichungsJahr)
+        String showAsValue = Stream.of(
+          autor,
+          documentNumber,
+          dokumentTyp.abbreviation(),
+          isbn,
+          title,
+          veroeffentlichungsJahr
+        )
           .filter(StringUtils::isNotBlank)
           .collect(Collectors.joining(", "));
 
@@ -253,7 +261,8 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
           .addAttribute("veroeffentlichungsJahr", veroeffentlichungsJahr)
           .addAttribute("buchtitel", title)
           .addAttribute("isbn", isbn)
-          .addAttribute("autor", autor);
+          .addAttribute("autor", autor)
+          .addAttribute("dokumenttyp", dokumentTyp.abbreviation());
       }
     }
   }
