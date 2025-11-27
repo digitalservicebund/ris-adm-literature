@@ -17,6 +17,12 @@ on:
         required: true
       SLACK_WEBHOOK_URL:
         required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      SENTRY_ORG: 
+        required: true
+      SENTRY_PROJECT: 
+        required: true
 
 jobs:
   deploy-staging:
@@ -56,3 +62,12 @@ jobs:
         if: ${{ failure() }}
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Create Sentry release
+        uses: getsentry/action-release@a181c1274a0587b294e2a7563c3b677e979c51b1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: staging
