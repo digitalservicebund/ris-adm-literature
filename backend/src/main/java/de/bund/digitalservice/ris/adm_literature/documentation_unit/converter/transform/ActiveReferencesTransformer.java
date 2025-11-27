@@ -7,27 +7,33 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ld
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.RisActiveReference;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.RisMeta;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.norm_abbreviation.NormAbbreviation;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp.VerweisTyp;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp.VerweisTypService;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * Transformer for active references (in German 'Aktivverweise').
  */
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class ActiveReferencesTransformer {
 
-  private final AkomaNtoso akomaNtoso;
+  private final VerweisTypService verweisTypService;
 
   /**
    * Transforms the {@code AkomaNtoso} object to a list of active references.
    *
+   * @param akomaNtoso The Akoma Ntoso XML object to transform
    * @return Active references list, or an empty list if the surrounding {@code <proprietary>} or
    *         {@code <ris:activeReferences> } elements are {@code null}
    */
-  public List<ActiveReference> transform() {
+  public List<ActiveReference> transform(AkomaNtoso akomaNtoso) {
     List<RisActiveReference> risActiveReferences = Optional.ofNullable(
       akomaNtoso.getDoc().getMeta().getProprietary()
     )
@@ -62,15 +68,9 @@ public class ActiveReferencesTransformer {
     return "administrative_regulation";
   }
 
-  private String transformTypeNumber(String typeNumber) {
-    return switch (typeNumber) {
-      case "01" -> "anwendung";
-      case "31" -> "neuregelung";
-      case "82" -> "rechtsgrundlage";
-      default -> {
-        log.debug("Unhandled type number: {}", typeNumber);
-        yield typeNumber;
-      }
-    };
+  private VerweisTyp transformTypeNumber(String typeNumber) {
+    return verweisTypService
+      .findVerweisTypByTypNummer(typeNumber)
+      .orElse(new VerweisTyp(UUID.randomUUID(), "", typeNumber));
   }
 }

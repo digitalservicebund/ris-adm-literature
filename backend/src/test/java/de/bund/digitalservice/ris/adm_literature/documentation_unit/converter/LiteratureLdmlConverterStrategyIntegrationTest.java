@@ -11,6 +11,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.X
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,7 +165,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       "SliHauptTitel",
       null,
       null,
-      "Dies ist eine Gesamtfussnote"
+      "Dies ist eine Gesamtfussnote",
+      null
     );
 
     // when
@@ -197,16 +199,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   void supports_shouldReturnTrueForSupportedTypes() {
     // given
     var uliContent = TestDocumentationUnitContent.createUli("DOC1", "2024");
-    var sliContent = new SliDocumentationUnitContent(
-      null,
-      "DOC2",
-      "2024",
-      Collections.emptyList(),
-      "Title",
-      null,
-      null,
-      null
-    );
+    var sliContent = TestDocumentationUnitContent.createSli("DOC2", "2024");
 
     // then
     assertThat(literatureLdmlConverterStrategy.supports(uliContent)).isTrue();
@@ -234,5 +227,48 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       .hasMessageContaining("Failed to convert Literature content to LDML")
       .hasCauseInstanceOf(IllegalStateException.class)
       .hasRootCauseMessage("Unexpected content type: " + unsupportedContent.getClass());
+  }
+
+  @Test
+  @DisplayName(
+    "Elements of <aktivsli> are processed into a <ris:selbstaendigeLiteraturReference> in <akn:implicitReference> in <akn:otherReferences>"
+  )
+  void process_aktivzitierungSelbstaendigeLiteratur() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      "Dies ist eine Gesamtfussnote",
+      List.of(
+        new SliDocumentationUnitContent.ActiveSliReference(
+          "docnum",
+          "jahr",
+          "titel",
+          "isbn",
+          "autor",
+          new DocumentType("VR", "Verwaltungsregelung")
+        )
+      )
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="autor, titel, docnum, VR, isbn, jahr">
+            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
   }
 }

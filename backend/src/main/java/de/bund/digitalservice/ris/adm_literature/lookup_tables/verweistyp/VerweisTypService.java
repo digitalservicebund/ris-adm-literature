@@ -1,11 +1,17 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp;
 
 import de.bund.digitalservice.ris.adm_literature.page.Page;
+import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
+import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class VerweisTypService {
 
+  private final VerweisTypRepository verweisTypRepository;
+
   /**
    * Finds a paginated list of reference types (VerweisTypen) (currently mocked).
    *
@@ -25,23 +33,34 @@ public class VerweisTypService {
    */
   @Transactional(readOnly = true)
   public Page<VerweisTyp> findVerweisTypen(@Nonnull VerweisTypQuery query) {
-    log.info(
-      "Ignoring given query as mocked reference types result is always returned: {}.",
-      query
-    );
-    return new Page<>(
-      List.of(
-        new VerweisTyp(UUID.fromString("3b0c6c8c-bb5d-4c18-9d1d-6d3c93e88f45"), "anwendung"),
-        new VerweisTyp(UUID.fromString("c8a27a4a-79d9-4f28-b462-47eeb03b6b6f"), "neuregelung"),
-        new VerweisTyp(UUID.fromString("5e7c24f7-85f4-4e89-9113-4d5eae1b29d3"), "rechtsgrundlage")
-      ),
-      3,
-      0,
-      3,
-      3,
-      true,
-      true,
-      false
-    );
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    var verweisTypen = StringUtils.isBlank(searchTerm)
+      ? verweisTypRepository.findAll(pageable)
+      : verweisTypRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+    return PageTransformer.transform(verweisTypen, mapVerweisTypEntity());
+  }
+
+  /**
+   * Returns an instance of 'Verweistyp' with the specified 'Typnummer' or an empty optional if not found.
+   * @param typNummer The 'Typnummer'
+   * @return 'Verweistyp' optional
+   */
+  @Transactional(readOnly = true)
+  public Optional<VerweisTyp> findVerweisTypByTypNummer(@Nonnull String typNummer) {
+    return verweisTypRepository.findByTypNummer(typNummer).map(mapVerweisTypEntity());
+  }
+
+  private Function<VerweisTypEntity, VerweisTyp> mapVerweisTypEntity() {
+    return verweisTypEntity ->
+      new VerweisTyp(
+        verweisTypEntity.getId(),
+        verweisTypEntity.getName(),
+        verweisTypEntity.getTypNummer()
+      );
   }
 }

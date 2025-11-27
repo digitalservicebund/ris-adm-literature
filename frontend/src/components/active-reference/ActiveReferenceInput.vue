@@ -9,14 +9,12 @@ import LegalForce from '@/domain/legalForce'
 import { type NormAbbreviation } from '@/domain/normAbbreviation'
 import SingleNorm from '@/domain/singleNorm'
 import IconAdd from '~icons/ic/baseline-add'
-import ActiveReference, {
-  ActiveReferenceDocumentType,
-  VerweisTypEnum,
-} from '@/domain/activeReference.ts'
+import ActiveReference, { ActiveReferenceDocumentType } from '@/domain/activeReference.ts'
 import RadioButton from 'primevue/radiobutton'
 import labels from '@/components/active-reference/activeReferenceInputLabels.json'
 import NormAbbreviationsDropDown from '@/components/NormAbbreviationsDropDown.vue'
 import VerweisTypDropDown from './VerweisTypDropDown.vue'
+import type { VerweisTyp } from '@/domain/verweisTyp.ts'
 
 const props = defineProps<{
   modelValue?: ActiveReference
@@ -66,7 +64,7 @@ const normAbbreviation = computed({
   },
 })
 
-const verweisTyp = computed<VerweisTypEnum | undefined>({
+const verweisTyp = computed<VerweisTyp | undefined>({
   get: () => activeReference.value.verweisTyp,
   set: (newValue) => {
     validationStore.remove('verweisTyp')

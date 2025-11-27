@@ -35,9 +35,9 @@ class VerweisTypControllerTest {
   @DisplayName("GET returns HTTP 200 and a JSON with three verweisTypen")
   void getVerweisTypen() throws Exception {
     // given
-    var anwendung = new VerweisTyp(UUID.randomUUID(), "anwendung");
-    var neuregelung = new VerweisTyp(UUID.randomUUID(), "neuregelung");
-    var rechtsgrundlage = new VerweisTyp(UUID.randomUUID(), "rechtsgrundlage");
+    var anwendung = new VerweisTyp(UUID.randomUUID(), "Anwendung", "01");
+    var neuregelung = new VerweisTyp(UUID.randomUUID(), "Neuregelung", "31");
+    var rechtsgrundlage = new VerweisTyp(UUID.randomUUID(), "Rechtsgrundlage", "82");
     given(
       verweisTypService.findVerweisTypen(
         new VerweisTypQuery("", new QueryOptions(0, 3, "name", Sort.Direction.ASC, true))

@@ -1,21 +1,10 @@
 import NormReference from '@/domain/normReference.ts'
 import type EditableListItem from '@/domain/editableListItem.ts'
-
-export enum VerweisTypEnum {
-  ANWENDUNG = 'anwendung',
-  NEUREGELUNG = 'neuregelung',
-  RECHTSGRUNDLAGE = 'rechtsgrundlage',
-}
+import type { VerweisTyp } from '@/domain/verweisTyp.ts'
 
 export enum ActiveReferenceDocumentType {
   NORM = 'norm',
   ADMINISTRATIVE_REGULATION = 'administrative_regulation',
-}
-
-export const verweisTypToLabel = {
-  [VerweisTypEnum.ANWENDUNG]: 'Anwendung',
-  [VerweisTypEnum.NEUREGELUNG]: 'Neuregelung',
-  [VerweisTypEnum.RECHTSGRUNDLAGE]: 'Rechtsgrundlage',
 }
 
 export default class ActiveReference extends NormReference {
@@ -23,7 +12,7 @@ export default class ActiveReference extends NormReference {
    * Reference document type is either NORM or ADMINISTRATIVE_REGULATION
    */
   public referenceDocumentType: ActiveReferenceDocumentType = ActiveReferenceDocumentType.NORM
-  public verweisTyp?: VerweisTypEnum
+  public verweisTyp?: VerweisTyp
 
   constructor(data: Partial<ActiveReference> = {}) {
     super(data)
@@ -42,7 +31,7 @@ export default class ActiveReference extends NormReference {
 
   get renderVerweisTyp(): string {
     if (this.verweisTyp) {
-      return verweisTypToLabel[this.verweisTyp] ?? ''
+      return this.verweisTyp.name ?? ''
     }
     return ''
   }

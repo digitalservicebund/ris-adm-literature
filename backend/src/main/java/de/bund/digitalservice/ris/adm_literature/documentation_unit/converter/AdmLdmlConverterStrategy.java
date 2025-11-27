@@ -417,9 +417,7 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
                 .stream()
                 .map(singleNorm -> {
                   RisActiveReference risActiveReference = new RisActiveReference();
-                  risActiveReference.setTypeNumber(
-                    transformVerweisTyp(activeReference.verweisTyp())
-                  );
+                  risActiveReference.setTypeNumber(activeReference.verweisTyp().typNummer());
                   risActiveReference.setReference(
                     activeReference.normAbbreviation().abbreviation()
                   );
@@ -429,7 +427,7 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
                 });
             }
             RisActiveReference risActiveReference = new RisActiveReference();
-            risActiveReference.setTypeNumber(transformVerweisTyp(activeReference.verweisTyp()));
+            risActiveReference.setTypeNumber(activeReference.verweisTyp().typNummer());
             risActiveReference.setReference(activeReference.normAbbreviation().abbreviation());
             return Stream.of(risActiveReference);
           })
@@ -466,18 +464,6 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
       RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
       risMeta.setDefinitionen(risDefinitionen);
     }
-  }
-
-  private String transformVerweisTyp(String verweisTyp) {
-    return switch (verweisTyp) {
-      case "anwendung" -> "01";
-      case "neuregelung" -> "31";
-      case "rechtsgrundlage" -> "82";
-      default -> {
-        log.debug("Unhandled reference type: {}", verweisTyp);
-        yield verweisTyp;
-      }
-    };
   }
 
   private void normalizeHistoricAdministrativeData(Meta meta) {

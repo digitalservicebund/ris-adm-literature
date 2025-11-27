@@ -1,17 +1,32 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.transform;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.ActiveReference;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SingleNorm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.*;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.norm_abbreviation.NormAbbreviation;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp.VerweisTyp;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.verweistyp.VerweisTypService;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig
 class ActiveReferencesTransformerTest {
+
+  @InjectMocks
+  private ActiveReferencesTransformer activeReferencesTransformer;
+
+  @Mock
+  private VerweisTypService verweisTypService;
 
   @Test
   void transform() {
@@ -32,6 +47,9 @@ class ActiveReferencesTransformerTest {
     activeReference.setTypeNumber("82");
     activeReference.setDateOfVersion("2025-07-07");
     risMeta.setActiveReferences(List.of(activeReference));
+    given(verweisTypService.findVerweisTypByTypNummer("82")).willReturn(
+      Optional.of(new VerweisTyp(UUID.randomUUID(), "Rechtsgrundlage", "82"))
+    );
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -48,9 +66,7 @@ class ActiveReferencesTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    List<ActiveReference> activeReferences = new ActiveReferencesTransformer(
-      akomaNtoso
-    ).transform();
+    List<ActiveReference> activeReferences = activeReferencesTransformer.transform(akomaNtoso);
 
     // then
     assertThat(activeReferences)
@@ -71,9 +87,9 @@ class ActiveReferencesTransformerTest {
   @ParameterizedTest
   @CsvSource(
     textBlock = """
-    01, anwendung
-    31, neuregelung
-    82, rechtsgrundlage
+    01, Anwendung
+    31, Neuregelung
+    82, Rechtsgrundlage
     99, 99
     """
   )
@@ -92,6 +108,9 @@ class ActiveReferencesTransformerTest {
     activeReference.setReference("PhanG");
     activeReference.setTypeNumber(typeNumber);
     risMeta.setActiveReferences(List.of(activeReference));
+    given(verweisTypService.findVerweisTypByTypNummer(typeNumber)).willReturn(
+      Optional.of(new VerweisTyp(UUID.randomUUID(), expectedReferenceType, typeNumber))
+    );
     // <akn:akomaNtoso>
     //   <akn:doc name="offene-struktur">
     //     <akn:meta>
@@ -107,15 +126,14 @@ class ActiveReferencesTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    List<ActiveReference> activeReferences = new ActiveReferencesTransformer(
-      akomaNtoso
-    ).transform();
+    List<ActiveReference> activeReferences = activeReferencesTransformer.transform(akomaNtoso);
 
     // then
     assertThat(activeReferences)
       .hasSize(1)
       .first()
       .extracting(ActiveReference::verweisTyp)
+      .extracting(VerweisTyp::name)
       .isEqualTo(expectedReferenceType);
   }
 
@@ -135,9 +153,7 @@ class ActiveReferencesTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    List<ActiveReference> activeReferences = new ActiveReferencesTransformer(
-      akomaNtoso
-    ).transform();
+    List<ActiveReference> activeReferences = activeReferencesTransformer.transform(akomaNtoso);
 
     // then
     assertThat(activeReferences).isEmpty();
@@ -167,9 +183,7 @@ class ActiveReferencesTransformerTest {
     // </akn:akomaNtoso>
 
     // when
-    List<ActiveReference> activeReferences = new ActiveReferencesTransformer(
-      akomaNtoso
-    ).transform();
+    List<ActiveReference> activeReferences = activeReferencesTransformer.transform(akomaNtoso);
 
     // then
     assertThat(activeReferences).isEmpty();
