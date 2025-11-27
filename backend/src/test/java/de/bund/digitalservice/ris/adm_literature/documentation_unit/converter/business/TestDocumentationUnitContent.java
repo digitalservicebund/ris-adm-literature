@@ -36,7 +36,17 @@ public class TestDocumentationUnitContent {
       null,
       null,
       null,
-      null
+      null,
+      List.of(
+        new SliDocumentationUnitContent.ActiveSliReference(
+          "docnum",
+          "11",
+          "titel",
+          "isbn",
+          "autor",
+          new DocumentType("VR", "Verwaltungsregelung")
+        )
+      )
     );
   }
 }
