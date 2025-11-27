@@ -78,7 +78,7 @@ describe('VerweisTypDropDown', () => {
     // then
     const emitted = wrapper.emitted('update:modelValue')!
     expect(emitted).toHaveLength(1)
-    expect(emitted[0]?.[0]).toEqual(anwendungFixture.name)
+    expect(emitted[0]?.[0]).toEqual(anwendungFixture)
 
     // when
     await input.setValue('unknownId')

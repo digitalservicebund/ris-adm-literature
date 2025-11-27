@@ -4,7 +4,6 @@ import { onMounted, ref } from 'vue'
 import { useAutoComplete, useVerweisTypSearch } from '@/composables/useAutoComplete'
 import type { VerweisTyp } from '@/domain/verweisTyp'
 import { useFetchVerweisTypen } from '@/services/verweisTypService'
-import { VerweisTypEnum, verweisTypToLabel } from '@/domain/activeReference'
 
 defineProps<{
   inputId: string
@@ -13,14 +12,14 @@ defineProps<{
   placeholder?: string
 }>()
 
-const modelValue = defineModel<VerweisTypEnum | undefined>()
+const modelValue = defineModel<VerweisTyp | undefined>()
 const emit = defineEmits<{
-  'update:modelValue': [value: VerweisTypEnum | undefined]
+  'update:modelValue': [value: VerweisTyp | undefined]
 }>()
 
 const autoComplete = ref<typeof RisAutoComplete | null>(null)
 const verweisTypen = ref<VerweisTyp[]>([])
-const selectedVerweisTypId = ref<string | undefined>()
+const selectedVerweisTypId = ref<string | undefined>(modelValue.value?.id)
 
 const searchFn = useVerweisTypSearch(verweisTypen)
 
@@ -28,15 +27,17 @@ const { suggestions, onComplete } = useAutoComplete(searchFn)
 
 function onModelValueChange(id: string | undefined) {
   selectedVerweisTypId.value = id
-  const selectedVerweisTyp = verweisTypen.value.find((c: VerweisTyp) => c.id === id)
-  emit('update:modelValue', selectedVerweisTyp?.name)
+  const selectedVerweisTyp = verweisTypen.value.find((vt: VerweisTyp) => vt.id === id)
+  emit('update:modelValue', selectedVerweisTyp)
 }
 
 onMounted(async () => {
   const { data } = await useFetchVerweisTypen()
   verweisTypen.value = data.value?.verweisTypen || []
   if (modelValue.value) {
-    const selectedRefType = verweisTypen.value.find((c: VerweisTyp) => c.name === modelValue.value)
+    const selectedRefType = verweisTypen.value.find(
+      (vt: VerweisTyp) => vt.id === modelValue.value?.id,
+    )
     selectedVerweisTypId.value = selectedRefType?.id
   }
 })
@@ -49,7 +50,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :input-id="inputId"
     :invalid="invalid"
-    :initial-label="modelValue && `${verweisTypToLabel[modelValue]}`"
+    :initial-label="modelValue && `${modelValue.name}`"
     :aria-label="ariaLabel"
     append-to="self"
     :placeholder="placeholder"

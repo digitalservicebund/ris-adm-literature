@@ -365,5 +365,24 @@ INSERT INTO citation_type (id, abbreviation, label, documentation_unit_document_
 (gen_random_uuid(), 'Übernahme', 'Übernahme', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '4'),
 (gen_random_uuid(), 'XX', 'XX', '9de5cf2d-edae-4dc3-be05-3806c86cc97b', 'b46b4247-6869-4ab3-a357-806476195c76', '5');
 
+CREATE TABLE
+    IF NOT EXISTS
+    verweistyp
+(
+    id         UUID         NOT NULL
+        CONSTRAINT verweistyp_pkey PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    typ_nummer VARCHAR(255) NOT NULL
+        CONSTRAINT verweistyp_typ_nummer_uc UNIQUE,
+    public_id  VARCHAR(255)
+        CONSTRAINT verweistyp_public_id_uc UNIQUE,
+    juris_id   VARCHAR(255) NOT NULL
+        CONSTRAINT verweistyp_juris_id_key UNIQUE
+);
+
+INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Anwendung', '01', 'anwendung-01', 1);
+INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Neuregelung', '31', 'neuregelung-31', 2);
+INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Rechtsgrundlage', '82', 'rechtsgrundlage-82', 3);
+
 
 set role test;

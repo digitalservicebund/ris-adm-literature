@@ -1,17 +1,19 @@
-import { VerweisTypEnum } from '@/domain/activeReference'
 import type { VerweisTyp } from '@/domain/verweisTyp'
 
 export const anwendungFixture: VerweisTyp = {
   id: 'anwendungTestId',
-  name: VerweisTypEnum.ANWENDUNG,
+  name: 'Anwendung',
+  typNummer: '01',
 }
 
 export const neuregelungFixture: VerweisTyp = {
   id: 'neuregelungTestId',
-  name: VerweisTypEnum.NEUREGELUNG,
+  name: 'Neuregelung',
+  typNummer: '31',
 }
 
 export const rechtsgrundlageFixture: VerweisTyp = {
   id: 'rechtsgrundlageTestId',
-  name: VerweisTypEnum.RECHTSGRUNDLAGE,
+  name: 'Rechtsgrundlage',
+  typNummer: '82',
 }

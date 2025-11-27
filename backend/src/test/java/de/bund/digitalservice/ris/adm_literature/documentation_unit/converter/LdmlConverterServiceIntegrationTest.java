@@ -560,13 +560,13 @@ class LdmlConverterServiceIntegrationTest {
       .extracting(
         ActiveReference::referenceDocumentType,
         ActiveReference::normAbbreviationRawValue,
-        ActiveReference::verweisTyp,
+        activeReference -> activeReference.verweisTyp().name(),
         activeReference ->
           activeReference.singleNorms().stream().map(SingleNorm::singleNorm).toList()
       )
       .containsExactly(
-        tuple("administrative_regulation", "PhanGB", "rechtsgrundlage", List.of("§ 1a Abs 1")),
-        tuple("administrative_regulation", "PhanGB", "rechtsgrundlage", List.of("§ 2 Abs 6"))
+        tuple("administrative_regulation", "PhanGB", "Rechtsgrundlage", List.of("§ 1a Abs 1")),
+        tuple("administrative_regulation", "PhanGB", "Rechtsgrundlage", List.of("§ 2 Abs 6"))
       );
   }
 
