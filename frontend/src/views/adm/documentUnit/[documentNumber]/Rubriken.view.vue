@@ -96,9 +96,9 @@ useScrollToHash()
     <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
       <TitleElement>Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
-        <InputField id="langueberschrift" label="Amtl. Langüberschrift *">
+        <InputField id="langueberschrift" v-slot="slotProps" label="Amtl. Langüberschrift *">
           <Textarea
-            id="langueberschrift"
+            :id="slotProps.id"
             class="w-full"
             v-model="langueberschrift"
             v-bind="{
@@ -118,17 +118,17 @@ useScrollToHash()
       </div>
       <div class="border-b-1 border-b-gray-400"></div>
       <div class="flex flex-row gap-24">
-        <InputField id="dokumenttyp" label="Dokumenttyp *">
+        <InputField id="dokumenttyp" v-slot="slotProps" label="Dokumenttyp *">
           <ComboboxInput
-            id="dokumenttyp"
+            :id="slotProps.id"
             v-model="dokumenttyp"
             aria-label="Dokumenttyp"
             :item-service="ComboboxItemService.getDocumentTypes"
           ></ComboboxInput>
         </InputField>
-        <InputField id="documentTypeLongText" label="Dokumenttyp Zusatz">
+        <InputField id="documentTypeLongText" v-slot="slotProps" label="Dokumenttyp Zusatz">
           <InputText
-            id="documentTypeLongText"
+            :id="slotProps.id"
             v-model="dokumenttypZusatz"
             aria-label="Dokumenttyp Zusatz"
             :invalid="false"
@@ -145,7 +145,7 @@ useScrollToHash()
           v-slot="slotProps"
         >
           <DateInput
-            id="inkrafttretedatum"
+            :id="slotProps.id"
             v-model="inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
@@ -161,7 +161,7 @@ useScrollToHash()
           v-slot="slotProps"
         >
           <DateInput
-            id="ausserkrafttretedatum"
+            :id="slotProps.id"
             v-model="ausserkrafttretedatum"
             ariaLabel="Ausserkrafttretedatum"
             class="ds-input-medium"
@@ -198,7 +198,7 @@ useScrollToHash()
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">
           <TextEditorCategory
-            id="gliederung"
+            id="gliederung-text-editor"
             v-model="gliederung"
             :editable="true"
             label="Gliederung"
@@ -269,7 +269,7 @@ useScrollToHash()
       <div class="flex flex-row gap-24">
         <div class="gap-0 w-full">
           <TextEditorCategory
-            id="kurzreferat"
+            id="kurzreferat-text-editor"
             v-model="kurzreferat"
             :editable="true"
             label="Kurzreferat"
