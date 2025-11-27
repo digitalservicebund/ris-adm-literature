@@ -97,6 +97,8 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     mapKurzreferat(ldmlDocument);
 
     // SLI specific logic
+    // This could possibly have the same logic as ULI and doesn't need to be a if case
+    // Should be checked when implementing ULI Aktivzitierung
     if (data instanceof SliDocumentationUnitContent sliData) {
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.activeSliReferences());
     }
