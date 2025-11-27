@@ -56,7 +56,7 @@ test.describe('ADM AbgabePage', () => {
 
   test(
     'Should show links to the mandatory fields; when clicking on a link, navigates to the corresponding field in Rubriken page',
-    { tag: ['@RISDEV-9374'] },
+    { tag: ['@RISDEV-10275'] },
     async ({ page }) => {
       // given
       await page.goto('/')
