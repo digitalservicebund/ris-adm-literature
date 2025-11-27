@@ -2,7 +2,7 @@
 import Button from 'primevue/button'
 import { useRoute, useRouter } from 'vue-router'
 import IconAdd from '~icons/material-symbols/add'
-import RisTabs from '@/components/literature/RisTabs.vue'
+import RisTabs from './RisTabs.vue'
 import { ROUTE_NAMES } from '@/constants/routes'
 import { DocumentCategory } from '@/domain/documentType'
 

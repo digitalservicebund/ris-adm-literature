@@ -6,9 +6,9 @@ import type { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import { DocumentCategory } from '@/domain/documentType'
 import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
-import TitelSection from '@/components/sli/TitelSection.vue'
-import DokumentTyp from '@/components/DokumentTyp.vue'
-import { useLiteratureRubriken } from '@/composables/useLiteratureRubriken'
+import TitelSection from './TitelSection.vue'
+import DokumentTyp from '@/views/literature/DokumentTyp.vue'
+import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {

@@ -3,12 +3,12 @@ import TitleElement from '@/components/TitleElement.vue'
 import InputField from '@/components/input/InputField.vue'
 import { useStoreForRoute } from '@/composables/useStoreForRoute'
 import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
-import DokumentTyp from '@/components/DokumentTyp.vue'
+import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
-import TitelSection from '@/components/uli/TitelSection.vue'
+import TitelSection from './TitelSection.vue'
 import { useScrollToHash } from '@/composables/useScrollToHash'
 import InputText from 'primevue/inputtext'
-import { useLiteratureRubriken } from '@/composables/useLiteratureRubriken'
+import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 
 const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
 const {
