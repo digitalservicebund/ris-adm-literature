@@ -270,5 +270,6 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)
     );
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 }
