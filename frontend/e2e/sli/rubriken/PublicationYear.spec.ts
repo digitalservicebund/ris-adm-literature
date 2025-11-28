@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test'
 
 test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
   test(
-    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading',
-    { tag: ['@RISDEV-10142', '@RISDEV-10119'] },
+    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading. Dates can be deleted again and persisted.',
+    { tag: ['@RISDEV-10142', '@RISDEV-10119', '@RISDEV-10287'] },
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbstaendig')
@@ -30,6 +30,18 @@ test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
 
       // then - value persists
       await expect(veroeffentlichungsjahrInput).toHaveValue('2020 bis 2025 $%&abc123 🎇')
+
+      await veroeffentlichungsjahrInput.fill('')
+      await page.getByText('Speichern').click()
+
+      // then
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+
+      // when
+      await page.reload()
+
+      // then
+      await expect(veroeffentlichungsjahrInput).toHaveValue('')
     },
   )
 })
