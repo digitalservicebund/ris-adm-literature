@@ -1,10 +1,5 @@
 spring:
   application.name: ris-adm-literature-backend
-  config:
-    import:
-      - 'optional:configmap:database-config'
-      - 'optional:configmap:/spring-config=true'
-      - 'optional:file:/etc/secrets/'
   jpa:
     # Run Hibernate DDL BEFORE data.sql
     defer-datasource-initialization: true
@@ -76,17 +71,3 @@ spring:
   sql:
     init:
       mode: always
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: kubernetes
-  cloud:
-    kubernetes:
-      config:
-        enabled: true
-      secrets:
-        enabled: true
-
