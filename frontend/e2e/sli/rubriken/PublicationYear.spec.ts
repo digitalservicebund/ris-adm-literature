@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
   test(
-    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading',
+    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading. Dates can be deleted again and persisted.',
     { tag: ['@RISDEV-10142', '@RISDEV-10119', '@RISDEV-10287'] },
     async ({ page }) => {
       // given
