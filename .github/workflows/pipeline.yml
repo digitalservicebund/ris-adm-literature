@@ -41,21 +41,39 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-  backend-build-image-scan-and-push-to-registry:
+  backend-build-image-and-scan:
     if: ${{ github.event_name != 'schedule' }}
-    uses: ./.github/workflows/backend-build-image-scan-and-push-to-registry.yml
+    uses: ./.github/workflows/backend-build-image-and-scan.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
     permissions:
       contents: read
       security-events: write
-      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
-      packages: write
     with:
       run-id: ${{ github.run_id }}
       image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
       container-registry: ghcr.io
+
+  backend-push-image-to-registry:
+    if: ${{ github.event_name != 'schedule' && ( github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env')) }}
+    # For PR releases, labels could be used like this:
+    # if: ${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'dev-env') || contains(github.event.labeled.labels.*.name, 'dev-env') }}
+    needs:
+      - security-jobs
+      - backend-checks
+      - backend-build-image-and-scan
+    uses: ./.github/workflows/backend-push-image-to-registry.yml
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    permissions:
+      contents: read
+      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+      packages: write
+    with:
+      run-id: ${{ github.run_id }}
+      container-registry: ghcr.io
+      image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
 
   ###############
   # Frontend jobs
@@ -180,10 +198,11 @@ jobs:
       - security-jobs
       - e2e-tests
       - frontend-checks
-      - frontend-build-image-and-scan # explicit dependency, so it can't be skipped accidentally
+      - frontend-build-image-and-scan
       - frontend-push-image-to-registry
       - backend-checks
-      - backend-build-image-scan-and-push-to-registry
+      - backend-build-image-and-scan
+      - backend-push-image-to-registry
     uses: ./.github/workflows/deploy-staging.yml
     permissions:
       id-token: write
