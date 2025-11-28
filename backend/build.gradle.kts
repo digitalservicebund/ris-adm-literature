@@ -63,6 +63,7 @@ dependencies {
     // CVE‐2025‐8916
     exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
+  implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-flyway")
   implementation("org.flywaydb:flyway-database-postgresql")
