@@ -15,7 +15,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   ########################################
   # Security
   ########################################
@@ -132,7 +131,6 @@ jobs:
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
-
   #######################################
   # e2e tests (frontend & backend)
   #######################################
@@ -143,18 +141,12 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-  e2e-compile-html-report:
-    if: ${{ github.event_name != 'schedule' }}
-    needs:
-      - e2e-tests
-    uses: ./.github/workflows/e2e-compile-html-report.yml
-
-  e2e-push-reports-to-ris-reports:
+  e2e-compile-html-report-and-push-to-ris-reports:
     if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
-      - e2e-compile-html-report
-      - push-backend-and-frontend-reports-to-ris-reports # don't push at the same time
-    uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
+      - e2e-tests
+      - push-backend-and-frontend-reports-to-ris-reports
+    uses: ./.github/workflows/e2e-compile-html-report-and-push-to-ris-reports.yml
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
 
