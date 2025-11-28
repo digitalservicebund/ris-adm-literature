@@ -75,15 +75,6 @@ jobs:
       container-registry: ghcr.io
       image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  backend-push-reports-to-ris-reports:
-    if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
-    needs:
-      - backend-checks
-      - frontend-push-reports-to-ris-reports # this is to avoid our reports jobs (backend/frontend) to cause each other to
-    uses: ./.github/workflows/backend-push-reports-to-ris-reports.yml
-    secrets:
-      RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
-
   ###############
   # Frontend jobs
   ###############
@@ -128,13 +119,19 @@ jobs:
       container-registry: ghcr.io
       image-ref: ghcr.io/${{ github.repository }}-frontend:${{ github.event.pull_request.head.sha || github.sha }}
 
-  frontend-push-reports-to-ris-reports:
+  #######################################
+  # Push backend and frontend reports to ris-reports
+  #######################################
+
+  push-backend-and-frontend-reports-to-ris-reports:
     if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
+      - backend-checks
       - frontend-checks
-    uses: ./.github/workflows/frontend-push-reports-to-ris-reports.yml
+    uses: ./.github/workflows/push-backend-and-frontend-reports-to-ris-reports.yml
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
+
 
   #######################################
   # e2e tests (frontend & backend)
@@ -156,7 +153,7 @@ jobs:
     if: ${{ github.event_name != 'schedule' && !cancelled() && github.ref == 'refs/heads/main' }}
     needs:
       - e2e-compile-html-report
-      - backend-push-reports-to-ris-reports # don't push at the same time
+      - push-backend-and-frontend-reports-to-ris-reports # don't push at the same time
     uses: ./.github/workflows/e2e-push-reports-to-ris-reports.yml
     secrets:
       RIS_REPORTS_DEPLOY_PRIVATE_KEY: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
