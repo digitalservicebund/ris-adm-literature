@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Register this action before your build step. It will then be executed at the end of the job post-processing.
-      - uses: Kesin11/actions-timeline@v2
+      - uses: Kesin11/actions-timeline@08733fc79583dc40253a6bfc48679cb459059893
         with:
           # e.g.: ${{ secrets.MY_PAT }}
           # Default: ${{ github.token }}
