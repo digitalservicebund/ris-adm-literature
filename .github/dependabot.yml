@@ -9,11 +9,16 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-  # disabled due to npm attacks
-  #- package-ecosystem: "npm" # See documentation for possible values
-  #  directory: "./frontend" # Location of package manifests
-  #  schedule:
-  #    interval: "daily"
+# disabled due to npm attacks - to be re-enabled on 2025-01-12
+#  - package-ecosystem: "npm" # See documentation for possible values
+#    directory: "./frontend" # Location of package manifests
+#    schedule:
+#      interval: "daily"
+#    cooldown:
+#      default-days: 3
+#      semver-major-days: 14
+#      semver-minor-days: 7
+#      semver-patch-days: 3
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
