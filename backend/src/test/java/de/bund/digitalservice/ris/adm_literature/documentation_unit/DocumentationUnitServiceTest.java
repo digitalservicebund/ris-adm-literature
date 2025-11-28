@@ -7,8 +7,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
@@ -16,15 +14,17 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.bu
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 @WithMockAdmUser
 class DocumentationUnitServiceTest {
 
@@ -33,9 +33,6 @@ class DocumentationUnitServiceTest {
 
   @Mock
   private Publisher publisher;
-
-  @Mock
-  private Map<String, Publisher> publishers;
 
   @Mock
   private DocumentationUnitPersistenceService documentationUnitPersistenceService;
@@ -105,8 +102,7 @@ class DocumentationUnitServiceTest {
   }
 
   @Test
-  void findByDocumentNumber_notValidXml()
-    throws com.fasterxml.jackson.core.JsonProcessingException {
+  void findByDocumentNumber_notValidXml() throws JacksonException {
     // given
     String xml =
       """
@@ -121,7 +117,7 @@ class DocumentationUnitServiceTest {
       Optional.of(documentationUnit)
     );
     given(ldmlConverterService.convertToBusinessModel(documentationUnit)).willReturn(null);
-    given(objectMapper.writeValueAsString(null)).willThrow(JsonProcessingException.class);
+    given(objectMapper.writeValueAsString(null)).willThrow(JacksonException.class);
 
     // when
     Exception exception = catchException(() ->
@@ -152,7 +148,6 @@ class DocumentationUnitServiceTest {
   void publish_shouldCallDatabaseAndS3Port_onHappyPath() {
     String docNumber = "doc123";
     String fakeXml = "<test>xml</test>";
-    String bsgPublisherName = "publicBsgPublisher";
     String fakeJson = "{\"test\":\"json\"}";
 
     var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
@@ -164,7 +159,6 @@ class DocumentationUnitServiceTest {
     );
     when(ldmlPublishConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
     when(documentationUnitPersistenceService.publish(any(), any(), any())).thenReturn(publishedDoc);
-    when(publishers.get(bsgPublisherName)).thenReturn(publisher);
 
     documentationUnitService.publish(docNumber, content);
 
@@ -215,7 +209,7 @@ class DocumentationUnitServiceTest {
   }
 
   @Test
-  void publish_shouldUseBsgPublisher_whenCategoryIsVerwaltungsvorschriften() throws Exception {
+  void publish_shouldUseBsgPublisher_whenCategoryIsVerwaltungsvorschriften() {
     // given
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KSNR1234567890",
@@ -260,19 +254,13 @@ class DocumentationUnitServiceTest {
   }
 
   @Test
-  void publish_shouldUseLiteraturePublisher_whenCategoryIsLiteratur() throws Exception {
+  void publish_shouldUseLiteraturePublisher_whenCategoryIsLiteratur() {
     // given
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KALU123456789",
       UUID.randomUUID(),
       TEST_JSON,
       TEST_OLD_XML
-    );
-    DocumentationUnit publishedUnit = new DocumentationUnit(
-      "KALU123456789",
-      UUID.randomUUID(),
-      TEST_JSON,
-      TEST_NEW_XML
     );
     UliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createUli(
       "KALU123456789",
@@ -284,10 +272,6 @@ class DocumentationUnitServiceTest {
     given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
       TEST_NEW_XML
     );
-    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
-    given(
-      documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
-    ).willReturn(publishedUnit);
 
     // when
     Optional<DocumentationUnit> result = documentationUnitService.publish(
@@ -304,19 +288,13 @@ class DocumentationUnitServiceTest {
   }
 
   @Test
-  void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() throws Exception {
+  void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() {
     // given
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KALU123456789",
       UUID.randomUUID(),
       TEST_JSON,
       TEST_OLD_XML
-    );
-    DocumentationUnit publishedUnit = new DocumentationUnit(
-      "KALU123456789",
-      UUID.randomUUID(),
-      TEST_JSON,
-      TEST_NEW_XML
     );
     SliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createSli(
       "KALU123456789",
@@ -328,10 +306,6 @@ class DocumentationUnitServiceTest {
     given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
       TEST_NEW_XML
     );
-    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
-    given(
-      documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
-    ).willReturn(publishedUnit);
 
     // when
     Optional<DocumentationUnit> result = documentationUnitService.publish(

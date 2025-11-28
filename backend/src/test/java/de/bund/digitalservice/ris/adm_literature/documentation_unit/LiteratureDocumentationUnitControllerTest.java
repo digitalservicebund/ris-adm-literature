@@ -17,7 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -159,7 +159,8 @@ class LiteratureDocumentationUnitControllerTest {
     @DisplayName(
       "Request PUT on publish returns HTTP 200 for valid ULI request (supporting both paths)"
     )
-    void publish_uli_success(String urlTemplate) throws Exception {
+    @Test
+    void publish_uli_success() throws Exception {
       // given
       String documentNumber = "KSLU054920710";
       String validJsonRequest =
@@ -179,7 +180,7 @@ class LiteratureDocumentationUnitControllerTest {
       // when
       mockMvc
         .perform(
-          put(urlTemplate, documentNumber)
+          put("/api/literature/uli/documentation-units/{documentNumber}/publish", documentNumber)
             .content(validJsonRequest)
             .contentType(MediaType.APPLICATION_JSON)
         )

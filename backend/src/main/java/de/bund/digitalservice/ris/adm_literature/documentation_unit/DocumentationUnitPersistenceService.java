@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
@@ -24,11 +22,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Persistence service for CRUD operations on documentation units
@@ -74,6 +74,7 @@ public class DocumentationUnitPersistenceService {
    * @param documentCategory The document category of the documentation unit
    * @return The newly created and persisted {@link DocumentationUnit}.
    */
+  @Retryable(DataIntegrityViolationException.class)
   public DocumentationUnit create(DocumentCategory documentCategory) {
     // Issue for the very first documentation unit of a new year: If for this year
     // there is no
@@ -88,14 +89,11 @@ public class DocumentationUnitPersistenceService {
     // with a commit; therefore a secondary bean (DocumentationUnitCreationService)
     // is used to encapsulate
     // the transaction. This method must not have a @Transactional annotation.
-    RetryTemplate retryTemplate = RetryTemplate.builder()
-      .retryOn(DataIntegrityViolationException.class)
-      .build();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal();
-
-    DocumentationUnit documentationUnit = retryTemplate.execute(_ ->
-      documentationUnitCreationService.create(details.office(), documentCategory)
+    DocumentationUnit documentationUnit = documentationUnitCreationService.create(
+      details.office(),
+      documentCategory
     );
     log.info(
       "New documentation unit created with document number: {}",
@@ -387,7 +385,7 @@ public class DocumentationUnitPersistenceService {
   private AdmDocumentationUnitContent transformJson(@Nonnull String json) {
     try {
       return objectMapper.readValue(json, AdmDocumentationUnitContent.class);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalStateException("Exception during transforming json: " + json, e);
     }
   }

@@ -12,9 +12,10 @@ import javax.xml.namespace.QName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class KurzreferatTransformerTest {
 
   private KurzreferatTransformer kurzreferatTransformer;

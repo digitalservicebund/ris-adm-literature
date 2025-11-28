@@ -22,7 +22,6 @@ public class TestAdmDocumentationUnitContent {
       null,
       null,
       List.of(),
-      true,
       new DocumentType("VR", "Verwaltungsregelung"),
       null,
       List.of(),

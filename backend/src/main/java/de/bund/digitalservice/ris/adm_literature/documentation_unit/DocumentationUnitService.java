@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
@@ -19,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Application service for CRUD operations on document units.
@@ -65,7 +65,7 @@ public class DocumentationUnitService {
   private String convertToJson(IDocumentationContent iDocumentationContent) {
     try {
       return objectMapper.writeValueAsString(iDocumentationContent);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalStateException(e);
     }
   }

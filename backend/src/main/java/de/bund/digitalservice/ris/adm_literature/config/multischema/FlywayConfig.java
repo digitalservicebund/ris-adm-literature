@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * Manages the Flyway database migrations for the multi-schema setup.
  * <p>
  * This class provides a manual configuration to replace the default
- * {@link org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration},
+ * {@link org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration},
  * which was excluded. It ensures that the same set of migrations is
  * applied to both the 'adm' and 'lit' datasources.
  */

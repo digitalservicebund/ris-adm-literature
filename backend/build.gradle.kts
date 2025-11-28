@@ -3,7 +3,7 @@ import com.github.jk1.license.filter.LicenseBundleNormalizer
 
 plugins {
   java
-  id("org.springframework.boot") version "3.5.7"
+  id("org.springframework.boot") version "4.0.0"
   id("io.spring.dependency-management") version "1.1.7"
   id("jacoco")
   id("org.sonarqube") version "7.1.0.6387"
@@ -34,9 +34,9 @@ repositories {
   maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springCloudVersion"] = "2025.0.0-RC1"
+extra["springCloudVersion"] = "2025.1.0"
 
-val springdocVersion = "2.8.14"
+val springdocVersion = "3.0.0"
 val sentryVersion = "8.27.1"
 val hypersistenceVersion = "3.12.0"
 val postgresVersion = "42.7.8"
@@ -51,7 +51,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-web") {
+  implementation("org.springframework.boot:spring-boot-starter-webmvc") {
   }
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
     // CVE-2024-7254
@@ -64,6 +64,8 @@ dependencies {
     exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-flyway")
+  implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
   implementation("com.google.protobuf:protobuf-java:4.33.1")
@@ -71,13 +73,9 @@ dependencies {
   implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
-  implementation("org.springframework.retry:spring-retry")
-  implementation("org.flywaydb:flyway-core")
-  implementation("org.flywaydb:flyway-database-postgresql")
-  implementation("org.springframework.session:spring-session-core")
   implementation("jakarta.xml.bind:jakarta.xml.bind-api")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
-  implementation("io.sentry:sentry-spring-boot-starter-jakarta:$sentryVersion")
+  implementation("io.sentry:sentry-spring-boot-4:$sentryVersion")
   implementation("io.sentry:sentry-logback:$sentryVersion")
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
@@ -89,12 +87,17 @@ dependencies {
   // no-auto-pin-removal CVE-2025-49146
   runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
-  testImplementation("org.springframework.security:spring-security-test")
-  testImplementation("org.testcontainers:junit-jupiter")
-  testImplementation("org.testcontainers:postgresql")
-  testImplementation("io.hypersistence:hypersistence-utils-hibernate-63:$hypersistenceVersion")
+  testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+  testImplementation("org.testcontainers:testcontainers-postgresql")
+  testImplementation("io.hypersistence:hypersistence-utils-hibernate-71:$hypersistenceVersion")
   testImplementation("org.testcontainers:localstack:$localStackVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
