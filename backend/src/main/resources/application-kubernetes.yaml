@@ -1,0 +1,12 @@
+spring:
+  config:
+    import:
+      - 'configmap:database-config'
+      - 'configmap:/spring-config=true'
+      - 'file:/etc/secrets/'
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+      secrets:
+        enabled: true
