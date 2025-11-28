@@ -30,10 +30,9 @@ public class SecurityConfiguration {
    *
    * @param http The {@link HttpSecurity} object to configure security settings.
    * @return A {@link SecurityFilterChain} configured with security settings.
-   * @throws Exception If an exception occurs during security configuration.
    */
   @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain securityFilterChain(HttpSecurity http) {
     http
       .authorizeHttpRequests(authorize ->
         authorize
