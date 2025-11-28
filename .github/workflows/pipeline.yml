@@ -50,6 +50,8 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      id-token: write # This is used to complete the identity challenge with sigstore/fulcio..
+      packages: write
     with:
       run-id: ${{ github.run_id }}
       image-ref: ghcr.io/${{ github.repository }}-backend:${{ github.event.pull_request.head.sha || github.sha }}
