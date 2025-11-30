@@ -9,6 +9,7 @@ import InputText from 'primevue/inputtext'
 import TitelSection from './TitelSection.vue'
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
+import ActiveReferenceLiteratures from '@/views/literature/ActiveReferenceLiteratures.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -29,7 +30,7 @@ useScrollToHash()
       <div class="flex flex-row gap-24">
         <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
           <DokumentTyp
-            inputId="dokumenttypen"
+            :input-id="slotProps.id"
             v-model="dokumenttypen"
             aria-label="Dokumenttyp"
             :invalid="slotProps.hasError"
@@ -59,6 +60,19 @@ useScrollToHash()
           Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
           werden
         </p>
+      </div>
+    </div>
+
+    <div
+      id="aktivzitierung"
+      aria-label="Aktivzitierung Literatur"
+      class="flex flex-col gap-24 bg-white p-24"
+    >
+      <TitleElement>Aktivzitierung Literatur</TitleElement>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <ActiveReferenceLiteratures />
+        </div>
       </div>
     </div>
   </div>

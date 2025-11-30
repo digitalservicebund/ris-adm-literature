@@ -13,6 +13,7 @@ import { buildUrlWithParams } from '@/utils/urlHelpers'
 import { computed, type Ref } from 'vue'
 import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
 import type { SliDocumentationUnit, SliDocumentUnitResponse } from '@/domain/sli/sliDocumentUnit'
+import ActiveReferenceLiterature from '@/domain/activeReferenceLiterature'
 
 const ADM_DOCUMENTATION_UNITS_URL = '/adm/documentation-units'
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
@@ -187,6 +188,12 @@ function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentatio
     id: data.id,
     documentNumber: data.documentNumber,
   }
+
+  documentUnit.activeReferenceLiteratures =
+    documentUnit.activeReferenceLiteratures?.map(
+      (entry) => new ActiveReferenceLiterature({ ...entry }),
+    ) ?? []
+
   documentUnit.note = documentUnit.note || ''
   return documentUnit
 }
