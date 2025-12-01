@@ -27,6 +27,7 @@ export interface SliDocUnitListItem {
   dokumenttypen?: DocumentType[]
   hauptsachtitel?: string
   dokumentarischerTitel?: string
+  verfasser?: string[]
 }
 
 export interface PaginatedSliDocUnitListResponse {
