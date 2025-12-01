@@ -72,4 +72,38 @@ describe('AktivzitierungLiteratureItem', () => {
 
     expect(emitted().deleteAktivzitierungLiterature).toBeTruthy()
   })
+
+  it('enters and leaves edit mode on edit and cancel', async () => {
+    const { user } = renderComponent()
+    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
+    expect(screen.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
+    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeVisible()
+  })
+
+  it('renders summary with only title when other fields are missing', () => {
+    const mockAktivzitierung: AktivzitierungLiterature = {
+      id: '1',
+      newEntry: false,
+      hauptsachtitel: 'Nur Titel',
+      veroeffentlichungsjahr: undefined,
+      verfasser: [],
+      dokumenttypen: [],
+    }
+    renderComponent(mockAktivzitierung)
+    expect(screen.getByText('Nur Titel')).toBeVisible()
+  })
+
+  it('renders only title when other summary fields are missing', () => {
+    const mockAktivzitierung: AktivzitierungLiterature = {
+      id: '1',
+      newEntry: false,
+      hauptsachtitel: 'Nur Titel',
+    }
+
+    renderComponent(mockAktivzitierung)
+
+    expect(screen.getByText('Nur Titel')).toBeVisible()
+  })
 })

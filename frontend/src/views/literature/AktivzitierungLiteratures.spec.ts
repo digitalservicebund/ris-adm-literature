@@ -83,4 +83,22 @@ describe('AktivzitierungLiteratures', () => {
       screen.queryByRole('button', { name: 'Aktivzitierung hinzufügen' }),
     ).not.toBeInTheDocument()
   })
+
+  it('shows creation panel when list is empty', () => {
+    renderComponent([])
+    expect(screen.getByLabelText('Aktivzitierung übernehmen')).toBeInTheDocument()
+  })
+  it('hides creation input and shows add button when list has entries and panel is closed', () => {
+    const mockAktivzitierung: AktivzitierungLiterature = {
+      id: '1',
+      newEntry: false,
+      hauptsachtitel: 'Titel',
+    }
+
+    renderComponent([mockAktivzitierung])
+    expect(
+      screen.queryByRole('button', { name: 'Aktivzitierung übernehmen' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+  })
 })
