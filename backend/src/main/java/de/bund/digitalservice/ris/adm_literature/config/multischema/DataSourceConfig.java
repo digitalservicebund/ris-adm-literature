@@ -54,6 +54,7 @@ public class DataSourceConfig {
     log.info("Adm database url: '{}'", dataSourceProperties.getUrl());
     log.info("Adm database user: '{}'", dataSourceProperties.getUsername());
     log.info(environment.getProperty("spring.datasource.adm.username"));
+    log.info(environment.getProperty("adm.database.user"));
     log.info(environment.getProperty("spring.datasource.literature.database.user"));
     log.info(environment.getProperty("s3.bucket.adm.public.bucket-name"));
     return dataSourceProperties.initializeDataSourceBuilder().build();
