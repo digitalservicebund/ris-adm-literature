@@ -39,7 +39,6 @@ extra["springCloudVersion"] = "2025.1.0"
 val springdocVersion = "3.0.0"
 val sentryVersion = "8.27.1"
 val hypersistenceVersion = "3.13.0"
-val postgresVersion = "42.7.8"
 val commonsTextVersion = "1.14.0"
 val localStackVersion = "1.21.3"
 val awsVersion = "2.33.0"
@@ -70,8 +69,6 @@ dependencies {
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
-  // no-auto-pin-removal CVE-2025-49146
-  runtimeOnly("org.postgresql:postgresql:$postgresVersion")
   annotationProcessor("org.projectlombok:lombok")
   testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
   testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
