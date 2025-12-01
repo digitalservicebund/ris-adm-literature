@@ -101,4 +101,83 @@ describe('AktivzitierungLiteratures', () => {
     ).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
   })
+
+  it('adds a new entry via onAddItem and updates the list', async () => {
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungLiteratures: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              "<button aria-label=\"Fake add\" @click=\"$emit('update-aktivzitierung-literature', { id: '1', newEntry: true, hauptsachtitel: 'Neu' })\"></button>",
+          },
+        },
+      },
+    })
+
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+
+    await user.click(screen.getByRole('button', { name: 'Fake add' }))
+
+    expect(screen.queryAllByRole('listitem')).toHaveLength(1)
+    expect(screen.getByText('Neu')).toBeInTheDocument()
+  })
+
+  it('closes the creation panel when cancel is emitted from the input', async () => {
+    const user = userEvent.setup()
+
+    const existing: AktivzitierungLiterature = {
+      id: '1',
+      uuid: '1',
+      newEntry: false,
+      hauptsachtitel: 'Titel',
+    }
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungLiteratures: [existing],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template: '<button aria-label="Fake cancel" @click="$emit(\'cancel\')"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
+    expect(screen.getByRole('button', { name: 'Fake cancel' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Fake cancel' }))
+
+    expect(screen.queryByRole('button', { name: 'Fake cancel' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+  })
 })
