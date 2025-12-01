@@ -6,8 +6,8 @@ WORKDIR /frontend
 # copy both 'package.json' and 'package-lock.json' (if available)
 COPY /frontend/package*.json ./
 
-# install project dependencies
-RUN npm ci --omit=dev
+# install project dependencies, ignore scripts (.npmrc does not suffice)
+RUN npm ci --omit=dev --ignore-scripts
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
