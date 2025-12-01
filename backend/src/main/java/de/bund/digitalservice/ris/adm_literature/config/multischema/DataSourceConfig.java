@@ -1,5 +1,9 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +61,13 @@ public class DataSourceConfig {
     log.info(environment.getProperty("adm.database.user"));
     log.info(environment.getProperty("spring.datasource.literature.database.user"));
     log.info(environment.getProperty("s3.bucket.adm.public.bucket-name"));
+    if (environment.matchesProfiles("kubernetes")) {
+      try (Stream<Path> files = Files.walk(Path.of("/etc/secrets"))) {
+        files.forEach(p -> log.info(p.toAbsolutePath().toString()));
+      } catch (IOException e) {
+        log.error("Error: ", e);
+      }
+    }
     return dataSourceProperties.initializeDataSourceBuilder().build();
   }
 
