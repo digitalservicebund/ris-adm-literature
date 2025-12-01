@@ -7,7 +7,7 @@ WORKDIR /frontend
 COPY /frontend/package*.json ./
 
 # install project dependencies
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
