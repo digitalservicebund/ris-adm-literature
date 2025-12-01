@@ -24,10 +24,7 @@ public class DataSourceConfig {
   @Bean
   @ConfigurationProperties("spring.datasource.adm")
   public DataSourceProperties admDataSourceProperties() {
-    DataSourceProperties dataSourceProperties = new DataSourceProperties();
-    log.info("Adm database url: '{}'", dataSourceProperties.getUrl());
-    log.info("Adm database user: '{}'", dataSourceProperties.getUsername());
-    return dataSourceProperties;
+    return new DataSourceProperties();
   }
 
   /**
@@ -38,10 +35,7 @@ public class DataSourceConfig {
   @Bean
   @ConfigurationProperties("spring.datasource.literature")
   public DataSourceProperties literatureDataSourceProperties() {
-    DataSourceProperties dataSourceProperties = new DataSourceProperties();
-    log.info("Literature database url: '{}'", dataSourceProperties.getUrl());
-    log.info("Literature database user: '{}'", dataSourceProperties.getUsername());
-    return dataSourceProperties;
+    return new DataSourceProperties();
   }
 
   /**
@@ -51,7 +45,10 @@ public class DataSourceConfig {
    */
   @Bean(name = "admDataSource")
   public DataSource admDataSource() {
-    return admDataSourceProperties().initializeDataSourceBuilder().build();
+    DataSourceProperties dataSourceProperties = admDataSourceProperties();
+    log.info("Adm database url: '{}'", dataSourceProperties.getUrl());
+    log.info("Adm database user: '{}'", dataSourceProperties.getUsername());
+    return dataSourceProperties.initializeDataSourceBuilder().build();
   }
 
   /**
@@ -61,6 +58,9 @@ public class DataSourceConfig {
    */
   @Bean(name = "litDataSource")
   public DataSource litDataSource() {
-    return literatureDataSourceProperties().initializeDataSourceBuilder().build();
+    DataSourceProperties dataSourceProperties = literatureDataSourceProperties();
+    log.info("Literature database url: '{}'", dataSourceProperties.getUrl());
+    log.info("Literature database user: '{}'", dataSourceProperties.getUsername());
+    return dataSourceProperties.initializeDataSourceBuilder().build();
   }
 }
