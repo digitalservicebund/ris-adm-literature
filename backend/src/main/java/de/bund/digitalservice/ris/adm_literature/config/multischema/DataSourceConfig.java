@@ -1,17 +1,11 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.stream.Stream;
 import javax.sql.DataSource;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 /**
  * Configures the individual DataSources for each schema.
@@ -20,10 +14,7 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @Slf4j
-@RequiredArgsConstructor
 public class DataSourceConfig {
-
-  private final Environment environment;
 
   /**
    * Loads the data source properties for the 'adm' schema.
@@ -54,21 +45,7 @@ public class DataSourceConfig {
    */
   @Bean(name = "admDataSource")
   public DataSource admDataSource() {
-    DataSourceProperties dataSourceProperties = admDataSourceProperties();
-    log.info("Adm database url: '{}'", dataSourceProperties.getUrl());
-    log.info("Adm database user: '{}'", dataSourceProperties.getUsername());
-    log.info(environment.getProperty("spring.datasource.adm.username"));
-    log.info(environment.getProperty("adm.database.user"));
-    log.info(environment.getProperty("spring.datasource.literature.database.user"));
-    log.info(environment.getProperty("s3.bucket.adm.public.bucket-name"));
-    if (environment.matchesProfiles("kubernetes")) {
-      try (Stream<Path> files = Files.walk(Path.of("/etc/secrets"))) {
-        files.forEach(p -> log.info(p.toAbsolutePath().toString()));
-      } catch (IOException e) {
-        log.error("Error: ", e);
-      }
-    }
-    return dataSourceProperties.initializeDataSourceBuilder().build();
+    return admDataSourceProperties().initializeDataSourceBuilder().build();
   }
 
   /**
@@ -78,9 +55,6 @@ public class DataSourceConfig {
    */
   @Bean(name = "litDataSource")
   public DataSource litDataSource() {
-    DataSourceProperties dataSourceProperties = literatureDataSourceProperties();
-    log.info("Literature database url: '{}'", dataSourceProperties.getUrl());
-    log.info("Literature database user: '{}'", dataSourceProperties.getUsername());
-    return dataSourceProperties.initializeDataSourceBuilder().build();
+    return literatureDataSourceProperties().initializeDataSourceBuilder().build();
   }
 }
