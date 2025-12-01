@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * which are later used by the {@link SchemaRoutingDataSource}.
  */
 @Configuration
+@Slf4j
 public class DataSourceConfig {
 
   /**
@@ -22,7 +24,10 @@ public class DataSourceConfig {
   @Bean
   @ConfigurationProperties("spring.datasource.adm")
   public DataSourceProperties admDataSourceProperties() {
-    return new DataSourceProperties();
+    DataSourceProperties dataSourceProperties = new DataSourceProperties();
+    log.info("Adm database url: '{}'", dataSourceProperties.getUrl());
+    log.info("Adm database user: '{}'", dataSourceProperties.getUsername());
+    return dataSourceProperties;
   }
 
   /**
@@ -33,7 +38,10 @@ public class DataSourceConfig {
   @Bean
   @ConfigurationProperties("spring.datasource.literature")
   public DataSourceProperties literatureDataSourceProperties() {
-    return new DataSourceProperties();
+    DataSourceProperties dataSourceProperties = new DataSourceProperties();
+    log.info("Literature database url: '{}'", dataSourceProperties.getUrl());
+    log.info("Literature database user: '{}'", dataSourceProperties.getUsername());
+    return dataSourceProperties;
   }
 
   /**
