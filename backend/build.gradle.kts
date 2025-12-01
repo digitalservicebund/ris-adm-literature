@@ -54,22 +54,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc") {
-  }
-  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config") {
-    // CVE-2024-7254
-    exclude("com.google.protobuf", "protobuf-java")
-
-    // CVE-2023-51775
-    exclude("org.bitbucket.b_c", "jose4j")
-
-    // CVE‐2025‐8916
-    exclude("org.bouncycastle", " bcpkix-jdk18on")
-  }
+  implementation("org.springframework.boot:spring-boot-starter-webmvc")
+  implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config")
   implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
-  implementation("com.google.protobuf:protobuf-java:4.33.1")
-  implementation("org.bitbucket.b_c:jose4j:0.9.6")
-  implementation("org.bouncycastle:bcpkix-jdk18on:1.83")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
   implementation("org.apache.commons:commons-text:$commonsTextVersion")
   implementation("jakarta.xml.bind:jakarta.xml.bind-api")
