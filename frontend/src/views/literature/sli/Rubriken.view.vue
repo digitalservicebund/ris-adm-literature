@@ -9,7 +9,7 @@ import InputText from 'primevue/inputtext'
 import TitelSection from './TitelSection.vue'
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
-import ActiveReferenceLiteratures from '@/views/literature/ActiveReferenceLiteratures.vue'
+import AktivzitierungLiteratures from '@/views/literature/AktivzitierungLiteratures.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -25,8 +25,12 @@ useScrollToHash()
 
 <template>
   <div class="flex w-full flex-1 grow flex-col gap-24 p-24">
-    <div id="formaldaten" aria-label="Formaldaten" class="flex flex-col gap-24 bg-white p-24">
-      <TitleElement>Formaldaten</TitleElement>
+    <section
+      id="formaldaten"
+      aria-labelledby="formaldaten-title"
+      class="flex flex-col gap-24 bg-white p-24"
+    >
+      <TitleElement id="formaldaten-title">Formaldaten</TitleElement>
       <div class="flex flex-row gap-24">
         <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
           <DokumentTyp
@@ -61,19 +65,19 @@ useScrollToHash()
           werden
         </p>
       </div>
-    </div>
+    </section>
 
-    <div
+    <section
       id="aktivzitierung"
-      aria-label="Aktivzitierung Literatur"
+      aria-labelledby="aktivzitierung-title"
       class="flex flex-col gap-24 bg-white p-24"
     >
-      <TitleElement>Aktivzitierung Literatur</TitleElement>
+      <TitleElement id="aktivzitierung-title">Aktivzitierung Literatur</TitleElement>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <ActiveReferenceLiteratures />
+          <AktivzitierungLiteratures />
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>

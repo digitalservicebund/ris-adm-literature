@@ -1,5 +1,5 @@
 import type { DocumentType } from '../documentType'
-import type ActiveReferenceLiterature from '../activeReferenceLiterature'
+import type { AktivzitierungLiterature } from '../AktivzitierungLiterature.ts'
 
 export interface SliDocumentationUnit {
   readonly id: string
@@ -10,7 +10,7 @@ export interface SliDocumentationUnit {
   dokumentarischerTitel?: string
   hauptsachtitelZusatz?: string
   note: string
-  activeReferenceLiteratures?: ActiveReferenceLiterature[]
+  aktivzitierungLiteratures?: AktivzitierungLiterature[]
 }
 
 export interface SliDocumentUnitResponse {
