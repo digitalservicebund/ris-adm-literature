@@ -49,7 +49,10 @@ val commonsLang3 = "3.20.0"
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation("org.springframework.boot:spring-boot-starter-flyway")
+  implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-webmvc") {
   }
@@ -64,11 +67,6 @@ dependencies {
     exclude("org.bouncycastle", " bcpkix-jdk18on")
   }
   implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
-  implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.boot:spring-boot-starter-flyway")
-  implementation("org.flywaydb:flyway-database-postgresql")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-
   implementation("com.google.protobuf:protobuf-java:4.33.1")
   implementation("org.bitbucket.b_c:jose4j:0.9.6")
   implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
