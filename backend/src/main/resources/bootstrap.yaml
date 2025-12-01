@@ -8,9 +8,3 @@ spring:
           - name: database-config
           - labels:
               spring-config: "true"
-      secrets:
-        enabled: true
-        fail-fast: true
-        sources:
-          - labels:
-              spring-config: "true"
