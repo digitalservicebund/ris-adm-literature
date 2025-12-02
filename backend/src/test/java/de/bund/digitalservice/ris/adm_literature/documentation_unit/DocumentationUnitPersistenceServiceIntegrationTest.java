@@ -54,8 +54,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     index.setLangueberschrift(langueberschrift);
     index.setFundstellen(fundstellen);
     index.setZitierdaten(zitierdaten);
-    index.setDocumentationOffice(DocumentationOffice.BSG);
-    index.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     entityManager.persistAndFlush(index);
   }
 
@@ -132,8 +130,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setLangueberschrift("Lang");
     documentationUnitIndexEntity.setFundstellen("Fund");
     documentationUnitIndexEntity.setZitierdaten("2012-12-12");
-    documentationUnitIndexEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
-    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     documentationUnitEntity = entityManager.merge(documentationUnitEntity);
@@ -267,8 +263,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
     );
     documentationUnitIndexEntity.setZitierdaten("2011-11-11");
-    documentationUnitIndexEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
-    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
@@ -325,8 +319,6 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
     documentationUnitIndexEntity.setZitierdaten("2011-11-11");
-    documentationUnitIndexEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
-    documentationUnitIndexEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
