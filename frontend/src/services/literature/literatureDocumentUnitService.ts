@@ -122,7 +122,7 @@ export function useGetSliPaginatedDocUnits(
       titel: search?.value?.titel?.toString(),
       veroeffentlichungsjahr: search?.value?.veroeffentlichungsjahr?.toString(),
       dokumenttypen: search?.value?.dokumenttypen?.join(),
-      zitierdaten: search?.value?.verfasser?.join(),
+      verfasser: search?.value?.verfasser?.join(),
       sortByProperty: 'documentNumber',
       sortDirection: 'DESC',
     }),
