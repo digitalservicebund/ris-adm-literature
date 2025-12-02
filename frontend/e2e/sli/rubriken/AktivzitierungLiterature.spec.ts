@@ -106,7 +106,9 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
 
       const dokumenttypInput = aktiv.getByRole('combobox', { name: 'Dokumenttyp' })
       await dokumenttypInput.click()
+
       const optionsOverlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      await expect(optionsOverlay.getByRole('option', { name: 'Bib' })).toBeVisible()
       await optionsOverlay.getByRole('option', { name: 'Bib' }).click()
 
       const verfasserGroup = aktiv.getByLabel('Verfasser/in')

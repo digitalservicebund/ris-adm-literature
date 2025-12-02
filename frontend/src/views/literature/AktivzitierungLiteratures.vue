@@ -41,7 +41,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
       class="mt-16"
       @update-aktivzitierung-literature="onAddItem"
       @cancel="isCreationPanelOpened = false"
-      :show-cancel-button="aktivzitierungLiteratures.length > 0"
+      :show-cancel-button="false"
     />
     <Button
       v-else
