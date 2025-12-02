@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test'
 
 const getAktivzitierungSection = (page: Page) =>
-  page.getByRole('region', { name: 'Aktivzitierung Literatur' })
+  page.getByRole('region', { name: 'Aktivzitierung (selbst. Literatur)' })
 
 test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
   test.beforeEach(async ({ page }) => {
@@ -43,6 +43,26 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
 
       // when – user transfers values to the list
       await aktiv.getByRole('button', { name: 'Übernehmen' }).click()
+
+      // when – user opens the creation panel
+      await aktiv.getByRole('button', { name: 'Aktivzitierung hinzufügen' }).click()
+
+      // inputs are cleared after Übernehmen
+      await expect(aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })).toHaveValue('')
+      await expect(aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' })).toHaveValue('')
+
+      // eslint-disable-next-line playwright/no-raw-locators
+      const dokumenttypChipList = aktiv
+        .getByTestId('document-type-autocomplete')
+        .locator('[role="listbox"][aria-orientation="horizontal"]')
+
+      await expect(
+        // eslint-disable-next-line playwright/no-raw-locators
+        dokumenttypChipList.locator('.p-autocomplete-input-chip'),
+      ).toHaveCount(0)
+
+      const verfasserGroupAfter = aktiv.getByLabel('Verfasser/in')
+      await expect(verfasserGroupAfter.getByRole('textbox')).toHaveValue('')
 
       // then – entry appears in the Aktivzitierung list
       const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })

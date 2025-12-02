@@ -50,7 +50,6 @@ describe('AktivzitierungLiteratureInput', () => {
     const existing: AktivzitierungLiterature = {
       id: 'id-2',
       uuid: 'uuid-2',
-      newEntry: false,
       hauptsachtitel: '',
       veroeffentlichungsjahr: '',
       dokumenttypen: [],
@@ -81,7 +80,6 @@ describe('AktivzitierungLiteratureInput', () => {
     const existing: AktivzitierungLiterature = {
       id: 'id-1',
       uuid: 'uuid-1',
-      newEntry: false,
       hauptsachtitel: 'Titel',
       veroeffentlichungsjahr: '2024',
       dokumenttypen: [],
@@ -98,7 +96,7 @@ describe('AktivzitierungLiteratureInput', () => {
   })
 
   it('does not emit delete when entry has no uuid (new entry)', async () => {
-    const newEntry: AktivzitierungLiterature = { id: 'tmp-1', newEntry: true }
+    const newEntry: AktivzitierungLiterature = { id: 'tmp-1' }
     const { emitted } = renderComponent({ aktivzitierungLiterature: newEntry })
 
     const deleteButton = screen.queryByRole('button', { name: 'Eintrag löschen' })
@@ -111,7 +109,6 @@ describe('AktivzitierungLiteratureInput', () => {
       aktivzitierungLiterature: {
         id: '1',
         uuid: '1',
-        newEntry: false,
         hauptsachtitel: 'Alt',
         veroeffentlichungsjahr: '',
         dokumenttypen: [],
@@ -125,7 +122,6 @@ describe('AktivzitierungLiteratureInput', () => {
       aktivzitierungLiterature: {
         id: '1',
         uuid: '1',
-        newEntry: false,
         hauptsachtitel: 'Neu',
         veroeffentlichungsjahr: '',
         dokumenttypen: [],

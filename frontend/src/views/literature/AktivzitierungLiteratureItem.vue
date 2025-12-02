@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import ToolTip from '@/components/ToolTip.vue'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
+import IconBaselineDescription from '~icons/ic/outline-class'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature.ts'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 
@@ -38,7 +39,7 @@ const onDeleteAktivzitierungLiterature = (id: string) => {
   toggleEditMode()
 }
 
-const renderSummary = computed(() => {
+const metaSummary = computed(() => {
   const parts: string[] = []
 
   if (props.aktivzitierungLiterature.veroeffentlichungsjahr) {
@@ -49,7 +50,7 @@ const renderSummary = computed(() => {
     props.aktivzitierungLiterature.verfasser &&
     props.aktivzitierungLiterature.verfasser.length > 0
   ) {
-    parts.push(props.aktivzitierungLiterature.verfasser.join('/ '))
+    parts.push(props.aktivzitierungLiterature.verfasser.join(', '))
   }
 
   if (
@@ -65,12 +66,13 @@ const renderSummary = computed(() => {
     }
   }
 
-  const title = props.aktivzitierungLiterature.hauptsachtitel
-  if (title) {
-    parts.push(title)
-  }
-
   return parts.join(', ')
+})
+
+const titleSummary = computed(() => {
+  return (
+    props.aktivzitierungLiterature.hauptsachtitel || 'Hauptsachtitel oder dokumentarischer Titel'
+  )
 })
 </script>
 
@@ -83,10 +85,18 @@ const renderSummary = computed(() => {
     @cancel="onClickCancel"
     show-cancel-button
   />
-  <div v-else class="flex w-full items-center">
-    <div class="ris-label1-regular">
-      {{ renderSummary }}
+  <div v-else class="flex w-full items-center gap-10">
+    <IconBaselineDescription class="text-neutral-800" />
+
+    <div class="flex flex-col gap-2">
+      <div class="ris-body1-regular">
+        {{ metaSummary }}
+      </div>
+      <div class="ris-body2-regular text-gray-800">
+        {{ titleSummary }}
+      </div>
     </div>
+
     <ToolTip class="ml-auto" text="Aufklappen">
       <button
         aria-label="Aktivzitierung Editieren"

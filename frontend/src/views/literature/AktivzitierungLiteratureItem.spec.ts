@@ -7,7 +7,6 @@ import AktivzitierungLiteratureItem from './AktivzitierungLiteratureItem.vue'
 const mockAktivzitierung: AktivzitierungLiterature = {
   id: 'aktiv-1',
   uuid: 'aktiv-1',
-  newEntry: false,
   veroeffentlichungsjahr: '2025',
   verfasser: ['again and again'],
   dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
@@ -28,7 +27,8 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders the summary in view mode', () => {
     renderComponent()
 
-    expect(screen.getByText('2025, again and again, (Ebs), a new one')).toBeInTheDocument()
+    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
+    expect(screen.getByText('a new one')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
   })
 
@@ -56,7 +56,8 @@ describe('AktivzitierungLiteratureItem', () => {
     await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
 
     expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
-    expect(screen.getByText('2025, again and again, (Ebs), a new one')).toBeInTheDocument()
+    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
+    expect(screen.getByText('a new one')).toBeInTheDocument()
   })
 
   it('emits deleteAktivzitierungLiterature when delete is clicked', async () => {
@@ -85,7 +86,6 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders summary with only title when other fields are missing', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      newEntry: false,
       hauptsachtitel: 'Nur Titel',
       veroeffentlichungsjahr: undefined,
       verfasser: [],
@@ -98,7 +98,6 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders only title when other summary fields are missing', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      newEntry: false,
       hauptsachtitel: 'Nur Titel',
     }
 

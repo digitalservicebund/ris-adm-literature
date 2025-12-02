@@ -24,39 +24,10 @@ const initialUuid = props.aktivzitierungLiterature?.uuid ?? crypto.randomUUID()
 const aktivzitierungLiterature = ref<AktivzitierungLiterature>({
   id: props.aktivzitierungLiterature?.id ?? initialUuid,
   uuid: initialUuid,
-  newEntry: props.aktivzitierungLiterature?.uuid === undefined,
   hauptsachtitel: props.aktivzitierungLiterature?.hauptsachtitel || '',
   veroeffentlichungsjahr: props.aktivzitierungLiterature?.veroeffentlichungsjahr || '',
   dokumenttypen: props.aktivzitierungLiterature?.dokumenttypen || [],
   verfasser: props.aktivzitierungLiterature?.verfasser || [],
-})
-
-const hauptsachtitel = computed({
-  get: () => aktivzitierungLiterature.value.hauptsachtitel || '',
-  set: (value: string) => {
-    aktivzitierungLiterature.value.hauptsachtitel = value
-  },
-})
-
-const veroeffentlichungsjahr = computed({
-  get: () => aktivzitierungLiterature.value.veroeffentlichungsjahr || '',
-  set: (value: string) => {
-    aktivzitierungLiterature.value.veroeffentlichungsjahr = value
-  },
-})
-
-const dokumenttypen = computed({
-  get: () => aktivzitierungLiterature.value.dokumenttypen || [],
-  set: (value) => {
-    aktivzitierungLiterature.value.dokumenttypen = value
-  },
-})
-
-const verfasser = computed({
-  get: () => aktivzitierungLiterature.value.verfasser ?? [],
-  set: (value: string[]) => {
-    aktivzitierungLiterature.value.verfasser = value
-  },
 })
 
 const isEmpty = computed(() => {
@@ -93,7 +64,6 @@ watch(
       aktivzitierungLiterature.value = {
         id: newVal.id || crypto.randomUUID(),
         uuid: newVal.uuid || crypto.randomUUID(),
-        newEntry: newVal.uuid === undefined,
         hauptsachtitel: newVal.hauptsachtitel || '',
         veroeffentlichungsjahr: newVal.veroeffentlichungsjahr || '',
         dokumenttypen: newVal.dokumenttypen || [],
@@ -111,7 +81,7 @@ watch(
       <InputField id="hauptsachtitel" v-slot="slotProps" label="Hauptsachtitel *">
         <InputText
           :id="slotProps.id"
-          v-model="hauptsachtitel"
+          v-model="aktivzitierungLiterature.hauptsachtitel"
           aria-label="Hauptsachtitel"
           :invalid="slotProps.hasError"
           fluid
@@ -121,7 +91,7 @@ watch(
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
           <InputText
             :id="slotProps.id"
-            v-model="veroeffentlichungsjahr"
+            v-model="aktivzitierungLiterature.veroeffentlichungsjahr"
             aria-label="Veröffentlichungsjahr"
             fluid
           />
@@ -130,7 +100,7 @@ watch(
         <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
           <DokumentTyp
             :input-id="slotProps.id"
-            v-model="dokumenttypen"
+            v-model="aktivzitierungLiterature.dokumenttypen"
             aria-label="Dokumenttyp"
             :document-category="DocumentCategory.LITERATUR_SELBSTAENDIG"
             :invalid="slotProps.hasError"
@@ -141,7 +111,7 @@ watch(
       <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in *">
         <RisChipsInput
           :input-id="slotProps.id"
-          v-model="verfasser"
+          v-model="aktivzitierungLiterature.verfasser!"
           aria-label="Verfasser/in"
           :invalid="slotProps.hasError"
         />

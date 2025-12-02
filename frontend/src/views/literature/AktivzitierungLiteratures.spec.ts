@@ -10,7 +10,6 @@ const mockAktivzitierungen: AktivzitierungLiterature[] = [
   {
     id: 'aktiv-1',
     uuid: 'aktiv-1',
-    newEntry: false,
     veroeffentlichungsjahr: '2025',
     verfasser: ['again and again'],
     dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
@@ -69,7 +68,8 @@ describe('AktivzitierungLiteratures', () => {
     renderComponent(mockAktivzitierungen)
 
     expect(screen.queryAllByRole('listitem')).toHaveLength(1)
-    expect(screen.getByText('2025, again and again, (Ebs), a new one')).toBeInTheDocument()
+    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
+    expect(screen.getByText('a new one')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
   })
 
@@ -91,7 +91,6 @@ describe('AktivzitierungLiteratures', () => {
   it('hides creation input and shows add button when list has entries and panel is closed', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      newEntry: false,
       hauptsachtitel: 'Titel',
     }
 
@@ -144,7 +143,6 @@ describe('AktivzitierungLiteratures', () => {
     const existing: AktivzitierungLiterature = {
       id: '1',
       uuid: '1',
-      newEntry: false,
       hauptsachtitel: 'Titel',
     }
 
