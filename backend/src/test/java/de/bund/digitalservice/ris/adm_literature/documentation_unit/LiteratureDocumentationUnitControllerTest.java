@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,15 +41,70 @@ class LiteratureDocumentationUnitControllerTest {
   class GetMultipleDocuments {
 
     @Test
-    @DisplayName("GET returns HTTP 200 and JSON")
-    void getDocs() throws Exception {
+    @DisplayName("GET returns HTTP 200 and sliReferenceSearchOverview in JSON")
+    void getDocsFormatted() throws Exception {
       // given nothing
       // when
       mockMvc
         .perform(get("/api/literature/documentation-units"))
-        //then
+        // then
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.json.test").isNotEmpty());
+        .andExpect(
+          content()
+            .json(
+              """
+              {
+                "sliReferenceSearchOverview": [
+                  {
+                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "documentNumber": "VALID123456789",
+                    "veroeffentlichungsjahr": "1999-2022",
+                    "dokumenttypen": [
+                      {
+                        "uuid": "11185f64-5717-4562-b3fc-2c963f66afa6",
+                        "abbreviation": "DokAbbrv",
+                        "name": "Doktyp 1"
+                      }
+                    ],
+                    "hauptsachtitel": "Dies ist der Hauptsachtitel",
+                    "dokumentarischerTitel": "Dies ist der dokumentarische Titel",
+                    "verfasser": [
+                      "Name 1",
+                      "Name 2"
+                    ]
+                  },
+                  {
+                    "id": "33385f64-5717-4562-b3fc-2c963f66afa6",
+                    "documentNumber": "VALID987654321",
+                    "veroeffentlichungsjahr": "2025",
+                    "dokumenttypen": [
+                      {
+                        "uuid": "44485f64-5717-4562-b3fc-2c963f66afa6",
+                        "abbreviation": "DokAbbrv 2",
+                        "name": "Doktyp 2"
+                      }
+                    ],
+                    "hauptsachtitel": "Dies ist der 2. Hauptsachtitel",
+                    "dokumentarischerTitel": "Dies ist der 2. dokumentarische Titel",
+                    "verfasser": [
+                      "Name 3",
+                      "Name 4"
+                    ]
+                  }
+                ],
+                "page": {
+                  "size": 15,
+                  "number": 0,
+                  "numberOfElements": 2,
+                  "totalElements": 2,
+                  "first": true,
+                  "last": true,
+                  "empty": false
+                }
+              }
+              """
+            )
+        );
     }
   }
 
