@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +44,60 @@ public class LiteratureDocumentationUnitController {
    * @return Document unit (should be multiple in the future)
    */
   @GetMapping("api/literature/documentation-units")
-  public ResponseEntity<DocumentationUnit> find() {
-    String json = "{\"test\":\"content\"}";
-    UUID uuid = UUID.randomUUID();
-    DocumentationUnit unit = new DocumentationUnit("DOCNR123456", uuid, json);
-    return ResponseEntity.ok(unit);
+  public ResponseEntity<String> find() {
+    String json =
+      """
+      {
+        "documentationUnitsOverview": [
+          {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "documentNumber": "VALID123456789",
+            "veroeffentlichungsjahr": "1999-2022",
+            "dokumenttypen": [
+              {
+                "uuid": "11185f64-5717-4562-b3fc-2c963f66afa6",
+                "abbreviation": "DokAbbrv",
+                "name": "Doktyp 1"
+              }
+            ],
+            "hauptsachtitel": "Dies ist der Hauptsachtitel",
+            "dokumentarischerTitel": "Dies ist der dokumentarische Titel",
+            "verfasser": [
+              "Name 1",
+              "Name 2"
+            ]
+          },
+          {
+            "id": "33385f64-5717-4562-b3fc-2c963f66afa6",
+            "documentNumber": "VALID987654321",
+            "veroeffentlichungsjahr": "2025",
+            "dokumenttypen": [
+              {
+                "uuid": "44485f64-5717-4562-b3fc-2c963f66afa6",
+                "abbreviation": "DokAbbrv 2",
+                "name": "Doktyp 2"
+              }
+            ],
+            "hauptsachtitel": "Dies ist der 2. Hauptsachtitel",
+            "dokumentarischerTitel": "Dies ist der 2. dokumentarische Titel",
+            "verfasser": [
+              "Name 3",
+              "Name 4"
+            ]
+          }
+        ],
+        "page": {
+          "size": 15,
+          "number": 0,
+          "numberOfElements": 2,
+          "totalElements": 2,
+          "first": true,
+          "last": true,
+          "empty": false
+        }
+      }
+      """;
+    return ResponseEntity.ok(json);
   }
 
   /**
