@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
+import type { SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
 
 type Props = {
   aktivzitierungLiterature?: AktivzitierungLiterature
@@ -137,5 +138,22 @@ describe('AktivzitierungLiteratureInput', () => {
     expect(
       screen.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
     ).toHaveValue('Neu')
+  })
+
+  it('emits the search params when clicking on the search button', async () => {
+    const { user, emitted } = renderComponent()
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    await user.type(titleInput, 'Testtitel')
+
+    const searchButton = screen.getByRole('button', { name: 'Selbststaendige Literatur suchen' })
+
+    await user.click(searchButton)
+
+    expect(emitted().search).toBeTruthy()
+    const payload = (emitted().search as [SliDocUnitSearchParams[]])[0][0]
+    expect(payload?.titel).toBe('Testtitel')
   })
 })

@@ -128,7 +128,7 @@ export function useGetSliPaginatedDocUnits(
     }),
   )
 
-  return useApiFetch(urlWithParams).json()
+  return useApiFetch(urlWithParams, { immediate: false }).json()
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {

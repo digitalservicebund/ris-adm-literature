@@ -5,6 +5,8 @@ import { createTestingPinia } from '@pinia/testing'
 import AktivzitierungLiteratures from './AktivzitierungLiteratures.vue'
 import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
+import { ref } from 'vue'
+import { flushPromises } from '@vue/test-utils'
 
 const addToastMock = vi.fn()
 vi.mock('primevue', () => ({
@@ -136,6 +138,8 @@ describe('AktivzitierungLiteratures', () => {
       },
     })
 
+    screen.debug()
+
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
 
     await user.click(screen.getByRole('button', { name: 'Fake add' }))
@@ -184,5 +188,104 @@ describe('AktivzitierungLiteratures', () => {
 
     expect(screen.queryByRole('button', { name: 'Fake cancel' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+  })
+
+  it('triggers a search when clicking on search', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([]),
+          ITEMS_PER_PAGE: ref(10),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, { titel: 'searched titel' })
+  })
+
+  it('should show an error toast on fetching error', async () => {
+    vi.resetModules()
+    const errorRef = ref()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([]),
+          ITEMS_PER_PAGE: ref(10),
+          fetchPaginatedData: vi.fn(),
+          error: errorRef,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+      },
+    })
+
+    errorRef.value = new Error('fetch error')
+    await flushPromises()
+
+    expect(addToastMock).toHaveBeenCalledWith({
+      severity: 'error',
+      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
+    })
   })
 })

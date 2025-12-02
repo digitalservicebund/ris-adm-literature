@@ -382,7 +382,8 @@ describe('literatureDocumentUnitService', () => {
       .spyOn(window, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
 
-    const { error, isFetching } = useGetSliPaginatedDocUnits(ref(5), 100, ref(undefined))
+    const { error, isFetching, execute } = useGetSliPaginatedDocUnits(ref(5), 100, ref(undefined))
+    execute()
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     expect(isFetching.value).toBe(false)
@@ -398,7 +399,7 @@ describe('literatureDocumentUnitService', () => {
       .spyOn(window, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
 
-    const { error, isFetching } = useGetSliPaginatedDocUnits(
+    const { error, isFetching, execute } = useGetSliPaginatedDocUnits(
       ref(5),
       100,
       ref({
@@ -408,6 +409,7 @@ describe('literatureDocumentUnitService', () => {
         dokumenttypen: ['Anordnung', 'Bekanntmachung'],
       }),
     )
+    execute()
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
 
     expect(isFetching.value).toBe(false)
