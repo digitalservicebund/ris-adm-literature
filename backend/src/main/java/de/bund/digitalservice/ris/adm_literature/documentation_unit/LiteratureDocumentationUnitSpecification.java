@@ -5,21 +5,18 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-@RequiredArgsConstructor
-public class LiteratureDocumentationUnitSpecification
+public record LiteratureDocumentationUnitSpecification(
+  String documentNumber,
+  String veroeffentlichungsjahr,
+  List<DocumentType> dokumenttypen,
+  String titel,
+  List<String> verfasser
+)
   implements Specification<DocumentationUnitEntity> {
-
-  private final String documentNumber;
-  private final String veroeffentlichungsjahr;
-  private final transient List<DocumentType> dokumenttypen;
-  private final String titel;
-  private final transient List<String> verfasser;
-
   @Override
   public Predicate toPredicate(
     @Nonnull Root<DocumentationUnitEntity> root,
@@ -65,11 +62,31 @@ public class LiteratureDocumentationUnitSpecification
       }
 
       if (!CollectionUtils.isEmpty(dokumenttypen)) {
-        predicates.add(indexJoin.get("dokumenttypen").in(dokumenttypen));
+        Predicate[] typePredicates = dokumenttypen
+          .stream()
+          .map(type ->
+            criteriaBuilder.like(
+              criteriaBuilder.lower(indexJoin.get("dokumenttypen")),
+              sqlContains(type.abbreviation())
+            )
+          )
+          .toArray(Predicate[]::new);
+
+        predicates.add(criteriaBuilder.or(typePredicates));
       }
 
       if (!CollectionUtils.isEmpty(verfasser)) {
-        predicates.add(indexJoin.get("verfasser").in(verfasser));
+        Predicate[] authorPredicates = verfasser
+          .stream()
+          .map(author ->
+            criteriaBuilder.like(
+              criteriaBuilder.lower(indexJoin.get("verfasser")),
+              sqlContains(author)
+            )
+          )
+          .toArray(Predicate[]::new);
+
+        predicates.add(criteriaBuilder.or(authorPredicates));
       }
     }
 
