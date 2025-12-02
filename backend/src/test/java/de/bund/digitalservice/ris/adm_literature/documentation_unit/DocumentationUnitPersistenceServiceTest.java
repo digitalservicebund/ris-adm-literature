@@ -65,7 +65,7 @@ class DocumentationUnitPersistenceServiceTest {
   }
 
   @Test
-  void findDocumentationUnitOverviewElements() {
+  void findAdmDocumentationUnitOverviewElements() {
     // given
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(UUID.randomUUID());
@@ -91,8 +91,8 @@ class DocumentationUnitPersistenceServiceTest {
 
     // when
     de.bund.digitalservice.ris.adm_literature.page.Page<DocumentationUnitOverviewElement> result =
-      documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
+      documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
+        new AdmDocumentationUnitQuery(
           null,
           null,
           null,

@@ -165,8 +165,56 @@ public class DocumentationUnitPersistenceService {
    * @return Page object with documentation unit overview elements and pagination data
    */
   @Transactional(readOnly = true)
-  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery query
+  public Page<DocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+    @Nonnull AdmDocumentationUnitQuery query
+  ) {
+    QueryOptions queryOptions = query.queryOptions();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
+      query.documentNumber(),
+      query.langueberschrift(),
+      query.fundstellen(),
+      query.zitierdaten()
+    );
+    var documentationUnitsPage = documentationUnitRepository.findAll(
+      documentUnitSpecification,
+      pageable
+    );
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+
+      if (index == null) {
+        return new DocumentationUnitOverviewElement(
+          documentationUnit.getId(),
+          documentationUnit.getDocumentNumber(),
+          Collections.emptyList(),
+          null,
+          Collections.emptyList()
+        );
+      }
+
+      return new DocumentationUnitOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        splitBySeparator(index.getZitierdaten()),
+        index.getLangueberschrift(),
+        splitBySeparator(index.getFundstellen())
+      );
+    });
+  }
+
+  /**
+   * Returns paginated documentation units overview elements.
+   *
+   * @param query The query
+   * @return Page object with documentation unit overview elements and pagination data
+   */
+  @Transactional(readOnly = true)
+  public Page<DocumentationUnitOverviewElement> findLiteratureDocumentationUnitOverviewElements(
+    @Nonnull LiteratureDocumentationUnitQuery query
   ) {
     QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());

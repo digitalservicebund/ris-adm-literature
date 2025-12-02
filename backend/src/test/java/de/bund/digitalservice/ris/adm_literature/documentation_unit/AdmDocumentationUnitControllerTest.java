@@ -149,7 +149,7 @@ class AdmDocumentationUnitControllerTest {
 
     @BeforeEach
     void beforeEach() {
-      given(documentationUnitService.findDocumentationUnitOverviewElements(any())).willReturn(
+      given(documentationUnitService.findAdmDocumentationUnitOverviewElements(any())).willReturn(
         TestPage.create(
           List.of(
             new DocumentationUnitOverviewElement(
@@ -249,7 +249,7 @@ class AdmDocumentationUnitControllerTest {
         Sort.Direction.DESC,
         true
       );
-      DocumentationUnitQuery expectedQuery = new DocumentationUnitQuery(
+      AdmDocumentationUnitQuery expectedQuery = new AdmDocumentationUnitQuery(
         documentNumber,
         langueberschrift,
         fundstellen,
@@ -258,7 +258,7 @@ class AdmDocumentationUnitControllerTest {
       );
 
       given(
-        documentationUnitService.findDocumentationUnitOverviewElements(expectedQuery)
+        documentationUnitService.findAdmDocumentationUnitOverviewElements(expectedQuery)
       ).willReturn(
         TestPage.create(
           List.of(
@@ -299,8 +299,8 @@ class AdmDocumentationUnitControllerTest {
       throws Exception {
       // given
       given(
-        documentationUnitService.findDocumentationUnitOverviewElements(
-          any(DocumentationUnitQuery.class)
+        documentationUnitService.findAdmDocumentationUnitOverviewElements(
+          any(AdmDocumentationUnitQuery.class)
         )
       ).willReturn(TestPage.create(List.of()));
 
@@ -310,12 +310,14 @@ class AdmDocumentationUnitControllerTest {
         .andExpect(status().isOk());
 
       // then
-      ArgumentCaptor<DocumentationUnitQuery> queryCaptor = ArgumentCaptor.forClass(
-        DocumentationUnitQuery.class
+      ArgumentCaptor<AdmDocumentationUnitQuery> queryCaptor = ArgumentCaptor.forClass(
+        AdmDocumentationUnitQuery.class
       );
-      verify(documentationUnitService).findDocumentationUnitOverviewElements(queryCaptor.capture());
+      verify(documentationUnitService).findAdmDocumentationUnitOverviewElements(
+        queryCaptor.capture()
+      );
 
-      DocumentationUnitQuery capturedQuery = queryCaptor.getValue();
+      AdmDocumentationUnitQuery capturedQuery = queryCaptor.getValue();
       assertThat(capturedQuery.queryOptions().sortByProperty()).isEqualTo(expectedSortProperty);
     }
 

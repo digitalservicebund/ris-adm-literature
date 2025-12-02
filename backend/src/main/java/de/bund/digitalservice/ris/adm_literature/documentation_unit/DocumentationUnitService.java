@@ -145,9 +145,19 @@ public class DocumentationUnitService {
     publisher.publish(publishOptions);
   }
 
-  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery queryOptions
+  public Page<DocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+    @Nonnull AdmDocumentationUnitQuery queryOptions
   ) {
-    return documentationUnitPersistenceService.findDocumentationUnitOverviewElements(queryOptions);
+    return documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
+      queryOptions
+    );
+  }
+
+  public Page<DocumentationUnitOverviewElement> findLiteratureDocumentationUnitOverviewElements(
+    @Nonnull LiteratureDocumentationUnitQuery queryOptions
+  ) {
+    return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
+      queryOptions
+    );
   }
 }

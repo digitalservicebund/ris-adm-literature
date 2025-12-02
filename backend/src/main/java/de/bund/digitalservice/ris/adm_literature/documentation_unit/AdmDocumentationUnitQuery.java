@@ -12,7 +12,7 @@ import jakarta.annotation.Nonnull;
  * @param zitierdaten Zitierdaten to search for
  * @param queryOptions Page query options
  */
-public record DocumentationUnitQuery(
+public record AdmDocumentationUnitQuery(
   String documentNumber,
   String langueberschrift,
   String fundstellen,

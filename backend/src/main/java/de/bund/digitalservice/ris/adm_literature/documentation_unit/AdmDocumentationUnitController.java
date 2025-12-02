@@ -74,8 +74,8 @@ public class AdmDocumentationUnitController {
     );
 
     var paginatedDocumentationUnits =
-      documentationUnitService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
+      documentationUnitService.findAdmDocumentationUnitOverviewElements(
+        new AdmDocumentationUnitQuery(
           StringUtils.trimToNull(documentNumber),
           StringUtils.trimToNull(langueberschrift),
           StringUtils.trimToNull(fundstellen),
