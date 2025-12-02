@@ -187,6 +187,7 @@ function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentatio
     id: data.id,
     documentNumber: data.documentNumber,
   }
+
   documentUnit.note = documentUnit.note || ''
   return documentUnit
 }

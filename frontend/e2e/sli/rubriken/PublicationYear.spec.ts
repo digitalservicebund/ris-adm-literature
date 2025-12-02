@@ -1,4 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
+
+const getFormaldatenSection = (page: Page) => page.getByRole('region', { name: 'Formaldaten' })
 
 test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
   test(
@@ -9,12 +11,13 @@ test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
       await page.goto('/literatur-selbstaendig')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.waitForURL(/dokumentationseinheit/)
+      const formaldaten = getFormaldatenSection(page)
 
       // then - field marked as required
-      await expect(page.getByText('Veröffentlichungsjahr *')).toBeVisible()
+      await expect(formaldaten.getByText('Veröffentlichungsjahr *')).toBeVisible()
 
       // when - enter alphanumeric input (variable length)
-      const veroeffentlichungsjahrInput = page.getByRole('textbox', {
+      const veroeffentlichungsjahrInput = formaldaten.getByRole('textbox', {
         name: 'Veröffentlichungsjahr',
       })
       await veroeffentlichungsjahrInput.fill('2020 bis 2025 $%&abc123 🎇')

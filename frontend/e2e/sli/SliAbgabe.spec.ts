@@ -28,12 +28,16 @@ test.describe('SLI AbgabePage', () => {
     'Should show validation error when mandatory fields contain whitespaces only',
     { tag: ['@RISDEV-10125'] },
     async ({ page }) => {
-      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Bi')
       const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
       await overlay.getByRole('option', { name: 'Bib' }).click()
-      await page.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(' ')
-      await page.getByRole('textbox', { name: 'Hauptsachtitel *', exact: true }).fill('     ')
+      await formaldaten.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(' ')
+      await formaldaten
+        .getByRole('textbox', { name: 'Hauptsachtitel *', exact: true })
+        .fill('     ')
 
       // when
       await page.getByText('Abgabe').click()
@@ -52,15 +56,16 @@ test.describe('SLI AbgabePage', () => {
     'Should show success message and enable publish button when all mandatory fields are filled',
     { tag: ['@RISDEV-10125'] },
     async ({ page }) => {
-      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Bi')
       const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
       await overlay.getByRole('option', { name: 'Bib' }).click()
 
-      await page
+      await formaldaten
         .getByRole('textbox', { name: 'Hauptsachtitel *', exact: true })
         .fill('Die unendliche Verhandlung')
-      await page.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill('2025')
+      await formaldaten.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill('2025')
       await page.getByRole('button', { name: 'Speichern' }).click()
 
       // when
@@ -77,15 +82,17 @@ test.describe('SLI AbgabePage', () => {
     'Should publish successfully when all mandatory fields are filled',
     { tag: ['@RISDEV-10125', '@RISDEV-10126'] },
     async ({ page }) => {
-      const input = page.getByRole('combobox', { name: /^Dokumenttyp/ })
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+
+      const input = formaldaten.getByRole('combobox', { name: /^Dokumenttyp/ })
       await input.fill('Bi')
       const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
       await overlay.getByRole('option', { name: 'Bib' }).click()
 
-      await page
+      await formaldaten
         .getByRole('textbox', { name: /^Hauptsachtitel/ })
         .fill('Die unendliche Verhandlung')
-      await page.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+      await formaldaten.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
       await page.getByRole('button', { name: 'Speichern' }).click()
 
       await page.getByText('Abgabe').click()
@@ -100,12 +107,13 @@ test.describe('SLI AbgabePage', () => {
     'Should show a publication error on backend error 500',
     { tag: ['@RISDEV-10126'] },
     async ({ page }) => {
-      const input = page.getByRole('combobox', { name: /^Dokumenttyp/ })
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+      const input = formaldaten.getByRole('combobox', { name: /^Dokumenttyp/ })
       await input.fill('Bi')
       const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
       await overlay.getByRole('option', { name: 'Bib' }).click()
-      await page.getByRole('textbox', { name: /^Hauptsachtitel/ }).fill('Testtitel')
-      await page.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+      await formaldaten.getByRole('textbox', { name: /^Hauptsachtitel/ }).fill('Testtitel')
+      await formaldaten.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
       await page.getByRole('button', { name: 'Speichern' }).click()
       await page.getByText('Abgabe').click()
 
@@ -126,22 +134,24 @@ test.describe('SLI AbgabePage', () => {
     { tag: ['@RISDEV-10125'] },
     async ({ page }) => {
       // when
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
       await page.getByText('Abgabe').click()
       await page.getByRole('link', { name: 'Dokumenttyp' }).click()
       // then
-      await expect(page.getByText('Dokumenttyp')).toBeInViewport()
+
+      await expect(formaldaten.getByText('Dokumenttyp')).toBeInViewport()
 
       // when
       await page.getByText('Abgabe').click()
       await page.getByRole('link', { name: 'Veröffentlichungsjahr' }).click()
       // then
-      await expect(page.getByText('Veröffentlichungsjahr')).toBeInViewport()
+      await expect(formaldaten.getByText('Veröffentlichungsjahr')).toBeInViewport()
 
       // when
       await page.getByText('Abgabe').click()
       await page.getByRole('link', { name: 'Hauptsachtitel / Dokumentarischer Titel' }).click()
       // then
-      await expect(page.getByText('Hauptsachtitel *', { exact: true })).toBeInViewport()
+      await expect(formaldaten.getByText('Hauptsachtitel *', { exact: true })).toBeInViewport()
     },
   )
 })

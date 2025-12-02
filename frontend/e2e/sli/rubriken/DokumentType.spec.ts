@@ -1,4 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
+
+const getFormaldatenSection = (page: Page) => page.getByRole('region', { name: 'Formaldaten' })
 
 test.describe('SLI Rubriken – Dokumenttyp', () => {
   test.beforeEach(async ({ page }) => {
@@ -11,8 +13,10 @@ test.describe('SLI Rubriken – Dokumenttyp', () => {
     'selecting and filtering document types shows abbreviation + name',
     { tag: ['@RISDEV-10120'] },
     async ({ page }) => {
+      const formaldaten = getFormaldatenSection(page)
+
       // given – new SLI document edit view
-      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.click()
       const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
       await expect(overlay.getByRole('option', { name: 'Bib' })).toBeVisible()
@@ -44,8 +48,10 @@ test.describe('SLI Rubriken – Dokumenttyp', () => {
     'removing a selected document type via chip X works',
     { tag: ['@RISDEV-10120'] },
     async ({ page }) => {
+      const formaldaten = getFormaldatenSection(page)
+
       // given
-      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Bi')
       await page
         .getByRole('listbox', { name: 'Optionsliste' })
@@ -74,11 +80,11 @@ test.describe('SLI Rubriken – Dokumenttyp', () => {
     'selected document types persist after save + reload',
     { tag: ['@RISDEV-10120'] },
     async ({ page }) => {
+      const formaldaten = getFormaldatenSection(page)
       // then
-      await expect(page.getByText('Dokumenttyp *')).toBeVisible()
-
+      await expect(formaldaten.getByText('Dokumenttyp *')).toBeVisible()
       // given
-      const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Bi')
       await page
         .getByRole('listbox', { name: 'Optionsliste' })
