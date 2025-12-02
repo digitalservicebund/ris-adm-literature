@@ -429,7 +429,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KALS2025000001',
       note: '',
       veroeffentlichungsjahr: '2025',
-      aktivzitierungLiteratures: [],
+      aktivzitierungenSli: [],
     }
 
     const docUnitResp = {
@@ -476,7 +476,7 @@ describe('documentUnitService', () => {
       documentNumber: 'KALS2025000001',
       note: '',
       veroeffentlichungsjahr: '2025',
-      aktivzitierungLiteratures: [],
+      aktivzitierungenSli: [],
     }
 
     const updatedResp = {
@@ -504,7 +504,7 @@ describe('documentUnitService', () => {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KALS2025000001',
       note: '',
-      aktivzitierungLiteratures: [],
+      aktivzitierungenSli: [],
     })
     await execute()
 

@@ -11,9 +11,9 @@ import IconAdd from '~icons/material-symbols/add'
 const store = useSliDocumentUnitStore()
 
 const aktivzitierungLiteratures = computed({
-  get: () => store.documentUnit!.aktivzitierungLiteratures ?? [],
+  get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungLiterature[]) => {
-    store.documentUnit!.aktivzitierungLiteratures = newValue
+    store.documentUnit!.aktivzitierungenSli = newValue
   },
 })
 

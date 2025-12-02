@@ -10,7 +10,7 @@ export interface SliDocumentationUnit {
   dokumentarischerTitel?: string
   hauptsachtitelZusatz?: string
   note: string
-  aktivzitierungLiteratures?: AktivzitierungLiterature[]
+  aktivzitierungenSli?: AktivzitierungLiterature[]
 }
 
 export interface SliDocumentUnitResponse {
