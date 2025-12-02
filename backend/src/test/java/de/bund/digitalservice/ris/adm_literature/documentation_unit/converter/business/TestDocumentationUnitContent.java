@@ -38,7 +38,7 @@ public class TestDocumentationUnitContent {
       null,
       null,
       List.of(
-        new SliDocumentationUnitContent.ActiveSliReference(
+        new SliDocumentationUnitContent.AktivzitierungSli(
           "docnum",
           "11",
           "titel",

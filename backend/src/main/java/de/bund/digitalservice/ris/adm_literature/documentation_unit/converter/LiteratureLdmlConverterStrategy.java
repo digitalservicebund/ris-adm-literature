@@ -100,7 +100,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     // This could possibly have the same logic as ULI and doesn't need to be a if case
     // Should be checked when implementing ULI Aktivzitierung
     if (data instanceof SliDocumentationUnitContent sliData) {
-      mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.activeSliReferences());
+      mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
     }
   }
 
@@ -226,7 +226,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
 
   private void mapAktivzitierungSelbstaendigeLiteratur(
     LdmlDocument ldmlDocument,
-    List<SliDocumentationUnitContent.ActiveSliReference> activeSliReferences
+    List<SliDocumentationUnitContent.AktivzitierungSli> activeSliReferences
   ) {
     if (activeSliReferences != null && !activeSliReferences.isEmpty()) {
       LdmlElement otherReferencesElement = ldmlDocument
@@ -235,7 +235,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
         .addAttribute(SOURCE, ACTIVE)
         .appendOnce();
 
-      for (SliDocumentationUnitContent.ActiveSliReference reference : activeSliReferences) {
+      for (SliDocumentationUnitContent.AktivzitierungSli reference : activeSliReferences) {
         String documentNumber = reference.documentNumber();
         String veroeffentlichungsJahr = reference.veroeffentlichungsJahr();
         String buchtitel = reference.buchtitel();

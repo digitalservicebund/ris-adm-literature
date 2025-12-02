@@ -15,7 +15,7 @@ import java.util.UUID;
  * @param hauptsachtitelZusatz Additional information for the main title.
  * @param dokumentarischerTitel The documentary title.
  * @param note An additional note.
- * @param activeSliReferences The list of active SLI references.
+ * @param aktivzitierungenSli The list of active SLI references.
  */
 public record SliDocumentationUnitContent(
   UUID id,
@@ -26,7 +26,7 @@ public record SliDocumentationUnitContent(
   String hauptsachtitelZusatz,
   String dokumentarischerTitel,
   String note,
-  List<ActiveSliReference> activeSliReferences
+  List<AktivzitierungSli> aktivzitierungenSli
 )
   implements LiteratureDocumentationUnitContent {
   /**
@@ -38,7 +38,7 @@ public record SliDocumentationUnitContent(
    * @param autor The author of the SLI.
    * @param dokumenttyp The type of the SLI.
    */
-  public record ActiveSliReference(
+  public record AktivzitierungSli(
     String documentNumber,
     String veroeffentlichungsJahr,
     String buchtitel,

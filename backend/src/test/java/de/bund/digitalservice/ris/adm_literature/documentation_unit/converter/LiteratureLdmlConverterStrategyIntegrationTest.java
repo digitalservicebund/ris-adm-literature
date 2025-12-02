@@ -245,7 +245,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       null,
       "Dies ist eine Gesamtfussnote",
       List.of(
-        new SliDocumentationUnitContent.ActiveSliReference(
+        new SliDocumentationUnitContent.AktivzitierungSli(
           "docnum",
           "jahr",
           "titel",
