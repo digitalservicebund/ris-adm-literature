@@ -221,12 +221,14 @@ public class DocumentationUnitPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
-      query.documentNumber(),
-      query.langueberschrift(),
-      query.fundstellen(),
-      query.zitierdaten()
-    );
+    LiteratureDocumentationUnitSpecification documentUnitSpecification =
+      new LiteratureDocumentationUnitSpecification(
+        query.documentNumber(),
+        query.veroeffentlichungsjahr(),
+        query.dokumenttypen(),
+        query.titel(),
+        query.verfasser()
+      );
     var documentationUnitsPage = documentationUnitRepository.findAll(
       documentUnitSpecification,
       pageable

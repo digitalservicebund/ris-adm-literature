@@ -248,7 +248,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
         new SliDocumentationUnitContent.AktivzitierungSli(
           "docnum",
           "jahr",
-          "buchTitel",
+          "titel",
           "isbn",
           "autor",
           new DocumentType("VR", "Verwaltungsregelung")
@@ -264,8 +264,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       """
       <akn:analysis source="attributsemantik-noch-undefiniert">
         <akn:otherReferences source="active">
-          <akn:implicitReference showAs="autor, buchTitel, docnum, VR, isbn, jahr">
-            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="buchTitel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
+          <akn:implicitReference showAs="autor, titel, docnum, VR, isbn, jahr">
+            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)
