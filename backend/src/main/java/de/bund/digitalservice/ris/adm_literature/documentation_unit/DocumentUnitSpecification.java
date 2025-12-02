@@ -4,14 +4,14 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.util.StringUtils;
 
 /**
  * JPA specification for querying documentation units by documentNumber, langueberschrift and fundstellen.
  */
 @RequiredArgsConstructor
-public class DocumentUnitSpecification implements Specification<DocumentationUnitEntity> {
+public class DocumentUnitSpecification implements PredicateSpecification<DocumentationUnitEntity> {
 
   private final String documentNumber;
   private final String langueberschrift;
@@ -20,15 +20,14 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
 
   @Override
   public Predicate toPredicate(
-    @Nonnull Root<DocumentationUnitEntity> root,
-    CriteriaQuery<?> query,
+    @Nonnull From<?, DocumentationUnitEntity> from,
     @Nonnull CriteriaBuilder criteriaBuilder
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
     if (StringUtils.hasText(documentNumber)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(root.get("documentNumber")),
+          criteriaBuilder.lower(from.get("documentNumber")),
           sqlContains(documentNumber)
         )
       );
@@ -38,7 +37,7 @@ public class DocumentUnitSpecification implements Specification<DocumentationUni
       StringUtils.hasText(langueberschrift) ||
       StringUtils.hasText(zitierdaten)
     ) {
-      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
+      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = from.join(
         "documentationUnitIndex",
         JoinType.LEFT
       );

@@ -49,7 +49,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = specification.toPredicate(root, query, cb);
+    Predicate predicate = specification.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -68,7 +68,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -92,7 +92,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -118,7 +118,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -139,7 +139,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -160,7 +160,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
@@ -186,7 +186,7 @@ class DocumentationUnitSpecificationIntegrationTest {
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
 
     // when
-    Predicate predicate = spec.toPredicate(root, query, cb);
+    Predicate predicate = spec.toPredicate(root, cb);
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
