@@ -41,25 +41,14 @@ class LiteratureDocumentationUnitControllerTest {
   class GetMultipleDocuments {
 
     @Test
-    @DisplayName("GET returns HTTP 200 and JSON")
-    void getDocs() throws Exception {
-      // given nothing
-      // when
-      mockMvc
-        .perform(get("/api/literature/documentation-units"))
-        // then
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.json.test").isNotEmpty());
-    }
-
-    @Test
-    @DisplayName("GET returns full JSON response")
+    @DisplayName("GET returns HTTP 200 and sliReferenceSearchOverview in JSON")
     void getDocsFormatted() throws Exception {
       // given nothing
       // when
       mockMvc
         .perform(get("/api/literature/documentation-units"))
         // then
+        .andExpect(status().isOk())
         .andExpect(
           content()
             .json(
