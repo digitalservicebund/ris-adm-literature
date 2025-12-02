@@ -39,6 +39,16 @@ public class LiteratureDocumentationUnitController {
   }
 
   /**
+   * Returns ok
+   *
+   * @return OK 200
+   */
+  @GetMapping("api/literature/documentation-units")
+  public ResponseEntity<String> find() {
+    return ResponseEntity.ok(null);
+  }
+
+  /**
    * Creates a new ULI documentation unit with a new document number in database and
    * returns it.
    *
