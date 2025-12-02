@@ -7,6 +7,7 @@ import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature
 import { DocumentCategory } from '@/domain/documentType'
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
+import type { SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
 
 const props = defineProps<{
   aktivzitierungLiterature?: AktivzitierungLiterature
@@ -17,6 +18,7 @@ const emit = defineEmits<{
   updateAktivzitierungLiterature: [aktivzitierungLiterature: AktivzitierungLiterature]
   deleteAktivzitierungLiterature: [id: string]
   cancel: [void]
+  search: [searchParams: SliDocUnitSearchParams]
 }>()
 
 const initialUuid = props.aktivzitierungLiterature?.uuid ?? crypto.randomUUID()
@@ -24,14 +26,14 @@ const initialUuid = props.aktivzitierungLiterature?.uuid ?? crypto.randomUUID()
 const aktivzitierungLiterature = ref<AktivzitierungLiterature>({
   id: props.aktivzitierungLiterature?.id ?? initialUuid,
   uuid: initialUuid,
-  hauptsachtitel: props.aktivzitierungLiterature?.hauptsachtitel || '',
+  titel: props.aktivzitierungLiterature?.titel || '',
   veroeffentlichungsjahr: props.aktivzitierungLiterature?.veroeffentlichungsjahr || '',
   dokumenttypen: props.aktivzitierungLiterature?.dokumenttypen || [],
   verfasser: props.aktivzitierungLiterature?.verfasser || [],
 })
 
 const isEmpty = computed(() => {
-  const fields = ['hauptsachtitel', 'veroeffentlichungsjahr', 'dokumenttypen', 'verfasser']
+  const fields = ['titel', 'veroeffentlichungsjahr', 'dokumenttypen', 'verfasser']
   return fields.every((field) => {
     const value = aktivzitierungLiterature.value[field as keyof AktivzitierungLiterature]
     if (value === undefined || value === null) return true
@@ -57,6 +59,17 @@ function onClickDelete() {
   }
 }
 
+function onClickSearch() {
+  emit('search', {
+    veroeffentlichungsjahr: aktivzitierungLiterature.value.veroeffentlichungsjahr,
+    titel: aktivzitierungLiterature.value.titel,
+    dokumenttypen: aktivzitierungLiterature.value.dokumenttypen?.map(
+      (docType) => docType.abbreviation,
+    ),
+    verfasser: aktivzitierungLiterature.value.verfasser,
+  })
+}
+
 watch(
   () => props.aktivzitierungLiterature,
   (newVal) => {
@@ -64,7 +77,7 @@ watch(
       aktivzitierungLiterature.value = {
         id: newVal.id || crypto.randomUUID(),
         uuid: newVal.uuid || crypto.randomUUID(),
-        hauptsachtitel: newVal.hauptsachtitel || '',
+        titel: newVal.titel || '',
         veroeffentlichungsjahr: newVal.veroeffentlichungsjahr || '',
         dokumenttypen: newVal.dokumenttypen || [],
         verfasser: newVal.verfasser || [],
@@ -78,11 +91,11 @@ watch(
 <template>
   <div>
     <div class="flex flex-col gap-24">
-      <InputField id="hauptsachtitel" v-slot="slotProps" label="Hauptsachtitel *">
+      <InputField id="titel" v-slot="slotProps" label="Hauptsachtitel / Dokumentarischer Titel *">
         <InputText
           :id="slotProps.id"
-          v-model="aktivzitierungLiterature.hauptsachtitel"
-          aria-label="Hauptsachtitel"
+          v-model="aktivzitierungLiterature.titel"
+          aria-label="Hauptsachtitel / Dokumentarischer Titel"
           :invalid="slotProps.hasError"
           fluid
         />
@@ -118,6 +131,12 @@ watch(
       </InputField>
     </div>
     <div class="flex w-full gap-16 mt-16">
+      <Button
+        aria-label="Selbststaendige Literatur suchen"
+        label="Suchen"
+        size="small"
+        @click.stop="onClickSearch"
+      />
       <Button
         :disabled="isEmpty"
         aria-label="Aktivzitierung übernehmen"

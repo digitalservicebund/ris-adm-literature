@@ -1,10 +1,17 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import AktivzitierungLiteratures from './AktivzitierungLiteratures.vue'
 import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
+
+const addToastMock = vi.fn()
+vi.mock('primevue', () => ({
+  useToast: vi.fn(() => ({
+    add: addToastMock,
+  })),
+}))
 
 const mockAktivzitierungen: AktivzitierungLiterature[] = [
   {
@@ -13,7 +20,7 @@ const mockAktivzitierungen: AktivzitierungLiterature[] = [
     veroeffentlichungsjahr: '2025',
     verfasser: ['again and again'],
     dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
-    hauptsachtitel: 'a new one',
+    titel: 'a new one',
   },
 ]
 
@@ -56,7 +63,7 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
 
     // Creation form from AktivzitierungLiteratureInput is visible
-    expect(screen.getByLabelText('Hauptsachtitel')).toBeInTheDocument()
+    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
 
     // Add button should not be visible in this state
     expect(
@@ -78,7 +85,7 @@ describe('AktivzitierungLiteratures', () => {
 
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
 
-    expect(screen.getByLabelText('Hauptsachtitel')).toBeInTheDocument()
+    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Aktivzitierung hinzufügen' }),
     ).not.toBeInTheDocument()
@@ -91,7 +98,7 @@ describe('AktivzitierungLiteratures', () => {
   it('hides creation input and shows add button when list has entries and panel is closed', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      hauptsachtitel: 'Titel',
+      titel: 'Titel',
     }
 
     renderComponent([mockAktivzitierung])
@@ -123,7 +130,7 @@ describe('AktivzitierungLiteratures', () => {
         stubs: {
           AktivzitierungLiteratureInput: {
             template:
-              "<button aria-label=\"Fake add\" @click=\"$emit('update-aktivzitierung-literature', { id: '1', newEntry: true, hauptsachtitel: 'Neu' })\"></button>",
+              "<button aria-label=\"Fake add\" @click=\"$emit('update-aktivzitierung-literature', { id: '1', titel: 'Neu' })\"></button>",
           },
         },
       },
@@ -143,7 +150,7 @@ describe('AktivzitierungLiteratures', () => {
     const existing: AktivzitierungLiterature = {
       id: '1',
       uuid: '1',
-      hauptsachtitel: 'Titel',
+      titel: 'Titel',
     }
 
     render(AktivzitierungLiteratures, {

@@ -10,7 +10,7 @@ const mockAktivzitierung: AktivzitierungLiterature = {
   veroeffentlichungsjahr: '2025',
   verfasser: ['again and again'],
   dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
-  hauptsachtitel: 'a new one',
+  titel: 'a new one',
 }
 
 function renderComponent(aktivzitierungLiterature: AktivzitierungLiterature = mockAktivzitierung) {
@@ -36,7 +36,7 @@ describe('AktivzitierungLiteratureItem', () => {
     const { user } = renderComponent()
 
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
-    expect(screen.getByLabelText('Hauptsachtitel')).toBeInTheDocument()
+    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
   })
 
   it('emits updateAktivzitierungLiterature when save is clicked in edit mode', async () => {
@@ -86,7 +86,7 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders summary with only title when other fields are missing', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      hauptsachtitel: 'Nur Titel',
+      titel: 'Nur Titel',
       veroeffentlichungsjahr: undefined,
       verfasser: [],
       dokumenttypen: [],
@@ -98,7 +98,7 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders only title when other summary fields are missing', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      hauptsachtitel: 'Nur Titel',
+      titel: 'Nur Titel',
     }
 
     renderComponent(mockAktivzitierung)

@@ -17,7 +17,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       const aktiv = getAktivzitierungSection(page)
 
       // then – inputs are visible
-      await expect(aktiv.getByText('Hauptsachtitel *')).toBeVisible()
+      await expect(aktiv.getByText('Hauptsachtitel / Dokumentarischer Titel *')).toBeVisible()
       await expect(aktiv.getByText('Veröffentlichungsjahr *')).toBeVisible()
       await expect(aktiv.getByText('Dokumenttyp *')).toBeVisible()
       await expect(aktiv.getByText('Verfasser/in *')).toBeVisible()
