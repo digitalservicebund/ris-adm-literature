@@ -40,9 +40,9 @@ public class LiteratureDocumentationUnitController {
   }
 
   /**
-   * Returns ok
+   * Returns a document unit (should be multiple in the future)
    *
-   * @return OK 200
+   * @return Document unit (should be multiple in the future)
    */
   @GetMapping("api/literature/documentation-units")
   public ResponseEntity<DocumentationUnit> find() {
