@@ -54,6 +54,17 @@ public class LiteratureDocumentationUnitController {
 
   /**
    * Returns document units overview
+   * @param documentNumber The document number of the document unit to be returned.
+   * @param veroeffentlichungsjahr The year of publication of the document unit.
+   * @param dokumenttypen The document types of the document unit.
+   * @param titel The title of the document unit.
+   * @param verfasser The authors of the document unit.
+   * @param pageNumber The page number of the result set.
+   * @param pageSize The page size of the result set.
+   * @param sortByProperty The property to sort by.
+   * @param sortDirection The sort direction.
+   * @param usePagination Whether to use pagination or not.
+   *
    *
    * @return Document unit (should be multiple in the future)
    */
