@@ -35,121 +35,136 @@ class LiteratureDocumentationUnitControllerTest {
   @MockitoBean
   private DocumentationUnitService documentationUnitService;
 
-  @Test
-  @DisplayName("Request GET returns HTTP 200 and data from mocked documentation unit port")
-  void find() throws Exception {
-    // given
-    String documentNumber = "KSLU054920710";
-    String json = "{\"test\":\"content\"}";
-    given(documentationUnitService.findByDocumentNumber(documentNumber)).willReturn(
-      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
-    );
+  @Nested
+  @DisplayName("GET single document")
+  class GetSingleDocument {
 
-    // when
-    mockMvc
-      .perform(get("/api/literature/documentation-units/{documentNumber}", documentNumber))
-      // then
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.documentNumber").value(documentNumber))
-      .andExpect(jsonPath("$.json.test").value("content"));
+    @Test
+    @DisplayName("Request GET returns HTTP 200 and data from mocked documentation unit port")
+    void find() throws Exception {
+      // given
+      String documentNumber = "KSLU054920710";
+      String json = "{\"test\":\"content\"}";
+      given(documentationUnitService.findByDocumentNumber(documentNumber)).willReturn(
+        Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+      );
+
+      // when
+      mockMvc
+        .perform(get("/api/literature/documentation-units/{documentNumber}", documentNumber))
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.documentNumber").value(documentNumber))
+        .andExpect(jsonPath("$.json.test").value("content"));
+    }
+
+    @Test
+    @DisplayName(
+      "Request GET returns HTTP 404 because mocked documentation unit port returns empty optional"
+    )
+    void find_notFound() throws Exception {
+      // given
+      String documentNumber = "KSNR000000001";
+      given(documentationUnitService.findByDocumentNumber(documentNumber)).willReturn(
+        Optional.empty()
+      );
+
+      // when
+      mockMvc
+        .perform(get("/api/literature/documentation-units/{documentNumber}", documentNumber))
+        // then
+        .andExpect(status().isNotFound());
+    }
   }
 
-  @Test
-  @DisplayName(
-    "Request GET returns HTTP 404 because mocked documentation unit port returns empty optional"
-  )
-  void find_notFound() throws Exception {
-    // given
-    String documentNumber = "KSNR000000001";
-    given(documentationUnitService.findByDocumentNumber(documentNumber)).willReturn(
-      Optional.empty()
-    );
+  @Nested
+  @DisplayName("POST to create document")
+  class PostToDocument {
 
-    // when
-    mockMvc
-      .perform(get("/api/literature/documentation-units/{documentNumber}", documentNumber))
-      // then
-      .andExpect(status().isNotFound());
+    @Test
+    @DisplayName("Request POST returns HTTP 201 and data from mocked ULI documentation unit")
+    void createUli() throws Exception {
+      // given
+      UUID id = UUID.randomUUID();
+      given(documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTAENDIG)).willReturn(
+        new DocumentationUnit("KSLU054920710", id, null)
+      );
+
+      // when
+      mockMvc
+        .perform(post("/api/literature/uli/documentation-units"))
+        // then
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(id.toString()))
+        .andExpect(jsonPath("$.documentNumber").value("KSLU054920710"));
+    }
+
+    @Test
+    @DisplayName("Request POST returns HTTP 201 and data from mocked SLI documentation unit")
+    void createSli() throws Exception {
+      // given
+      UUID id = UUID.randomUUID();
+      given(documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTAENDIG)).willReturn(
+        new DocumentationUnit("KSLS054920710", id, null)
+      );
+
+      // when
+      mockMvc
+        .perform(post("/api/literature/sli/documentation-units"))
+        // then
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(id.toString()))
+        .andExpect(jsonPath("$.documentNumber").value("KSLS054920710"));
+    }
   }
 
-  @Test
-  @DisplayName("Request POST returns HTTP 201 and data from mocked ULI documentation unit")
-  void createUli() throws Exception {
-    // given
-    UUID id = UUID.randomUUID();
-    given(documentationUnitService.create(DocumentCategory.LITERATUR_UNSELBSTAENDIG)).willReturn(
-      new DocumentationUnit("KSLU054920710", id, null)
-    );
+  @Nested
+  @DisplayName("PUT a single document")
+  class PutSingleDocument {
 
-    // when
-    mockMvc
-      .perform(post("/api/literature/uli/documentation-units"))
-      // then
-      .andExpect(status().isCreated())
-      .andExpect(jsonPath("$.id").value(id.toString()))
-      .andExpect(jsonPath("$.documentNumber").value("KSLU054920710"));
-  }
+    @Test
+    @DisplayName("Request PUT returns HTTP 200 and data from mocked documentation unit port")
+    void update() throws Exception {
+      // given
+      String documentNumber = "KSLU054920710";
+      String json = "{\"test\":\"content\"}";
+      given(documentationUnitService.update(documentNumber, json)).willReturn(
+        Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
+      );
 
-  @Test
-  @DisplayName("Request POST returns HTTP 201 and data from mocked SLI documentation unit")
-  void createSli() throws Exception {
-    // given
-    UUID id = UUID.randomUUID();
-    given(documentationUnitService.create(DocumentCategory.LITERATUR_SELBSTAENDIG)).willReturn(
-      new DocumentationUnit("KSLS054920710", id, null)
-    );
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/documentation-units/{documentNumber}", documentNumber)
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.documentNumber").value(documentNumber))
+        .andExpect(jsonPath("$.json.test").value("content"));
+    }
 
-    // when
-    mockMvc
-      .perform(post("/api/literature/sli/documentation-units"))
-      // then
-      .andExpect(status().isCreated())
-      .andExpect(jsonPath("$.id").value(id.toString()))
-      .andExpect(jsonPath("$.documentNumber").value("KSLS054920710"));
-  }
+    @Test
+    @DisplayName(
+      "Request PUT returns HTTP 404 because mocked documentation unit port returns empty optional"
+    )
+    void update_notFound() throws Exception {
+      // given
+      String documentNumber = "KSNR000000001";
+      String json = "{\"test\":\"unsuccessful\"}";
+      given(documentationUnitService.update(documentNumber, json)).willReturn(Optional.empty());
 
-  @Test
-  @DisplayName("Request PUT returns HTTP 200 and data from mocked documentation unit port")
-  void update() throws Exception {
-    // given
-    String documentNumber = "KSLU054920710";
-    String json = "{\"test\":\"content\"}";
-    given(documentationUnitService.update(documentNumber, json)).willReturn(
-      Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
-    );
-
-    // when
-    mockMvc
-      .perform(
-        put("/api/literature/documentation-units/{documentNumber}", documentNumber)
-          .content(json)
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      // then
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.documentNumber").value(documentNumber))
-      .andExpect(jsonPath("$.json.test").value("content"));
-  }
-
-  @Test
-  @DisplayName(
-    "Request PUT returns HTTP 404 because mocked documentation unit port returns empty optional"
-  )
-  void update_notFound() throws Exception {
-    // given
-    String documentNumber = "KSNR000000001";
-    String json = "{\"test\":\"unsuccessful\"}";
-    given(documentationUnitService.update(documentNumber, json)).willReturn(Optional.empty());
-
-    // when
-    mockMvc
-      .perform(
-        put("/api/literature/documentation-units/{documentNumber}", documentNumber)
-          .content(json)
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      // then
-      .andExpect(status().isNotFound());
+      // when
+      mockMvc
+        .perform(
+          put("/api/literature/documentation-units/{documentNumber}", documentNumber)
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isNotFound());
+    }
   }
 
   @Nested
