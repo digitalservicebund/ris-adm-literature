@@ -7,6 +7,8 @@ import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature
 import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
+import SearchResults from '@/components/SearchResults.vue'
+import AktivzitierungSearchResult from '@/views/literature/AktivzitierungSearchResult.vue'
 
 const store = useSliDocumentUnitStore()
 
@@ -19,6 +21,8 @@ const aktivzitierungLiteratures = computed({
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
   useEditableList(aktivzitierungLiteratures)
+
+const searchResults = []
 </script>
 
 <template>
@@ -54,5 +58,10 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
     >
       <template #icon><IconAdd /></template>
     </Button>
+    <SearchResults :search-results="searchResults" :is-loading="false">
+      <template #default="{ searchResult }">
+        <AktivzitierungSearchResult :search-result="searchResult" />
+      </template>
+    </SearchResults>
   </div>
 </template>

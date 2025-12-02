@@ -1,11 +1,11 @@
 import { render, screen, within } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import AktivzitierungSearchResults from './AktivzitierungSearchResults.vue'
 import { sliDocUnitListItemFixture } from '@/testing/fixtures/sliDocumentUnit.fixture'
+import SearchResults from './SearchResults.vue'
 
 describe('Aktivzitierung search results', () => {
   it('renders 1 row', () => {
-    render(AktivzitierungSearchResults, {
+    render(SearchResults, {
       props: {
         searchResults: [sliDocUnitListItemFixture],
         isLoading: false,
@@ -20,7 +20,7 @@ describe('Aktivzitierung search results', () => {
   })
 
   it('renders an empty message', () => {
-    render(AktivzitierungSearchResults, {
+    render(SearchResults, {
       props: {
         searchResults: [],
         isLoading: false,
@@ -31,7 +31,7 @@ describe('Aktivzitierung search results', () => {
   })
 
   it('renders a loading spinner', () => {
-    render(AktivzitierungSearchResults, {
+    render(SearchResults, {
       props: {
         searchResults: [],
         isLoading: true,

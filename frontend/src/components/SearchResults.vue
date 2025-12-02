@@ -2,7 +2,6 @@
 import ProgressSpinner from 'primevue/progressspinner'
 import errorMessages from '@/i18n/errors.json'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
-import AktivzitierungSearchResult from './AktivzitierungSearchResult.vue'
 
 defineProps<{
   searchResults: SliDocUnitListItem[]
@@ -24,7 +23,7 @@ defineProps<{
       <p class="ris-label1-bold mb-20">Passende Suchergebnisse:</p>
       <ul class="flex flex-col gap-10">
         <li v-for="searchResult in searchResults" :key="searchResult.id">
-          <AktivzitierungSearchResult :search-result="searchResult" />
+          <slot :searchResult="searchResult"></slot>
         </li>
       </ul>
     </div>

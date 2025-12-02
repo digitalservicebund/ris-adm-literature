@@ -13,7 +13,7 @@ import LiteratureOverviewPage from '@/views/literature/Overview.view.vue'
 import DocumentUnits from './components/document-units/DocumentUnits.vue'
 import EditDocument from '@/views/EditDocument.view.vue'
 import UliRubriken from '@/views/literature/uli/Rubriken.view.vue'
-import SliRubriken from '@/views/literature/sli/Rubriken.view.vue'
+import SliRubriken from '@/views/literature/sli/rubriken/Rubriken.view.vue'
 import { DocumentCategory } from './domain/documentType'
 import RootRedirectPage from '@/views/RootRedirect.view.vue'
 
