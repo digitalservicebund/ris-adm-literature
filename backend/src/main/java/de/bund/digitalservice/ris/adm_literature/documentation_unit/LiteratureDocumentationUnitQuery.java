@@ -11,7 +11,7 @@ import java.util.List;
  * @param documentNumber DocumentNumber to search for
  * @param veroeffentlichungsjahr Publication year to search for
  * @param dokumenttypen List of document types to filter by
- * @param titel Title to search for
+ * @param buchTitel Title to search for
  * @param verfasser List of authors to search for
  * @param queryOptions Page query options
  */
@@ -19,7 +19,7 @@ public record LiteratureDocumentationUnitQuery(
   String documentNumber,
   String veroeffentlichungsjahr,
   List<DocumentType> dokumenttypen,
-  String titel,
+  String buchTitel,
   List<String> verfasser,
   @Nonnull QueryOptions queryOptions
 ) {}

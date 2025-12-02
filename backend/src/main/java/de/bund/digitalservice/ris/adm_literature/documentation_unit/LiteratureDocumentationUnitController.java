@@ -32,7 +32,7 @@ public class LiteratureDocumentationUnitController {
   private static final Set<String> INDEX_ALIASES = Set.of(
     "veroeffentlichungsjahr",
     "dokumenttypen",
-    "titel",
+    "buchTitel",
     "verfasser"
   );
 
@@ -62,7 +62,7 @@ public class LiteratureDocumentationUnitController {
     @RequestParam(required = false) String documentNumber,
     @RequestParam(required = false) String veroeffentlichungsjahr,
     @RequestParam(required = false) List<DocumentType> dokumenttypen,
-    @RequestParam(required = false) String titel,
+    @RequestParam(required = false) String buchTitel,
     @RequestParam(required = false) List<String> verfasser,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "15") int pageSize,
@@ -88,7 +88,7 @@ public class LiteratureDocumentationUnitController {
           StringUtils.trimToNull(documentNumber),
           StringUtils.trimToNull(veroeffentlichungsjahr),
           dokumenttypen,
-          StringUtils.trimToNull(titel),
+          StringUtils.trimToNull(buchTitel),
           verfasser,
           queryOptions
         )

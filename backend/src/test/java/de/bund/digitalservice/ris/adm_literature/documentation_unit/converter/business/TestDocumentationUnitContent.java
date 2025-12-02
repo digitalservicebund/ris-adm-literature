@@ -41,7 +41,7 @@ public class TestDocumentationUnitContent {
         new SliDocumentationUnitContent.AktivzitierungSli(
           "docnum",
           "11",
-          "titel",
+          "buchTitel",
           "isbn",
           "autor",
           new DocumentType("VR", "Verwaltungsregelung")
