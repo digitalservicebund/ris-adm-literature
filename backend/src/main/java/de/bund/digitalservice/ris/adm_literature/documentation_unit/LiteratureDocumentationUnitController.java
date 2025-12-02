@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +40,21 @@ public class LiteratureDocumentationUnitController {
   }
 
   /**
-   * Returns ok
+   * Returns a document unit (should be multiple in the future)
    *
-   * @return OK 200
+   * @return Document unit (should be multiple in the future)
    */
   @GetMapping("api/literature/documentation-units")
-  public ResponseEntity<String> find() {
-    return ResponseEntity.ok(null);
+  public ResponseEntity<DocumentationUnit> find() {
+    String json = "{\"test\":\"content\"}";
+    UUID uuid = UUID.randomUUID();
+    DocumentationUnit unit = new DocumentationUnit("DOCNR123456", uuid, json);
+    return ResponseEntity.ok(unit);
   }
 
   /**
-   * Creates a new ULI documentation unit with a new document number in database and
+   * Creates a new ULI documentation unit with a new document number in database
+   * and
    * returns it.
    *
    * @return Created documentation unit
@@ -61,7 +66,8 @@ public class LiteratureDocumentationUnitController {
   }
 
   /**
-   * Creates a new SLI documentation unit with a new document number in database and
+   * Creates a new SLI documentation unit with a new document number in database
+   * and
    * returns it.
    *
    * @return Created documentation unit
@@ -93,12 +99,16 @@ public class LiteratureDocumentationUnitController {
   /**
    * Publishes the documentation unit with the given document number and content.
    *
-   * @param documentNumber           The document number of the document to publish
+   * @param documentNumber           The document number of the document to
+   *                                 publish
    * @param documentationUnitContent The documentation unit content to publish
    * @return The published documentation unit or
-   *         <br>- HTTP 400 if input not valid
-   *         <br>- HTTP 404 if not found
-   *         <br>- HTTP 503 if the external publishing service is unavailable
+   *         <br>
+   *         - HTTP 400 if input not valid
+   *         <br>
+   *         - HTTP 404 if not found
+   *         <br>
+   *         - HTTP 503 if the external publishing service is unavailable
    */
   @ApiResponses(
     value = {
@@ -151,12 +161,16 @@ public class LiteratureDocumentationUnitController {
   /**
    * Publishes the documentation unit with the given document number and content.
    *
-   * @param documentNumber           The document number of the document to publish
+   * @param documentNumber           The document number of the document to
+   *                                 publish
    * @param documentationUnitContent The documentation unit content to publish
    * @return The published documentation unit or
-   *         <br>- HTTP 400 if input not valid
-   *         <br>- HTTP 404 if not found
-   *         <br>- HTTP 503 if the external publishing service is unavailable
+   *         <br>
+   *         - HTTP 400 if input not valid
+   *         <br>
+   *         - HTTP 404 if not found
+   *         <br>
+   *         - HTTP 503 if the external publishing service is unavailable
    */
   @ApiResponses(
     value = {
