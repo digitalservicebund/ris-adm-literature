@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
@@ -33,12 +32,15 @@ public class DocumentationUnitIndexEntity {
   @Basic
   private String zitierdaten;
 
-  @Enumerated(EnumType.STRING)
-  @Basic(optional = false)
-  private DocumentCategory documentationUnitType;
+  @Basic
+  private String titel;
 
-  @Enumerated(EnumType.STRING)
-  @Basic(optional = false)
-  @Column(name = "documentation_office")
-  private DocumentationOffice documentationOffice;
+  @Basic
+  private String veroeffentlichungsjahr;
+
+  @Basic
+  private String dokumenttypen;
+
+  @Basic
+  private String verfasser;
 }

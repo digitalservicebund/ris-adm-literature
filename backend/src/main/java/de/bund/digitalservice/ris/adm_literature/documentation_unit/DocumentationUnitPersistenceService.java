@@ -272,12 +272,6 @@ public class DocumentationUnitPersistenceService {
         documentationUnitIndex.documentationUnitEntity
       );
     }
-    documentationUnitIndexEntity.setDocumentationUnitType(
-      documentationUnitIndex.getDocumentationUnitType()
-    );
-    documentationUnitIndexEntity.setDocumentationOffice(
-      documentationUnitIndex.getDocumentationOffice()
-    );
     documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
     documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
     documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
