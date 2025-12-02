@@ -158,8 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     # the ${{ success() }} is required for the "if" not to override the "needs" below
     # (we did run into this problem and saw auto-merges even as "frontend-checks" failed)
-    if: false # disabled due to attack on npm packages
-    #if: ${{ github.event_name != 'schedule' && success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
+    if: ${{ github.event_name != 'schedule' && success() && github.actor == 'dependabot[bot]' && !cancelled() && github.ref != 'refs/heads/main' }}
     permissions: write-all
     needs:
       - frontend-checks
