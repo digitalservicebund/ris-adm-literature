@@ -36,6 +36,22 @@ class LiteratureDocumentationUnitControllerTest {
   private DocumentationUnitService documentationUnitService;
 
   @Nested
+  @DisplayName("GET multiple documents")
+  class GetMultipleDocuments {
+
+    @Test
+    @DisplayName("GET returns HTTP 200")
+    void getDocs() throws Exception {
+      // given nothing
+      // when
+      mockMvc
+        .perform(get("/api/literature/documentation-units"))
+        //then
+        .andExpect(status().isOk());
+    }
+  }
+
+  @Nested
   @DisplayName("GET single document")
   class GetSingleDocument {
 
