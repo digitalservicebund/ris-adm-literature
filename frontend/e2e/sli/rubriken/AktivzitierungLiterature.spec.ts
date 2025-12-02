@@ -269,3 +269,35 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
     },
   )
 })
+
+test.describe(
+  'Add aktivzitierung via searching through the SLI documents',
+  { tag: ['@RISDEV-10276'] },
+  () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/literatur-selbstaendig')
+      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+      await page.waitForURL(/dokumentationseinheit/)
+    })
+
+    test('clicking on search retrieves some documents', async ({ page }) => {
+      const aktiv = getAktivzitierungSection(page)
+
+      // when
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+      await expect(searchResultsList).toBeVisible()
+    })
+
+    test.skip('shows no results message: "Keine passende Suchergebnisse"', () => {})
+    test.skip('adding more search parameters reduces the number of results, also for multiple documenttypen and verfasser', () => {})
+    test.skip('shows a correctly formatted search result: Veröffentlichungsjahr, Verfasser, Dokumentnummer, Hauptsachtitel or Dokumentarischer Titel', () => {})
+    test.skip('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', () => {})
+    test.skip('retrieves only published documents', () => {})
+    test.skip('clicking on the search result "add" button adds a reference to the aktivzitierung list and clears the search', () => {})
+    test.skip('an aktivzitierung entry added from the search can only be removed but not edited', () => {})
+    test.skip('aktivzitierungen added from the search can be saved', () => {})
+  },
+)

@@ -200,7 +200,7 @@ describe('AktivzitierungLiteratures', () => {
           isFetching: ref(false),
           firstRowIndex: ref(0),
           totalRows: ref(2),
-          items: ref([]),
+          items: ref([{ id: 'searchResultId1' }, { id: 'searchResultId2' }]),
           ITEMS_PER_PAGE: ref(10),
           fetchPaginatedData: fetchPaginatedDataMock,
           error: null,
@@ -239,6 +239,8 @@ describe('AktivzitierungLiteratures', () => {
 
     await user.click(screen.getByRole('button', { name: 'Fake search' }))
     expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, { titel: 'searched titel' })
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(2)
   })
 
   it('should show an error toast on fetching error', async () => {

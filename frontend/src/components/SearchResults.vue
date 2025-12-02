@@ -21,7 +21,7 @@ defineProps<{
 
     <div v-else-if="searchResults.length > 0" class="">
       <p class="ris-label1-bold mb-20">Passende Suchergebnisse:</p>
-      <ul class="flex flex-col gap-10">
+      <ul class="flex flex-col gap-10" aria-label="Passende Suchergebnisse">
         <li v-for="searchResult in searchResults" :key="searchResult.id">
           <slot :searchResult="searchResult"></slot>
         </li>

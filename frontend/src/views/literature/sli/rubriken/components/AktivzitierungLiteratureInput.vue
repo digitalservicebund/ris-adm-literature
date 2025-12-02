@@ -132,7 +132,7 @@ watch(
     </div>
     <div class="flex w-full gap-16 mt-16">
       <Button
-        aria-label="Selbststaendige Literatur suchen"
+        aria-label="Selbständige Literatur suchen"
         label="Suchen"
         size="small"
         @click.stop="onClickSearch"

@@ -148,7 +148,7 @@ describe('AktivzitierungLiteratureInput', () => {
     })
     await user.type(titleInput, 'Testtitel')
 
-    const searchButton = screen.getByRole('button', { name: 'Selbststaendige Literatur suchen' })
+    const searchButton = screen.getByRole('button', { name: 'Selbständige Literatur suchen' })
 
     await user.click(searchButton)
 
