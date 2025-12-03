@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
  * JPA specification for querying documentation units by documentNumber, langueberschrift and fundstellen.
  */
 @RequiredArgsConstructor
-public class DocumentUnitSpecification implements Specification<DocumentationUnitEntity> {
+public class AdmDocumentUnitSpecification implements Specification<DocumentationUnitEntity> {
 
   private final String documentNumber;
   private final String langueberschrift;

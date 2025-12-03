@@ -86,7 +86,10 @@ class DocumentationUnitPersistenceServiceTest {
     );
 
     given(
-      documentationUnitRepository.findAll(any(DocumentUnitSpecification.class), any(Pageable.class))
+      documentationUnitRepository.findAll(
+        any(AdmDocumentUnitSpecification.class),
+        any(Pageable.class)
+      )
     ).willReturn(pageOfEntities);
 
     // when

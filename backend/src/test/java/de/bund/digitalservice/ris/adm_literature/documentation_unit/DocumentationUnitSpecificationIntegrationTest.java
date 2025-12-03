@@ -43,7 +43,12 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with no parameters should not add a filtering where clause")
   void toPredicate_withNoParameters() {
     // given
-    DocumentUnitSpecification specification = new DocumentUnitSpecification(null, null, null, null);
+    AdmDocumentUnitSpecification specification = new AdmDocumentUnitSpecification(
+      null,
+      null,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -62,7 +67,7 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with documentNumber should add like clause and no join")
   void toPredicate_withDocumentNumberOnly() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification("123", null, null, null);
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification("123", null, null, null);
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -81,7 +86,7 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with langueberschrift should add like clause and a left join")
   void toPredicate_withLangueberschriftOnly() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification(
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
       null,
       "ueberschriftXY",
       null,
@@ -107,7 +112,7 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with fundstellen should add like clause and a left join")
   void toPredicate_withFundstellenOnly() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification(
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
       null,
       null,
       "fundstelleXY",
@@ -133,7 +138,7 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with zitierdaten should add like clause and a left join")
   void toPredicate_withZitierdatenOnly() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification(null, null, null, "zdXY");
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(null, null, null, "zdXY");
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -154,7 +159,12 @@ class DocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with all parameters should add multiple like clauses and a left join")
   void toPredicate_withAllParameters() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification("123", "luXX", "fsXY", "zdXZ");
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+      "123",
+      "luXX",
+      "fsXY",
+      "zdXZ"
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -180,7 +190,12 @@ class DocumentationUnitSpecificationIntegrationTest {
   )
   void toPredicate_withAllIndexParameters() {
     // given
-    DocumentUnitSpecification spec = new DocumentUnitSpecification(null, "luXX", "fsXY", "zdXZ");
+    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+      null,
+      "luXX",
+      "fsXY",
+      "zdXZ"
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);

@@ -173,14 +173,14 @@ public class DocumentationUnitPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
+    AdmDocumentUnitSpecification admDocumentUnitSpecification = new AdmDocumentUnitSpecification(
       query.documentNumber(),
       query.langueberschrift(),
       query.fundstellen(),
       query.zitierdaten()
     );
     var documentationUnitsPage = documentationUnitRepository.findAll(
-      documentUnitSpecification,
+      admDocumentUnitSpecification,
       pageable
     );
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
