@@ -64,7 +64,7 @@ onMounted(() => {
   >
     <SideToggle
       class="sticky top-[4rem] z-20 max-h-fit"
-      custom-button-classes="top-24 pt-4"
+      custom-button-classes="top-24"
       :icon="icon"
       :is-expanded="store.isExpanded"
       label="Seitenpanel"

@@ -21,7 +21,7 @@ describe('Aktivzitierung search result', () => {
           id: 'searchResultTestId',
           documentNumber: 'KSLS054920710',
           veroeffentlichungsjahr: '2025',
-          hauptsachtitel: 'TheHauptTitle',
+          titel: 'TheHauptTitle',
           verfasser: ['Müller', 'Zimmermann'],
         },
       },
@@ -38,7 +38,7 @@ describe('Aktivzitierung search result', () => {
           id: 'id1',
           documentNumber: 'DOC-12345',
           veroeffentlichungsjahr: '2023',
-          hauptsachtitel: 'Book without known author',
+          titel: 'Book without known author',
           verfasser: [],
         },
       },
@@ -54,7 +54,7 @@ describe('Aktivzitierung search result', () => {
         searchResult: {
           id: 'id2',
           documentNumber: 'DOC-67890',
-          hauptsachtitel: 'Report by a known group',
+          titel: 'Report by a known group',
           verfasser: ['Research Team A'],
         },
       },
@@ -70,28 +70,12 @@ describe('Aktivzitierung search result', () => {
         searchResult: {
           id: 'id3',
           documentNumber: 'DOC-ONLY',
-          hauptsachtitel: 'Minimal Entry',
+          titel: 'Minimal Entry',
         },
       },
     })
 
     expect(screen.getByText('DOC-ONLY')).toBeInTheDocument()
     expect(screen.getByText('Minimal Entry')).toBeInTheDocument()
-  })
-
-  it('renders documentarischerTitel when hauptsachtitel is missing', () => {
-    render(AktivzitierungSearchResult, {
-      props: {
-        searchResult: {
-          id: 'id4',
-          documentNumber: 'DOC-FALLBACK',
-          veroeffentlichungsjahr: '2020',
-          dokumentarischerTitel: 'A Backup Documentary Title',
-        },
-      },
-    })
-
-    expect(screen.getByText('2020 | DOC-FALLBACK')).toBeInTheDocument()
-    expect(screen.getByText('A Backup Documentary Title')).toBeInTheDocument()
   })
 })
