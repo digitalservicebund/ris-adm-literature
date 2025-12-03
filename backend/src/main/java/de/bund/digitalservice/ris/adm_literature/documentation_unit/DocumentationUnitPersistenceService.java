@@ -7,19 +7,20 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.bu
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeEntity;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeRepository;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,7 @@ public class DocumentationUnitPersistenceService {
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
+  private final DocumentTypeRepository documentTypeRepository;
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
 
@@ -238,6 +240,8 @@ public class DocumentationUnitPersistenceService {
       documentUnitSpecification,
       pageable
     );
+    final Map<String, String> typeLookup = getDocumentTypeNames(documentationUnitsPage);
+
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
@@ -252,15 +256,50 @@ public class DocumentationUnitPersistenceService {
         );
       }
 
+      List<String> documentTypeNames = splitBySeparator(index.getDokumenttypen())
+        .stream()
+        .map(abbrev -> typeLookup.getOrDefault(abbrev, abbrev))
+        .toList();
+
       return new LiteratureDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
         index.getVeroeffentlichungsjahr(),
         index.getTitel(),
-        splitBySeparator(index.getDokumenttypen()),
+        documentTypeNames,
         splitBySeparator(index.getVerfasser())
       );
     });
+  }
+
+  @NotNull
+  private Map<String, String> getDocumentTypeNames(
+    org.springframework.data.domain.Page<DocumentationUnitEntity> documentationUnitsPage
+  ) {
+    Set<String> allAbbreviations = documentationUnitsPage
+      .getContent()
+      .stream()
+      .map(DocumentationUnitEntity::getDocumentationUnitIndex)
+      .filter(Objects::nonNull)
+      .map(DocumentationUnitIndexEntity::getDokumenttypen)
+      .filter(StringUtils::isNotBlank)
+      .flatMap(s -> Arrays.stream(StringUtils.splitByWholeSeparator(s, ENTRY_SEPARATOR)))
+      .collect(Collectors.toSet());
+
+    Map<String, String> abbreviationToNameMap = Collections.emptyMap();
+
+    if (!allAbbreviations.isEmpty()) {
+      abbreviationToNameMap = documentTypeRepository
+        .findByDocumentCategoryAndAbbreviationIn(
+          DocumentCategory.LITERATUR_SELBSTAENDIG,
+          allAbbreviations
+        )
+        .stream()
+        .collect(
+          Collectors.toMap(DocumentTypeEntity::getAbbreviation, DocumentTypeEntity::getName)
+        );
+    }
+    return abbreviationToNameMap;
   }
 
   private List<String> splitBySeparator(String value) {

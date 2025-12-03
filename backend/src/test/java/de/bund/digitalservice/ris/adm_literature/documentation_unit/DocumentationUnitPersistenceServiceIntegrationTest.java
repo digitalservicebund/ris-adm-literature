@@ -758,6 +758,49 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(null, null, null, null);
   }
 
+  @Test
+  void findLiteratureDocumentationUnitOverviewElements_resolvesDocumentTypeNames() {
+    // given
+    var unit = new DocumentationUnitEntity();
+    unit.setDocumentNumber("KVLS2025000999");
+    unit.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
+    unit.setDocumentationOffice(DocumentationOffice.BVERFG);
+    entityManager.persist(unit);
+
+    var index = new DocumentationUnitIndexEntity();
+    index.setDocumentationUnit(unit);
+    index.setTitel("Complex Legal Analysis");
+    index.setVeroeffentlichungsjahr("2025");
+
+    index.setDokumenttypen("Dis" + ENTRY_SEPARATOR + "Bib");
+    unit.setDocumentationUnitIndex(index);
+    entityManager.persistAndFlush(index);
+
+    // when
+    var query = new LiteratureDocumentationUnitQuery(
+      "KVLS2025000999",
+      null,
+      null,
+      null,
+      null,
+      new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+    );
+
+    var resultPage =
+      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(resultPage.content())
+      .singleElement()
+      .satisfies(element -> {
+        assertThat(element.documentNumber()).isEqualTo("KVLS2025000999");
+        assertThat(element.dokumenttypen()).containsExactlyInAnyOrder(
+          "Dissertation",
+          "Bibliographie"
+        );
+      });
+  }
+
   private TypedQuery<DocumentationUnitIndexEntity> createTypedQuery(
     DocumentationUnitEntity documentationUnitEntity
   ) {
