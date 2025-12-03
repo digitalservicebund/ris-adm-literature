@@ -1,5 +1,6 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,20 +16,28 @@ import org.springframework.util.StopWatch;
 @Slf4j
 public class DocumentationUnitIndexJob {
 
-  private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
+  private final DocumentationUnitIndexService documentationUnitIndexService;
 
   /**
    * Execute indexing of all documentation units without documentation unit index.
    */
   @Scheduled(cron = "${cronjob.DocumentationUnitIndexJob:-}", zone = "Europe/Berlin")
   public void indexAll() {
-    StopWatch stopWatch = new StopWatch("Index documentation units");
+    indexSchema(SchemaType.ADM);
+    indexSchema(SchemaType.LIT);
+  }
+
+  private void indexSchema(SchemaType schemaType) {
+    StopWatch stopWatch = new StopWatch(
+      String.format("Index documentation units in database schema %s.", schemaType)
+    );
     stopWatch.start();
-    long totalNumberOfElements = documentationUnitPersistenceService.indexAll();
+    long totalNumberOfElements = documentationUnitIndexService.updateIndex(schemaType);
     stopWatch.stop();
     log.info(
-      "Indexing {} documentation units finished. \n{}",
+      "Indexing {} documentation units in database schema {} finished. \n{}",
       totalNumberOfElements,
+      schemaType,
       stopWatch.prettyPrint(TimeUnit.SECONDS)
     );
   }

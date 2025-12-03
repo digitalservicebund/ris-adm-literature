@@ -1,5 +1,6 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
