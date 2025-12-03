@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
+import type { SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
 
 type Props = {
   aktivzitierungLiterature?: AktivzitierungLiterature
@@ -33,7 +34,9 @@ describe('AktivzitierungLiteratureInput', () => {
   it('enables Übernehmen when at least one field is filled and emits update on click', async () => {
     const { user, emitted } = renderComponent()
 
-    const titleInput = screen.getByRole('textbox', { name: 'Hauptsachtitel' })
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
     await user.type(titleInput, 'Testtitel')
 
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
@@ -43,14 +46,14 @@ describe('AktivzitierungLiteratureInput', () => {
 
     expect(emitted().updateAktivzitierungLiterature).toBeTruthy()
     const payload = (emitted().updateAktivzitierungLiterature as [AktivzitierungLiterature[]])[0][0]
-    expect(payload?.hauptsachtitel).toBe('Testtitel')
+    expect(payload?.titel).toBe('Testtitel')
   })
 
   it('enables Übernehmen when array field (verfasser) is prefilled', () => {
     const existing: AktivzitierungLiterature = {
       id: 'id-2',
       uuid: 'uuid-2',
-      hauptsachtitel: '',
+      titel: '',
       veroeffentlichungsjahr: '',
       dokumenttypen: [],
       verfasser: ['Autor'],
@@ -80,7 +83,7 @@ describe('AktivzitierungLiteratureInput', () => {
     const existing: AktivzitierungLiterature = {
       id: 'id-1',
       uuid: 'uuid-1',
-      hauptsachtitel: 'Titel',
+      titel: 'Titel',
       veroeffentlichungsjahr: '2024',
       dokumenttypen: [],
       verfasser: [],
@@ -109,20 +112,22 @@ describe('AktivzitierungLiteratureInput', () => {
       aktivzitierungLiterature: {
         id: '1',
         uuid: '1',
-        hauptsachtitel: 'Alt',
+        titel: 'Alt',
         veroeffentlichungsjahr: '',
         dokumenttypen: [],
         verfasser: [],
       },
     })
 
-    expect(screen.getByRole('textbox', { name: 'Hauptsachtitel' })).toHaveValue('Alt')
+    expect(
+      screen.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).toHaveValue('Alt')
 
     await rerender({
       aktivzitierungLiterature: {
         id: '1',
         uuid: '1',
-        hauptsachtitel: 'Neu',
+        titel: 'Neu',
         veroeffentlichungsjahr: '',
         dokumenttypen: [],
         verfasser: [],
@@ -130,6 +135,25 @@ describe('AktivzitierungLiteratureInput', () => {
       showCancelButton: true,
     })
 
-    expect(screen.getByRole('textbox', { name: 'Hauptsachtitel' })).toHaveValue('Neu')
+    expect(
+      screen.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).toHaveValue('Neu')
+  })
+
+  it('emits the search params when clicking on the search button', async () => {
+    const { user, emitted } = renderComponent()
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    await user.type(titleInput, 'Testtitel')
+
+    const searchButton = screen.getByRole('button', { name: 'Selbständige Literatur suchen' })
+
+    await user.click(searchButton)
+
+    expect(emitted().search).toBeTruthy()
+    const payload = (emitted().search as [SliDocUnitSearchParams[]])[0][0]
+    expect(payload?.titel).toBe('Testtitel')
   })
 })

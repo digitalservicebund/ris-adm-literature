@@ -69,9 +69,7 @@ const metaSummary = computed(() => {
 })
 
 const titleSummary = computed(() => {
-  return (
-    props.aktivzitierungLiterature.hauptsachtitel || 'Hauptsachtitel oder dokumentarischer Titel'
-  )
+  return props.aktivzitierungLiterature.titel || 'Hauptsachtitel oder dokumentarischer Titel'
 })
 </script>
 
