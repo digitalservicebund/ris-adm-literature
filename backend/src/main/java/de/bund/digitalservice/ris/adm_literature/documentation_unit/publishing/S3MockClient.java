@@ -61,6 +61,9 @@ public class S3MockClient implements S3Client {
   @Override
   public PutObjectResponse putObject(PutObjectRequest putObjectRequest, RequestBody requestBody) {
     String fileName = putObjectRequest.key();
+    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+      fileName = fileName.replace(':', '_');
+    }
 
     File file = localStorageDirectory.resolve(fileName).toFile();
     file.getParentFile().mkdirs();
