@@ -35,7 +35,7 @@ const {
   error,
 } = usePagination<SliDocUnitListItem, SliDocUnitSearchParams>(
   useGetSliPaginatedDocUnits,
-  'sliReferenceSearchOverview',
+  'documentationUnitsOverview',
 )
 
 watch(error, (err) => {

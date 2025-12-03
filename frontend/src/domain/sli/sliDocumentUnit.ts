@@ -24,9 +24,8 @@ export interface SliDocUnitListItem {
   readonly id: string
   readonly documentNumber: string
   veroeffentlichungsjahr?: string
-  dokumenttypen?: DocumentType[]
-  hauptsachtitel?: string
-  dokumentarischerTitel?: string
+  dokumenttypen?: string[]
+  titel?: string
   verfasser?: string[]
 }
 
