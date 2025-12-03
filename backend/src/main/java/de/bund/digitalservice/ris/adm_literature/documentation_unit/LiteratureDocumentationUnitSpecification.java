@@ -9,6 +9,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+/**
+ * A specification class that defines query filters for the {@link DocumentationUnitEntity} entity.
+ * It uses various criteria for querying data such as document number, year of publication,
+ * document types, title, and authors. This class is part of the unit specification for
+ * querying and filtering LiteratureDocumentation.
+ *
+ * @param documentNumber     A string representing the document number to filter by.
+ * @param veroeffentlichungsjahr A string representing the publication year to filter by.
+ * @param dokumenttypen      A list of {@link DocumentType} objects representing the document types to filter by.
+ * @param titel              A string representing the title to filter by.
+ * @param verfasser          A list of strings representing the authors to filter by.
+ */
 public record LiteratureDocumentationUnitSpecification(
   String documentNumber,
   String veroeffentlichungsjahr,
