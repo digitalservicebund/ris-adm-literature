@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import ToolTip from '@/components/ToolTip.vue'
 import DocumentationUnitSummary from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/DocumentationUnitSummary.vue'
 import Button from 'primevue/button'
 import ActiveCitation from '@/domain/activeCitation'
@@ -20,19 +19,18 @@ async function copySummary() {
 
     <!-- Button group -->
     <div class="flex flex-row -space-x-2">
-      <ToolTip text="Kopieren">
-        <Button
-          id="category-import"
-          aria-label="Aktivzitierung in die Zwischenablage kopieren"
-          data-testid="copy-summary"
-          size="small"
-          text
-          @click="copySummary"
-          @keypress.enter="copySummary"
-        >
-          <template #icon> <IconBaselineContentCopy /> </template>
-        </Button>
-      </ToolTip>
+      <Button
+        v-tooltip.bottom="'Kopieren'"
+        id="category-import"
+        aria-label="Aktivzitierung in die Zwischenablage kopieren"
+        data-testid="copy-summary"
+        size="small"
+        text
+        @click="copySummary"
+        @keypress.enter="copySummary"
+      >
+        <template #icon> <IconBaselineContentCopy /> </template>
+      </Button>
     </div>
   </div>
 </template>

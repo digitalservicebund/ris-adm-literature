@@ -11,12 +11,15 @@ import router from '@/router.ts'
 import { ToastService } from 'primevue'
 import { useAuthentication } from '@/services/auth.ts'
 import { getEnv } from '@/services/envService.ts'
+import Tooltip from 'primevue/tooltip'
 
 try {
   // Fetch environment configuration
   const env = await getEnv()
 
   const app = createApp(App)
+
+  app.directive('tooltip', Tooltip)
 
   // env.PROD does not mean the "prod" environment, but should be true for all hosted
   // environments (as opposed to local development), cf: https://vite.dev/guide/env-and-mode

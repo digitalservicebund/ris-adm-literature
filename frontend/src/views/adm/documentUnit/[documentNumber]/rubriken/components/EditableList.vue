@@ -6,7 +6,6 @@ import Button from 'primevue/button'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconAdd from '~icons/material-symbols/add'
 import type EditableListItem from '@/domain/editableListItem'
-import ToolTip from '@/components/ToolTip.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -214,22 +213,20 @@ watch(
           class="flex scroll-m-64"
           :data="entry"
         />
-
-        <ToolTip text="Aufklappen">
-          <button
-            id="editable-list-select-button"
-            class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
-            :data-testid="`list-entry-${index}`"
-            @click="
-              () => {
-                toggleDisplayDefaultValue(false)
-                setEditEntry(entry as T)
-              }
-            "
-          >
-            <IconArrowDown />
-          </button>
-        </ToolTip>
+        <button
+          v-tooltip.bottom="'Aufklappen'"
+          id="editable-list-select-button"
+          class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
+          :data-testid="`list-entry-${index}`"
+          @click="
+            () => {
+              toggleDisplayDefaultValue(false)
+              setEditEntry(entry as T)
+            }
+          "
+        >
+          <IconArrowDown />
+        </button>
       </div>
 
       <component

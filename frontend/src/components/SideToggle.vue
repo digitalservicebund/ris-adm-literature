@@ -2,7 +2,6 @@
 import { type Component, computed } from 'vue'
 import IconChevronLeft from '~icons/ic/baseline-chevron-left'
 import IconChevronRight from '~icons/ic/baseline-chevron-right'
-import ToolTip from '@/components/ToolTip.vue'
 import { OpeningDirection } from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/enumDisplayMode'
 
 interface Props {
@@ -47,23 +46,19 @@ const toggle = () => {
 
 <template>
   <div class="relative bg-white" :class="classes">
-    <ToolTip
-      class="!absolute top-16 z-20"
+    <button
+      v-tooltip.bottom="props.label + ' ' + postFix"
+      :aria-label="props.label + ' ' + postFix"
+      class="w-icon relative flex min-h-32 min-w-32 items-center justify-center rounded-full border-1 border-solid border-gray-400 bg-white text-gray-900 cursor-pointer !absolute top-16 z-20"
       :class="buttonClasses"
-      :text="props.label + ' ' + postFix"
+      @click="toggle"
     >
-      <button
-        :aria-label="props.label + ' ' + postFix"
-        class="w-icon relative flex min-h-32 min-w-32 items-center justify-center rounded-full border-1 border-solid border-gray-400 bg-white text-gray-900 cursor-pointer"
-        @click="toggle"
-      >
-        <component :is="icon" v-if="icon" class="text-blue-800" />
-        <IconChevronLeft
-          v-else-if="props.openingDirection === OpeningDirection.LEFT ? !isExpanded : isExpanded"
-        />
-        <IconChevronRight v-else />
-      </button>
-    </ToolTip>
+      <component :is="icon" v-if="icon" class="text-blue-800" />
+      <IconChevronLeft
+        v-else-if="props.openingDirection === OpeningDirection.LEFT ? !isExpanded : isExpanded"
+      />
+      <IconChevronRight v-else />
+    </button>
     <div v-show="isExpanded">
       <slot />
     </div>
