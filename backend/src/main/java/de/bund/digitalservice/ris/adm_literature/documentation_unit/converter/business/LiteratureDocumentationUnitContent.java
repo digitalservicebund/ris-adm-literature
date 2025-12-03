@@ -42,6 +42,10 @@ public interface LiteratureDocumentationUnitContent extends DocumentationUnitCon
     );
   }
 
+  /**
+   * Returns either 'Hauptsachtitel' or 'dokumentarischer Titel' or {@code null} if none of them set.
+   * @return Titel if set, {@code null} otherwise
+   */
   @JsonIgnore
   default String titel() {
     // Used for indexing it is sufficient to check for null. If both fields are null, titel in index is as well.
