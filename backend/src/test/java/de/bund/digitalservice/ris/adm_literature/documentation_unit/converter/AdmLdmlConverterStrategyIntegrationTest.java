@@ -53,7 +53,7 @@ class AdmLdmlConverterStrategyIntegrationTest {
   )
   void convertToLdml_withExistingVersion() {
     // given
-    String previousXmlVersion = TestFile.readFileToString("ldml-example.akn.xml");
+    String previousXmlVersion = TestFile.readFileToString("adm/ldml-example.akn.xml");
     AdmDocumentationUnitContent admDocumentationUnitContent =
       TestAdmDocumentationUnitContent.create("KSNR00000011", "Lange Überschrift");
 
@@ -729,7 +729,7 @@ class AdmLdmlConverterStrategyIntegrationTest {
       List.of(),
       List.of()
     );
-    String previousXml = TestFile.readFileToString("ldml-example-historic-data.akn.xml");
+    String previousXml = TestFile.readFileToString("adm/ldml-example-historic-data.akn.xml");
 
     // when
     String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, previousXml);

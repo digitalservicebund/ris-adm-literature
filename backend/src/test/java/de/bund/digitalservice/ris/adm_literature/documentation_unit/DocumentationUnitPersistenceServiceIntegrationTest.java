@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     documentationUnitEntity = entityManager.merge(documentationUnitEntity);
-    String json = TestFile.readFileToString("json-example.json");
+    String json = TestFile.readFileToString("adm/json-example.json");
 
     // when
     documentationUnitPersistenceService.update(documentationUnitEntity.getDocumentNumber(), json);
@@ -182,8 +183,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     UUID id = entityManager.persistFlushFind(documentationUnitEntity).getId();
 
     // when
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
-    String json = TestFile.readFileToString("json-example.json");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
+    String json = TestFile.readFileToString("adm/json-example.json");
     documentationUnitPersistenceService.publish(
       documentationUnitEntity.getDocumentNumber(),
       json,
@@ -447,9 +448,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void indexByDocumentationUnit_xml() {
+  void indexByAdmDocumentationUnit_xml() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR9999999999");
     documentationUnitEntity.setXml(xml);
@@ -477,9 +478,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void indexByDocumentationUnit_json() {
+  void indexByAdmDocumentationUnit_json() {
     // given
-    String json = TestFile.readFileToString("json-example.json");
+    String json = TestFile.readFileToString("adm/json-example.json");
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR777777777");
     documentationUnitEntity.setJson(json);
@@ -507,7 +508,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void indexByDocumentationUnit_jsonNotValid() {
+  void indexByAdmDocumentationUnit_jsonNotValid() {
     // given
     var documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber(String.format("KSNR%s100003", Year.now()));
@@ -540,10 +541,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void indexByDocumentationUnit_jsonAndXml() {
+  void indexByAdmDocumentationUnit_jsonAndXml() {
     // given
-    String json = TestFile.readFileToString("json-example.json");
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String json = TestFile.readFileToString("adm/json-example.json");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR555555555");
     documentationUnitEntity.setJson(json);
@@ -572,7 +573,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void indexByDocumentationUnit_jsonAndXmlAreNull() {
+  void indexByAdmDocumentationUnit_jsonAndXmlAreNull() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR333333333");
@@ -593,6 +594,160 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
         DocumentationUnitIndexEntity::getZitierdaten
       )
       .containsExactly(null, null, null);
+  }
+
+  @Test
+  @Disabled("Needs to be implemented with conversion from LDML to Json")
+  void indexBySliDocumentationUnit_xml() {
+    // given
+    String xml = TestFile.readFileToString("literature/sli/ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KVLS9999999999");
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BVERFG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.indexAll();
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        null
+      );
+  }
+
+  @Test
+  void indexBySliDocumentationUnit_json() {
+    // given
+    String json = TestFile.readFileToString("literature/sli/json-example.json");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KVLS2025000009");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BVERFG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.indexAll();
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        null
+      );
+  }
+
+  @Test
+  void indexBySliDocumentationUnit_jsonNotValid() {
+    // given
+    var documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KVLS000004711");
+    documentationUnitEntity.setJson(
+      """
+      {
+        "id": "11111111-1657-4085-ae2a-993a04c27f6b",
+        "documentNumber": "KVLS000004711",
+        [] ooops
+      }
+      """
+    );
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BVERFG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.indexAll();
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(null, null, null, null);
+  }
+
+  @Test
+  @Disabled("Needs to be implemented with conversion from LDML to Json")
+  void indexBySliDocumentationUnit_jsonAndXml() {
+    // given
+    String json = TestFile.readFileToString("literature/sli/json-example.json");
+    String xml = TestFile.readFileToString("literature/sli/ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KVLS555555555");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.indexAll();
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+  }
+
+  @Test
+  void indexBySliDocumentationUnit_jsonAndXmlAreNull() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KVLS333333333");
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BVERFG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.indexAll();
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(null, null, null, null);
   }
 
   private TypedQuery<DocumentationUnitIndexEntity> createTypedQuery(

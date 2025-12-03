@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.Fundstelle;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
@@ -60,4 +61,9 @@ public record AdmDocumentationUnitContent(
   List<String> titelAspekte,
   List<Definition> definitionen
 )
-  implements IDocumentationContent {}
+  implements DocumentationUnitContent {
+  @Override
+  public DocumentCategory documentCategory() {
+    return DocumentCategory.VERWALTUNGSVORSCHRIFTEN;
+  }
+}

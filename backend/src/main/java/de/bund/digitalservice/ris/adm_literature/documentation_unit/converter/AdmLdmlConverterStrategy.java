@@ -37,7 +37,7 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
   private final DomXmlReader domXmlReader = new DomXmlReader();
 
   @Override
-  public boolean supports(IDocumentationContent content) {
+  public boolean supports(DocumentationUnitContent content) {
     return content instanceof AdmDocumentationUnitContent;
   }
 
@@ -49,7 +49,10 @@ public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
    * @return LDML xml representation of the given documentation unit content
    */
   @Override
-  public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) {
+  public String convertToLdml(
+    @Nonnull DocumentationUnitContent content,
+    String previousXmlVersion
+  ) {
     // This cast is safe because the 'supports' method is checked first
     AdmDocumentationUnitContent admDocumentationUnitContent = (AdmDocumentationUnitContent) content;
     AkomaNtoso akomaNtoso;

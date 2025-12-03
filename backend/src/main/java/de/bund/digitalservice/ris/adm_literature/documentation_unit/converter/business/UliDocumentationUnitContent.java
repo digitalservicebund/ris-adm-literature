@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
 import java.util.UUID;
@@ -26,4 +27,9 @@ public record UliDocumentationUnitContent(
   String dokumentarischerTitel,
   String note
 )
-  implements LiteratureDocumentationUnitContent {}
+  implements LiteratureDocumentationUnitContent {
+  @Override
+  public DocumentCategory documentCategory() {
+    return DocumentCategory.LITERATUR_UNSELBSTAENDIG;
+  }
+}

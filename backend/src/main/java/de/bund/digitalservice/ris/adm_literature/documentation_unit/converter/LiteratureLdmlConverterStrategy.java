@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.LiteratureDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
@@ -40,7 +40,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
   private static final String IMPLICIT_REFERENCE = "akn:implicitReference";
 
   @Override
-  public boolean supports(IDocumentationContent content) {
+  public boolean supports(DocumentationUnitContent content) {
     return (
       content instanceof UliDocumentationUnitContent ||
       content instanceof SliDocumentationUnitContent
@@ -49,7 +49,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
 
   @Override
   public String convertToLdml(
-    @Nonnull IDocumentationContent iDocumentationContent,
+    @Nonnull DocumentationUnitContent documentationUnitContent,
     String previousXmlVersion
   ) {
     try {
@@ -60,16 +60,16 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       }
 
       LiteratureDocumentCategory category =
-        switch (iDocumentationContent) {
+        switch (documentationUnitContent) {
           case UliDocumentationUnitContent _ -> LiteratureDocumentCategory.ULI;
           case SliDocumentationUnitContent _ -> LiteratureDocumentCategory.SLI;
           default -> throw new IllegalStateException(
-            "Unexpected content type: " + iDocumentationContent.getClass()
+            "Unexpected content type: " + documentationUnitContent.getClass()
           );
         };
 
       LiteratureDocumentationUnitContent content =
-        (LiteratureDocumentationUnitContent) iDocumentationContent;
+        (LiteratureDocumentationUnitContent) documentationUnitContent;
 
       LdmlDocument ldmlDocument = minimalLdmlDocument.create(category);
       transformToLdml(ldmlDocument, content, category);
