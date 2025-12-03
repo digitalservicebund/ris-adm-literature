@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
@@ -21,7 +22,7 @@ import org.springframework.util.StringUtils;
  * @param titel              A string representing the title to filter by.
  * @param verfasser          A list of strings representing the authors to filter by.
  */
-public record LiteratureDocumentationUnitSpecification(
+public record SliLiteratureDocumentationUnitSpecification(
   String documentNumber,
   String veroeffentlichungsjahr,
   List<String> dokumenttypen,
@@ -36,6 +37,12 @@ public record LiteratureDocumentationUnitSpecification(
     @Nonnull CriteriaBuilder criteriaBuilder
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
+    predicates.add(
+      criteriaBuilder.equal(
+        root.get("documentationUnitType"),
+        DocumentCategory.LITERATUR_SELBSTAENDIG.name()
+      )
+    );
 
     if (StringUtils.hasText(documentNumber)) {
       predicates.add(

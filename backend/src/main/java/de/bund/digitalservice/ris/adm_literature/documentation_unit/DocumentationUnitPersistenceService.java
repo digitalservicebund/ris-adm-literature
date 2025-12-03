@@ -223,8 +223,8 @@ public class DocumentationUnitPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    LiteratureDocumentationUnitSpecification documentUnitSpecification =
-      new LiteratureDocumentationUnitSpecification(
+    SliLiteratureDocumentationUnitSpecification documentUnitSpecification =
+      new SliLiteratureDocumentationUnitSpecification(
         query.documentNumber(),
         query.veroeffentlichungsjahr(),
         query.dokumenttypen(),
