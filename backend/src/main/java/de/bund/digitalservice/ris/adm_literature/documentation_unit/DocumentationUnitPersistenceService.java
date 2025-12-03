@@ -111,7 +111,7 @@ public class DocumentationUnitPersistenceService {
    * @param documentNumber The document number to identify the documentation unit
    * @param json           The json string to update
    * @return The updated documentation unit or an empty optional, if there is no documentation unit
-   *         with the given document number
+   * with the given document number
    */
   @Transactional
   public DocumentationUnit update(@Nonnull String documentNumber, @Nonnull String json) {
@@ -398,13 +398,15 @@ public class DocumentationUnitPersistenceService {
         documentationUnitIndex.setVeroeffentlichungsjahr(
           sliDocumentationUnitContent.veroeffentlichungsjahr()
         );
-        documentationUnitIndex.setDokumenttypen(
-          sliDocumentationUnitContent
-            .dokumenttypen()
-            .stream()
-            .map(DocumentType::abbreviation)
-            .collect(Collectors.joining(ENTRY_SEPARATOR))
-        );
+        if (sliDocumentationUnitContent.dokumenttypen() != null) {
+          documentationUnitIndex.setDokumenttypen(
+            sliDocumentationUnitContent
+              .dokumenttypen()
+              .stream()
+              .map(DocumentType::abbreviation)
+              .collect(Collectors.joining(ENTRY_SEPARATOR))
+          );
+        }
         documentationUnitIndex.setVerfasser(null);
       }
       default -> log.debug(
