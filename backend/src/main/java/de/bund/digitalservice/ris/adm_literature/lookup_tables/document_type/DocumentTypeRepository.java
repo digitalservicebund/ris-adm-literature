@@ -25,6 +25,14 @@ public interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity
     DocumentCategory documentCategory
   );
 
+  /**
+   * Retrieves a list of DocumentTypeEntity instances that match the given document category
+   * and have abbreviations contained in the specified collection.
+   *
+   * @param documentCategory the category of the documents to filter by; must not be null
+   * @param abbreviations the collection of abbreviations to filter by; must not be null
+   * @return a list of matching DocumentTypeEntity instances based on the provided criteria
+   */
   List<DocumentTypeEntity> findByDocumentCategoryAndAbbreviationIn(
     @Nonnull DocumentCategory documentCategory,
     @Nonnull Collection<String> abbreviations
