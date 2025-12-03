@@ -209,7 +209,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   @Test
   void supports_shouldReturnFalseForUnsupportedTypes() {
     // given
-    IDocumentationContent unsupportedContent = Mockito.mock(IDocumentationContent.class);
+    DocumentationUnitContent unsupportedContent = Mockito.mock(DocumentationUnitContent.class);
 
     // then
     assertThat(literatureLdmlConverterStrategy.supports(unsupportedContent)).isFalse();
@@ -218,7 +218,7 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   @Test
   void convertToLdml_shouldWrapExceptionsInPublishingFailedException() {
     // given
-    IDocumentationContent unsupportedContent = Mockito.mock(AdmDocumentationUnitContent.class);
+    DocumentationUnitContent unsupportedContent = Mockito.mock(AdmDocumentationUnitContent.class);
 
     // when and then
     assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)

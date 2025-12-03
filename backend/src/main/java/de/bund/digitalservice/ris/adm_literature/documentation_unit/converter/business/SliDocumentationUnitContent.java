@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,11 @@ public record SliDocumentationUnitContent(
   List<AktivzitierungSli> aktivzitierungenSli
 )
   implements LiteratureDocumentationUnitContent {
+  @Override
+  public DocumentCategory documentCategory() {
+    return DocumentCategory.LITERATUR_SELBSTAENDIG;
+  }
+
   /**
    * A reference to an active SLI.
    * @param documentNumber The document number of the SLI.

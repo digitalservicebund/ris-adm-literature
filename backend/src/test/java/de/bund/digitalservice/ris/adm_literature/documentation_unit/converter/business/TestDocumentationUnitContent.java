@@ -33,7 +33,7 @@ public class TestDocumentationUnitContent {
       documentNumber,
       veroeffentlichungsjahr,
       List.of(new DocumentType("Auf", "Aufsatz")),
-      null,
+      "Hauptsachtitel",
       null,
       null,
       null,

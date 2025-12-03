@@ -31,7 +31,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     UUID uuid = UUID.randomUUID();
     DocumentationUnit documentationUnit = new DocumentationUnit("KSNR20250000001", uuid, null, xml);
 
@@ -49,7 +49,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_fundstellen() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -73,7 +73,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_longTitle() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -95,7 +95,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_kurzreferat() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -118,7 +118,7 @@ class LdmlConverterServiceIntegrationTest {
   @Tag("RISDEV-7821")
   void convertToBusinessModel_noKurzreferat() {
     // given
-    String xml = TestFile.readFileToString("ldml-no-kurzreferat.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-no-kurzreferat.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -137,7 +137,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_entryIntoEffectDate() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -159,7 +159,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_expiryDate() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -181,7 +181,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_gliederung() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -240,7 +240,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_keywords() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -301,7 +301,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_datesToQuote() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -324,7 +324,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_referenceNumbers() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -385,7 +385,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_fieldsOfLaw() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -415,7 +415,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_documentType() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -438,7 +438,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_documentTypeZusatz() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -460,7 +460,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_normReference() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -489,7 +489,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_activeCitations() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -533,7 +533,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_activeReferences() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -569,7 +569,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_normgeber() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -604,7 +604,7 @@ class LdmlConverterServiceIntegrationTest {
   @Tag("RISDEV-7936")
   void convertToBusinessModel_normgeberEqualNameForLegalEntityAndOrgan() {
     // given
-    String xml = TestFile.readFileToString("ldml-example-normgeber.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example-normgeber.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -638,7 +638,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_berufsbilder() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -662,7 +662,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_titelAspekte() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),
@@ -686,7 +686,7 @@ class LdmlConverterServiceIntegrationTest {
   @Test
   void convertToBusinessModel_definitionen() {
     // given
-    String xml = TestFile.readFileToString("ldml-example.akn.xml");
+    String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
     DocumentationUnit documentationUnit = new DocumentationUnit(
       "KSNR20250000001",
       UUID.randomUUID(),

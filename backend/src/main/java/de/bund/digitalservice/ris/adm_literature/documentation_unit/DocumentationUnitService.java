@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
@@ -62,9 +62,9 @@ public class DocumentationUnitService {
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
 
-  private String convertToJson(IDocumentationContent iDocumentationContent) {
+  private String convertToJson(DocumentationUnitContent documentationUnitContent) {
     try {
-      return objectMapper.writeValueAsString(iDocumentationContent);
+      return objectMapper.writeValueAsString(documentationUnitContent);
     } catch (JacksonException e) {
       throw new IllegalStateException(e);
     }
@@ -93,7 +93,7 @@ public class DocumentationUnitService {
   @Transactional
   public Optional<DocumentationUnit> publish(
     @Nonnull String documentNumber,
-    @Nonnull IDocumentationContent documentationUnitContent
+    @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
@@ -110,10 +110,15 @@ public class DocumentationUnitService {
     );
 
     return switch (documentationUnitContent) {
-      case SliDocumentationUnitContent _ -> {
+      case SliDocumentationUnitContent sli -> {
+        String json = convertToJson(sli);
+        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+          documentNumber,
+          json,
+          xml
+        );
         publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTAENDIG);
-        // TODO: Return converted doc like for adm NOSONAR
-        yield optionalDocumentationUnit;
+        yield convertLdml(publishedDocumentationUnit);
       }
       case UliDocumentationUnitContent _ -> {
         publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTAENDIG);

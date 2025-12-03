@@ -4,6 +4,9 @@ import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDet
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -275,6 +278,12 @@ public class DocumentationUnitPersistenceService {
     documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
     documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
     documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
+    documentationUnitIndexEntity.setTitel(documentationUnitIndex.getTitel());
+    documentationUnitIndexEntity.setVeroeffentlichungsjahr(
+      documentationUnitIndex.getVeroeffentlichungsjahr()
+    );
+    documentationUnitIndexEntity.setDokumenttypen(documentationUnitIndex.getDokumenttypen());
+    documentationUnitIndexEntity.setVerfasser(documentationUnitIndex.getVerfasser());
     return documentationUnitIndexEntity;
   }
 
@@ -292,11 +301,8 @@ public class DocumentationUnitPersistenceService {
       log.debug("Stacktrace:", e);
     }
     // We save an empty entry so the document still appears on overview page
-    DocumentationUnitIndex fallbackIndex = new DocumentationUnitIndex(documentationUnitEntity);
-    fallbackIndex.setDocumentationUnitType(documentationUnitEntity.getDocumentationUnitType());
-    fallbackIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     // Content fields (langueberschrift, etc.) remain null as intended on error
-    return fallbackIndex;
+    return new DocumentationUnitIndex(documentationUnitEntity);
   }
 
   private DocumentationUnitIndex createIndex(
@@ -305,10 +311,6 @@ public class DocumentationUnitPersistenceService {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
-    documentationUnitIndex.setDocumentationUnitType(
-      documentationUnitEntity.getDocumentationUnitType()
-    );
-    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
     if (documentationUnitEntity.isEmpty()) {
       // We save an empty entry so the document still appears on overview page
       return documentationUnitIndex;
@@ -329,56 +331,96 @@ public class DocumentationUnitPersistenceService {
       );
     } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
-      AdmDocumentationUnitContent admDocumentationUnitContent = transformJson(
-        documentationUnitEntity.getJson()
-      );
-      documentationUnitIndex = createDocumentationUnitIndex(
-        documentationUnitEntity,
-        admDocumentationUnitContent
-      );
+      switch (documentationUnitEntity.getDocumentationUnitType()) {
+        case VERWALTUNGSVORSCHRIFTEN -> {
+          AdmDocumentationUnitContent admDocumentationUnitContent = transformJson(
+            documentationUnitEntity.getJson(),
+            AdmDocumentationUnitContent.class
+          );
+          documentationUnitIndex = createDocumentationUnitIndex(
+            documentationUnitEntity,
+            admDocumentationUnitContent
+          );
+        }
+        case LITERATUR_SELBSTAENDIG -> {
+          SliDocumentationUnitContent sliDocumentationUnitContent = transformJson(
+            documentationUnitEntity.getJson(),
+            SliDocumentationUnitContent.class
+          );
+          documentationUnitIndex = createDocumentationUnitIndex(
+            documentationUnitEntity,
+            sliDocumentationUnitContent
+          );
+        }
+        default -> log.warn(
+          "Indexing document category {} is not supported.",
+          documentationUnitEntity.getDocumentationUnitType()
+        );
+      }
     }
     return documentationUnitIndex;
   }
 
   private DocumentationUnitIndex createDocumentationUnitIndex(
     DocumentationUnitEntity documentationUnitEntity,
-    AdmDocumentationUnitContent admDocumentationUnitContent
+    DocumentationUnitContent documentationUnitContent
   ) {
     DocumentationUnitIndex documentationUnitIndex = new DocumentationUnitIndex(
       documentationUnitEntity
     );
-    documentationUnitIndex.setDocumentationUnitType(
-      documentationUnitEntity.getDocumentationUnitType()
-    );
-    documentationUnitIndex.setDocumentationOffice(documentationUnitEntity.getDocumentationOffice());
-    documentationUnitIndex.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
-    if (admDocumentationUnitContent.fundstellen() != null) {
-      documentationUnitIndex.setFundstellen(
-        admDocumentationUnitContent
-          .fundstellen()
-          .stream()
-          .map(
-            f ->
-              (f.ambiguousPeriodikum() != null
-                  ? f.ambiguousPeriodikum()
-                  : f.periodikum().abbreviation()) +
-              " " +
-              f.zitatstelle()
-          )
-          .collect(Collectors.joining(ENTRY_SEPARATOR))
-      );
-    }
-    if (admDocumentationUnitContent.zitierdaten() != null) {
-      documentationUnitIndex.setZitierdaten(
-        String.join(ENTRY_SEPARATOR, admDocumentationUnitContent.zitierdaten())
+    switch (documentationUnitContent) {
+      case AdmDocumentationUnitContent admDocumentationUnitContent -> {
+        documentationUnitIndex.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
+        if (admDocumentationUnitContent.fundstellen() != null) {
+          documentationUnitIndex.setFundstellen(
+            admDocumentationUnitContent
+              .fundstellen()
+              .stream()
+              .map(
+                f ->
+                  (f.ambiguousPeriodikum() != null
+                      ? f.ambiguousPeriodikum()
+                      : f.periodikum().abbreviation()) +
+                  " " +
+                  f.zitatstelle()
+              )
+              .collect(Collectors.joining(ENTRY_SEPARATOR))
+          );
+        }
+        if (admDocumentationUnitContent.zitierdaten() != null) {
+          documentationUnitIndex.setZitierdaten(
+            String.join(ENTRY_SEPARATOR, admDocumentationUnitContent.zitierdaten())
+          );
+        }
+      }
+      case SliDocumentationUnitContent sliDocumentationUnitContent -> {
+        documentationUnitIndex.setTitel(sliDocumentationUnitContent.titel());
+        documentationUnitIndex.setVeroeffentlichungsjahr(
+          sliDocumentationUnitContent.veroeffentlichungsjahr()
+        );
+        documentationUnitIndex.setDokumenttypen(
+          sliDocumentationUnitContent
+            .dokumenttypen()
+            .stream()
+            .map(DocumentType::abbreviation)
+            .collect(Collectors.joining(ENTRY_SEPARATOR))
+        );
+        documentationUnitIndex.setVerfasser(null);
+      }
+      default -> log.debug(
+        "Indexing document category {} is not supported.",
+        documentationUnitContent.documentCategory()
       );
     }
     return documentationUnitIndex;
   }
 
-  private AdmDocumentationUnitContent transformJson(@Nonnull String json) {
+  private <T extends DocumentationUnitContent> T transformJson(
+    @Nonnull String json,
+    Class<T> clazz
+  ) {
     try {
-      return objectMapper.readValue(json, AdmDocumentationUnitContent.class);
+      return objectMapper.readValue(json, clazz);
     } catch (JacksonException e) {
       throw new IllegalStateException("Exception during transforming json: " + json, e);
     }
@@ -390,10 +432,12 @@ public class DocumentationUnitPersistenceService {
   private static class DocumentationUnitIndex {
 
     private final DocumentationUnitEntity documentationUnitEntity;
-    private DocumentCategory documentationUnitType;
-    private DocumentationOffice documentationOffice;
     private String langueberschrift;
     private String fundstellen;
     private String zitierdaten;
+    private String titel;
+    private String veroeffentlichungsjahr;
+    private String dokumenttypen;
+    private String verfasser;
   }
 }

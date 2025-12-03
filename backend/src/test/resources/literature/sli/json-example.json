@@ -1,0 +1,20 @@
+{
+  "documentNumber": "KVLS2025000009",
+  "dokumenttypen": [
+    {
+      "abbreviation": "Ebs",
+      "name": "Entscheidungsbesprechung",
+      "uuid": "Ebs"
+    },
+    {
+      "abbreviation": "Gut",
+      "name": "Gutachten",
+      "uuid": "Gut"
+    }
+  ],
+  "hauptsachtitel": "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+  "hauptsachtitelZusatz": "Entscheidungsbesprechung",
+  "id": "93570ba7-5650-472d-9da1-77375c194163",
+  "note": "",
+  "veroeffentlichungsjahr": "2022ff"
+}
