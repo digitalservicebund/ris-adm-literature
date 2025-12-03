@@ -53,60 +53,52 @@ public record SliLiteratureDocumentationUnitSpecification(
       );
     }
 
-    boolean searchInIndexTable =
-      StringUtils.hasText(veroeffentlichungsjahr) ||
-      StringUtils.hasText(titel) ||
-      !CollectionUtils.isEmpty(dokumenttypen) ||
-      !CollectionUtils.isEmpty(verfasser);
+    Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
+      "documentationUnitIndex",
+      JoinType.LEFT
+    );
 
-    if (searchInIndexTable) {
-      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
-        "documentationUnitIndex",
-        JoinType.LEFT
+    if (StringUtils.hasText(veroeffentlichungsjahr)) {
+      predicates.add(
+        criteriaBuilder.like(
+          criteriaBuilder.lower(indexJoin.get("veroeffentlichungsjahr")),
+          sqlContains(veroeffentlichungsjahr)
+        )
       );
+    }
 
-      if (StringUtils.hasText(veroeffentlichungsjahr)) {
-        predicates.add(
+    if (StringUtils.hasText(titel)) {
+      predicates.add(
+        criteriaBuilder.like(criteriaBuilder.lower(indexJoin.get("titel")), sqlContains(titel))
+      );
+    }
+
+    if (!CollectionUtils.isEmpty(dokumenttypen)) {
+      Predicate[] typePredicates = dokumenttypen
+        .stream()
+        .map(type ->
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("veroeffentlichungsjahr")),
-            sqlContains(veroeffentlichungsjahr)
+            criteriaBuilder.lower(indexJoin.get("dokumenttypen")),
+            sqlContains(type)
           )
-        );
-      }
+        )
+        .toArray(Predicate[]::new);
 
-      if (StringUtils.hasText(titel)) {
-        predicates.add(
-          criteriaBuilder.like(criteriaBuilder.lower(indexJoin.get("titel")), sqlContains(titel))
-        );
-      }
+      predicates.add(criteriaBuilder.and(typePredicates));
+    }
 
-      if (!CollectionUtils.isEmpty(dokumenttypen)) {
-        Predicate[] typePredicates = dokumenttypen
-          .stream()
-          .map(type ->
-            criteriaBuilder.like(
-              criteriaBuilder.lower(indexJoin.get("dokumenttypen")),
-              sqlContains(type)
-            )
+    if (!CollectionUtils.isEmpty(verfasser)) {
+      Predicate[] authorPredicates = verfasser
+        .stream()
+        .map(author ->
+          criteriaBuilder.like(
+            criteriaBuilder.lower(indexJoin.get("verfasser")),
+            sqlContains(author)
           )
-          .toArray(Predicate[]::new);
+        )
+        .toArray(Predicate[]::new);
 
-        predicates.add(criteriaBuilder.and(typePredicates));
-      }
-
-      if (!CollectionUtils.isEmpty(verfasser)) {
-        Predicate[] authorPredicates = verfasser
-          .stream()
-          .map(author ->
-            criteriaBuilder.like(
-              criteriaBuilder.lower(indexJoin.get("verfasser")),
-              sqlContains(author)
-            )
-          )
-          .toArray(Predicate[]::new);
-
-        predicates.add(criteriaBuilder.and(authorPredicates));
-      }
+      predicates.add(criteriaBuilder.and(authorPredicates));
     }
 
     return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
