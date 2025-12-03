@@ -317,8 +317,6 @@ class DocumentationUnitServiceTest {
     given(
       documentationUnitPersistenceService.publish("KVLS123456789", TEST_JSON, TEST_NEW_XML)
     ).willReturn(publishedUnit);
-    // TODO Return business model once LdmlConverterService supports multiple document categories NOSONAR
-    given(ldmlConverterService.convertToBusinessModel(publishedUnit)).willReturn(null);
 
     // when
     Optional<DocumentationUnit> result = documentationUnitService.publish(

@@ -118,7 +118,7 @@ public class DocumentationUnitService {
           xml
         );
         publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTAENDIG);
-        yield convertLdml(publishedDocumentationUnit);
+        yield Optional.of(publishedDocumentationUnit);
       }
       case UliDocumentationUnitContent _ -> {
         publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTAENDIG);
