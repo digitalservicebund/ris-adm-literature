@@ -190,7 +190,7 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
   })
 
-  it('triggers a search when clicking on search', async () => {
+  it('triggers a search when clicking on search, shows the results and the paginator, navigates to next result page', async () => {
     vi.resetModules()
     const fetchPaginatedDataMock = vi.fn()
 
@@ -199,9 +199,12 @@ describe('AktivzitierungLiteratures', () => {
         usePagination: () => ({
           isFetching: ref(false),
           firstRowIndex: ref(0),
-          totalRows: ref(2),
-          items: ref([{ id: 'searchResultId1' }, { id: 'searchResultId2' }]),
-          ITEMS_PER_PAGE: ref(10),
+          totalRows: ref(20),
+          items: ref(
+            Array.from({ length: 20 }, (_, index) => ({
+              id: `searchResultId${index + 1}`,
+            })),
+          ),
           fetchPaginatedData: fetchPaginatedDataMock,
           error: null,
         }),
@@ -237,10 +240,23 @@ describe('AktivzitierungLiteratures', () => {
       },
     })
 
+    expect(screen.queryByText('Passende Suchergebnisse:')).not.toBeInTheDocument()
+
+    // when
     await user.click(screen.getByRole('button', { name: 'Fake search' }))
+    // then
     expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, { titel: 'searched titel' })
     expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
-    expect(screen.queryAllByRole('listitem')).toHaveLength(2)
+    expect(screen.queryAllByRole('listitem')).toHaveLength(20)
+    expect(screen.getByLabelText('Zurück')).toBeInTheDocument()
+    expect(screen.getByText('Seite 1')).toBeInTheDocument()
+    expect(screen.getByLabelText('Weiter')).toBeInTheDocument()
+
+    // when
+    await user.click(screen.getByLabelText('Weiter'))
+    // then
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(1, { titel: 'searched titel' })
+    expect(screen.getByText('Seite 2')).toBeInTheDocument()
   })
 
   it('should show an error toast on fetching error', async () => {
@@ -289,5 +305,27 @@ describe('AktivzitierungLiteratures', () => {
       severity: 'error',
       summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
     })
+  })
+
+  it('aktivzitierung list is empty when there is no existing aktivzitierungen', async () => {
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                },
+              },
+            },
+          }),
+        ],
+      },
+    })
+
+    expect(screen.queryByRole('list', { name: 'Aktivzitierung Liste' })).not.toBeInTheDocument()
   })
 })
