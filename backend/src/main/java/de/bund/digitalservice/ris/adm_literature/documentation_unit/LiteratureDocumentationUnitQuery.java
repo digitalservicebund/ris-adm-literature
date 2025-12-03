@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public record LiteratureDocumentationUnitQuery(
   String documentNumber,
   String veroeffentlichungsjahr,
-  List<DocumentType> dokumenttypen,
+  List<String> dokumenttypen,
   String titel,
   List<String> verfasser,
   @Nonnull QueryOptions queryOptions

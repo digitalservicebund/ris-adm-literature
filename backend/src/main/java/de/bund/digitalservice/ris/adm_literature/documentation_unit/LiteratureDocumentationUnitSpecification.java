@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 public record LiteratureDocumentationUnitSpecification(
   String documentNumber,
   String veroeffentlichungsjahr,
-  List<DocumentType> dokumenttypen,
+  List<String> dokumenttypen,
   String titel,
   List<String> verfasser
 )
@@ -79,7 +79,7 @@ public record LiteratureDocumentationUnitSpecification(
           .map(type ->
             criteriaBuilder.like(
               criteriaBuilder.lower(indexJoin.get("dokumenttypen")),
-              sqlContains(type.abbreviation())
+              sqlContains(type)
             )
           )
           .toArray(Predicate[]::new);

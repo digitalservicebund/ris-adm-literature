@@ -3,7 +3,6 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,13 +67,13 @@ public class LiteratureDocumentationUnitController {
    *
    * @return Document unit (should be multiple in the future)
    */
-  @GetMapping("api/literature/documentation-units")
+  @GetMapping("api/literature/sli/documentation-units")
   public ResponseEntity<
     DocumentationUnitsOverviewResponse<LiteratureDocumentationUnitOverviewElement>
   > find(
     @RequestParam(required = false) String documentNumber,
     @RequestParam(required = false) String veroeffentlichungsjahr,
-    @RequestParam(required = false) List<DocumentType> dokumenttypen,
+    @RequestParam(required = false) List<String> dokumenttypen,
     @RequestParam(required = false) String titel,
     @RequestParam(required = false) List<String> verfasser,
     @RequestParam(defaultValue = "0") int pageNumber,
