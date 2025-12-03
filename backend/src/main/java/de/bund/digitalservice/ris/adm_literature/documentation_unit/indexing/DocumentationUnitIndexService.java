@@ -26,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * Documentation unit index service for building an index for documentation units.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,6 +42,10 @@ public class DocumentationUnitIndexService {
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
 
+  /**
+   * Updates the index for the given documentation unit entity.
+   * @param documentationUnitEntity The documentation unit entity for which the index is to be updated
+   */
   @Transactional(propagation = Propagation.MANDATORY)
   public void updateIndex(DocumentationUnitEntity documentationUnitEntity) {
     documentationUnitIndexRepository.save(
@@ -63,6 +70,7 @@ public class DocumentationUnitIndexService {
    * without an index before calling this method.
    * </p>
    *
+   * @param schemaType The schema to use
    * @return Number of indexed documents
    */
   public long updateIndex(@NonNull SchemaType schemaType) {
