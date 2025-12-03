@@ -70,7 +70,6 @@ onMounted(() => {
       label="Seitenpanel"
       :opening-direction="OpeningDirection.LEFT"
       :shortcut="shortCut"
-      tabindex="0"
       @update:is-expanded="togglePanel"
     >
       <ExtraContentSidePanelMenu

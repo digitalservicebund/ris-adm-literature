@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import { type NodeHelperInterface } from './FieldOfLawNode'
 import FlexContainer from '@/components/FlexContainer.vue'
 import Checkbox from 'primevue/checkbox'
-import Tooltip from '@/components/ToolTip.vue'
 import { type FieldOfLaw } from '@/domain/fieldOfLaw'
 import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
 import IconArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
@@ -108,28 +107,26 @@ watch(
     <FlexContainer class="min-h-36" flex-direction="flex-row">
       <div v-if="node.hasChildren">
         <div v-if="isExpanded">
-          <Tooltip text="Zuklappen">
-            <button
-              id="collapse-button"
-              :aria-label="node.text + ' einklappen'"
-              class="w-icon rounded-full bg-blue-200 text-blue-800"
-              @click="toggleExpanded"
-            >
-              <IconArrowUp />
-            </button>
-          </Tooltip>
+          <button
+            v-tooltip.bottom="'Zuklappen'"
+            id="collapse-button"
+            :aria-label="node.text + ' einklappen'"
+            class="w-icon rounded-full bg-blue-200 text-blue-800"
+            @click="toggleExpanded"
+          >
+            <IconArrowUp />
+          </button>
         </div>
         <div v-else>
-          <Tooltip text="Aufklappen">
-            <button
-              id="expand-button"
-              :aria-label="node.text + ' aufklappen'"
-              class="w-icon rounded-full bg-blue-200 text-blue-800 cursor-pointer"
-              @click="toggleExpanded"
-            >
-              <IconArrowDown />
-            </button>
-          </Tooltip>
+          <button
+            v-tooltip.bottom="'Aufklappen'"
+            id="expand-button"
+            :aria-label="node.text + ' aufklappen'"
+            class="w-icon rounded-full bg-blue-200 text-blue-800 cursor-pointer"
+            @click="toggleExpanded"
+          >
+            <IconArrowDown />
+          </button>
         </div>
       </div>
       <span v-else class="pl-[1.3333em]" />

@@ -73,7 +73,6 @@ watch(
         data-testid="side-toggle-navigation"
         :is-expanded="showNavigationPanelRef"
         label="Navigation"
-        tabindex="0"
         test-id="side-toggle-navigation"
         @update:is-expanded="toggleNavigationPanel"
       >

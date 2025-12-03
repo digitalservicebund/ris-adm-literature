@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
 import AktivzitierungLiteratureItem from './AktivzitierungLiteratureItem.vue'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
@@ -7,7 +7,15 @@ import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature
 import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
+import SearchResults from '@/components/SearchResults.vue'
+import AktivzitierungSearchResult from '@/views/literature/AktivzitierungSearchResult.vue'
+import type { SliDocUnitListItem, SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
+import { useToast } from 'primevue'
+import { usePagination } from '@/composables/usePagination'
+import { useGetSliPaginatedDocUnits } from '@/services/literature/literatureDocumentUnitService'
+import errorMessages from '@/i18n/errors.json'
 
+const toast = useToast()
 const store = useSliDocumentUnitStore()
 
 const aktivzitierungLiteratures = computed({
@@ -19,6 +27,36 @@ const aktivzitierungLiteratures = computed({
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
   useEditableList(aktivzitierungLiteratures)
+
+const {
+  items: searchResults,
+  fetchPaginatedData,
+  isFetching,
+  error,
+} = usePagination<SliDocUnitListItem, SliDocUnitSearchParams>(
+  useGetSliPaginatedDocUnits,
+  'sliReferenceSearchOverview',
+)
+
+watch(error, (err) => {
+  if (err) {
+    toast.add({
+      severity: 'error',
+      summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
+    })
+  }
+})
+
+const searchParams = ref<SliDocUnitSearchParams>()
+
+async function fetchData(page: number = 0) {
+  await fetchPaginatedData(page, searchParams.value)
+}
+
+async function onSearch(params: SliDocUnitSearchParams) {
+  searchParams.value = params
+  await fetchData(0)
+}
 </script>
 
 <template>
@@ -41,6 +79,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
       class="mt-16"
       @update-aktivzitierung-literature="onAddItem"
       @cancel="isCreationPanelOpened = false"
+      @search="onSearch"
       :show-cancel-button="false"
     />
     <Button
@@ -54,5 +93,10 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
     >
       <template #icon><IconAdd /></template>
     </Button>
+    <SearchResults class="mt-16" :search-results="searchResults" :is-loading="isFetching">
+      <template #default="{ searchResult }">
+        <AktivzitierungSearchResult :search-result="searchResult" />
+      </template>
+    </SearchResults>
   </div>
 </template>

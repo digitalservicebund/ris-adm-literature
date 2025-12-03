@@ -254,7 +254,7 @@ class DocumentationUnitServiceTest {
   }
 
   @Test
-  void publish_shouldUseLiteraturePublisher_whenCategoryIsLiteratur() {
+  void publish_shouldUseLiteraturePublisher_whenCategoryIsUli() {
     // given
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KALU123456789",
@@ -291,25 +291,36 @@ class DocumentationUnitServiceTest {
   void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() {
     // given
     DocumentationUnit existingUnit = new DocumentationUnit(
-      "KALU123456789",
+      "KVLS123456789",
       UUID.randomUUID(),
       TEST_JSON,
       TEST_OLD_XML
     );
+    DocumentationUnit publishedUnit = new DocumentationUnit(
+      "KSNR1234567890",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_NEW_XML
+    );
     SliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createSli(
-      "KALU123456789",
+      "KVLS123456789",
       "2025"
     );
-    given(documentationUnitPersistenceService.findByDocumentNumber("KALU123456789")).willReturn(
+    given(documentationUnitPersistenceService.findByDocumentNumber("KVLS123456789")).willReturn(
       Optional.of(existingUnit)
     );
     given(ldmlPublishConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
       TEST_NEW_XML
     );
 
+    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
+    given(
+      documentationUnitPersistenceService.publish("KVLS123456789", TEST_JSON, TEST_NEW_XML)
+    ).willReturn(publishedUnit);
+
     // when
     Optional<DocumentationUnit> result = documentationUnitService.publish(
-      "KALU123456789",
+      "KVLS123456789",
       contentToPublish
     );
 

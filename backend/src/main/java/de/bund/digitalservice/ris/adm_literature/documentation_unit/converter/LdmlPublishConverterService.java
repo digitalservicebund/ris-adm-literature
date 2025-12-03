@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.IDocumentationContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,10 @@ public class LdmlPublishConverterService {
    * @return LDML xml representation
    * @throws IllegalArgumentException if no matching converter strategy is found
    */
-  public String convertToLdml(@Nonnull IDocumentationContent content, String previousXmlVersion) {
+  public String convertToLdml(
+    @Nonnull DocumentationUnitContent content,
+    String previousXmlVersion
+  ) {
     log.debug(
       "Finding converter strategy for content type: {}",
       content.getClass().getSimpleName()

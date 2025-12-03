@@ -1,10 +1,19 @@
 import { userEvent } from '@testing-library/user-event'
 import { render, screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import AktivzitierungLiteratures from './AktivzitierungLiteratures.vue'
 import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
+import { ref } from 'vue'
+import { flushPromises } from '@vue/test-utils'
+
+const addToastMock = vi.fn()
+vi.mock('primevue', () => ({
+  useToast: vi.fn(() => ({
+    add: addToastMock,
+  })),
+}))
 
 const mockAktivzitierungen: AktivzitierungLiterature[] = [
   {
@@ -13,7 +22,7 @@ const mockAktivzitierungen: AktivzitierungLiterature[] = [
     veroeffentlichungsjahr: '2025',
     verfasser: ['again and again'],
     dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
-    hauptsachtitel: 'a new one',
+    titel: 'a new one',
   },
 ]
 
@@ -56,7 +65,7 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
 
     // Creation form from AktivzitierungLiteratureInput is visible
-    expect(screen.getByLabelText('Hauptsachtitel')).toBeInTheDocument()
+    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
 
     // Add button should not be visible in this state
     expect(
@@ -78,7 +87,7 @@ describe('AktivzitierungLiteratures', () => {
 
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
 
-    expect(screen.getByLabelText('Hauptsachtitel')).toBeInTheDocument()
+    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Aktivzitierung hinzufügen' }),
     ).not.toBeInTheDocument()
@@ -91,7 +100,7 @@ describe('AktivzitierungLiteratures', () => {
   it('hides creation input and shows add button when list has entries and panel is closed', () => {
     const mockAktivzitierung: AktivzitierungLiterature = {
       id: '1',
-      hauptsachtitel: 'Titel',
+      titel: 'Titel',
     }
 
     renderComponent([mockAktivzitierung])
@@ -123,11 +132,13 @@ describe('AktivzitierungLiteratures', () => {
         stubs: {
           AktivzitierungLiteratureInput: {
             template:
-              "<button aria-label=\"Fake add\" @click=\"$emit('update-aktivzitierung-literature', { id: '1', newEntry: true, hauptsachtitel: 'Neu' })\"></button>",
+              "<button aria-label=\"Fake add\" @click=\"$emit('update-aktivzitierung-literature', { id: '1', titel: 'Neu' })\"></button>",
           },
         },
       },
     })
+
+    screen.debug()
 
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
 
@@ -143,7 +154,7 @@ describe('AktivzitierungLiteratures', () => {
     const existing: AktivzitierungLiterature = {
       id: '1',
       uuid: '1',
-      hauptsachtitel: 'Titel',
+      titel: 'Titel',
     }
 
     render(AktivzitierungLiteratures, {
@@ -177,5 +188,106 @@ describe('AktivzitierungLiteratures', () => {
 
     expect(screen.queryByRole('button', { name: 'Fake cancel' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+  })
+
+  it('triggers a search when clicking on search', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([{ id: 'searchResultId1' }, { id: 'searchResultId2' }]),
+          ITEMS_PER_PAGE: ref(10),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, { titel: 'searched titel' })
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(2)
+  })
+
+  it('should show an error toast on fetching error', async () => {
+    vi.resetModules()
+    const errorRef = ref()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([]),
+          ITEMS_PER_PAGE: ref(10),
+          fetchPaginatedData: vi.fn(),
+          error: errorRef,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+      },
+    })
+
+    errorRef.value = new Error('fetch error')
+    await flushPromises()
+
+    expect(addToastMock).toHaveBeenCalledWith({
+      severity: 'error',
+      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
+    })
   })
 })
