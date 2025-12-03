@@ -73,7 +73,7 @@ class LiteratureDocumentationUnitControllerTest {
 
       // when & then
       mockMvc
-        .perform(get("/api/literature/documentation-units"))
+        .perform(get("/api/literature/sli/documentation-units"))
         .andExpect(status().isOk())
         .andExpect(
           content()
