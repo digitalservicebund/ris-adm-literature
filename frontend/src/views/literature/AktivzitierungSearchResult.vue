@@ -5,8 +5,7 @@ const props = defineProps<{
   searchResult: SliDocUnitListItem
 }>()
 
-const { veroeffentlichungsjahr, verfasser, documentNumber, hauptsachtitel, dokumentarischerTitel } =
-  props.searchResult
+const { veroeffentlichungsjahr, verfasser, documentNumber, titel } = props.searchResult
 
 function formatHeading(): string {
   const hasAuthor = verfasser && verfasser.length > 0
@@ -37,7 +36,7 @@ function formatHeading(): string {
       {{ formatHeading() }}
     </p>
     <p class="ris-body2-regular text-gray-800">
-      {{ hauptsachtitel || dokumentarischerTitel || 'unbekannt' }}
+      {{ titel || 'unbekannt' }}
     </p>
   </div>
 </template>

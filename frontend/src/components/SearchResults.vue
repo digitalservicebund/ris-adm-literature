@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bg-blue-200 p-16">
+  <div>
     <div v-if="isLoading" class="grid justify-items-center">
       <ProgressSpinner />
     </div>

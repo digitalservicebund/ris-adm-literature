@@ -10,17 +10,18 @@ import SearchPanel from './SearchPanel.vue'
 import errorMessages from '@/i18n/errors.json'
 
 const toast = useToast()
+const ITEMS_PER_PAGE = 100
 
 const {
   firstRowIndex,
   totalRows,
   items: docUnits,
-  ITEMS_PER_PAGE,
   fetchPaginatedData,
   isFetching,
   error,
 } = usePagination<AdmDocUnitListItem, AdmDocUnitSearchParams>(
   useGetAdmPaginatedDocUnits,
+  ITEMS_PER_PAGE,
   'documentationUnitsOverview',
 )
 
