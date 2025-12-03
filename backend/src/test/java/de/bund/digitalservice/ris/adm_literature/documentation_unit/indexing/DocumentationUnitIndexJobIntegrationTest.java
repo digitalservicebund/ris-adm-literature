@@ -29,6 +29,14 @@ class DocumentationUnitIndexJobIntegrationTest {
   @Test
   void indexAll() {
     // given
+    entityManager
+      .getEntityManager()
+      .createQuery("DELETE FROM DocumentationUnitIndexEntity")
+      .executeUpdate();
+    entityManager
+      .getEntityManager()
+      .createQuery("DELETE FROM DocumentationUnitEntity")
+      .executeUpdate();
     DocumentationUnitEntity admDocumentationUnitEntity = new DocumentationUnitEntity();
     admDocumentationUnitEntity.setDocumentNumber("KSNR777777777");
     admDocumentationUnitEntity.setJson(TestFile.readFileToString("adm/json-example.json"));
