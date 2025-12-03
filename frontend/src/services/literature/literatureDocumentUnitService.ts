@@ -116,7 +116,7 @@ export function useGetSliPaginatedDocUnits(
   search: Ref<SliDocUnitSearchParams | undefined>,
 ): UseFetchReturn<PaginatedSliDocUnitListResponse> {
   const urlWithParams = computed(() =>
-    buildUrlWithParams(`${LITERATURE_DOCUMENTATION_UNITS_URL}`, {
+    buildUrlWithParams(`${SLI_LITERATURE_DOCUMENTATION_UNITS_URL}`, {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       titel: search?.value?.titel?.toString(),
