@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureTestEntityManager
 @ActiveProfiles("test")
-class SliLiteratureDocumentationUnitSpecificationTest {
+class SliDocumentationUnitSpecificationTest {
 
   @Autowired
   private TestEntityManager entityManager;
@@ -44,8 +44,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   @DisplayName("toPredicate with no parameters should only filter by category, no joins")
   void toPredicate_withNoParameters() {
     // given
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(null, null, null, null, null);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      null,
+      null,
+      null,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -67,8 +72,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   @DisplayName("toPredicate with documentNumber should add like clause and no join")
   void toPredicate_withDocumentNumberOnly() {
     // given
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification("123", null, null, null, null);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      "123",
+      null,
+      null,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -90,8 +100,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   @DisplayName("toPredicate with veroeffentlichungsjahr should add like clause and left join")
   void toPredicate_withVeroeffentlichungsjahrOnly() {
     // given
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(null, "2023", null, null, null);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      null,
+      "2023",
+      null,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -112,8 +127,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   @DisplayName("toPredicate with title should add like clause and left join")
   void toPredicate_withTitleOnly() {
     // given
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(null, null, null, "My Title", null);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      null,
+      null,
+      null,
+      "My Title",
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -135,8 +155,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   void toPredicate_withMultipleDokumenttypen_shouldUseAndLogic() {
     // given
     List<String> types = List.of("Buch", "Artikel");
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(null, null, types, null, null);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      null,
+      null,
+      types,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -160,8 +185,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   void toPredicate_withMultipleVerfasser_shouldUseAndLogic() {
     // given
     List<String> authors = List.of("Müller", "Schmidt");
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(null, null, null, null, authors);
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      null,
+      null,
+      null,
+      null,
+      authors
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -184,14 +214,13 @@ class SliLiteratureDocumentationUnitSpecificationTest {
   @DisplayName("toPredicate with all parameters should combine all clauses correctly")
   void toPredicate_withAllParameters() {
     // given
-    SliLiteratureDocumentationUnitSpecification spec =
-      new SliLiteratureDocumentationUnitSpecification(
-        "123",
-        "2023",
-        List.of("Buch"),
-        "Titel",
-        List.of("Author")
-      );
+    SliDocumentationUnitSpecification spec = new SliDocumentationUnitSpecification(
+      "123",
+      "2023",
+      List.of("Buch"),
+      "Titel",
+      List.of("Author")
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);

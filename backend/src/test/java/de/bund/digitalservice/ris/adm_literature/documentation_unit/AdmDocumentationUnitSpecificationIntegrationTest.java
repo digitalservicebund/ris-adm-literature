@@ -43,7 +43,7 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with no parameters should not add a filtering where clause")
   void toPredicate_withNoParameters() {
     // given
-    AdmDocumentUnitSpecification specification = new AdmDocumentUnitSpecification(
+    AdmDocumentionUnitSpecification specification = new AdmDocumentionUnitSpecification(
       null,
       null,
       null,
@@ -67,7 +67,12 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with documentNumber should add like clause and no join")
   void toPredicate_withDocumentNumberOnly() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification("123", null, null, null);
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
+      "123",
+      null,
+      null,
+      null
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -86,7 +91,7 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with langueberschrift should add like clause and a left join")
   void toPredicate_withLangueberschriftOnly() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
       null,
       "ueberschriftXY",
       null,
@@ -112,7 +117,7 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with fundstellen should add like clause and a left join")
   void toPredicate_withFundstellenOnly() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
       null,
       null,
       "fundstelleXY",
@@ -138,7 +143,12 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with zitierdaten should add like clause and a left join")
   void toPredicate_withZitierdatenOnly() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(null, null, null, "zdXY");
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
+      null,
+      null,
+      null,
+      "zdXY"
+    );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
     CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
     Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
@@ -159,7 +169,7 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   @DisplayName("toPredicate with all parameters should add multiple like clauses and a left join")
   void toPredicate_withAllParameters() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
       "123",
       "luXX",
       "fsXY",
@@ -190,7 +200,7 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
   )
   void toPredicate_withAllIndexParameters() {
     // given
-    AdmDocumentUnitSpecification spec = new AdmDocumentUnitSpecification(
+    AdmDocumentionUnitSpecification spec = new AdmDocumentionUnitSpecification(
       null,
       "luXX",
       "fsXY",

@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
  * @param titel              A string representing the title to filter by.
  * @param verfasser          A list of strings representing the authors to filter by.
  */
-public record SliLiteratureDocumentationUnitSpecification(
+public record SliDocumentationUnitSpecification(
   String documentNumber,
   String veroeffentlichungsjahr,
   List<String> dokumenttypen,
@@ -47,15 +47,6 @@ public record SliLiteratureDocumentationUnitSpecification(
 
     // must be published
     predicates.add(criteriaBuilder.isNotNull(root.get("xml")));
-
-    if (StringUtils.hasText(documentNumber)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(root.get("documentNumber")),
-          sqlContains(documentNumber)
-        )
-      );
-    }
 
     if (StringUtils.hasText(documentNumber)) {
       predicates.add(

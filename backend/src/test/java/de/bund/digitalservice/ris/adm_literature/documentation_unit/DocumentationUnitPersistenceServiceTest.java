@@ -91,7 +91,7 @@ class DocumentationUnitPersistenceServiceTest {
 
     given(
       documentationUnitRepository.findAll(
-        any(AdmDocumentUnitSpecification.class),
+        any(AdmDocumentionUnitSpecification.class),
         any(Pageable.class)
       )
     ).willReturn(pageOfEntities);
@@ -167,7 +167,7 @@ class DocumentationUnitPersistenceServiceTest {
 
     given(
       documentationUnitRepository.findAll(
-        any(SliLiteratureDocumentationUnitSpecification.class),
+        any(SliDocumentationUnitSpecification.class),
         any(Pageable.class)
       )
     ).willReturn(pageOfEntities);

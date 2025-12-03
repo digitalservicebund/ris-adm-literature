@@ -178,14 +178,15 @@ public class DocumentationUnitPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    AdmDocumentUnitSpecification admDocumentUnitSpecification = new AdmDocumentUnitSpecification(
-      query.documentNumber(),
-      query.langueberschrift(),
-      query.fundstellen(),
-      query.zitierdaten()
-    );
+    AdmDocumentionUnitSpecification admDocumentionUnitSpecification =
+      new AdmDocumentionUnitSpecification(
+        query.documentNumber(),
+        query.langueberschrift(),
+        query.fundstellen(),
+        query.zitierdaten()
+      );
     var documentationUnitsPage = documentationUnitRepository.findAll(
-      admDocumentUnitSpecification,
+      admDocumentionUnitSpecification,
       pageable
     );
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
@@ -228,8 +229,8 @@ public class DocumentationUnitPersistenceService {
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    SliLiteratureDocumentationUnitSpecification documentUnitSpecification =
-      new SliLiteratureDocumentationUnitSpecification(
+    SliDocumentationUnitSpecification documentUnitSpecification =
+      new SliDocumentationUnitSpecification(
         query.documentNumber(),
         query.veroeffentlichungsjahr(),
         query.dokumenttypen(),
