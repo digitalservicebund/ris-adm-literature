@@ -69,7 +69,9 @@ public class LiteratureDocumentationUnitController {
    * @return Document unit (should be multiple in the future)
    */
   @GetMapping("api/literature/documentation-units")
-  public ResponseEntity<DocumentationUnitsOverviewResponse> find(
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<LiteratureDocumentationUnitOverviewElement>
+  > find(
     @RequestParam(required = false) String documentNumber,
     @RequestParam(required = false) String veroeffentlichungsjahr,
     @RequestParam(required = false) List<DocumentType> dokumenttypen,
@@ -105,7 +107,7 @@ public class LiteratureDocumentationUnitController {
         )
       );
     return ResponseEntity.ok(
-      new DocumentationUnitsOverviewResponse(
+      new DocumentationUnitsOverviewResponse<>(
         paginatedDocumentationUnits.content(),
         new PageResponse(paginatedDocumentationUnits)
       )

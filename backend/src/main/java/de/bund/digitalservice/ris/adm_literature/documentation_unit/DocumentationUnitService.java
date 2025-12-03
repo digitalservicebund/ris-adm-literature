@@ -145,7 +145,7 @@ public class DocumentationUnitService {
     publisher.publish(publishOptions);
   }
 
-  public Page<DocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+  public Page<AdmDocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
     @Nonnull AdmDocumentationUnitQuery queryOptions
   ) {
     return documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
@@ -153,7 +153,9 @@ public class DocumentationUnitService {
     );
   }
 
-  public Page<DocumentationUnitOverviewElement> findLiteratureDocumentationUnitOverviewElements(
+  public Page<
+    LiteratureDocumentationUnitOverviewElement
+  > findLiteratureDocumentationUnitOverviewElements(
     @Nonnull LiteratureDocumentationUnitQuery queryOptions
   ) {
     return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(

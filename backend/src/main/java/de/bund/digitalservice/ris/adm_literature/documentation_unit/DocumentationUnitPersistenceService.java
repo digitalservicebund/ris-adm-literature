@@ -165,7 +165,7 @@ public class DocumentationUnitPersistenceService {
    * @return Page object with documentation unit overview elements and pagination data
    */
   @Transactional(readOnly = true)
-  public Page<DocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+  public Page<AdmDocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
     @Nonnull AdmDocumentationUnitQuery query
   ) {
     QueryOptions queryOptions = query.queryOptions();
@@ -187,7 +187,7 @@ public class DocumentationUnitPersistenceService {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
       if (index == null) {
-        return new DocumentationUnitOverviewElement(
+        return new AdmDocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
           Collections.emptyList(),
@@ -196,7 +196,7 @@ public class DocumentationUnitPersistenceService {
         );
       }
 
-      return new DocumentationUnitOverviewElement(
+      return new AdmDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
         splitBySeparator(index.getZitierdaten()),
@@ -213,7 +213,9 @@ public class DocumentationUnitPersistenceService {
    * @return Page object with documentation unit overview elements and pagination data
    */
   @Transactional(readOnly = true)
-  public Page<DocumentationUnitOverviewElement> findLiteratureDocumentationUnitOverviewElements(
+  public Page<
+    LiteratureDocumentationUnitOverviewElement
+  > findLiteratureDocumentationUnitOverviewElements(
     @Nonnull LiteratureDocumentationUnitQuery query
   ) {
     QueryOptions queryOptions = query.queryOptions();
@@ -237,21 +239,23 @@ public class DocumentationUnitPersistenceService {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
       if (index == null) {
-        return new DocumentationUnitOverviewElement(
+        return new LiteratureDocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
-          Collections.emptyList(),
           null,
+          null,
+          Collections.emptyList(),
           Collections.emptyList()
         );
       }
 
-      return new DocumentationUnitOverviewElement(
+      return new LiteratureDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
-        splitBySeparator(index.getZitierdaten()),
-        index.getLangueberschrift(),
-        splitBySeparator(index.getFundstellen())
+        index.getVeroeffentlichungsjahr(),
+        index.getTitel(),
+        splitBySeparator(index.getDokumenttypen()),
+        splitBySeparator(index.getVerfasser())
       );
     });
   }

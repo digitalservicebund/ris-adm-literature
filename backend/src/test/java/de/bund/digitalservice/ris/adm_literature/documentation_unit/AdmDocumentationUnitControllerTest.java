@@ -152,14 +152,14 @@ class AdmDocumentationUnitControllerTest {
       given(documentationUnitService.findAdmDocumentationUnitOverviewElements(any())).willReturn(
         TestPage.create(
           List.of(
-            new DocumentationUnitOverviewElement(
+            new AdmDocumentationUnitOverviewElement(
               UUID.fromString("11111111-1657-4085-ae2a-993a04c27f6b"),
               "KSNR000004711",
               List.of("2011-11-11"),
               "Sample Document Title 1",
               List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2")
             ),
-            new DocumentationUnitOverviewElement(
+            new AdmDocumentationUnitOverviewElement(
               UUID.fromString("22222222-1657-4085-ae2a-993a04c27f6b"),
               "KSNR000004712",
               List.of("2011-11-11"),
@@ -262,7 +262,7 @@ class AdmDocumentationUnitControllerTest {
       ).willReturn(
         TestPage.create(
           List.of(
-            new DocumentationUnitOverviewElement(
+            new AdmDocumentationUnitOverviewElement(
               UUID.randomUUID(),
               documentNumber,
               List.of(zitierdaten),

@@ -90,25 +90,26 @@ class DocumentationUnitPersistenceServiceTest {
     ).willReturn(pageOfEntities);
 
     // when
-    de.bund.digitalservice.ris.adm_literature.page.Page<DocumentationUnitOverviewElement> result =
-      documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
-        new AdmDocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
-        )
-      );
+    de.bund.digitalservice.ris.adm_literature.page.Page<
+      AdmDocumentationUnitOverviewElement
+    > result = documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
+      new AdmDocumentationUnitQuery(
+        null,
+        null,
+        null,
+        null,
+        new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+      )
+    );
 
     // then
     assertThat(result.content())
       .hasSize(2)
       .extracting(
-        DocumentationUnitOverviewElement::documentNumber,
-        DocumentationUnitOverviewElement::langueberschrift,
-        DocumentationUnitOverviewElement::zitierdaten,
-        DocumentationUnitOverviewElement::fundstellen
+        AdmDocumentationUnitOverviewElement::documentNumber,
+        AdmDocumentationUnitOverviewElement::langueberschrift,
+        AdmDocumentationUnitOverviewElement::zitierdaten,
+        AdmDocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(
         Tuple.tuple("DOC-001", "Title 1", List.of("2023-01-01"), List.of("Citation 1")),
@@ -116,7 +117,7 @@ class DocumentationUnitPersistenceServiceTest {
       );
 
     // Assert transformation for the entity WITH an index
-    DocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    AdmDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
     assertThat(elementWithIndex.id()).isEqualTo(entityWithIndex.getId());
     assertThat(elementWithIndex.documentNumber()).isEqualTo("DOC-001");
     assertThat(elementWithIndex.langueberschrift()).isEqualTo("Title 1");
@@ -124,7 +125,7 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithIndex.fundstellen()).containsExactly("Citation 1");
 
     // Assert transformation for the entity WITHOUT an index
-    DocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    AdmDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.id()).isEqualTo(entityWithoutIndex.getId());
     assertThat(elementWithoutIndex.documentNumber()).isEqualTo("DOC-002");
     assertThat(elementWithoutIndex.langueberschrift()).isNull();

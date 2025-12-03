@@ -280,15 +280,15 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // then
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
-      .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
+      .asInstanceOf(InstanceOfAssertFactories.list(AdmDocumentationUnitOverviewElement.class))
       .filteredOn(documentationUnitOverviewElement ->
         documentationUnitOverviewElement.documentNumber().equals("KSNR2025100001")
       )
       .singleElement()
       .extracting(
-        DocumentationUnitOverviewElement::zitierdaten,
-        DocumentationUnitOverviewElement::langueberschrift,
-        DocumentationUnitOverviewElement::fundstellen
+        AdmDocumentationUnitOverviewElement::zitierdaten,
+        AdmDocumentationUnitOverviewElement::langueberschrift,
+        AdmDocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(
         List.of("2011-11-11"),
@@ -337,15 +337,15 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // then
     assertThat(documentationUnitOverviewElements)
       .extracting(Page::content)
-      .asInstanceOf(InstanceOfAssertFactories.list(DocumentationUnitOverviewElement.class))
+      .asInstanceOf(InstanceOfAssertFactories.list(AdmDocumentationUnitOverviewElement.class))
       .filteredOn(documentationUnitOverviewElement ->
         documentationUnitOverviewElement.documentNumber().equals("KSNR2025100002")
       )
       .singleElement()
       .extracting(
-        DocumentationUnitOverviewElement::zitierdaten,
-        DocumentationUnitOverviewElement::langueberschrift,
-        DocumentationUnitOverviewElement::fundstellen
+        AdmDocumentationUnitOverviewElement::zitierdaten,
+        AdmDocumentationUnitOverviewElement::langueberschrift,
+        AdmDocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(List.of("2011-11-11"), "Sample Document Title 1", List.of());
   }
@@ -372,7 +372,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(result.content())
       .hasSize(1)
       .singleElement()
-      .extracting(DocumentationUnitOverviewElement::documentNumber)
+      .extracting(AdmDocumentationUnitOverviewElement::documentNumber)
       .isEqualTo("KSNR00001");
   }
 
@@ -398,7 +398,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(result.content())
       .hasSize(1)
       .singleElement()
-      .extracting(DocumentationUnitOverviewElement::langueberschrift)
+      .extracting(AdmDocumentationUnitOverviewElement::langueberschrift)
       .isEqualTo("A very specific title");
   }
 
@@ -424,7 +424,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(result.content())
       .hasSize(1)
       .singleElement()
-      .extracting(DocumentationUnitOverviewElement::fundstellen)
+      .extracting(AdmDocumentationUnitOverviewElement::fundstellen)
       .isEqualTo(List.of("Fundstelle Alpha"));
   }
 
@@ -450,7 +450,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(result.content())
       .hasSize(1)
       .singleElement()
-      .extracting(DocumentationUnitOverviewElement::zitierdaten)
+      .extracting(AdmDocumentationUnitOverviewElement::zitierdaten)
       .isEqualTo(List.of("2025-01-07"));
   }
 
