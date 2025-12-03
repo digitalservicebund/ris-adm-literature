@@ -10,6 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * Repository for {@link DocumentTypeEntity}.
+ */
 public interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity, UUID> {
   Page<
     DocumentTypeEntity
