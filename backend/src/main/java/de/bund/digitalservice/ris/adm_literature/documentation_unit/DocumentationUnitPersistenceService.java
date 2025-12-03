@@ -42,7 +42,7 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class DocumentationUnitPersistenceService {
 
-  static final String ENTRY_SEPARATOR = "$µµµµµ$";
+  public static final String ENTRY_SEPARATOR = "$µµµµµ$";
 
   private static final int INDEX_BATCH_SIZE = 500;
 

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeRepository;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ class DocumentationUnitPersistenceServiceTest {
 
   @Mock
   private DocumentationUnitRepository documentationUnitRepository;
+
+  @Mock
+  private DocumentTypeRepository documentTypeRepository;
 
   @Test
   void findByDocumentNumber() {
@@ -139,7 +143,7 @@ class DocumentationUnitPersistenceServiceTest {
   @Test
   void findLiteratureDocumentationUnitOverviewElements() {
     // given
-    String separator = "$µµµµµ$";
+    String separator = DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
 
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(UUID.randomUUID());
@@ -148,7 +152,7 @@ class DocumentationUnitPersistenceServiceTest {
     DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
     index.setVeroeffentlichungsjahr("2024");
     index.setTitel("Literature Title");
-    index.setDokumenttypen("BOOK" + separator + "ARTICLE");
+    index.setDokumenttypen("Entscheidungsbesprechung" + separator + "Dissertation");
     index.setVerfasser("Doe, John" + separator + "Smith, Jane");
     entityWithIndex.setDocumentationUnitIndex(index);
 
@@ -195,7 +199,10 @@ class DocumentationUnitPersistenceServiceTest {
       );
 
     LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
-    assertThat(elementWithIndex.dokumenttypen()).containsExactly("BOOK", "ARTICLE");
+    assertThat(elementWithIndex.dokumenttypen()).containsExactly(
+      "Entscheidungsbesprechung",
+      "Dissertation"
+    );
     assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
 
     LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
