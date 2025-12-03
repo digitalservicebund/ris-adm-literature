@@ -135,4 +135,71 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithoutIndex.zitierdaten()).isEmpty();
     assertThat(elementWithoutIndex.fundstellen()).isEmpty();
   }
+
+  @Test
+  void findLiteratureDocumentationUnitOverviewElements() {
+    // given
+    String separator = "$µµµµµ$";
+
+    DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
+    entityWithIndex.setId(UUID.randomUUID());
+    entityWithIndex.setDocumentNumber("LIT-001");
+
+    DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setVeroeffentlichungsjahr("2024");
+    index.setTitel("Literature Title");
+    index.setDokumenttypen("BOOK" + separator + "ARTICLE");
+    index.setVerfasser("Doe, John" + separator + "Smith, Jane");
+    entityWithIndex.setDocumentationUnitIndex(index);
+
+    DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
+    entityWithoutIndex.setId(UUID.randomUUID());
+    entityWithoutIndex.setDocumentNumber("LIT-002");
+    entityWithoutIndex.setDocumentationUnitIndex(null);
+
+    Page<DocumentationUnitEntity> pageOfEntities = new PageImpl<>(
+      List.of(entityWithIndex, entityWithoutIndex)
+    );
+
+    given(
+      documentationUnitRepository.findAll(
+        any(SliLiteratureDocumentationUnitSpecification.class),
+        any(Pageable.class)
+      )
+    ).willReturn(pageOfEntities);
+
+    // when
+    var result =
+      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
+        new LiteratureDocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
+        )
+      );
+
+    // then
+    assertThat(result.content())
+      .hasSize(2)
+      .extracting(
+        LiteratureDocumentationUnitOverviewElement::documentNumber,
+        LiteratureDocumentationUnitOverviewElement::titel,
+        LiteratureDocumentationUnitOverviewElement::veroeffentlichungsjahr
+      )
+      .containsExactly(
+        Tuple.tuple("LIT-001", "Literature Title", "2024"),
+        Tuple.tuple("LIT-002", null, null)
+      );
+
+    LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    assertThat(elementWithIndex.dokumenttypen()).containsExactly("BOOK", "ARTICLE");
+    assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
+
+    LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
+    assertThat(elementWithoutIndex.verfasser()).isEmpty();
+  }
 }
