@@ -37,12 +37,25 @@ public record SliLiteratureDocumentationUnitSpecification(
     @Nonnull CriteriaBuilder criteriaBuilder
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
+    // must be sli
     predicates.add(
       criteriaBuilder.equal(
         root.get("documentationUnitType"),
         DocumentCategory.LITERATUR_SELBSTAENDIG.name()
       )
     );
+
+    // must be published
+    predicates.add(criteriaBuilder.isNotNull(root.get("xml")));
+
+    if (StringUtils.hasText(documentNumber)) {
+      predicates.add(
+        criteriaBuilder.like(
+          criteriaBuilder.lower(root.get("documentNumber")),
+          sqlContains(documentNumber)
+        )
+      );
+    }
 
     if (StringUtils.hasText(documentNumber)) {
       predicates.add(

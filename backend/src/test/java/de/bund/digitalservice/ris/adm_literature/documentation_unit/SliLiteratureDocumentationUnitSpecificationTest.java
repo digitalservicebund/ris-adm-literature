@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureTestEntityManager
 @ActiveProfiles("test")
-class SliLiteratureDocumentationUnitSpecificationIntegrationTest {
+class SliLiteratureDocumentationUnitSpecificationTest {
 
   @Autowired
   private TestEntityManager entityManager;

@@ -765,6 +765,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     unit.setDocumentNumber("KVLS2025000999");
     unit.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
     unit.setDocumentationOffice(DocumentationOffice.BVERFG);
+    unit.setXml("<test>content</test>");
     entityManager.persist(unit);
 
     var index = new DocumentationUnitIndexEntity();
