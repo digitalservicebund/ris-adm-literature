@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureTestEntityManager
 @ActiveProfiles("test")
-class DocumentationUnitSpecificationIntegrationTest {
+class AdmDocumentationUnitSpecificationIntegrationTest {
 
   @Autowired
   private TestEntityManager entityManager;

@@ -91,7 +91,7 @@ public record SliLiteratureDocumentationUnitSpecification(
           )
           .toArray(Predicate[]::new);
 
-        predicates.add(criteriaBuilder.or(typePredicates));
+        predicates.add(criteriaBuilder.and(typePredicates));
       }
 
       if (!CollectionUtils.isEmpty(verfasser)) {
@@ -105,7 +105,7 @@ public record SliLiteratureDocumentationUnitSpecification(
           )
           .toArray(Predicate[]::new);
 
-        predicates.add(criteriaBuilder.or(authorPredicates));
+        predicates.add(criteriaBuilder.and(authorPredicates));
       }
     }
 
