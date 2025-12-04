@@ -13,11 +13,19 @@ const mockAktivzitierung: AktivzitierungLiterature = {
   titel: 'a new one',
 }
 
-function renderComponent(aktivzitierungLiterature: AktivzitierungLiterature = mockAktivzitierung) {
+function renderComponent(
+  aktivzitierungLiterature: AktivzitierungLiterature = mockAktivzitierung,
+  extraProps: Record<string, unknown> = {},
+) {
   const user = userEvent.setup()
 
   const utils = render(AktivzitierungLiteratureItem, {
-    props: { aktivzitierungLiterature },
+    props: { aktivzitierungLiterature, ...extraProps },
+    global: {
+      directives: {
+        tooltip: () => {},
+      },
+    },
   })
 
   return { user, ...utils }
@@ -29,79 +37,74 @@ describe('AktivzitierungLiteratureItem', () => {
 
     expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
     expect(screen.getByText('a new one')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })
 
-  it('toggles to edit mode when clicking the expand button', async () => {
-    const { user } = renderComponent()
+  it('emits editStart when clicking the edit button', async () => {
+    const { user, emitted } = renderComponent()
 
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
-    expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Eintrag bearbeiten' }))
+
+    expect(emitted().editStart).toBeTruthy()
+  })
+
+  it('shows the input form when isEditing is true', () => {
+    renderComponent(mockAktivzitierung, { isEditing: true })
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    expect(titleInput).toBeInTheDocument()
+    expect(titleInput).toHaveValue('a new one')
   })
 
   it('emits updateAktivzitierungLiterature when save is clicked in edit mode', async () => {
-    const { user, emitted } = renderComponent()
+    const { user, emitted } = renderComponent(mockAktivzitierung, { isEditing: true })
 
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung übernehmen' }))
 
     expect(emitted().updateAktivzitierungLiterature).toBeTruthy()
-    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
   })
 
-  it('leaves edit mode on cancel', async () => {
-    const { user } = renderComponent()
+  it('emits cancelEdit when cancel is clicked in edit mode', async () => {
+    const { user, emitted } = renderComponent(mockAktivzitierung, { isEditing: true })
 
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
     await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
 
-    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
-    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
-    expect(screen.getByText('a new one')).toBeInTheDocument()
+    expect(emitted().cancelEdit).toBeTruthy()
   })
 
-  it('emits deleteAktivzitierungLiterature when delete is clicked', async () => {
-    const { user, emitted } = renderComponent()
-
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
+  it('emits deleteAktivzitierungLiterature and cancelEdit when delete is clicked', async () => {
+    const { user, emitted } = renderComponent(mockAktivzitierung, { isEditing: true })
 
     const deleteButtons = screen.getAllByRole('button', { name: 'Eintrag löschen' })
-
-    const entryDeleteButton = deleteButtons[1]
+    const entryDeleteButton = deleteButtons[deleteButtons.length - 1]
 
     await user.click(entryDeleteButton!)
 
     expect(emitted().deleteAktivzitierungLiterature).toBeTruthy()
-  })
-
-  it('enters and leaves edit mode on edit and cancel', async () => {
-    const { user } = renderComponent()
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung Editieren' }))
-    expect(screen.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
-
-    await user.click(screen.getByRole('button', { name: 'Abbrechen' }))
-    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeVisible()
+    expect(emitted().cancelEdit).toBeTruthy()
   })
 
   it('renders summary with only title when other fields are missing', () => {
-    const mockAktivzitierung: AktivzitierungLiterature = {
+    const onlyTitle: AktivzitierungLiterature = {
       id: '1',
       titel: 'Nur Titel',
       veroeffentlichungsjahr: undefined,
       verfasser: [],
       dokumenttypen: [],
     }
-    renderComponent(mockAktivzitierung)
+    renderComponent(onlyTitle)
     expect(screen.getByText('Nur Titel')).toBeVisible()
   })
 
   it('renders only title when other summary fields are missing', () => {
-    const mockAktivzitierung: AktivzitierungLiterature = {
+    const onlyTitle: AktivzitierungLiterature = {
       id: '1',
       titel: 'Nur Titel',
     }
 
-    renderComponent(mockAktivzitierung)
+    renderComponent(onlyTitle)
 
     expect(screen.getByText('Nur Titel')).toBeVisible()
   })

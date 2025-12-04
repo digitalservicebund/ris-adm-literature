@@ -35,7 +35,7 @@ function formatHeading(): string {
     <p class="ris-body1-regular">
       {{ formatHeading() }}
     </p>
-    <p class="ris-body2-regular text-gray-800">
+    <p class="ris-body2-regular text-gray-900">
       {{ titel || 'unbekannt' }}
     </p>
   </div>

@@ -98,15 +98,6 @@ describe('AktivzitierungLiteratureInput', () => {
     expect((emitted().deleteAktivzitierungLiterature as [string[]])[0][0]).toBe('id-1')
   })
 
-  it('does not emit delete when entry has no uuid (new entry)', async () => {
-    const newEntry: AktivzitierungLiterature = { id: 'tmp-1' }
-    const { emitted } = renderComponent({ aktivzitierungLiterature: newEntry })
-
-    const deleteButton = screen.queryByRole('button', { name: 'Eintrag löschen' })
-    expect(deleteButton).not.toBeInTheDocument()
-    expect(emitted().deleteAktivzitierungLiterature).toBeUndefined()
-  })
-
   it('updates local state when aktivzitierungLiterature prop changes', async () => {
     const { rerender } = renderComponent({
       aktivzitierungLiterature: {

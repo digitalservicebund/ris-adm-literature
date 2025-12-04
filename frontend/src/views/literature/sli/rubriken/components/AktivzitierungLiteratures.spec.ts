@@ -68,9 +68,7 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
 
     // Add button should not be visible in this state
-    expect(
-      screen.queryByRole('button', { name: 'Aktivzitierung hinzufügen' }),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
 
   it('renders a list of existing aktivzitierung entries', () => {
@@ -79,18 +77,16 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.queryAllByRole('listitem')).toHaveLength(1)
     expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
     expect(screen.getByText('a new one')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Aktivzitierung Editieren' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })
 
   it('opens the creation panel when clicking the add button', async () => {
     const { user } = renderComponent(mockAktivzitierungen)
 
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
 
     expect(screen.getByLabelText('Hauptsachtitel / Dokumentarischer Titel')).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: 'Aktivzitierung hinzufügen' }),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
 
   it('shows creation panel when list is empty', () => {
@@ -107,7 +103,7 @@ describe('AktivzitierungLiteratures', () => {
     expect(
       screen.queryByRole('button', { name: 'Aktivzitierung übernehmen' }),
     ).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Weitere Angabe' })).toBeVisible()
   })
 
   it('adds a new entry via onAddItem and updates the list', async () => {
@@ -181,13 +177,13 @@ describe('AktivzitierungLiteratures', () => {
       },
     })
 
-    await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
     expect(screen.getByRole('button', { name: 'Fake cancel' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Fake cancel' }))
 
     expect(screen.queryByRole('button', { name: 'Fake cancel' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Weitere Angabe' })).toBeVisible()
   })
 
   it('triggers a search when clicking on search, shows the results and the paginator, navigates to next result page', async () => {
@@ -327,5 +323,118 @@ describe('AktivzitierungLiteratures', () => {
     })
 
     expect(screen.queryByRole('list', { name: 'Aktivzitierung Liste' })).not.toBeInTheDocument()
+  })
+
+  it('allows only one aktivzitierung entry to be in edit mode at a time', async () => {
+    const twoEntries: AktivzitierungLiterature[] = [
+      {
+        id: 'aktiv-1',
+        titel: 'Titel 1',
+      },
+      {
+        id: 'aktiv-2',
+        titel: 'Titel 2',
+      },
+    ]
+
+    const { user } = renderComponent(twoEntries)
+
+    // both entries are shown in summary mode
+    expect(screen.getByText('Titel 1')).toBeInTheDocument()
+    expect(screen.getByText('Titel 2')).toBeInTheDocument()
+
+    const editButtons = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })
+
+    await user.click(editButtons[0]!)
+
+    // // then – only one edit form is visible, prefilled with first title
+    expect(
+      screen.getAllByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveLength(1)
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveValue('Titel 1')
+
+    // // when – open edit for second entry
+    await user.click(editButtons[1]!)
+
+    // // then – still only one edit form, now for second entry
+    expect(
+      screen.getAllByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveLength(1)
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveValue('Titel 2')
+    expect(screen.queryByDisplayValue('Titel 1')).not.toBeInTheDocument()
+  })
+
+  it('hides the creation panel and the add button when an entry is in edit mode', async () => {
+    const twoEntries: AktivzitierungLiterature[] = [
+      { id: 'aktiv-1', titel: 'Titel 1' },
+      { id: 'aktiv-2', titel: 'Titel 2' },
+    ]
+
+    const { user } = renderComponent(twoEntries)
+
+    const editButtons = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })
+    const firstEditButton = editButtons[0]!
+    await user.click(firstEditButton)
+
+    // then – the visible textbox is prefilled with the entry's title (edit form, not creation panel)
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    expect(titleInput).toHaveValue('Titel 1') // ← This proves it's the edit form, not empty creation panel
+
+    expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
+  })
+
+  it('closes edit mode after cancelling an edited entry', async () => {
+    const existing: AktivzitierungLiterature[] = [{ id: 'aktiv-1', titel: 'Alt' }]
+
+    const { user } = renderComponent(existing)
+
+    const editButtons = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })
+    const firstEditButton = editButtons[0]!
+    await user.click(firstEditButton)
+
+    const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
+    await user.click(cancelButton)
+
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Abbrechen' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Übernehmen' })).not.toBeInTheDocument()
+  })
+
+  it('closes the creation panel when starting to edit an existing entry', async () => {
+    const existing: AktivzitierungLiterature = {
+      id: 'aktiv-1',
+      titel: 'Titel 1',
+    }
+
+    const { user } = renderComponent([existing])
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveValue('')
+
+    await user.click(screen.getByRole('button', { name: 'Eintrag bearbeiten' }))
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    expect(titleInput).toHaveValue('Titel 1')
+    expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
 })
