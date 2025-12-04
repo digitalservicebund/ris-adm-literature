@@ -30,7 +30,7 @@ describe('AktivzitierungLiteratureItem', () => {
   it('renders the summary in view mode', () => {
     renderComponent()
 
-    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
+    expect(screen.getByText('2025, again and again (Ebs)')).toBeInTheDocument()
     expect(screen.getByText('a new one')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })

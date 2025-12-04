@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
-import MaterialSymbolsClose from '~icons/material-symbols/close'
+import IconFilledDescription from '~icons/ic/class'
+import IconClose from '~icons/ic/close'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature.ts'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 
@@ -54,8 +55,16 @@ const metaSummary = computed(() => {
     props.aktivzitierungLiterature.verfasser &&
     props.aktivzitierungLiterature.verfasser.length > 0
   ) {
-    parts.push(props.aktivzitierungLiterature.verfasser.join(', '))
+    const authors = props.aktivzitierungLiterature.verfasser
+      .map((author) => author.trim().replace(/,$/, ''))
+      .filter((author) => author.length > 0)
+      .join(', ')
+    if (authors) {
+      parts.push(authors)
+    }
   }
+
+  const mainParts = parts.join(', ')
 
   if (
     props.aktivzitierungLiterature.dokumenttypen &&
@@ -66,15 +75,15 @@ const metaSummary = computed(() => {
       .filter(Boolean)
       .join(', ')
     if (abbreviations) {
-      parts.push(`(${abbreviations})`)
+      return `${mainParts} (${abbreviations})`
     }
   }
 
-  return parts.join(', ')
+  return mainParts
 })
 
 const titleSummary = computed(() => {
-  return props.aktivzitierungLiterature.titel || 'Hauptsachtitel oder dokumentarischer Titel'
+  return props.aktivzitierungLiterature.titel || ''
 })
 </script>
 
@@ -88,7 +97,8 @@ const titleSummary = computed(() => {
     show-cancel-button
   />
   <div v-else class="flex w-full items-center gap-10">
-    <IconBaselineDescription class="text-neutral-800" />
+    <IconBaselineDescription v-if="!isFromSearch" class="text-neutral-800" />
+    <IconFilledDescription v-if="isFromSearch" class="text-neutral-800" />
 
     <div class="flex flex-col gap-2">
       <div class="ris-body1-regular">
@@ -115,7 +125,7 @@ const titleSummary = computed(() => {
         class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
         @click="onDeleteFromSummary"
       >
-        <MaterialSymbolsClose />
+        <IconClose />
       </button>
     </div>
   </div>

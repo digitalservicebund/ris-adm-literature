@@ -163,8 +163,9 @@ describe('getSliMenuItems', () => {
     const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
     const rubrikenItem = result[0]
     expect(rubrikenItem?.children).toBeDefined()
-    expect(rubrikenItem?.children?.length).toBe(1)
+    expect(rubrikenItem?.children?.length).toBe(2)
     expect(rubrikenItem?.children?.[0]?.label).toBe('Formaldaten')
+    expect(rubrikenItem?.children?.[1]?.label).toBe('Inhaltliche Erschließung')
   })
 
   it('sets the correct route and hash for the "Formaldaten" child', () => {
@@ -175,7 +176,14 @@ describe('getSliMenuItems', () => {
     expect(formaldatenItem?.route.query).toEqual(mockRouteQuery)
     expect(formaldatenItem?.route.hash).toBe('#formaldaten')
   })
-
+  it('sets the correct route and hash for the "Inhaltliche Erschließung" child', () => {
+    const result = getSliMenuItems(mockDocumentNumber, mockRouteQuery)
+    const inhaltlicheErschliessungItem = result[0]?.children?.[1]
+    expect(inhaltlicheErschliessungItem?.route.name).toBe(ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN)
+    expect(inhaltlicheErschliessungItem?.route.params?.documentNumber).toBe(mockDocumentNumber)
+    expect(inhaltlicheErschliessungItem?.route.query).toEqual(mockRouteQuery)
+    expect(inhaltlicheErschliessungItem?.route.hash).toBe('#inhaltlicheErschliessung')
+  })
   it('handles empty routeQuery gracefully', () => {
     const result = getSliMenuItems(mockDocumentNumber, {})
     expect(result[0]?.route.query).toEqual({})
