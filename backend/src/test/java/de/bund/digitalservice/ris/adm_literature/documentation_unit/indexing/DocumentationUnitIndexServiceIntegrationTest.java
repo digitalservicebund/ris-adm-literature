@@ -334,6 +334,160 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .containsExactly(null, null, null, null);
   }
 
+  @Test
+  @Disabled("Needs to be implemented with conversion from LDML to Json")
+  void indexByUliDocumentationUnit_xml() {
+    // given
+    String xml = TestFile.readFileToString("literature/uli/ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("STLU9999999999");
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BFH);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        null
+      );
+  }
+
+  @Test
+  void indexByUliDocumentationUnit_json() {
+    // given
+    String json = TestFile.readFileToString("literature/sli/json-example.json");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("STLU2025000009");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BFH);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        null
+      );
+  }
+
+  @Test
+  void indexByUliDocumentationUnit_jsonNotValid() {
+    // given
+    var documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("STLU000004711");
+    documentationUnitEntity.setJson(
+      """
+      {
+        "id": "11111111-1657-4085-ae2a-993a04c27f6b",
+        "documentNumber": "STLU000004711",
+        [] ooops
+      }
+      """
+    );
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BFH);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(null, null, null, null);
+  }
+
+  @Test
+  @Disabled("Needs to be implemented with conversion from LDML to Json")
+  void indexByUliDocumentationUnit_jsonAndXml() {
+    // given
+    String json = TestFile.readFileToString("literature/uli/json-example.json");
+    String xml = TestFile.readFileToString("literature/uli/ldml-example.akn.xml");
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("STLU555555555");
+    documentationUnitEntity.setJson(json);
+    documentationUnitEntity.setXml(xml);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BFH);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+  }
+
+  @Test
+  void indexByUliDocumentationUnit_jsonAndXmlAreNull() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("STLU333333333");
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_UNSELBSTAENDIG);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BFH);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+
+    // when
+    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+
+    // then
+    TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
+    assertThat(query.getResultList())
+      .singleElement()
+      .extracting(
+        DocumentationUnitIndexEntity::getTitel,
+        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
+        DocumentationUnitIndexEntity::getDokumenttypen,
+        DocumentationUnitIndexEntity::getVerfasser
+      )
+      .containsExactly(null, null, null, null);
+  }
+
   private TypedQuery<DocumentationUnitIndexEntity> createTypedQuery(
     DocumentationUnitEntity documentationUnitEntity
   ) {

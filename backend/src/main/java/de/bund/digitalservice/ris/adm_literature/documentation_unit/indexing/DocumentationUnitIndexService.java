@@ -6,9 +6,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Documentatio
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -177,32 +175,25 @@ public class DocumentationUnitIndexService {
       );
     } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
-      switch (documentationUnitEntity.getDocumentationUnitType()) {
-        case VERWALTUNGSVORSCHRIFTEN -> {
-          AdmDocumentationUnitContent admDocumentationUnitContent = transformJson(
+      DocumentationUnitContent documentationUnitContent =
+        switch (documentationUnitEntity.getDocumentationUnitType()) {
+          case VERWALTUNGSVORSCHRIFTEN -> transformJson(
             documentationUnitEntity.getJson(),
             AdmDocumentationUnitContent.class
           );
-          documentationUnitIndex = createDocumentationUnitIndex(
-            documentationUnitEntity,
-            admDocumentationUnitContent
-          );
-        }
-        case LITERATUR_SELBSTAENDIG -> {
-          SliDocumentationUnitContent sliDocumentationUnitContent = transformJson(
+          case LITERATUR_SELBSTAENDIG -> transformJson(
             documentationUnitEntity.getJson(),
             SliDocumentationUnitContent.class
           );
-          documentationUnitIndex = createDocumentationUnitIndex(
-            documentationUnitEntity,
-            sliDocumentationUnitContent
+          case LITERATUR_UNSELBSTAENDIG -> transformJson(
+            documentationUnitEntity.getJson(),
+            UliDocumentationUnitContent.class
           );
-        }
-        default -> log.warn(
-          "Indexing document category {} is not supported.",
-          documentationUnitEntity.getDocumentationUnitType()
-        );
-      }
+        };
+      documentationUnitIndex = createDocumentationUnitIndex(
+        documentationUnitEntity,
+        documentationUnitContent
+      );
     }
     return documentationUnitIndex;
   }
@@ -239,14 +230,14 @@ public class DocumentationUnitIndexService {
           );
         }
       }
-      case SliDocumentationUnitContent sliDocumentationUnitContent -> {
-        documentationUnitIndex.setTitel(sliDocumentationUnitContent.titel());
+      case LiteratureDocumentationUnitContent literatureDocumentationUnitContent -> {
+        documentationUnitIndex.setTitel(literatureDocumentationUnitContent.titel());
         documentationUnitIndex.setVeroeffentlichungsjahr(
-          sliDocumentationUnitContent.veroeffentlichungsjahr()
+          literatureDocumentationUnitContent.veroeffentlichungsjahr()
         );
-        if (sliDocumentationUnitContent.dokumenttypen() != null) {
+        if (literatureDocumentationUnitContent.dokumenttypen() != null) {
           documentationUnitIndex.setDokumenttypen(
-            sliDocumentationUnitContent
+            literatureDocumentationUnitContent
               .dokumenttypen()
               .stream()
               .map(DocumentType::abbreviation)
