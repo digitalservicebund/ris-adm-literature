@@ -96,6 +96,8 @@ function handleCancelEdit() {
   handleEditEnd()
 }
 
+const inputRef = ref<InstanceType<typeof AktivzitierungLiteratureInput>>()
+
 function handleAddSearchResult(result: SliDocUnitListItem) {
   if (
     aktivzitierungLiteratures.value.some((entry) => entry.documentNumber === result.documentNumber)
@@ -116,6 +118,7 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
   isCreationPanelOpened.value = true
   showSearchResults.value = false
   searchParams.value = undefined
+  inputRef.value?.clearSearchFields()
 }
 </script>
 
@@ -142,6 +145,7 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
       </li>
     </ol>
     <AktivzitierungLiteratureInput
+      ref="inputRef"
       v-if="isCreationPanelOpened || aktivzitierungLiteratures.length === 0"
       class="mt-16"
       @update-aktivzitierung-literature="handleAddItem"

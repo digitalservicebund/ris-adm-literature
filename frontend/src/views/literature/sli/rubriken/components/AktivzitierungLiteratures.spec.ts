@@ -438,9 +438,10 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
 
-  it('adds a search result as non-editable entry, prevents duplicates and allows removing via X', async () => {
+  it('adds a search result as non-editable entry, prevents duplicates, clears inputs and allows removing via X', async () => {
     vi.resetModules()
     const fetchPaginatedDataMock = vi.fn()
+    const clearSearchFieldsSpy = vi.fn()
 
     vi.doMock('@/composables/usePagination', () => {
       return {
@@ -485,39 +486,44 @@ describe('AktivzitierungLiteratures', () => {
         stubs: {
           AktivzitierungLiteratureInput: {
             template:
-              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button>',
+              '<div><button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button></div>',
+            setup(props, { expose }) {
+              expose({ clearSearchFields: clearSearchFieldsSpy })
+            },
           },
         },
       },
     })
 
-    // trigger search
     await user.click(screen.getByRole('button', { name: 'Fake search' }))
 
-    // click + on first search result to add to list
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+
     const addButtons = screen.getAllByRole('button', {
       name: 'Aktivzitierung hinzufügen',
     })
     await user.click(addButtons[0]!)
 
-    // one list entry added
+    expect(clearSearchFieldsSpy).toHaveBeenCalledTimes(1)
+
+    expect(screen.queryByText('Passende Suchergebnisse:')).not.toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: 'Fake search' })).toBeInTheDocument()
+
     const list = screen.getByRole('list', { name: 'Aktivzitierung Liste' })
     let items = within(list).getAllByRole('listitem')
     expect(items).toHaveLength(1)
 
     const firstItem = items[0]
-    // search-based entry: has X, no edit button
     expect(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' })).toBeInTheDocument()
     expect(
       within(firstItem!).queryByRole('button', { name: 'Eintrag bearbeiten' }),
     ).not.toBeInTheDocument()
 
-    // clicking + again for same result does NOT add a duplicate
     await user.click(addButtons[0]!)
     items = within(list).getAllByRole('listitem')
     expect(items).toHaveLength(1)
 
-    // clicking X removes the entry from the list
     await user.click(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' }))
     expect(screen.queryByRole('list', { name: 'Aktivzitierung Liste' })).not.toBeInTheDocument()
   })
