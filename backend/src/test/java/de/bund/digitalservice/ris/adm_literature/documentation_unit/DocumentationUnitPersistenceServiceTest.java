@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeRepository;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +31,7 @@ class DocumentationUnitPersistenceServiceTest {
   private DocumentationUnitRepository documentationUnitRepository;
 
   @Mock
-  private DocumentTypeRepository documentTypeRepository;
+  private DocumentTypeService documentTypeService;
 
   @Test
   void findByDocumentNumber() {
