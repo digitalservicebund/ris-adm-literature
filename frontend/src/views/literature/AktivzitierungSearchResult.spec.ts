@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import AktivzitierungSearchResult from './AktivzitierungSearchResult.vue'
 import { sliDocUnitListItemFixture } from '@/testing/fixtures/sliDocumentUnit.fixture'
+import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit.ts'
 
 describe('Aktivzitierung search result', () => {
   it('renders correctly', () => {
@@ -97,7 +98,7 @@ describe('Aktivzitierung search result', () => {
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
 
     expect(emitted().add).toBeTruthy()
-    const payload = (emitted().add as any[])[0][0]
-    expect(payload.documentNumber).toBe('DOC-ADD')
+    const payload = (emitted().add as [SliDocUnitListItem[]])[0][0]
+    expect(payload!.documentNumber).toBe('DOC-ADD')
   })
 })
