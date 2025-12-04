@@ -250,8 +250,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
           "jahr",
           "titel",
           "isbn",
-          "autor",
-          new DocumentType("VR", "Verwaltungsregelung")
+          List.of("autor"),
+          List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
       )
     );
@@ -264,12 +264,35 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       """
       <akn:analysis source="attributsemantik-noch-undefiniert">
         <akn:otherReferences source="active">
-          <akn:implicitReference showAs="autor, titel, docnum, VR, isbn, jahr">
-            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
+          <akn:implicitReference showAs="titel, jahr, autor">
+            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumentTyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)
     );
     assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("When previousXmlVersion is provided, it is ignored and a new document is created")
+  void convertToLdml_withPreviousXmlVersion_shouldIgnoreAndCreateNew() {
+    // given
+    UliDocumentationUnitContent uliDocumentationUnitContent =
+      TestDocumentationUnitContent.createUli("KSLU00000099", "2025");
+    String previousXmlVersion = "<previous>valid or invalid xml content</previous>";
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      previousXmlVersion
+    );
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:FRBRalias name="Dokumentnummer" value="KSLU00000099"/>"""
+    );
+
+    assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 }

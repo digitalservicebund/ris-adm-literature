@@ -43,8 +43,8 @@ public class TestDocumentationUnitContent {
           "11",
           "titel",
           "isbn",
-          "autor",
-          new DocumentType("VR", "Verwaltungsregelung")
+          List.of("autor"),
+          List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
       )
     );
