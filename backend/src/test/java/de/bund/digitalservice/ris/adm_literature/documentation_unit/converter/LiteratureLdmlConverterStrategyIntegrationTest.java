@@ -250,8 +250,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
           "jahr",
           "titel",
           "isbn",
-          "autor",
-          new DocumentType("VR", "Verwaltungsregelung")
+          List.of("autor"),
+          List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
       )
     );
@@ -264,8 +264,8 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
       """
       <akn:analysis source="attributsemantik-noch-undefiniert">
         <akn:otherReferences source="active">
-          <akn:implicitReference showAs="autor, titel, docnum, VR, isbn, jahr">
-            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumenttyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
+          <akn:implicitReference showAs="titel, jahr, autor">
+            <ris:selbstaendigeLiteraturReference autor="autor" buchtitel="titel" documentNumber="docnum" dokumentTyp="VR" isbn="isbn" veroeffentlichungsJahr="jahr"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)

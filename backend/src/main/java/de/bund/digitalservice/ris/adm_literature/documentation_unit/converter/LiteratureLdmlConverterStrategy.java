@@ -97,7 +97,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
     mapKurzreferat(ldmlDocument);
 
     // SLI specific logic
-    // This could possibly have the same logic as ULI and doesn't need to be a if case
+    // This could possibly have the same logic as ULI and doesn't need to be an if case
     // Should be checked when implementing ULI Aktivzitierung
     if (data instanceof SliDocumentationUnitContent sliData) {
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
@@ -253,6 +253,8 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
             .collect(Collectors.joining(", "))
           : "";
 
+        // Currently the same style as the migration. Needs to be re-iterated and either here or in the migration project
+        // adapted once the format of selbstaendigeLiteraturReference is final
         String showAsValue = Stream.of(titel, veroeffentlichungsJahr, verfasser)
           .filter(StringUtils::isNotBlank)
           .collect(Collectors.joining(", "));
