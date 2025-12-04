@@ -4,7 +4,7 @@
            xmlns:risCommon="http://ldml.neuris.de/literature/meta/"
            elementFormDefault="qualified"
            targetNamespace="http://ldml.neuris.de/literature/unselbstaendig/meta/" version="1.0">
-  <xs:import namespace="http://ldml.neuris.de/literature/meta/" schemaLocation="ldml-ris-literature.xsd"/>
+  <xs:import namespace="http://ldml.neuris.de/literature/meta/" schemaLocation="../lit/ldml-ris-literature.xsd"/>
   <xs:element name="meta">
     <xs:complexType>
       <xs:sequence>

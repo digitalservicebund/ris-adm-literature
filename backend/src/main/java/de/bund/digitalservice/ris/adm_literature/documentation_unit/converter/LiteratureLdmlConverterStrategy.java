@@ -238,17 +238,26 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
       for (SliDocumentationUnitContent.AktivzitierungSli reference : activeSliReferences) {
         String documentNumber = reference.documentNumber();
         String veroeffentlichungsJahr = reference.veroeffentlichungsJahr();
-        String buchtitel = reference.buchtitel();
+        String titel = reference.titel();
         String isbn = reference.isbn();
-        String autor = reference.autor();
-        DocumentType dokumentTyp = reference.dokumenttyp();
-        // urheber/ typ / verfasser need to be clarified
+
+        String verfasser = reference.verfasser() != null
+          ? String.join(", ", reference.verfasser())
+          : "";
+
+        String dokumentTypen = reference.dokumenttypen() != null
+          ? reference
+            .dokumenttypen()
+            .stream()
+            .map(DocumentType::abbreviation)
+            .collect(Collectors.joining(", "))
+          : "";
 
         String showAsValue = Stream.of(
-          autor,
-          buchtitel,
+          verfasser,
+          titel,
           documentNumber,
-          dokumentTyp.abbreviation(),
+          dokumentTypen,
           isbn,
           veroeffentlichungsJahr
         )
@@ -261,10 +270,10 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
           .appendElementAndGet("ris:selbstaendigeLiteraturReference")
           .addAttribute("documentNumber", documentNumber)
           .addAttribute("veroeffentlichungsJahr", veroeffentlichungsJahr)
-          .addAttribute("buchtitel", buchtitel)
+          .addAttribute("buchtitel", titel)
           .addAttribute("isbn", isbn)
-          .addAttribute("autor", autor)
-          .addAttribute("dokumenttyp", dokumentTyp.abbreviation());
+          .addAttribute("autor", verfasser)
+          .addAttribute("dokumentTyp", dokumentTypen);
       }
     }
   }
