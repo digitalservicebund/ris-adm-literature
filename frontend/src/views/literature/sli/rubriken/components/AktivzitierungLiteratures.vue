@@ -71,6 +71,28 @@ watch(error, (err) => {
 })
 
 const editingItemId = ref<string | undefined>(undefined)
+
+// make sure all entries have unique IDs when loaded and reset editing state
+watch(
+  () => store.documentUnit?.aktivzitierungenSli,
+  (entries) => {
+    if (entries) {
+      editingItemId.value = undefined
+
+      // Only process if there are entries missing IDs
+      const needsIds = entries.some((entry) => !entry.id || entry.id === '')
+      if (needsIds) {
+        entries.forEach((entry) => {
+          if (!entry.id || entry.id === '') {
+            entry.id = crypto.randomUUID()
+          }
+        })
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
+
 function handleEditStart(itemId: string) {
   if (isCreationPanelOpened.value) {
     isCreationPanelOpened.value = false

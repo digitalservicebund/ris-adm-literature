@@ -7,6 +7,7 @@ import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
 import { ref } from 'vue'
 import { flushPromises } from '@vue/test-utils'
+import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 
 const addToastMock = vi.fn()
 vi.mock('primevue', () => ({
@@ -630,5 +631,53 @@ describe('AktivzitierungLiteratures', () => {
     expect(items).toHaveLength(1)
     expect(screen.getByText('Existing Entry')).toBeInTheDocument()
     expect(clearSearchFieldsSpy).not.toHaveBeenCalled()
+  })
+
+  it('generates unique IDs for entries missing them when data loads', async () => {
+    const entriesWithoutIds: AktivzitierungLiterature[] = [
+      {
+        id: '',
+        titel: 'Entry 1',
+      },
+      {
+        titel: 'Entry 2',
+      } as AktivzitierungLiterature,
+      {
+        id: 'existing-id',
+        titel: 'Entry 3',
+      },
+    ]
+
+    renderComponent(entriesWithoutIds)
+
+    const store = useSliDocumentUnitStore()
+    const loadedEntries = store.documentUnit!.aktivzitierungenSli!
+
+    expect(loadedEntries[0]!.id).toBeTruthy()
+    expect(loadedEntries[0]!.id).not.toBe('')
+    expect(loadedEntries[1]!.id).toBeTruthy()
+    expect(loadedEntries[1]!.id).not.toBe('')
+    expect(loadedEntries[2]!.id).toBe('existing-id')
+
+    expect(loadedEntries[0]!.id).not.toBe(loadedEntries[1]!.id)
+  })
+
+  it('resets editingItemId when data changes', async () => {
+    const { user } = renderComponent(mockAktivzitierungen)
+    const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
+    await user.click(editButton)
+
+    expect(
+      screen.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).toBeInTheDocument()
+
+    const store = useSliDocumentUnitStore()
+    store.documentUnit!.aktivzitierungenSli = [...mockAktivzitierungen]
+    await flushPromises()
+
+    expect(
+      screen.queryByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })
 })
