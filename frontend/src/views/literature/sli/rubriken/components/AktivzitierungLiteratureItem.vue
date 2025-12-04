@@ -1,41 +1,37 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
+import { computed } from 'vue'
+import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature.ts'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 
 const props = defineProps<{
   aktivzitierungLiterature: AktivzitierungLiterature
+  isEditing?: boolean
 }>()
 
 const emit = defineEmits<{
   updateAktivzitierungLiterature: [aktivzitierungLiterature: AktivzitierungLiterature]
   deleteAktivzitierungLiterature: [id: string]
+  editStart: [id: string]
+  cancelEdit: [void]
 }>()
 
-const isEditMode = ref<boolean>(false)
-
-const toggleEditMode = () => {
-  isEditMode.value = !isEditMode.value
-}
-
 const onExpandAccordion = () => {
-  toggleEditMode()
+  emit('editStart', props.aktivzitierungLiterature.id)
 }
 
 const onUpdateAktivzitierungLiterature = (aktivzitierungLiterature: AktivzitierungLiterature) => {
   emit('updateAktivzitierungLiterature', aktivzitierungLiterature)
-  isEditMode.value = false
 }
 
 const onClickCancel = () => {
-  toggleEditMode()
+  emit('cancelEdit')
 }
 
 const onDeleteAktivzitierungLiterature = (id: string) => {
   emit('deleteAktivzitierungLiterature', id)
-  toggleEditMode()
+  emit('cancelEdit')
 }
 
 const metaSummary = computed(() => {
@@ -75,7 +71,7 @@ const titleSummary = computed(() => {
 
 <template>
   <AktivzitierungLiteratureInput
-    v-if="isEditMode"
+    v-if="isEditing"
     :aktivzitierung-literature="aktivzitierungLiterature"
     @update-aktivzitierung-literature="onUpdateAktivzitierungLiterature"
     @delete-aktivzitierung-literature="onDeleteAktivzitierungLiterature"
@@ -89,17 +85,17 @@ const titleSummary = computed(() => {
       <div class="ris-body1-regular">
         {{ metaSummary }}
       </div>
-      <div class="ris-body2-regular text-gray-800">
+      <div class="ris-body2-regular text-gray-900">
         {{ titleSummary }}
       </div>
     </div>
     <button
-      v-tooltip.bottom="'Aufklappen'"
-      aria-label="Aktivzitierung Editieren"
+      v-tooltip.bottom="'Eintrag bearbeiten'"
+      aria-label="Eintrag bearbeiten"
       class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer ml-auto"
       @click="onExpandAccordion"
     >
-      <IconArrowDown />
+      <IconEdit />
     </button>
   </div>
 </template>

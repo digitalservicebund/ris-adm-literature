@@ -21,11 +21,9 @@ const emit = defineEmits<{
   search: [searchParams: SliDocUnitSearchParams]
 }>()
 
-const initialUuid = props.aktivzitierungLiterature?.uuid ?? crypto.randomUUID()
-
 const aktivzitierungLiterature = ref<AktivzitierungLiterature>({
-  id: props.aktivzitierungLiterature?.id ?? initialUuid,
-  uuid: initialUuid,
+  id: props.aktivzitierungLiterature?.id ?? crypto.randomUUID(),
+  uuid: props.aktivzitierungLiterature?.uuid,
   titel: props.aktivzitierungLiterature?.titel || '',
   veroeffentlichungsjahr: props.aktivzitierungLiterature?.veroeffentlichungsjahr || '',
   dokumenttypen: props.aktivzitierungLiterature?.dokumenttypen || [],
@@ -43,10 +41,21 @@ const isEmpty = computed(() => {
   })
 })
 
-const isExistingEntry = computed(() => !!props.aktivzitierungLiterature?.uuid)
+const isExistingEntry = computed(() => !!props.aktivzitierungLiterature?.id)
+const isCreating = computed(() => !props.aktivzitierungLiterature)
 
 function onClickSave() {
   emit('updateAktivzitierungLiterature', { ...aktivzitierungLiterature.value })
+  if (isCreating.value) {
+    aktivzitierungLiterature.value = {
+      id: crypto.randomUUID(),
+      uuid: undefined,
+      titel: '',
+      veroeffentlichungsjahr: '',
+      dokumenttypen: [],
+      verfasser: [],
+    }
+  }
 }
 
 function onClickCancel() {
@@ -54,7 +63,7 @@ function onClickCancel() {
 }
 
 function onClickDelete() {
-  if (props.aktivzitierungLiterature?.uuid) {
+  if (props.aktivzitierungLiterature?.id) {
     emit('deleteAktivzitierungLiterature', props.aktivzitierungLiterature.id)
   }
 }
@@ -76,7 +85,7 @@ watch(
     if (newVal) {
       aktivzitierungLiterature.value = {
         id: newVal.id || crypto.randomUUID(),
-        uuid: newVal.uuid || crypto.randomUUID(),
+        uuid: newVal.uuid,
         titel: newVal.titel || '',
         veroeffentlichungsjahr: newVal.veroeffentlichungsjahr || '',
         dokumenttypen: newVal.dokumenttypen || [],
@@ -91,7 +100,7 @@ watch(
 <template>
   <div>
     <div class="flex flex-col gap-24">
-      <InputField id="titel" v-slot="slotProps" label="Hauptsachtitel / Dokumentarischer Titel *">
+      <InputField id="titel" v-slot="slotProps" label="Hauptsachtitel / Dokumentarischer Titel">
         <InputText
           :id="slotProps.id"
           v-model="aktivzitierungLiterature.titel"
@@ -101,7 +110,7 @@ watch(
         />
       </InputField>
       <div class="flex flex-row gap-24">
-        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr *">
+        <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr">
           <InputText
             :id="slotProps.id"
             v-model="aktivzitierungLiterature.veroeffentlichungsjahr"
@@ -110,7 +119,7 @@ watch(
           />
         </InputField>
 
-        <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp *">
+        <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp">
           <DokumentTyp
             :input-id="slotProps.id"
             v-model="aktivzitierungLiterature.dokumenttypen"
@@ -121,7 +130,7 @@ watch(
         </InputField>
       </div>
 
-      <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in *">
+      <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in">
         <RisChipsInput
           :input-id="slotProps.id"
           v-model="aktivzitierungLiterature.verfasser!"
@@ -132,6 +141,7 @@ watch(
     </div>
     <div class="flex w-full gap-16 mt-16">
       <Button
+        v-if="isCreating"
         aria-label="Selbständige Literatur suchen"
         label="Suchen"
         size="small"
@@ -141,6 +151,7 @@ watch(
         :disabled="isEmpty"
         aria-label="Aktivzitierung übernehmen"
         label="Übernehmen"
+        severity="secondary"
         size="small"
         @click.stop="onClickSave"
       />

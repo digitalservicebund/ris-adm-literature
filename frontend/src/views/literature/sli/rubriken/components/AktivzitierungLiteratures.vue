@@ -69,11 +69,41 @@ watch(error, (err) => {
     })
   }
 })
+
+const editingItemId = ref<string | undefined>(undefined)
+function handleEditStart(itemId: string) {
+  if (isCreationPanelOpened.value) {
+    isCreationPanelOpened.value = false
+  }
+  editingItemId.value = itemId
+}
+
+function handleEditEnd() {
+  editingItemId.value = undefined
+}
+
+function handleUpdateItem(item: AktivzitierungLiterature) {
+  onUpdateItem(item)
+  handleEditEnd()
+}
+
+function handleAddItem(item: AktivzitierungLiterature) {
+  onAddItem(item)
+  isCreationPanelOpened.value = true
+}
+
+function handleCancelEdit() {
+  handleEditEnd()
+}
 </script>
 
 <template>
   <div aria-label="Aktivzitierung" class="aktivzitierungLiteraturesList">
-    <ol v-if="aktivzitierungLiteratures.length > 0" aria-label="Aktivzitierung Liste">
+    <ol
+      v-if="aktivzitierungLiteratures.length > 0"
+      aria-label="Aktivzitierung Liste"
+      class="border-t-1 border-blue-300"
+    >
       <li
         class="border-b-1 border-blue-300 py-16"
         v-for="aktivzitierungLiterature in aktivzitierungLiteratures"
@@ -81,7 +111,10 @@ watch(error, (err) => {
       >
         <AktivzitierungLiteratureItem
           :aktivzitierung-literature="aktivzitierungLiterature"
-          @update-aktivzitierung-literature="onUpdateItem"
+          :is-editing="editingItemId === aktivzitierungLiterature.id"
+          @update-aktivzitierung-literature="handleUpdateItem"
+          @edit-start="handleEditStart(aktivzitierungLiterature.id)"
+          @cancel-edit="handleCancelEdit"
           @delete-aktivzitierung-literature="onRemoveItem"
         />
       </li>
@@ -89,17 +122,17 @@ watch(error, (err) => {
     <AktivzitierungLiteratureInput
       v-if="isCreationPanelOpened || aktivzitierungLiteratures.length === 0"
       class="mt-16"
-      @update-aktivzitierung-literature="onAddItem"
+      @update-aktivzitierung-literature="handleAddItem"
       @cancel="isCreationPanelOpened = false"
       @search="onSearch"
       :show-cancel-button="false"
     />
     <Button
-      v-else
+      v-else-if="!editingItemId"
       class="mt-16"
-      aria-label="Aktivzitierung hinzufügen"
+      aria-label="Weitere Angabe"
       severity="secondary"
-      label="Aktivzitierung hinzufügen"
+      label="Weitere Angabe"
       size="small"
       @click="isCreationPanelOpened = true"
     >
