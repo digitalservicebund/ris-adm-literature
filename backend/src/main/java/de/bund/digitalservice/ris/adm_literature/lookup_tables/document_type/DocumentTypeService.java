@@ -5,8 +5,9 @@ import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -75,5 +76,26 @@ public class DocumentTypeService {
   private Function<DocumentTypeEntity, DocumentType> mapDocumentTypeEntity() {
     return documentTypeEntity ->
       new DocumentType(documentTypeEntity.getAbbreviation(), documentTypeEntity.getName());
+  }
+
+  /**
+   * Retrieves a map of document type abbreviations to their corresponding names
+   * for the specified document category.
+   *
+   * @return A map where keys represent document type abbreviations and values
+   *         represent the corresponding document type names.
+   */
+  @Transactional(readOnly = true)
+  public Map<String, String> getDocumentTypeNames() {
+    return documentTypeRepository
+      .findAllByDocumentCategory(DocumentCategory.LITERATUR_SELBSTAENDIG)
+      .stream()
+      .collect(
+        Collectors.toMap(
+          DocumentTypeEntity::getAbbreviation,
+          DocumentTypeEntity::getName,
+          (existing, replacement) -> existing // Safety merge in case of duplicate keys
+        )
+      );
   }
 }

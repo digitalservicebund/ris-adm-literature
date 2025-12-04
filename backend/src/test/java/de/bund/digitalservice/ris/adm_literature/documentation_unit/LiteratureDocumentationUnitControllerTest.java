@@ -12,6 +12,8 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
+import de.bund.digitalservice.ris.adm_literature.page.TestPage;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -43,31 +45,51 @@ class LiteratureDocumentationUnitControllerTest {
     @Test
     @DisplayName("GET returns HTTP 200 and sliReferenceSearchOverview in JSON")
     void getDocsFormatted() throws Exception {
-      // given nothing
-      // when
+      // given
+      given(
+        documentationUnitService.findLiteratureDocumentationUnitOverviewElements(any())
+      ).willReturn(
+        TestPage.create(
+          List.of(
+            new LiteratureDocumentationUnitOverviewElement(
+              UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+              "VALID123456789",
+              "1999-2022",
+              "Dies ist der Hauptsachtitel",
+              List.of("DA"),
+              List.of("Name 1", "Name 2")
+            ),
+            new LiteratureDocumentationUnitOverviewElement(
+              UUID.fromString("33385f64-5717-4562-b3fc-2c963f66afa6"),
+              "VALID987654321",
+              "2025",
+              "Dies ist der 2. Hauptsachtitel",
+              List.of("DV"),
+              List.of("Name 3", "Name 4")
+            )
+          )
+        )
+      );
+
+      // when & then
       mockMvc
-        .perform(get("/api/literature/documentation-units"))
-        // then
+        .perform(get("/api/literature/sli/documentation-units"))
         .andExpect(status().isOk())
         .andExpect(
           content()
             .json(
               """
-              {
-                "sliReferenceSearchOverview": [
+
+                {
+                "documentationUnitsOverview": [
                   {
                     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                     "documentNumber": "VALID123456789",
                     "veroeffentlichungsjahr": "1999-2022",
+                    "titel": "Dies ist der Hauptsachtitel",
                     "dokumenttypen": [
-                      {
-                        "uuid": "11185f64-5717-4562-b3fc-2c963f66afa6",
-                        "abbreviation": "DokAbbrv",
-                        "name": "Doktyp 1"
-                      }
+                      "DA"
                     ],
-                    "hauptsachtitel": "Dies ist der Hauptsachtitel",
-                    "dokumentarischerTitel": "Dies ist der dokumentarische Titel",
                     "verfasser": [
                       "Name 1",
                       "Name 2"
@@ -77,15 +99,10 @@ class LiteratureDocumentationUnitControllerTest {
                     "id": "33385f64-5717-4562-b3fc-2c963f66afa6",
                     "documentNumber": "VALID987654321",
                     "veroeffentlichungsjahr": "2025",
+                    "titel": "Dies ist der 2. Hauptsachtitel",
                     "dokumenttypen": [
-                      {
-                        "uuid": "44485f64-5717-4562-b3fc-2c963f66afa6",
-                        "abbreviation": "DokAbbrv 2",
-                        "name": "Doktyp 2"
-                      }
+                      "DV"
                     ],
-                    "hauptsachtitel": "Dies ist der 2. Hauptsachtitel",
-                    "dokumentarischerTitel": "Dies ist der 2. dokumentarische Titel",
                     "verfasser": [
                       "Name 3",
                       "Name 4"
@@ -93,7 +110,7 @@ class LiteratureDocumentationUnitControllerTest {
                   }
                 ],
                 "page": {
-                  "size": 15,
+                  "size": 2,
                   "number": 0,
                   "numberOfElements": 2,
                   "totalElements": 2,

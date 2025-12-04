@@ -7,13 +7,12 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.bu
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,13 +40,14 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class DocumentationUnitPersistenceService {
 
-  static final String ENTRY_SEPARATOR = "$µµµµµ$";
+  public static final String ENTRY_SEPARATOR = "$µµµµµ$";
 
   private static final int INDEX_BATCH_SIZE = 500;
 
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
+  private final DocumentTypeService documentTypeService;
   private final ObjectMapper objectMapper;
   private final LdmlConverterService ldmlConverterService;
 
@@ -168,29 +168,30 @@ public class DocumentationUnitPersistenceService {
    * @return Page object with documentation unit overview elements and pagination data
    */
   @Transactional(readOnly = true)
-  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery query
+  public Page<AdmDocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+    @Nonnull AdmDocumentationUnitQuery query
   ) {
     QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
-    DocumentUnitSpecification documentUnitSpecification = new DocumentUnitSpecification(
-      query.documentNumber(),
-      query.langueberschrift(),
-      query.fundstellen(),
-      query.zitierdaten()
-    );
+    AdmDocumentionUnitSpecification admDocumentionUnitSpecification =
+      new AdmDocumentionUnitSpecification(
+        query.documentNumber(),
+        query.langueberschrift(),
+        query.fundstellen(),
+        query.zitierdaten()
+      );
     var documentationUnitsPage = documentationUnitRepository.findAll(
-      documentUnitSpecification,
+      admDocumentionUnitSpecification,
       pageable
     );
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
       if (index == null) {
-        return new DocumentationUnitOverviewElement(
+        return new AdmDocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
           Collections.emptyList(),
@@ -199,12 +200,73 @@ public class DocumentationUnitPersistenceService {
         );
       }
 
-      return new DocumentationUnitOverviewElement(
+      return new AdmDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
         splitBySeparator(index.getZitierdaten()),
         index.getLangueberschrift(),
         splitBySeparator(index.getFundstellen())
+      );
+    });
+  }
+
+  /**
+   * Returns paginated documentation units overview elements.
+   *
+   * @param query The query
+   * @return Page object with documentation unit overview elements and pagination data
+   */
+  @Transactional(readOnly = true)
+  public Page<
+    LiteratureDocumentationUnitOverviewElement
+  > findLiteratureDocumentationUnitOverviewElements(
+    @Nonnull LiteratureDocumentationUnitQuery query
+  ) {
+    QueryOptions queryOptions = query.queryOptions();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    SliDocumentationUnitSpecification documentUnitSpecification =
+      new SliDocumentationUnitSpecification(
+        query.documentNumber(),
+        query.veroeffentlichungsjahr(),
+        query.dokumenttypen(),
+        query.titel(),
+        query.verfasser()
+      );
+    var documentationUnitsPage = documentationUnitRepository.findAll(
+      documentUnitSpecification,
+      pageable
+    );
+    final Map<String, String> typeLookup = documentTypeService.getDocumentTypeNames();
+
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+
+      if (index == null) {
+        return new LiteratureDocumentationUnitOverviewElement(
+          documentationUnit.getId(),
+          documentationUnit.getDocumentNumber(),
+          null,
+          null,
+          Collections.emptyList(),
+          Collections.emptyList()
+        );
+      }
+
+      List<String> documentTypeNames = splitBySeparator(index.getDokumenttypen())
+        .stream()
+        .map(abbrev -> typeLookup.getOrDefault(abbrev, abbrev))
+        .toList();
+
+      return new LiteratureDocumentationUnitOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        index.getVeroeffentlichungsjahr(),
+        index.getTitel(),
+        documentTypeNames,
+        splitBySeparator(index.getVerfasser())
       );
     });
   }

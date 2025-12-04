@@ -388,7 +388,7 @@ describe('literatureDocumentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      '/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
@@ -414,7 +414,7 @@ describe('literatureDocumentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/documentation-units?pageNumber=5&pageSize=100&titel=DerTitel&veroeffentlichungsjahr=2025&dokumenttypen=Anordnung%2CBekanntmachung&verfasser=M%C3%BCller%2CZimmermann&sortByProperty=documentNumber&sortDirection=DESC',
+      '/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&titel=DerTitel&veroeffentlichungsjahr=2025&dokumenttypen=Anordnung%2CBekanntmachung&verfasser=M%C3%BCller%2CZimmermann&sortByProperty=documentNumber&sortDirection=DESC',
       expect.anything(),
     )
     expect(error.value).toBeFalsy()

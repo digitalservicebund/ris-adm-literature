@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ class DocumentationUnitPersistenceServiceTest {
 
   @Mock
   private DocumentationUnitRepository documentationUnitRepository;
+
+  @Mock
+  private DocumentTypeService documentTypeService;
 
   @Test
   void findByDocumentNumber() {
@@ -65,7 +69,7 @@ class DocumentationUnitPersistenceServiceTest {
   }
 
   @Test
-  void findDocumentationUnitOverviewElements() {
+  void findAdmDocumentationUnitOverviewElements() {
     // given
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(UUID.randomUUID());
@@ -86,29 +90,33 @@ class DocumentationUnitPersistenceServiceTest {
     );
 
     given(
-      documentationUnitRepository.findAll(any(DocumentUnitSpecification.class), any(Pageable.class))
+      documentationUnitRepository.findAll(
+        any(AdmDocumentionUnitSpecification.class),
+        any(Pageable.class)
+      )
     ).willReturn(pageOfEntities);
 
     // when
-    de.bund.digitalservice.ris.adm_literature.page.Page<DocumentationUnitOverviewElement> result =
-      documentationUnitPersistenceService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
-        )
-      );
+    de.bund.digitalservice.ris.adm_literature.page.Page<
+      AdmDocumentationUnitOverviewElement
+    > result = documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
+      new AdmDocumentationUnitQuery(
+        null,
+        null,
+        null,
+        null,
+        new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
+      )
+    );
 
     // then
     assertThat(result.content())
       .hasSize(2)
       .extracting(
-        DocumentationUnitOverviewElement::documentNumber,
-        DocumentationUnitOverviewElement::langueberschrift,
-        DocumentationUnitOverviewElement::zitierdaten,
-        DocumentationUnitOverviewElement::fundstellen
+        AdmDocumentationUnitOverviewElement::documentNumber,
+        AdmDocumentationUnitOverviewElement::langueberschrift,
+        AdmDocumentationUnitOverviewElement::zitierdaten,
+        AdmDocumentationUnitOverviewElement::fundstellen
       )
       .containsExactly(
         Tuple.tuple("DOC-001", "Title 1", List.of("2023-01-01"), List.of("Citation 1")),
@@ -116,7 +124,7 @@ class DocumentationUnitPersistenceServiceTest {
       );
 
     // Assert transformation for the entity WITH an index
-    DocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    AdmDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
     assertThat(elementWithIndex.id()).isEqualTo(entityWithIndex.getId());
     assertThat(elementWithIndex.documentNumber()).isEqualTo("DOC-001");
     assertThat(elementWithIndex.langueberschrift()).isEqualTo("Title 1");
@@ -124,11 +132,81 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithIndex.fundstellen()).containsExactly("Citation 1");
 
     // Assert transformation for the entity WITHOUT an index
-    DocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    AdmDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.id()).isEqualTo(entityWithoutIndex.getId());
     assertThat(elementWithoutIndex.documentNumber()).isEqualTo("DOC-002");
     assertThat(elementWithoutIndex.langueberschrift()).isNull();
     assertThat(elementWithoutIndex.zitierdaten()).isEmpty();
     assertThat(elementWithoutIndex.fundstellen()).isEmpty();
+  }
+
+  @Test
+  void findLiteratureDocumentationUnitOverviewElements() {
+    // given
+    String separator = DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
+
+    DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
+    entityWithIndex.setId(UUID.randomUUID());
+    entityWithIndex.setDocumentNumber("LIT-001");
+
+    DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setVeroeffentlichungsjahr("2024");
+    index.setTitel("Literature Title");
+    index.setDokumenttypen("Entscheidungsbesprechung" + separator + "Dissertation");
+    index.setVerfasser("Doe, John" + separator + "Smith, Jane");
+    entityWithIndex.setDocumentationUnitIndex(index);
+
+    DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
+    entityWithoutIndex.setId(UUID.randomUUID());
+    entityWithoutIndex.setDocumentNumber("LIT-002");
+    entityWithoutIndex.setDocumentationUnitIndex(null);
+
+    Page<DocumentationUnitEntity> pageOfEntities = new PageImpl<>(
+      List.of(entityWithIndex, entityWithoutIndex)
+    );
+
+    given(
+      documentationUnitRepository.findAll(
+        any(SliDocumentationUnitSpecification.class),
+        any(Pageable.class)
+      )
+    ).willReturn(pageOfEntities);
+
+    // when
+    var result =
+      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
+        new LiteratureDocumentationUnitQuery(
+          null,
+          null,
+          null,
+          null,
+          null,
+          new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
+        )
+      );
+
+    // then
+    assertThat(result.content())
+      .hasSize(2)
+      .extracting(
+        LiteratureDocumentationUnitOverviewElement::documentNumber,
+        LiteratureDocumentationUnitOverviewElement::titel,
+        LiteratureDocumentationUnitOverviewElement::veroeffentlichungsjahr
+      )
+      .containsExactly(
+        Tuple.tuple("LIT-001", "Literature Title", "2024"),
+        Tuple.tuple("LIT-002", null, null)
+      );
+
+    LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    assertThat(elementWithIndex.dokumenttypen()).containsExactly(
+      "Entscheidungsbesprechung",
+      "Dissertation"
+    );
+    assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
+
+    LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
+    assertThat(elementWithoutIndex.verfasser()).isEmpty();
   }
 }

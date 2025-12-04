@@ -41,7 +41,7 @@ const {
 } = usePagination<SliDocUnitListItem, SliDocUnitSearchParams>(
   useGetSliPaginatedDocUnits,
   ITEMS_PER_PAGE,
-  'sliReferenceSearchOverview',
+  'documentationUnitsOverview',
 )
 
 const searchParams = ref<SliDocUnitSearchParams>()

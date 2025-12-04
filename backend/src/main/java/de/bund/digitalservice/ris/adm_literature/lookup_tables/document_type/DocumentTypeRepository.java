@@ -2,12 +2,16 @@ package de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * Repository for {@link DocumentTypeEntity}.
+ */
 interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity, UUID> {
   Page<
     DocumentTypeEntity
@@ -22,4 +26,6 @@ interface DocumentTypeRepository extends JpaRepository<DocumentTypeEntity, UUID>
     String abbreviation,
     DocumentCategory documentCategory
   );
+
+  List<DocumentTypeEntity> findAllByDocumentCategory(DocumentCategory category);
 }

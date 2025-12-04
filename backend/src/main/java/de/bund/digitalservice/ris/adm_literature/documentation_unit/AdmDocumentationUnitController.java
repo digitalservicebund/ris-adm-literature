@@ -50,7 +50,9 @@ public class AdmDocumentationUnitController {
    * @return Paginated list of document units
    */
   @GetMapping("api/adm/documentation-units")
-  public ResponseEntity<DocumentationUnitsOverviewResponse> find(
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<AdmDocumentationUnitOverviewElement>
+  > find(
     @RequestParam(value = "documentNumber", required = false) String documentNumber,
     @RequestParam(value = "langueberschrift", required = false) String langueberschrift,
     @RequestParam(value = "fundstellen", required = false) String fundstellen,
@@ -74,8 +76,8 @@ public class AdmDocumentationUnitController {
     );
 
     var paginatedDocumentationUnits =
-      documentationUnitService.findDocumentationUnitOverviewElements(
-        new DocumentationUnitQuery(
+      documentationUnitService.findAdmDocumentationUnitOverviewElements(
+        new AdmDocumentationUnitQuery(
           StringUtils.trimToNull(documentNumber),
           StringUtils.trimToNull(langueberschrift),
           StringUtils.trimToNull(fundstellen),
@@ -84,7 +86,7 @@ public class AdmDocumentationUnitController {
         )
       );
     return ResponseEntity.ok(
-      new DocumentationUnitsOverviewResponse(
+      new DocumentationUnitsOverviewResponse<>(
         paginatedDocumentationUnits.content(),
         new PageResponse(paginatedDocumentationUnits)
       )
