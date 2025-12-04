@@ -30,4 +30,5 @@ vi.mock('@/services/auth', () => {
 
 beforeAll(() => {
   config.global.plugins = [PrimeVue]
+  config.global.directives.tooltip = () =>{}
 })
