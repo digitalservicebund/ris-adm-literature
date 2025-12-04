@@ -33,8 +33,8 @@ public class ValidatorConfig {
     return new XmlValidator(
       List.of(
         AKOMA_NTOSO_SCHEMA_LOCATION,
-        "/schemas/proprietary/lit/ldml-ris-literature.xsd",
-        "/schemas/proprietary/uli/ldml-ris-literature-unselbstaendig-meta.xsd"
+        "/schemas/proprietary/literature/ldml-ris-literature.xsd",
+        "/schemas/proprietary/literature/ldml-ris-literature-unselbstaendig-meta.xsd"
       )
     );
   }
@@ -48,8 +48,8 @@ public class ValidatorConfig {
     return new XmlValidator(
       List.of(
         AKOMA_NTOSO_SCHEMA_LOCATION,
-        "/schemas/proprietary/lit/ldml-ris-literature.xsd",
-        "/schemas/proprietary/sli/ldml-ris-literature-selbstaendig-meta.xsd"
+        "/schemas/proprietary/literature/ldml-ris-literature.xsd",
+        "/schemas/proprietary/literature/ldml-ris-literature-selbstaendig-meta.xsd"
       )
     );
   }

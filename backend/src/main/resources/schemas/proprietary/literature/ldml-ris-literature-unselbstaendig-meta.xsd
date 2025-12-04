@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://ldml.neuris.de/literature/selbstaendig/meta/"
+<xs:schema xmlns="http://ldml.neuris.de/literature/unselbstaendig/meta/"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:risCommon="http://ldml.neuris.de/literature/meta/"
-           elementFormDefault="qualified" targetNamespace="http://ldml.neuris.de/literature/selbstaendig/meta/"
-           version="1.0">
-  <xs:import namespace="http://ldml.neuris.de/literature/meta/" schemaLocation="../lit/ldml-ris-literature.xsd"/>
+           elementFormDefault="qualified"
+           targetNamespace="http://ldml.neuris.de/literature/unselbstaendig/meta/" version="1.0">
+  <xs:import namespace="http://ldml.neuris.de/literature/meta/" schemaLocation="ldml-ris-literature.xsd"/>
   <xs:element name="meta">
     <xs:complexType>
       <xs:sequence>
@@ -34,18 +34,6 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element name="gliederungEntry" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="gesamttitelAngaben" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="gesamttitel" maxOccurs="unbounded">
-                <xs:complexType>
-                  <xs:attribute name="titel" type="xs:string" use="required"/>
-                  <xs:attribute name="bandbezeichnung" type="xs:string"/>
-                </xs:complexType>
-              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -99,62 +87,19 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="teilbaende" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="teilband" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="ausgabe" type="xs:string" minOccurs="0"/>
-        <xs:element name="besitznachweise" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="besitznachweis" maxOccurs="unbounded">
-                <xs:complexType>
-                  <xs:attribute name="institution" use="required"/>
-                  <xs:attribute name="signatur"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="titelkurzformen" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="titelkurzform" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="kollation" minOccurs="0">
-          <xs:complexType>
-            <xs:attribute name="umfangsangabe" type="xs:string" use="required"/>
-            <xs:attribute name="begleitmaterial" type="xs:string"/>
-            <xs:attribute name="illustrationsangabe" type="xs:string"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="sonstigerSachtitelListe" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="sonstigerSachtitel" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="vorauflagen" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="vorauflage" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="bibliothekarischeVerweisungen" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="bibliothekarischeVerweisung" type="xs:string" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fundstelleUnselbstaendig">
+    <xs:complexType>
+      <xs:attribute name="periodikum" type="xs:string" use="required"/>
+      <xs:attribute name="zitatstelle" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fundstelleSelbstaendig">
+    <xs:complexType>
+      <xs:attribute name="titel" type="xs:string" use="required"/>
+      <xs:attribute name="zitatstelle" type="xs:string" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="normReference" type="risCommon:normReferenceType"/>
@@ -197,7 +142,7 @@
   <xs:attribute name="name" type="xs:string"/>
   <xs:attribute name="titel" type="xs:string"/>
   <xs:attribute name="zusatz" type="xs:string"/>
-  <xs:attribute name="jahr" type="xs:string"/>
+  <xs:attribute name="jahr" type="xs:gYear"/>
   <xs:attribute name="ort" type="xs:string"/>
   <xs:attribute name="land" type="xs:string"/>
 </xs:schema>
