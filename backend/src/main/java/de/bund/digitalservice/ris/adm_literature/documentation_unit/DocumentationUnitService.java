@@ -150,9 +150,33 @@ public class DocumentationUnitService {
     publisher.publish(publishOptions);
   }
 
-  public Page<DocumentationUnitOverviewElement> findDocumentationUnitOverviewElements(
-    @Nonnull DocumentationUnitQuery queryOptions
+  /**
+   * Retrieves a paginated list of AdmDocumentationUnitOverviewElements based on the specified query options.
+   *
+   * @param queryOptions The query parameters to filter and paginate the results. Must not be null.
+   * @return A paginated {@link Page} containing the matching AdmDocumentationUnitOverviewElements.
+   */
+  public Page<AdmDocumentationUnitOverviewElement> findAdmDocumentationUnitOverviewElements(
+    @Nonnull AdmDocumentationUnitQuery queryOptions
   ) {
-    return documentationUnitPersistenceService.findDocumentationUnitOverviewElements(queryOptions);
+    return documentationUnitPersistenceService.findAdmDocumentationUnitOverviewElements(
+      queryOptions
+    );
+  }
+
+  /**
+   * Retrieves a paginated list of LiteratureDocumentationUnitOverviewElements based on the specified query options.
+   *
+   * @param queryOptions The query parameters to filter and paginate the results. Must not be null.
+   * @return A paginated {@link Page} containing the matching LiteratureDocumentationUnitOverviewElements.
+   */
+  public Page<
+    LiteratureDocumentationUnitOverviewElement
+  > findLiteratureDocumentationUnitOverviewElements(
+    @Nonnull LiteratureDocumentationUnitQuery queryOptions
+  ) {
+    return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
+      queryOptions
+    );
   }
 }

@@ -2,6 +2,8 @@ import { ref } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { usePagination } from '@/composables/usePagination'
 
+const ITEMS_PER_PAGE = 100
+
 const mockData = {
   documentationUnitsOverview: [
     { id: 1, title: 'Doc 1' },
@@ -22,15 +24,15 @@ describe('usePagination', () => {
       execute: vi.fn().mockResolvedValue(undefined),
     })
 
-    const { items, totalRows, firstRowIndex, ITEMS_PER_PAGE } = usePagination(
+    const { items, totalRows, firstRowIndex } = usePagination(
       mockFetchData,
+      ITEMS_PER_PAGE,
       'documentationUnitsOverview',
     )
 
     expect(items.value.length).toBe(2)
     expect(totalRows.value).toBe(42)
     expect(firstRowIndex.value).toBe(0)
-    expect(ITEMS_PER_PAGE).toBe(100)
   })
 
   it('should call execute when fetchPaginatedData is called', async () => {
@@ -42,7 +44,11 @@ describe('usePagination', () => {
       execute: executeSpy,
     })
 
-    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+    const { fetchPaginatedData } = usePagination(
+      mockFetchData,
+      ITEMS_PER_PAGE,
+      'documentationUnitsOverview',
+    )
 
     await fetchPaginatedData(1)
 
@@ -58,14 +64,18 @@ describe('usePagination', () => {
       execute: executeSpy,
     })
 
-    const { fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+    const { fetchPaginatedData } = usePagination(
+      mockFetchData,
+      ITEMS_PER_PAGE,
+      'documentationUnitsOverview',
+    )
 
     const newSearch = { documentNumber: 'abc' }
 
     await fetchPaginatedData(42, newSearch)
 
     // Because new search resets page to 0
-    expect(mockFetchData).toHaveBeenCalledWith(expect.anything(), 100, expect.anything())
+    expect(mockFetchData).toHaveBeenCalledWith(expect.anything(), ITEMS_PER_PAGE, expect.anything())
     expect(executeSpy).toHaveBeenCalled()
   })
 
@@ -80,7 +90,11 @@ describe('usePagination', () => {
       execute: executeSpy,
     })
 
-    const { error, fetchPaginatedData } = usePagination(mockFetchData, 'documentationUnitsOverview')
+    const { error, fetchPaginatedData } = usePagination(
+      mockFetchData,
+      ITEMS_PER_PAGE,
+      'documentationUnitsOverview',
+    )
 
     await fetchPaginatedData()
 
@@ -99,7 +113,11 @@ describe('usePagination', () => {
       execute: executeSpy,
     })
 
-    const { items, totalRows, fetchPaginatedData } = usePagination(mockFetchData, 'results')
+    const { items, totalRows, fetchPaginatedData } = usePagination(
+      mockFetchData,
+      ITEMS_PER_PAGE,
+      'results',
+    )
 
     await fetchPaginatedData()
 

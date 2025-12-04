@@ -3,13 +3,19 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
+import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +27,13 @@ import tools.jackson.databind.JsonNode;
 @RestController
 @RequiredArgsConstructor
 public class LiteratureDocumentationUnitController {
+
+  private static final Set<String> INDEX_ALIASES = Set.of(
+    "veroeffentlichungsjahr",
+    "dokumenttypen",
+    "titel",
+    "verfasser"
+  );
 
   private final DocumentationUnitService documentationUnitService;
 
@@ -40,64 +53,64 @@ public class LiteratureDocumentationUnitController {
 
   /**
    * Returns document units overview
+   * @param documentNumber The document number of the document unit to be returned.
+   * @param veroeffentlichungsjahr The year of publication of the document unit.
+   * @param dokumenttypen The document types of the document unit.
+   * @param titel The title of the document unit.
+   * @param verfasser The authors of the document unit.
+   * @param pageNumber The page number of the result set.
+   * @param pageSize The page size of the result set.
+   * @param sortByProperty The property to sort by.
+   * @param sortDirection The sort direction.
+   * @param usePagination Whether to use pagination or not.
+   *
    *
    * @return Document unit (should be multiple in the future)
    */
-  @GetMapping("api/literature/documentation-units")
-  public ResponseEntity<String> find() {
-    String json =
-      """
-      {
-        "sliReferenceSearchOverview": [
-          {
-            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "documentNumber": "VALID123456789",
-            "veroeffentlichungsjahr": "1999-2022",
-            "dokumenttypen": [
-              {
-                "uuid": "11185f64-5717-4562-b3fc-2c963f66afa6",
-                "abbreviation": "DokAbbrv",
-                "name": "Doktyp 1"
-              }
-            ],
-            "hauptsachtitel": "Dies ist der Hauptsachtitel",
-            "dokumentarischerTitel": "Dies ist der dokumentarische Titel",
-            "verfasser": [
-              "Name 1",
-              "Name 2"
-            ]
-          },
-          {
-            "id": "33385f64-5717-4562-b3fc-2c963f66afa6",
-            "documentNumber": "VALID987654321",
-            "veroeffentlichungsjahr": "2025",
-            "dokumenttypen": [
-              {
-                "uuid": "44485f64-5717-4562-b3fc-2c963f66afa6",
-                "abbreviation": "DokAbbrv 2",
-                "name": "Doktyp 2"
-              }
-            ],
-            "hauptsachtitel": "Dies ist der 2. Hauptsachtitel",
-            "dokumentarischerTitel": "Dies ist der 2. dokumentarische Titel",
-            "verfasser": [
-              "Name 3",
-              "Name 4"
-            ]
-          }
-        ],
-        "page": {
-          "size": 15,
-          "number": 0,
-          "numberOfElements": 2,
-          "totalElements": 2,
-          "first": true,
-          "last": true,
-          "empty": false
-        }
-      }
-      """;
-    return ResponseEntity.ok(json);
+  @GetMapping("api/literature/sli/documentation-units")
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<LiteratureDocumentationUnitOverviewElement>
+  > find(
+    @RequestParam(required = false) String documentNumber,
+    @RequestParam(required = false) String veroeffentlichungsjahr,
+    @RequestParam(required = false) List<String> dokumenttypen,
+    @RequestParam(required = false) String titel,
+    @RequestParam(required = false) List<String> verfasser,
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "15") int pageSize,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "true") boolean usePagination
+  ) {
+    String resolvedSortByProperty = INDEX_ALIASES.contains(sortByProperty)
+      ? "documentationUnitIndex." + sortByProperty
+      : sortByProperty;
+
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      resolvedSortByProperty,
+      sortDirection,
+      usePagination
+    );
+
+    var paginatedDocumentationUnits =
+      documentationUnitService.findLiteratureDocumentationUnitOverviewElements(
+        new LiteratureDocumentationUnitQuery(
+          StringUtils.trimToNull(documentNumber),
+          StringUtils.trimToNull(veroeffentlichungsjahr),
+          dokumenttypen,
+          StringUtils.trimToNull(titel),
+          verfasser,
+          queryOptions
+        )
+      );
+    return ResponseEntity.ok(
+      new DocumentationUnitsOverviewResponse<>(
+        paginatedDocumentationUnits.content(),
+        new PageResponse(paginatedDocumentationUnits)
+      )
+    );
   }
 
   /**

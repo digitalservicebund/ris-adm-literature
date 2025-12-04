@@ -10,10 +10,13 @@ import IconAdd from '~icons/material-symbols/add'
 import SearchResults from '@/components/SearchResults.vue'
 import AktivzitierungSearchResult from '@/views/literature/AktivzitierungSearchResult.vue'
 import type { SliDocUnitListItem, SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
-import { useToast } from 'primevue'
+import { useToast, type PageState } from 'primevue'
 import { usePagination } from '@/composables/usePagination'
 import { useGetSliPaginatedDocUnits } from '@/services/literature/literatureDocumentUnitService'
 import errorMessages from '@/i18n/errors.json'
+import { RisPaginator } from '@digitalservicebund/ris-ui/components'
+
+const ITEMS_PER_PAGE = 15
 
 const toast = useToast()
 const store = useSliDocumentUnitStore()
@@ -29,14 +32,34 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
   useEditableList(aktivzitierungLiteratures)
 
 const {
+  firstRowIndex,
+  totalRows,
   items: searchResults,
   fetchPaginatedData,
   isFetching,
   error,
 } = usePagination<SliDocUnitListItem, SliDocUnitSearchParams>(
   useGetSliPaginatedDocUnits,
-  'sliReferenceSearchOverview',
+  ITEMS_PER_PAGE,
+  'documentationUnitsOverview',
 )
+
+const searchParams = ref<SliDocUnitSearchParams>()
+const showSearchResults = ref(false)
+
+async function fetchData(page: number = 0) {
+  await fetchPaginatedData(page, searchParams.value)
+}
+
+async function handlePageUpdate(pageState: PageState) {
+  await fetchData(pageState.page)
+}
+
+async function onSearch(params: SliDocUnitSearchParams) {
+  searchParams.value = params
+  await fetchData(0)
+  showSearchResults.value = true
+}
 
 watch(error, (err) => {
   if (err) {
@@ -46,17 +69,6 @@ watch(error, (err) => {
     })
   }
 })
-
-const searchParams = ref<SliDocUnitSearchParams>()
-
-async function fetchData(page: number = 0) {
-  await fetchPaginatedData(page, searchParams.value)
-}
-
-async function onSearch(params: SliDocUnitSearchParams) {
-  searchParams.value = params
-  await fetchData(0)
-}
 </script>
 
 <template>
@@ -93,10 +105,20 @@ async function onSearch(params: SliDocUnitSearchParams) {
     >
       <template #icon><IconAdd /></template>
     </Button>
-    <SearchResults class="mt-16" :search-results="searchResults" :is-loading="isFetching">
-      <template #default="{ searchResult }">
-        <AktivzitierungSearchResult :search-result="searchResult" />
-      </template>
-    </SearchResults>
+    <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
+      <SearchResults :search-results="searchResults" :is-loading="isFetching">
+        <template #default="{ searchResult }">
+          <AktivzitierungSearchResult :search-result="searchResult" />
+        </template>
+      </SearchResults>
+      <RisPaginator
+        v-if="searchResults.length > 0"
+        :first="firstRowIndex"
+        :rows="ITEMS_PER_PAGE"
+        :total-records="totalRows"
+        @page="handlePageUpdate"
+        :is-loading="isFetching"
+      />
+    </div>
   </div>
 </template>

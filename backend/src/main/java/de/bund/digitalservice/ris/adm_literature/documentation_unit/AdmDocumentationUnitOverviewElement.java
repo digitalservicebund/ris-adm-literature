@@ -13,7 +13,7 @@ import java.util.UUID;
  * @param langueberschrift The unabbreviated title of the documentation unit
  * @param fundstellen      The list of Fundstellen
  */
-public record DocumentationUnitOverviewElement(
+public record AdmDocumentationUnitOverviewElement(
   @Nonnull UUID id,
   @Nonnull String documentNumber,
   List<String> zitierdaten,

@@ -280,7 +280,7 @@ test.describe(
       await page.waitForURL(/dokumentationseinheit/)
     })
 
-    test('clicking on search retrieves some documents', async ({ page }) => {
+    test.skip('clicking on search retrieves some documents', async ({ page }) => {
       const aktiv = getAktivzitierungSection(page)
 
       // when

@@ -8,8 +8,9 @@ import java.util.List;
  *
  * @param documentationUnitsOverview          List of document units' data
  * @param page Pagination data
+ * @param <T>                        The type of the element
  */
-public record DocumentationUnitsOverviewResponse(
-  List<DocumentationUnitOverviewElement> documentationUnitsOverview,
+public record DocumentationUnitsOverviewResponse<T>(
+  List<T> documentationUnitsOverview,
   PageResponse page
 ) {}
