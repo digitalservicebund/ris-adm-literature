@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;

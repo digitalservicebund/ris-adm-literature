@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
+import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -144,7 +145,7 @@ class DocumentationUnitPersistenceServiceTest {
   @Test
   void findLiteratureDocumentationUnitOverviewElements() {
     // given
-    String separator = DocumentationUnitPersistenceService.ENTRY_SEPARATOR;
+    String separator = ENTRY_SEPARATOR;
 
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(UUID.randomUUID());
