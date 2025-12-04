@@ -44,6 +44,7 @@ public record SliDocumentationUnitContent(
    * @param verfasser The authors of the SLI.
    * @param dokumenttypen The type of the SLI.
    */
+  // TODO: Optional and required fields need to be clarified NOSONAR
   public record AktivzitierungSli(
     String documentNumber,
     String veroeffentlichungsJahr,
