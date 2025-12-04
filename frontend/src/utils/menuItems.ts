@@ -147,6 +147,14 @@ export function getSliMenuItems(
             hash: '#formaldaten',
           },
         },
+        {
+          label: 'Inhaltliche Erschließung',
+          route: {
+            ...baseRoute,
+            name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
+            hash: '#inhaltlicheErschliessung',
+          },
+        },
       ],
     },
     {

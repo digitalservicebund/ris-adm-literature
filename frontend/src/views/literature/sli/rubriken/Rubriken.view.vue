@@ -72,7 +72,13 @@ useScrollToHash()
       aria-labelledby="aktivzitierung-title"
       class="flex flex-col gap-24 bg-white p-24"
     >
-      <TitleElement id="aktivzitierung-title">Aktivzitierung (selbst. Literatur)</TitleElement>
+      <TitleElement
+        aria-label="Inhaltliche Erschließung"
+        class="mb-12"
+        id="inhaltlicheErschliessung"
+        >Inhaltliche Erschließung</TitleElement
+      >
+      <h2 id="aktivzitierung-title" class="ris-body1-bold">Aktivzitierung (selbst. Literatur)</h2>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <AktivzitierungLiteratures />
