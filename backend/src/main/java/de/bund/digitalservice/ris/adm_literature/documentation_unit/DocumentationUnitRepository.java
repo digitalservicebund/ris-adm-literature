@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-interface DocumentationUnitRepository
+/**
+ * JPA repository for documentation unit entities.
+ */
+public interface DocumentationUnitRepository
   extends
     JpaRepository<DocumentationUnitEntity, UUID>,
     JpaSpecificationExecutor<DocumentationUnitEntity> {

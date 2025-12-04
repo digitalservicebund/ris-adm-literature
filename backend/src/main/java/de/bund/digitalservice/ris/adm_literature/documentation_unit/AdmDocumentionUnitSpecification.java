@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
