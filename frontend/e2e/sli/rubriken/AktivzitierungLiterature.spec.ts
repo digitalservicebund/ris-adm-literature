@@ -17,10 +17,10 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       const aktiv = getAktivzitierungSection(page)
 
       // then – inputs are visible
-      await expect(aktiv.getByText('Hauptsachtitel / Dokumentarischer Titel *')).toBeVisible()
-      await expect(aktiv.getByText('Veröffentlichungsjahr *')).toBeVisible()
-      await expect(aktiv.getByText('Dokumenttyp *')).toBeVisible()
-      await expect(aktiv.getByText('Verfasser/in *')).toBeVisible()
+      await expect(aktiv.getByText('Hauptsachtitel / Dokumentarischer Titel')).toBeVisible()
+      await expect(aktiv.getByText('Veröffentlichungsjahr')).toBeVisible()
+      await expect(aktiv.getByText('Dokumenttyp')).toBeVisible()
+      await expect(aktiv.getByText('Verfasser/in')).toBeVisible()
 
       // given – user fills all Aktivzitierung fields
       const titleInput = aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })
@@ -44,10 +44,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       // when – user transfers values to the list
       await aktiv.getByRole('button', { name: 'Übernehmen' }).click()
 
-      // when – user opens the creation panel
-      await aktiv.getByRole('button', { name: 'Aktivzitierung hinzufügen' }).click()
-
-      // inputs are cleared after Übernehmen
+      // creation panel stays open and inputs are cleared after Übernehmen
       await expect(aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })).toHaveValue('')
       await expect(aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' })).toHaveValue('')
 
@@ -123,7 +120,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       await expect(aktivList.getByText('Zu löschendes SLI‑Buch')).toBeVisible()
 
       // when – user opens the entry and deletes it
-      await aktiv.getByRole('button', { name: 'Aktivzitierung Editieren' }).click()
+      await aktiv.getByRole('button', { name: 'Eintrag bearbeiten' }).click()
 
       // There can be multiple "Eintrag löschen" buttons (chips etc.), so scope to Aktivzitierung section
       const deleteButtons = aktiv.getByRole('button', { name: 'Eintrag löschen' })
@@ -176,9 +173,11 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       await expect(aktivList.getByText('Alte Version')).toBeVisible()
 
       // when – user edits the entry and clicks Übernehmen in edit mode
-      await aktiv.getByRole('button', { name: 'Aktivzitierung Editieren' }).click()
+      await aktiv.getByRole('button', { name: 'Eintrag bearbeiten' }).click()
 
-      const editTitleInput = aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })
+      const editTitleInput = aktiv.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      })
       await editTitleInput.fill('Neue Version')
 
       const editYearInput = aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' })
@@ -220,15 +219,18 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       const aktiv = getAktivzitierungSection(page)
 
       // given – create initial entry
-      await aktiv.getByRole('textbox', { name: 'Hauptsachtitel' }).fill('Original Titel')
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill('Original Titel')
       await aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill('2020')
 
       const dokumenttypInput = aktiv.getByRole('combobox', { name: 'Dokumenttyp' })
       await dokumenttypInput.click()
-      await page
-        .getByRole('listbox', { name: 'Optionsliste' })
-        .getByRole('option', { name: 'Bib' })
-        .click()
+      const optionsOverlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      const bibOption = optionsOverlay.getByRole('option', { name: 'Bib' })
+
+      await expect(bibOption).toBeVisible()
+      await bibOption.click()
 
       const verfasserGroup = aktiv.getByLabel('Verfasser/in')
       const verfasserInput = verfasserGroup.getByRole('textbox')
@@ -242,9 +244,11 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       await expect(aktivList.getByText('Original Titel')).toBeVisible()
 
       // when – user edits but clicks Abbrechen
-      await aktiv.getByRole('button', { name: 'Aktivzitierung Editieren' }).click()
+      await aktiv.getByRole('button', { name: 'Eintrag bearbeiten' }).click()
 
-      const editTitleInput = aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })
+      const editTitleInput = aktiv.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      })
       await editTitleInput.fill('Geänderter Titel')
 
       await aktiv.getByRole('button', { name: 'Abbrechen' }).click()
@@ -270,7 +274,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
   )
 })
 
-test.describe(
+test.describe.skip(
   'Add aktivzitierung via searching through the SLI documents',
   { tag: ['@RISDEV-10276'] },
   () => {

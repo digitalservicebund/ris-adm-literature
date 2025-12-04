@@ -413,4 +413,28 @@ describe('AktivzitierungLiteratures', () => {
     expect(screen.queryByRole('button', { name: 'Abbrechen' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Übernehmen' })).not.toBeInTheDocument()
   })
+
+  it('closes the creation panel when starting to edit an existing entry', async () => {
+    const existing: AktivzitierungLiterature = {
+      id: 'aktiv-1',
+      titel: 'Titel 1',
+    }
+
+    const { user } = renderComponent([existing])
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Hauptsachtitel / Dokumentarischer Titel',
+      }),
+    ).toHaveValue('')
+
+    await user.click(screen.getByRole('button', { name: 'Eintrag bearbeiten' }))
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    expect(titleInput).toHaveValue('Titel 1')
+    expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
+  })
 })
