@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/vue'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import AktivzitierungSearchResult from './AktivzitierungSearchResult.vue'
 import { sliDocUnitListItemFixture } from '@/testing/fixtures/sliDocumentUnit.fixture'
@@ -77,5 +78,26 @@ describe('Aktivzitierung search result', () => {
 
     expect(screen.getByText('DOC-ONLY')).toBeInTheDocument()
     expect(screen.getByText('Minimal Entry')).toBeInTheDocument()
+  })
+
+  it('emits add with the searchResult when clicking the + button', async () => {
+    const user = userEvent.setup()
+    const searchResult = {
+      id: 'id-add',
+      documentNumber: 'DOC-ADD',
+      veroeffentlichungsjahr: '2025',
+      titel: 'Some title',
+      verfasser: ['Name 1'],
+    }
+
+    const { emitted } = render(AktivzitierungSearchResult, {
+      props: { searchResult },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
+
+    expect(emitted().add).toBeTruthy()
+    const payload = (emitted().add as any[])[0][0]
+    expect(payload.documentNumber).toBe('DOC-ADD')
   })
 })

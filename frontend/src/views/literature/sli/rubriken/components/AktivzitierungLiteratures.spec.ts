@@ -1,5 +1,5 @@
 import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
+import { render, screen, within } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import AktivzitierungLiteratures from './AktivzitierungLiteratures.vue'
@@ -436,5 +436,89 @@ describe('AktivzitierungLiteratures', () => {
     })
     expect(titleInput).toHaveValue('Titel 1')
     expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
+  })
+
+  it('adds a search result as non-editable entry, prevents duplicates and allows removing via X', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            {
+              id: 'sli-uuid-1',
+              documentNumber: 'VALID123456789',
+              veroeffentlichungsjahr: '1999-2022',
+              verfasser: ['Name 1', 'Name 2'],
+              titel: undefined,
+            },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button>',
+          },
+        },
+      },
+    })
+
+    // trigger search
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    // click + on first search result to add to list
+    const addButtons = screen.getAllByRole('button', {
+      name: 'Aktivzitierung hinzufügen',
+    })
+    await user.click(addButtons[0]!)
+
+    // one list entry added
+    const list = screen.getByRole('list', { name: 'Aktivzitierung Liste' })
+    let items = within(list).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+
+    const firstItem = items[0]
+    // search-based entry: has X, no edit button
+    expect(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' })).toBeInTheDocument()
+    expect(
+      within(firstItem!).queryByRole('button', { name: 'Eintrag bearbeiten' }),
+    ).not.toBeInTheDocument()
+
+    // clicking + again for same result does NOT add a duplicate
+    await user.click(addButtons[0]!)
+    items = within(list).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+
+    // clicking X removes the entry from the list
+    await user.click(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' }))
+    expect(screen.queryByRole('list', { name: 'Aktivzitierung Liste' })).not.toBeInTheDocument()
   })
 })

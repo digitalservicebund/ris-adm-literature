@@ -95,6 +95,28 @@ function handleAddItem(item: AktivzitierungLiterature) {
 function handleCancelEdit() {
   handleEditEnd()
 }
+
+function handleAddSearchResult(result: SliDocUnitListItem) {
+  if (
+    aktivzitierungLiteratures.value.some((entry) => entry.documentNumber === result.documentNumber)
+  ) {
+    return
+  }
+
+  const entry: AktivzitierungLiterature = {
+    id: crypto.randomUUID(),
+    uuid: result.id,
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    veroeffentlichungsjahr: result.veroeffentlichungsjahr,
+    verfasser: result.verfasser || [],
+  }
+
+  onAddItem(entry)
+  isCreationPanelOpened.value = true
+  showSearchResults.value = false
+  searchParams.value = undefined
+}
 </script>
 
 <template>
@@ -141,7 +163,7 @@ function handleCancelEdit() {
     <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
       <SearchResults :search-results="searchResults" :is-loading="isFetching">
         <template #default="{ searchResult }">
-          <AktivzitierungSearchResult :search-result="searchResult" />
+          <AktivzitierungSearchResult :search-result="searchResult" @add="handleAddSearchResult" />
         </template>
       </SearchResults>
       <RisPaginator

@@ -21,11 +21,6 @@ function renderComponent(
 
   const utils = render(AktivzitierungLiteratureItem, {
     props: { aktivzitierungLiterature, ...extraProps },
-    global: {
-      directives: {
-        tooltip: () => {},
-      },
-    },
   })
 
   return { user, ...utils }
