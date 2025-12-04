@@ -253,14 +253,7 @@ public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
             .collect(Collectors.joining(", "))
           : "";
 
-        String showAsValue = Stream.of(
-          verfasser,
-          titel,
-          documentNumber,
-          dokumentTypen,
-          isbn,
-          veroeffentlichungsJahr
-        )
+        String showAsValue = Stream.of(titel, veroeffentlichungsJahr, verfasser)
           .filter(StringUtils::isNotBlank)
           .collect(Collectors.joining(", "));
 
