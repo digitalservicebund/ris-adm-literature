@@ -51,7 +51,7 @@
     "@vitejs/plugin-vue": "^6.0.2",
     "@vitejs/plugin-vue-jsx": "^5.1.2",
     "@vue/tsconfig": "^0.8.1",
-    "@vueuse/core": "^14.0.0",
+    "@vueuse/core": "^14.1.0",
     "dayjs": "^1.11.19",
     "keycloak-js": "^26.2.1",
     "postcss": "^8.5.6",
