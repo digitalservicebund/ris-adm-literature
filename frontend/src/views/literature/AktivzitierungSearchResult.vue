@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 import Button from 'primevue/button'
-import Tag from 'primevue/tag'
 import IconAdd from '~icons/material-symbols/add'
 
 const props = defineProps<{
