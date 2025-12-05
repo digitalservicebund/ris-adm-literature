@@ -21,11 +21,26 @@ const ITEMS_PER_PAGE = 15
 const toast = useToast()
 const store = useSliDocumentUnitStore()
 
+const ownDocumentNumber = computed(() => store.documentUnit?.documentNumber)
+
 const aktivzitierungLiteratures = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungLiterature[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue
   },
+})
+
+const visibleSearchResults = computed(() => {
+  if (!searchResults.value) return []
+  return searchResults.value.filter((result) => result.documentNumber !== ownDocumentNumber.value)
+})
+
+const addedDocumentNumbers = computed(() => {
+  return new Set(
+    aktivzitierungLiteratures.value
+      .map((entry) => entry.documentNumber)
+      .filter((num): num is string => !!num),
+  )
 })
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
@@ -187,9 +202,13 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
       <template #icon><IconAdd /></template>
     </Button>
     <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
-      <SearchResults :search-results="searchResults" :is-loading="isFetching">
+      <SearchResults :search-results="visibleSearchResults" :is-loading="isFetching">
         <template #default="{ searchResult }">
-          <AktivzitierungSearchResult :search-result="searchResult" @add="handleAddSearchResult" />
+          <AktivzitierungSearchResult
+            :search-result="searchResult"
+            :is-added="addedDocumentNumbers.has(searchResult.documentNumber)"
+            @add="handleAddSearchResult"
+          />
         </template>
       </SearchResults>
       <RisPaginator
