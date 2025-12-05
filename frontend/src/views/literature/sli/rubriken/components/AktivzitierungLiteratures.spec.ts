@@ -680,4 +680,125 @@ describe('AktivzitierungLiteratures', () => {
     ).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })
+
+  it('filters out the own document from search results', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    // Mock results containing the current document (OWN-123) and another one (OTHER-456)
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([
+            { id: '1', documentNumber: 'OWN-123', titel: 'My Own Document' },
+            { id: '2', documentNumber: 'OTHER-456', titel: 'Other Document' },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'OWN-123',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'test\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+    expect(screen.getByText('Other Document')).toBeInTheDocument()
+    expect(screen.queryByText('My Own Document')).not.toBeInTheDocument()
+  })
+
+  it('marks existing entries in search results as added (shows tag/disabled button)', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    const commonDocNumber = 'ALREADY-ADDED-999'
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            { id: 'search-id-1', documentNumber: commonDocNumber, titel: 'Duplicate Title' },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'DOC-MAIN',
+                  note: '',
+                  aktivzitierungenSli: [
+                    {
+                      id: 'existing-1',
+                      documentNumber: commonDocNumber,
+                      titel: 'Existing List Entry',
+                    },
+                  ],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'test\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    expect(screen.getByText('Duplicate Title')).toBeInTheDocument()
+    expect(screen.getByText('Bereits hinzugefügt')).toBeInTheDocument()
+
+    const addButton = screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })
+    expect(addButton).toBeDisabled()
+  })
 })
