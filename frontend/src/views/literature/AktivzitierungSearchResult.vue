@@ -66,7 +66,7 @@ function formatHeading(): string {
 
     <div
       v-if="isAdded"
-      class="ris-label2-regular flex w-[fit-content] items-center rounded-full px-4 py-2 bg-yellow-300"
+      class="ris-label2-regular flex w-[fit-content] items-center rounded-full px-4 py-2 bg-yellow-300 ml-1 shrink-0"
     >
       <span class="mx-2 text-yellow-900">Bereits hinzugefügt</span>
     </div>
