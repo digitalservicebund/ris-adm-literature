@@ -2,11 +2,12 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitRepository;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;

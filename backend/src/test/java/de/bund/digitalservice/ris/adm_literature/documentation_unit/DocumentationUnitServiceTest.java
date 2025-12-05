@@ -8,9 +8,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.TestLiteratureUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
@@ -262,7 +266,7 @@ class DocumentationUnitServiceTest {
       TEST_JSON,
       TEST_OLD_XML
     );
-    UliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createUli(
+    UliDocumentationUnitContent contentToPublish = TestLiteratureUnitContent.createUli(
       "KALU123456789",
       "2025"
     );
@@ -302,7 +306,7 @@ class DocumentationUnitServiceTest {
       TEST_JSON,
       TEST_NEW_XML
     );
-    SliDocumentationUnitContent contentToPublish = TestDocumentationUnitContent.createSli(
+    SliDocumentationUnitContent contentToPublish = TestLiteratureUnitContent.createSli(
       "KVLS123456789",
       "2025"
     );

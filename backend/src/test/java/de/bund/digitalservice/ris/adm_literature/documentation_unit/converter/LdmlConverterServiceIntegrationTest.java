@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.Fundstelle;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstelle;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.institution.InstitutionType;

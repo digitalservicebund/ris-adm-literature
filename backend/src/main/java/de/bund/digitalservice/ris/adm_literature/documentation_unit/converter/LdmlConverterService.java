@@ -1,9 +1,10 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ldml.AkomaNtoso;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.transform.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.JaxbXmlReader;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.jaxb.AkomaNtoso;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.transform.*;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LdmlConverterService {
 
-  private final XmlReader xmlReader;
+  private final JaxbXmlReader jaxbXmlReader;
   private final FundstellenTransformer fundstellenTransformer;
   private final DocumentTypeTransformer documentTypeTransformer;
   private final NormgeberTransformer normgeberTransformer;
@@ -35,7 +36,7 @@ public class LdmlConverterService {
   public AdmDocumentationUnitContent convertToBusinessModel(
     @Nonnull DocumentationUnit documentationUnit
   ) {
-    AkomaNtoso akomaNtoso = xmlReader.readXml(documentationUnit.xml());
+    AkomaNtoso akomaNtoso = jaxbXmlReader.readXml(documentationUnit.xml());
     log.debug("Read Akoma Ntoso from XML: {}.", akomaNtoso);
     return new AdmDocumentationUnitContent(
       documentationUnit.id(),

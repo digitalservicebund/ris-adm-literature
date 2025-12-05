@@ -2,9 +2,9 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
 import java.util.function.UnaryOperator;
 
-class XmlNormalizer {
+public class XmlNormalizer {
 
-  static final UnaryOperator<String> NORMALIZE_FUNCTION = text ->
+  public static final UnaryOperator<String> NORMALIZE_FUNCTION = text ->
     text
       // Remove whitespaces and linefeeds between end and start of tags
       .replaceAll(">\\s+<", "><")

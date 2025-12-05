@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
  * Class for normalizing a string into a readable slug to use in URIs or URLs.
  */
 @RequiredArgsConstructor
-class Slug {
+public class Slug {
 
   private static final Map<String, String> GERMAN_LETTER_REPLACEMENTS = Map.ofEntries(
     Map.entry("ä", "ae"),
