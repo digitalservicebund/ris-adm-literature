@@ -101,4 +101,28 @@ describe('Aktivzitierung search result', () => {
     const payload = (emitted().add as [SliDocUnitListItem[]])[0][0]
     expect(payload!.documentNumber).toBe('DOC-ADD')
   })
+
+  it('disables button and shows tag when isAdded prop is true', async () => {
+    const user = userEvent.setup()
+    const searchResult = {
+      id: 'id-added',
+      documentNumber: 'DOC-ADDED',
+      titel: 'Already Added Title',
+    }
+
+    const { emitted } = render(AktivzitierungSearchResult, {
+      props: {
+        searchResult,
+        isAdded: true,
+      },
+    })
+
+    expect(screen.getByText('Bereits hinzugefügt')).toBeInTheDocument()
+
+    const button = screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })
+    expect(button).toBeDisabled()
+
+    await user.click(button)
+    expect(emitted().add).toBeFalsy()
+  })
 })
