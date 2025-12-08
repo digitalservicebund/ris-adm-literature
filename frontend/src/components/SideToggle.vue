@@ -35,7 +35,7 @@ const classes = computed(() => ({
 
 const buttonClasses = computed(() => ({
   'right-0 -mr-16': props.openingDirection == OpeningDirection.RIGHT,
-  'left-0 -ml-24': props.openingDirection == OpeningDirection.LEFT,
+  'left-0 -ml-16': props.openingDirection == OpeningDirection.LEFT,
   [props.customButtonClasses]: props.customButtonClasses,
 }))
 

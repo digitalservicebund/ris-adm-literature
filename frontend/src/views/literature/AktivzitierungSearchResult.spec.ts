@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/vue'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import AktivzitierungSearchResult from './AktivzitierungSearchResult.vue'
 import { sliDocUnitListItemFixture } from '@/testing/fixtures/sliDocumentUnit.fixture'
+import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit.ts'
 
 describe('Aktivzitierung search result', () => {
   it('renders correctly', () => {
@@ -77,5 +79,50 @@ describe('Aktivzitierung search result', () => {
 
     expect(screen.getByText('DOC-ONLY')).toBeInTheDocument()
     expect(screen.getByText('Minimal Entry')).toBeInTheDocument()
+  })
+
+  it('emits add with the searchResult when clicking the + button', async () => {
+    const user = userEvent.setup()
+    const searchResult = {
+      id: 'id-add',
+      documentNumber: 'DOC-ADD',
+      veroeffentlichungsjahr: '2025',
+      titel: 'Some title',
+      verfasser: ['Name 1'],
+    }
+
+    const { emitted } = render(AktivzitierungSearchResult, {
+      props: { searchResult },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
+
+    expect(emitted().add).toBeTruthy()
+    const payload = (emitted().add as [SliDocUnitListItem[]])[0][0]
+    expect(payload!.documentNumber).toBe('DOC-ADD')
+  })
+
+  it('disables button and shows tag when isAdded prop is true', async () => {
+    const user = userEvent.setup()
+    const searchResult = {
+      id: 'id-added',
+      documentNumber: 'DOC-ADDED',
+      titel: 'Already Added Title',
+    }
+
+    const { emitted } = render(AktivzitierungSearchResult, {
+      props: {
+        searchResult,
+        isAdded: true,
+      },
+    })
+
+    expect(screen.getByText('Bereits hinzugefügt')).toBeInTheDocument()
+
+    const button = screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })
+    expect(button).toBeDisabled()
+
+    await user.click(button)
+    expect(emitted().add).toBeFalsy()
   })
 })

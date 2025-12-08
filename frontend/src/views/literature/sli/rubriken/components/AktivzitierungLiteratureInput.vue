@@ -58,6 +58,19 @@ function onClickSave() {
   }
 }
 
+function clearSearchFields() {
+  if (isCreating.value) {
+    aktivzitierungLiterature.value.titel = ''
+    aktivzitierungLiterature.value.veroeffentlichungsjahr = ''
+    aktivzitierungLiterature.value.dokumenttypen = []
+    aktivzitierungLiterature.value.verfasser = []
+  }
+}
+
+defineExpose({
+  clearSearchFields,
+})
+
 function onClickCancel() {
   emit('cancel')
 }

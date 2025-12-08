@@ -39,17 +39,18 @@ public record SliDocumentationUnitContent(
    * A reference to an active SLI.
    * @param documentNumber The document number of the SLI.
    * @param veroeffentlichungsJahr The publication year of the SLI.
-   * @param buchtitel The main title of the SLI.
+   * @param titel The main title of the SLI.
    * @param isbn The ISBN of the SLI.
-   * @param autor The author of the SLI.
-   * @param dokumenttyp The type of the SLI.
+   * @param verfasser The authors of the SLI.
+   * @param dokumenttypen The type of the SLI.
    */
+  // TODO: Optional and required fields need to be clarified NOSONAR
   public record AktivzitierungSli(
     String documentNumber,
     String veroeffentlichungsJahr,
-    String buchtitel,
+    String titel,
     String isbn,
-    String autor, // urheber/ typ / verfasser need to be clarified
-    DocumentType dokumenttyp
+    List<String> verfasser, // urheber/ typ / verfasser need to be clarified
+    List<DocumentType> dokumenttypen
   ) {}
 }

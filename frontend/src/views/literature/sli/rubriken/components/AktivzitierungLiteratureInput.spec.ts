@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
 import type { SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
@@ -146,5 +148,26 @@ describe('AktivzitierungLiteratureInput', () => {
     expect(emitted().search).toBeTruthy()
     const payload = (emitted().search as [SliDocUnitSearchParams[]])[0][0]
     expect(payload?.titel).toBe('Testtitel')
+  })
+
+  it('clears search fields when clearSearchFields is called in creation mode', async () => {
+    const wrapper = mount(AktivzitierungLiteratureInput, {
+      props: { showCancelButton: false },
+    })
+
+    const titleInput = wrapper.find('input[aria-label="Hauptsachtitel / Dokumentarischer Titel"]')
+    const yearInput = wrapper.find('input[aria-label="Veröffentlichungsjahr"]')
+
+    await titleInput.setValue('Test Title')
+    await yearInput.setValue('2024')
+
+    expect((titleInput.element as HTMLInputElement).value).toBe('Test Title')
+    expect((yearInput.element as HTMLInputElement).value).toBe('2024')
+
+    wrapper.vm.clearSearchFields()
+    await nextTick()
+
+    expect((titleInput.element as HTMLInputElement).value).toBe('')
+    expect((yearInput.element as HTMLInputElement).value).toBe('')
   })
 })

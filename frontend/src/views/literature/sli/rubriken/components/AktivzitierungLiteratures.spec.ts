@@ -1,5 +1,5 @@
 import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
+import { render, screen, within } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import AktivzitierungLiteratures from './AktivzitierungLiteratures.vue'
@@ -7,6 +7,7 @@ import type { SliDocumentationUnit } from '@/domain/sli/sliDocumentUnit'
 import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature'
 import { ref } from 'vue'
 import { flushPromises } from '@vue/test-utils'
+import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 
 const addToastMock = vi.fn()
 vi.mock('primevue', () => ({
@@ -75,7 +76,7 @@ describe('AktivzitierungLiteratures', () => {
     renderComponent(mockAktivzitierungen)
 
     expect(screen.queryAllByRole('listitem')).toHaveLength(1)
-    expect(screen.getByText('2025, again and again, (Ebs)')).toBeInTheDocument()
+    expect(screen.getByText('2025, again and again (Ebs)')).toBeInTheDocument()
     expect(screen.getByText('a new one')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
   })
@@ -436,5 +437,368 @@ describe('AktivzitierungLiteratures', () => {
     })
     expect(titleInput).toHaveValue('Titel 1')
     expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
+  })
+
+  it('adds a search result as non-editable entry, prevents duplicates, clears inputs and allows removing via X', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+    const clearSearchFieldsSpy = vi.fn()
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            {
+              id: 'sli-uuid-1',
+              documentNumber: 'VALID123456789',
+              veroeffentlichungsjahr: '1999-2022',
+              verfasser: ['Name 1', 'Name 2'],
+              titel: undefined,
+            },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<div><button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button></div>',
+            setup(props, { expose }) {
+              expose({ clearSearchFields: clearSearchFieldsSpy })
+            },
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+
+    const addButtons = screen.getAllByRole('button', {
+      name: 'Aktivzitierung hinzufügen',
+    })
+    await user.click(addButtons[0]!)
+
+    expect(clearSearchFieldsSpy).toHaveBeenCalledTimes(1)
+
+    expect(screen.queryByText('Passende Suchergebnisse:')).not.toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: 'Fake search' })).toBeInTheDocument()
+
+    const list = screen.getByRole('list', { name: 'Aktivzitierung Liste' })
+    let items = within(list).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+
+    const firstItem = items[0]
+    expect(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' })).toBeInTheDocument()
+    expect(
+      within(firstItem!).queryByRole('button', { name: 'Eintrag bearbeiten' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(addButtons[0]!)
+    items = within(list).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+
+    await user.click(within(firstItem!).getByRole('button', { name: 'Eintrag löschen' }))
+    expect(screen.queryByRole('list', { name: 'Aktivzitierung Liste' })).not.toBeInTheDocument()
+  })
+
+  it('calls handleUpdateItem when updating an entry', async () => {
+    const existing: AktivzitierungLiterature = {
+      id: 'aktiv-1',
+      titel: 'Original Title',
+    }
+
+    const { user } = renderComponent([existing])
+
+    const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
+    await user.click(editButton)
+
+    const titleInput = screen.getByRole('textbox', {
+      name: 'Hauptsachtitel / Dokumentarischer Titel',
+    })
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Updated Title')
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    await user.click(saveButton)
+
+    expect(screen.getByText('Updated Title')).toBeInTheDocument()
+    expect(screen.queryByText('Original Title')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
+  })
+
+  it('does not add duplicate search result when documentNumber already exists', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+    const clearSearchFieldsSpy = vi.fn()
+
+    const existingEntry: AktivzitierungLiterature = {
+      id: 'existing-1',
+      documentNumber: 'VALID123456789',
+      titel: 'Existing Entry',
+    }
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            {
+              id: 'sli-uuid-1',
+              documentNumber: 'VALID123456789',
+              veroeffentlichungsjahr: '1999-2022',
+              verfasser: ['Name 1'],
+            },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [existingEntry],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<div><button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button></div>',
+            setup(props, { expose }) {
+              expose({ clearSearchFields: clearSearchFieldsSpy })
+            },
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+
+    const addButtons = screen.getAllByRole('button', {
+      name: 'Aktivzitierung hinzufügen',
+    })
+    await user.click(addButtons[0]!)
+
+    const list = screen.getByRole('list', { name: 'Aktivzitierung Liste' })
+    const items = within(list).getAllByRole('listitem')
+    expect(items).toHaveLength(1)
+    expect(screen.getByText('Existing Entry')).toBeInTheDocument()
+    expect(clearSearchFieldsSpy).not.toHaveBeenCalled()
+  })
+
+  it('generates unique IDs for entries missing them when data loads', async () => {
+    const entriesWithoutIds: AktivzitierungLiterature[] = [
+      {
+        id: '',
+        titel: 'Entry 1',
+      },
+      {
+        titel: 'Entry 2',
+      } as AktivzitierungLiterature,
+      {
+        id: 'existing-id',
+        titel: 'Entry 3',
+      },
+    ]
+
+    renderComponent(entriesWithoutIds)
+
+    const store = useSliDocumentUnitStore()
+    const loadedEntries = store.documentUnit!.aktivzitierungenSli!
+
+    expect(loadedEntries[0]!.id).toBeTruthy()
+    expect(loadedEntries[0]!.id).not.toBe('')
+    expect(loadedEntries[1]!.id).toBeTruthy()
+    expect(loadedEntries[1]!.id).not.toBe('')
+    expect(loadedEntries[2]!.id).toBe('existing-id')
+
+    expect(loadedEntries[0]!.id).not.toBe(loadedEntries[1]!.id)
+  })
+
+  it('resets editingItemId when data changes', async () => {
+    const { user } = renderComponent(mockAktivzitierungen)
+    const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
+    await user.click(editButton)
+
+    expect(
+      screen.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).toBeInTheDocument()
+
+    const store = useSliDocumentUnitStore()
+    store.documentUnit!.aktivzitierungenSli = [...mockAktivzitierungen]
+    await flushPromises()
+
+    expect(
+      screen.queryByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Eintrag bearbeiten' })).toBeInTheDocument()
+  })
+
+  it('filters out the own document from search results', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    // Mock results containing the current document (OWN-123) and another one (OTHER-456)
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(2),
+          items: ref([
+            { id: '1', documentNumber: 'OWN-123', titel: 'My Own Document' },
+            { id: '2', documentNumber: 'OTHER-456', titel: 'Other Document' },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'OWN-123',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'test\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    expect(screen.getByText('Passende Suchergebnisse:')).toBeInTheDocument()
+    expect(screen.getByText('Other Document')).toBeInTheDocument()
+    expect(screen.queryByText('My Own Document')).not.toBeInTheDocument()
+  })
+
+  it('marks existing entries in search results as added (shows tag/disabled button)', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+
+    const commonDocNumber = 'ALREADY-ADDED-999'
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            { id: 'search-id-1', documentNumber: commonDocNumber, titel: 'Duplicate Title' },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'DOC-MAIN',
+                  note: '',
+                  aktivzitierungenSli: [
+                    {
+                      id: 'existing-1',
+                      documentNumber: commonDocNumber,
+                      titel: 'Existing List Entry',
+                    },
+                  ],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<button aria-label="Fake search" @click="$emit(\'search\', { titel: \'test\' })"></button>',
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+
+    expect(screen.getByText('Duplicate Title')).toBeInTheDocument()
+    expect(screen.getByText('Bereits hinzugefügt')).toBeInTheDocument()
+
+    const addButton = screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })
+    expect(addButton).toBeDisabled()
   })
 })

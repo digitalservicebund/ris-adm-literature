@@ -21,11 +21,26 @@ const ITEMS_PER_PAGE = 15
 const toast = useToast()
 const store = useSliDocumentUnitStore()
 
+const ownDocumentNumber = computed(() => store.documentUnit?.documentNumber)
+
 const aktivzitierungLiteratures = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungLiterature[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue
   },
+})
+
+const visibleSearchResults = computed(() => {
+  if (!searchResults.value) return []
+  return searchResults.value.filter((result) => result.documentNumber !== ownDocumentNumber.value)
+})
+
+const addedDocumentNumbers = computed(() => {
+  return new Set(
+    aktivzitierungLiteratures.value
+      .map((entry) => entry.documentNumber)
+      .filter((num): num is string => !!num),
+  )
 })
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
@@ -71,6 +86,28 @@ watch(error, (err) => {
 })
 
 const editingItemId = ref<string | undefined>(undefined)
+
+// make sure all entries have unique IDs when loaded and reset editing state
+watch(
+  () => store.documentUnit?.aktivzitierungenSli,
+  (entries) => {
+    if (entries) {
+      editingItemId.value = undefined
+
+      // Only process if there are entries missing IDs
+      const needsIds = entries.some((entry) => !entry.id || entry.id === '')
+      if (needsIds) {
+        entries.forEach((entry) => {
+          if (!entry.id || entry.id === '') {
+            entry.id = crypto.randomUUID()
+          }
+        })
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
+
 function handleEditStart(itemId: string) {
   if (isCreationPanelOpened.value) {
     isCreationPanelOpened.value = false
@@ -94,6 +131,31 @@ function handleAddItem(item: AktivzitierungLiterature) {
 
 function handleCancelEdit() {
   handleEditEnd()
+}
+
+const inputRef = ref<InstanceType<typeof AktivzitierungLiteratureInput>>()
+
+function handleAddSearchResult(result: SliDocUnitListItem) {
+  if (
+    aktivzitierungLiteratures.value.some((entry) => entry.documentNumber === result.documentNumber)
+  ) {
+    return
+  }
+
+  const entry: AktivzitierungLiterature = {
+    id: crypto.randomUUID(),
+    uuid: result.id,
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    veroeffentlichungsjahr: result.veroeffentlichungsjahr,
+    verfasser: result.verfasser || [],
+  }
+
+  onAddItem(entry)
+  isCreationPanelOpened.value = true
+  showSearchResults.value = false
+  searchParams.value = undefined
+  inputRef.value?.clearSearchFields()
 }
 </script>
 
@@ -120,6 +182,7 @@ function handleCancelEdit() {
       </li>
     </ol>
     <AktivzitierungLiteratureInput
+      ref="inputRef"
       v-if="isCreationPanelOpened || aktivzitierungLiteratures.length === 0"
       class="mt-16"
       @update-aktivzitierung-literature="handleAddItem"
@@ -139,9 +202,13 @@ function handleCancelEdit() {
       <template #icon><IconAdd /></template>
     </Button>
     <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
-      <SearchResults :search-results="searchResults" :is-loading="isFetching">
+      <SearchResults :search-results="visibleSearchResults" :is-loading="isFetching">
         <template #default="{ searchResult }">
-          <AktivzitierungSearchResult :search-result="searchResult" />
+          <AktivzitierungSearchResult
+            :search-result="searchResult"
+            :is-added="addedDocumentNumbers.has(searchResult.documentNumber)"
+            @add="handleAddSearchResult"
+          />
         </template>
       </SearchResults>
       <RisPaginator

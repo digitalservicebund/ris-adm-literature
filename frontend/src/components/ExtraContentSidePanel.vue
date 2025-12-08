@@ -2,7 +2,6 @@
 import type { Component } from 'vue'
 import { computed, onMounted } from 'vue'
 import ExtraContentSidePanelMenu from '@/components/ExtraContentSidePanelMenu.vue'
-import FlexItem from '@/components/FlexItem.vue'
 import InputField from '@/components/input/InputField.vue'
 import TextAreaInput from '@/components/input/TextAreaInput.vue'
 import SideToggle from '@/components/SideToggle.vue'
@@ -57,8 +56,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <FlexItem
-    class="h-full flex-col border-l-1 border-solid border-gray-400 bg-white"
+  <div
+    class="h-full flex flex-col border-l-1 border-solid border-gray-400 bg-white"
     :class="[store.isExpanded ? 'flex-1' : '', store.isExpanded ? 'w-1/2' : '']"
     data-testid="attachment-view-side-panel"
   >
@@ -92,5 +91,5 @@ onMounted(() => {
         </div>
       </div>
     </SideToggle>
-  </FlexItem>
+  </div>
 </template>

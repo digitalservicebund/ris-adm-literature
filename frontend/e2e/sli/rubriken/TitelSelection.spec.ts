@@ -5,7 +5,7 @@ const getFormaldatenSection = (page: Page) => page.getByRole('region', { name: '
 test.describe('SLI Rubriken - Titelauswahl', () => {
   test(
     'Hauptsachtitel/Dokumentarischer Titel toggle and persistence',
-    { tag: ['@RISDEV-10121'] },
+    { tag: ['@RISDEV-10121', '@RISDEV-10122'] },
     async ({ page }) => {
       // given – new SLI document edit view
       await page.goto('/literatur-selbstaendig')
@@ -101,7 +101,7 @@ test.describe('SLI Rubriken - Titelauswahl', () => {
 
   test(
     'disables button when typing in Zusatz zum Hauptsachtitel',
-    { tag: ['@RISDEV-10121'] },
+    { tag: ['@RISDEV-10121', '@RISDEV-10122'] },
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbstaendig')
@@ -123,7 +123,7 @@ test.describe('SLI Rubriken - Titelauswahl', () => {
 
   test(
     're-enables button when both fields are cleared',
-    { tag: ['@RISDEV-10121'] },
+    { tag: ['@RISDEV-10121', '@RISDEV-10122'] },
     async ({ page }) => {
       // given
       await page.goto('/literatur-selbstaendig')

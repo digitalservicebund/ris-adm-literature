@@ -34,10 +34,10 @@
   </xs:complexType>
   <xs:complexType name="selbstaendigeLiteraturReferenceType">
     <xs:attribute name="documentNumber" type="xs:string"/>
-    <xs:attribute name="veroeffentlichungsJahr" type="xs:string" use="required"/>
-    <xs:attribute name="autor" type="xs:string" use="required"/>
-    <xs:attribute name="buchtitel" type="xs:string" use="required"/>
-    <xs:attribute name="dokumenttyp" type="xs:string"/>
+    <xs:attribute name="veroeffentlichungsJahr" type="xs:string"/>
+    <xs:attribute name="autor" type="xs:string"/>
+    <xs:attribute name="buchtitel" type="xs:string"/>
+    <xs:attribute name="dokumentTyp" type="xs:string"/>
     <xs:attribute name="isbn" type="xs:string"/>
   </xs:complexType>
 </xs:schema>
