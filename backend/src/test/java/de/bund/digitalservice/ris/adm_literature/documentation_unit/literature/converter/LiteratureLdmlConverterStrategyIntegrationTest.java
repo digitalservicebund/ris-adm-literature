@@ -285,8 +285,10 @@ class LiteratureLdmlConverterStrategyIntegrationTest {
   @DisplayName("When previousXmlVersion is provided, it is ignored and a new document is created")
   void convertToLdml_withPreviousXmlVersion_shouldIgnoreAndCreateNew() {
     // given
-    UliDocumentationUnitContent uliDocumentationUnitContent =
-      TestDocumentationUnitContent.createUli("KSLU00000099", "2025");
+    UliDocumentationUnitContent uliDocumentationUnitContent = TestLiteratureUnitContent.createUli(
+      "KSLU00000099",
+      "2025"
+    );
     String previousXmlVersion = "<previous>valid or invalid xml content</previous>";
 
     // when
