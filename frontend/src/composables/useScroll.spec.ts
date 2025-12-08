@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render } from '@testing-library/vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { nextTick, defineComponent } from 'vue'
-import { useScrollToHash } from './useScrollToHash.ts'
+import { useScrollToHash } from './useScroll.ts'
 
 const DEFAULT_OFFSET = 120
 const MOCK_SCROLL_Y = 500 // Mock current scroll position
