@@ -274,17 +274,263 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
   )
 })
 
-test.describe.skip(
+// Helper function to create a sli doc
+async function createDocument(
+  page: Page,
+  data: { title: string; year: string; docType: string[] },
+  publish: boolean,
+) {
+  await page.goto('/literatur-selbstaendig')
+  await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  await page.waitForURL(/dokumentationseinheit/)
+
+  const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+
+  const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
+  const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
+
+  for (const type of data.docType) {
+    await input.fill(type)
+    await overlay.getByRole('option', { name: type }).click()
+  }
+
+  await formaldaten.getByRole('textbox', { name: 'Hauptsachtitel *', exact: true }).fill(data.title)
+  await formaldaten.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(data.year)
+
+  await page.getByRole('button', { name: 'Speichern' }).click()
+  if (publish) {
+    await page.getByText('Abgabe').click()
+    await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+  }
+}
+
+test.describe(
   'Add aktivzitierung via searching through the SLI documents',
   { tag: ['@RISDEV-10276'] },
   () => {
-    test.beforeEach(async ({ page }) => {
+    // This suite is configured to run in 'serial' mode
+    // because the expensive document creation is performed ONCE in beforeAll
+    // using a shared 'page' object, which requires sequential execution
+    // to maintain state and prevent race conditions between tests.
+    test.describe.configure({ mode: 'serial' })
+
+    let page: Page
+
+    // Shared, unique test IDs
+    const titleSharedId = crypto.randomUUID()
+    const titleDoc1 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`
+    const titleDoc2 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`
+    const yearSharedId = crypto.randomUUID()
+    const veroeffentlichungsjahrDoc1 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`
+    const veroeffentlichungsjahrDoc2 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`
+
+    // Configure tests (documents creation)
+    test.beforeAll(async ({ browser }) => {
+      page = await browser.newPage()
+
+      // Create Doc 1
+      await createDocument(
+        page,
+        {
+          title: titleDoc1,
+          year: veroeffentlichungsjahrDoc1,
+          docType: ['Bib'],
+        },
+        true,
+      )
+
+      // Create Doc 2
+      await createDocument(
+        page,
+        {
+          title: titleDoc2,
+          year: veroeffentlichungsjahrDoc2,
+          docType: ['Dis'],
+        },
+        true,
+      )
+    })
+
+    test.afterAll(async () => {
+      await page.close()
+    })
+
+    test.beforeEach(async () => {
       await page.goto('/literatur-selbstaendig')
       await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
       await page.waitForURL(/dokumentationseinheit/)
     })
 
-    test.skip('clicking on search retrieves some documents', async ({ page }) => {
+    test('shows no results message when searching for non-existent title', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      // when
+      const nonExistingTitle = crypto.randomUUID()
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(nonExistingTitle)
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      // then
+      await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+    })
+
+    test('search by shared title ID retrieves exactly 2 documents', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      // when
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(titleSharedId)
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+      await expect(searchResultsList).toBeVisible()
+      const listItems = searchResultsList.getByRole('listitem')
+      await expect(listItems).toHaveCount(2)
+      await expect(page.getByText(titleDoc1)).toBeVisible()
+      await expect(page.getByText(titleDoc2)).toBeVisible()
+    })
+
+    test('search by shared year ID retrieves exactly 2 documents', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      // when
+      await aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(yearSharedId)
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+      await expect(searchResultsList).toBeVisible()
+      const listItems = searchResultsList.getByRole('listitem')
+      await expect(listItems).toHaveCount(2)
+      await expect(page.getByText(titleDoc1)).toBeVisible()
+      await expect(page.getByText(titleDoc2)).toBeVisible()
+    })
+
+    test('adding more search parameters (Document Type) reduces results to 1', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(titleSharedId)
+
+      // when adding an additional filter: Doc Type 'Bib' (Doc1 only)
+      const input = aktiv.getByRole('combobox', { name: 'Dokumenttyp' })
+      const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      await input.fill('Bib')
+      await overlay.getByRole('option', { name: 'Bib' }).click()
+
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const listItems = aktiv.getByRole('listitem')
+      await expect(listItems).toHaveCount(1)
+      await expect(page.getByText(titleDoc1)).toBeVisible()
+      await expect(page.getByText(titleDoc2)).toBeHidden()
+    })
+
+    test('shows a correctly formatted search result: Veröffentlichungsjahr, Verfasser, Dokumentnummer, Hauptsachtitel or Dokumentarischer Titel', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(titleDoc1)
+
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const listItems = aktiv.getByRole('listitem')
+      await expect(listItems).toHaveCount(1)
+      await expect(listItems.getByText(/KALS2025/)).toBeVisible()
+      const headingStructureRegex = /Veröffentlichungsjahr: .* \| KALS2025.*/
+      await expect(listItems.getByText(headingStructureRegex)).toBeVisible()
+    })
+
+    test('retrieves only published documents', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      const titel = 'Unpublished doc'
+      await createDocument(
+        page,
+        {
+          title: titel,
+          year: '2025',
+          docType: ['Dis'],
+        },
+        false,
+      )
+
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(titel)
+
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+    })
+
+    test(`clicking on the search result "add" button adds a reference to the aktivzitierung list and clears the search,
+      it can only be removed but not edited,
+      it can be saved and persist after reload,
+      finally the document can be published`, async () => {
+      // given
+      const formaldaten = page.getByRole('region', { name: 'Formaldaten' })
+
+      const input = formaldaten.getByRole('combobox', { name: 'Dokumenttyp' })
+      const overlay = page.getByRole('listbox', { name: 'Optionsliste' })
+      await input.fill('Dis')
+      await overlay.getByRole('option', { name: 'Dis' }).click()
+
+      await formaldaten
+        .getByRole('textbox', { name: 'Hauptsachtitel *', exact: true })
+        .fill('TheTitle')
+      await formaldaten.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill('2025')
+
+      const aktiv = getAktivzitierungSection(page)
+
+      await aktiv
+        .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
+        .fill(titleDoc1)
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await expect(aktiv.getByText(titleDoc1)).toBeVisible()
+
+      // when – user adds an aktivzitierung from the search results
+      await aktiv.getByRole('button', { name: 'Aktivzitierung hinzufügen' }).click()
+      // then
+      const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
+      const listItems = aktivList.getByRole('listitem')
+      await expect(listItems).toHaveCount(1)
+      await expect(listItems.getByText(titleDoc1)).toBeVisible()
+      await expect(
+        aktiv.getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' }),
+      ).toBeEmpty()
+      await expect(listItems.getByRole('button', { name: 'Eintrag löschen' })).toBeVisible()
+      await expect(listItems.getByRole('button', { name: 'Eintrag bearbeiten' })).not.toBeAttached()
+
+      // when – user saves the document
+      await page.getByRole('button', { name: 'Speichern' }).click()
+      // then
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+
+      // when – user reloads the page
+      await page.reload()
+      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivListAfterReload = aktivAfterReload.getByRole('list', {
+        name: 'Aktivzitierung Liste',
+      })
+      // then – Aktivzitierung entry is still present
+      await expect(aktivListAfterReload.getByText(titleDoc1)).toBeVisible()
+
+      // when – user published
+      await page.getByText('Abgabe').click()
+      await page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }).click()
+      // then
+      await expect(page.getByText('Freigabe ist abgeschlossen')).toBeVisible()
+    })
+
+    test('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', async () => {
       const aktiv = getAktivzitierungSection(page)
 
       // when
@@ -293,15 +539,23 @@ test.describe.skip(
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
       await expect(searchResultsList).toBeVisible()
-    })
+      const listItems = searchResultsList.getByRole('listitem')
+      await expect(listItems).toHaveCount(15)
+      await expect(page.getByText('Seite 1')).toBeVisible()
 
-    test.skip('shows no results message: "Keine passende Suchergebnisse"', () => {})
-    test.skip('adding more search parameters reduces the number of results, also for multiple documenttypen and verfasser', () => {})
-    test.skip('shows a correctly formatted search result: Veröffentlichungsjahr, Verfasser, Dokumentnummer, Hauptsachtitel or Dokumentarischer Titel', () => {})
-    test.skip('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', () => {})
-    test.skip('retrieves only published documents', () => {})
-    test.skip('clicking on the search result "add" button adds a reference to the aktivzitierung list and clears the search', () => {})
-    test.skip('an aktivzitierung entry added from the search can only be removed but not edited', () => {})
-    test.skip('aktivzitierungen added from the search can be saved', () => {})
+      // when
+      await aktiv.getByRole('button', { name: 'Weiter' }).click()
+
+      // then
+      await expect(aktiv.getByText('Seite 2')).toBeVisible()
+      await expect(aktiv.getByRole('button', { name: 'Zurück' })).toBeVisible()
+
+      // when
+      await aktiv.getByRole('button', { name: 'Zurück' }).click()
+
+      // then
+      await expect(aktiv.getByText('Seite 1')).toBeVisible()
+      await expect(aktiv.getByRole('button', { name: 'Zurück' })).toBeHidden()
+    })
   },
 )
