@@ -530,6 +530,32 @@ test.describe(
       await expect(page.getByText('Freigabe ist abgeschlossen')).toBeVisible()
     })
 
-    test.skip('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', () => {})
+    test('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', async () => {
+      const aktiv = getAktivzitierungSection(page)
+
+      // when
+      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+
+      // then
+      const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+      await expect(searchResultsList).toBeVisible()
+      const listItems = searchResultsList.getByRole('listitem')
+      await expect(listItems).toHaveCount(15)
+      await expect(page.getByText('Seite 1')).toBeVisible()
+
+      // when
+      await aktiv.getByRole('button', { name: 'Weiter' }).click()
+
+      // then
+      await expect(aktiv.getByText('Seite 2')).toBeVisible()
+      await expect(aktiv.getByRole('button', { name: 'Zurück' })).toBeVisible()
+
+      // when
+      await aktiv.getByRole('button', { name: 'Zurück' }).click()
+
+      // then
+      await expect(aktiv.getByText('Seite 1')).toBeVisible()
+      await expect(aktiv.getByRole('button', { name: 'Zurück' })).toBeHidden()
+    })
   },
 )
