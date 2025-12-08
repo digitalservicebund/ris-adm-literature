@@ -21,7 +21,7 @@ import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
 import Berufsbild from './components/Berufsbild.vue'
 import TitelAspekt from './components/TitelAspekt.vue'
 import Definitionen from './components/Definitionen.vue'
-import { useScrollToHash } from '@/composables/useScrollToHash'
+import { useScrollToHash } from '@/composables/useScroll'
 
 const store = useAdmDocUnitStore()
 

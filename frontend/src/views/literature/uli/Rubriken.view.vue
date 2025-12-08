@@ -6,7 +6,7 @@ import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { DocumentCategory } from '@/domain/documentType'
 import TitelSection from './TitelSection.vue'
-import { useScrollToHash } from '@/composables/useScrollToHash'
+import { useScrollToHash } from '@/composables/useScroll'
 import InputText from 'primevue/inputtext'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 
