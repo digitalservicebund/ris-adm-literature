@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import jakarta.annotation.Nonnull;
 
 /**

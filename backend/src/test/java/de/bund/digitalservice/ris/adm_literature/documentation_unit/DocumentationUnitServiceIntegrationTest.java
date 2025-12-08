@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.business.TestAdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
