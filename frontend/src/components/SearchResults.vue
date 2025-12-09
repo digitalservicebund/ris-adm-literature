@@ -23,7 +23,7 @@ watch(
 </script>
 
 <template>
-  <div ref="resultsContainer" class="mb-20">
+  <div ref="resultsContainer">
     <div v-if="isLoading" class="grid justify-items-center">
       <ProgressSpinner />
     </div>

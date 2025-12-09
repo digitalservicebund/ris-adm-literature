@@ -243,6 +243,7 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
       </SearchResults>
       <RisPaginator
         v-if="searchResults.length > 0"
+        class="mt-20"
         :first="firstRowIndex"
         :rows="ITEMS_PER_PAGE"
         :total-records="totalRows"
