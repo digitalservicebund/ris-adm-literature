@@ -7,7 +7,7 @@ import AktivzitierungLiteratureItem from './AktivzitierungLiteratureItem.vue'
 const mockAktivzitierung: AktivzitierungLiterature = {
   id: 'aktiv-1',
   uuid: 'aktiv-1',
-  veroeffentlichungsjahr: '2025',
+  veroeffentlichungsJahr: '2025',
   verfasser: ['again and again'],
   dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
   titel: 'a new one',
@@ -85,7 +85,7 @@ describe('AktivzitierungLiteratureItem', () => {
     const onlyTitle: AktivzitierungLiterature = {
       id: '1',
       titel: 'Nur Titel',
-      veroeffentlichungsjahr: undefined,
+      veroeffentlichungsJahr: undefined,
       verfasser: [],
       dokumenttypen: [],
     }

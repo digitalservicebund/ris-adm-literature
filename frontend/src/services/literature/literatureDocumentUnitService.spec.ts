@@ -403,7 +403,7 @@ describe('literatureDocumentUnitService', () => {
       ref(5),
       100,
       ref({
-        veroeffentlichungsjahr: '2025',
+        veroeffentlichungsJahr: '2025',
         verfasser: ['Müller', 'Zimmermann'],
         titel: 'DerTitel',
         dokumenttypen: ['Anordnung', 'Bekanntmachung'],

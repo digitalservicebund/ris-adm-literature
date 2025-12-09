@@ -20,7 +20,7 @@ const mockAktivzitierungen: AktivzitierungLiterature[] = [
   {
     id: 'aktiv-1',
     uuid: 'aktiv-1',
-    veroeffentlichungsjahr: '2025',
+    veroeffentlichungsJahr: '2025',
     verfasser: ['again and again'],
     dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
     titel: 'a new one',

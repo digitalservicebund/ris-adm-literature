@@ -47,8 +47,8 @@ const onDeleteFromSummary = () => {
 const metaSummary = computed(() => {
   const parts: string[] = []
 
-  if (props.aktivzitierungLiterature.veroeffentlichungsjahr) {
-    parts.push(props.aktivzitierungLiterature.veroeffentlichungsjahr)
+  if (props.aktivzitierungLiterature.veroeffentlichungsJahr) {
+    parts.push(props.aktivzitierungLiterature.veroeffentlichungsJahr)
   }
 
   if (

@@ -120,7 +120,7 @@ export function useGetSliPaginatedDocUnits(
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       titel: search?.value?.titel?.toString(),
-      veroeffentlichungsjahr: search?.value?.veroeffentlichungsjahr?.toString(),
+      veroeffentlichungsjahr: search?.value?.veroeffentlichungsJahr?.toString(),
       dokumenttypen: search?.value?.dokumenttypen?.join(),
       verfasser: search?.value?.verfasser?.join(),
       sortByProperty: 'documentNumber',

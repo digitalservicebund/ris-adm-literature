@@ -25,13 +25,13 @@ const aktivzitierungLiterature = ref<AktivzitierungLiterature>({
   id: props.aktivzitierungLiterature?.id ?? crypto.randomUUID(),
   uuid: props.aktivzitierungLiterature?.uuid,
   titel: props.aktivzitierungLiterature?.titel || '',
-  veroeffentlichungsjahr: props.aktivzitierungLiterature?.veroeffentlichungsjahr || '',
+  veroeffentlichungsJahr: props.aktivzitierungLiterature?.veroeffentlichungsJahr || '',
   dokumenttypen: props.aktivzitierungLiterature?.dokumenttypen || [],
   verfasser: props.aktivzitierungLiterature?.verfasser || [],
 })
 
 const isEmpty = computed(() => {
-  const fields = ['titel', 'veroeffentlichungsjahr', 'dokumenttypen', 'verfasser']
+  const fields = ['titel', 'veroeffentlichungsJahr', 'dokumenttypen', 'verfasser']
   return fields.every((field) => {
     const value = aktivzitierungLiterature.value[field as keyof AktivzitierungLiterature]
     if (value === undefined || value === null) return true
@@ -51,7 +51,7 @@ function onClickSave() {
       id: crypto.randomUUID(),
       uuid: undefined,
       titel: '',
-      veroeffentlichungsjahr: '',
+      veroeffentlichungsJahr: '',
       dokumenttypen: [],
       verfasser: [],
     }
@@ -61,7 +61,7 @@ function onClickSave() {
 function clearSearchFields() {
   if (isCreating.value) {
     aktivzitierungLiterature.value.titel = ''
-    aktivzitierungLiterature.value.veroeffentlichungsjahr = ''
+    aktivzitierungLiterature.value.veroeffentlichungsJahr = ''
     aktivzitierungLiterature.value.dokumenttypen = []
     aktivzitierungLiterature.value.verfasser = []
   }
@@ -83,7 +83,7 @@ function onClickDelete() {
 
 function onClickSearch() {
   emit('search', {
-    veroeffentlichungsjahr: aktivzitierungLiterature.value.veroeffentlichungsjahr,
+    veroeffentlichungsJahr: aktivzitierungLiterature.value.veroeffentlichungsJahr,
     titel: aktivzitierungLiterature.value.titel,
     dokumenttypen: aktivzitierungLiterature.value.dokumenttypen?.map(
       (docType) => docType.abbreviation,
@@ -100,7 +100,7 @@ watch(
         id: newVal.id || crypto.randomUUID(),
         uuid: newVal.uuid,
         titel: newVal.titel || '',
-        veroeffentlichungsjahr: newVal.veroeffentlichungsjahr || '',
+        veroeffentlichungsJahr: newVal.veroeffentlichungsJahr || '',
         dokumenttypen: newVal.dokumenttypen || [],
         verfasser: newVal.verfasser || [],
       }
@@ -126,7 +126,7 @@ watch(
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr">
           <InputText
             :id="slotProps.id"
-            v-model="aktivzitierungLiterature.veroeffentlichungsjahr"
+            v-model="aktivzitierungLiterature.veroeffentlichungsJahr"
             aria-label="Veröffentlichungsjahr"
             fluid
           />

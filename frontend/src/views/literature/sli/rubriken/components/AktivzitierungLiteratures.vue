@@ -15,6 +15,8 @@ import { usePagination } from '@/composables/usePagination'
 import { useGetSliPaginatedDocUnits } from '@/services/literature/literatureDocumentUnitService'
 import errorMessages from '@/i18n/errors.json'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
+import { DocumentCategory } from '@/domain/documentType'
+import { useFetchDocumentTypes } from '@/services/documentTypeService'
 
 const ITEMS_PER_PAGE = 15
 
@@ -58,6 +60,20 @@ const {
   ITEMS_PER_PAGE,
   'documentationUnitsOverview',
 )
+
+const { data: docTypes } = useFetchDocumentTypes(DocumentCategory.LITERATUR_SELBSTAENDIG)
+
+const nameToAbbreviation = computed(() => {
+  const mapping = new Map<string, string>()
+  docTypes.value?.documentTypes?.forEach((docType) => {
+    mapping.set(docType.name, docType.abbreviation)
+  })
+  return mapping
+})
+
+function getNameToAbbreviation(name: string): string {
+  return nameToAbbreviation.value.get(name) || name
+}
 
 const searchParams = ref<SliDocUnitSearchParams>()
 const showSearchResults = ref(false)
@@ -127,6 +143,9 @@ function handleUpdateItem(item: AktivzitierungLiterature) {
 function handleAddItem(item: AktivzitierungLiterature) {
   onAddItem(item)
   isCreationPanelOpened.value = true
+  // Close search results when manually adding an entry
+  showSearchResults.value = false
+  searchParams.value = undefined
 }
 
 function handleCancelEdit() {
@@ -142,13 +161,23 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
     return
   }
 
+  // Convert dokumenttypen from (names) to abbreviations
+  const dokumenttypen = result.dokumenttypen?.map((name) => {
+    const abbreviation = getNameToAbbreviation(name)
+    return {
+      abbreviation,
+      name,
+    }
+  })
+
   const entry: AktivzitierungLiterature = {
     id: crypto.randomUUID(),
     uuid: result.id,
     titel: result.titel,
     documentNumber: result.documentNumber,
-    veroeffentlichungsjahr: result.veroeffentlichungsjahr,
+    veroeffentlichungsJahr: result.veroeffentlichungsjahr,
     verfasser: result.verfasser || [],
+    dokumenttypen: dokumenttypen || [],
   }
 
   onAddItem(entry)
@@ -207,6 +236,7 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
           <AktivzitierungSearchResult
             :search-result="searchResult"
             :is-added="addedDocumentNumbers.has(searchResult.documentNumber)"
+            :document-type-name-to-abbreviation="nameToAbbreviation"
             @add="handleAddSearchResult"
           />
         </template>
