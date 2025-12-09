@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",
-    "@digitalservicebund/ris-ui": "^3.17.1",
+    "@digitalservicebund/ris-ui": "^3.18.1",
     "@guardian/prosemirror-invisibles": "^3.1.1",
     "@iconify-json/ic": "^1.2.4",
     "@iconify-json/material-symbols": "^1.2.48",
