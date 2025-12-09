@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 
 test.describe('SLI AbgabePage', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,22 +7,59 @@ test.describe('SLI AbgabePage', () => {
     await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
   })
 
-  test(
-    'Should show validation error when mandatory fields are missing',
-    { tag: ['@RISDEV-10125'] },
-    async ({ page }) => {
-      // when
-      await page.getByText('Abgabe').click()
-      // then
-      await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeVisible()
-      await expect(page.getByText('Dokumenttyp')).toBeVisible()
-      await expect(page.getByText('Veröffentlichungsjahr')).toBeVisible()
-      await expect(page.getByText('Hauptsachtitel / Dokumentarischer Titel')).toBeVisible()
-      await expect(
-        page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }),
-      ).toBeDisabled()
-    },
-  )
+  async function fillMandatoryFields(page: Page, missing: string[] = []) {
+    const form = page.getByRole('region', { name: 'Formaldaten' })
+
+    if (!missing.includes('Dokumenttyp')) {
+      const input = form.getByRole('combobox', { name: /^Dokumenttyp/ })
+      await input.fill('Bi')
+      await page
+        .getByRole('listbox', { name: 'Optionsliste' })
+        .getByRole('option', { name: 'Bib' })
+        .click()
+    }
+
+    if (!missing.includes('Hauptsachtitel')) {
+      await form
+        .getByRole('textbox', { name: /^Hauptsachtitel/ })
+        .fill('Die unendliche Verhandlung')
+    }
+
+    if (!missing.includes('Veröffentlichungsjahr')) {
+      await form.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+    }
+
+    await page.getByRole('button', { name: 'Speichern' }).click()
+  }
+
+  const missingFields = [
+    ['Dokumenttyp'],
+    ['Hauptsachtitel'],
+    ['Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Hauptsachtitel'],
+    ['Hauptsachtitel', 'Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Hauptsachtitel', 'Veröffentlichungsjahr'],
+  ]
+
+  for (const fields of missingFields) {
+    test(
+      `Should show validation error when mandatory ${fields.join()} are missing`,
+      { tag: ['@RISDEV-10125'] },
+      async ({ page }) => {
+        await fillMandatoryFields(page, fields)
+
+        await page.getByText('Abgabe').click()
+
+        await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeVisible()
+        for (const field of fields) {
+          await expect(page.getByText(field)).toBeVisible()
+        }
+        const publishButton = page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' })
+        await expect(publishButton).toBeDisabled()
+      },
+    )
+  }
 
   test(
     'Should show validation error when mandatory fields contain whitespaces only',

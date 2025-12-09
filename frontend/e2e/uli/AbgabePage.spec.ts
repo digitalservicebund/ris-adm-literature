@@ -1,13 +1,17 @@
-import { expect, test } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 
 test.describe('ULI AbgabePage', () => {
+  test.beforeEach(async ({ page }) => {
+    // given
+    await page.goto('/literatur-unselbstaendig')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+  })
+
   test(
     'Should enter mandatory data, validate fine and publish successfully',
     { tag: ['@RISDEV-9375', '@RISDEV-9374'] },
     async ({ page }) => {
       // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
       const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Auf')
       await page.getByText('Aufsatz').click()
@@ -31,34 +35,65 @@ test.describe('ULI AbgabePage', () => {
     },
   )
 
-  test(
-    'Should show validation error when mandatory fields are missing',
-    { tag: ['@RISDEV-9374'] },
-    async ({ page }) => {
-      // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
+  async function fillMandatoryFields(page: Page, missing: string[] = []) {
+    const form = page.getByRole('region', { name: 'Formaldaten' })
 
-      // when
-      await page.getByText('Abgabe').click()
-      // then
-      await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeVisible()
-      await expect(page.getByText('Dokumenttyp')).toBeVisible()
-      await expect(page.getByText('Veröffentlichungsjahr')).toBeVisible()
-      await expect(page.getByText('Hauptsachtitel / Dokumentarischer Titel')).toBeVisible()
-      await expect(
-        page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' }),
-      ).toBeDisabled()
-    },
-  )
+    if (!missing.includes('Dokumenttyp')) {
+      const input = form.getByRole('combobox', { name: /^Dokumenttyp/ })
+      await input.fill('Au')
+      await page
+        .getByRole('listbox', { name: 'Optionsliste' })
+        .getByRole('option', { name: 'Auf' })
+        .click()
+    }
+
+    if (!missing.includes('Hauptsachtitel')) {
+      await form
+        .getByRole('textbox', { name: /^Hauptsachtitel/ })
+        .fill('Die unendliche Verhandlung')
+    }
+
+    if (!missing.includes('Veröffentlichungsjahr')) {
+      await form.getByRole('textbox', { name: /^Veröffentlichungsjahr/ }).fill('2025')
+    }
+
+    await page.getByRole('button', { name: 'Speichern' }).click()
+  }
+
+  const missingFields = [
+    ['Dokumenttyp'],
+    ['Hauptsachtitel'],
+    ['Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Hauptsachtitel'],
+    ['Hauptsachtitel', 'Veröffentlichungsjahr'],
+    ['Dokumenttyp', 'Hauptsachtitel', 'Veröffentlichungsjahr'],
+  ]
+
+  for (const fields of missingFields) {
+    test(
+      `Should show validation error when mandatory ${fields.join()} are missing`,
+      { tag: ['@RISDEV-9374'] },
+      async ({ page }) => {
+        await fillMandatoryFields(page, fields)
+
+        await page.getByText('Abgabe').click()
+
+        await expect(page.getByText('Folgende Pflichtfelder sind nicht befüllt:')).toBeVisible()
+        for (const field of fields) {
+          await expect(page.getByText(field)).toBeVisible()
+        }
+        const publishButton = page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' })
+        await expect(publishButton).toBeDisabled()
+      },
+    )
+  }
 
   test(
     'Should show validation error when mandatory fields contain whitespaces only',
     { tag: ['@RISDEV-10137'] },
     async ({ page }) => {
       // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
       const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Auf')
       await page.getByText('Aufsatz').click()
@@ -82,10 +117,6 @@ test.describe('ULI AbgabePage', () => {
     'Should show links to the mandatory fields; when clicking on a link, navigates to the corresponding field in Rubriken page',
     { tag: ['@RISDEV-9374'] },
     async ({ page }) => {
-      // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
-
       // when
       await page.getByText('Abgabe').click()
       await page.getByRole('link', { name: 'Dokumenttyp' }).click()
@@ -111,8 +142,6 @@ test.describe('ULI AbgabePage', () => {
     { tag: ['@RISDEV-9375'] },
     async ({ page }) => {
       // given
-      await page.goto('/')
-      await page.getByText('Neue Dokumentationseinheit').click()
       const input = page.getByRole('combobox', { name: 'Dokumenttyp' })
       await input.fill('Auf')
       await page.getByText('Aufsatz').click()
