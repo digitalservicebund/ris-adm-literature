@@ -10,6 +10,7 @@ describe('Aktivzitierung search result', () => {
     render(AktivzitierungSearchResult, {
       props: {
         searchResult: sliDocUnitListItemFixture,
+        isAdded: false,
       },
     })
 
@@ -26,6 +27,7 @@ describe('Aktivzitierung search result', () => {
           titel: 'TheHauptTitle',
           verfasser: ['Müller', 'Zimmermann'],
         },
+        isAdded: false,
       },
     })
 
@@ -43,6 +45,7 @@ describe('Aktivzitierung search result', () => {
           titel: 'Book without known author',
           verfasser: [],
         },
+        isAdded: false,
       },
     })
 
@@ -59,6 +62,7 @@ describe('Aktivzitierung search result', () => {
           titel: 'Report by a known group',
           verfasser: ['Research Team A'],
         },
+        isAdded: false,
       },
     })
 
@@ -74,6 +78,7 @@ describe('Aktivzitierung search result', () => {
           documentNumber: 'DOC-ONLY',
           titel: 'Minimal Entry',
         },
+        isAdded: false,
       },
     })
 
@@ -92,7 +97,7 @@ describe('Aktivzitierung search result', () => {
     }
 
     const { emitted } = render(AktivzitierungSearchResult, {
-      props: { searchResult },
+      props: { searchResult, isAdded: false },
     })
 
     await user.click(screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' }))
@@ -124,5 +129,43 @@ describe('Aktivzitierung search result', () => {
 
     await user.click(button)
     expect(emitted().add).toBeFalsy()
+  })
+
+  it('maps document type names to abbreviations and shows them with year/authors', () => {
+    render(AktivzitierungSearchResult, {
+      props: {
+        searchResult: {
+          id: 'id-mapped',
+          documentNumber: 'DOC-123',
+          veroeffentlichungsjahr: '2025',
+          verfasser: ['Name'],
+          dokumenttypen: ['Bibliographie'],
+          titel: 'Title',
+        },
+        isAdded: false,
+        documentTypeNameToAbbreviation: new Map([['Bibliographie', 'Bib']]),
+      },
+    })
+
+    expect(screen.getByText('2025, Name (Bib) | DOC-123')).toBeInTheDocument()
+    expect(screen.getByText('Title')).toBeInTheDocument()
+  })
+
+  it('shows only mapped doc types when year/authors are missing', () => {
+    render(AktivzitierungSearchResult, {
+      props: {
+        searchResult: {
+          id: 'id-mapped-no-meta',
+          documentNumber: 'DOC-ONLY',
+          dokumenttypen: ['Bibliographie'],
+          titel: 'Minimal',
+        },
+        isAdded: false,
+        documentTypeNameToAbbreviation: new Map([['Bibliographie', 'Bib']]),
+      },
+    })
+
+    expect(screen.getByText('(Bib) | DOC-ONLY')).toBeInTheDocument()
+    expect(screen.getByText('Minimal')).toBeInTheDocument()
   })
 })

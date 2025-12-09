@@ -56,7 +56,7 @@ describe('AktivzitierungLiteratureInput', () => {
       id: 'id-2',
       uuid: 'uuid-2',
       titel: '',
-      veroeffentlichungsjahr: '',
+      veroeffentlichungsJahr: '',
       dokumenttypen: [],
       verfasser: ['Autor'],
     }
@@ -86,7 +86,7 @@ describe('AktivzitierungLiteratureInput', () => {
       id: 'id-1',
       uuid: 'uuid-1',
       titel: 'Titel',
-      veroeffentlichungsjahr: '2024',
+      veroeffentlichungsJahr: '2024',
       dokumenttypen: [],
       verfasser: [],
     }
@@ -106,7 +106,7 @@ describe('AktivzitierungLiteratureInput', () => {
         id: '1',
         uuid: '1',
         titel: 'Alt',
-        veroeffentlichungsjahr: '',
+        veroeffentlichungsJahr: '',
         dokumenttypen: [],
         verfasser: [],
       },

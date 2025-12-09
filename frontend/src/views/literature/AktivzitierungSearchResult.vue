@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
@@ -6,6 +7,7 @@ import IconAdd from '~icons/material-symbols/add'
 const props = defineProps<{
   searchResult: SliDocUnitListItem
   isAdded: boolean
+  documentTypeNameToAbbreviation?: Map<string, string>
 }>()
 
 const emit = defineEmits<{
@@ -18,25 +20,44 @@ function handleAdd() {
   }
 }
 
-const { veroeffentlichungsjahr, verfasser, documentNumber, titel } = props.searchResult
+const { veroeffentlichungsjahr, verfasser, documentNumber, titel, dokumenttypen } =
+  props.searchResult
+
+const documentTypeAbbreviations = computed(() => {
+  if (!dokumenttypen || dokumenttypen.length === 0 || !props.documentTypeNameToAbbreviation) {
+    return dokumenttypen || []
+  }
+  return dokumenttypen
+    .map((name) => props.documentTypeNameToAbbreviation?.get(name) || name)
+    .filter(Boolean)
+})
 
 function formatHeading(): string {
-  const hasAuthor = verfasser && verfasser.length > 0
-
   const parts = []
 
   if (veroeffentlichungsjahr) {
     parts.push(veroeffentlichungsjahr)
   }
 
-  if (hasAuthor) {
+  if (verfasser && verfasser.length > 0) {
     parts.push(verfasser.join(', '))
   }
 
   const citationPart = parts.join(', ')
 
-  if (citationPart) {
-    return `${citationPart} | ${documentNumber}`
+  let result = citationPart
+  if (documentTypeAbbreviations.value.length > 0) {
+    const docTypes = documentTypeAbbreviations.value.join(', ')
+    if (docTypes) {
+      if (citationPart) {
+        result = `${citationPart} (${docTypes})`
+      } else {
+        result = `(${docTypes})`
+      }
+    }
+  }
+  if (result) {
+    return `${result} | ${documentNumber}`
   }
 
   return documentNumber

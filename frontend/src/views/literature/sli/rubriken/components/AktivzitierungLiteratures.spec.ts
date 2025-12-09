@@ -20,7 +20,7 @@ const mockAktivzitierungen: AktivzitierungLiterature[] = [
   {
     id: 'aktiv-1',
     uuid: 'aktiv-1',
-    veroeffentlichungsjahr: '2025',
+    veroeffentlichungsJahr: '2025',
     verfasser: ['again and again'],
     dokumenttypen: [{ uuid: 'Ebs', abbreviation: 'Ebs', name: 'Ebs' }],
     titel: 'a new one',
@@ -800,5 +800,84 @@ describe('AktivzitierungLiteratures', () => {
 
     const addButton = screen.getByRole('button', { name: 'Aktivzitierung hinzufügen' })
     expect(addButton).toBeDisabled()
+  })
+
+  it('maps doc type names to abbreviations and keeps year when adding from search', async () => {
+    vi.resetModules()
+    const fetchPaginatedDataMock = vi.fn()
+    const clearSearchFieldsSpy = vi.fn()
+
+    vi.doMock('@/services/documentTypeService', () => ({
+      useFetchDocumentTypes: () => ({
+        data: ref({ documentTypes: [{ name: 'Bibliographie', abbreviation: 'Bib' }] }),
+      }),
+    }))
+
+    vi.doMock('@/composables/usePagination', () => {
+      return {
+        usePagination: () => ({
+          isFetching: ref(false),
+          firstRowIndex: ref(0),
+          totalRows: ref(1),
+          items: ref([
+            {
+              id: 'sli-uuid-1',
+              documentNumber: 'DOC-123',
+              veroeffentlichungsjahr: '2025',
+              verfasser: [],
+              titel: 'Mapped Entry',
+              dokumenttypen: ['Bibliographie'],
+            },
+          ]),
+          fetchPaginatedData: fetchPaginatedDataMock,
+          error: null,
+        }),
+      }
+    })
+
+    const { default: AktivzitierungLiteratures } = await import('./AktivzitierungLiteratures.vue')
+    const user = userEvent.setup()
+
+    render(AktivzitierungLiteratures, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              sliDocumentUnit: {
+                documentUnit: <SliDocumentationUnit>{
+                  id: '123',
+                  documentNumber: 'KSLS2025000001',
+                  note: '',
+                  aktivzitierungenSli: [],
+                },
+              },
+            },
+          }),
+        ],
+        stubs: {
+          AktivzitierungLiteratureInput: {
+            template:
+              '<div><button aria-label="Fake search" @click="$emit(\'search\', { titel: \'searched titel\' })"></button></div>',
+            setup(props, { expose }) {
+              expose({ clearSearchFields: clearSearchFieldsSpy })
+            },
+          },
+        },
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Fake search' }))
+    const addButtons = screen.getAllByRole('button', { name: 'Aktivzitierung hinzufügen' })
+    await user.click(addButtons[0]!)
+
+    // Abbreviation and year should be rendered in the list entry
+    const list = screen.getByRole('list', { name: 'Aktivzitierung Liste' })
+    const item = within(list).getAllByRole('listitem')[0]!
+    expect(within(item).getByText(/Bib/)).toBeInTheDocument()
+    expect(within(item).getByText(/2025/)).toBeInTheDocument()
+    expect(within(item).getByText('Mapped Entry')).toBeInTheDocument()
+
+    // Search panel closes after add
+    expect(screen.queryByText('Passende Suchergebnisse:')).not.toBeInTheDocument()
   })
 })
