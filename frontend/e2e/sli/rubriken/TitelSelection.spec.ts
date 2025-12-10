@@ -61,7 +61,6 @@ test.describe('SLI Rubriken - Titelauswahl', () => {
       await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
 
       // then – button returns and Hauptsachtitel is enabled
-
       await page.reload()
       await expect(
         formaldaten.getByRole('button', { name: 'Dokumentarischer Titel' }),
