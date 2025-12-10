@@ -57,6 +57,7 @@ export interface AdmDocumentUnitResponse {
   id: string
   documentNumber: string
   json: AdmDocumentationUnit
+  note?: string
 }
 
 export const requiredAdmDocUnitFields = [

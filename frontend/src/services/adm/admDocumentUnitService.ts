@@ -85,6 +85,7 @@ function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentatio
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
+    note: data.note || '',
   }
 
   documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
@@ -115,6 +116,5 @@ function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentatio
         ),
       }),
   )
-  documentUnit.note = documentUnit.note || ''
   return documentUnit
 }

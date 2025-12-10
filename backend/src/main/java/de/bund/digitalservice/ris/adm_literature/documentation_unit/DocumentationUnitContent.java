@@ -8,4 +8,5 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 public interface DocumentationUnitContent {
   String documentNumber();
   DocumentCategory documentCategory();
+  String note();
 }

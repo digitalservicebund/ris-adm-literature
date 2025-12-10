@@ -12,14 +12,19 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Doc
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +35,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Persistence service for CRUD operations on documentation units
@@ -43,6 +51,8 @@ public class DocumentationUnitPersistenceService {
   private final DocumentationUnitIndexService documentationUnitIndexService;
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentTypeService documentTypeService;
+  private final NoteService noteService;
+  private final ObjectMapper objectMapper;
 
   /**
    * Finds a document by its number.
@@ -54,14 +64,22 @@ public class DocumentationUnitPersistenceService {
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
-      .map(documentationUnitEntity ->
-        new DocumentationUnit(
+      .map(documentationUnitEntity -> {
+        String json = documentationUnitEntity.getJson();
+        String note = noteService.find(documentationUnitEntity);
+        if (ObjectUtils.allNotNull(json, note)) {
+          JsonNode jsonNode = objectMapper.readTree(json);
+          ((ObjectNode) jsonNode).put("note", note);
+          json = objectMapper.writeValueAsString(jsonNode);
+        }
+        return new DocumentationUnit(
           documentNumber,
           documentationUnitEntity.getId(),
-          documentationUnitEntity.getJson(),
-          documentationUnitEntity.getXml()
-        )
-      );
+          json,
+          documentationUnitEntity.getXml(),
+          note
+        );
+      });
   }
 
   /**
@@ -113,8 +131,16 @@ public class DocumentationUnitPersistenceService {
       .map(documentationUnitEntity -> {
         documentationUnitEntity.setJson(json);
         log.info("Updated documentation unit with document number: {}.", documentNumber);
+        String note = objectMapper.readTree(json).path("note").asString(null);
+        noteService.save(documentationUnitEntity, note);
         documentationUnitIndexService.updateIndex(documentationUnitEntity);
-        return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), json);
+        return new DocumentationUnit(
+          documentNumber,
+          documentationUnitEntity.getId(),
+          json,
+          null,
+          note
+        );
       })
       .orElse(null);
   }
@@ -141,9 +167,17 @@ public class DocumentationUnitPersistenceService {
       .map(documentationUnitEntity -> {
         documentationUnitEntity.setJson(json);
         documentationUnitEntity.setXml(xml);
+        String note = objectMapper.readTree(json).path("note").asString(null);
+        noteService.save(documentationUnitEntity, note);
         log.info("Published documentation unit with document number: {}.", documentNumber);
         documentationUnitIndexService.updateIndex(documentationUnitEntity);
-        return new DocumentationUnit(documentNumber, documentationUnitEntity.getId(), null, xml);
+        return new DocumentationUnit(
+          documentNumber,
+          documentationUnitEntity.getId(),
+          json,
+          xml,
+          note
+        );
       })
       .orElse(null);
   }

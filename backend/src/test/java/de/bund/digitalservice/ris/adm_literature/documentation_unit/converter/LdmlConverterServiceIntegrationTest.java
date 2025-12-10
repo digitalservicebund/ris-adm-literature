@@ -51,12 +51,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_fundstellen() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -75,12 +70,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_longTitle() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -93,16 +83,15 @@ class LdmlConverterServiceIntegrationTest {
       .isEqualTo("1. Bekanntmachung zum XML-Testen in NeuRIS VwV");
   }
 
+  private static DocumentationUnit createDocumentationUnit(String documentNumber, String xml) {
+    return new DocumentationUnit(documentNumber, UUID.randomUUID(), null, xml, null);
+  }
+
   @Test
   void convertToBusinessModel_kurzreferat() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -120,12 +109,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_noKurzreferat() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-no-kurzreferat.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -139,12 +123,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_entryIntoEffectDate() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -161,12 +140,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_expiryDate() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -183,12 +157,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_gliederung() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -220,12 +189,7 @@ class LdmlConverterServiceIntegrationTest {
         </akn:doc>
       </akn:akomaNtoso>
       """;
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -242,12 +206,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_keywords() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     List<String> expectedKeywords = Stream.of(
       "Schlag",
@@ -281,12 +240,7 @@ class LdmlConverterServiceIntegrationTest {
         </akn:doc>
       </akn:akomaNtoso>
       """;
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -303,12 +257,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_datesToQuote() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -326,12 +275,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_referenceNumbers() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -364,12 +308,7 @@ class LdmlConverterServiceIntegrationTest {
         </akn:doc>
       </akn:akomaNtoso>
       """;
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -387,12 +326,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_fieldsOfLaw() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -417,12 +351,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_documentType() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -440,12 +369,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_documentTypeZusatz() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -462,12 +386,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_normReference() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -491,12 +410,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_activeCitations() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -535,12 +449,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_activeReferences() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -571,12 +480,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_normgeber() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -606,12 +510,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_normgeberEqualNameForLegalEntityAndOrgan() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example-normgeber.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -640,12 +539,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_berufsbilder() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     List<String> expectedBerufsbilder = Stream.of("Brillenschleifer").toList();
 
@@ -664,12 +558,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_titelAspekte() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     List<String> expectedTitelAspekte = Stream.of("Gemeinsamer Bundesausschuss", "GBA").toList();
 
@@ -688,12 +577,7 @@ class LdmlConverterServiceIntegrationTest {
   void convertToBusinessModel_definitionen() {
     // given
     String xml = TestFile.readFileToString("adm/ldml-example.akn.xml");
-    DocumentationUnit documentationUnit = new DocumentationUnit(
-      "KSNR20250000001",
-      UUID.randomUUID(),
-      null,
-      xml
-    );
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSNR20250000001", xml);
 
     List<Definition> expectedDefinitionen = Stream.of(new Definition("Sachgesamtheit")).toList();
 
