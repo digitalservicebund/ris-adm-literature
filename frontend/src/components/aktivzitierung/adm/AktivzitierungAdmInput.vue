@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: AktivzitierungAdm): void
+  'update:modelValue': [value: AktivzitierungAdm]
 }>()
 </script>
 

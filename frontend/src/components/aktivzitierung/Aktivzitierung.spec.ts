@@ -8,6 +8,8 @@ import Aktivzitierung from './Aktivzitierung.vue'
 type DummyT = { id: string; documentNumber?: string }
 
 describe('Aktivzitierung', () => {
+  const initialItem: DummyT = { id: '1', documentNumber: 'DOC123' }
+
   it('renders creation panel if list is empty', () => {
     render(Aktivzitierung, {
       global: {
@@ -19,8 +21,6 @@ describe('Aktivzitierung', () => {
   })
 
   it('renders list items if list has entries', async () => {
-    const initialItem: DummyT = { id: '1', documentNumber: 'DOC123' }
-
     render(Aktivzitierung, {
       global: {
         plugins: [PrimeVue],
@@ -37,7 +37,7 @@ describe('Aktivzitierung', () => {
 
   it('renders initial list items and allows adding a new item', async () => {
     const user = userEvent.setup()
-    const initialList: DummyT[] = [{ id: '1', documentNumber: 'DOC123' }]
+    const initialList: DummyT[] = [initialItem]
 
     // Use v-model via "modelValue" prop + "update:modelValue" emit
     const model = {
@@ -84,8 +84,6 @@ describe('Aktivzitierung', () => {
   it('opens creation panel when "Weitere Angabe" button is clicked', async () => {
     const user = userEvent.setup()
 
-    const initialItem: DummyT = { id: '1', documentNumber: 'DOC123' }
-
     render(Aktivzitierung, {
       global: {
         plugins: [PrimeVue],
@@ -101,5 +99,99 @@ describe('Aktivzitierung', () => {
 
     // After click, creation panel (input textbox) should appear
     expect(screen.getByRole('textbox')).toBeInTheDocument()
+  })
+
+  it('handleEditStart sets editingItemId and closes creation panel', async () => {
+    const user = userEvent.setup()
+
+    render(Aktivzitierung, {
+      props: { modelValue: [...[initialItem]] },
+      global: {
+        plugins: [PrimeVue],
+      },
+    })
+
+    // Click "edit" button of first item
+    const editButtons = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })
+    await user.click(editButtons[0]!)
+
+    // The first item should now be in editing mode → save button visible
+    expect(screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })).toBeInTheDocument()
+  })
+
+  it('handleEditEnd clears editingItemId', async () => {
+    const user = userEvent.setup()
+
+    render(Aktivzitierung, {
+      props: { modelValue: [...[initialItem]] },
+      global: {
+        plugins: [PrimeVue],
+      },
+    })
+
+    // Start editing first item
+    const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
+    await user.click(editButton)
+
+    // Click "Abbrechen" → handleCancelEdit → should clear editingItemId
+    const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
+    if (cancelButton) await user.click(cancelButton)
+
+    // The save button should no longer exist
+    expect(
+      screen.queryByRole('button', { name: 'Aktivzitierung übernehmen' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('handleCancelEdit clears editingItemId', async () => {
+    const user = userEvent.setup()
+
+    render(Aktivzitierung, {
+      props: { modelValue: [...[initialItem]] },
+      global: {
+        plugins: [PrimeVue],
+      },
+    })
+
+    const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
+    await user.click(editButton)
+
+    const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
+    if (cancelButton) await user.click(cancelButton)
+
+    // Editing mode ended → save button gone
+    expect(
+      screen.queryByRole('button', { name: 'Aktivzitierung übernehmen' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('handleUpdateItem calls onUpdateItem and ends editing', async () => {
+    const user = userEvent.setup()
+    const newDocNumber = 'UPDATED_DOC'
+
+    render(Aktivzitierung, {
+      props: { modelValue: [...[initialItem]] },
+      global: {
+        plugins: [PrimeVue],
+      },
+    })
+
+    // Start editing first item
+    const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
+    await user.click(editButton)
+
+    // Update the documentNumber
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    await user.clear(input)
+    await user.type(input, newDocNumber)
+
+    // Click save → triggers handleUpdateItem
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    await user.click(saveButton)
+
+    expect(screen.getByText('UPDATED_DOC')).toBeVisible()
+    expect(
+      screen.queryByRole('button', { name: 'Aktivzitierung übernehmen' }),
+    ).not.toBeInTheDocument()
   })
 })

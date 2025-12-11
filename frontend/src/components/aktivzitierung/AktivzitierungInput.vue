@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends { id: string }">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
 
 const props = defineProps<{
@@ -13,16 +13,23 @@ const emit = defineEmits<{
   cancel: [void]
 }>()
 
-const aktivzitierungRef = ref<T>((props.aktivzitierung as T) || {})
+const createInitialT = (): T => {
+  return { id: crypto.randomUUID() } as T
+}
+
+const aktivzitierungRef = ref<T>(
+  props.aktivzitierung
+    ? { ...props.aktivzitierung } // Use a copy of the prop data
+    : createInitialT(),
+)
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id)
 
 function onClickSave() {
-  emit('update', {
-    ...aktivzitierungRef.value,
-    ...{ id: props.aktivzitierung?.id || crypto.randomUUID() },
-  })
-  aktivzitierungRef.value = {}
+  emit('update', aktivzitierungRef.value)
+  if (!isExistingEntry.value) {
+    aktivzitierungRef.value = createInitialT()
+  }
 }
 
 function onClickCancel() {
@@ -39,6 +46,15 @@ function onClickDelete() {
 const onUpdate = (newValue: any) => {
   aktivzitierungRef.value = newValue
 }
+
+watch(
+  () => props.aktivzitierung,
+  (newVal: T | undefined) => {
+    if (newVal) {
+      aktivzitierungRef.value = { ...newVal } as T
+    }
+  },
+)
 </script>
 
 <template>
