@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LdmlPublishConverterService {
+public class ObjectToLdmlConverterService {
 
-  private final List<LdmlConverterStrategy> strategies;
+  private final List<ObjectToLdmlConverterStrategy> strategies;
 
   /**
    * Converts the given business model to LDML xml.
@@ -36,13 +36,13 @@ public class LdmlPublishConverterService {
       content.getClass().getSimpleName()
     );
 
-    LdmlConverterStrategy strategy = strategies
+    ObjectToLdmlConverterStrategy strategy = strategies
       .stream()
       .filter(s -> s.supports(content))
       .findFirst()
       .orElseThrow(() ->
         new IllegalArgumentException(
-          "No LdmlConverterStrategy found for content type: " + content.getClass().getName()
+          "No ObjectToLdmlConverterStrategy found for content type: " + content.getClass().getName()
         )
       );
 

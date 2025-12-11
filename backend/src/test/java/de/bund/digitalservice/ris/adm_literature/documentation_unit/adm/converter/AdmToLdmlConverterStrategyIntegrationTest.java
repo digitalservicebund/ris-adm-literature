@@ -26,10 +26,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AdmLdmlConverterStrategyIntegrationTest {
+class AdmToLdmlConverterStrategyIntegrationTest {
 
   @Autowired
-  private AdmLdmlConverterStrategy admLdmlConverterStrategy;
+  private AdmToLdmlConverterStrategy admLdmlConverterStrategy;
 
   @Test
   @DisplayName("Conversion of document with document number results into xml with FRBRalias")
