@@ -3,13 +3,19 @@
 import { ref } from 'vue'
 import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
 import AktivzitierungInput from './AktivzitierungInput.vue'
-import AktivzitierungAdmInput from './adm/AktivzitierungAdmInput.vue'
-import AktivzitierungAdmItem from './adm/AktivzitierungAdmItem.vue'
 import AktivzitierungItem from './AktivzitierungItem.vue'
 import IconAdd from '~icons/material-symbols/add'
 import { Button } from 'primevue'
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] })
+defineSlots<{
+  // 1. Slot for rendering the READ-ONLY list item
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  item(props: { aktivzitierung: T }): any
+  // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): any
+}>()
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
   useEditableList(aktivzitierungList)
@@ -63,7 +69,7 @@ function handleCancelEdit() {
           @delete="onRemoveItem"
         >
           <template #default="{ aktivzitierung }">
-            <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
+            <slot name="item" :aktivzitierung="aktivzitierung"></slot>
           </template>
         </AktivzitierungItem>
       </li>
@@ -77,7 +83,7 @@ function handleCancelEdit() {
       :show-cancel-button="false"
     >
       <template #default="{ modelValue, onUpdateModelValue }">
-        <AktivzitierungAdmInput :modelValue="modelValue" @update:modelValue="onUpdateModelValue" />
+        <slot name="input" :modelValue="modelValue" :onUpdateModelValue="onUpdateModelValue"></slot>
       </template>
     </AktivzitierungInput>
     <Button

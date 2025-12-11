@@ -15,6 +15,17 @@ describe('Aktivzitierung', () => {
       global: {
         plugins: [PrimeVue],
       },
+      slots: {
+        item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+        input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
+      },
     })
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
@@ -28,6 +39,17 @@ describe('Aktivzitierung', () => {
       // Use defineModel initial value
       props: {
         modelValue: [initialItem], // assuming defineModel allows this initial prop override
+      },
+      slots: {
+        item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+        input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
       },
     })
 
@@ -50,6 +72,17 @@ describe('Aktivzitierung', () => {
       },
       global: {
         plugins: [PrimeVue],
+      },
+      slots: {
+        item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+        input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
       },
     })
 
@@ -90,6 +123,17 @@ describe('Aktivzitierung', () => {
       },
       props: {
         modelValue: [initialItem],
+      },
+      slots: {
+        item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+        input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
       },
     })
 
@@ -173,6 +217,17 @@ describe('Aktivzitierung', () => {
       props: { modelValue: [...[initialItem]] },
       global: {
         plugins: [PrimeVue],
+      },
+      slots: {
+        item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+        input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
       },
     })
 
