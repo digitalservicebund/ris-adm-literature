@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -24,10 +24,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class LdmlConverterServiceIntegrationTest {
+class LdmlToAdmConverterServiceIntegrationTest {
 
   @Autowired
-  private LdmlConverterService ldmlConverterService;
+  private LdmlToAdmConverterService ldmlToAdmConverterService;
 
   @Test
   void convertToBusinessModel() {
@@ -38,7 +38,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -55,7 +55,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -74,7 +74,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -95,7 +95,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent.kurzreferat())
@@ -113,7 +113,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent.kurzreferat()).isNull();
@@ -127,7 +127,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -144,7 +144,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -161,7 +161,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -193,7 +193,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -216,7 +216,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -244,7 +244,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -261,7 +261,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -279,7 +279,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -312,7 +312,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -330,7 +330,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent.fieldsOfLaw())
@@ -355,7 +355,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -373,7 +373,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -390,7 +390,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent.normReferences())
@@ -414,7 +414,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -453,7 +453,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -484,7 +484,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -514,7 +514,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -545,7 +545,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -564,7 +564,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)
@@ -583,7 +583,7 @@ class LdmlConverterServiceIntegrationTest {
 
     // when
     AdmDocumentationUnitContent admDocumentationUnitContent =
-      ldmlConverterService.convertToBusinessModel(documentationUnit);
+      ldmlToAdmConverterService.convertToBusinessModel(documentationUnit);
 
     // then
     assertThat(admDocumentationUnitContent)

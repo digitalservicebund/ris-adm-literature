@@ -5,7 +5,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstelle;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.jaxb.*;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterStrategy;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlReader;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class AdmLdmlConverterStrategy implements LdmlConverterStrategy {
+public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy {
 
   private final JaxbXmlReader jaxbXmlReader;
   private final JaxbXmlWriter jaxbXmlWriter;
