@@ -10,6 +10,9 @@ import TitelSection from '@/views/literature/sli/rubriken/components/TitelSectio
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 import AktivzitierungLiteratures from '@/views/literature/sli/rubriken/components/AktivzitierungLiteratures.vue'
+import { computed } from 'vue'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
+import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -19,6 +22,13 @@ const {
   dokumentarischerTitel,
   hauptsachtitelZusatz,
 } = useLiteratureRubriken(store)
+
+const aktivzitierungAdm = computed({
+  get: () => store.documentUnit!.aktivzitierungenAdm ?? [],
+  set: (newValue: AktivzitierungAdm[]) => {
+    store.documentUnit!.aktivzitierungenAdm = newValue
+  },
+})
 
 useScrollToHash()
 </script>
@@ -82,6 +92,12 @@ useScrollToHash()
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
           <AktivzitierungLiteratures />
+        </div>
+      </div>
+      <h2 class="ris-body1-bold">Aktivzitierung (Verwaltungsvorschrift)</h2>
+      <div class="flex flex-row gap-24 w-full">
+        <div class="flex flex-col w-full">
+          <Aktivzitierung v-model="aktivzitierungAdm" />
         </div>
       </div>
     </section>
