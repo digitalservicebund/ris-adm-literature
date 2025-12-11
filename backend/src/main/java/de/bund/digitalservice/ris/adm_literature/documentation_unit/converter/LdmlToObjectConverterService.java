@@ -24,6 +24,7 @@ public class LdmlToObjectConverterService {
    * Converts the xml of the given documentation unit to a business model.
    *
    * @param documentationUnit The documentation unit to convert
+   * @param clazz The class of the returned business model
    * @return Business model representation of given documentation unit's xml
    */
   public DocumentationUnitContent convertToBusinessModel(
