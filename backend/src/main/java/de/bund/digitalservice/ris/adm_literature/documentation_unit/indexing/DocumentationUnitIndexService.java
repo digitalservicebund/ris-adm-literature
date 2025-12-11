@@ -4,7 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContex
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
@@ -39,7 +39,7 @@ public class DocumentationUnitIndexService {
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
   private final ObjectMapper objectMapper;
-  private final LdmlConverterService ldmlConverterService;
+  private final LdmlToObjectConverterService ldmlToObjectConverterService;
 
   /**
    * Updates the index for the given documentation unit entity.
@@ -162,13 +162,14 @@ public class DocumentationUnitIndexService {
     }
     if (documentationUnitEntity.getJson() == null && documentationUnitEntity.getXml() != null) {
       // Published documentation unit, there is only xml
-      var documentationUnitContent = ldmlConverterService.convertToBusinessModel(
+      var documentationUnitContent = ldmlToObjectConverterService.convertToBusinessModel(
         new DocumentationUnit(
           documentationUnitEntity.getDocumentNumber(),
           documentationUnitEntity.getId(),
           null,
           documentationUnitEntity.getXml()
-        )
+        ),
+        AdmDocumentationUnitContent.class
       );
       documentationUnitIndex = createDocumentationUnitIndex(
         documentationUnitEntity,

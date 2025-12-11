@@ -1,10 +1,11 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.JaxbXmlReader;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.jaxb.AkomaNtoso;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.transform.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterStrategy;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LdmlConverterService {
+public class LdmlToAdmConverterService implements LdmlToObjectConverterStrategy {
 
   private final JaxbXmlReader jaxbXmlReader;
   private final FundstellenTransformer fundstellenTransformer;
@@ -28,7 +29,7 @@ public class LdmlConverterService {
   private final ActiveReferencesTransformer activeReferencesTransformer;
 
   /**
-   * Converts the xml of the given documentation unit to business models.
+   * Converts the xml of the given documentation unit to a business model.
    *
    * @param documentationUnit The documentation unit to convert
    * @return Business model representation of given documentation unit's xml
@@ -62,5 +63,10 @@ public class LdmlConverterService {
       new TitelAspekteTransformer().transform(akomaNtoso),
       new DefinitionenTransformer().transform(akomaNtoso)
     );
+  }
+
+  @Override
+  public boolean supports(Class<? extends DocumentationUnitContent> clazz) {
+    return clazz.equals(AdmDocumentationUnitContent.class);
   }
 }
