@@ -38,7 +38,7 @@ function onClickCancel() {
 
 function onClickDelete() {
   if (props.aktivzitierung?.id) {
-    emit('delete', props.aktivzitierung.id)
+    emit('delete', props.aktivzitierung?.id)
   }
 }
 
