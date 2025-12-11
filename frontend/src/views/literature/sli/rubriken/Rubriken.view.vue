@@ -13,6 +13,8 @@ import AktivzitierungLiteratures from '@/views/literature/sli/rubriken/component
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
+import AktivzitierungAdmInput from '@/components/aktivzitierung/adm/AktivzitierungAdmInput.vue'
+import AktivzitierungAdmItem from '@/components/aktivzitierung/adm/AktivzitierungAdmItem.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -97,7 +99,18 @@ useScrollToHash()
       <h2 class="ris-body1-bold">Aktivzitierung (Verwaltungsvorschrift)</h2>
       <div class="flex flex-row gap-24 w-full">
         <div class="flex flex-col w-full">
-          <Aktivzitierung v-model="aktivzitierungAdm" />
+          <Aktivzitierung v-model="aktivzitierungAdm">
+            <template #item="{ aktivzitierung }">
+              <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
+            </template>
+
+            <template #input="{ modelValue, onUpdateModelValue }">
+              <AktivzitierungAdmInput
+                :modelValue="modelValue"
+                @update:modelValue="onUpdateModelValue"
+              />
+            </template>
+          </Aktivzitierung>
         </div>
       </div>
     </section>
