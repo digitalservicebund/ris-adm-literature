@@ -1,6 +1,7 @@
 import type { DocumentType } from '@/domain/documentType'
 import type { AktivzitierungLiterature } from '../AktivzitierungLiterature.ts'
 import type { Page } from '@/domain/pagination'
+import type { AktivzitierungAdm } from '../AktivzitierungAdm.ts'
 
 export interface SliDocumentationUnit {
   readonly id: string
@@ -12,6 +13,7 @@ export interface SliDocumentationUnit {
   hauptsachtitelZusatz?: string
   note: string
   aktivzitierungenSli?: AktivzitierungLiterature[]
+  aktivzitierungenAdm?: AktivzitierungAdm[]
 }
 
 export interface SliDocumentUnitResponse {
