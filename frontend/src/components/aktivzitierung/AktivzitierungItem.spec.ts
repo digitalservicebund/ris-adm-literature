@@ -84,4 +84,30 @@ describe('AktivzitierungAdmItem', () => {
     expect(updateEvents).toBeTruthy()
     expect(updateEvents[0]![0].documentNumber).toBe('Updated')
   })
+
+  it('emits delete and cancelEdit when child triggers delete', async () => {
+    const user = userEvent.setup()
+    const { emitted } = render(AktivzitierungItem, {
+      props: { aktivzitierung: item, isEditing: true },
+      global: { plugins: [PrimeVue], components: { Button } },
+      slots: {
+        default: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>`,
+      },
+    })
+
+    const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
+    await user.click(deleteButton)
+
+    const emits = emitted()
+
+    // Verify events were emitted
+    expect(emits.delete).toBeTruthy()
+    expect(emits.delete![0]).toEqual(['123']) // emitted id
+
+    expect(emits.cancelEdit).toBeTruthy()
+    expect(emits.cancelEdit?.length).toBe(1)
+  })
 })
