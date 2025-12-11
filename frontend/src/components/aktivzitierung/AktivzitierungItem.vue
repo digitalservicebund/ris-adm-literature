@@ -43,7 +43,7 @@ const onDelete = (id: string) => {
     @update="onUpdate"
     @cancel="onClickCancel"
     @delete="onDelete"
-    :show-cancel-button="false"
+    :show-cancel-button="true"
   >
     <template #default="{ modelValue, onUpdateModelValue }">
       <AktivzitierungAdmInput :modelValue="modelValue" @update:modelValue="onUpdateModelValue" />
