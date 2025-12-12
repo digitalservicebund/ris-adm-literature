@@ -19,6 +19,7 @@ import java.util.UUID;
  * @param dokumentarischerTitel The documentary title.
  * @param note An additional note.
  * @param aktivzitierungenSli The list of active SLI references.
+ * @param aktivzitierungenAdm The list of active ADM references.
  */
 public record SliDocumentationUnitContent(
   UUID id,
