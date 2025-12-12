@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -174,6 +175,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       null,
       null,
       "Dies ist eine Gesamtfussnote",
+      null,
       null
     );
 
@@ -238,9 +240,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
   }
 
   @Test
-  @DisplayName(
-    "Elements of <aktivsli> are processed into a <ris:selbstaendigeLiteraturReference> in <akn:implicitReference> in <akn:otherReferences>"
-  )
+  @DisplayName("Maps to aktivzitierungSelbstaendigeLiteratur")
   void process_aktivzitierungSelbstaendigeLiteratur() {
     // given
     SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
@@ -253,7 +253,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       null,
       "Dies ist eine Gesamtfussnote",
       List.of(
-        new SliDocumentationUnitContent.AktivzitierungSli(
+        new AktivzitierungSli(
           "docnum",
           "jahr",
           "titel",
@@ -261,7 +261,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           List.of("autor"),
           List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
-      )
+      ),
+      null
     );
 
     // when
@@ -304,5 +305,52 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     assertThatCode(() -> uliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("Maps to aktivzitierungVerwaltungsvorschrift")
+  void process_aktivzitierungVerwaltungsvorschrift() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      null,
+      Collections.emptyList(),
+      List.of(
+        new de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm(
+          "doc123",
+          "VwV",
+          "BGBl I",
+          "S. 100",
+          "2023-01-01",
+          "AZ 123/45",
+          "VwV",
+          "BMI"
+        )
+      )
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="VwV, AZ 123/45">
+            <ris:verwaltungsvorschriftReference abbreviation="VwV" documentNumber="doc123" dokumenttyp="VwV" inkrafttretedatum="2023-01-01" normgeber="BMI" reference="AZ 123/45">
+              <ris:fundstelle periodikum="BGBl I" zitatstelle="S. 100"/>
+            </ris:verwaltungsvorschriftReference>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
 }
