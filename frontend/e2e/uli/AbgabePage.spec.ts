@@ -72,7 +72,7 @@ test.describe('ULI AbgabePage', () => {
 
   for (const fields of missingFields) {
     test(
-      `Should show validation error when mandatory ${fields.join()} are missing`,
+      `Should show validation error when mandatory ${fields.join()} are missing, shows the required fields and a link to the rubriken page`,
       { tag: ['@RISDEV-9374'] },
       async ({ page }) => {
         await fillMandatoryFields(page, fields)
@@ -85,6 +85,10 @@ test.describe('ULI AbgabePage', () => {
         }
         const publishButton = page.getByRole('button', { name: 'Zur Veröffentlichung freigeben' })
         await expect(publishButton).toBeDisabled()
+        await expect(page.getByRole('button', { name: 'Rubriken bearbeiten' })).toBeVisible()
+        await page.getByRole('button', { name: 'Rubriken bearbeiten' }).click()
+
+        await expect(page.getByRole('heading', { name: 'Formaldaten' })).toBeVisible()
       },
     )
   }
