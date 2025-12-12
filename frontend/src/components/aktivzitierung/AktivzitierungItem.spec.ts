@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import PrimeVue from 'primevue/config'
 import AktivzitierungItem from './AktivzitierungItem.vue'
 
-type DummyT = { id: string; documentNumber?: string }
+type DummyT = { id: string; documentNumber?: string; citationType?: string }
 
 function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean }) {
   return render(AktivzitierungItem, {
@@ -15,7 +15,7 @@ function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean })
     slots: {
       item: `
           <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+            <div data-testid="doc-number">{{ Object.values(aktivzitierung).join(',') }}</div>
           </template>`,
       input: `
           <template #default="{ modelValue, onUpdateModelValue }">
@@ -27,7 +27,7 @@ function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean })
 }
 
 describe('AktivzitierungAdmItem', () => {
-  const item: DummyT = { id: '123', documentNumber: 'DOC123' }
+  const item: DummyT = { id: '123', documentNumber: 'DOC123', citationType: 'Anmerkung' }
 
   it('renders read-only view when isEditing is false', () => {
     renderComponent({ aktivzitierung: item, isEditing: false })
@@ -36,6 +36,7 @@ describe('AktivzitierungAdmItem', () => {
     const div = screen.getByTestId('doc-number')
     expect(div).toBeInTheDocument()
     expect(div).toHaveTextContent('DOC123')
+    expect(div).toHaveTextContent('Anmerkung')
 
     // Edit button exists
     const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
