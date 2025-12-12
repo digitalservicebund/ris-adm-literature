@@ -21,7 +21,7 @@ const citationType = computed({
       : undefined
   },
   set: (val: ZitierArt | undefined) => {
-    emit('update:modelValue', { ...props.modelValue, ...{ citationType: val?.abbreviation } })
+    emit('update:modelValue', { ...props.modelValue, citationType: val?.abbreviation })
   },
 })
 </script>
@@ -41,8 +41,7 @@ const citationType = computed({
           :id="slotProps.id"
           :model-value="modelValue?.documentNumber"
           @update:model-value="
-            (documentNumber) =>
-              emit('update:modelValue', { ...props.modelValue, ...{ documentNumber } })
+            (documentNumber) => emit('update:modelValue', { ...props.modelValue, documentNumber })
           "
           aria-label="Dokumentnummer"
           :invalid="slotProps.hasError"
