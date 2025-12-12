@@ -2,25 +2,35 @@ import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
 import PrimeVue from 'primevue/config'
-import Button from 'primevue/button'
 import AktivzitierungItem from './AktivzitierungItem.vue'
 
 type DummyT = { id: string; documentNumber?: string }
+
+function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean }) {
+  return render(AktivzitierungItem, {
+    global: {
+      plugins: [PrimeVue],
+    },
+    props,
+    slots: {
+      item: `
+          <template #default="{ aktivzitierung }">
+            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
+          </template>`,
+      input: `
+          <template #default="{ modelValue, onUpdateModelValue }">
+            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          </template>
+          `,
+    },
+  })
+}
 
 describe('AktivzitierungAdmItem', () => {
   const item: DummyT = { id: '123', documentNumber: 'DOC123' }
 
   it('renders read-only view when isEditing is false', () => {
-    render(AktivzitierungItem, {
-      props: { aktivzitierung: item, isEditing: false },
-      global: { plugins: [PrimeVue], components: { Button } },
-      slots: {
-        default: `
-          <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
-          </template>`,
-      },
-    })
+    renderComponent({ aktivzitierung: item, isEditing: false })
 
     // The slot content should render
     const div = screen.getByTestId('doc-number')
@@ -34,10 +44,7 @@ describe('AktivzitierungAdmItem', () => {
 
   it('emits editStart when edit button is clicked', async () => {
     const user = userEvent.setup()
-    const { emitted } = render(AktivzitierungItem, {
-      props: { aktivzitierung: item, isEditing: false },
-      global: { plugins: [PrimeVue], components: { Button } },
-    })
+    const { emitted } = renderComponent({ aktivzitierung: item, isEditing: false })
 
     const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
     await user.click(editButton)
@@ -48,10 +55,7 @@ describe('AktivzitierungAdmItem', () => {
   })
 
   it('renders AktivzitierungInput when isEditing is true', () => {
-    render(AktivzitierungItem, {
-      props: { aktivzitierung: item, isEditing: true },
-      global: { plugins: [PrimeVue], components: { Button } },
-    })
+    renderComponent({ aktivzitierung: item, isEditing: true })
 
     // Save button inside AktivzitierungInput exists
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
@@ -60,16 +64,7 @@ describe('AktivzitierungAdmItem', () => {
 
   it('passes update and cancelEdit events through AktivzitierungInput', async () => {
     const user = userEvent.setup()
-    const { emitted } = render(AktivzitierungItem, {
-      props: { aktivzitierung: item, isEditing: true },
-      global: { plugins: [PrimeVue], components: { Button } },
-      slots: {
-        default: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>`,
-      },
-    })
+    const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true })
 
     // Change input and click save
     const input = screen.getByRole('textbox')
@@ -87,16 +82,7 @@ describe('AktivzitierungAdmItem', () => {
 
   it('emits delete and cancelEdit when child triggers delete', async () => {
     const user = userEvent.setup()
-    const { emitted } = render(AktivzitierungItem, {
-      props: { aktivzitierung: item, isEditing: true },
-      global: { plugins: [PrimeVue], components: { Button } },
-      slots: {
-        default: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>`,
-      },
-    })
+    const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
     await user.click(deleteButton)

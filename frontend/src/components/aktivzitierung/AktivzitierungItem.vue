@@ -2,7 +2,6 @@
 import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
 import AktivzitierungInput from './AktivzitierungInput.vue'
-import AktivzitierungAdmInput from './adm/AktivzitierungAdmInput.vue'
 
 const props = defineProps<{
   aktivzitierung: T
@@ -14,6 +13,15 @@ const emit = defineEmits<{
   delete: [id: string]
   editStart: [id: string]
   cancelEdit: [void]
+}>()
+
+defineSlots<{
+  // 1. Slot for rendering the READ-ONLY list item
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  item(props: { aktivzitierung: T }): any
+  // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input(props: { modelValue: any; onUpdateModelValue: (value: T) => void }): any
 }>()
 
 const onExpandAccordion = () => {
@@ -46,14 +54,14 @@ const onDelete = (id: string) => {
     :show-cancel-button="true"
   >
     <template #default="{ modelValue, onUpdateModelValue }">
-      <AktivzitierungAdmInput :modelValue="modelValue" @update:modelValue="onUpdateModelValue" />
+      <slot name="input" :modelValue="modelValue" :onUpdateModelValue="onUpdateModelValue"></slot>
     </template>
   </AktivzitierungInput>
   <div v-else class="flex w-full items-center gap-10">
     <IconBaselineDescription class="text-neutral-800" />
 
     <div class="flex flex-col gap-2">
-      <slot :aktivzitierung="aktivzitierung"></slot>
+      <slot name="item" :aktivzitierung="aktivzitierung"></slot>
     </div>
     <div class="ml-auto flex items-center gap-8">
       <button
