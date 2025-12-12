@@ -42,8 +42,7 @@ function onClickDelete() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const onUpdate = (newValue: any) => {
+const onUpdate = (newValue: T) => {
   aktivzitierungRef.value = newValue
 }
 

@@ -14,7 +14,7 @@ defineSlots<{
   item(props: { aktivzitierung: T }): any
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): any
+  input(props: { modelValue: any; onUpdateModelValue: (value: T) => void }): any
 }>()
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
@@ -68,8 +68,16 @@ function handleCancelEdit() {
           @cancel-edit="handleCancelEdit"
           @delete="onRemoveItem"
         >
-          <template #default="{ aktivzitierung }">
+          <template #item="{ aktivzitierung }">
             <slot name="item" :aktivzitierung="aktivzitierung"></slot>
+          </template>
+
+          <template #input="{ modelValue, onUpdateModelValue }">
+            <slot
+              name="input"
+              :modelValue="modelValue"
+              :onUpdateModelValue="onUpdateModelValue"
+            ></slot>
           </template>
         </AktivzitierungItem>
       </li>

@@ -7,50 +7,38 @@ import Aktivzitierung from './Aktivzitierung.vue'
 // Dummy type
 type DummyT = { id: string; documentNumber?: string }
 
-describe('Aktivzitierung', () => {
-  const initialItem: DummyT = { id: '1', documentNumber: 'DOC123' }
-
-  it('renders creation panel if list is empty', () => {
-    render(Aktivzitierung, {
-      global: {
-        plugins: [PrimeVue],
-      },
-      slots: {
-        item: `
+function renderComponent(props?: { modelValue: DummyT[] }) {
+  return render(Aktivzitierung, {
+    global: {
+      plugins: [PrimeVue],
+    },
+    props,
+    slots: {
+      item: `
           <template #default="{ aktivzitierung }">
             <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
           </template>`,
-        input: `
+      input: `
           <template #default="{ modelValue, onUpdateModelValue }">
             <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
           </template>
           `,
-      },
-    })
+    },
+  })
+}
+
+describe('Aktivzitierung', () => {
+  const initialItem: DummyT = { id: '1', documentNumber: 'DOC123' }
+
+  it('renders creation panel if list is empty', () => {
+    renderComponent()
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
   })
 
   it('renders list items if list has entries', async () => {
-    render(Aktivzitierung, {
-      global: {
-        plugins: [PrimeVue],
-      },
-      // Use defineModel initial value
-      props: {
-        modelValue: [initialItem], // assuming defineModel allows this initial prop override
-      },
-      slots: {
-        item: `
-          <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
-          </template>`,
-        input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>
-          `,
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     // The item slot should render documentNumber
@@ -66,26 +54,9 @@ describe('Aktivzitierung', () => {
       value: [...initialList],
     }
 
-    const { emitted } = render(Aktivzitierung, {
-      props: {
-        modelValue: model.value,
-      },
-      global: {
-        plugins: [PrimeVue],
-      },
-      slots: {
-        item: `
-          <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
-          </template>`,
-        input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>
-          `,
-      },
+    const { emitted } = renderComponent({
+      modelValue: model.value,
     })
-
     expect(screen.getByText('DOC123')).toBeInTheDocument()
 
     const addButton = screen.getByRole('button', { name: 'Weitere Angabe' })
@@ -117,24 +88,8 @@ describe('Aktivzitierung', () => {
   it('opens creation panel when "Weitere Angabe" button is clicked', async () => {
     const user = userEvent.setup()
 
-    render(Aktivzitierung, {
-      global: {
-        plugins: [PrimeVue],
-      },
-      props: {
-        modelValue: [initialItem],
-      },
-      slots: {
-        item: `
-          <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
-          </template>`,
-        input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>
-          `,
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     // Click "Weitere Angabe" button
@@ -148,11 +103,8 @@ describe('Aktivzitierung', () => {
   it('handleEditStart sets editingItemId and closes creation panel', async () => {
     const user = userEvent.setup()
 
-    render(Aktivzitierung, {
-      props: { modelValue: [...[initialItem]] },
-      global: {
-        plugins: [PrimeVue],
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     // Click "edit" button of first item
@@ -166,11 +118,8 @@ describe('Aktivzitierung', () => {
   it('handleEditEnd clears editingItemId', async () => {
     const user = userEvent.setup()
 
-    render(Aktivzitierung, {
-      props: { modelValue: [...[initialItem]] },
-      global: {
-        plugins: [PrimeVue],
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     // Start editing first item
@@ -190,11 +139,8 @@ describe('Aktivzitierung', () => {
   it('handleCancelEdit clears editingItemId', async () => {
     const user = userEvent.setup()
 
-    render(Aktivzitierung, {
-      props: { modelValue: [...[initialItem]] },
-      global: {
-        plugins: [PrimeVue],
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
@@ -213,22 +159,8 @@ describe('Aktivzitierung', () => {
     const user = userEvent.setup()
     const newDocNumber = 'UPDATED_DOC'
 
-    render(Aktivzitierung, {
-      props: { modelValue: [...[initialItem]] },
-      global: {
-        plugins: [PrimeVue],
-      },
-      slots: {
-        item: `
-          <template #default="{ aktivzitierung }">
-            <div data-testid="doc-number">{{ aktivzitierung.documentNumber }}</div>
-          </template>`,
-        input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
-          </template>
-          `,
-      },
+    renderComponent({
+      modelValue: [initialItem],
     })
 
     // Start editing first item
