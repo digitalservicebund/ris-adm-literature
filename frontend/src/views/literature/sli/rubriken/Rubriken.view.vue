@@ -80,39 +80,47 @@ useScrollToHash()
     </section>
 
     <section
-      id="aktivzitierung"
+      id="inhaltlicheErschliessung"
       aria-labelledby="aktivzitierung-title"
       class="flex flex-col gap-24 bg-white p-24"
     >
       <TitleElement
         aria-label="Inhaltliche Erschließung"
         class="mb-12"
-        id="inhaltlicheErschliessung"
+        id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
-      <h2 id="aktivzitierung-title" class="ris-body1-bold">Aktivzitierung (selbst. Literatur)</h2>
-      <div class="flex flex-row gap-24 w-full">
-        <div class="flex flex-col w-full">
-          <AktivzitierungLiteratures />
+      <section id="aktivzitierungSli" aria-labelledby="aktivzitierungSli-title">
+        <h2 id="aktivzitierungSli-title" class="ris-body1-bold">
+          Aktivzitierung (selbst. Literatur)
+        </h2>
+        <div class="flex flex-row gap-24 w-full">
+          <div class="flex flex-col w-full">
+            <AktivzitierungLiteratures />
+          </div>
         </div>
-      </div>
-      <h2 class="ris-body1-bold">Aktivzitierung (Verwaltungsvorschrift)</h2>
-      <div class="flex flex-row gap-24 w-full">
-        <div class="flex flex-col w-full">
-          <Aktivzitierung v-model="aktivzitierungAdm">
-            <template #item="{ aktivzitierung }">
-              <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
-            </template>
+      </section>
+      <section id="aktivzitierungAdm" aria-labelledby="aktivzitierungAdm-title">
+        <h2 id="aktivzitierungAdm-title" class="ris-body1-bold">
+          Aktivzitierung (Verwaltungsvorschrift)
+        </h2>
+        <div class="flex flex-row gap-24 w-full">
+          <div class="flex flex-col w-full">
+            <Aktivzitierung v-model="aktivzitierungAdm">
+              <template #item="{ aktivzitierung }">
+                <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
+              </template>
 
-            <template #input="{ modelValue, onUpdateModelValue }">
-              <AktivzitierungAdmInput
-                :modelValue="modelValue"
-                @update:modelValue="onUpdateModelValue"
-              />
-            </template>
-          </Aktivzitierung>
+              <template #input="{ modelValue, onUpdateModelValue }">
+                <AktivzitierungAdmInput
+                  :modelValue="modelValue"
+                  @update:modelValue="onUpdateModelValue"
+                />
+              </template>
+            </Aktivzitierung>
+          </div>
         </div>
-      </div>
+      </section>
     </section>
   </div>
 </template>
