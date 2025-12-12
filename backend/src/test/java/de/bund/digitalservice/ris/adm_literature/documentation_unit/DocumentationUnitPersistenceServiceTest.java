@@ -13,6 +13,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Doc
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
@@ -23,11 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentationUnitPersistenceServiceTest {
@@ -41,12 +44,18 @@ class DocumentationUnitPersistenceServiceTest {
   @Mock
   private DocumentTypeService documentTypeService;
 
+  @Mock
+  private NoteService noteService;
+
+  @Spy
+  private ObjectMapper objectMapper = new ObjectMapper();
+
   @Test
   void findByDocumentNumber() {
     // given
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     documentationUnitEntity.setDocumentNumber("KSNR000000002");
-    documentationUnitEntity.setJson("\"abc\":false");
+    documentationUnitEntity.setJson("{\"abc\":false}");
     given(documentationUnitRepository.findByDocumentNumber("KSNR000000002")).willReturn(
       Optional.of(documentationUnitEntity)
     );
@@ -57,7 +66,7 @@ class DocumentationUnitPersistenceServiceTest {
 
     // then
     assertThat(documentationUnit).hasValueSatisfying(actual ->
-      assertThat(actual.json()).isEqualTo("\"abc\":false")
+      assertThat(actual.json()).isEqualTo("{\"abc\":false}")
     );
   }
 

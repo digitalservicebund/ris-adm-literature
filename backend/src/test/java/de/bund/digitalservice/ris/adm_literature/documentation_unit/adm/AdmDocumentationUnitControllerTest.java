@@ -106,7 +106,7 @@ class AdmDocumentationUnitControllerTest {
   void update() throws Exception {
     // given
     String documentNumber = "KSNR054920707";
-    String json = "{\"test\":\"content\"}";
+    String json = "{\"test\":\"content\",\"note\":\"Notiz\"}";
     given(documentationUnitService.update(documentNumber, json)).willReturn(
       Optional.of(new DocumentationUnit(documentNumber, UUID.randomUUID(), json))
     );

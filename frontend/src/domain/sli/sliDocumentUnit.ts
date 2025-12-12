@@ -18,6 +18,7 @@ export interface SliDocumentUnitResponse {
   id: string
   documentNumber: string
   json: SliDocumentationUnit
+  note?: string
 }
 
 export interface SliDocUnitListItem {

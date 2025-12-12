@@ -15,4 +15,5 @@ export interface UliDocumentUnitResponse {
   id: string
   documentNumber: string
   json: UliDocumentationUnit
+  note?: string
 }

@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteEntity;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
@@ -67,7 +68,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
     Year thisYear = Year.now();
     documentationUnitEntity.setDocumentNumber(String.format("KSNR%s000002", thisYear));
-    documentationUnitEntity.setJson("{\"test\":\"content\"");
+    documentationUnitEntity.setJson("{\"test\":\"content\"}");
     documentationUnitEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     entityManager.persistAndFlush(documentationUnitEntity);
@@ -81,7 +82,36 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     // then
     assertThat(documentationUnit)
       .isPresent()
-      .hasValueSatisfying(actual -> assertThat(actual.json()).isEqualTo("{\"test\":\"content\""));
+      .hasValueSatisfying(actual -> assertThat(actual.json()).isEqualTo("{\"test\":\"content\"}"));
+  }
+
+  @Test
+  @DisplayName("Find a documentation unit with a note")
+  void findByDocumentNumber_withNote() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR2025000222");
+    documentationUnitEntity.setJson("{\"test\":\"content\"}");
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
+    documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
+    NoteEntity noteEntity = new NoteEntity();
+    noteEntity.setNote("Notiz");
+    noteEntity.setDocumentationUnit(documentationUnitEntity);
+    entityManager.persistAndFlush(noteEntity);
+
+    // when
+    Optional<DocumentationUnit> documentationUnit =
+      documentationUnitPersistenceService.findByDocumentNumber(
+        documentationUnitEntity.getDocumentNumber()
+      );
+
+    // then
+    assertThat(documentationUnit)
+      .isPresent()
+      .hasValueSatisfying(actual ->
+        assertThat(actual.json()).isEqualTo("{\"test\":\"content\",\"note\":\"Notiz\"}")
+      );
   }
 
   @Test
@@ -156,6 +186,34 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
         "Das Periodikum 2021, Seite 15",
         "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
       );
+  }
+
+  @Test
+  @DisplayName("Updated an existing documentation unit and its note")
+  void update_withNote() {
+    // given
+    DocumentationUnitEntity documentationUnitEntity = new DocumentationUnitEntity();
+    documentationUnitEntity.setDocumentNumber("KSNR2025000111");
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
+    entityManager.persistAndFlush(documentationUnitEntity);
+
+    // when
+    documentationUnitPersistenceService.update(
+      documentationUnitEntity.getDocumentNumber(),
+      "{\"test\":\"content\",\"note\":\"Neue Notiz\"}"
+    );
+
+    // then
+    assertThat(
+      entityManager
+        .getEntityManager()
+        .createQuery("from NoteEntity", NoteEntity.class)
+        .getResultList()
+    )
+      .singleElement()
+      .extracting(NoteEntity::getNote)
+      .isEqualTo("Neue Notiz");
   }
 
   @Test

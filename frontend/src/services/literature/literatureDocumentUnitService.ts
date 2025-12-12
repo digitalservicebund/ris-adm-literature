@@ -132,22 +132,18 @@ export function useGetSliPaginatedDocUnits(
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
-  const documentUnit: SliDocumentationUnit = {
-    ...data.json,
-    id: data.id,
-    documentNumber: data.documentNumber,
-  }
-
-  documentUnit.note = documentUnit.note || ''
-  return documentUnit
+  return mapResponseToLiteratureDocUnit(data)
 }
 
 function mapResponseToUliDocUnit(data: UliDocumentUnitResponse): UliDocumentationUnit {
-  const documentUnit: UliDocumentationUnit = {
+  return mapResponseToLiteratureDocUnit(data)
+}
+
+function mapResponseToLiteratureDocUnit(data: UliDocumentUnitResponse | SliDocumentUnitResponse) {
+  return {
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
+    note: data.note || '',
   }
-  documentUnit.note = documentUnit.note || ''
-  return documentUnit
 }
