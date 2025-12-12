@@ -13,6 +13,10 @@ const metaSummary = computed(() => {
     parts.push(props.aktivzitierung.documentNumber)
   }
 
+  if (props.aktivzitierung.citationType) {
+    parts.push(props.aktivzitierung.citationType)
+  }
+
   const mainParts = parts.join(', ')
 
   return mainParts
