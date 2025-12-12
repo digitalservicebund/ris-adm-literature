@@ -1,7 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 /**
- * Represents an administrative record of an Aktivzitierung (activation or citation activity),
+ * Represents an administrative record of an Aktivzitierung,
  * containing detailed metadata about the citation or document reference.
  *
  * @param documentNumber    The unique identifier of the document being activated.
