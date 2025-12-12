@@ -12,10 +12,9 @@ defineProps<{
 
 const modelValue = defineModel<Institution | undefined>()
 const emit = defineEmits<{
-  'update:modelValue': [value: Institution]
+  'update:modelValue': [value: Institution | undefined]
 }>()
 
-const autoComplete = ref<typeof RisAutoComplete | null>(null)
 const institutions = ref<Institution[]>([])
 const selectedInstitutionId = ref<string | undefined>(modelValue.value?.id)
 
@@ -26,9 +25,7 @@ const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComple
 function onModelValueChange(id: string | undefined) {
   selectedInstitutionId.value = id
   const selectedInstitution = institutions.value.find((inst: Institution) => inst.id === id)
-  if (selectedInstitution) {
-    emit('update:modelValue', selectedInstitution)
-  }
+  emit('update:modelValue', selectedInstitution)
 }
 
 onMounted(async () => {
@@ -39,7 +36,6 @@ onMounted(async () => {
 
 <template>
   <RisAutoComplete
-    ref="autoComplete"
     :model-value="selectedInstitutionId"
     :suggestions="suggestions"
     :invalid="isInvalid"

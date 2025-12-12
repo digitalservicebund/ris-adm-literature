@@ -80,7 +80,11 @@ const onClickDelete = () => {
 
 const validateInstitution = () => {
   const institutionId = institution.value?.id
-  if (institutionId && existingInstitutionIds.value.includes(institutionId)) {
+  if (
+    institutionId &&
+    existingInstitutionIds.value.includes(institutionId) &&
+    props.normgeber?.institution.id !== institutionId
+  ) {
     validationStore.add('Normgeber bereits eingegeben', 'institution')
   } else {
     validationStore.remove('institution')
