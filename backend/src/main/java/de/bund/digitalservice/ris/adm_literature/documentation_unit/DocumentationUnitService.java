@@ -5,8 +5,8 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlPublishConverterService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -32,8 +32,8 @@ import tools.jackson.databind.ObjectMapper;
 public class DocumentationUnitService {
 
   private final DocumentationUnitPersistenceService documentationUnitPersistenceService;
-  private final LdmlConverterService ldmlConverterService;
-  private final LdmlPublishConverterService ldmlPublishConverterService;
+  private final LdmlToObjectConverterService ldmlToObjectConverterService;
+  private final ObjectToLdmlConverterService objectToLdmlConverterService;
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
 
@@ -60,7 +60,10 @@ public class DocumentationUnitService {
   }
 
   private Optional<DocumentationUnit> convertLdml(DocumentationUnit documentationUnit) {
-    var documentationUnitContent = ldmlConverterService.convertToBusinessModel(documentationUnit);
+    var documentationUnitContent = ldmlToObjectConverterService.convertToBusinessModel(
+      documentationUnit,
+      AdmDocumentationUnitContent.class
+    );
     String json = convertToJson(documentationUnitContent);
     return Optional.of(new DocumentationUnit(documentationUnit, json));
   }
@@ -107,7 +110,7 @@ public class DocumentationUnitService {
     }
 
     DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
-    String xml = ldmlPublishConverterService.convertToLdml(
+    String xml = objectToLdmlConverterService.convertToLdml(
       documentationUnitContent,
       documentationUnit.xml()
     );

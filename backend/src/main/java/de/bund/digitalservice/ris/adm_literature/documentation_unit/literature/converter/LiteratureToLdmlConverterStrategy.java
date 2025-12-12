@@ -2,7 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlConverterStrategy;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlWriter;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class LiteratureLdmlConverterStrategy implements LdmlConverterStrategy {
+public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy {
 
   private final MinimalLdmlDocument minimalLdmlDocument = new MinimalLdmlDocument();
 
