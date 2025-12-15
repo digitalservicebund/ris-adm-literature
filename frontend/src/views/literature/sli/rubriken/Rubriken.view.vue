@@ -10,6 +10,11 @@ import TitelSection from '@/views/literature/sli/rubriken/components/TitelSectio
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 import AktivzitierungLiteratures from '@/views/literature/sli/rubriken/components/AktivzitierungLiteratures.vue'
+import { computed } from 'vue'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
+import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
+import AktivzitierungAdmInput from '@/components/aktivzitierung/adm/AktivzitierungAdmInput.vue'
+import AktivzitierungAdmItem from '@/components/aktivzitierung/adm/AktivzitierungAdmItem.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -19,6 +24,13 @@ const {
   dokumentarischerTitel,
   hauptsachtitelZusatz,
 } = useLiteratureRubriken(store)
+
+const aktivzitierungAdm = computed({
+  get: () => store.documentUnit!.aktivzitierungenAdm ?? [],
+  set: (newValue: AktivzitierungAdm[]) => {
+    store.documentUnit!.aktivzitierungenAdm = newValue
+  },
+})
 
 useScrollToHash()
 </script>
@@ -68,22 +80,47 @@ useScrollToHash()
     </section>
 
     <section
-      id="aktivzitierung"
+      id="inhaltlicheErschliessung"
       aria-labelledby="aktivzitierung-title"
       class="flex flex-col gap-24 bg-white p-24"
     >
       <TitleElement
         aria-label="Inhaltliche Erschließung"
         class="mb-12"
-        id="inhaltlicheErschliessung"
+        id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
-      <h2 id="aktivzitierung-title" class="ris-body1-bold">Aktivzitierung (selbst. Literatur)</h2>
-      <div class="flex flex-row gap-24 w-full">
-        <div class="flex flex-col w-full">
-          <AktivzitierungLiteratures />
+      <section id="aktivzitierungSli" aria-labelledby="aktivzitierungSli-title">
+        <h2 id="aktivzitierungSli-title" class="ris-body1-bold mb-12">
+          Aktivzitierung (selbst. Literatur)
+        </h2>
+        <div class="flex flex-row gap-24 w-full">
+          <div class="flex flex-col w-full">
+            <AktivzitierungLiteratures />
+          </div>
         </div>
-      </div>
+      </section>
+      <section id="aktivzitierungAdm" aria-labelledby="aktivzitierungAdm-title">
+        <h2 id="aktivzitierungAdm-title" class="ris-body1-bold mb-12">
+          Aktivzitierung (Verwaltungsvorschrift)
+        </h2>
+        <div class="flex flex-row gap-24 w-full">
+          <div class="flex flex-col w-full">
+            <Aktivzitierung v-model="aktivzitierungAdm">
+              <template #item="{ aktivzitierung }">
+                <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
+              </template>
+
+              <template #input="{ modelValue, onUpdateModelValue }">
+                <AktivzitierungAdmInput
+                  :modelValue="modelValue"
+                  @update:modelValue="onUpdateModelValue"
+                />
+              </template>
+            </Aktivzitierung>
+          </div>
+        </div>
+      </section>
     </section>
   </div>
 </template>
