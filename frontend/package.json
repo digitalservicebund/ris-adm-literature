@@ -58,7 +58,7 @@
     "primevue": "^4.5.0",
     "unplugin-icons": "^22.5.0",
     "vite": "^7.2.6",
-    "vue-router": "^4.6.3",
+    "vue-router": "^4.6.4",
     "vue-tsc": "^3.1.8"
   },
   "devDependencies": {
