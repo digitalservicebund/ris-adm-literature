@@ -6,6 +6,9 @@ import jakarta.persistence.Embeddable;
 import java.util.List;
 import lombok.Data;
 
+/**
+ * Adm index.
+ */
 @Embeddable
 @Data
 public class AdmIndex {

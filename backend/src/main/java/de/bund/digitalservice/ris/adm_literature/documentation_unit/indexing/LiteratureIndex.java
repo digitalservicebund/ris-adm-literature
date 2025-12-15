@@ -4,6 +4,9 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
+/**
+ * Literature index.
+ */
 @Data
 @Embeddable
 public class LiteratureIndex {

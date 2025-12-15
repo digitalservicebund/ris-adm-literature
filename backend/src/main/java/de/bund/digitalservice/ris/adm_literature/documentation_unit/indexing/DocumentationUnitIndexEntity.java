@@ -31,6 +31,11 @@ public class DocumentationUnitIndexEntity {
   @Embedded
   private LiteratureIndex literatureIndex;
 
+  /**
+   * Returns an instance of {@link AdmIndex}. If the current instance is {@code null} then
+   * a new instance is created, assigned and returned.
+   * @return Instance of {@code AdmIndex}
+   */
   @Nonnull
   public AdmIndex getAdmIndex() {
     if (admIndex == null) {
@@ -39,6 +44,11 @@ public class DocumentationUnitIndexEntity {
     return admIndex;
   }
 
+  /**
+   * Returns an instance of {@link LiteratureIndex}. If the current instance is {@code null} then
+   * a new instance is created, assigned and returned.
+   * @return Instance of {@code LiteratureIndex}
+   */
   @Nonnull
   public LiteratureIndex getLiteratureIndex() {
     if (literatureIndex == null) {
