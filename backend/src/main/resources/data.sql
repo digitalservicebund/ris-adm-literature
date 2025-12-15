@@ -98,12 +98,14 @@ WITH created as (
         ON CONFLICT DO NOTHING
         returning id as created_documentation_unit_id)
 INSERT
-INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten)
 SELECT gen_random_uuid(),
        created.created_documentation_unit_id,
        '1. Bekanntmachung zum XML-Testen in NeuRIS VwV',
        'Das Periodikum 2021, Seite 15',
-       '2025-05-05$µµµµµ$2025-06-01'
+    array ['Das Periodikum 2021, Seite 15'],
+       '2025-05-05 2025-06-01',
+    array ['2025-05-05','2025-06-01']
 FROM created
 ON CONFLICT DO NOTHING;
 
@@ -113,12 +115,14 @@ INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit
 SELECT gen_random_uuid(), 'KSNR000000001', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
 WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000001');
 
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten)
 SELECT gen_random_uuid(),
        du.id,
        'Alpha Global Setup Document',
-       'BGB 123$µµµµµ$VWV xyz',
-       '2024-06-17$µµµµµ$1950-01-01'
+       'BGB 123 VWV xyz',
+       array ['BGB 123', 'VWV xyz'],
+       '2024-06-17 1950-01-01',
+       array ['2024-06-17', '1950-01-01']
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000001'
   AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
@@ -128,12 +132,14 @@ INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit
 SELECT gen_random_uuid(), 'KSNR000000002', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
 WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000002');
 
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen, zitierdaten)
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten)
 SELECT gen_random_uuid(),
        du.id,
        'Beta Global Setup Document',
        'BGB 456',
-       '2024-06-18'
+       array ['BGB 456'],
+       '2024-06-18',
+       array ['2024-06-18']
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000002'
   AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);

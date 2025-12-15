@@ -120,15 +120,16 @@ public class DocumentationUnitIndexService {
         documentationUnitIndex.documentationUnitEntity
       );
     }
-    documentationUnitIndexEntity.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
-    documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
-    documentationUnitIndexEntity.setZitierdaten(documentationUnitIndex.getZitierdaten());
-    documentationUnitIndexEntity.setTitel(documentationUnitIndex.getTitel());
-    documentationUnitIndexEntity.setVeroeffentlichungsjahr(
-      documentationUnitIndex.getVeroeffentlichungsjahr()
-    );
-    documentationUnitIndexEntity.setDokumenttypen(documentationUnitIndex.getDokumenttypen());
-    documentationUnitIndexEntity.setVerfasser(documentationUnitIndex.getVerfasser());
+    AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
+    admIndex.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
+    admIndex.setFundstellenCombined(documentationUnitIndex.getFundstellen());
+    admIndex.setZitierdatenCombined(documentationUnitIndex.getZitierdaten());
+
+    LiteratureIndex literatureIndex = documentationUnitIndexEntity.getLiteratureIndex();
+    literatureIndex.setTitel(documentationUnitIndex.getTitel());
+    literatureIndex.setVeroeffentlichungsjahr(documentationUnitIndex.getVeroeffentlichungsjahr());
+    literatureIndex.setDokumenttypen(documentationUnitIndex.getDokumenttypen());
+    literatureIndex.setVerfasser(documentationUnitIndex.getVerfasser());
     return documentationUnitIndexEntity;
   }
 

@@ -7,8 +7,10 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentionUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
@@ -186,13 +188,13 @@ public class DocumentationUnitPersistenceService {
           Collections.emptyList()
         );
       }
-
+      AdmIndex admIndex = index.getAdmIndex();
       return new AdmDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
-        splitBySeparator(index.getZitierdaten()),
-        index.getLangueberschrift(),
-        splitBySeparator(index.getFundstellen())
+        admIndex.getZitierdaten(),
+        admIndex.getLangueberschrift(),
+        admIndex.getFundstellen()
       );
     });
   }
@@ -242,7 +244,8 @@ public class DocumentationUnitPersistenceService {
         );
       }
 
-      List<String> documentTypeNames = splitBySeparator(index.getDokumenttypen())
+      LiteratureIndex literatureIndex = index.getLiteratureIndex();
+      List<String> documentTypeNames = splitBySeparator(literatureIndex.getDokumenttypen())
         .stream()
         .map(abbrev -> typeLookup.getOrDefault(abbrev, abbrev))
         .toList();
@@ -250,10 +253,10 @@ public class DocumentationUnitPersistenceService {
       return new LiteratureDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
-        index.getVeroeffentlichungsjahr(),
-        index.getTitel(),
+        literatureIndex.getVeroeffentlichungsjahr(),
+        literatureIndex.getTitel(),
         documentTypeNames,
-        splitBySeparator(index.getVerfasser())
+        splitBySeparator(literatureIndex.getVerfasser())
       );
     });
   }

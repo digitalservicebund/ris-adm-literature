@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
@@ -24,24 +25,25 @@ public class DocumentationUnitIndexEntity {
   @OneToOne(optional = false)
   private DocumentationUnitEntity documentationUnit;
 
-  @Basic
-  private String langueberschrift;
+  @Embedded
+  private AdmIndex admIndex;
 
-  @Basic
-  private String fundstellen;
+  @Embedded
+  private LiteratureIndex literatureIndex;
 
-  @Basic
-  private String zitierdaten;
+  @Nonnull
+  public AdmIndex getAdmIndex() {
+    if (admIndex == null) {
+      admIndex = new AdmIndex();
+    }
+    return admIndex;
+  }
 
-  @Basic
-  private String titel;
-
-  @Basic
-  private String veroeffentlichungsjahr;
-
-  @Basic
-  private String dokumenttypen;
-
-  @Basic
-  private String verfasser;
+  @Nonnull
+  public LiteratureIndex getLiteratureIndex() {
+    if (literatureIndex == null) {
+      literatureIndex = new LiteratureIndex();
+    }
+    return literatureIndex;
+  }
 }
