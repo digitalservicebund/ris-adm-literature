@@ -104,7 +104,6 @@ describe('DokumentTypDropDown', () => {
 
     await user.click(screen.getByRole('option', { name: 'Bekanntmachung' }))
     const emittedVal = emitted('update:modelValue') as [string[]]
-    console.log(emittedVal)
     const abbr = emittedVal?.[0][0]
     expect(abbr).toBe('Bekanntmachung')
   })

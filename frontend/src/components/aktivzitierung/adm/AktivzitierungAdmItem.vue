@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm.ts'
+import { parseIsoDateToLocal } from '@/utils/dateHelpers'
 
 const props = defineProps<{
   aktivzitierung: AktivzitierungAdm
 }>()
 
 const metaSummary = computed(() => {
-  const parts: string[] = []
+  const parts = [
+    props.aktivzitierung.citationType,
+    props.aktivzitierung.normgeber,
+    props.aktivzitierung.inkrafttretedatum
+      ? parseIsoDateToLocal(props.aktivzitierung.inkrafttretedatum)
+      : undefined,
+    props.aktivzitierung.periodikum,
+    props.aktivzitierung.dokumenttyp,
+    props.aktivzitierung.documentNumber,
+  ].filter(Boolean)
 
-  if (props.aktivzitierung.documentNumber) {
-    parts.push(props.aktivzitierung.documentNumber)
-  }
-
-  if (props.aktivzitierung.citationType) {
-    parts.push(props.aktivzitierung.citationType)
-  }
-
-  const mainParts = parts.join(', ')
-
-  return mainParts
+  return parts.join(', ')
 })
 </script>
 

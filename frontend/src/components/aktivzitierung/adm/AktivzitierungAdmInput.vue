@@ -49,6 +49,7 @@ const periodikum = computed({
       ? ({
           id: props.modelValue.periodikum,
           abbreviation: props.modelValue.periodikum,
+          title: props.modelValue.periodikum,
         } as Periodikum)
       : undefined
   },

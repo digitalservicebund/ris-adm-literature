@@ -1,50 +1,73 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/vue'
-import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm.ts'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 import AktivzitierungAdmItem from './AktivzitierungAdmItem.vue'
 
-describe('AktivzitierungAdmItem', () => {
-  it('renders only documentNumber when citationType is missing', () => {
-    const aktivzitierung: AktivzitierungAdm = {
-      id: '1',
-      documentNumber: 'DOC-123',
-      citationType: undefined,
-    }
+const baseItem = { id: 'test-id' }
 
+const testCases = [
+  {
+    name: 'should render all fields separated by comma',
+    data: {
+      ...baseItem,
+      citationType: 'VV',
+      normgeber: 'BMJ',
+      inkrafttretedatum: '2024-01-01',
+      periodikum: 'BGBI',
+      dokumenttyp: 'VO',
+      documentNumber: '123-A',
+    },
+    expected: 'VV, BMJ, 01.01.2024, BGBI, VO, 123-A',
+  },
+  {
+    name: 'should render only citationType and documentNumber',
+    data: {
+      ...baseItem,
+      citationType: 'VwV',
+      documentNumber: '456-B',
+      normgeber: null,
+      periodikum: undefined,
+    },
+    expected: 'VwV, 456-B',
+  },
+  {
+    name: 'should render only date and periodikum',
+    data: {
+      ...baseItem,
+      inkrafttretedatum: '2023-05-15',
+      periodikum: 'GBl',
+      documentNumber: '',
+    },
+    expected: '15.05.2023, GBl',
+  },
+  {
+    name: 'should render empty string when all fields are missing',
+    data: {
+      ...baseItem,
+      citationType: null,
+      normgeber: undefined,
+      documentNumber: '',
+    },
+    expected: '',
+  },
+  {
+    name: 'should render only normgeber',
+    data: {
+      ...baseItem,
+      normgeber: 'BMBF',
+    },
+    expected: 'BMBF',
+  },
+]
+
+describe('AktivzitierungAdmItem (metaSummary)', () => {
+  it.each(testCases)('$name', ({ data, expected }) => {
     render(AktivzitierungAdmItem, {
-      props: { aktivzitierung },
+      props: { aktivzitierung: data as AktivzitierungAdm },
     })
 
-    expect(screen.getByText('DOC-123')).toBeInTheDocument()
-    expect(screen.queryByText('Citation A')).not.toBeInTheDocument()
-  })
-
-  it('renders only citationType when documentNumber is missing', () => {
-    const aktivzitierung: AktivzitierungAdm = {
-      id: '1',
-      documentNumber: undefined,
-      citationType: 'Citation A',
+    if (expected) {
+      expect(screen.getByText(expected)).toBeInTheDocument()
     }
-
-    render(AktivzitierungAdmItem, {
-      props: { aktivzitierung },
-    })
-
-    expect(screen.getByText('Citation A')).toBeInTheDocument()
-    expect(screen.queryByText('DOC-123')).not.toBeInTheDocument()
-  })
-
-  it('renders both documentNumber and citationType', () => {
-    const aktivzitierung: AktivzitierungAdm = {
-      id: '1',
-      documentNumber: 'DOC-123',
-      citationType: 'Citation A',
-    }
-
-    render(AktivzitierungAdmItem, {
-      props: { aktivzitierung },
-    })
-
-    expect(screen.getByText('DOC-123, Citation A')).toBeInTheDocument()
   })
 })
