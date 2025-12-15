@@ -17,7 +17,7 @@ import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
 import type { DocumentType } from '@/domain/documentType'
 import CourtDropDown from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/CourtDropDown.vue'
-import ZitierArtDropDown from './ZitierArtDropDown.vue'
+import ZitierArtDropDown from '@/components/ZitierArtDropDown.vue'
 
 const props = defineProps<{
   modelValue?: ActiveCitation

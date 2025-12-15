@@ -6,7 +6,7 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
 import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import InstitutionDropDown from './InstitutionDropDown.vue'
+import InstitutionDropDown from '@/components/InstitutionDropDown.vue'
 import RegionDropDown from './RegionDropDown.vue'
 
 const props = defineProps<{
