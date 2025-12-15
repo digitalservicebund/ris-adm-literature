@@ -10,6 +10,8 @@ import type { Institution } from '@/domain/normgeber'
 import DateInput from '@/components/input/DateInput.vue'
 import PeriodikumDropDown from '@/components/dropdown/PeriodikumDropDown.vue'
 import type { Periodikum } from '@/domain/fundstelle'
+import DokumentTypDropDown from '@/components/dropdown/DokumentTypDropDown.vue'
+import { DocumentCategory } from '@/domain/documentType'
 
 const props = defineProps<{
   modelValue: AktivzitierungAdm
@@ -124,6 +126,17 @@ const periodikum = computed({
           aria-label="Dokumentnummer"
           :invalid="slotProps.hasError"
           fluid
+        />
+      </InputField>
+      <InputField id="docType" label="Dokumenttyp" v-slot="slotProps">
+        <DokumentTypDropDown
+          :input-id="slotProps.id"
+          :model-value="modelValue?.dokumenttyp"
+          @update:model-value="
+            (dokumenttyp) => emit('update:modelValue', { ...props.modelValue, dokumenttyp })
+          "
+          :isInvalid="false"
+          :document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
         />
       </InputField>
     </div>
