@@ -5,7 +5,7 @@ import { type Fundstelle, type Periodikum } from '@/domain/fundstelle'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
-import PeriodikumDropDown from '@/components/PeriodikumDropDown.vue'
+import PeriodikumDropDown from '@/components/dropdown/PeriodikumDropDown.vue'
 
 const props = defineProps<{
   fundstelle?: Fundstelle
