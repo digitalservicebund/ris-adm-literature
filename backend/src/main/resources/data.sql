@@ -276,7 +276,7 @@ SELECT gen_random_uuid(),
        created.created_documentation_unit_id,
        'Lexikon Soziologie und Sozialtheorie',
        '2015',
-       ['Wob'],
+       array ['Wob'],
        'Wob'
 FROM created
 ON CONFLICT DO NOTHING;
