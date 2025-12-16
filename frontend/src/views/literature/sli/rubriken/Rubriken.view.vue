@@ -9,12 +9,13 @@ import InputText from 'primevue/inputtext'
 import TitelSection from '@/views/literature/sli/rubriken/components/TitelSection.vue'
 import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
-import AktivzitierungLiteratures from '@/views/literature/sli/rubriken/components/AktivzitierungLiteratures.vue'
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
 import AktivzitierungAdmInput from '@/components/aktivzitierung/adm/AktivzitierungAdmInput.vue'
 import AktivzitierungAdmItem from '@/components/aktivzitierung/adm/AktivzitierungAdmItem.vue'
+import AktivzitierungSli from '@/components/aktivzitierung/sli/AktivzitierungSli.vue'
+import type { AktivzitierungSli as AktivzitierungSliType } from '@/domain/AktivzitierungSli'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -29,6 +30,13 @@ const aktivzitierungAdm = computed({
   get: () => store.documentUnit!.aktivzitierungenAdm ?? [],
   set: (newValue: AktivzitierungAdm[]) => {
     store.documentUnit!.aktivzitierungenAdm = newValue
+  },
+})
+
+const aktivzitierungSli = computed({
+  get: () => store.documentUnit!.aktivzitierungenSli ?? [],
+  set: (newValue: AktivzitierungSliType[]) => {
+    store.documentUnit!.aktivzitierungenSli = newValue
   },
 })
 
@@ -96,7 +104,7 @@ useScrollToHash()
         </h2>
         <div class="flex flex-row gap-24 w-full">
           <div class="flex flex-col w-full">
-            <AktivzitierungLiteratures />
+            <AktivzitierungSli v-model="aktivzitierungSli" />
           </div>
         </div>
       </section>

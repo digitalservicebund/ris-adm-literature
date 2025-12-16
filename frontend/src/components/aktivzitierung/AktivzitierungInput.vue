@@ -54,6 +54,20 @@ watch(
     }
   },
 )
+
+const isEmpty = computed(() => {
+  const value = aktivzitierungRef.value as Record<string, unknown>
+  const entries = Object.entries(value).filter(([key]) => key !== 'id')
+
+  if (entries.length === 0) return true
+
+  return entries.every(([, v]) => {
+    if (v === undefined || v === null) return true
+    if (typeof v === 'string') return v.trim() === ''
+    if (Array.isArray(v)) return v.length === 0
+    return false
+  })
+})
 </script>
 
 <template>
@@ -67,6 +81,7 @@ watch(
         label="Übernehmen"
         severity="secondary"
         size="small"
+        :disabled="isEmpty"
         @click.stop="onClickSave"
       />
       <Button
