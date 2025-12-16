@@ -131,6 +131,27 @@ export function useGetSliPaginatedDocUnits(
   return useApiFetch(urlWithParams, { immediate: false }).json()
 }
 
+export function useGetAdmPaginatedDocUnitsForSli(
+  pageNumber: Ref<number>,
+  pageSize: number,
+  search: Ref,
+) {
+  const urlWithParams = computed(() =>
+    buildUrlWithParams('/literature/adm/documentation-units', {
+      pageNumber: pageNumber.value.toString(),
+      pageSize: pageSize.toString(),
+      documentNumber: search?.value?.documentNumber?.toString(),
+      fundstellen: search?.value?.fundstellen?.toString(),
+      langueberschrift: search?.value?.langueberschrift?.toString(),
+      zitierdaten: search?.value?.zitierdaten?.toString(),
+      sortByProperty: 'documentNumber',
+      sortDirection: 'DESC',
+    }),
+  )
+
+  return useApiFetch(urlWithParams).json()
+}
+
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
   return mapResponseToLiteratureDocUnit(data)
 }

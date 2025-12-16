@@ -14,8 +14,14 @@ import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
 import AktivzitierungAdmInput from '@/components/aktivzitierung/adm/AktivzitierungAdmInput.vue'
 import AktivzitierungAdmItem from '@/components/aktivzitierung/adm/AktivzitierungAdmItem.vue'
-import AktivzitierungSli from '@/components/aktivzitierung/sli/AktivzitierungSli.vue'
 import type { AktivzitierungSli as AktivzitierungSliType } from '@/domain/AktivzitierungSli'
+import AktivzitierungSliItem from '@/components/aktivzitierung/sli/AktivzitierungSliItem.vue'
+import AktivzitierungSliInput from '@/components/aktivzitierung/sli/AktivzitierungSliInput.vue'
+import {
+  useGetAdmPaginatedDocUnitsForSli,
+  useGetSliPaginatedDocUnits,
+} from '@/services/literature/literatureDocumentUnitService'
+import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -104,7 +110,29 @@ useScrollToHash()
         </h2>
         <div class="flex flex-row gap-24 w-full">
           <div class="flex flex-col w-full">
-            <AktivzitierungSli v-model="aktivzitierungSli" />
+            <Aktivzitierung
+              v-model="aktivzitierungSli"
+              :fetch-results-fn="useGetSliPaginatedDocUnits"
+            >
+              <template #item="{ aktivzitierung }">
+                <AktivzitierungSliItem :aktivzitierung="aktivzitierung" />
+              </template>
+
+              <template #input="{ modelValue, onUpdateModelValue }">
+                <AktivzitierungSliInput
+                  :modelValue="modelValue"
+                  @update:modelValue="onUpdateModelValue"
+                />
+              </template>
+
+              <template #searchResult="{ searchResult, isAdded, onAdd }">
+                <AktivzitierungSliSearchResult
+                  :searchResult="searchResult"
+                  :is-added="isAdded"
+                  @add="onAdd"
+                />
+              </template>
+            </Aktivzitierung>
           </div>
         </div>
       </section>
@@ -114,7 +142,10 @@ useScrollToHash()
         </h2>
         <div class="flex flex-row gap-24 w-full">
           <div class="flex flex-col w-full">
-            <Aktivzitierung v-model="aktivzitierungAdm">
+            <Aktivzitierung
+              v-model="aktivzitierungAdm"
+              :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
+            >
               <template #item="{ aktivzitierung }">
                 <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
               </template>

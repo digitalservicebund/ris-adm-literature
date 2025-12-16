@@ -11,6 +11,7 @@ const emit = defineEmits<{
   update: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
+  search: [aktivzitierung: T]
 }>()
 
 const createInitialT = (): T => {
@@ -76,6 +77,12 @@ const isEmpty = computed(() => {
       <slot :modelValue="aktivzitierungRef" :onUpdateModelValue="onUpdate"></slot>
     </div>
     <div class="flex w-full gap-16 mt-16">
+      <Button
+        aria-label="Selbständige Literatur suchen"
+        label="Suchen"
+        size="small"
+        @click.stop="emit('search', aktivzitierungRef.value)"
+      />
       <Button
         aria-label="Aktivzitierung übernehmen"
         label="Übernehmen"

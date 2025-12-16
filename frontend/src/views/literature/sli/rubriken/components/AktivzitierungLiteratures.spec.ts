@@ -135,8 +135,6 @@ describe('AktivzitierungLiteratures', () => {
       },
     })
 
-    screen.debug()
-
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
 
     await user.click(screen.getByRole('button', { name: 'Fake add' }))

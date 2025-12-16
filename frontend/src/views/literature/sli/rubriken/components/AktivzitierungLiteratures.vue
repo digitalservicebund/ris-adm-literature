@@ -3,12 +3,11 @@ import { computed, ref, watch } from 'vue'
 import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
 import AktivzitierungLiteratureItem from './AktivzitierungLiteratureItem.vue'
 import AktivzitierungLiteratureInput from './AktivzitierungLiteratureInput.vue'
-import type { AktivzitierungLiterature } from '@/domain/AktivzitierungLiterature.ts'
 import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
 import SearchResults from '@/components/SearchResults.vue'
-import AktivzitierungSearchResult from '@/views/literature/AktivzitierungSearchResult.vue'
+import AktivzitierungSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
 import type { SliDocUnitListItem, SliDocUnitSearchParams } from '@/domain/sli/sliDocumentUnit'
 import { useToast, type PageState } from 'primevue'
 import { usePagination } from '@/composables/usePagination'
@@ -17,6 +16,7 @@ import errorMessages from '@/i18n/errors.json'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import { DocumentCategory } from '@/domain/documentType'
 import { useFetchDocumentTypes } from '@/services/documentTypeService'
+import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
 
 const ITEMS_PER_PAGE = 15
 
@@ -27,7 +27,7 @@ const ownDocumentNumber = computed(() => store.documentUnit?.documentNumber)
 
 const aktivzitierungLiteratures = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
-  set: (newValue: AktivzitierungLiterature[]) => {
+  set: (newValue: AktivzitierungSli[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue
   },
 })
@@ -135,12 +135,12 @@ function handleEditEnd() {
   editingItemId.value = undefined
 }
 
-function handleUpdateItem(item: AktivzitierungLiterature) {
+function handleUpdateItem(item: AktivzitierungSli) {
   onUpdateItem(item)
   handleEditEnd()
 }
 
-function handleAddItem(item: AktivzitierungLiterature) {
+function handleAddItem(item: AktivzitierungSli) {
   onAddItem(item)
   isCreationPanelOpened.value = true
   // Close search results when manually adding an entry
@@ -170,7 +170,7 @@ function handleAddSearchResult(result: SliDocUnitListItem) {
     }
   })
 
-  const entry: AktivzitierungLiterature = {
+  const entry: AktivzitierungSli = {
     id: crypto.randomUUID(),
     uuid: result.id,
     titel: result.titel,

@@ -1,18 +1,71 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect } from 'vitest'
-import PrimeVue from 'primevue/config'
+import { describe, it, expect, vi } from 'vitest'
 import Aktivzitierung from './Aktivzitierung.vue'
+import { ref, type Ref } from 'vue'
+import type { UseFetchReturn } from '@vueuse/core'
 
-// Dummy type
+const mockToastAdd = vi.fn()
+
+vi.mock('primevue', () => {
+  // Mock 'useToast' hook
+  const useToast = vi.fn(() => ({
+    add: mockToastAdd,
+  }))
+
+  // Mock components used in the component's template
+  const Button = {
+    props: ['label', 'severity', 'size', 'aria-label', 'disabled', 'class'],
+    template: '<button><slot name="icon"></slot>{{ label }}</button>',
+  }
+
+  return {
+    useToast,
+    Button,
+  }
+})
+
+// Dummy Aktivzitierung
 type DummyT = { id: string; documentNumber?: string }
+
+// Dummy Search Result
+type DummySearchResult = {
+  id: string
+  documentNumber: string
+  title: string
+}
+
+type FetchResultsFunction = (
+  page: Ref<number>,
+  itemsPerPage: number,
+  searchParams: Ref,
+) => UseFetchReturn<DummySearchResult>
+
+const fetchSpy = vi.fn() as unknown as FetchResultsFunction
+
+const mockFetchPaginatedData = vi.fn()
+const mockSearchResults = ref<DummySearchResult[]>([])
+const mockTotalRows = ref(0)
+const mockIsFetching = ref(false)
+const mockError = ref(null)
+
+vi.mock('@/composables/usePagination', () => ({
+  usePagination: vi.fn(() => ({
+    firstRowIndex: ref(0),
+    totalRows: mockTotalRows,
+    items: mockSearchResults,
+    fetchPaginatedData: mockFetchPaginatedData,
+    isFetching: mockIsFetching,
+    error: mockError,
+  })),
+}))
 
 function renderComponent(props?: { modelValue: DummyT[] }) {
   return render(Aktivzitierung, {
-    global: {
-      plugins: [PrimeVue],
+    props: {
+      modelValue: props?.modelValue,
+      fetchResultsFn: fetchSpy,
     },
-    props,
     slots: {
       item: `
           <template #default="{ aktivzitierung }">
@@ -23,6 +76,18 @@ function renderComponent(props?: { modelValue: DummyT[] }) {
             <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
           </template>
           `,
+      searchResult: `
+        <template #default="{ searchResult, isAdded, onAdd }">
+          <div data-testid="search-result-title">{{ searchResult.title }}</div>
+          <button
+            data-testid="search-result-add-btn"
+            :disabled="isAdded"
+            @click="onAdd(searchResult)"
+          >
+            Add
+          </button>
+        </template>
+        `,
     },
   })
 }

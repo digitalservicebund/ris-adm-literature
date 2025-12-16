@@ -1,12 +1,11 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="R extends { id: string }">
 import ProgressSpinner from 'primevue/progressspinner'
 import errorMessages from '@/i18n/errors.json'
-import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 import { ref, watch } from 'vue'
 import { useScrollToElement } from '@/composables/useScroll'
 
 const props = defineProps<{
-  searchResults: SliDocUnitListItem[]
+  searchResults: R[]
   isLoading: boolean
 }>()
 
