@@ -22,6 +22,7 @@ import {
   useGetSliPaginatedDocUnits,
 } from '@/services/literature/literatureDocumentUnitService'
 import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
+import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitieurungAdmSearchResult.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -154,6 +155,14 @@ useScrollToHash()
                 <AktivzitierungAdmInput
                   :modelValue="modelValue"
                   @update:modelValue="onUpdateModelValue"
+                />
+              </template>
+
+              <template #searchResult="{ searchResult, isAdded, onAdd }">
+                <AktivzitierungAdmSearchResult
+                  :searchResult="searchResult"
+                  :is-added="isAdded"
+                  @add="onAdd"
                 />
               </template>
             </Aktivzitierung>
