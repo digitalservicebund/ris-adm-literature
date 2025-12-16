@@ -38,7 +38,7 @@ import tools.jackson.databind.ObjectMapper;
 public class DocumentationUnitIndexService {
 
   private static final int INDEX_BATCH_SIZE = 500;
-  public static final String SEPARATOR = " ";
+  private static final String SEPARATOR = " ";
 
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
