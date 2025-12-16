@@ -83,7 +83,7 @@ public record SliDocumentationUnitSpecification(
         .stream()
         .map(type ->
           criteriaBuilder.like(
-            criteriaBuilder.lower(literatureIndex.get("dokumenttypen")),
+            criteriaBuilder.lower(literatureIndex.get("dokumenttypenCombined")),
             sqlContains(type)
           )
         )
@@ -97,7 +97,7 @@ public record SliDocumentationUnitSpecification(
         .stream()
         .map(author ->
           criteriaBuilder.like(
-            criteriaBuilder.lower(literatureIndex.get("verfasser")),
+            criteriaBuilder.lower(literatureIndex.get("verfasserListCombined")),
             sqlContains(author)
           )
         )

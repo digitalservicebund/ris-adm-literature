@@ -1,7 +1,9 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -17,9 +19,15 @@ public class LiteratureIndex {
   @Basic
   private String veroeffentlichungsjahr;
 
-  @Basic
-  private String dokumenttypen;
+  @Column(columnDefinition = "text[]")
+  private List<String> dokumenttypen;
 
   @Basic
-  private String verfasser;
+  private String dokumenttypenCombined;
+
+  @Column(columnDefinition = "text[]")
+  private List<String> verfasserList;
+
+  @Basic
+  private String verfasserListCombined;
 }

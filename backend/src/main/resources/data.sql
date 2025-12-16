@@ -271,11 +271,12 @@ created AS (
     RETURNING id AS created_documentation_unit_id
 )
 INSERT
-INTO literature.documentation_unit_index (id, documentation_unit_id, titel, veroeffentlichungsjahr, dokumenttypen)
+INTO literature.documentation_unit_index (id, documentation_unit_id, titel, veroeffentlichungsjahr, dokumenttypen, dokumenttypen_combined)
 SELECT gen_random_uuid(),
        created.created_documentation_unit_id,
        'Lexikon Soziologie und Sozialtheorie',
        '2015',
+       ['Wob'],
        'Wob'
 FROM created
 ON CONFLICT DO NOTHING;

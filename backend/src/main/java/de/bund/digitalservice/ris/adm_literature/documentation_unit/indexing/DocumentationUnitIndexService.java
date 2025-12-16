@@ -2,8 +2,13 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstelle;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Normgeber;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -11,11 +16,10 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.U
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -33,8 +37,8 @@ import tools.jackson.databind.ObjectMapper;
 @Slf4j
 public class DocumentationUnitIndexService {
 
-  public static final String ENTRY_SEPARATOR = "$µµµµµ$";
   private static final int INDEX_BATCH_SIZE = 500;
+  public static final String SEPARATOR = " ";
 
   private final DocumentationUnitRepository documentationUnitRepository;
   private final DocumentationUnitIndexRepository documentationUnitIndexRepository;
@@ -106,31 +110,6 @@ public class DocumentationUnitIndexService {
       );
     } while (documentationUnitEntities.hasNext());
     return totalNumberOfElements;
-  }
-
-  private DocumentationUnitIndexEntity mapDocumentationUnitIndex(
-    DocumentationUnitIndex documentationUnitIndex
-  ) {
-    DocumentationUnitIndexEntity documentationUnitIndexEntity =
-      documentationUnitIndex.documentationUnitEntity.getDocumentationUnitIndex();
-    if (documentationUnitIndexEntity == null) {
-      // New entry for created or imported documents
-      documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
-      documentationUnitIndexEntity.setDocumentationUnit(
-        documentationUnitIndex.documentationUnitEntity
-      );
-    }
-    AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
-    admIndex.setLangueberschrift(documentationUnitIndex.getLangueberschrift());
-    admIndex.setFundstellenCombined(documentationUnitIndex.getFundstellen());
-    admIndex.setZitierdatenCombined(documentationUnitIndex.getZitierdaten());
-
-    LiteratureIndex literatureIndex = documentationUnitIndexEntity.getLiteratureIndex();
-    literatureIndex.setTitel(documentationUnitIndex.getTitel());
-    literatureIndex.setVeroeffentlichungsjahr(documentationUnitIndex.getVeroeffentlichungsjahr());
-    literatureIndex.setDokumenttypen(documentationUnitIndex.getDokumenttypen());
-    literatureIndex.setVerfasser(documentationUnitIndex.getVerfasser());
-    return documentationUnitIndexEntity;
   }
 
   private DocumentationUnitIndex createIndexSafely(
@@ -210,44 +189,45 @@ public class DocumentationUnitIndexService {
     );
     switch (documentationUnitContent) {
       case AdmDocumentationUnitContent admDocumentationUnitContent -> {
-        documentationUnitIndex.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
+        AdmIndexData admIndexData = documentationUnitIndex.getAdmIndexData();
+        admIndexData.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
         if (admDocumentationUnitContent.fundstellen() != null) {
-          documentationUnitIndex.setFundstellen(
+          admIndexData.setFundstellen(
             admDocumentationUnitContent
               .fundstellen()
               .stream()
-              .map(
-                f ->
-                  (f.ambiguousPeriodikum() != null
-                      ? f.ambiguousPeriodikum()
-                      : f.periodikum().abbreviation()) +
-                  " " +
-                  f.zitatstelle()
-              )
-              .collect(Collectors.joining(ENTRY_SEPARATOR))
+              .map(Fundstelle::toFormattedString)
+              .toList()
           );
         }
-        if (admDocumentationUnitContent.zitierdaten() != null) {
-          documentationUnitIndex.setZitierdaten(
-            String.join(ENTRY_SEPARATOR, admDocumentationUnitContent.zitierdaten())
+        admIndexData.setZitierdaten(admDocumentationUnitContent.zitierdaten());
+        if (admDocumentationUnitContent.normgeberList() != null) {
+          admIndexData.setNormgeberList(
+            admDocumentationUnitContent.normgeberList().stream().map(Normgeber::format).toList()
           );
+        }
+        admIndexData.setAktenzeichenList(admDocumentationUnitContent.aktenzeichen());
+        admIndexData.setInkrafttretedatum(admDocumentationUnitContent.inkrafttretedatum());
+        if (admDocumentationUnitContent.dokumenttyp() != null) {
+          admIndexData.setDokumenttyp(admDocumentationUnitContent.dokumenttyp().abbreviation());
         }
       }
       case LiteratureDocumentationUnitContent literatureDocumentationUnitContent -> {
-        documentationUnitIndex.setTitel(literatureDocumentationUnitContent.titel());
-        documentationUnitIndex.setVeroeffentlichungsjahr(
+        LiteratureIndexData literatureIndexData = documentationUnitIndex.getLiteratureIndexData();
+        literatureIndexData.setTitel(literatureDocumentationUnitContent.titel());
+        literatureIndexData.setVeroeffentlichungsjahr(
           literatureDocumentationUnitContent.veroeffentlichungsjahr()
         );
         if (literatureDocumentationUnitContent.dokumenttypen() != null) {
-          documentationUnitIndex.setDokumenttypen(
+          literatureIndexData.setDokumenttypen(
             literatureDocumentationUnitContent
               .dokumenttypen()
               .stream()
               .map(DocumentType::abbreviation)
-              .collect(Collectors.joining(ENTRY_SEPARATOR))
+              .toList()
           );
         }
-        documentationUnitIndex.setVerfasser(null);
+        literatureIndexData.setVerfasserList(null);
       }
       default -> log.debug(
         "Indexing document category {} is not supported.",
@@ -255,6 +235,25 @@ public class DocumentationUnitIndexService {
       );
     }
     return documentationUnitIndex;
+  }
+
+  private DocumentationUnitIndexEntity mapDocumentationUnitIndex(
+    DocumentationUnitIndex documentationUnitIndex
+  ) {
+    DocumentationUnitIndexEntity documentationUnitIndexEntity =
+      documentationUnitIndex.documentationUnitEntity.getDocumentationUnitIndex();
+    if (documentationUnitIndexEntity == null) {
+      // New entry for created or imported documents
+      documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
+      documentationUnitIndexEntity.setDocumentationUnit(
+        documentationUnitIndex.documentationUnitEntity
+      );
+    }
+    documentationUnitIndex.getAdmIndexData().update(documentationUnitIndexEntity.getAdmIndex());
+    documentationUnitIndex
+      .getLiteratureIndexData()
+      .update(documentationUnitIndexEntity.getLiteratureIndex());
+    return documentationUnitIndexEntity;
   }
 
   private <T extends DocumentationUnitContent> T transformJson(
@@ -269,17 +268,55 @@ public class DocumentationUnitIndexService {
   }
 
   @Data
-  @AllArgsConstructor
   @RequiredArgsConstructor
   private static class DocumentationUnitIndex {
 
     private final DocumentationUnitEntity documentationUnitEntity;
+    private final AdmIndexData admIndexData = new AdmIndexData();
+    private final LiteratureIndexData literatureIndexData = new LiteratureIndexData();
+  }
+
+  @Data
+  private static class AdmIndexData {
+
     private String langueberschrift;
-    private String fundstellen;
-    private String zitierdaten;
+    private List<String> fundstellen;
+    private List<String> zitierdaten;
+    private String inkrafttretedatum;
+    private List<String> normgeberList;
+    private List<String> aktenzeichenList;
+    private String dokumenttyp;
+
+    void update(@Nonnull AdmIndex admIndex) {
+      admIndex.setLangueberschrift(langueberschrift);
+      admIndex.setFundstellen(fundstellen);
+      admIndex.setFundstellenCombined(StringUtils.join(fundstellen, SEPARATOR));
+      admIndex.setZitierdaten(zitierdaten);
+      admIndex.setZitierdatenCombined(StringUtils.join(zitierdaten, SEPARATOR));
+      admIndex.setInkrafttretedatum(inkrafttretedatum);
+      admIndex.setNormgeberList(normgeberList);
+      admIndex.setNormgeberListCombined(StringUtils.join(normgeberList, SEPARATOR));
+      admIndex.setAktenzeichenList(aktenzeichenList);
+      admIndex.setAktenzeichenListCombined(StringUtils.join(aktenzeichenList, SEPARATOR));
+      admIndex.setDokumenttyp(dokumenttyp);
+    }
+  }
+
+  @Data
+  private static class LiteratureIndexData {
+
     private String titel;
     private String veroeffentlichungsjahr;
-    private String dokumenttypen;
-    private String verfasser;
+    private List<String> dokumenttypen;
+    private List<String> verfasserList;
+
+    void update(@Nonnull LiteratureIndex literatureIndex) {
+      literatureIndex.setTitel(titel);
+      literatureIndex.setVeroeffentlichungsjahr(veroeffentlichungsjahr);
+      literatureIndex.setDokumenttypen(dokumenttypen);
+      literatureIndex.setDokumenttypenCombined(StringUtils.join(dokumenttypen, SEPARATOR));
+      literatureIndex.setVerfasserList(verfasserList);
+      literatureIndex.setVerfasserListCombined(StringUtils.join(verfasserList, SEPARATOR));
+    }
   }
 }

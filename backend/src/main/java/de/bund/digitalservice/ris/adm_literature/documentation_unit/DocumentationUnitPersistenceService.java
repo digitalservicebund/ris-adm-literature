@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
-
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -14,15 +12,14 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Lit
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
-import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +41,6 @@ public class DocumentationUnitPersistenceService {
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitIndexService documentationUnitIndexService;
   private final DocumentationUnitRepository documentationUnitRepository;
-  private final DocumentTypeService documentTypeService;
 
   /**
    * Finds a document by its number.
@@ -228,8 +224,6 @@ public class DocumentationUnitPersistenceService {
       documentUnitSpecification,
       pageable
     );
-    final Map<String, String> typeLookup = documentTypeService.getDocumentTypeNames();
-
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
@@ -245,24 +239,14 @@ public class DocumentationUnitPersistenceService {
       }
 
       LiteratureIndex literatureIndex = index.getLiteratureIndex();
-      List<String> documentTypeNames = splitBySeparator(literatureIndex.getDokumenttypen())
-        .stream()
-        .map(abbrev -> typeLookup.getOrDefault(abbrev, abbrev))
-        .toList();
-
       return new LiteratureDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
         literatureIndex.getVeroeffentlichungsjahr(),
         literatureIndex.getTitel(),
-        documentTypeNames,
-        splitBySeparator(literatureIndex.getVerfasser())
+        literatureIndex.getDokumenttypen(),
+        literatureIndex.getVerfasserList()
       );
     });
-  }
-
-  private List<String> splitBySeparator(String value) {
-    String[] separatedValues = StringUtils.splitByWholeSeparator(value, ENTRY_SEPARATOR);
-    return separatedValues != null ? List.of(separatedValues) : List.of();
   }
 }

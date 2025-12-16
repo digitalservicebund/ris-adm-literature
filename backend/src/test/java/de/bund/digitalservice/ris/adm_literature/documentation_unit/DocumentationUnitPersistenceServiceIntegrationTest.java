@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
@@ -160,7 +159,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -269,9 +268,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
     admIndex.setLangueberschrift("Sample Document Title 1");
-    admIndex.setFundstellenCombined(
-      "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
-    );
+    admIndex.setFundstellenCombined("p.abbrev.1 zitatstelle 1 p.abbrev.2 zitatstelle 2");
     admIndex.setFundstellen(List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2"));
     admIndex.setZitierdatenCombined("2011-11-11");
     admIndex.setZitierdaten(List.of("2011-11-11"));
@@ -483,8 +480,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     LiteratureIndex literatureIndex = index.getLiteratureIndex();
     literatureIndex.setTitel("Complex Legal Analysis");
     literatureIndex.setVeroeffentlichungsjahr("2025");
-
-    literatureIndex.setDokumenttypen("Dis" + ENTRY_SEPARATOR + "Bib");
+    literatureIndex.setDokumenttypenCombined("Dis Bib");
+    literatureIndex.setDokumenttypen(List.of("Dis", "Bib"));
     unit.setDocumentationUnitIndex(index);
     entityManager.persistAndFlush(index);
 
@@ -506,10 +503,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .singleElement()
       .satisfies(element -> {
         assertThat(element.documentNumber()).isEqualTo("KVLS2025000999");
-        assertThat(element.dokumenttypen()).containsExactlyInAnyOrder(
-          "Dissertation",
-          "Bibliographie"
-        );
+        assertThat(element.dokumenttypen()).containsExactlyInAnyOrder("Dis", "Bib");
       });
   }
 

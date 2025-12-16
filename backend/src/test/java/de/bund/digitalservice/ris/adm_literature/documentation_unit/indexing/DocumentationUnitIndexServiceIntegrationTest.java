@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
@@ -58,7 +57,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -89,7 +88,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -156,7 +155,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -208,13 +207,13 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -241,13 +240,13 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -281,8 +280,8 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -312,10 +311,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+      .containsExactly("", "", "Ebs Kon", null);
   }
 
   @Test
@@ -338,8 +337,8 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -367,13 +366,13 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -400,13 +399,13 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -440,8 +439,8 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -471,10 +470,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+      .containsExactly("", "", "Ebs Kon", null);
   }
 
   @Test
@@ -497,8 +496,8 @@ class DocumentationUnitIndexServiceIntegrationTest {
       .extracting(
         LiteratureIndex::getTitel,
         LiteratureIndex::getVeroeffentlichungsjahr,
-        LiteratureIndex::getDokumenttypen,
-        LiteratureIndex::getVerfasser
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }

@@ -19,4 +19,16 @@ public record Fundstelle(
   String zitatstelle,
   LegalPeriodical periodikum,
   String ambiguousPeriodikum
-) {}
+) {
+  /**
+   * Returns a formatted string of this fundstelle containing the legal periodical abbreviation and citation.
+   * @return Formatted string
+   */
+  public String toFormattedString() {
+    return (
+      (ambiguousPeriodikum != null ? ambiguousPeriodikum : periodikum.abbreviation()) +
+      " " +
+      zitatstelle
+    );
+  }
+}
