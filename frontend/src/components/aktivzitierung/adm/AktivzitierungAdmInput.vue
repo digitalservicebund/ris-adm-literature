@@ -65,8 +65,6 @@ const periodikum = computed({
       <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
         <ZitierArtDropDown :input-id="slotProps.id" v-model="citationType" :invalid="false" />
       </InputField>
-    </div>
-    <div class="flex flex-row gap-24">
       <InputField id="normgeber" label="Normgeber" v-slot="slotProps">
         <InstitutionDropDown :input-id="slotProps.id" v-model="normgeber" :isInvalid="false" />
       </InputField>

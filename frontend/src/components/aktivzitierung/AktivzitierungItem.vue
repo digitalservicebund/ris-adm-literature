@@ -1,6 +1,7 @@
 <script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
+import IconBaselineDescriptionFilled from '~icons/ic/class'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 import { computed, type VNodeChild } from 'vue'
 import IconClose from '~icons/ic/close'
@@ -66,7 +67,8 @@ const isFromSearch = computed(
     </template>
   </AktivzitierungInput>
   <div v-else class="flex w-full items-center gap-10">
-    <IconBaselineDescription class="text-neutral-800" />
+    <IconBaselineDescriptionFilled v-if="isFromSearch" class="text-neutral-800" />
+    <IconBaselineDescription v-else class="text-neutral-800" />
 
     <div class="flex flex-col gap-2">
       <slot name="item" :aktivzitierung="aktivzitierung"></slot>
