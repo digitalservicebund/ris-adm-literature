@@ -81,7 +81,7 @@ defineExpose({
 
 <template>
   <div>
-    <div class="flex flex-col gap-24">
+    <div class="flex flex-col gap-24" :key="aktivzitierungRef.id">
       <slot :modelValue="aktivzitierungRef" :onUpdateModelValue="onUpdate"></slot>
     </div>
     <div class="flex w-full gap-16 mt-16">
