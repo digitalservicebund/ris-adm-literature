@@ -1,9 +1,6 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
-
-import PrimeVue from 'primevue/config'
-import Button from 'primevue/button'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 
 // Dummy type for generic T
@@ -18,10 +15,6 @@ describe('AktivzitierungInput', () => {
       props: {
         aktivzitierung: initial,
         showCancelButton: true,
-      },
-      global: {
-        plugins: [PrimeVue],
-        components: { Button },
       },
       slots: {
         default: `<template #default="{ modelValue, onUpdateModelValue }">
@@ -52,7 +45,6 @@ describe('AktivzitierungInput', () => {
     const user = userEvent.setup()
     const { emitted } = render(AktivzitierungInput, {
       props: { showCancelButton: true },
-      global: { plugins: [PrimeVue], components: { Button } },
     })
 
     const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
@@ -71,7 +63,6 @@ describe('AktivzitierungInput', () => {
         aktivzitierung: existing,
         showCancelButton: true,
       },
-      global: { plugins: [PrimeVue], components: { Button } },
     })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
@@ -91,7 +82,6 @@ describe('AktivzitierungInput', () => {
         aktivzitierung: initialValue,
         showCancelButton: false,
       },
-      global: { plugins: [PrimeVue] },
       slots: {
         default: `<template #default="{ modelValue }">
                     <input data-testid="docnumber" :value="modelValue.documentNumber" readonly />

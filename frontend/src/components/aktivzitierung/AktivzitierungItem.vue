@@ -1,11 +1,13 @@
-<script lang="ts" setup generic="T extends { id: string }">
+<script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
 import AktivzitierungInput from './AktivzitierungInput.vue'
+import { computed } from 'vue'
+import IconClose from '~icons/ic/close'
 
 const props = defineProps<{
   aktivzitierung: T
-  isEditing?: boolean
+  isEditing: boolean
 }>()
 
 const emit = defineEmits<{
@@ -40,6 +42,10 @@ const onDelete = (id: string) => {
   emit('delete', id)
   emit('cancelEdit')
 }
+
+const isFromSearch = computed(
+  () => !!props.aktivzitierung.documentNumber, // search-based if documentNumber set
+)
 </script>
 
 <template>
@@ -65,12 +71,22 @@ const onDelete = (id: string) => {
     </div>
     <div class="ml-auto flex items-center gap-8">
       <button
+        v-if="!isFromSearch"
         v-tooltip.bottom="'Eintrag bearbeiten'"
         aria-label="Eintrag bearbeiten"
         class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer ml-auto"
         @click="onExpandAccordion"
       >
         <IconEdit />
+      </button>
+      <button
+        v-else
+        v-tooltip.bottom="'Eintrag löschen'"
+        aria-label="Eintrag löschen"
+        class="flex h-32 w-32 items-center justify-center text-blue-800 hover:bg-blue-100 focus:shadow-[inset_0_0_0_0.125rem] focus:shadow-blue-800 focus:outline-none cursor-pointer"
+        @click="onDelete(aktivzitierung.id)"
+      >
+        <IconClose />
       </button>
     </div>
   </div>

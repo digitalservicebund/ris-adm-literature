@@ -169,7 +169,7 @@ describe('Aktivzitierung', () => {
     const user = userEvent.setup()
 
     renderComponent({
-      modelValue: [initialItem],
+      modelValue: [{ id: '1' }],
     })
 
     // Click "edit" button of first item
@@ -184,7 +184,7 @@ describe('Aktivzitierung', () => {
     const user = userEvent.setup()
 
     renderComponent({
-      modelValue: [initialItem],
+      modelValue: [{ id: '1' }],
     })
 
     // Start editing first item
@@ -205,7 +205,7 @@ describe('Aktivzitierung', () => {
     const user = userEvent.setup()
 
     renderComponent({
-      modelValue: [initialItem],
+      modelValue: [{ id: '1' }],
     })
 
     const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
@@ -225,7 +225,7 @@ describe('Aktivzitierung', () => {
     const newDocNumber = 'UPDATED_DOC'
 
     renderComponent({
-      modelValue: [initialItem],
+      modelValue: [{ id: '1' }],
     })
 
     // Start editing first item
