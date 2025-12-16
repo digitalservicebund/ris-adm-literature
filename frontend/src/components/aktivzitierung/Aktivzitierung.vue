@@ -7,7 +7,7 @@
     R extends { id: string; documentNumber: string }
   "
 >
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
 import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 import AktivzitierungItem from './AktivzitierungItem.vue'
@@ -30,14 +30,11 @@ const props = defineProps<{
 const aktivzitierungList = defineModel<T[]>({ default: () => [] })
 defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  item(props: { aktivzitierung: T }): any
+  item(props: { aktivzitierung: T }): VNodeChild
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  input(props: { modelValue: any; onUpdateModelValue: (value: T) => void }): any
+  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
   // 3. Slot for rendering the search result list item
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): any
+  searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild
 }>()
 
 const {
@@ -62,6 +59,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
 const editingItemId = ref<string | undefined>(undefined)
 const showSearchResults = ref(false)
 const searchParams = ref()
+const inputRef = ref<{ clearSearchFields: () => void }>()
 
 function handleEditStart(itemId: string) {
   if (isCreationPanelOpened.value) {
@@ -130,11 +128,11 @@ function handleAddSearchResult(result: R) {
     id: crypto.randomUUID(),
   }
 
-  onAddItem(entry)
+  onAddItem(entry as unknown as T)
   isCreationPanelOpened.value = true
   showSearchResults.value = false
   searchParams.value = undefined
-  //inputRef.value?.clearSearchFields()
+  inputRef.value?.clearSearchFields()
 }
 
 watch(error, (err) => {
@@ -192,7 +190,11 @@ watch(error, (err) => {
       :show-cancel-button="false"
     >
       <template #default="{ modelValue, onUpdateModelValue }">
-        <slot name="input" :modelValue="modelValue" :onUpdateModelValue="onUpdateModelValue"></slot>
+        <slot
+          name="input"
+          :modelValue="modelValue as T"
+          :onUpdateModelValue="onUpdateModelValue"
+        ></slot>
       </template>
     </AktivzitierungInput>
     <Button

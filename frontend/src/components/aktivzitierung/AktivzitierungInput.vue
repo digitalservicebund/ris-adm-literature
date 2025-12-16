@@ -1,4 +1,4 @@
-<script lang="ts" setup generic="T extends { id: string }">
+<script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
 
@@ -68,6 +68,14 @@ const isEmpty = computed(() => {
     if (Array.isArray(v)) return v.length === 0
     return false
   })
+})
+
+function clearSearchFields() {
+  aktivzitierungRef.value = createInitialT()
+}
+
+defineExpose({
+  clearSearchFields,
 })
 </script>
 

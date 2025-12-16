@@ -2,7 +2,7 @@
 import IconEdit from '~icons/ic/outline-edit'
 import IconBaselineDescription from '~icons/ic/outline-class'
 import AktivzitierungInput from './AktivzitierungInput.vue'
-import { computed } from 'vue'
+import { computed, type VNodeChild } from 'vue'
 import IconClose from '~icons/ic/close'
 
 const props = defineProps<{
@@ -19,11 +19,9 @@ const emit = defineEmits<{
 
 defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  item(props: { aktivzitierung: T }): any
+  item(props: { aktivzitierung: T }): VNodeChild
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  input(props: { modelValue: any; onUpdateModelValue: (value: T) => void }): any
+  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
 }>()
 
 const onExpandAccordion = () => {
@@ -60,7 +58,11 @@ const isFromSearch = computed(
     :show-cancel-button="true"
   >
     <template #default="{ modelValue, onUpdateModelValue }">
-      <slot name="input" :modelValue="modelValue" :onUpdateModelValue="onUpdateModelValue"></slot>
+      <slot
+        name="input"
+        :modelValue="modelValue as T"
+        :onUpdateModelValue="onUpdateModelValue"
+      ></slot>
     </template>
   </AktivzitierungInput>
   <div v-else class="flex w-full items-center gap-10">
