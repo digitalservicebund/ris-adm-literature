@@ -86,7 +86,7 @@ defineExpose({
     </div>
     <div class="flex w-full gap-16 mt-16">
       <Button
-        aria-label="Selbständige Literatur suchen"
+        aria-label="Dokumente Suchen"
         label="Suchen"
         size="small"
         @click.stop="emit('search', aktivzitierungRef.value)"
