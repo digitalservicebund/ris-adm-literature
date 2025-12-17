@@ -65,8 +65,13 @@ dependencies {
   implementation("io.sentry:sentry-logback:$sentryVersion")
   implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
 
-  implementation("software.amazon.awssdk:s3")
+  implementation("software.amazon.awssdk:s3") {
+    exclude("io.netty", "netty-codec-http")
+  }
   implementation("org.jsoup:jsoup:$jsoupVersion")
+
+  implementation("io.netty:netty-codec-http:4.2.8.Final")
+
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
