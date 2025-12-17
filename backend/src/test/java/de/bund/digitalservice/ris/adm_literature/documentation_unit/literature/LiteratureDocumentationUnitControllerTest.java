@@ -127,6 +127,57 @@ class LiteratureDocumentationUnitControllerTest {
   }
 
   @Nested
+  @DisplayName("GET multiple adm documents")
+  class GetMultipleAdmDocuments {
+
+    @Test
+    @DisplayName("GET returns HTTP 200 and admReferenceSearchOverview in JSON")
+    void getDocsFormatted() throws Exception {
+      // when & then
+      mockMvc
+        .perform(get("/api/literature/adm/documentation-units"))
+        .andExpect(status().isOk())
+        .andExpect(
+          content()
+            .json(
+              """
+
+                {
+                "documentationUnitsOverview": [
+                  {
+                    "id": "7d4f92b1-3e0a-4c2d-9b5a-8f1e6c3d4a2b",
+                    "documentNumber": "VALID123456789",
+                    "inkrafttretedatum": "2023-01-01",
+                    "langueberschrift": "The long title",
+                    "dokumenttyp": "VV",
+                    "normgeber": "AA"
+                  },
+                  {
+                    "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+                    "documentNumber": "VALID987654321",
+                    "inkrafttretedatum": "2025-01-01",
+                    "langueberschrift": "The long title 2",
+                    "dokumenttyp": "VE",
+                    "normgeber": "ABI"
+                  }
+                ],
+                "page": {
+                  "size": 2,
+                  "number": 0,
+                  "numberOfElements": 2,
+                  "totalElements": 2,
+                  "first": true,
+                  "last": true,
+                  "empty": false
+                }
+              }
+              """
+            )
+        );
+    }
+  }
+
+  @Nested
   @DisplayName("GET single document")
   class GetSingleDocument {
 
