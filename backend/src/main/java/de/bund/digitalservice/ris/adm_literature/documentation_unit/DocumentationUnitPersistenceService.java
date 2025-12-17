@@ -13,7 +13,6 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.L
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
-import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -22,6 +21,7 @@ import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +46,6 @@ public class DocumentationUnitPersistenceService {
   private final DocumentationUnitCreationService documentationUnitCreationService;
   private final DocumentationUnitIndexService documentationUnitIndexService;
   private final DocumentationUnitRepository documentationUnitRepository;
-  private final DocumentTypeService documentTypeService;
   private final NoteService noteService;
   private final ObjectMapper objectMapper;
 
