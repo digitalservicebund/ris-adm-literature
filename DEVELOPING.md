@@ -54,6 +54,7 @@ When visiting the app with your browser, you'll be asked to log in. Depending on
 
 For the required emails/passwords, please refer to the local keycloak configuation file at [./backend/keycloak-config/realm.json](./backend/keycloak-config/realm.json).
 
+
 ## Database Schemas
 The backend uses a PostgreSQL database containing multiple schemas:
 * adm: Stores data related to administrative directives.
