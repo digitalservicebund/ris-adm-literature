@@ -1,12 +1,13 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -55,9 +56,12 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     var index = new DocumentationUnitIndexEntity();
     index.setDocumentationUnit(unit);
     unit.setDocumentationUnitIndex(index);
-    index.setLangueberschrift(langueberschrift);
-    index.setFundstellen(fundstellen);
-    index.setZitierdaten(zitierdaten);
+    AdmIndex admIndex = index.getAdmIndex();
+    admIndex.setLangueberschrift(langueberschrift);
+    admIndex.setFundstellenCombined(fundstellen);
+    admIndex.setFundstellen(List.of(fundstellen));
+    admIndex.setZitierdatenCombined(zitierdaten);
+    admIndex.setZitierdaten(List.of(zitierdaten));
     entityManager.persistAndFlush(index);
   }
 
@@ -131,9 +135,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
     DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
-    documentationUnitIndexEntity.setLangueberschrift("Lang");
-    documentationUnitIndexEntity.setFundstellen("Fund");
-    documentationUnitIndexEntity.setZitierdaten("2012-12-12");
+    AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
+    admIndex.setLangueberschrift("Lang");
+    admIndex.setFundstellenCombined("Fund");
+    admIndex.setZitierdatenCombined("2012-12-12");
     documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     documentationUnitEntity = entityManager.merge(documentationUnitEntity);
@@ -147,14 +152,14 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     assertThat(query.getResultList())
       .singleElement()
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        duie -> duie.getAdmIndex().getLangueberschrift(),
+        duie -> duie.getAdmIndex().getFundstellenCombined(),
+        duie -> duie.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -261,12 +266,12 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
-
-    documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
-    documentationUnitIndexEntity.setFundstellen(
-      "p.abbrev.1 zitatstelle 1%sp.abbrev.2 zitatstelle 2".formatted(ENTRY_SEPARATOR)
-    );
-    documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
+    admIndex.setLangueberschrift("Sample Document Title 1");
+    admIndex.setFundstellenCombined("p.abbrev.1 zitatstelle 1 p.abbrev.2 zitatstelle 2");
+    admIndex.setFundstellen(List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2"));
+    admIndex.setZitierdatenCombined("2011-11-11");
+    admIndex.setZitierdaten(List.of("2011-11-11"));
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
     // when
@@ -321,8 +326,10 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
     DocumentationUnitIndexEntity documentationUnitIndexEntity = new DocumentationUnitIndexEntity();
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
-    documentationUnitIndexEntity.setLangueberschrift("Sample Document Title 1");
-    documentationUnitIndexEntity.setZitierdaten("2011-11-11");
+    AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
+    admIndex.setLangueberschrift("Sample Document Title 1");
+    admIndex.setZitierdatenCombined("2011-11-11");
+    admIndex.setZitierdaten(List.of("2011-11-11"));
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     entityManager.persistAndFlush(documentationUnitIndexEntity);
 
@@ -351,7 +358,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
         AdmDocumentationUnitOverviewElement::langueberschrift,
         AdmDocumentationUnitOverviewElement::fundstellen
       )
-      .containsExactly(List.of("2011-11-11"), "Sample Document Title 1", List.of());
+      .containsExactly(List.of("2011-11-11"), "Sample Document Title 1", null);
   }
 
   @Test
@@ -470,10 +477,11 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
 
     var index = new DocumentationUnitIndexEntity();
     index.setDocumentationUnit(unit);
-    index.setTitel("Complex Legal Analysis");
-    index.setVeroeffentlichungsjahr("2025");
-
-    index.setDokumenttypen("Dis" + ENTRY_SEPARATOR + "Bib");
+    LiteratureIndex literatureIndex = index.getLiteratureIndex();
+    literatureIndex.setTitel("Complex Legal Analysis");
+    literatureIndex.setVeroeffentlichungsjahr("2025");
+    literatureIndex.setDokumenttypenCombined("Dis Bib");
+    literatureIndex.setDokumenttypen(List.of("Dis", "Bib"));
     unit.setDocumentationUnitIndex(index);
     entityManager.persistAndFlush(index);
 
@@ -495,10 +503,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .singleElement()
       .satisfies(element -> {
         assertThat(element.documentNumber()).isEqualTo("KVLS2025000999");
-        assertThat(element.dokumenttypen()).containsExactlyInAnyOrder(
-          "Dissertation",
-          "Bibliographie"
-        );
+        assertThat(element.dokumenttypen()).containsExactlyInAnyOrder("Dis", "Bib");
       });
   }
 

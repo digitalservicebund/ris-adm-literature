@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
@@ -24,24 +25,35 @@ public class DocumentationUnitIndexEntity {
   @OneToOne(optional = false)
   private DocumentationUnitEntity documentationUnit;
 
-  @Basic
-  private String langueberschrift;
+  @Embedded
+  private AdmIndex admIndex;
 
-  @Basic
-  private String fundstellen;
+  @Embedded
+  private LiteratureIndex literatureIndex;
 
-  @Basic
-  private String zitierdaten;
+  /**
+   * Returns an instance of {@link AdmIndex}. If the current instance is {@code null} then
+   * a new instance is created, assigned and returned.
+   * @return Instance of {@code AdmIndex}
+   */
+  @Nonnull
+  public AdmIndex getAdmIndex() {
+    if (admIndex == null) {
+      admIndex = new AdmIndex();
+    }
+    return admIndex;
+  }
 
-  @Basic
-  private String titel;
-
-  @Basic
-  private String veroeffentlichungsjahr;
-
-  @Basic
-  private String dokumenttypen;
-
-  @Basic
-  private String verfasser;
+  /**
+   * Returns an instance of {@link LiteratureIndex}. If the current instance is {@code null} then
+   * a new instance is created, assigned and returned.
+   * @return Instance of {@code LiteratureIndex}
+   */
+  @Nonnull
+  public LiteratureIndex getLiteratureIndex() {
+    if (literatureIndex == null) {
+      literatureIndex = new LiteratureIndex();
+    }
+    return literatureIndex;
+  }
 }
