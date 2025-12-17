@@ -84,17 +84,6 @@ function handleSearch(params: SliDocUnitSearchParams) {
   showSearchResults.value = true
 }
 
-// function handleAddItem(item: AktivzitierungSli) {
-//   // Ensure ID exists
-//   if (!item.id || item.id === '') {
-//     item.id = crypto.randomUUID()
-//   }
-//   aktivzitierungSli.value = [...aktivzitierungSli.value, item]
-//   // Close search results when manually adding an entry
-//   showSearchResults.value = false
-//   searchParams.value = undefined
-// }
-
 function handleAddSearchResult(result: SliDocUnitListItem) {
   if (aktivzitierungSli.value.some((entry) => entry.documentNumber === result.documentNumber)) {
     return

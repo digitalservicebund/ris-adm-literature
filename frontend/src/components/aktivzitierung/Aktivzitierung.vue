@@ -30,6 +30,7 @@ const props = defineProps<{
     itemsPerPage: number,
     searchParams: Ref<unknown>,
   ) => UseFetchReturn<R>
+  transformResultFn?: (result: R) => T
 }>()
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] })
@@ -124,8 +125,12 @@ function onSearch(params: unknown) {
 function addSearchResult(result: R) {
   if (addedDocumentNumbers.value.has(result.documentNumber)) return
 
+  const baseEntry: T = props.transformResultFn
+    ? props.transformResultFn(result)
+    : (result as unknown as T)
+
   const entry: T = {
-    ...(result as unknown as T),
+    ...baseEntry,
     id: crypto.randomUUID(),
   }
 

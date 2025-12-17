@@ -23,6 +23,7 @@ import {
 } from '@/services/literature/literatureDocumentUnitService'
 import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
 import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitieurungAdmSearchResult.vue'
+import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -46,6 +47,23 @@ const aktivzitierungSli = computed({
     store.documentUnit!.aktivzitierungenSli = newValue
   },
 })
+
+function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
+  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
+    abbreviation: abbr,
+    name: abbr,
+  }))
+
+  return {
+    id: crypto.randomUUID(),
+    uuid: result.id,
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    veroeffentlichungsJahr: result.veroeffentlichungsjahr,
+    verfasser: result.verfasser || [],
+    dokumenttypen: dokumenttypen || [],
+  }
+}
 
 useScrollToHash()
 </script>
@@ -114,6 +132,7 @@ useScrollToHash()
             <Aktivzitierung
               v-model="aktivzitierungSli"
               :fetch-results-fn="useGetSliPaginatedDocUnits"
+              :transform-result-fn="mapSliSearchResult"
             >
               <template #item="{ aktivzitierung }">
                 <AktivzitierungSliItem :aktivzitierung="aktivzitierung" />
