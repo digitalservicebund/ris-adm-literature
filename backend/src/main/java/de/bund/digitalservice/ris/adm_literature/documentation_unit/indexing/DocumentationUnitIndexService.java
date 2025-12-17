@@ -47,6 +47,7 @@ public class DocumentationUnitIndexService {
 
   /**
    * Updates the index for the given documentation unit entity.
+   *
    * @param documentationUnitEntity The documentation unit entity for which the index is to be updated
    */
   @Transactional(propagation = Propagation.MANDATORY)
@@ -147,7 +148,8 @@ public class DocumentationUnitIndexService {
           documentationUnitEntity.getDocumentNumber(),
           documentationUnitEntity.getId(),
           null,
-          documentationUnitEntity.getXml()
+          documentationUnitEntity.getXml(),
+          null
         ),
         AdmDocumentationUnitContent.class
       );

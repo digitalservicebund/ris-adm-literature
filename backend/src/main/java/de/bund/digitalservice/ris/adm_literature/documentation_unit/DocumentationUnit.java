@@ -6,24 +6,40 @@ import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 /**
- * DocumentationUnit business object
+ * Documentation unit business object.
  *
  * @param documentNumber The publicly known number of the document
  * @param id The internal (database) id of the document
  * @param json The JSON containing the documentation unit (persisting the frontend's pinia store state),
  *             can be {@code null} for migrated documentation units
  * @param xml The xml, can be {@code null} for new documentation units
+ * @param note The note
  */
 public record DocumentationUnit(
   @Nonnull String documentNumber,
   @Nonnull UUID id,
   @JsonRawValue String json,
-  @JsonIgnore String xml
+  @JsonIgnore String xml,
+  String note
 ) {
   public DocumentationUnit(@Nonnull String documentNumber, @Nonnull UUID id, String json) {
-    this(documentNumber, id, json, null);
+    this(documentNumber, id, json, null, null);
+  }
+  public DocumentationUnit(
+    @Nonnull String documentNumber,
+    @Nonnull UUID id,
+    String json,
+    String xml
+  ) {
+    this(documentNumber, id, json, xml, null);
   }
   public DocumentationUnit(@Nonnull DocumentationUnit documentationUnit, @Nonnull String json) {
-    this(documentationUnit.documentNumber, documentationUnit.id, json, null);
+    this(
+      documentationUnit.documentNumber,
+      documentationUnit.id,
+      json,
+      null,
+      documentationUnit.note
+    );
   }
 }
