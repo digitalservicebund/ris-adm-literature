@@ -3,8 +3,6 @@ import { computed } from 'vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
 import type { AdmDocUnitListItem } from '@/domain/adm/admDocumentUnit'
-import { useStatusBadge } from '@/composables/useStatusBadge'
-import type { PublicationStatus } from '@/domain/publicationStatus'
 import { parseIsoDateToLocal } from '@/utils/dateHelpers'
 
 type AdmSearchResult = AdmDocUnitListItem &
@@ -12,7 +10,9 @@ type AdmSearchResult = AdmDocUnitListItem &
     inkrafttretedatum: string
     normgeber: string
     dokumenttyp: string
-    status: PublicationStatus
+    aktenzeichen: string
+    periodikum: string
+    zitatstelle: string
   }>
 
 const props = defineProps<{
@@ -28,26 +28,44 @@ function handleAdd() {
   if (!props.isAdded) emit('add', props.searchResult)
 }
 
-const statusBadge = computed(() => {
-  return props.searchResult.status ? useStatusBadge(props.searchResult.status).value : undefined
-})
-
-const heading = computed(() => {
+const line1 = computed(() => {
   const parts: string[] = []
 
-  const formatted = props.searchResult.inkrafttretedatum
+  // Normgeber
+  const normgeber = props.searchResult.normgeber
+  if (normgeber) parts.push(normgeber)
+
+  // Datum des Inkrafttretens
+  const formattedDate = props.searchResult.inkrafttretedatum
     ? parseIsoDateToLocal(props.searchResult.inkrafttretedatum)
     : null
-  if (formatted) parts.push(formatted)
+  if (formattedDate) parts.push(formattedDate)
 
-  const normgeber = props.searchResult.normgeber
-  const dokTyp = props.searchResult.dokumenttyp
-  if (normgeber && dokTyp) parts.push(`${normgeber} (${dokTyp})`)
-  else if (normgeber) parts.push(normgeber)
-  else if (dokTyp) parts.push(`(${dokTyp})`)
+  // Aktenzeichen
+  const aktenzeichen = props.searchResult.aktenzeichen
+  if (aktenzeichen) parts.push(aktenzeichen)
+
+  // Fundstelle = Periodikum + Zitatstelle
+  const periodikum = props.searchResult.periodikum
+  const zitatstelle = props.searchResult.zitatstelle
+  const fundstelle =
+    periodikum && zitatstelle ? `${periodikum} ${zitatstelle}` : periodikum || zitatstelle || null
+
+  // Dokumenttyp
+  const dokumenttyp = props.searchResult.dokumenttyp
+
+  if (fundstelle && dokumenttyp) {
+    parts.push(`${fundstelle} (${dokumenttyp})`)
+  } else if (fundstelle) {
+    parts.push(fundstelle)
+  } else if (dokumenttyp) {
+    parts.push(`(${dokumenttyp})`)
+  }
 
   return parts.join(', ')
 })
+
+const line2 = computed(() => props.searchResult.langueberschrift || 'unbekannt')
 </script>
 
 <template>
@@ -64,16 +82,7 @@ const heading = computed(() => {
 
     <div class="flex flex-col w-full">
       <div class="flex flex-row items-center gap-12 flex-wrap">
-        <p class="ris-body1-regular">{{ heading || '—' }} | {{ searchResult.documentNumber }}</p>
-
-        <span
-          v-if="statusBadge?.label"
-          class="rounded-full px-10 py-4"
-          :class="statusBadge.backgroundColor"
-        >
-          {{ statusBadge.label }}
-        </span>
-
+        <p class="ris-body1-regular">{{ line1 || '—' }} | {{ searchResult.documentNumber }}</p>
         <div
           v-if="isAdded"
           class="ris-label2-regular flex w-[fit-content] items-center rounded-full px-4 py-2 bg-yellow-300 ml-1 shrink-0"
@@ -83,7 +92,7 @@ const heading = computed(() => {
       </div>
 
       <p class="ris-body2-regular text-gray-900">
-        {{ searchResult.langueberschrift || 'unbekannt' }}
+        {{ line2 }}
       </p>
     </div>
   </div>
