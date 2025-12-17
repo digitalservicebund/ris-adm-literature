@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
@@ -49,15 +48,16 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        AdmIndex::getLangueberschrift,
+        AdmIndex::getFundstellenCombined,
+        AdmIndex::getZitierdatenCombined
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -79,15 +79,16 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        AdmIndex::getLangueberschrift,
+        AdmIndex::getFundstellenCombined,
+        AdmIndex::getZitierdatenCombined
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -116,10 +117,11 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        AdmIndex::getLangueberschrift,
+        AdmIndex::getFundstellenCombined,
+        AdmIndex::getZitierdatenCombined
       )
       .containsExactly(null, null, null);
   }
@@ -144,15 +146,16 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        AdmIndex::getLangueberschrift,
+        AdmIndex::getFundstellenCombined,
+        AdmIndex::getZitierdatenCombined
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
         "Das Periodikum 2021, Seite 15",
-        "2025-05-05%s2025-06-01".formatted(ENTRY_SEPARATOR)
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -172,10 +175,11 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getLangueberschrift,
-        DocumentationUnitIndexEntity::getFundstellen,
-        DocumentationUnitIndexEntity::getZitierdaten
+        AdmIndex::getLangueberschrift,
+        AdmIndex::getFundstellenCombined,
+        AdmIndex::getZitierdatenCombined
       )
       .containsExactly(null, null, null);
   }
@@ -199,16 +203,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -231,16 +236,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -270,11 +276,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -300,13 +307,14 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+      .containsExactly("", "", "Ebs Kon", null);
   }
 
   @Test
@@ -325,11 +333,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -353,16 +362,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -385,16 +395,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(
         "Hauptsache Titel - eine Gesetzgebungsgutschrift",
         "2022ff",
-        "Ebs%sGut".formatted(ENTRY_SEPARATOR),
+        "Ebs Gut",
         null
       );
   }
@@ -424,11 +435,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }
@@ -454,13 +466,14 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs%sKon".formatted(ENTRY_SEPARATOR), null);
+      .containsExactly("", "", "Ebs Kon", null);
   }
 
   @Test
@@ -479,11 +492,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
+      .extracting(DocumentationUnitIndexEntity::getLiteratureIndex)
       .extracting(
-        DocumentationUnitIndexEntity::getTitel,
-        DocumentationUnitIndexEntity::getVeroeffentlichungsjahr,
-        DocumentationUnitIndexEntity::getDokumenttypen,
-        DocumentationUnitIndexEntity::getVerfasser
+        LiteratureIndex::getTitel,
+        LiteratureIndex::getVeroeffentlichungsjahr,
+        LiteratureIndex::getDokumenttypenCombined,
+        LiteratureIndex::getVerfasserListCombined
       )
       .containsExactly(null, null, null, null);
   }

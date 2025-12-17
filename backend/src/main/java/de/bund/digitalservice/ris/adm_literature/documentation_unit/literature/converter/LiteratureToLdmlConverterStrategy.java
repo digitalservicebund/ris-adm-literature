@@ -1,6 +1,8 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.converter;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlWriter;
@@ -102,6 +104,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
     // Should be checked when implementing ULI Aktivzitierung
     if (data instanceof SliDocumentationUnitContent sliData) {
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
+      mapAktivzitierungVerwaltungsvorschrift(ldmlDocument, sliData.aktivzitierungenAdm());
     }
   }
 
@@ -227,7 +230,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
 
   private void mapAktivzitierungSelbstaendigeLiteratur(
     LdmlDocument ldmlDocument,
-    List<SliDocumentationUnitContent.AktivzitierungSli> activeSliReferences
+    List<AktivzitierungSli> activeSliReferences
   ) {
     if (activeSliReferences != null && !activeSliReferences.isEmpty()) {
       LdmlElement otherReferencesElement = ldmlDocument
@@ -236,7 +239,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
         .addAttribute(SOURCE, ACTIVE)
         .appendOnce();
 
-      for (SliDocumentationUnitContent.AktivzitierungSli reference : activeSliReferences) {
+      for (AktivzitierungSli reference : activeSliReferences) {
         String documentNumber = reference.documentNumber();
         String veroeffentlichungsJahr = reference.veroeffentlichungsJahr();
         String titel = reference.titel();
@@ -270,6 +273,50 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("isbn", isbn)
           .addAttribute("autor", verfasser)
           .addAttribute("dokumentTyp", dokumentTypen);
+      }
+    }
+  }
+
+  private void mapAktivzitierungVerwaltungsvorschrift(
+    LdmlDocument ldmlDocument,
+    List<AktivzitierungAdm> activeVvReferences
+  ) {
+    if (activeVvReferences != null && !activeVvReferences.isEmpty()) {
+      LdmlElement otherReferences = ldmlDocument
+        .addAnalysis()
+        .prepareElement(OTHER_REFERENCES)
+        .addAttribute(SOURCE, ACTIVE)
+        .appendOnce();
+
+      for (AktivzitierungAdm vvNode : activeVvReferences) {
+        String abbreviation = vvNode.citationType();
+        String reference = vvNode.aktenzeichen();
+        String documentNumber = vvNode.documentNumber();
+        String periodikum = vvNode.periodikum();
+        String zitatstelle = vvNode.zitatstelle();
+        String dokumenttyp = vvNode.dokumenttyp();
+        String normgeber = vvNode.normgeber();
+        String inkrafttretedatum = vvNode.inkrafttretedatum();
+
+        String showAs = abbreviation + ", " + reference;
+
+        LdmlElement risVvReference = otherReferences
+          .appendElementAndGet(IMPLICIT_REFERENCE)
+          .addAttribute(SHOW_AS, showAs)
+          .appendElementAndGet("ris:verwaltungsvorschriftReference")
+          .addAttribute("abbreviation", abbreviation) // citationType
+          .addAttribute("reference", reference) // aktenzeichen
+          .addAttribute("documentNumber", documentNumber)
+          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute("normgeber", normgeber)
+          .addAttribute("inkrafttretedatum", inkrafttretedatum);
+
+        if (StringUtils.isNoneBlank(periodikum, zitatstelle)) {
+          risVvReference
+            .appendElementAndGet("ris:fundstelle")
+            .addAttribute("periodikum", periodikum)
+            .addAttribute("zitatstelle", zitatstelle);
+        }
       }
     }
   }

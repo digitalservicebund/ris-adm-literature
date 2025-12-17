@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
 
@@ -39,13 +41,25 @@ public class TestLiteratureUnitContent {
       null,
       null,
       List.of(
-        new SliDocumentationUnitContent.AktivzitierungSli(
+        new AktivzitierungSli(
           "docnum",
           "11",
           "titel",
           "isbn",
           List.of("autor"),
           List.of(new DocumentType("VR", "Verwaltungsregelung"))
+        )
+      ),
+      List.of(
+        new AktivzitierungAdm(
+          "docnum",
+          "11",
+          "periodikum",
+          "zitstelle",
+          "11.11.111",
+          "akt",
+          "doktyp",
+          "normgeber"
         )
       )
     );

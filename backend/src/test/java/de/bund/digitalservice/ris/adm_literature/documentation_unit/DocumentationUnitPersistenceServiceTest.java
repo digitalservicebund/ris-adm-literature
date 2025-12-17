@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import static de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService.ENTRY_SEPARATOR;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,7 +8,9 @@ import static org.mockito.BDDMockito.given;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentionUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
@@ -92,9 +93,12 @@ class DocumentationUnitPersistenceServiceTest {
     entityWithIndex.setId(UUID.randomUUID());
     entityWithIndex.setDocumentNumber("DOC-001");
     DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
-    index.setLangueberschrift("Title 1");
-    index.setZitierdaten("2023-01-01");
-    index.setFundstellen("Citation 1");
+    AdmIndex admIndex = index.getAdmIndex();
+    admIndex.setLangueberschrift("Title 1");
+    admIndex.setZitierdatenCombined("2023-01-01");
+    admIndex.setZitierdaten(List.of("2023-01-01"));
+    admIndex.setFundstellenCombined("Citation 1");
+    admIndex.setFundstellen(List.of("Citation 1"));
     entityWithIndex.setDocumentationUnitIndex(index);
 
     DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
@@ -160,17 +164,18 @@ class DocumentationUnitPersistenceServiceTest {
   @Test
   void findLiteratureDocumentationUnitOverviewElements() {
     // given
-    String separator = ENTRY_SEPARATOR;
-
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(UUID.randomUUID());
     entityWithIndex.setDocumentNumber("LIT-001");
 
     DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
-    index.setVeroeffentlichungsjahr("2024");
-    index.setTitel("Literature Title");
-    index.setDokumenttypen("Entscheidungsbesprechung" + separator + "Dissertation");
-    index.setVerfasser("Doe, John" + separator + "Smith, Jane");
+    LiteratureIndex literatureIndex = index.getLiteratureIndex();
+    literatureIndex.setVeroeffentlichungsjahr("2024");
+    literatureIndex.setTitel("Literature Title");
+    literatureIndex.setDokumenttypen(List.of("Ebs", "Dis"));
+    literatureIndex.setDokumenttypenCombined("Ebs Dis");
+    literatureIndex.setVerfasserList(List.of("Doe, John", "Smith, Jane"));
+    literatureIndex.setVerfasserListCombined("Doe, John Smith, Jane");
     entityWithIndex.setDocumentationUnitIndex(index);
 
     DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
@@ -216,10 +221,7 @@ class DocumentationUnitPersistenceServiceTest {
       );
 
     LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
-    assertThat(elementWithIndex.dokumenttypen()).containsExactly(
-      "Entscheidungsbesprechung",
-      "Dissertation"
-    );
+    assertThat(elementWithIndex.dokumenttypen()).containsExactly("Ebs", "Dis");
     assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
 
     LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);

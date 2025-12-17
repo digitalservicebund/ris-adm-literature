@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
@@ -40,15 +39,12 @@ public class AdmDocumentionUnitSpecification implements Specification<Documentat
       StringUtils.hasText(langueberschrift) ||
       StringUtils.hasText(zitierdaten)
     ) {
-      Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
-        "documentationUnitIndex",
-        JoinType.LEFT
-      );
+      var admIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("admIndex");
 
       if (StringUtils.hasText(fundstellen)) {
         predicates.add(
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("fundstellen")),
+            criteriaBuilder.lower(admIndex.get("fundstellenCombined")),
             sqlContains(fundstellen)
           )
         );
@@ -56,7 +52,7 @@ public class AdmDocumentionUnitSpecification implements Specification<Documentat
       if (StringUtils.hasText(langueberschrift)) {
         predicates.add(
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("langueberschrift")),
+            criteriaBuilder.lower(admIndex.get("langueberschrift")),
             sqlContains(langueberschrift)
           )
         );
@@ -64,7 +60,7 @@ public class AdmDocumentionUnitSpecification implements Specification<Documentat
       if (StringUtils.hasText(zitierdaten)) {
         predicates.add(
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("zitierdaten")),
+            criteriaBuilder.lower(admIndex.get("zitierdatenCombined")),
             sqlContains(zitierdaten)
           )
         );

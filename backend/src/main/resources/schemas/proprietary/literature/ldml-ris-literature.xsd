@@ -16,9 +16,12 @@
     <xs:attribute name="documentNumber" type="xs:string"/>
   </xs:complexType>
   <xs:complexType name="vvReferenceAttributeType" abstract="true">
-    <xs:attribute name="abbreviation" type="xs:string" use="required"/>
-    <xs:attribute name="reference" type="xs:string" use="required"/>
+    <xs:attribute name="abbreviation" type="xs:string"/>
+    <xs:attribute name="reference" type="xs:string"/>
     <xs:attribute name="documentNumber" type="xs:string"/>
+    <xs:attribute name="dokumenttyp" type="xs:string"/>
+    <xs:attribute name="inkrafttretedatum" type="xs:string"/>
+    <xs:attribute name="normgeber" type="xs:string"/>
   </xs:complexType>
   <!-- Used by caselawReference and vvReference -->
   <xs:complexType name="fundstelleAttributeType" abstract="true">

@@ -177,7 +177,7 @@ class SliDocumentationUnitSpecificationTest {
     assertThat(sql)
       .contains("left join documentation_unit_index")
       .contains(
-        "lower(dui1_0.dokumenttypen) like ? escape '' and lower(dui1_0.dokumenttypen) like ? escape ''"
+        "lower(dui1_0.dokumenttypen_combined) like ? escape '' and lower(dui1_0.dokumenttypen_combined) like ? escape ''"
       );
   }
 
@@ -207,7 +207,7 @@ class SliDocumentationUnitSpecificationTest {
     assertThat(sql)
       .contains("left join documentation_unit_index")
       .contains(
-        "lower(dui1_0.verfasser) like ? escape '' and lower(dui1_0.verfasser) like ? escape ''"
+        "lower(dui1_0.verfasser_list_combined) like ? escape '' and lower(dui1_0.verfasser_list_combined) like ? escape ''"
       );
   }
 
@@ -238,7 +238,7 @@ class SliDocumentationUnitSpecificationTest {
       .contains("lower(due1_0.document_number) like ?")
       .contains("and lower(dui1_0.veroeffentlichungsjahr) like ?")
       .contains("and lower(dui1_0.titel) like ?")
-      .contains("and lower(dui1_0.dokumenttypen) like ?")
-      .contains("and lower(dui1_0.verfasser) like ?");
+      .contains("and lower(dui1_0.dokumenttypen_combined) like ?")
+      .contains("and lower(dui1_0.verfasser_list_combined) like ?");
   }
 }

@@ -6,7 +6,7 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useValidationStore } from '@/composables/useValidationStore'
 import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import InstitutionDropDown from './InstitutionDropDown.vue'
+import InstitutionDropDown from '@/components/dropdown/InstitutionDropDown.vue'
 import RegionDropDown from './RegionDropDown.vue'
 
 const props = defineProps<{
@@ -80,7 +80,11 @@ const onClickDelete = () => {
 
 const validateInstitution = () => {
   const institutionId = institution.value?.id
-  if (institutionId && existingInstitutionIds.value.includes(institutionId)) {
+  if (
+    institutionId &&
+    existingInstitutionIds.value.includes(institutionId) &&
+    props.normgeber?.institution.id !== institutionId
+  ) {
     validationStore.add('Normgeber bereits eingegeben', 'institution')
   } else {
     validationStore.remove('institution')

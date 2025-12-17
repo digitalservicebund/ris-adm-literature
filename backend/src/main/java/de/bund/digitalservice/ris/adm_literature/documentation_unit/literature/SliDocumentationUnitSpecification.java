@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
@@ -59,15 +58,12 @@ public record SliDocumentationUnitSpecification(
       );
     }
 
-    Join<DocumentationUnitEntity, DocumentationUnitIndexEntity> indexJoin = root.join(
-      "documentationUnitIndex",
-      JoinType.LEFT
-    );
+    var literatureIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("literatureIndex");
 
     if (StringUtils.hasText(veroeffentlichungsjahr)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(indexJoin.get("veroeffentlichungsjahr")),
+          criteriaBuilder.lower(literatureIndex.get("veroeffentlichungsjahr")),
           sqlContains(veroeffentlichungsjahr)
         )
       );
@@ -75,7 +71,10 @@ public record SliDocumentationUnitSpecification(
 
     if (StringUtils.hasText(titel)) {
       predicates.add(
-        criteriaBuilder.like(criteriaBuilder.lower(indexJoin.get("titel")), sqlContains(titel))
+        criteriaBuilder.like(
+          criteriaBuilder.lower(literatureIndex.get("titel")),
+          sqlContains(titel)
+        )
       );
     }
 
@@ -84,7 +83,7 @@ public record SliDocumentationUnitSpecification(
         .stream()
         .map(type ->
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("dokumenttypen")),
+            criteriaBuilder.lower(literatureIndex.get("dokumenttypenCombined")),
             sqlContains(type)
           )
         )
@@ -98,7 +97,7 @@ public record SliDocumentationUnitSpecification(
         .stream()
         .map(author ->
           criteriaBuilder.like(
-            criteriaBuilder.lower(indexJoin.get("verfasser")),
+            criteriaBuilder.lower(literatureIndex.get("verfasserListCombined")),
             sqlContains(author)
           )
         )
