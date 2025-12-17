@@ -129,7 +129,7 @@ jobs:
 
       - name: Upload e2e ${{ matrix.playwright-project.name }} test report blob
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-e2e-test-report.blob.${{ matrix.playwright-project.name }}.${{ matrix.shardIndex || 'full' }}
           retention-days: 3
