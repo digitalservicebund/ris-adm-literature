@@ -7,10 +7,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
@@ -184,5 +181,9 @@ public class DocumentationUnitService {
     return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
       queryOptions
     );
+  }
+
+  public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(AktivzitierungQuery query) {
+    return documentationUnitPersistenceService.findAktivzitierungen(query);
   }
 }

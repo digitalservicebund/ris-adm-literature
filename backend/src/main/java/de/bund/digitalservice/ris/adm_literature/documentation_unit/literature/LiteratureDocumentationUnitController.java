@@ -114,6 +114,51 @@ public class LiteratureDocumentationUnitController {
     );
   }
 
+  @GetMapping("api/literature/sli/adm/aktivzitierungen")
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<AdmAktivzitierungOverviewElement>
+  > findAktivzitierungen(
+    @RequestParam(required = false) String documentNumber,
+    @RequestParam(required = false) String periodikum,
+    @RequestParam(required = false) String zitatstelle,
+    @RequestParam(required = false) String inkrafttretedatum,
+    @RequestParam(required = false) String aktenzeichen,
+    @RequestParam(required = false) String dokumenttyp,
+    @RequestParam(required = false) String normgeber,
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "15") int pageSize,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection
+  ) {
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      sortByProperty,
+      sortDirection,
+      true
+    );
+
+    var paginatedResults = documentationUnitService.findAktivzitierungen(
+      new AktivzitierungQuery(
+        StringUtils.trimToNull(documentNumber),
+        StringUtils.trimToNull(periodikum),
+        StringUtils.trimToNull(zitatstelle),
+        StringUtils.trimToNull(inkrafttretedatum),
+        StringUtils.trimToNull(aktenzeichen),
+        StringUtils.trimToNull(dokumenttyp),
+        StringUtils.trimToNull(normgeber),
+        queryOptions
+      )
+    );
+
+    return ResponseEntity.ok(
+      new DocumentationUnitsOverviewResponse<>(
+        paginatedResults.content(),
+        new PageResponse(paginatedResults)
+      )
+    );
+  }
+
   /**
    * Creates a new ULI documentation unit with a new document number in database
    * and

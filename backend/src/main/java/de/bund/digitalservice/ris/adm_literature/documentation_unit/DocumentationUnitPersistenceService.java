@@ -9,9 +9,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Adm
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
@@ -277,6 +275,61 @@ public class DocumentationUnitPersistenceService {
         literatureIndex.getTitel(),
         literatureIndex.getDokumenttypen(),
         literatureIndex.getVerfasserList()
+      );
+    });
+  }
+
+  @Transactional(readOnly = true)
+  public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(
+    @Nonnull AktivzitierungQuery query
+  ) {
+    QueryOptions queryOptions = query.queryOptions();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+
+    AktivzitierungAdmSpecification spec = new AktivzitierungAdmSpecification(
+      query.documentNumber(),
+      query.periodikum(),
+      query.zitatstelle(),
+      query.inkrafttretedatum(),
+      query.aktenzeichen(),
+      query.dokumenttyp(),
+      query.normgeber()
+    );
+
+    var documentationUnitsPage = documentationUnitRepository.findAll(spec, pageable);
+
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+
+      if (index == null) {
+        return new AdmAktivzitierungOverviewElement(
+          documentationUnit.getId(),
+          documentationUnit.getDocumentNumber(),
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        );
+      }
+
+      var admIndex = index.getAdmIndex();
+      return new AdmAktivzitierungOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        admIndex.getInkrafttretedatum(),
+        admIndex.getLangueberschrift(),
+        admIndex.getDokumenttyp(),
+        admIndex.getNormgeberListCombined(),
+        admIndex.getFundstellenCombined(),
+        admIndex.getZitierdatenCombined(),
+        admIndex.getAktenzeichenListCombined()
       );
     });
   }
