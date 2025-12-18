@@ -11,9 +11,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.groups.Tuple;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -227,5 +226,81 @@ class DocumentationUnitPersistenceServiceTest {
     LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
     assertThat(elementWithoutIndex.verfasser()).isEmpty();
+  }
+
+  @Test
+  void findAktivzitierungen() {
+    // given
+    UUID idWithIndex = UUID.randomUUID();
+    DocumentationUnitEntity entityWithIndex = getDocumentationUnitEntity(idWithIndex);
+
+    UUID idWithoutIndex = UUID.randomUUID();
+    DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
+    entityWithoutIndex.setId(idWithoutIndex);
+    entityWithoutIndex.setDocumentNumber("ADM-002");
+    entityWithoutIndex.setDocumentationUnitIndex(null);
+
+    Page<DocumentationUnitEntity> pageOfEntities = new PageImpl<>(
+      List.of(entityWithIndex, entityWithoutIndex)
+    );
+
+    given(
+      documentationUnitRepository.findAll(
+        any(AktivzitierungAdmSpecification.class),
+        any(Pageable.class)
+      )
+    ).willReturn(pageOfEntities);
+
+    AktivzitierungQuery query = new AktivzitierungQuery(
+      "ADM",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      new QueryOptions(0, 10, "documentNumber", Sort.Direction.DESC, true)
+    );
+
+    // when
+    var result = documentationUnitPersistenceService.findAktivzitierungen(query);
+
+    // then
+    assertThat(result.content()).hasSize(2);
+
+    AdmAktivzitierungOverviewElement elementWithIndex = result.content().getFirst();
+    assertThat(elementWithIndex.id()).isEqualTo(idWithIndex);
+    assertThat(elementWithIndex.documentNumber()).isEqualTo("ADM-001");
+    assertThat(elementWithIndex.inkrafttretedatum()).isEqualTo("2025-01-01");
+    assertThat(elementWithIndex.langueberschrift()).isEqualTo("Administrative Title");
+    assertThat(elementWithIndex.dokumenttyp()).isEqualTo("VV");
+    assertThat(elementWithIndex.normgeber()).isEqualTo("BMJ");
+    assertThat(elementWithIndex.periodikum()).isEqualTo("BGBI I S. 1");
+    assertThat(elementWithIndex.zitatstelle()).isEqualTo("§ 5");
+    assertThat(elementWithIndex.aktenzeichen()).isEqualTo("AZ-123");
+
+    AdmAktivzitierungOverviewElement elementWithoutIndex = result.content().get(1);
+    assertThat(elementWithoutIndex.id()).isEqualTo(idWithoutIndex);
+    assertThat(elementWithoutIndex.documentNumber()).isEqualTo("ADM-002");
+    assertThat(elementWithoutIndex.inkrafttretedatum()).isNull();
+    assertThat(elementWithoutIndex.periodikum()).isNull();
+  }
+
+  private static @NonNull DocumentationUnitEntity getDocumentationUnitEntity(UUID idWithIndex) {
+    DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
+    entityWithIndex.setId(idWithIndex);
+    entityWithIndex.setDocumentNumber("ADM-001");
+
+    DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    var admIndex = index.getAdmIndex();
+    admIndex.setInkrafttretedatum("2025-01-01");
+    admIndex.setLangueberschrift("Administrative Title");
+    admIndex.setDokumenttyp("VV");
+    admIndex.setNormgeberListCombined("BMJ");
+    admIndex.setFundstellenCombined("BGBI I S. 1");
+    admIndex.setZitierdatenCombined("§ 5");
+    admIndex.setAktenzeichenListCombined("AZ-123");
+    entityWithIndex.setDocumentationUnitIndex(index);
+    return entityWithIndex;
   }
 }
