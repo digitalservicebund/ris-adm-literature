@@ -30,7 +30,6 @@ import org.springframework.resilience.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -282,7 +281,7 @@ public class DocumentationUnitPersistenceService {
     });
   }
 
-  @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+  @Transactional(readOnly = true)
   public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(
     @Nonnull AktivzitierungQuery query
   ) {
