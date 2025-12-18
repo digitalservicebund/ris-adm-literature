@@ -22,7 +22,7 @@ import {
   useGetSliPaginatedDocUnits,
 } from '@/services/literature/literatureDocumentUnitService'
 import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
-import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitieurungAdmSearchResult.vue'
+import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()

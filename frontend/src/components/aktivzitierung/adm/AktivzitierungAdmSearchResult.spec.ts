@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import AktivzitieurungAdmSearchResult from './AktivzitieurungAdmSearchResult.vue'
+import AktivzitieurungAdmSearchResult from './AktivzitierungAdmSearchResult.vue'
 
 describe('Aktivzitierung search result', () => {
   const defaultSearchResult = {
