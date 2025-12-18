@@ -2,7 +2,6 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaRoutingDataSource;
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -300,8 +299,6 @@ public class DocumentationUnitPersistenceService {
   ) {
     QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
-    SchemaType currentSchema = SchemaContextHolder.getSchema();
-    log.info("Current application schema context: {}", currentSchema);
     Pageable pageable = queryOptions.usePagination()
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
