@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,8 +23,8 @@ public record AdmAktivzitierungOverviewElement(
   String inkrafttretedatum,
   String langueberschrift,
   String dokumenttyp,
-  String normgeber,
-  String periodikum,
-  String zitatstelle,
-  String aktenzeichen
+  List<String> normgeber,
+  List<String> periodikum,
+  List<String> zitatstelle,
+  List<String> aktenzeichen
 ) {}

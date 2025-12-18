@@ -339,10 +339,10 @@ public class DocumentationUnitPersistenceService {
         admIndex.getInkrafttretedatum(),
         admIndex.getLangueberschrift(),
         admIndex.getDokumenttyp(),
-        admIndex.getNormgeberListCombined(),
-        admIndex.getFundstellenCombined(),
-        admIndex.getZitierdatenCombined(),
-        admIndex.getAktenzeichenListCombined()
+        admIndex.getNormgeberList(),
+        admIndex.getFundstellen(),
+        admIndex.getZitierdaten(),
+        admIndex.getAktenzeichenList()
       );
     });
   }
