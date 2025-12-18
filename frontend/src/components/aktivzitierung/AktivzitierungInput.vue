@@ -62,6 +62,8 @@ const isEmpty = computed(() => {
 
   if (entries.length === 0) return true
 
+  console.log(entries)
+
   return entries.every(([, v]) => {
     if (v === undefined || v === null) return true
     if (typeof v === 'string') return v.trim() === ''

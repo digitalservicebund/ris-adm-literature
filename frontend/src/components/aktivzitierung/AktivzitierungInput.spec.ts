@@ -108,6 +108,12 @@ describe('AktivzitierungInput', () => {
     // The slot should now show the updated value
     const updatedInput = screen.getByTestId('docnumber') as HTMLInputElement
     expect(updatedInput.value).toBe('NEW')
+
+    // Rerender with undefined aktivzitierung
+    await rerender({ aktivzitierung: undefined })
+
+    // The slot should show the existing value
+    expect(updatedInput.value).toBe('NEW')
   })
 
   it('disables the save button when fields are empty or only whitespace', async () => {
@@ -135,8 +141,19 @@ describe('AktivzitierungInput', () => {
     expect(saveButton).toBeEnabled()
   })
 
-  it('considers empty arrays and undefined as empty', async () => {
-    const initial: DummyT = { id: '1', documentNumber: undefined, documentTypes: [] }
+  it('considers undefined as empty', async () => {
+    const initial: DummyT = { id: '1', documentNumber: undefined }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeDisabled()
+  })
+
+  it('considers empty arrays as empty', async () => {
+    const initial: DummyT = { id: '1', documentNumber: '', documentTypes: [] }
 
     render(AktivzitierungInput, {
       props: { aktivzitierung: initial, showCancelButton: false },

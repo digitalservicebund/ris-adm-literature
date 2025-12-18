@@ -36,6 +36,10 @@ describe('AktivzitierungAdmItem', () => {
     // Edit button exists
     const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
     expect(editButton).toBeInTheDocument()
+
+    // Remove button does not exist
+    const remove = screen.queryByRole('button', { name: 'Eintrag löschen' })
+    expect(remove).not.toBeInTheDocument()
   })
 
   it('edit button is hidden and remove button is shown when aktivzitierung has a doc number', () => {
@@ -98,6 +102,26 @@ describe('AktivzitierungAdmItem', () => {
     const { emitted } = renderComponent({
       aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
       isEditing: true,
+    })
+
+    const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
+    await user.click(deleteButton)
+
+    const emits = emitted()
+
+    // Verify events were emitted
+    expect(emits.delete).toBeTruthy()
+    expect(emits.delete![0]).toEqual(['123']) // emitted id
+
+    expect(emits.cancelEdit).toBeTruthy()
+    expect(emits.cancelEdit?.length).toBe(1)
+  })
+
+  it('emits delete for an aktivzitierung coming from search', async () => {
+    const user = userEvent.setup()
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
+      isEditing: false,
     })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
