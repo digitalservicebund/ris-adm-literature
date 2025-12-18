@@ -41,7 +41,7 @@ public record AktivzitierungAdmSpecification(
     if (StringUtils.hasText(periodikum)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("periodikum")),
+          criteriaBuilder.lower(admIndex.get("fundstellenCombined")),
           sqlContains(periodikum)
         )
       );
@@ -50,7 +50,7 @@ public record AktivzitierungAdmSpecification(
     if (StringUtils.hasText(zitatstelle)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("zitatstelle")),
+          criteriaBuilder.lower(admIndex.get("zitierdatenCombined")),
           sqlContains(zitatstelle)
         )
       );
@@ -68,7 +68,7 @@ public record AktivzitierungAdmSpecification(
     if (StringUtils.hasText(aktenzeichen)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("aktenzeichen")),
+          criteriaBuilder.lower(admIndex.get("aktenzeichenListCombined")),
           sqlContains(aktenzeichen)
         )
       );
@@ -86,7 +86,7 @@ public record AktivzitierungAdmSpecification(
     if (StringUtils.hasText(normgeber)) {
       predicates.add(
         criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("normgeber")),
+          criteriaBuilder.lower(admIndex.get("normgeberListCombined")),
           sqlContains(normgeber)
         )
       );
