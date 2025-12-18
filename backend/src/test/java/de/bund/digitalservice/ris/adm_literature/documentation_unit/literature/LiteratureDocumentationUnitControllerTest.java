@@ -504,4 +504,101 @@ class LiteratureDocumentationUnitControllerTest {
         .andExpect(status().isBadRequest());
     }
   }
+
+  @Nested
+  @DisplayName("GET Aktivzitierungen (ADM)")
+  class GetAktivzitierungenAdm {
+
+    @Test
+    @DisplayName("GET returns HTTP 200 and admAktivzitierungenOverview in JSON")
+    void getAktivzitierungenFormatted() throws Exception {
+      // given
+      UUID id1 = UUID.fromString("7d4f92b1-3e0a-4c2d-9b5a-8f1e6c3d4a2b");
+      UUID id2 = UUID.fromString("a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d");
+
+      given(documentationUnitService.findAktivzitierungen(any())).willReturn(
+        TestPage.create(
+          List.of(
+            new AdmAktivzitierungOverviewElement(
+              id1,
+              "VALID123456789",
+              "2023-01-01",
+              "The long title",
+              "VV",
+              "AA",
+              "ABA",
+              "§4",
+              "363"
+            ),
+            new AdmAktivzitierungOverviewElement(
+              id2,
+              "VALID987654321",
+              "2025-01-01",
+              "The long title 2",
+              "VE",
+              "ABI",
+              "AE",
+              "§6",
+              "370"
+            )
+          )
+        )
+      );
+
+      // when & then
+      mockMvc
+        .perform(
+          get("/api/literature/aktivzitierungen/adm")
+            .param("documentNumber", "VALID")
+            .param("periodikum", "ABA")
+        )
+        .andExpect(status().isOk())
+        .andExpect(
+          content()
+            .json(
+              String.format(
+                """
+                {
+                  "documentationUnitsOverview": [
+                    {
+                      "id": "%s",
+                      "documentNumber": "VALID123456789",
+                      "inkrafttretedatum": "2023-01-01",
+                      "langueberschrift": "The long title",
+                      "dokumenttyp": "VV",
+                      "normgeber": "AA",
+                      "periodikum": "ABA",
+                      "zitatstelle": "§4",
+                      "aktenzeichen": "363"
+                    },
+                    {
+                      "id": "%s",
+                      "documentNumber": "VALID987654321",
+                      "inkrafttretedatum": "2025-01-01",
+                      "langueberschrift": "The long title 2",
+                      "dokumenttyp": "VE",
+                      "normgeber": "ABI",
+                      "periodikum": "AE",
+                      "zitatstelle": "§6",
+                      "aktenzeichen": "370"
+                    }
+                  ],
+                  "page": {
+                    "size": 2,
+                    "number": 0,
+                    "numberOfElements": 2,
+                    "totalElements": 2,
+                    "first": true,
+                    "last": true,
+                    "empty": false
+                  }
+                }
+                """,
+                id1,
+                id2
+              )
+            )
+        );
+    }
+  }
 }
