@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 
 // Dummy type for generic T
-type DummyT = { id: string; documentNumber?: string; documentTypes?: string[] }
+type DummyT = { id: string; documentNumber?: string; documentTypes?: string[]; count?: number }
 
 describe('AktivzitierungInput', () => {
   it('emits "update" when save button is clicked', async () => {
@@ -161,5 +161,16 @@ describe('AktivzitierungInput', () => {
 
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
     expect(saveButton).toBeDisabled()
+  })
+
+  it('save button is enabled for a field of type number', async () => {
+    const initial: DummyT = { id: '1', documentNumber: '', count: 10 }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeEnabled()
   })
 })
