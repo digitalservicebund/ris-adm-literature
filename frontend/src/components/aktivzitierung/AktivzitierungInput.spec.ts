@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 
 // Dummy type for generic T
-type DummyT = { id: string; documentNumber?: string }
+type DummyT = { id: string; documentNumber?: string; documentTypes?: string[] }
 
 describe('AktivzitierungInput', () => {
   it('emits "update" when save button is clicked', async () => {
@@ -73,6 +73,15 @@ describe('AktivzitierungInput', () => {
     expect(events[0]![0]).toBe('abc')
   })
 
+  it('does not show or emit delete if no ID is present (creation mode)', async () => {
+    const { emitted } = render(AktivzitierungInput, {
+      props: { showCancelButton: false },
+    })
+
+    expect(screen.queryByRole('button', { name: 'Eintrag löschen' })).not.toBeInTheDocument()
+    expect(emitted().delete).toBeUndefined()
+  })
+
   it('updates aktivzitierungRef when aktivzitierung prop changes', async () => {
     const initialValue: DummyT = { id: '1', documentNumber: 'OLD' }
     const newValue: DummyT = { id: '2', documentNumber: 'NEW' }
@@ -99,5 +108,41 @@ describe('AktivzitierungInput', () => {
     // The slot should now show the updated value
     const updatedInput = screen.getByTestId('docnumber') as HTMLInputElement
     expect(updatedInput.value).toBe('NEW')
+  })
+
+  it('disables the save button when fields are empty or only whitespace', async () => {
+    render(AktivzitierungInput, {
+      props: { showCancelButton: false },
+      slots: {
+        default: `<template #default="{ modelValue, onUpdateModelValue }">
+                      <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+                    </template>`,
+      },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    const input = screen.getByTestId('input')
+
+    // 1. Initial state (only ID exists) -> Should be empty/disabled
+    expect(saveButton).toBeDisabled()
+
+    // 2. Whitespace only -> Should be empty/disabled
+    await userEvent.type(input, '   ')
+    expect(saveButton).toBeDisabled()
+
+    // 3. Valid text -> Should be enabled
+    await userEvent.type(input, 'DOC-123')
+    expect(saveButton).toBeEnabled()
+  })
+
+  it('considers empty arrays and undefined as empty', async () => {
+    const initial: DummyT = { id: '1', documentNumber: undefined, documentTypes: [] }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeDisabled()
   })
 })
