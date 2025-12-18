@@ -74,6 +74,10 @@ function clearSearchFields() {
   aktivzitierungRef.value = createInitialT()
 }
 
+function onClickSearch() {
+  emit('search', aktivzitierungRef.value)
+}
+
 defineExpose({
   clearSearchFields,
 })
@@ -89,7 +93,7 @@ defineExpose({
         aria-label="Dokumente Suchen"
         label="Suchen"
         size="small"
-        @click.stop="emit('search', aktivzitierungRef.value)"
+        @click.stop="onClickSearch"
       />
       <Button
         aria-label="Aktivzitierung übernehmen"

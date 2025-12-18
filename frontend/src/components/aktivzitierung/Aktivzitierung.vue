@@ -57,7 +57,7 @@ const {
   firstRowIndex: Ref<number>
   totalRows: Ref<number>
   items: Ref<R[]>
-  fetchPaginatedData: (page: number, params: Ref<unknown>) => Promise<void>
+  fetchPaginatedData: (page: number, params?: unknown) => Promise<void>
   isFetching: Ref<boolean>
   error: Ref<unknown>
 }
@@ -71,17 +71,14 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
 const editingItemId = ref<string | null>(null)
 const showSearchResults = ref(false)
 const searchParams = ref<unknown>()
+const citationTypeFromSearch = ref<string | undefined>()
 const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
 
 /** ------------------------------------------------------------------
  * Computed
  * ------------------------------------------------------------------ */
-const addedDocumentNumbers = computed<Set<string>>(() => {
-  return new Set(
-    aktivzitierungList.value
-      .map((entry) => entry.documentNumber)
-      .filter((num): num is string => Boolean(num)),
-  )
+const addedDocumentNumbers = computed(() => {
+  return new Set(aktivzitierungList.value.map((entry) => entry.documentNumber).filter(Boolean))
 })
 
 const isEditing = computed(() => editingItemId.value !== null)
@@ -98,18 +95,30 @@ function stopEditing() {
   editingItemId.value = null
 }
 
+function removeDocumentNumber(item: T): T {
+  // Remove documentNumber from manual entries (as only the search results should have it)
+  const itemObj = item as Record<string, unknown>
+  return Object.fromEntries(
+    Object.entries(itemObj).filter(([key]) => key !== 'documentNumber'),
+  ) as T
+}
+
 function updateItem(item: T) {
-  onUpdateItem(item)
+  // Remove the documentNumber if this is a manual entry
+  const cleanedItem = removeDocumentNumber(item)
+  onUpdateItem(cleanedItem)
   stopEditing()
 }
 
 function addItem(item: T) {
-  onAddItem(item)
+  // Remove documentNumber from manual entries (only search results should have it)
+  const cleanedItem = removeDocumentNumber(item)
+  onAddItem(cleanedItem)
   isCreationPanelOpened.value = true
 }
 
 async function fetchData(page = 0) {
-  await fetchPaginatedData(page, searchParams)
+  await fetchPaginatedData(page, searchParams.value)
 }
 
 async function onPageUpdate(pageState: PageState) {
@@ -117,6 +126,14 @@ async function onPageUpdate(pageState: PageState) {
 }
 
 function onSearch(params: unknown) {
+  const paramsObj = params as Record<string, unknown> | undefined
+  const citationTypeValue = paramsObj?.citationType as string | undefined
+
+  citationTypeFromSearch.value =
+    citationTypeValue && typeof citationTypeValue === 'string' && citationTypeValue.trim() !== ''
+      ? citationTypeValue
+      : undefined
+
   searchParams.value = params
   showSearchResults.value = true
   fetchData(0)
@@ -129,15 +146,31 @@ function addSearchResult(result: R) {
     ? props.transformResultFn(result)
     : (result as unknown as T)
 
-  const entry: T = {
-    ...baseEntry,
+  const citationTypeValue =
+    citationTypeFromSearch.value ||
+    ((searchParams.value as Record<string, unknown> | undefined)?.citationType as
+      | string
+      | undefined)
+
+  const baseEntryObj = baseEntry as Record<string, unknown>
+
+  const entryObj: Record<string, unknown> = {
+    ...baseEntryObj,
     id: crypto.randomUUID(),
+    ...(citationTypeValue &&
+    typeof citationTypeValue === 'string' &&
+    citationTypeValue.trim() !== ''
+      ? { citationType: citationTypeValue.trim() }
+      : {}),
   }
+
+  const entry: T = entryObj as T
 
   onAddItem(entry)
   isCreationPanelOpened.value = true
   showSearchResults.value = false
   searchParams.value = undefined
+  citationTypeFromSearch.value = undefined
   inputRef.value?.clearSearchFields()
 }
 
@@ -156,7 +189,6 @@ watch(error, (err) => {
 
 <template>
   <div aria-label="Aktivzitierung" class="aktivzitierungAdmList">
-    <!-- Existing entries -->
     <ol
       v-if="aktivzitierungList.length"
       aria-label="Aktivzitierung Liste"
@@ -186,8 +218,6 @@ watch(error, (err) => {
         </AktivzitierungItem>
       </li>
     </ol>
-
-    <!-- Creation panel -->
     <AktivzitierungInput
       v-if="isCreationPanelOpened || !aktivzitierungList.length"
       ref="inputRef"
@@ -218,8 +248,6 @@ watch(error, (err) => {
     >
       <template #icon><IconAdd /></template>
     </Button>
-
-    <!-- Search results -->
     <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
       <SearchResults :search-results="searchResults" :is-loading="isFetching">
         <template #default="{ searchResult }">
