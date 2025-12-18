@@ -2,18 +2,19 @@
 import { computed } from 'vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
-import type { AdmDocUnitListItem } from '@/domain/adm/admDocumentUnit'
 import { parseIsoDateToLocal } from '@/utils/dateHelpers'
 
-type AdmSearchResult = AdmDocUnitListItem &
-  Partial<{
-    inkrafttretedatum: string
-    normgeber: string
-    dokumenttyp: string
-    aktenzeichen: string
-    periodikum: string
-    zitatstelle: string
-  }>
+type AdmSearchResult = {
+  readonly id: string
+  readonly documentNumber: string
+  langueberschrift?: string
+  inkrafttretedatum?: string
+  normgeber?: string
+  dokumenttyp?: string
+  aktenzeichen?: string
+  periodikum?: string
+  zitatstelle?: string
+}
 
 const props = defineProps<{
   searchResult: AdmSearchResult

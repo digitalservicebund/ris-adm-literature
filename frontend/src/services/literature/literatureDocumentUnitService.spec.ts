@@ -9,6 +9,7 @@ import {
   usePutUliDocUnit,
   usePutSliDocUnit,
   useGetSliPaginatedDocUnits,
+  useGetAdmPaginatedDocUnitsForSli,
 } from '@/services/literature/literatureDocumentUnitService'
 import { until } from '@vueuse/core'
 import { ref } from 'vue'
@@ -415,6 +416,56 @@ describe('literatureDocumentUnitService', () => {
     expect(isFetching.value).toBe(false)
     expect(fetchSpy).toHaveBeenCalledWith(
       '/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&titel=DerTitel&veroeffentlichungsjahr=2025&dokumenttypen=Anordnung%2CBekanntmachung&verfasser=M%C3%BCller%2CZimmermann&sortByProperty=documentNumber&sortDirection=DESC',
+      expect.anything(),
+    )
+    expect(error.value).toBeFalsy()
+  })
+
+  it('gets an unfiltered paginated list of sli doc units', async () => {
+    const fetchSpy = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+
+    const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
+      ref(5),
+      100,
+      ref(undefined),
+    )
+    execute()
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+
+    expect(isFetching.value).toBe(false)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/literature/adm/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      expect.anything(),
+    )
+    expect(error.value).toBeFalsy()
+  })
+
+  it('gets an filtered paginated list of sli doc units', async () => {
+    const fetchSpy = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+
+    const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
+      ref(5),
+      100,
+      ref({
+        documentNumber: 'KSNR2025',
+        periodikum: 'ThePeriodikum',
+        zitatstelle: 'TheZitatstelle',
+        inkrafttretedatum: '2025-01-01',
+        aktenzeichen: '§3',
+        dokumenttyp: 'VE',
+        normgeber: 'AA',
+      }),
+    )
+    execute()
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+
+    expect(isFetching.value).toBe(false)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/literature/adm/documentation-units?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC',
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
