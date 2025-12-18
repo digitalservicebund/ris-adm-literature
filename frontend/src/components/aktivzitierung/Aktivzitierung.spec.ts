@@ -31,7 +31,7 @@ type DummyT = { id: string; documentNumber?: string; title?: string }
 type DummySearchResult = {
   id: string
   documentNumber: string
-  title: string
+  title?: string
 }
 
 type FetchResultsFunction = (
@@ -53,20 +53,26 @@ vi.mock('@/composables/usePagination', () => ({
   usePagination: vi.fn(() => mockPagination),
 }))
 
-function renderComponent(props: { modelValue: DummyT[]; fetchResultsFn: FetchResultsFunction }) {
+function renderComponent(props: {
+  modelValue: DummyT[]
+  fetchResultsFn: FetchResultsFunction
+  transformResultFn?: (R: DummySearchResult) => DummyT
+}) {
   return render(Aktivzitierung, {
     props: {
       modelValue: props.modelValue,
       fetchResultsFn: props.fetchResultsFn,
+      transformResultFn: props.transformResultFn,
     },
     slots: {
       item: `
           <template #default="{ aktivzitierung }">
-            <div data-testid="item">{{aktivzitierung.title}} {{ aktivzitierung.documentNumber }}</div>
+            <div data-testid="item">{{aktivzitierung.citationType}} {{aktivzitierung.title}} {{ aktivzitierung.documentNumber }}</div>
           </template>`,
       input: `
           <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.title" @input="onUpdateModelValue({ ...modelValue, title: $event.target.value })"/>
+            <input data-testid="input-title" :value="modelValue.title" @input="onUpdateModelValue({ ...modelValue, title: $event.target.value })"/>
+            <input data-testid="input-citationType" :value="modelValue.citationType" @input="onUpdateModelValue({ ...modelValue, citationType: $event.target.value })"/>
           </template>
           `,
       searchResult: `
@@ -87,7 +93,7 @@ function renderComponent(props: { modelValue: DummyT[]; fetchResultsFn: FetchRes
 
 describe('Aktivzitierung', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.resetAllMocks()
     mockPagination.items.value = []
     mockPagination.totalRows.value = 0
     mockPagination.firstRowIndex.value = 0
@@ -97,7 +103,8 @@ describe('Aktivzitierung', () => {
   it('renders creation panel if list is empty', () => {
     renderComponent({ modelValue: [], fetchResultsFn: vi.fn() })
 
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByTestId('input-title')).toBeInTheDocument()
+    expect(screen.getByTestId('input-citationType')).toBeInTheDocument()
   })
 
   it('renders list items if list has entries', async () => {
@@ -126,7 +133,7 @@ describe('Aktivzitierung', () => {
     await user.click(addButton)
 
     // After click, creation panel (input textbox) should appear
-    const input = screen.getByRole('textbox')
+    const input = screen.getByTestId('input-title')
     expect(input).toBeInTheDocument()
 
     // Type a new title
@@ -157,7 +164,7 @@ describe('Aktivzitierung', () => {
     await user.click(addButton)
 
     // After click, creation panel (input textbox) should appear
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByTestId('input-title')).toBeInTheDocument()
   })
 
   it('handleEditStart sets editingItemId and closes creation panel', async () => {
@@ -211,7 +218,7 @@ describe('Aktivzitierung', () => {
 
   it('handleUpdateItem calls onUpdateItem and ends editing', async () => {
     const user = userEvent.setup()
-    const newDocNumber = 'UPDATED_DOC'
+    const newTitle = 'UPDATED_DOC'
 
     renderComponent({ modelValue: [{ id: '1' }], fetchResultsFn: vi.fn() })
 
@@ -219,10 +226,10 @@ describe('Aktivzitierung', () => {
     const editButton = screen.getAllByRole('button', { name: 'Eintrag bearbeiten' })[0]!
     await user.click(editButton)
 
-    // Update the documentNumber
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    // Update the title
+    const input = screen.getByTestId('input-title')
     await user.clear(input)
-    await user.type(input, newDocNumber)
+    await user.type(input, newTitle)
 
     // Click save → triggers handleUpdateItem
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
@@ -251,15 +258,15 @@ describe('Aktivzitierung', () => {
     await user.click(editButtons[0]!)
 
     // // then – only one edit form is visible, prefilled with first title
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
-    expect(screen.getByRole('textbox')).toHaveValue('doc1')
+    expect(screen.getByTestId('input-title')).toBeInTheDocument()
+    expect(screen.getByTestId('input-title')).toHaveValue('doc1')
 
     // // when – open edit for second entry
     await user.click(editButtons[1]!)
 
     // // then – still only one edit form, now for second entry
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
-    expect(screen.getByRole('textbox')).toHaveValue('doc2')
+    expect(screen.getByTestId('input-title')).toBeInTheDocument()
+    expect(screen.getByTestId('input-title')).toHaveValue('doc2')
     expect(screen.queryByDisplayValue('doc1')).not.toBeInTheDocument()
   })
 
@@ -276,9 +283,8 @@ describe('Aktivzitierung', () => {
     const firstEditButton = editButtons[0]!
     await user.click(firstEditButton)
 
-    // then – the visible textbox is prefilled with the entry's title (edit form, not creation panel)
-    const titleInput = screen.getByRole('textbox')
-    expect(titleInput).toHaveValue('Titel 1') // ← This proves it's the edit form, not empty creation panel
+    const titleInput = screen.getByTestId('input-title')
+    expect(titleInput).toHaveValue('Titel 1')
 
     expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
@@ -310,11 +316,11 @@ describe('Aktivzitierung', () => {
     renderComponent({ modelValue: existing, fetchResultsFn: vi.fn() })
 
     await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
-    expect(screen.getByRole('textbox')).toHaveValue('')
+    expect(screen.getByTestId('input-title')).toHaveValue('')
 
     await user.click(screen.getByRole('button', { name: 'Eintrag bearbeiten' }))
 
-    const titleInput = screen.getByRole('textbox')
+    const titleInput = screen.getByTestId('input-title')
     expect(titleInput).toHaveValue('Alt')
     expect(screen.queryByRole('button', { name: 'Weitere Angabe' })).not.toBeInTheDocument()
   })
@@ -366,5 +372,84 @@ describe('Aktivzitierung', () => {
       severity: 'error',
       summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
     })
+  })
+
+  it('persists the citationType after triggering a search and so it is added to the aktivzitierung from search result later', async () => {
+    mockPagination.fetchPaginatedData.mockImplementation(async () => {
+      mockPagination.items.value = [
+        { id: 'uuid-1', documentNumber: 'DOC-123', title: 'Found Item' },
+      ]
+      mockPagination.totalRows.value = 20
+    })
+
+    const user = userEvent.setup()
+    const fetchResultsFn = vi.fn()
+
+    renderComponent({ modelValue: [], fetchResultsFn })
+
+    const input = screen.getByTestId('input-citationType')
+    await user.type(input, 'Anordnung')
+
+    const searchButton = screen.getByRole('button', { name: 'Dokumente Suchen' })
+    await user.click(searchButton)
+
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+
+    expect(screen.getByText('Anordnung Found Item DOC-123')).toBeInTheDocument()
+  })
+
+  it('result is transformed when a transformer is provided', async () => {
+    mockPagination.fetchPaginatedData.mockImplementation(async () => {
+      mockPagination.items.value = [
+        { id: 'uuid-1', documentNumber: 'DOC-123', title: 'Found Item' },
+      ]
+      mockPagination.totalRows.value = 20
+    })
+
+    const user = userEvent.setup()
+    const fetchResultsFn = vi.fn()
+    const transformResultFn = (result: DummySearchResult) => ({ ...result, title: 'Transformed' })
+
+    renderComponent({ modelValue: [], fetchResultsFn, transformResultFn })
+
+    const searchButton = screen.getByRole('button', { name: 'Dokumente Suchen' })
+    await user.click(searchButton)
+
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+
+    expect(screen.getByText('Transformed DOC-123')).toBeInTheDocument()
+  })
+
+  it('prevents adding the same document number twice', async () => {
+    const user = userEvent.setup()
+    const existing = [{ id: '1', documentNumber: 'DOC-DUP', title: 'Existing' }]
+    mockPagination.items.value = [
+      { id: 'res-1', documentNumber: 'DOC-DUP', title: 'Search Result' },
+    ]
+
+    renderComponent({ modelValue: existing, fetchResultsFn: vi.fn() })
+
+    await user.click(screen.getByRole('button', { name: 'Weitere Angabe' }))
+    await user.click(screen.getByRole('button', { name: 'Dokumente Suchen' }))
+
+    const addBtn = screen.getByRole('button', { name: 'Add' })
+    expect(addBtn).toBeDisabled()
+  })
+
+  it('removes documentNumber from items when they are added manually (addItem/updateItem)', async () => {
+    const user = userEvent.setup()
+    const { emitted } = renderComponent({ modelValue: [], fetchResultsFn: vi.fn() })
+
+    const input = screen.getByTestId('input-title')
+    await user.type(input, 'New Title')
+
+    // Click Save (addItem)
+    await user.click(screen.getByRole('button', { name: 'Aktivzitierung übernehmen' }))
+
+    const events = emitted()['update:modelValue'] as Array<[DummyT[]]>
+    const newItem = events[0]![0][0]
+
+    expect(newItem).not.toHaveProperty('documentNumber')
+    expect(newItem!.title).toBe('New Title')
   })
 })
