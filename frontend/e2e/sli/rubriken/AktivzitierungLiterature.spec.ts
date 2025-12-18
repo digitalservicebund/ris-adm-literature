@@ -369,7 +369,7 @@ test.describe(
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(nonExistingTitle)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
       // then
       await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
     })
@@ -381,7 +381,7 @@ test.describe(
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleSharedId)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
@@ -397,7 +397,7 @@ test.describe(
 
       // when
       await aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(yearSharedId)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
@@ -421,7 +421,7 @@ test.describe(
       await input.fill('Bib')
       await overlay.getByRole('option', { name: 'Bib' }).click()
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const listItems = aktiv.getByRole('listitem')
@@ -437,7 +437,7 @@ test.describe(
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleDoc1)
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const listItems = aktiv.getByRole('listitem')
@@ -465,7 +465,7 @@ test.describe(
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titel)
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
@@ -493,7 +493,7 @@ test.describe(
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleDoc1)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
       await expect(aktiv.getByText(titleDoc1)).toBeVisible()
 
       // when – user adds an aktivzitierung from the search results
@@ -534,7 +534,7 @@ test.describe(
       const aktiv = getAktivzitierungSection(page)
 
       // when
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
