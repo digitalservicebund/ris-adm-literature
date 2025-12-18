@@ -10,13 +10,13 @@ spring:
   datasource:
     adm:
       url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${adm.database.schema:adm}
-      username: ${adm.database.user:test}
-      password: ${adm.database.password:test}
+      username: ${adm.database.user:adm}
+      password: ${adm.database.password:adm}
       driver-class-name: org.postgresql.Driver
     literature:
       url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${literature.database.schema:literature}
-      username: ${literature.database.user:test}
-      password: ${literature.database.password:test}
+      username: ${literature.database.user:literature}
+      password: ${literature.database.password:literature}
       driver-class-name: org.postgresql.Driver
   security:
     oauth2:
@@ -60,14 +60,3 @@ s3:
         access-key: ${s3.literature.public.access-key:test}
         access-key-id: ${s3.literature.public.access-key-id:test}
         bucket-name-ref: ${s3.bucket.literature.public.bucket-name:local-mock-bucket.literature}
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: default
-
-  sql:
-    init:
-      mode: always

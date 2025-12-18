@@ -385,4 +385,4 @@ INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_ra
 INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Rechtsgrundlage', '82', 'rechtsgrundlage-82', 3);
 
 
-set role test;
+set role postgres;
