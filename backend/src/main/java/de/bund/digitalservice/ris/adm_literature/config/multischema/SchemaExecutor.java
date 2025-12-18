@@ -3,6 +3,9 @@ package de.bund.digitalservice.ris.adm_literature.config.multischema;
 import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Utility component for managing temporary database schema context switches.
+ */
 @Component
 public class SchemaExecutor {
 
