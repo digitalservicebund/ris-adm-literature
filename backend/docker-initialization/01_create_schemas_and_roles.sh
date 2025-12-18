@@ -73,16 +73,15 @@ setup_schema_and_permissions() {
 }
 
 echo "Create lookup_tables role and schema"
-create_role_if_not_exists "lookup_tables" "test"
+create_role_if_not_exists "lookup_tables" "lookup_tables"
 setup_schema_and_permissions "ris_adm_literature" "lookup_tables" "lookup_tables"
-grant_read_access "ris_adm_literature" "lookup_tables" "test" "lookup_tables"
 
 echo "Create adm role and schema"
 create_role_if_not_exists "adm" "adm"
 setup_schema_and_permissions "ris_adm_literature" "adm" "adm"
 grant_read_access "ris_adm_literature" "lookup_tables" "adm" "lookup_tables"
 
-echo "Create adm role and schema"
+echo "Create literature role and schema"
 create_role_if_not_exists "literature" "literature"
 setup_schema_and_permissions "ris_adm_literature" "literature" "literature"
 grant_read_access "ris_adm_literature" "lookup_tables" "literature" "lookup_tables"
