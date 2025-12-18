@@ -34,7 +34,7 @@
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^4.6.1",
     "@sentry/vue": "^10.29.0",
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.18",
     "@tiptap/extension-blockquote": "^3.11.0",
     "@tiptap/extension-document": "^3.12.1",
     "@tiptap/extension-image": "^3.13.0",
