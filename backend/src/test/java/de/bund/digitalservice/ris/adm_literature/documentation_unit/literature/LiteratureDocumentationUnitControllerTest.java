@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.bund.digitalservice.ris.adm_literature.config.security.SecurityConfiguration;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AdmAktivzitierungOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;

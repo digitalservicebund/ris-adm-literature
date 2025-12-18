@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import jakarta.annotation.Nonnull;
 import java.util.UUID;

@@ -1,9 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitsOverviewResponse;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.*;
 import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import io.swagger.v3.oas.annotations.media.Content;
