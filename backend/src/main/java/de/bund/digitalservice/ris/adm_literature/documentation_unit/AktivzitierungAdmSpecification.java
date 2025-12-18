@@ -8,6 +8,14 @@ import org.springframework.util.StringUtils;
 
 /**
  * Specification for searching Aktivzitierung within the ADM schema.
+ *
+ * @param documentNumber     The unique document identifier to filter by.
+ * @param periodikum         The periodikum.
+ * @param zitatstelle        The zitatselle.
+ * @param inkrafttretedatum  The effective date of the cited document.
+ * @param aktenzeichen       The aktenzeichen.
+ * @param dokumenttyp        The dokumenttyp.
+ * @param normgeber          The normgeber.
  */
 public record AktivzitierungAdmSpecification(
   String documentNumber,

@@ -186,6 +186,15 @@ public class DocumentationUnitService {
     );
   }
 
+  /**
+   * Finds administrative citations by switching the database context.
+   * * <p>Wraps the persistence call within a {@link SchemaExecutor} to ensure the search
+   * is performed against the {@code ADM} schema, regardless of the current request's
+   * default schema context.</p>
+   *
+   * @param query The search and pagination parameters.
+   * @return A page of administrative overview elements from the ADM schema.
+   */
   public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(AktivzitierungQuery query) {
     return schemaExecutor.executeInSchema(SchemaType.ADM, () ->
       documentationUnitPersistenceService.findAktivzitierungen(query)

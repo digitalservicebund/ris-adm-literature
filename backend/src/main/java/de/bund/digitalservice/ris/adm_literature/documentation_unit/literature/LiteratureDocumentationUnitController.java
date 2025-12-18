@@ -114,6 +114,23 @@ public class LiteratureDocumentationUnitController {
     );
   }
 
+  /**
+   * Returns administrative citations (Aktivzitierungen) overview from the ADM schema.
+   *
+   * @param documentNumber The document number to search for.
+   * @param periodikum The periodikum to search for.
+   * @param zitatstelle The zitatstelle to search for.
+   * @param inkrafttretedatum The effective date to search for.
+   * @param aktenzeichen The docket or reference number to search for.
+   * @param dokumenttyp The document type to search for.
+   * @param normgeber The issuing authority to search for.
+   * @param pageNumber The page number of the result set.
+   * @param pageSize The page size of the result set.
+   * @param sortByProperty The property to sort by.
+   * @param sortDirection The sort direction.
+   *
+   * @return A response containing a paginated list of administrative overview elements.
+   */
   @GetMapping("api/literature/aktivzitierungen/adm")
   public ResponseEntity<
     DocumentationUnitsOverviewResponse<AdmAktivzitierungOverviewElement>
