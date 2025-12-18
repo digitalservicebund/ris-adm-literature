@@ -130,9 +130,7 @@ function onSearch(params: unknown) {
   const citationTypeValue = paramsObj?.citationType as string | undefined
 
   citationTypeFromSearch.value =
-    citationTypeValue && typeof citationTypeValue === 'string' && citationTypeValue.trim() !== ''
-      ? citationTypeValue
-      : undefined
+    citationTypeValue && citationTypeValue.trim() !== '' ? citationTypeValue.trim() : undefined
 
   searchParams.value = params
   showSearchResults.value = true
@@ -157,9 +155,7 @@ function addSearchResult(result: R) {
   const entryObj: Record<string, unknown> = {
     ...baseEntryObj,
     id: crypto.randomUUID(),
-    ...(citationTypeValue &&
-    typeof citationTypeValue === 'string' &&
-    citationTypeValue.trim() !== ''
+    ...(citationTypeValue && citationTypeValue.trim() !== ''
       ? { citationType: citationTypeValue.trim() }
       : {}),
   }
