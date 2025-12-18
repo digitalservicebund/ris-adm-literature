@@ -274,10 +274,10 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithIndex.inkrafttretedatum()).isEqualTo("2025-01-01");
     assertThat(elementWithIndex.langueberschrift()).isEqualTo("Administrative Title");
     assertThat(elementWithIndex.dokumenttyp()).isEqualTo("VV");
-    assertThat(elementWithIndex.normgeber()).isEqualTo("BMJ");
-    assertThat(elementWithIndex.periodikum()).isEqualTo("BGBI I S. 1");
-    assertThat(elementWithIndex.zitatstelle()).isEqualTo("§ 5");
-    assertThat(elementWithIndex.aktenzeichen()).isEqualTo("AZ-123");
+    assertThat(elementWithIndex.normgeber()).containsExactly("BMJ");
+    assertThat(elementWithIndex.periodikum()).containsExactly("BGBI I S. 1");
+    assertThat(elementWithIndex.zitatstelle()).containsExactly("§ 5");
+    assertThat(elementWithIndex.aktenzeichen()).containsExactly("AZ-123");
 
     AdmAktivzitierungOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.id()).isEqualTo(idWithoutIndex);
@@ -296,10 +296,10 @@ class DocumentationUnitPersistenceServiceTest {
     admIndex.setInkrafttretedatum("2025-01-01");
     admIndex.setLangueberschrift("Administrative Title");
     admIndex.setDokumenttyp("VV");
-    admIndex.setNormgeberListCombined("BMJ");
-    admIndex.setFundstellenCombined("BGBI I S. 1");
-    admIndex.setZitierdatenCombined("§ 5");
-    admIndex.setAktenzeichenListCombined("AZ-123");
+    admIndex.setNormgeberList(List.of("BMJ"));
+    admIndex.setFundstellen(List.of("BGBI I S. 1"));
+    admIndex.setZitierdaten(List.of("§ 5"));
+    admIndex.setAktenzeichenList(List.of("AZ-123"));
     entityWithIndex.setDocumentationUnitIndex(index);
     return entityWithIndex;
   }
