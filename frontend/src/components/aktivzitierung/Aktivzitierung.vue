@@ -220,7 +220,6 @@ watch(error, (err) => {
       class="mt-16"
       :show-cancel-button="false"
       @update="addItem"
-      @cancel="isCreationPanelOpened = false"
       @search="onSearch"
     >
       <template #default="{ modelValue, onUpdateModelValue }">

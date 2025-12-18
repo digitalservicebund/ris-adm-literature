@@ -38,9 +38,7 @@ function onClickCancel() {
 }
 
 function onClickDelete() {
-  if (props.aktivzitierung?.id) {
-    emit('delete', props.aktivzitierung?.id)
-  }
+  emit('delete', aktivzitierungRef.value.id)
 }
 
 const onUpdate = (newValue: T) => {
@@ -61,8 +59,6 @@ const isEmpty = computed(() => {
   const entries = Object.entries(value).filter(([key]) => key !== 'id')
 
   if (entries.length === 0) return true
-
-  console.log(entries)
 
   return entries.every(([, v]) => {
     if (v === undefined || v === null) return true
