@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
@@ -33,6 +35,7 @@ public class DocumentationUnitService {
   private final ObjectToLdmlConverterService objectToLdmlConverterService;
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
+  private final SchemaExecutor schemaExecutor;
 
   /**
    * Finds a DocumentationUnit by its document number.
@@ -184,6 +187,8 @@ public class DocumentationUnitService {
   }
 
   public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(AktivzitierungQuery query) {
-    return documentationUnitPersistenceService.findAktivzitierungen(query);
+    return schemaExecutor.executeInSchema(SchemaType.ADM, () ->
+      documentationUnitPersistenceService.findAktivzitierungen(query)
+    );
   }
 }
