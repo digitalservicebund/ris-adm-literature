@@ -114,7 +114,7 @@ public class LiteratureDocumentationUnitController {
     );
   }
 
-  @GetMapping("api/literature/adm/aktivzitierungen")
+  @GetMapping("api/literature/aktivzitierungen/adm")
   public ResponseEntity<
     DocumentationUnitsOverviewResponse<AdmAktivzitierungOverviewElement>
   > findAktivzitierungen(
