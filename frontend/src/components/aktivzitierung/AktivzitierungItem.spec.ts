@@ -95,7 +95,10 @@ describe('AktivzitierungAdmItem', () => {
 
   it('emits delete and cancelEdit when child triggers delete', async () => {
     const user = userEvent.setup()
-    const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true })
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
+      isEditing: true,
+    })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
     await user.click(deleteButton)
