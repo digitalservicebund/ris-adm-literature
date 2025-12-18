@@ -526,10 +526,10 @@ class LiteratureDocumentationUnitControllerTest {
               "2023-01-01",
               "The long title",
               "VV",
-              "AA",
-              "ABA",
-              "§4",
-              "363"
+              List.of("AA"),
+              List.of("ABA"),
+              List.of("§4"),
+              List.of("363")
             ),
             new AdmAktivzitierungOverviewElement(
               id2,
@@ -537,10 +537,10 @@ class LiteratureDocumentationUnitControllerTest {
               "2025-01-01",
               "The long title 2",
               "VE",
-              "ABI",
-              "AE",
-              "§6",
-              "370"
+              List.of("ABI"),
+              List.of("AE"),
+              List.of("§6"),
+              List.of("370")
             )
           )
         )
@@ -567,10 +567,10 @@ class LiteratureDocumentationUnitControllerTest {
                       "inkrafttretedatum": "2023-01-01",
                       "langueberschrift": "The long title",
                       "dokumenttyp": "VV",
-                      "normgeber": "AA",
-                      "periodikum": "ABA",
-                      "zitatstelle": "§4",
-                      "aktenzeichen": "363"
+                      "normgeber": ["AA"],
+                      "periodikum": ["ABA"],
+                      "zitatstelle": ["§4"],
+                      "aktenzeichen": ["363"]
                     },
                     {
                       "id": "%s",
@@ -578,10 +578,10 @@ class LiteratureDocumentationUnitControllerTest {
                       "inkrafttretedatum": "2025-01-01",
                       "langueberschrift": "The long title 2",
                       "dokumenttyp": "VE",
-                      "normgeber": "ABI",
-                      "periodikum": "AE",
-                      "zitatstelle": "§6",
-                      "aktenzeichen": "370"
+                      "normgeber": ["ABI"],
+                      "periodikum": ["AE"],
+                      "zitatstelle": ["§6"],
+                      "aktenzeichen": ["370"]
                     }
                   ],
                   "page": {
