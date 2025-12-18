@@ -79,9 +79,14 @@ setup_schema_and_permissions "ris_adm_literature" "lookup_tables" "lookup_tables
 echo "Create adm role and schema"
 create_role_if_not_exists "adm" "adm"
 setup_schema_and_permissions "ris_adm_literature" "adm" "adm"
-grant_read_access "ris_adm_literature" "lookup_tables" "adm" "lookup_tables"
 
 echo "Create literature role and schema"
 create_role_if_not_exists "literature" "literature"
 setup_schema_and_permissions "ris_adm_literature" "literature" "literature"
+
+echo "Grant read access for lookup_tables schema"
+grant_read_access "ris_adm_literature" "lookup_tables" "adm" "lookup_tables"
 grant_read_access "ris_adm_literature" "lookup_tables" "literature" "lookup_tables"
+
+echo "Grant read access on tables for referencing between document categories (Dokumentarten)"
+grant_read_access "ris_adm_literature" "adm" "literature" "adm"
