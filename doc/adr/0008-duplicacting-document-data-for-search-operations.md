@@ -1,11 +1,11 @@
 # 8. Duplicating document data for search operations
 
-Date: 2025-12-❓❓❓
+Date: 2025-12-18 <br>
 Previous version: 2025-06-11
 
 ## Status
 
-Proposal (❓❓❓ should become: Accepted)
+Accepted
 
 ## Context
 
