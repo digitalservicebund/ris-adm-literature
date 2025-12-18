@@ -17,7 +17,7 @@ const testCases = [
       dokumenttyp: 'VO',
       documentNumber: '123-A',
     },
-    expected: 'VV, BMJ, 01.01.2024, BGBI, VO, 123-A',
+    expected: 'VV, BMJ, 01.01.2024, BGBI (VO) | 123-A',
   },
   {
     name: 'should render only citationType and documentNumber',
@@ -28,7 +28,7 @@ const testCases = [
       normgeber: null,
       periodikum: undefined,
     },
-    expected: 'VwV, 456-B',
+    expected: 'VwV | 456-B',
   },
   {
     name: 'should render only date and periodikum',
