@@ -1,9 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitsOverviewResponse;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.*;
 import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -110,6 +108,68 @@ public class LiteratureDocumentationUnitController {
       new DocumentationUnitsOverviewResponse<>(
         paginatedDocumentationUnits.content(),
         new PageResponse(paginatedDocumentationUnits)
+      )
+    );
+  }
+
+  /**
+   * Returns administrative citations (Aktivzitierungen) overview from the ADM schema.
+   *
+   * @param documentNumber The document number to search for.
+   * @param periodikum The periodikum to search for.
+   * @param zitatstelle The zitatstelle to search for.
+   * @param inkrafttretedatum The effective date to search for.
+   * @param aktenzeichen The docket or reference number to search for.
+   * @param dokumenttyp The document type to search for.
+   * @param normgeber The issuing authority to search for.
+   * @param pageNumber The page number of the result set.
+   * @param pageSize The page size of the result set.
+   * @param sortByProperty The property to sort by.
+   * @param sortDirection The sort direction.
+   *
+   * @return A response containing a paginated list of administrative overview elements.
+   */
+  @GetMapping("api/literature/aktivzitierungen/adm")
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<AdmAktivzitierungOverviewElement>
+  > findAktivzitierungen(
+    @RequestParam(required = false) String documentNumber,
+    @RequestParam(required = false) String periodikum,
+    @RequestParam(required = false) String zitatstelle,
+    @RequestParam(required = false) String inkrafttretedatum,
+    @RequestParam(required = false) String aktenzeichen,
+    @RequestParam(required = false) String dokumenttyp,
+    @RequestParam(required = false) String normgeber,
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "15") int pageSize,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection
+  ) {
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      sortByProperty,
+      sortDirection,
+      true
+    );
+
+    var paginatedResults = documentationUnitService.findAktivzitierungen(
+      new AktivzitierungQuery(
+        StringUtils.trimToNull(documentNumber),
+        StringUtils.trimToNull(periodikum),
+        StringUtils.trimToNull(zitatstelle),
+        StringUtils.trimToNull(inkrafttretedatum),
+        StringUtils.trimToNull(aktenzeichen),
+        StringUtils.trimToNull(dokumenttyp),
+        StringUtils.trimToNull(normgeber),
+        queryOptions
+      )
+    );
+
+    return ResponseEntity.ok(
+      new DocumentationUnitsOverviewResponse<>(
+        paginatedResults.content(),
+        new PageResponse(paginatedResults)
       )
     );
   }
