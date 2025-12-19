@@ -4,8 +4,7 @@
   setup
   generic="
     T extends { id: string; documentNumber?: string },
-    R extends { id: string; documentNumber: string },
-    S extends AktivzitierungSearchParams
+    R extends { id: string; documentNumber: string }
   "
 >
 import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
@@ -30,7 +29,7 @@ const props = defineProps<{
   fetchResultsFn: (
     page: Ref<number>,
     itemsPerPage: number,
-    searchParams: Ref<S | undefined>,
+    searchParams: Ref<AktivzitierungSearchParams | undefined>,
   ) => UseFetchReturn<R>
   transformResultFn?: (result: R) => T
 }>()
@@ -62,7 +61,7 @@ const {
   firstRowIndex: Ref<number>
   totalRows: Ref<number>
   items: Ref<R[]>
-  fetchPaginatedData: (page: number, params?: S) => Promise<void>
+  fetchPaginatedData: (page: number, params?: AktivzitierungSearchParams) => Promise<void>
   isFetching: Ref<boolean>
   error: Ref<unknown>
 }
@@ -75,7 +74,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
  * ------------------------------------------------------------------ */
 const editingItemId = ref<string | null>(null)
 const showSearchResults = ref(false)
-const searchParams = ref<S>()
+const searchParams = ref<AktivzitierungSearchParams>()
 const citationTypeFromSearch = ref<string | undefined>()
 const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
 
@@ -130,11 +129,11 @@ async function onPageUpdate(pageState: PageState) {
   await fetchData(pageState.page)
 }
 
-function onSearch(params: S) {
+function onSearch(params: AktivzitierungSearchParams) {
   // Safe check: does the current param type support citationType?
-  if (params && 'citationType' in params) {
-    const value = params.citationType as string | undefined
-    citationTypeFromSearch.value = value?.trim() !== '' ? value?.trim() : undefined
+  if (params && 'citationType' in params && typeof params.citationType === 'string') {
+    const trimmed = params.citationType.trim()
+    citationTypeFromSearch.value = trimmed || undefined
   } else {
     citationTypeFromSearch.value = undefined
   }

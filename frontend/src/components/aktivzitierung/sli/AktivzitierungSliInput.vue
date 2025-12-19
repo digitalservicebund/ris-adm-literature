@@ -50,15 +50,6 @@ function clearSearchFields() {
 defineExpose({
   clearSearchFields,
 })
-
-// function onClickSearch() {
-//   emit('search', {
-//     veroeffentlichungsJahr: props.modelValue.veroeffentlichungsJahr,
-//     titel: props.modelValue.titel,
-//     dokumenttypen: props.modelValue.dokumenttypen?.map((docType) => docType.abbreviation),
-//     verfasser: props.modelValue.verfasser || [],
-//   })
-// }
 </script>
 
 <template>
