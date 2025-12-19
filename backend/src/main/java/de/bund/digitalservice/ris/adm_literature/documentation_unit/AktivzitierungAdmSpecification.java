@@ -39,10 +39,8 @@ public record AktivzitierungAdmSpecification(
 
     var admIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("admIndex");
 
-    if (StringUtils.hasText(periodikum) || StringUtils.hasText(zitatstelle)) {
-      addPredicate(periodikum, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
-      addPredicate(zitatstelle, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
-    }
+    addPredicate(periodikum, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
+    addPredicate(zitatstelle, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
 
     addPredicate(inkrafttretedatum, predicates, criteriaBuilder, admIndex.get("inkrafttretedatum"));
     addPredicate(

@@ -528,7 +528,6 @@ class LiteratureDocumentationUnitControllerTest {
               "VV",
               List.of("AA"),
               List.of("ABA"),
-              List.of("§4"),
               List.of("363")
             ),
             new AdmAktivzitierungOverviewElement(
@@ -539,7 +538,6 @@ class LiteratureDocumentationUnitControllerTest {
               "VE",
               List.of("ABI"),
               List.of("AE"),
-              List.of("§6"),
               List.of("370")
             )
           )
