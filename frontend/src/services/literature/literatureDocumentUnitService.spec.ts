@@ -13,6 +13,10 @@ import {
 } from '@/services/literature/literatureDocumentUnitService'
 import { until } from '@vueuse/core'
 import { ref } from 'vue'
+import {
+  docTypeAnordnungFixture,
+  docTypeBekanntmachungFixture,
+} from '@/testing/fixtures/documentType.fixture'
 
 describe('literatureDocumentUnitService', () => {
   beforeEach(() => {
@@ -407,7 +411,7 @@ describe('literatureDocumentUnitService', () => {
         veroeffentlichungsJahr: '2025',
         verfasser: ['Müller', 'Zimmermann'],
         titel: 'DerTitel',
-        dokumenttypen: ['Anordnung', 'Bekanntmachung'],
+        dokumenttypen: [docTypeAnordnungFixture, docTypeBekanntmachungFixture],
       }),
     )
     execute()
@@ -421,7 +425,7 @@ describe('literatureDocumentUnitService', () => {
     expect(error.value).toBeFalsy()
   })
 
-  it('gets an unfiltered paginated list of sli doc units', async () => {
+  it('gets an unfiltered paginated list of adm doc units', async () => {
     const fetchSpy = vi
       .spyOn(window, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
@@ -442,7 +446,7 @@ describe('literatureDocumentUnitService', () => {
     expect(error.value).toBeFalsy()
   })
 
-  it('gets an filtered paginated list of sli doc units', async () => {
+  it('gets an filtered paginated list of adm doc units', async () => {
     const fetchSpy = vi
       .spyOn(window, 'fetch')
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))

@@ -90,10 +90,7 @@ defineExpose({
       <InputField id="dokumenttypen" v-slot="slotProps" label="Dokumenttyp">
         <DokumentTyp
           :input-id="slotProps.id"
-          :model-value="dokumenttypen"
-          @update:model-value="
-            (dokumenttypen) => emit('update:modelValue', { ...modelValue, dokumenttypen })
-          "
+          v-model="dokumenttypen"
           aria-label="Dokumenttyp"
           :document-category="DocumentCategory.LITERATUR_SELBSTAENDIG"
           :invalid="slotProps.hasError"
@@ -104,8 +101,7 @@ defineExpose({
     <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in">
       <RisChipsInput
         :input-id="slotProps.id"
-        :model-value="verfasser"
-        @update:model-value="(verfasser) => emit('update:modelValue', { ...modelValue, verfasser })"
+        v-model="verfasser"
         aria-label="Verfasser/in"
         :invalid="slotProps.hasError"
       />

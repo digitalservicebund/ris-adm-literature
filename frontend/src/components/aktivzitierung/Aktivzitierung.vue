@@ -4,7 +4,8 @@
   setup
   generic="
     T extends { id: string; documentNumber?: string },
-    R extends { id: string; documentNumber: string }
+    R extends { id: string; documentNumber: string },
+    S extends AktivzitierungSearchParams
   "
 >
 import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
@@ -18,6 +19,7 @@ import { usePagination } from '@/composables/usePagination'
 import SearchResults from '../SearchResults.vue'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import errorMessages from '@/i18n/errors.json'
+import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const ITEMS_PER_PAGE = 15
 
@@ -28,7 +30,7 @@ const props = defineProps<{
   fetchResultsFn: (
     page: Ref<number>,
     itemsPerPage: number,
-    searchParams: Ref<unknown>,
+    searchParams: Ref<S | undefined>,
   ) => UseFetchReturn<R>
   transformResultFn?: (result: R) => T
 }>()
@@ -36,8 +38,11 @@ const props = defineProps<{
 const aktivzitierungList = defineModel<T[]>({ default: () => [] })
 
 defineSlots<{
+  // 1. Slot for rendering the READ-ONLY list item
   item(props: { aktivzitierung: T }): VNodeChild
+  // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
   input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
+  // 2. Slot for rendering the search result in the search results list
   searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild
 }>()
 
@@ -57,7 +62,7 @@ const {
   firstRowIndex: Ref<number>
   totalRows: Ref<number>
   items: Ref<R[]>
-  fetchPaginatedData: (page: number, params?: unknown) => Promise<void>
+  fetchPaginatedData: (page: number, params?: S) => Promise<void>
   isFetching: Ref<boolean>
   error: Ref<unknown>
 }
@@ -70,7 +75,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
  * ------------------------------------------------------------------ */
 const editingItemId = ref<string | null>(null)
 const showSearchResults = ref(false)
-const searchParams = ref<unknown>()
+const searchParams = ref<S>()
 const citationTypeFromSearch = ref<string | undefined>()
 const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
 
@@ -125,12 +130,14 @@ async function onPageUpdate(pageState: PageState) {
   await fetchData(pageState.page)
 }
 
-function onSearch(params: unknown) {
-  const paramsObj = params as Record<string, unknown> | undefined
-  const citationTypeValue = paramsObj?.citationType as string | undefined
-
-  citationTypeFromSearch.value =
-    citationTypeValue && citationTypeValue.trim() !== '' ? citationTypeValue.trim() : undefined
+function onSearch(params: S) {
+  // Safe check: does the current param type support citationType?
+  if (params && 'citationType' in params) {
+    const value = params.citationType as string | undefined
+    citationTypeFromSearch.value = value?.trim() !== '' ? value?.trim() : undefined
+  } else {
+    citationTypeFromSearch.value = undefined
+  }
 
   searchParams.value = params
   showSearchResults.value = true

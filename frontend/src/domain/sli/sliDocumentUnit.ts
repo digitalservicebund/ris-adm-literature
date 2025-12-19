@@ -40,6 +40,6 @@ export interface PaginatedSliDocUnitListResponse {
 export interface SliDocUnitSearchParams {
   veroeffentlichungsJahr?: string
   titel?: string
-  dokumenttypen?: string[]
+  dokumenttypen?: DocumentType[]
   verfasser?: string[]
 }
