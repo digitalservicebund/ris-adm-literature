@@ -150,10 +150,7 @@ class LiteratureDocumentationUnitControllerTest {
                     "inkrafttretedatum": "2023-01-01",
                     "langueberschrift": "The long title",
                     "dokumenttyp": "VV",
-                    "normgeber": "AA",
-                    "periodikum": "ABA",
-                    "zitatstelle": "§4",
-                    "aktenzeichen": "363"
+                    "normgeber": "AA"
                   },
                   {
                     "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
@@ -161,10 +158,7 @@ class LiteratureDocumentationUnitControllerTest {
                     "inkrafttretedatum": "2025-01-01",
                     "langueberschrift": "The long title 2",
                     "dokumenttyp": "VE",
-                    "normgeber": "ABI",
-                    "periodikum": "AE",
-                    "zitatstelle": "§6",
-                    "aktenzeichen": "370"
+                    "normgeber": "ABI"
                   }
                 ],
                 "page": {

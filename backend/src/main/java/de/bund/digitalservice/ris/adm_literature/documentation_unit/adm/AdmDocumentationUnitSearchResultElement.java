@@ -12,9 +12,6 @@ import java.util.UUID;
  * @param langueberschrift      The unabbreviated title of the documentation unit
  * @param dokumenttyp       The document type categorizing the citation or document.
  * @param normgeber         The legislative or authoritative entity responsible for the cited content.
- * @param periodikum        The periodical or publication where the citation appears.
- * @param zitatstelle       The specific reference location (e.g., page, section) in the periodical.
- * @param aktenzeichen      The docket or case number associated with the document or process.
  */
 public record AdmDocumentationUnitSearchResultElement(
   @Nonnull UUID id,
@@ -22,8 +19,5 @@ public record AdmDocumentationUnitSearchResultElement(
   String inkrafttretedatum,
   String langueberschrift,
   String dokumenttyp,
-  String normgeber,
-  String periodikum,
-  String zitatstelle,
-  String aktenzeichen
+  String normgeber
 ) {}
