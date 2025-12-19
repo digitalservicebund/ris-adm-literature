@@ -137,7 +137,7 @@ export function useGetAdmPaginatedDocUnitsForSli(
   search: Ref<AdmDocUnitSearchParams | undefined>,
 ) {
   const urlWithParams = computed(() =>
-    buildUrlWithParams('/literature/adm/documentation-units', {
+    buildUrlWithParams('/literature/aktivzitierungen/adm', {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       documentNumber: search?.value?.documentNumber?.toString(),

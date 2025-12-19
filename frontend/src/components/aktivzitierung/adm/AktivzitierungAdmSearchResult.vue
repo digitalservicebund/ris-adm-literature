@@ -9,11 +9,10 @@ type AdmSearchResult = {
   readonly documentNumber: string
   langueberschrift?: string
   inkrafttretedatum?: string
-  normgeber?: string
   dokumenttyp?: string
-  aktenzeichen?: string
-  periodikum?: string
-  zitatstelle?: string
+  normgeberList?: string[]
+  aktenzeichenList?: string[]
+  fundstellen?: string[]
 }
 
 const props = defineProps<{
@@ -30,37 +29,29 @@ function handleAdd() {
 }
 
 const line1 = computed(() => {
+  const { normgeberList, inkrafttretedatum, aktenzeichenList, fundstellen, dokumenttyp } =
+    props.searchResult
+
+  // Helper to safely get the first non-empty item from a potential array
+  const firstOf = (list?: string[]) => (list?.length ? list[0] : null)
+
   const parts: string[] = []
 
-  // Normgeber
-  const normgeber = props.searchResult.normgeber
+  const normgeber = firstOf(normgeberList)
   if (normgeber) parts.push(normgeber)
 
-  // Datum des Inkrafttretens
-  const formattedDate = props.searchResult.inkrafttretedatum
-    ? parseIsoDateToLocal(props.searchResult.inkrafttretedatum)
-    : null
-  if (formattedDate) parts.push(formattedDate)
+  const date = inkrafttretedatum ? parseIsoDateToLocal(inkrafttretedatum) : null
+  if (date) parts.push(date)
 
-  // Aktenzeichen
-  const aktenzeichen = props.searchResult.aktenzeichen
-  if (aktenzeichen) parts.push(aktenzeichen)
+  const az = firstOf(aktenzeichenList)
+  if (az) parts.push(az)
 
-  // Fundstelle = Periodikum + Zitatstelle
-  const periodikum = props.searchResult.periodikum
-  const zitatstelle = props.searchResult.zitatstelle
-  const fundstelle =
-    periodikum && zitatstelle ? `${periodikum} ${zitatstelle}` : periodikum || zitatstelle || null
-
-  // Dokumenttyp
-  const dokumenttyp = props.searchResult.dokumenttyp
+  const fundstelle = firstOf(fundstellen)
 
   if (fundstelle && dokumenttyp) {
     parts.push(`${fundstelle} (${dokumenttyp})`)
-  } else if (fundstelle) {
-    parts.push(fundstelle)
-  } else if (dokumenttyp) {
-    parts.push(`(${dokumenttyp})`)
+  } else if (fundstelle || dokumenttyp) {
+    parts.push(fundstelle || `(${dokumenttyp})`)
   }
 
   return parts.join(', ')

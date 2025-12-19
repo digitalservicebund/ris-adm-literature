@@ -15,11 +15,10 @@ describe('Aktivzitierung search result', () => {
       props: {
         searchResult: {
           ...defaultSearchResult,
-          normgeber: 'BVerfG',
+          normgeberList: ['BVerfG'],
           inkrafttretedatum: '2025-12-18',
-          aktenzeichen: '1 BvR 123/25',
-          periodikum: 'BGBl I',
-          zitatstelle: 'S. 456',
+          aktenzeichenList: ['1 BvR 123/25'],
+          fundstellen: ['BGBl I, S. 456'],
           dokumenttyp: 'Urteil',
         },
         isAdded: false,
@@ -28,7 +27,7 @@ describe('Aktivzitierung search result', () => {
 
     // parseIsoDateToLocal(2025-12-18) -> 18.12.2025
     expect(
-      screen.getByText('BVerfG, 18.12.2025, 1 BvR 123/25, BGBl I S. 456 (Urteil) | DOC-123'),
+      screen.getByText('BVerfG, 18.12.2025, 1 BvR 123/25, BGBl I, S. 456 (Urteil) | DOC-123'),
     ).toBeInTheDocument()
     expect(screen.getByText('Standard Titel')).toBeInTheDocument()
   })
@@ -38,7 +37,7 @@ describe('Aktivzitierung search result', () => {
       props: {
         searchResult: {
           ...defaultSearchResult,
-          normgeber: 'BMJ',
+          normgeberList: ['BMJ'],
           dokumenttyp: 'Verordnung',
         },
         isAdded: false,
@@ -46,21 +45,6 @@ describe('Aktivzitierung search result', () => {
     })
 
     expect(screen.getByText('BMJ, (Verordnung) | DOC-123')).toBeInTheDocument()
-  })
-
-  it('joins periodikum and zitatstelle into fundstelle with a space', () => {
-    render(AktivzitieurungAdmSearchResult, {
-      props: {
-        searchResult: {
-          ...defaultSearchResult,
-          periodikum: 'NJW',
-          zitatstelle: '2025, 10',
-        },
-        isAdded: false,
-      },
-    })
-
-    expect(screen.getByText('NJW 2025, 10 | DOC-123')).toBeInTheDocument()
   })
 
   it('renders only documentNumber with fallback dash when metadata is missing', () => {
@@ -97,7 +81,7 @@ describe('Aktivzitierung search result', () => {
     const user = userEvent.setup()
     const searchResult = {
       ...defaultSearchResult,
-      normgeber: 'TEST-GEBER',
+      normgeberList: ['TEST-GEBER'],
     }
 
     const { emitted } = render(AktivzitieurungAdmSearchResult, {
@@ -134,7 +118,7 @@ describe('Aktivzitierung search result', () => {
       props: {
         searchResult: {
           ...defaultSearchResult,
-          periodikum: 'OnlyFundstelle',
+          fundstellen: ['OnlyFundstelle'],
         },
         isAdded: false,
       },
@@ -148,7 +132,7 @@ describe('Aktivzitierung search result', () => {
       props: {
         searchResult: {
           ...defaultSearchResult,
-          normgeber: 'Geber',
+          normgeberList: ['Geber'],
           dokumenttyp: 'TypOnly',
         },
         isAdded: false,

@@ -440,7 +440,7 @@ describe('literatureDocumentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/adm/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
@@ -469,7 +469,7 @@ describe('literatureDocumentUnitService', () => {
 
     expect(isFetching.value).toBe(false)
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/adm/documentation-units?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC',
+      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC',
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
