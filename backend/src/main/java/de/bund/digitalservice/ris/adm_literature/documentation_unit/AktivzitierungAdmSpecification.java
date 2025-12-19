@@ -3,7 +3,6 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -59,15 +58,13 @@ public record AktivzitierungAdmSpecification(
   }
 
   private void addPredicate(
-    String documentNumber,
+    String param,
     ArrayList<Predicate> predicates,
-    @NonNull CriteriaBuilder criteriaBuilder,
+    @Nonnull CriteriaBuilder criteriaBuilder,
     Path<String> root
   ) {
-    if (StringUtils.hasText(documentNumber)) {
-      predicates.add(
-        criteriaBuilder.like(criteriaBuilder.lower(root), sqlContains(documentNumber))
-      );
+    if (StringUtils.hasText(param)) {
+      predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root), sqlContains(param)));
     }
   }
 
