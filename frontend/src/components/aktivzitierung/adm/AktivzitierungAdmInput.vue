@@ -44,6 +44,8 @@ const normgeber = computed({
   set: (val: Institution | undefined) => {
     if (val) {
       emit('update:modelValue', { ...props.modelValue, normgeberList: [val?.name] })
+    } else {
+      emit('update:modelValue', { ...props.modelValue, normgeberList: [] })
     }
   },
 })
@@ -52,10 +54,8 @@ const aktenzeichen = computed({
   get: () => {
     return props.modelValue.aktenzeichenList?.[0] ? props.modelValue.aktenzeichenList[0] : ''
   },
-  set: (val: string | undefined) => {
-    if (val) {
-      emit('update:modelValue', { ...props.modelValue, aktenzeichenList: [val] })
-    }
+  set: (val: string) => {
+    emit('update:modelValue', { ...props.modelValue, aktenzeichenList: [val].filter(Boolean) })
   },
 })
 
@@ -146,6 +146,7 @@ const periodikum = computed({
           @update:model-value="
             (dokumenttyp) => emit('update:modelValue', { ...props.modelValue, dokumenttyp })
           "
+          aria-label="Dokumenttyp"
           :isInvalid="false"
           :document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
         />
