@@ -34,12 +34,28 @@ const citationType = computed({
 
 const normgeber = computed({
   get: () => {
-    return props.modelValue.normgeber
-      ? ({ id: props.modelValue.normgeber, name: props.modelValue.normgeber } as Institution)
+    return props.modelValue.normgeberList?.[0]
+      ? ({
+          id: props.modelValue.normgeberList[0],
+          name: props.modelValue.normgeberList[0],
+        } as Institution)
       : undefined
   },
   set: (val: Institution | undefined) => {
-    emit('update:modelValue', { ...props.modelValue, normgeber: val?.name })
+    if (val) {
+      emit('update:modelValue', { ...props.modelValue, normgeberList: [val?.name] })
+    }
+  },
+})
+
+const aktenzeichen = computed({
+  get: () => {
+    return props.modelValue.aktenzeichenList?.[0] ? props.modelValue.aktenzeichenList[0] : ''
+  },
+  set: (val: string | undefined) => {
+    if (val) {
+      emit('update:modelValue', { ...props.modelValue, aktenzeichenList: [val] })
+    }
   },
 })
 
@@ -86,10 +102,7 @@ const periodikum = computed({
       <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
         <InputText
           :id="slotProps.id"
-          :model-value="modelValue?.aktenzeichen"
-          @update:model-value="
-            (aktenzeichen) => emit('update:modelValue', { ...props.modelValue, aktenzeichen })
-          "
+          v-model="aktenzeichen"
           aria-label="Aktenzeichen"
           :invalid="slotProps.hasError"
           fluid

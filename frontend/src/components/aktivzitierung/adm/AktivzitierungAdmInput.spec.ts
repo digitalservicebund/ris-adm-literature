@@ -82,7 +82,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Normgeber',
       inputValue: 'Bundestag',
-      expectedPatch: { normgeber: 'Bundestag' },
+      expectedPatch: { normgeberList: ['Bundestag'] },
     },
     {
       label: 'Inkrafttretedatum',
@@ -92,7 +92,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Aktenzeichen',
       inputValue: '§3',
-      expectedPatch: { aktenzeichen: '§3' },
+      expectedPatch: { aktenzeichenList: ['§3'] },
     },
     {
       label: 'Periodikum',

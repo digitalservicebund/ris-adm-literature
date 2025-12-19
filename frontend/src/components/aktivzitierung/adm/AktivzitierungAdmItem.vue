@@ -14,8 +14,8 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     parts.push(aktivzitierung.citationType)
   }
 
-  if (aktivzitierung.normgeber) {
-    parts.push(aktivzitierung.normgeber)
+  if (aktivzitierung.normgeberList?.[0]) {
+    parts.push(aktivzitierung.normgeberList[0])
   }
 
   if (aktivzitierung.inkrafttretedatum) {
@@ -25,21 +25,33 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     }
   }
 
-  if (aktivzitierung.aktenzeichen) {
-    parts.push(aktivzitierung.aktenzeichen)
+  if (aktivzitierung.aktenzeichenList?.[0]) {
+    parts.push(aktivzitierung.aktenzeichenList[0])
   }
 
   return parts
 }
 
-function calculateFundstelle(periodikum?: string, zitatstelle?: string): string | null {
+function calculateFundstelle(
+  fundstellen?: string[],
+  periodikum?: string,
+  zitatstelle?: string,
+): string | null {
+  if (fundstellen?.[0]) {
+    return fundstellen[0]
+  }
+
   if (periodikum && zitatstelle) {
-    return `${periodikum} ${zitatstelle}`
+    return `${periodikum}, ${zitatstelle}`
   }
   return periodikum || zitatstelle || null
 }
 
 function buildFundstellePart(fundstelle: string | null, dokumenttyp?: string): string | null {
+  if (fundstelle && dokumenttyp) {
+    return `${fundstelle} (${dokumenttyp})`
+  }
+
   if (fundstelle && dokumenttyp) {
     return `${fundstelle} (${dokumenttyp})`
   }
@@ -66,6 +78,7 @@ const metaSummary = computed(() => {
   const parts = buildBasicParts(props.aktivzitierung)
 
   const fundstelle = calculateFundstelle(
+    props.aktivzitierung.fundstellen,
     props.aktivzitierung.periodikum,
     props.aktivzitierung.zitatstelle,
   )

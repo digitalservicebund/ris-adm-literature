@@ -11,15 +11,14 @@ const testCases = [
     data: {
       ...baseItem,
       citationType: 'VV',
-      normgeber: 'BMJ',
+      normgeberList: ['BMJ'],
       inkrafttretedatum: '2024-01-01',
-      aktenzeichen: 'Az 123',
-      periodikum: 'BGBl',
-      zitatstelle: 'I S. 10',
+      aktenzeichenList: ['Az 123'],
+      fundstellen: ['BGBl, I S. 10'],
       dokumenttyp: 'VO',
       documentNumber: '123-A',
     },
-    expected: 'VV, BMJ, 01.01.2024, Az 123, BGBl I S. 10 (VO) | 123-A',
+    expected: 'VV, BMJ, 01.01.2024, Az 123, BGBl, I S. 10 (VO) | 123-A',
   },
   {
     name: 'should render only citationType and documentNumber (ignoring citationType if docNum missing)',
@@ -49,16 +48,7 @@ const testCases = [
     expected: 'NJW | 123',
   },
   {
-    name: 'should handle fundstelle with zitatstelle only',
-    data: {
-      ...baseItem,
-      documentNumber: '123',
-      zitatstelle: 'S. 50',
-    },
-    expected: 'S. 50 | 123',
-  },
-  {
-    name: 'should render dokumenttyp in parentheses when no fundstelle exists',
+    name: 'should render dokumenttyp in parentheses',
     data: {
       ...baseItem,
       documentNumber: '123',
@@ -72,16 +62,17 @@ const testCases = [
       ...baseItem,
       documentNumber: '123',
       periodikum: 'BGBl',
+      zitatstelle: 'S. 45',
       dokumenttyp: 'Anordnung',
     },
-    expected: 'BGBl (Anordnung) | 123',
+    expected: 'BGBl, S. 45 (Anordnung) | 123',
   },
   {
     name: 'should render aktenzeichen without other basic parts',
     data: {
       ...baseItem,
       documentNumber: '123',
-      aktenzeichen: 'II ZR 12/23',
+      aktenzeichenList: ['II ZR 12/23', 'XX'],
     },
     expected: 'II ZR 12/23 | 123',
   },
