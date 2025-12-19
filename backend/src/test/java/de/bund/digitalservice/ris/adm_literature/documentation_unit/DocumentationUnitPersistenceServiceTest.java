@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.groups.Tuple;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -229,7 +228,6 @@ class DocumentationUnitPersistenceServiceTest {
     assertThat(elementWithoutIndex.verfasser()).isEmpty();
   }
 
-  @Disabled("Temporarily ignored")
   @Test
   void findAktivzitierungen() {
     // given
@@ -293,7 +291,7 @@ class DocumentationUnitPersistenceServiceTest {
           List.of("BGBI I S. 1"),
           List.of("AZ-123")
         ),
-        Tuple.tuple(idWithoutIndex, "ADM-002", null, null, null, List.of(), List.of(), List.of())
+        Tuple.tuple(idWithoutIndex, "ADM-002", null, null, null, null, null, null)
       );
   }
 
