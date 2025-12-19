@@ -318,20 +318,6 @@ public class DocumentationUnitPersistenceService {
     return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
-      if (index == null) {
-        return new AdmAktivzitierungOverviewElement(
-          documentationUnit.getId(),
-          documentationUnit.getDocumentNumber(),
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        );
-      }
-
       var admIndex = index.getAdmIndex();
       return new AdmAktivzitierungOverviewElement(
         documentationUnit.getId(),
@@ -341,7 +327,6 @@ public class DocumentationUnitPersistenceService {
         admIndex.getDokumenttyp(),
         admIndex.getNormgeberList(),
         admIndex.getFundstellen(),
-        admIndex.getZitierdaten(),
         admIndex.getAktenzeichenList()
       );
     });

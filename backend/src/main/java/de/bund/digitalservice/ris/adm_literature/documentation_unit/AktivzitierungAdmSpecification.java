@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -35,72 +36,39 @@ public record AktivzitierungAdmSpecification(
   ) {
     ArrayList<Predicate> predicates = new ArrayList<>();
 
-    if (StringUtils.hasText(documentNumber)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(root.get("documentNumber")),
-          sqlContains(documentNumber)
-        )
-      );
-    }
+    addPredicate(documentNumber, predicates, criteriaBuilder, root.get("documentNumber"));
 
     var admIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("admIndex");
 
-    if (StringUtils.hasText(periodikum)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("fundstellenCombined")),
-          sqlContains(periodikum)
-        )
-      );
+    if (StringUtils.hasText(periodikum) || StringUtils.hasText(zitatstelle)) {
+      addPredicate(periodikum, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
+      addPredicate(zitatstelle, predicates, criteriaBuilder, admIndex.get("fundstellenCombined"));
     }
 
-    if (StringUtils.hasText(zitatstelle)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("zitierdatenCombined")),
-          sqlContains(zitatstelle)
-        )
-      );
-    }
-
-    if (StringUtils.hasText(inkrafttretedatum)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("inkrafttretedatum")),
-          sqlContains(inkrafttretedatum)
-        )
-      );
-    }
-
-    if (StringUtils.hasText(aktenzeichen)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("aktenzeichenListCombined")),
-          sqlContains(aktenzeichen)
-        )
-      );
-    }
-
-    if (StringUtils.hasText(dokumenttyp)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("dokumenttyp")),
-          sqlContains(dokumenttyp)
-        )
-      );
-    }
-
-    if (StringUtils.hasText(normgeber)) {
-      predicates.add(
-        criteriaBuilder.like(
-          criteriaBuilder.lower(admIndex.get("normgeberListCombined")),
-          sqlContains(normgeber)
-        )
-      );
-    }
+    addPredicate(inkrafttretedatum, predicates, criteriaBuilder, admIndex.get("inkrafttretedatum"));
+    addPredicate(
+      aktenzeichen,
+      predicates,
+      criteriaBuilder,
+      admIndex.get("aktenzeichenListCombined")
+    );
+    addPredicate(dokumenttyp, predicates, criteriaBuilder, admIndex.get("dokumenttyp"));
+    addPredicate(normgeber, predicates, criteriaBuilder, admIndex.get("normgeberListCombined"));
 
     return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+  }
+
+  private void addPredicate(
+    String documentNumber,
+    ArrayList<Predicate> predicates,
+    @NonNull CriteriaBuilder criteriaBuilder,
+    Path<String> root
+  ) {
+    if (StringUtils.hasText(documentNumber)) {
+      predicates.add(
+        criteriaBuilder.like(criteriaBuilder.lower(root), sqlContains(documentNumber))
+      );
+    }
   }
 
   private String sqlContains(String term) {

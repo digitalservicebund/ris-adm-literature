@@ -12,10 +12,9 @@ import java.util.UUID;
  * @param inkrafttretedatum  The effective date of the document.
  * @param langueberschrift   The long title or heading.
  * @param dokumenttyp        The type of document.
- * @param normgeber          The issuing authority.
- * @param periodikum         The periodikum.
- * @param zitatstelle        The zitatstelle.
- * @param aktenzeichen       The aktenzeichen.
+ * @param normgeberList      The normgeber list ('Juristische Person' or 'Organ')
+ * @param fundstellen         The fundstellen.
+ * @param aktenzeichenList       The aktenzeichen list.
  */
 public record AdmAktivzitierungOverviewElement(
   @Nonnull UUID id,
@@ -23,8 +22,7 @@ public record AdmAktivzitierungOverviewElement(
   String inkrafttretedatum,
   String langueberschrift,
   String dokumenttyp,
-  List<String> normgeber,
-  List<String> periodikum,
-  List<String> zitatstelle,
-  List<String> aktenzeichen
+  List<String> normgeberList,
+  List<String> fundstellen,
+  List<String> aktenzeichenList
 ) {}

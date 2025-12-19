@@ -232,7 +232,7 @@ class DocumentationUnitPersistenceServiceTest {
   void findAktivzitierungen() {
     // given
     UUID idWithIndex = UUID.randomUUID();
-    DocumentationUnitEntity entityWithIndex = getDocumentationUnitEntity(idWithIndex);
+    DocumentationUnitEntity entityWithIndex = createDocumentationUnitEntity(idWithIndex);
 
     UUID idWithoutIndex = UUID.randomUUID();
     DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
@@ -266,27 +266,35 @@ class DocumentationUnitPersistenceServiceTest {
     var result = documentationUnitPersistenceService.findAktivzitierungen(query);
 
     // then
-    assertThat(result.content()).hasSize(2);
-
-    AdmAktivzitierungOverviewElement elementWithIndex = result.content().getFirst();
-    assertThat(elementWithIndex.id()).isEqualTo(idWithIndex);
-    assertThat(elementWithIndex.documentNumber()).isEqualTo("ADM-001");
-    assertThat(elementWithIndex.inkrafttretedatum()).isEqualTo("2025-01-01");
-    assertThat(elementWithIndex.langueberschrift()).isEqualTo("Administrative Title");
-    assertThat(elementWithIndex.dokumenttyp()).isEqualTo("VV");
-    assertThat(elementWithIndex.normgeber()).containsExactly("BMJ");
-    assertThat(elementWithIndex.periodikum()).containsExactly("BGBI I S. 1");
-    assertThat(elementWithIndex.zitatstelle()).containsExactly("§ 5");
-    assertThat(elementWithIndex.aktenzeichen()).containsExactly("AZ-123");
-
-    AdmAktivzitierungOverviewElement elementWithoutIndex = result.content().get(1);
-    assertThat(elementWithoutIndex.id()).isEqualTo(idWithoutIndex);
-    assertThat(elementWithoutIndex.documentNumber()).isEqualTo("ADM-002");
-    assertThat(elementWithoutIndex.inkrafttretedatum()).isNull();
-    assertThat(elementWithoutIndex.periodikum()).isNull();
+    assertThat(result.content())
+      .hasSize(2)
+      .extracting(
+        AdmAktivzitierungOverviewElement::id,
+        AdmAktivzitierungOverviewElement::documentNumber,
+        AdmAktivzitierungOverviewElement::inkrafttretedatum,
+        AdmAktivzitierungOverviewElement::langueberschrift,
+        AdmAktivzitierungOverviewElement::dokumenttyp,
+        AdmAktivzitierungOverviewElement::normgeberList,
+        AdmAktivzitierungOverviewElement::fundstellen,
+        AdmAktivzitierungOverviewElement::aktenzeichenList
+      )
+      .containsExactly(
+        Tuple.tuple(
+          idWithIndex,
+          "ADM-001",
+          "2025-01-01",
+          "Administrative Title",
+          "VV",
+          List.of("BMJ"),
+          List.of("BGBI I S. 1"),
+          List.of("§ 5"),
+          List.of("AZ-123")
+        ),
+        Tuple.tuple(idWithoutIndex, "ADM-002", null, null, null, null, null, null, null)
+      );
   }
 
-  private static @NonNull DocumentationUnitEntity getDocumentationUnitEntity(UUID idWithIndex) {
+  private static @NonNull DocumentationUnitEntity createDocumentationUnitEntity(UUID idWithIndex) {
     DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
     entityWithIndex.setId(idWithIndex);
     entityWithIndex.setDocumentNumber("ADM-001");
