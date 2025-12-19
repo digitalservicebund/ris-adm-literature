@@ -120,32 +120,6 @@ class AktivzitierungAdmSpecificationTest {
   }
 
   @Test
-  @DisplayName("toPredicate with zitatstelle should add like clause and left join on index")
-  void toPredicate_withZitatstelleOnly() {
-    AktivzitierungAdmSpecification spec = new AktivzitierungAdmSpecification(
-      null,
-      null,
-      "Seite 5",
-      null,
-      null,
-      null,
-      null
-    );
-    CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<DocumentationUnitEntity> query = cb.createQuery(DocumentationUnitEntity.class);
-    Root<DocumentationUnitEntity> root = query.from(DocumentationUnitEntity.class);
-
-    Predicate predicate = spec.toPredicate(root, query, cb);
-    String sql = SQLExtractor.from(
-      entityManager.getEntityManager().createQuery(query.where(predicate))
-    );
-
-    assertThat(sql)
-      .contains("left join documentation_unit_index")
-      .contains("lower(dui1_0.zitierdaten_combined) like ?");
-  }
-
-  @Test
   @DisplayName("toPredicate with aktenzeichen should use combined field in join")
   void toPredicate_withAktenzeichenOnly() {
     AktivzitierungAdmSpecification spec = new AktivzitierungAdmSpecification(
@@ -222,7 +196,6 @@ class AktivzitierungAdmSpecificationTest {
       .contains("left join documentation_unit_index")
       .contains("lower(due1_0.document_number) like ?")
       .contains("and lower(dui1_0.fundstellen_combined) like ?")
-      .contains("and lower(dui1_0.zitierdaten_combined) like ?")
       .contains("and lower(dui1_0.inkrafttretedatum) like ?")
       .contains("and lower(dui1_0.aktenzeichen_list_combined) like ?")
       .contains("and lower(dui1_0.dokumenttyp) like ?")
