@@ -3,25 +3,15 @@ import { computed } from 'vue'
 import Button from 'primevue/button'
 import IconAdd from '~icons/material-symbols/add'
 import { parseIsoDateToLocal } from '@/utils/dateHelpers'
-
-type AdmSearchResult = {
-  readonly id: string
-  readonly documentNumber: string
-  langueberschrift?: string
-  inkrafttretedatum?: string
-  dokumenttyp?: string
-  normgeberList?: string[]
-  aktenzeichenList?: string[]
-  fundstellen?: string[]
-}
+import type { AdmAktivzitierungListItem } from '@/domain/adm/admDocumentUnit'
 
 const props = defineProps<{
-  searchResult: AdmSearchResult
+  searchResult: AdmAktivzitierungListItem
   isAdded: boolean
 }>()
 
 const emit = defineEmits<{
-  add: [searchResult: AdmSearchResult]
+  add: [searchResult: AdmAktivzitierungListItem]
 }>()
 
 function handleAdd() {

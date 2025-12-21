@@ -24,6 +24,7 @@ import {
 import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
 import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
+import type { AdmAktivzitierungListItem } from '@/domain/adm/admDocumentUnit'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -62,6 +63,15 @@ function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
     veroeffentlichungsJahr: result.veroeffentlichungsjahr,
     verfasser: result.verfasser || [],
     dokumenttypen: dokumenttypen || [],
+  }
+}
+
+function mapAdmSearchResult(result: AdmAktivzitierungListItem): AktivzitierungAdm {
+  const { id, ...rest } = result
+  return {
+    id: crypto.randomUUID(),
+    uuid: id,
+    ...rest,
   }
 }
 
@@ -165,6 +175,7 @@ useScrollToHash()
             <Aktivzitierung
               v-model="aktivzitierungAdm"
               :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
+              :transform-result-fn="mapAdmSearchResult"
             >
               <template #item="{ aktivzitierung }">
                 <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />

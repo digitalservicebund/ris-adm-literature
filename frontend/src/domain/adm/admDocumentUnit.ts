@@ -54,6 +54,17 @@ export interface AdmDocUnitListItem {
   fundstellen: string[]
 }
 
+export interface AdmAktivzitierungListItem {
+  readonly id: string
+  readonly documentNumber: string
+  langueberschrift?: string
+  inkrafttretedatum?: string
+  dokumenttyp?: string
+  normgeberList?: string[]
+  aktenzeichenList?: string[]
+  fundstellen?: string[]
+}
+
 export interface PaginatedAdmDocUnitListResponse {
   documentationUnitsOverview: AdmDocUnitListItem[]
   page: Page
