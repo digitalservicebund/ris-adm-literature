@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Rest controller for searching adm references (documentation units) to be used as 'Aktivzitierungen'.
+ */
 @RestController
 @RequiredArgsConstructor
 public class AdmAktivzitierungController {
