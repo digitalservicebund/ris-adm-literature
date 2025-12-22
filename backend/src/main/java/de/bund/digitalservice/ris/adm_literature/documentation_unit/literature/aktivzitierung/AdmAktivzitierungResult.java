@@ -1,11 +1,12 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.aktivzitierung;
 
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents an overview element for an administrative citation (Aktivzitierung).
+ * Represents a search result for a citation of an administrative regulation
+ * (Aktivzitierung Verwaltungsvorschrift).
  *
  * @param id                 The unique identifier of the documentation unit.
  * @param documentNumber     The public document number.
@@ -13,10 +14,11 @@ import java.util.UUID;
  * @param langueberschrift   The long title or heading.
  * @param dokumenttyp        The type of document.
  * @param normgeberList      The normgeber list ('Juristische Person' or 'Organ')
- * @param fundstellen         The fundstellen.
- * @param aktenzeichenList       The aktenzeichen list.
+ * @param fundstellen        The fundstellen.
+ * @param aktenzeichenList   The aktenzeichen list.
+ * @param zitierdaten        The zitierdaten
  */
-public record AdmAktivzitierungOverviewElement(
+public record AdmAktivzitierungResult(
   @Nonnull UUID id,
   @Nonnull String documentNumber,
   String inkrafttretedatum,
@@ -24,5 +26,6 @@ public record AdmAktivzitierungOverviewElement(
   String dokumenttyp,
   List<String> normgeberList,
   List<String> fundstellen,
-  List<String> aktenzeichenList
+  List<String> aktenzeichenList,
+  List<String> zitierdaten
 ) {}

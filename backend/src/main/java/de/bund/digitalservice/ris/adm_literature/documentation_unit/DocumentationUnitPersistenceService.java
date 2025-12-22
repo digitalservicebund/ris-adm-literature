@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaRoutingDataSource;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -11,7 +9,9 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Adm
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
@@ -30,7 +30,6 @@ import org.springframework.resilience.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -278,56 +277,6 @@ public class DocumentationUnitPersistenceService {
         literatureIndex.getTitel(),
         literatureIndex.getDokumenttypen(),
         literatureIndex.getVerfasserList()
-      );
-    });
-  }
-
-  /**
-   * Searches for administrative citations (Aktivzitierungen) across documentation units.
-   * * <p>This method uses {@code Propagation.REQUIRES_NEW} to force the creation of a new
-   * database connection. This is critical in our multi-schema setup to ensure the
-   * {@link SchemaRoutingDataSource} performs a fresh lookup of the current
-   * {@link SchemaContextHolder} value, allowing the query to target the ADM schema
-   * even if called from within a LIT schema request context.</p>
-   *
-   * @param query The search criteria including document metadata and pagination options.
-   * @return A paginated list of ADM overview elements transformed from the persistence layer.
-   */
-  @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-  public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(
-    @Nonnull AktivzitierungQuery query
-  ) {
-    QueryOptions queryOptions = query.queryOptions();
-    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
-    Pageable pageable = queryOptions.usePagination()
-      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
-      : Pageable.unpaged(sort);
-
-    AktivzitierungAdmSpecification spec = new AktivzitierungAdmSpecification(
-      query.documentNumber(),
-      query.periodikum(),
-      query.zitatstelle(),
-      query.inkrafttretedatum(),
-      query.aktenzeichen(),
-      query.dokumenttyp(),
-      query.normgeber()
-    );
-
-    var documentationUnitsPage = documentationUnitRepository.findAll(spec, pageable);
-
-    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
-      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
-
-      var admIndex = index.getAdmIndex();
-      return new AdmAktivzitierungOverviewElement(
-        documentationUnit.getId(),
-        documentationUnit.getDocumentNumber(),
-        admIndex.getInkrafttretedatum(),
-        admIndex.getLangueberschrift(),
-        admIndex.getDokumenttyp(),
-        admIndex.getNormgeberList(),
-        admIndex.getFundstellen(),
-        admIndex.getAktenzeichenList()
       );
     });
   }

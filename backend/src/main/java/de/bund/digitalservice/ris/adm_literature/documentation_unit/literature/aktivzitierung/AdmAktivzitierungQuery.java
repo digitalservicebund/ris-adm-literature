@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.aktivzitierung;
 
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
@@ -13,9 +13,10 @@ import jakarta.annotation.Nonnull;
  * @param aktenzeichen      Docket or reference number to search for
  * @param dokumenttyp       Document type to search for
  * @param normgeber         Issuing authority to search for
+ * @param zitierdatum       The 'Zitierdatum' to search for
  * @param queryOptions      Pagination and sorting options
  */
-public record AktivzitierungQuery(
+public record AdmAktivzitierungQuery(
   String documentNumber,
   String periodikum,
   String zitatstelle,
@@ -23,5 +24,6 @@ public record AktivzitierungQuery(
   String aktenzeichen,
   String dokumenttyp,
   String normgeber,
+  String zitierdatum,
   @Nonnull QueryOptions queryOptions
 ) {}
