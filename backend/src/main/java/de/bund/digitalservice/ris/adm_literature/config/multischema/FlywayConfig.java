@@ -18,7 +18,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FlywayConfig {
 
-  private static final String MIGRATION_LOCATION = "classpath:db/migration";
+  private static final String MIGRATION_LOCATION = "classpath:db/migration/shared";
+  private static final String MIGRATION_ADM_LOCATION = "classpath:db/migration/adm";
 
   /**
    * Defines the Flyway configuration for the ADM schema.
@@ -32,7 +33,7 @@ public class FlywayConfig {
     return Flyway.configure()
       .dataSource(admDataSource)
       .schemas(admSchema)
-      .locations(MIGRATION_LOCATION)
+      .locations(MIGRATION_LOCATION, MIGRATION_ADM_LOCATION)
       .baselineOnMigrate(true)
       .load();
   }

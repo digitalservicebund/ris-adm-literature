@@ -1,7 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
@@ -9,7 +7,10 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
@@ -35,7 +36,6 @@ public class DocumentationUnitService {
   private final ObjectToLdmlConverterService objectToLdmlConverterService;
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
-  private final SchemaExecutor schemaExecutor;
 
   /**
    * Finds a DocumentationUnit by its document number.
@@ -183,21 +183,6 @@ public class DocumentationUnitService {
   ) {
     return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
       queryOptions
-    );
-  }
-
-  /**
-   * Finds administrative citations by switching the database context.
-   * * <p>Wraps the persistence call within a {@link SchemaExecutor} to ensure the search
-   * is performed against the {@code ADM} schema, regardless of the current request's
-   * default schema context.</p>
-   *
-   * @param query The search and pagination parameters.
-   * @return A page of administrative overview elements from the ADM schema.
-   */
-  public Page<AdmAktivzitierungOverviewElement> findAktivzitierungen(AktivzitierungQuery query) {
-    return schemaExecutor.executeInSchema(SchemaType.ADM, () ->
-      documentationUnitPersistenceService.findAktivzitierungen(query)
     );
   }
 }
