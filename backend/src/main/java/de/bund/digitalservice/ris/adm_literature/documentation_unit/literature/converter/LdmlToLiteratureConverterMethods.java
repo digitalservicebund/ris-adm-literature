@@ -15,7 +15,6 @@ import javax.xml.xpath.XPathNodes;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
@@ -23,7 +22,6 @@ import org.w3c.dom.Node;
 @RequiredArgsConstructor
 class LdmlToLiteratureConverterMethods {
 
-  @Autowired
   private final DocumentTypeService documentTypeService;
 
   @NonNull
