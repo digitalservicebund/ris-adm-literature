@@ -4,19 +4,15 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * Class for creating an instance of {@link LdmlDocument} with a basic structure.
  */
-@Slf4j
-public class MinimalLdmlDocument {
+class MinimalLdmlDocument {
 
   // TODO: Check which values should be in NOSONAR
   // bei <akn:FRBRdate date="$CURRENT_DATE" name="migration" ris:domainTerm="migration"/>
@@ -62,31 +58,18 @@ public class MinimalLdmlDocument {
       .map(String::strip)
       .collect(Collectors.joining());
 
-  private final DocumentBuilder documentBuilder;
-
-  /**
-   * Creates a new instance of this class.
-   */
-  public MinimalLdmlDocument() {
-    try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-      documentBuilder = documentBuilderFactory.newDocumentBuilder();
-    } catch (ParserConfigurationException e) {
-      log.error("Could not create DocumentBuilderFactory", e);
-      throw new IllegalStateException("Could not create DocumentBuilderFactory", e);
-    }
-  }
-
   /**
    * Creates a new instance of {@link LdmlDocument} and returns it.
+   * @param documentBuilder The document builder instance to use
    * @param literatureDocumentCategory The literature documentation category
    * @return New instance of ldml document
    * @throws IOException If an I/O error occurs
    * @throws SAXException If a parse error occurs
    */
-  public LdmlDocument create(LiteratureDocumentCategory literatureDocumentCategory)
-    throws IOException, SAXException {
+  public LdmlDocument create(
+    @NonNull DocumentBuilder documentBuilder,
+    @NonNull LiteratureDocumentCategory literatureDocumentCategory
+  ) throws IOException, SAXException {
     String currentDate = LocalDate.now().toString();
     String populatedLdml = MINIMAL_LDML.replace("$CURRENT_DATE", currentDate).replace(
       "$RIS_NAMESPACE",

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<akn:akomaNtoso xmlns:akn="http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+                xmlns:ris="http://ldml.neuris.de/literature/selbstaendig/meta/">
+  <akn:doc name="offene-struktur">
+    <akn:meta>
+      <akn:identification source="attributsemantik-noch-undefiniert">
+        <akn:FRBRWork>
+          <akn:FRBRthis value="TODO"/>
+          <akn:FRBRuri value="TODO"/>
+          <akn:FRBRalias name="Dokumentnummer" value="KSLS20250000033"/>
+          <akn:FRBRalias name="dokumentarischerTitel" value="Ein interessantes Buch"/>
+          <akn:FRBRdate date="2025-04-30" name="Erfassungsdatum"/>
+          <akn:FRBRauthor as="#verfasser" href="#xx-verfasser-1"/>
+          <akn:FRBRauthor as="#herausgeber-person" href="#mueller-wolfgang-herausgeber-person-1"/>
+          <akn:FRBRauthor as="#herausgeber-person" href="#schmidt-jens-herausgeber-person-2"/>
+          <akn:FRBRauthor as="#bearbeiter" href="#schulze-annika-bearbeiter-1"/>
+          <akn:FRBRauthor as="#hochschule" href="#universitaet-fantasie-hochschule-1"/>
+          <akn:FRBRauthor as="#verlag" href="#realitaet-verlag-1"/>
+          <akn:FRBRcountry value="de"/>
+          <akn:FRBRsubtype value="LS"/>
+          <akn:FRBRnumber value="ISBN 000-0-00-111111-1"/>
+          <akn:FRBRname value="TODO"/>
+        </akn:FRBRWork>
+        <akn:FRBRExpression>
+          <akn:FRBRthis value="TODO"/>
+          <akn:FRBRuri value="TODO"/>
+          <akn:FRBRdate date="2025-01-01" name="Migration"/>
+          <akn:FRBRauthor href="TODO"/>
+          <akn:FRBRlanguage language="deu"/>
+        </akn:FRBRExpression>
+        <akn:FRBRManifestation>
+          <akn:FRBRthis value="TODO"/>
+          <akn:FRBRuri value="TODO"/>
+          <akn:FRBRdate date="2025-01-01" name="Migration"/>
+          <akn:FRBRauthor href="TODO"/>
+          <akn:FRBRformat value="xml"/>
+        </akn:FRBRManifestation>
+      </akn:identification>
+      <akn:classification source="doktyp">
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Bib" value="Bib"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Ebs" value="Ebs"/>
+      </akn:classification>
+      <akn:classification source="schlagwort">
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Grundbegriff" value="Grundbegriff"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Sozialtheorie" value="Sozialtheorie"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Soziologie" value="Soziologie"/>
+      </akn:classification>
+      <akn:references source="attributsemantik-noch-undefiniert">
+        <akn:TLCPerson eId="xx-verfasser-1" href="akn/ontology/persons/de/xx" ris:name="XX" showAs="XX"/>
+        <akn:TLCPerson eId="mueller-wolfgang-herausgeber-person-1" href="akn/ontology/persons/de/mueller-wolfgang"
+                       ris:name="Müller, Wolfgang"
+                       ris:titel="Raketenwissenschaftler an der Universität Wolken"
+                       showAs="Müller, Wolfgang, Raketenwissenschaftler an der Universität Wolken"/>
+        <akn:TLCPerson eId="schmidt-jens-herausgeber-person-2" href="akn/ontology/persons/de/schmidt-jens"
+                       ris:name="Schmidt, Jens"
+                       ris:titel="Dr Dr"
+                       showAs="Schmidt Jens, Dr Dr"/>
+        <akn:TLCPerson eId="schulze-annika-bearbeiter-1" href="akn/ontology/persons/de/schulze-annika"
+                       ris:name="Schulze, Annika" ris:titel="Geheime Regierungsrätin" showAs="Schulze, Annika, Geheime Regierungsrätin"/>
+        <akn:TLCOrganization eId="universitaet-fantasie-hochschule-1"
+                             href="akn/ontology/organizations/de/universitaet-fantasie" ris:jahr="2025"
+                             ris:name="Universität Fanatasie" showAs="Universität Fantasie, 2025"/>
+        <akn:TLCOrganization eId="realitaet-verlag-1"
+                             href="akn/ontology/organizations/de/realitaet" ris:name="Realität"
+                             ris:ort="Wolken" showAs="Realität, Wolken"/>
+        <akn:TLCRole eId="verfasser" href="akn/ontology/roles/de/verfasser" showAs="Verfasser"/>
+        <akn:TLCRole eId="herausgeber-person" href="akn/ontology/roles/de/herausgeber-person"
+                     showAs="Herausgeber Person"/>
+        <akn:TLCRole eId="bearbeiter" href="akn/ontology/roles/de/bearbeiter" showAs="Bearbeiter"/>
+        <akn:TLCRole eId="hochschule" href="akn/ontology/roles/de/hochschule" showAs="Hochschule"/>
+        <akn:TLCRole eId="verlag" href="akn/ontology/roles/de/verlag" showAs="Verlag"/>
+      </akn:references>
+      <akn:proprietary source="attributsemantik-noch-undefiniert">
+        <ris:meta>
+          <ris:sachgebiete>
+            <ris:sachgebiet notation="NEW">PR-05-01</ris:sachgebiet>
+            <ris:sachgebiet notation="NEW">XX-04-02</ris:sachgebiet>
+          </ris:sachgebiete>
+          <ris:veroeffentlichungsJahre>
+            <ris:veroeffentlichungsJahr>2025</ris:veroeffentlichungsJahr>
+          </ris:veroeffentlichungsJahre>
+          <ris:gesamttitelAngaben>
+            <ris:gesamttitel bandbezeichnung="Nr 11111" titel="Realitätsband"/>
+          </ris:gesamttitelAngaben>
+          <ris:zuordnungen>
+            <ris:zuordnung aspekt="Titel" begriff="hundert Grundbegriffe"/>
+            <ris:zuordnung aspekt="Titel" begriff="Einführung"/>
+          </ris:zuordnungen>
+          <ris:besitznachweise>
+            <ris:besitznachweis institution="BSG" signatur="VwiK 1032"/>
+          </ris:besitznachweise>
+          <ris:kollation umfangsangabe="359 S"/>
+        </ris:meta>
+      </akn:proprietary>
+    </akn:meta>
+    <akn:preface>
+      <akn:longTitle>
+        <akn:block name="longTitle">Lexikon der Spieltheorie</akn:block>
+      </akn:longTitle>
+    </akn:preface>
+    <akn:mainBody>
+      <akn:hcontainer name="crossheading"/>
+    </akn:mainBody>
+  </akn:doc>
+</akn:akomaNtoso>

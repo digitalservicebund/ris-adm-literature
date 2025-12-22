@@ -2,6 +2,8 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.x
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.NamedNodeMap;
@@ -51,5 +53,17 @@ public class NodeToList {
       .stream()
       .map(attributeNode -> Pair.of(attributeNode.getNodeName(), attributeNode.getNodeValue()))
       .toList();
+  }
+
+  /**
+   * Returns a map where the left side is the key and the right side the value of an attribute from
+   * the given node map.
+   * @param namedNodeMap The node map
+   * @return Map of attributes
+   */
+  public static Map<String, String> toAttributeMap(NamedNodeMap namedNodeMap) {
+    return toList(namedNodeMap)
+      .stream()
+      .collect(Collectors.toMap(Node::getNodeName, Node::getNodeValue));
   }
 }
