@@ -505,4 +505,13 @@ describe('literatureDocumentUnitService', () => {
 
     expect(data.value).not.toHaveProperty('documentationUnits')
   })
+
+  it('returns null when ADM response is null', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
+    await execute()
+
+    expect(data.value).toBeNull()
+  })
 })
