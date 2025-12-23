@@ -152,7 +152,17 @@ export function useGetAdmPaginatedDocUnitsForSli(
     }),
   )
 
-  return useApiFetch(urlWithParams, { immediate: false }).json()
+  return useApiFetch(urlWithParams, {
+    immediate: false,
+    afterFetch: ({ data }) => ({
+      data: data
+        ? {
+            documentationUnitsOverview: data.documentationUnits,
+            page: data.page,
+          }
+        : null,
+    }),
+  }).json()
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
