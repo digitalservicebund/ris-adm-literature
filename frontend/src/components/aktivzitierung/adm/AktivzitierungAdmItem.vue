@@ -42,7 +42,7 @@ function calculateFundstelle(
   }
 
   if (periodikum && zitatstelle) {
-    return `${periodikum}, ${zitatstelle}`
+    return `${periodikum} ${zitatstelle}`
   }
   return periodikum || zitatstelle || null
 }

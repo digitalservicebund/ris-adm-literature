@@ -14,11 +14,11 @@ const testCases = [
       normgeberList: ['BMJ'],
       inkrafttretedatum: '2024-01-01',
       aktenzeichenList: ['Az 123'],
-      fundstellen: ['BGBl, I S. 10'],
+      fundstellen: ['BGBl I S. 10'],
       dokumenttyp: 'VO',
       documentNumber: '123-A',
     },
-    expected: 'VV, BMJ, 01.01.2024, Az 123, BGBl, I S. 10 (VO) | 123-A',
+    expected: 'VV, BMJ, 01.01.2024, Az 123, BGBl I S. 10 (VO) | 123-A',
   },
   {
     name: 'should render only citationType and documentNumber (ignoring citationType if docNum missing)',
@@ -65,7 +65,7 @@ const testCases = [
       zitatstelle: 'S. 45',
       dokumenttyp: 'Anordnung',
     },
-    expected: 'BGBl, S. 45 (Anordnung) | 123',
+    expected: 'BGBl S. 45 (Anordnung) | 123',
   },
   {
     name: 'should render aktenzeichen without other basic parts',
