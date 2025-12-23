@@ -131,12 +131,12 @@ useScrollToHash()
     >
       <TitleElement
         aria-label="Inhaltliche Erschließung"
-        class="mb-12"
+        class="mb-24"
         id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
       <section id="aktivzitierungSli" aria-labelledby="aktivzitierungSli-title">
-        <h2 id="aktivzitierungSli-title" class="ris-body1-bold mb-12">
+        <h2 id="aktivzitierungSli-title" class="ris-body1-bold mb-16">
           Aktivzitierung (selbst. Literatur)
         </h2>
         <div class="flex flex-row gap-24 w-full">
@@ -169,7 +169,7 @@ useScrollToHash()
         </div>
       </section>
       <section id="aktivzitierungAdm" aria-labelledby="aktivzitierungAdm-title">
-        <h2 id="aktivzitierungAdm-title" class="ris-body1-bold mb-12">
+        <h2 id="aktivzitierungAdm-title" class="ris-body1-bold mb-16">
           Aktivzitierung (Verwaltungsvorschrift)
         </h2>
         <div class="flex flex-row gap-24 w-full">
