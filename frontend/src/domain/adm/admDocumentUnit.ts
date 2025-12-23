@@ -34,10 +34,16 @@ export interface AdmDocumentationUnit {
 }
 
 export interface AdmDocUnitSearchParams {
-  documentNumber: string
-  langueberschrift: string
-  fundstellen: string
-  zitierdaten: string
+  documentNumber?: string
+  langueberschrift?: string
+  fundstellen?: string
+  zitierdaten?: string
+  periodikum?: string
+  zitatstelle?: string
+  inkrafttretedatum?: string
+  aktenzeichen?: string
+  dokumenttyp?: string
+  normgeber?: string
 }
 
 export interface AdmDocUnitListItem {
@@ -46,6 +52,17 @@ export interface AdmDocUnitListItem {
   zitierdaten: string[]
   langueberschrift?: string
   fundstellen: string[]
+}
+
+export interface AdmAktivzitierungListItem {
+  readonly id: string
+  readonly documentNumber: string
+  langueberschrift?: string
+  inkrafttretedatum?: string
+  dokumenttyp?: string
+  normgeberList?: string[]
+  aktenzeichenList?: string[]
+  fundstellen?: string[]
 }
 
 export interface PaginatedAdmDocUnitListResponse {

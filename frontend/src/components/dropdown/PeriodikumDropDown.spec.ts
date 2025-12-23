@@ -2,11 +2,14 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
 import PeriodikumDropDown from './PeriodikumDropDown.vue'
+import type { Periodikum } from '@/domain/fundstelle'
 
 vi.mock('@digitalservicebund/ris-ui/components', () => ({
   RisAutoComplete: {
     name: 'RisAutoComplete',
-    template: `<div><input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" /></div>`,
+    template: `<div data-testid="autocomplete-wrapper" :data-initial-label="initialLabel">
+                <input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" />
+               </div>`,
     props: ['modelValue', 'suggestions', 'initialLabel'],
   },
 }))
@@ -92,5 +95,52 @@ describe('PeriodikumDropDown', () => {
     // then undefined is emitted
     expect(emitted).toHaveLength(2)
     expect(emitted[1]?.[0]).toEqual(undefined)
+  })
+
+  it('returns a combined string when both abbreviation and title are present', () => {
+    const wrapper = mount(PeriodikumDropDown, {
+      props: {
+        inputId: 'foo',
+        invalid: false,
+        modelValue: {
+          id: '1',
+          abbreviation: 'BGBI',
+          title: 'Bundesgesetzblatt',
+        },
+      },
+    })
+
+    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
+    expect(autoComplete.props('initialLabel')).toBe('BGBI | Bundesgesetzblatt')
+  })
+
+  it('returns only the abbreviation when title is missing', () => {
+    const wrapper = mount(PeriodikumDropDown, {
+      props: {
+        inputId: 'foo',
+        invalid: false,
+        modelValue: {
+          id: '2',
+          abbreviation: 'JK',
+          // title is missing
+        } as Periodikum,
+      },
+    })
+
+    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
+    expect(autoComplete.props('initialLabel')).toBe('JK')
+  })
+
+  it('returns an empty string when modelValue is undefined', () => {
+    const wrapper = mount(PeriodikumDropDown, {
+      props: {
+        inputId: 'foo',
+        invalid: false,
+        modelValue: undefined,
+      },
+    })
+
+    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
+    expect(autoComplete.props('initialLabel')).toBe('')
   })
 })

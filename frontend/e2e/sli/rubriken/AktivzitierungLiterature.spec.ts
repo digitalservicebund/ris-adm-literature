@@ -1,7 +1,10 @@
 import { test, expect, Page } from '@playwright/test'
 
-const getAktivzitierungSection = (page: Page) =>
+const getSliAktivzitierungSection = (page: Page) =>
   page.getByRole('region', { name: 'Aktivzitierung (selbst. Literatur)' })
+
+const getAdmAktivzitierungSection = (page: Page) =>
+  page.getByRole('region', { name: 'Aktivzitierung (Verwaltungsvorschrift)' })
 
 test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,7 +17,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
     'manual Aktivzitierung entry can be created and persists after save + reload',
     { tag: ['@RISDEV-7455'] },
     async ({ page }) => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // then – inputs are visible
       await expect(aktiv.getByText('Hauptsachtitel / Dokumentarischer Titel')).toBeVisible()
@@ -75,7 +78,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       // when – user reloads the page
       await page.reload()
 
-      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivAfterReload = getSliAktivzitierungSection(page)
       const aktivListAfterReload = aktivAfterReload.getByRole('list', {
         name: 'Aktivzitierung Liste',
       })
@@ -92,7 +95,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
     'deleted Aktivzitierung entry is removed and does not reappear after save + reload',
     { tag: ['@RISDEV-7455'] },
     async ({ page }) => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // given – create one Aktivzitierung entry (same steps as in first test)
       const titleInput = aktiv.getByRole('textbox', { name: 'Hauptsachtitel' })
@@ -136,7 +139,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       // when – user reloads the page
       await page.reload()
 
-      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivAfterReload = getSliAktivzitierungSection(page)
 
       // then – deleted entry does not reappear
       await expect(aktivAfterReload.getByText('Zu löschendes SLI‑Buch')).toHaveCount(0)
@@ -148,7 +151,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
     'editing an Aktivzitierung entry and saving updates the summary and persists',
     { tag: ['@RISDEV-7455'] },
     async ({ page }) => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // given – create initial entry
       await aktiv.getByRole('textbox', { name: 'Hauptsachtitel' }).fill('Alte Version')
@@ -201,7 +204,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
       await page.reload()
 
-      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivAfterReload = getSliAktivzitierungSection(page)
       const aktivListAfterReload = aktivAfterReload.getByRole('list', {
         name: 'Aktivzitierung Liste',
       })
@@ -216,7 +219,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
     'cancelling edits on an Aktivzitierung entry keeps the original summary and persists',
     { tag: ['@RISDEV-7455'] },
     async ({ page }) => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // given – create initial entry
       await aktiv
@@ -262,7 +265,7 @@ test.describe('SLI Rubriken – Aktivzitierung Literatur', () => {
       await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
       await page.reload()
 
-      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivAfterReload = getSliAktivzitierungSection(page)
       const aktivListAfterReload = aktivAfterReload.getByRole('list', {
         name: 'Aktivzitierung Liste',
       })
@@ -362,26 +365,26 @@ test.describe(
     })
 
     test('shows no results message when searching for non-existent title', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // when
       const nonExistingTitle = crypto.randomUUID()
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(nonExistingTitle)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
       // then
       await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
     })
 
     test('search by shared title ID retrieves exactly 2 documents', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // when
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleSharedId)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
@@ -393,11 +396,11 @@ test.describe(
     })
 
     test('search by shared year ID retrieves exactly 2 documents', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // when
       await aktiv.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill(yearSharedId)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
@@ -409,7 +412,7 @@ test.describe(
     })
 
     test('adding more search parameters (Document Type) reduces results to 1', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
@@ -421,7 +424,7 @@ test.describe(
       await input.fill('Bib')
       await overlay.getByRole('option', { name: 'Bib' }).click()
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const listItems = aktiv.getByRole('listitem')
@@ -431,13 +434,13 @@ test.describe(
     })
 
     test('shows a correctly formatted search result: Veröffentlichungsjahr, Verfasser, Dokumentnummer, Hauptsachtitel or Dokumentarischer Titel', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleDoc1)
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const listItems = aktiv.getByRole('listitem')
@@ -448,7 +451,7 @@ test.describe(
     })
 
     test('retrieves only published documents', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       const titel = 'Unpublished doc'
       await createDocument(
@@ -465,7 +468,7 @@ test.describe(
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titel)
 
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
@@ -488,12 +491,12 @@ test.describe(
         .fill('TheTitle')
       await formaldaten.getByRole('textbox', { name: 'Veröffentlichungsjahr' }).fill('2025')
 
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
         .fill(titleDoc1)
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
       await expect(aktiv.getByText(titleDoc1)).toBeVisible()
 
       // when – user adds an aktivzitierung from the search results
@@ -516,7 +519,7 @@ test.describe(
 
       // when – user reloads the page
       await page.reload()
-      const aktivAfterReload = getAktivzitierungSection(page)
+      const aktivAfterReload = getSliAktivzitierungSection(page)
       const aktivListAfterReload = aktivAfterReload.getByRole('list', {
         name: 'Aktivzitierung Liste',
       })
@@ -531,10 +534,10 @@ test.describe(
     })
 
     test('shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results', async () => {
-      const aktiv = getAktivzitierungSection(page)
+      const aktiv = getSliAktivzitierungSection(page)
 
       // when
-      await aktiv.getByRole('button', { name: 'Selbständige Literatur suchen' }).click()
+      await aktiv.getByRole('button', { name: 'Dokumente Suchen' }).click()
 
       // then
       const searchResultsList = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
@@ -559,3 +562,137 @@ test.describe(
     })
   },
 )
+
+test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/literatur-selbstaendig')
+    await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
+    await page.waitForURL(/dokumentationseinheit/)
+  })
+
+  test(
+    'manual ADM aktivzitierung entry can be created and persists after save + reload',
+    { tag: ['@RISDEV-10323'] },
+    async ({ page }) => {
+      const aktiv = getAdmAktivzitierungSection(page)
+
+      // Given: ADM fields are visible
+      await expect(aktiv.getByText('Art der Zitierung')).toBeVisible()
+      await expect(aktiv.getByText('Normgeber')).toBeVisible()
+      await expect(aktiv.getByText('Datum des Inkrafttretens')).toBeVisible()
+      await expect(aktiv.getByText('Aktenzeichen')).toBeVisible()
+      await expect(aktiv.getByText('Periodikum')).toBeVisible()
+      await expect(aktiv.getByText('Zitatstelle')).toBeVisible()
+      await expect(aktiv.getByText('Dokumenttyp')).toBeVisible()
+      await expect(aktiv.getByText('Dokumentnummer')).toBeVisible()
+
+      // When: user fills all fields (Dokumentnummer should be ignored)
+      await aktiv.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      const options = page.getByRole('listbox', { name: 'Optionsliste' })
+      await expect(options).toBeVisible()
+      await page.getByRole('option', { name: 'Übernahme' }).click()
+      await aktiv.getByRole('combobox', { name: 'Normgeber' }).click()
+      await page.getByRole('option', { name: 'Erstes Organ' }).click()
+      const dateInput = aktiv.getByRole('textbox', { name: 'Inkrafttretedatum' })
+      await dateInput.fill('01.01.2024')
+      const aktenzeichenInput = aktiv.getByRole('textbox', { name: 'Aktenzeichen' })
+      await aktenzeichenInput.fill('Az 123')
+      await aktiv.getByRole('combobox', { name: 'Periodikum' }).click()
+      await page.getByRole('option', { name: 'ABc | Die Beispi' }).click()
+      const zitatstelleInput = aktiv.getByRole('textbox', { name: 'Zitatstelle' })
+      await zitatstelleInput.fill('S. 10')
+      const dokumenttypInput = aktiv.getByRole('combobox', { name: 'Dokumenttyp' })
+      await dokumenttypInput.click()
+      await page.getByRole('option', { name: 'VV' }).click()
+      const documentNumberInput = aktiv.getByRole('textbox', { name: 'Dokumentnummer' })
+      await documentNumberInput.fill('DOC-123-MANUAL')
+
+      // And: user clicks Übernehmen
+      await aktiv.getByRole('button', { name: 'Übernehmen' }).click()
+
+      // Then: fields are cleared and summary shows data without manual document number
+      await expect(aktiv.getByRole('textbox', { name: 'Inkrafttretedatum' })).toHaveValue('')
+      await expect(aktiv.getByRole('textbox', { name: 'Aktenzeichen' })).toHaveValue('')
+      await expect(aktiv.getByRole('textbox', { name: 'Zitatstelle' })).toHaveValue('')
+      await expect(aktiv.getByRole('textbox', { name: 'Dokumentnummer' })).toHaveValue('')
+      const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
+      await expect(
+        aktivList.getByText('Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)', { exact: false }),
+      ).toBeVisible()
+      await expect(aktivList.getByText('DOC-123-MANUAL')).toHaveCount(0)
+
+      // When: user saves the document
+      await page.getByRole('button', { name: 'Speichern' }).click()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+
+      // When: user reloads the page
+      await page.reload()
+
+      const aktivAfterReload = getAdmAktivzitierungSection(page)
+      // Then: Aktivzitierung entry is still present
+      const aktivListAfterReload = aktivAfterReload.getByRole('list', {
+        name: 'Aktivzitierung Liste',
+      })
+      await expect(
+        aktivListAfterReload.getByText('Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)', {
+          exact: false,
+        }),
+      ).toBeVisible()
+    },
+  )
+
+  test(
+    'manual ADM aktivzitierung entry can be edited, cancelled, deleted and changes persist',
+    { tag: ['@RISDEV-10323'] },
+    async ({ page }) => {
+      const aktiv = getAdmAktivzitierungSection(page)
+
+      // Given: ADM fields are visible
+      await aktiv.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+      const options = page.getByRole('listbox', { name: 'Optionsliste' })
+      await expect(options).toBeVisible()
+      await page.getByRole('option', { name: 'Übernahme' }).click()
+      const aktenzeichenInput = aktiv.getByRole('textbox', { name: 'Aktenzeichen' })
+      await aktenzeichenInput.fill('Az 123')
+      await aktiv.getByRole('button', { name: 'Übernehmen' }).click()
+      const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
+      await expect(aktivList.getByText('Az 123', { exact: false })).toBeVisible()
+
+      // When: user edits Aktenzeichen and saves
+      await aktiv.getByRole('button', { name: 'Eintrag bearbeiten' }).click()
+      const editAktenzeichen = aktiv.getByRole('textbox', { name: 'Aktenzeichen' })
+      await editAktenzeichen.fill('Az 999')
+      await aktiv.getByRole('button', { name: 'Übernehmen' }).click()
+
+      // Then: summary updates to new value
+
+      await expect(aktivList.getByText('Az 999', { exact: false })).toBeVisible()
+      await expect(aktivList.getByText('Az 123', { exact: false })).toHaveCount(0)
+
+      // And: after save + reload, edit persists
+
+      await page.getByRole('button', { name: 'Speichern' }).click()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+      await page.reload()
+
+      const aktivAfterReload = getAdmAktivzitierungSection(page)
+      const aktivListAfterReload = aktivAfterReload.getByRole('list', {
+        name: 'Aktivzitierung Liste',
+      })
+      await expect(aktivListAfterReload.getByText('Az 999', { exact: false })).toBeVisible()
+
+      // And: user deletes the entry; after save + reload it’s gone
+
+      await aktivAfterReload.getByRole('button', { name: 'Eintrag bearbeiten' }).click()
+      await aktivAfterReload.getByRole('button', { name: 'Eintrag löschen' }).click()
+      await expect(aktivAfterReload.getByText('Az 999', { exact: false })).toHaveCount(0)
+
+      await page.getByRole('button', { name: 'Speichern' }).click()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+      await page.reload()
+
+      const aktivAfterSecondReload = getAdmAktivzitierungSection(page)
+      await expect(aktivAfterSecondReload.getByText('Az 999', { exact: false })).toHaveCount(0)
+    },
+  )
+})

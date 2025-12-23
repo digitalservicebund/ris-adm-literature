@@ -524,7 +524,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
   }
 
   @Test
-  void findLiteratureDocumentationUnitOverviewElements_resolvesDocumentTypeNames() {
+  void findLiteratureDocumentationUnitOverviewElements_resolvesDocumentTypeAbbreviations() {
     // given
     var unit = new DocumentationUnitEntity();
     unit.setDocumentNumber("KVLS2025000999");

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import AktivzitierungSearchResult from './AktivzitierungSearchResult.vue'
+import AktivzitierungSearchResult from './AktivzitierungSliSearchResult.vue'
 import { sliDocUnitListItemFixture } from '@/testing/fixtures/sliDocumentUnit.fixture'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit.ts'
 

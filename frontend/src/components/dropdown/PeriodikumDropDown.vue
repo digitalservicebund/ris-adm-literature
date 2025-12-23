@@ -29,6 +29,13 @@ function onModelValueChange(id: string | undefined) {
   emit('update:modelValue', selectedPeriodikum)
 }
 
+function getInitialLabel(): string {
+  const item = modelValue.value
+  if (!item?.abbreviation) return ''
+
+  return [item.abbreviation, item.title].filter(Boolean).join(' | ')
+}
+
 onMounted(async () => {
   const { data } = await useFetchLegalPeriodicals()
   periodika.value = data.value?.legalPeriodicals || []
@@ -42,7 +49,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :input-id="inputId"
     :invalid="invalid"
-    :initial-label="modelValue && `${modelValue.abbreviation} | ${modelValue.title}`"
+    :initial-label="getInitialLabel()"
     aria-label="Periodikum"
     append-to="self"
     typeahead

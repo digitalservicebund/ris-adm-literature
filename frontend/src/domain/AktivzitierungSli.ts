@@ -1,6 +1,6 @@
 import type { DocumentType } from './documentType'
 
-export interface AktivzitierungLiterature {
+export interface AktivzitierungSli {
   id: string
   uuid?: string
   documentNumber?: string

@@ -2,13 +2,13 @@ import { useApiFetch } from '../apiService'
 import { type UseFetchReturn } from '@vueuse/core'
 import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
 import type {
-  PaginatedSliDocUnitListResponse,
   SliDocumentationUnit,
   SliDocumentUnitResponse,
   SliDocUnitSearchParams,
 } from '@/domain/sli/sliDocumentUnit'
 import { computed, type Ref } from 'vue'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
+import type { AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
 
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
@@ -114,15 +114,39 @@ export function useGetSliPaginatedDocUnits(
   pageNumber: Ref<number>,
   pageSize: number,
   search: Ref<SliDocUnitSearchParams | undefined>,
-): UseFetchReturn<PaginatedSliDocUnitListResponse> {
+) {
   const urlWithParams = computed(() =>
     buildUrlWithParams(`${SLI_LITERATURE_DOCUMENTATION_UNITS_URL}`, {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       titel: search?.value?.titel?.toString(),
       veroeffentlichungsjahr: search?.value?.veroeffentlichungsJahr?.toString(),
-      dokumenttypen: search?.value?.dokumenttypen?.join(),
+      dokumenttypen: search?.value?.dokumenttypen?.map((d) => d.abbreviation).join(),
       verfasser: search?.value?.verfasser?.join(),
+      sortByProperty: 'documentNumber',
+      sortDirection: 'DESC',
+    }),
+  )
+
+  return useApiFetch(urlWithParams, { immediate: false }).json()
+}
+
+export function useGetAdmPaginatedDocUnitsForSli(
+  pageNumber: Ref<number>,
+  pageSize: number,
+  search: Ref<AdmDocUnitSearchParams | undefined>,
+) {
+  const urlWithParams = computed(() =>
+    buildUrlWithParams('/literature/aktivzitierungen/adm', {
+      pageNumber: pageNumber.value.toString(),
+      pageSize: pageSize.toString(),
+      documentNumber: search?.value?.documentNumber?.toString(),
+      periodikum: search?.value?.periodikum?.toString(),
+      zitatstelle: search?.value?.zitatstelle?.toString(),
+      inkrafttretedatum: search?.value?.inkrafttretedatum?.toString(),
+      aktenzeichen: search?.value?.aktenzeichen?.toString(),
+      dokumenttyp: search?.value?.dokumenttyp?.toString(),
+      normgeber: search?.value?.normgeber?.toString(),
       sortByProperty: 'documentNumber',
       sortDirection: 'DESC',
     }),

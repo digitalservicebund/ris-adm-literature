@@ -1,6 +1,7 @@
-<script lang="ts" setup generic="T extends { id: string }">
+<script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
+import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const props = defineProps<{
   aktivzitierung?: T
@@ -11,6 +12,7 @@ const emit = defineEmits<{
   update: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
+  search: [params: AktivzitierungSearchParams]
 }>()
 
 const createInitialT = (): T => {
@@ -37,9 +39,7 @@ function onClickCancel() {
 }
 
 function onClickDelete() {
-  if (props.aktivzitierung?.id) {
-    emit('delete', props.aktivzitierung?.id)
-  }
+  emit('delete', aktivzitierungRef.value.id)
 }
 
 const onUpdate = (newValue: T) => {
@@ -54,19 +54,52 @@ watch(
     }
   },
 )
+
+const isEmpty = computed(() => {
+  const value = aktivzitierungRef.value as Record<string, unknown>
+  const entries = Object.entries(value).filter(([key]) => key !== 'id')
+
+  if (entries.length === 0) return true
+
+  return entries.every(([, v]) => {
+    if (v === undefined || v === null) return true
+    if (typeof v === 'string') return v.trim() === ''
+    if (Array.isArray(v)) return v.length === 0
+    return false
+  })
+})
+
+function clearSearchFields() {
+  aktivzitierungRef.value = createInitialT()
+}
+
+function onClickSearch() {
+  emit('search', aktivzitierungRef.value)
+}
+
+defineExpose({
+  clearSearchFields,
+})
 </script>
 
 <template>
   <div>
-    <div class="flex flex-col gap-24">
+    <div class="flex flex-col gap-24" :key="aktivzitierungRef.id">
       <slot :modelValue="aktivzitierungRef" :onUpdateModelValue="onUpdate"></slot>
     </div>
     <div class="flex w-full gap-16 mt-16">
+      <Button
+        aria-label="Dokumente Suchen"
+        label="Suchen"
+        size="small"
+        @click.stop="onClickSearch"
+      />
       <Button
         aria-label="Aktivzitierung übernehmen"
         label="Übernehmen"
         severity="secondary"
         size="small"
+        :disabled="isEmpty"
         @click.stop="onClickSave"
       />
       <Button

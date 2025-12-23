@@ -7,24 +7,102 @@ const props = defineProps<{
   aktivzitierung: AktivzitierungAdm
 }>()
 
-const metaSummary = computed(() => {
-  const parts = [
-    props.aktivzitierung.citationType,
-    props.aktivzitierung.normgeber,
-    props.aktivzitierung.inkrafttretedatum
-      ? parseIsoDateToLocal(props.aktivzitierung.inkrafttretedatum)
-      : undefined,
-    props.aktivzitierung.periodikum,
-    props.aktivzitierung.dokumenttyp,
-    props.aktivzitierung.documentNumber,
-  ].filter(Boolean)
+function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
+  const parts: string[] = []
 
-  return parts.join(', ')
+  if (aktivzitierung.citationType && aktivzitierung.documentNumber) {
+    parts.push(aktivzitierung.citationType)
+  }
+
+  if (aktivzitierung.normgeberList?.[0]) {
+    parts.push(aktivzitierung.normgeberList[0])
+  }
+
+  if (aktivzitierung.inkrafttretedatum) {
+    const formatted = parseIsoDateToLocal(aktivzitierung.inkrafttretedatum)
+    if (formatted) {
+      parts.push(formatted)
+    }
+  }
+
+  if (aktivzitierung.aktenzeichenList?.[0]) {
+    parts.push(aktivzitierung.aktenzeichenList[0])
+  }
+
+  return parts
+}
+
+function calculateFundstelle(
+  fundstellen?: string[],
+  periodikum?: string,
+  zitatstelle?: string,
+): string | null {
+  if (fundstellen?.[0]) {
+    return fundstellen[0]
+  }
+
+  if (periodikum && zitatstelle) {
+    return `${periodikum} ${zitatstelle}`
+  }
+  return periodikum || zitatstelle || null
+}
+
+function buildFundstellePart(fundstelle: string | null, dokumenttyp?: string): string | null {
+  if (fundstelle && dokumenttyp) {
+    return `${fundstelle} (${dokumenttyp})`
+  }
+
+  if (fundstelle && dokumenttyp) {
+    return `${fundstelle} (${dokumenttyp})`
+  }
+  if (fundstelle) {
+    return fundstelle
+  }
+  if (dokumenttyp) {
+    return `(${dokumenttyp})`
+  }
+  return null
+}
+
+function formatSummary(parts: string[], documentNumber?: string): string {
+  const firstPart = parts.join(', ')
+
+  if (documentNumber) {
+    return firstPart ? `${firstPart} | ${documentNumber}` : documentNumber
+  }
+
+  return firstPart
+}
+
+const metaSummary = computed(() => {
+  const parts = buildBasicParts(props.aktivzitierung)
+
+  const fundstelle = calculateFundstelle(
+    props.aktivzitierung.fundstellen,
+    props.aktivzitierung.periodikum,
+    props.aktivzitierung.zitatstelle,
+  )
+
+  const fundstellePart = buildFundstellePart(fundstelle, props.aktivzitierung.dokumenttyp)
+  if (fundstellePart) {
+    parts.push(fundstellePart)
+  }
+
+  return formatSummary(parts, props.aktivzitierung.documentNumber)
 })
 </script>
 
 <template>
-  <div class="ris-body1-regular">
-    {{ metaSummary }}
+  <div class="flex flex-col">
+    <div class="ris-body1-regular">
+      {{ metaSummary }}
+    </div>
+
+    <div
+      v-if="aktivzitierung.documentNumber && aktivzitierung.langueberschrift"
+      class="ris-body2-regular text-gray-900"
+    >
+      {{ aktivzitierung.langueberschrift }}
+    </div>
   </div>
 </template>
