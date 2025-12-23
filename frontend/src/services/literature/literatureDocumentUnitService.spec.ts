@@ -474,4 +474,35 @@ describe('literatureDocumentUnitService', () => {
     )
     expect(error.value).toBeFalsy()
   })
+
+  it('transforms ADM response from documentationUnits to documentationUnitsOverview', async () => {
+    const mockResponse = {
+      documentationUnits: [
+        { id: 'uuid-1', documentNumber: 'KSNR20250001' },
+        { id: 'uuid-2', documentNumber: 'KSNR20250002' },
+      ],
+      page: {
+        size: 15,
+        number: 0,
+        numberOfElements: 2,
+        totalElements: 2,
+        first: true,
+        last: true,
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(mockResponse), { status: 200 }),
+    )
+
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
+    await execute()
+
+    expect(data.value).toEqual({
+      documentationUnitsOverview: mockResponse.documentationUnits,
+      page: mockResponse.page,
+    })
+
+    expect(data.value).not.toHaveProperty('documentationUnits')
+  })
 })
