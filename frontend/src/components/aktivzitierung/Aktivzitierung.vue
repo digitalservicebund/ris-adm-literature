@@ -43,6 +43,8 @@ defineSlots<{
   input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
   // 2. Slot for rendering the search result in the search results list
   searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild
+  // 3. Slot for custom icon (optional, defaults to standard icons)
+  icon?(props: { aktivzitierung: T; isFromSearch: boolean }): VNodeChild
 }>()
 
 /** ------------------------------------------------------------------
@@ -216,6 +218,10 @@ watch(error, (err) => {
 
           <template #input="slotProps">
             <slot name="input" v-bind="slotProps" />
+          </template>
+
+          <template #icon="slotProps">
+            <slot name="icon" v-bind="slotProps" />
           </template>
         </AktivzitierungItem>
       </li>

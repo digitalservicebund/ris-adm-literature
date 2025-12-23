@@ -25,6 +25,8 @@ import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/Aktiv
 import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue'
 import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 import type { AdmAktivzitierungListItem } from '@/domain/adm/admDocumentUnit'
+import IconReceiptLongFilled from '~icons/ic/baseline-receipt-long'
+import IconReceiptLongOutline from '~icons/ic/outline-receipt-long'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -177,6 +179,10 @@ useScrollToHash()
               :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
               :transform-result-fn="mapAdmSearchResult"
             >
+              <template #icon="{ isFromSearch }">
+                <IconReceiptLongFilled v-if="isFromSearch" class="text-neutral-800" />
+                <IconReceiptLongOutline v-else class="text-neutral-800" />
+              </template>
               <template #item="{ aktivzitierung }">
                 <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
               </template>
