@@ -45,7 +45,7 @@
     "@tiptap/extension-text-align": "^3.13.0",
     "@tiptap/extension-text-style": "^3.13.0",
     "@tiptap/pm": "^3.6.7",
-    "@tiptap/starter-kit": "^3.13.0",
+    "@tiptap/starter-kit": "^3.14.0",
     "@tiptap/vue-3": "^3.13.0",
     "@tsconfig/node23": "^23.0.4",
     "@vitejs/plugin-vue": "^6.0.3",
