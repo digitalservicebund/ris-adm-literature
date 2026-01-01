@@ -43,7 +43,7 @@ val postgresVersion = "42.7.8"
 val commonsTextVersion = "1.15.0"
 val localStackVersion = "1.21.4"
 val awsVersion = "2.33.0"
-val jsoupVersion = "1.21.2"
+val jsoupVersion = "1.22.1"
 val commonsLang3 = "3.20.0"
 
 dependencies {
