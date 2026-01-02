@@ -63,7 +63,7 @@ jobs:
         with:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Create Sentry release
-        uses: getsentry/action-release@a181c1274a0587b294e2a7563c3b677e979c51b1
+        uses: getsentry/action-release@dc439117d95e169b233eaec2a7f674a5d0111ca7
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
