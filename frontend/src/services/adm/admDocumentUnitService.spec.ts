@@ -38,6 +38,7 @@ describe('admDocumentUnitService', () => {
       id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
       documentNumber: 'KSNR054920707',
       json: docUnit,
+      administrativeData: { note: '' },
     }
 
     vi.spyOn(window, 'fetch').mockResolvedValue(
@@ -93,6 +94,7 @@ describe('admDocumentUnitService', () => {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
       },
+      administrativeData: { note: '' },
     }
 
     vi.spyOn(window, 'fetch').mockResolvedValue(
@@ -156,6 +158,7 @@ describe('admDocumentUnitService', () => {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
       },
+      administrativeData: { note: '' },
     }
 
     vi.spyOn(window, 'fetch').mockResolvedValue(
@@ -206,6 +209,7 @@ describe('admDocumentUnitService', () => {
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         documentNumber: 'KSNR054920707',
       },
+      administrativeData: { note: '' },
     }
 
     vi.spyOn(window, 'fetch').mockResolvedValue(
