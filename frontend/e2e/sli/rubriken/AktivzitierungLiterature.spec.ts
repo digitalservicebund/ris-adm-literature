@@ -697,4 +697,196 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
       await expect(aktivAfterSecondReload.getByText('Az 999', { exact: false })).toHaveCount(0)
     },
   )
+
+  test.describe(
+    'SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift) – Suche',
+    {
+      tag: ['@RISDEV-10325'],
+    },
+    () => {
+      test('ADM search by document number finds seeded document', async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // When: search for seeded ADM document
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR000000001')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result appears with title
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results).toBeVisible()
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+        await expect(results.getByText('Alpha Global Setup Document')).toBeVisible()
+      })
+
+      test('ADM search by partial document number finds seeded document (left and right truncated)', async ({
+        page,
+      }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // When: search with partial document number (left-truncated - missing right chars)
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR00000000')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result appears
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+
+        // When: search with partial document number (right-truncated - missing left chars)
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('000000001')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result appears
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+
+        // When: search with partial document number (middle match - missing both ends)
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('SNR00000000')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result appears
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+      })
+
+      test('ADM search should narrow the results when adding more search criterias (AND-relationship)', async ({
+        page,
+      }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // When: search for a specific seeded Inkrafttretedatum
+        await aktiv.getByRole('textbox', { name: 'Inkrafttretedatum' }).fill('01.12.2025')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: 2 results should be visible
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results).toBeVisible()
+        const items = results.getByRole('listitem')
+        await expect(items).toHaveCount(2)
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with a periodikum
+        await aktiv.getByRole('combobox', { name: 'Periodikum' }).click()
+        await page.getByRole('option', { name: 'BKK' }).click()
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: 1 result should be visible
+        await expect(items).toHaveCount(1)
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+      })
+
+      test('ADM search shows no-results message when nothing matches', async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // Given
+        await aktiv
+          .getByRole('textbox', { name: 'Dokumentnummer' })
+          .fill('NO-MATCH-' + crypto.randomUUID())
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then
+        await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+      })
+
+      test('ADM search paginates 15 results per page', async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // When
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: page 1 has 15 items
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        const items = results.getByRole('listitem')
+        await expect(items).toHaveCount(15)
+      })
+
+      test('ADM search only retrieves published documents', async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // Given
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR000000003')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then
+        await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
+      })
+
+      test('ADM search result can be added, clears search, cannot be edited, can be deleted, persists', async ({
+        page,
+      }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // Given
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR000000001')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+
+        // When
+        await results.getByRole('button', { name: 'Aktivzitierung hinzufügen' }).first().click()
+
+        // Then: entry in list, search fields cleared, not editable, deletable
+        const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
+        await expect(aktivList.getByRole('listitem')).toHaveCount(1)
+        await expect(aktiv.getByRole('textbox', { name: 'Dokumentnummer' })).toHaveValue('')
+        await expect(
+          aktivList.getByRole('button', { name: 'Eintrag bearbeiten' }),
+        ).not.toBeAttached()
+        await expect(aktivList.getByRole('button', { name: 'Eintrag löschen' })).toBeVisible()
+        // Verify summary shows document number and title
+        await expect(aktivList.getByText('KSNR000000001')).toBeVisible()
+        await expect(aktivList.getByText('Alpha Global Setup Document')).toBeVisible()
+
+        // When: save + reload
+        await page.getByRole('button', { name: 'Speichern' }).click()
+        await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+        await page.reload()
+
+        const aktivAfterReload = getAdmAktivzitierungSection(page)
+        const aktivListAfterReload = aktivAfterReload.getByRole('list', {
+          name: 'Aktivzitierung Liste',
+        })
+        await expect(aktivListAfterReload.getByRole('listitem')).toHaveCount(1)
+        await expect(aktivListAfterReload.getByText('KSNR000000001')).toBeVisible()
+
+        // When: delete + save + reload
+        await aktivListAfterReload.getByRole('button', { name: 'Eintrag löschen' }).click()
+        await page.getByRole('button', { name: 'Speichern' }).click()
+        await page.reload()
+
+        const aktivAfterSecondReload = getAdmAktivzitierungSection(page)
+        await expect(
+          aktivAfterSecondReload
+            .getByRole('list', { name: 'Aktivzitierung Liste' })
+            .getByRole('listitem'),
+        ).toHaveCount(0)
+      })
+
+      test('ADM search result with citation type shows citation type first in summary', async ({
+        page,
+      }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // Given: user selects a citation type
+        await aktiv.getByRole('combobox', { name: 'Art der Zitierung' }).click()
+        const options = page.getByRole('listbox', { name: 'Optionsliste' })
+        await expect(options).toBeVisible()
+        await expect(options.getByRole('option', { name: 'Ablehnung' })).toBeVisible()
+        await options.getByRole('option', { name: 'Ablehnung' }).click()
+
+        // When: search for seeded document and add result
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR000000001')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+        await results.getByRole('button', { name: 'Aktivzitierung hinzufügen' }).first().click()
+
+        // Then: summary shows citation type (full name) first, followed by document number and title
+        const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
+        await expect(aktivList.getByRole('listitem')).toHaveCount(1)
+        // Verify citation type appears first in summary (full name "Ablehnung", not abbreviation)
+        await expect(aktivList.getByText(/Ablehnung.*KSNR000000001/)).toBeVisible()
+        await expect(aktivList.getByText('KSNR000000001')).toBeVisible()
+        await expect(aktivList.getByText('Alpha Global Setup Document')).toBeVisible()
+      })
+    },
+  )
 })
