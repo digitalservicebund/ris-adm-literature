@@ -10,7 +10,7 @@ const props = defineProps<{
 function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
   const parts: string[] = []
 
-  if (aktivzitierung.citationType && aktivzitierung.documentNumber) {
+  if (aktivzitierung.citationType) {
     parts.push(aktivzitierung.citationType)
   }
 
@@ -48,10 +48,6 @@ function calculateFundstelle(
 }
 
 function buildFundstellePart(fundstelle: string | null, dokumenttyp?: string): string | null {
-  if (fundstelle && dokumenttyp) {
-    return `${fundstelle} (${dokumenttyp})`
-  }
-
   if (fundstelle && dokumenttyp) {
     return `${fundstelle} (${dokumenttyp})`
   }
