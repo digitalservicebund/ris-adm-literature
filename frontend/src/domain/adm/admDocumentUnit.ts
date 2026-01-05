@@ -41,9 +41,9 @@ export interface AdmDocUnitSearchParams {
   periodikum?: string
   zitatstelle?: string
   inkrafttretedatum?: string
-  aktenzeichen?: string
+  aktenzeichenList?: string[]
   dokumenttyp?: string
-  normgeber?: string
+  normgeberList?: string[]
 }
 
 export interface AdmDocUnitListItem {
