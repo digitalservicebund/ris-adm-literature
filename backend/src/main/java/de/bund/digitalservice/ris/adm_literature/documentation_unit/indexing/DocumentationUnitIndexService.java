@@ -11,8 +11,6 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstel
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Normgeber;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -141,6 +139,10 @@ public class DocumentationUnitIndexService {
       // We save an empty entry so the document still appears on overview page
       return documentationUnitIndex;
     }
+    Class<? extends DocumentationUnitContent> documentationUnitContentClass =
+      DocumentationUnitContent.getDocumentationUnitContentClass(
+        documentationUnitEntity.getDocumentationUnitType()
+      );
     if (documentationUnitEntity.getJson() == null && documentationUnitEntity.getXml() != null) {
       // Published documentation unit, there is only xml
       var documentationUnitContent = ldmlToObjectConverterService.convertToBusinessModel(
@@ -151,7 +153,7 @@ public class DocumentationUnitIndexService {
           documentationUnitEntity.getXml(),
           null
         ),
-        AdmDocumentationUnitContent.class
+        documentationUnitContentClass
       );
       documentationUnitIndex = createDocumentationUnitIndex(
         documentationUnitEntity,
@@ -159,21 +161,10 @@ public class DocumentationUnitIndexService {
       );
     } else if (documentationUnitEntity.getJson() != null) {
       // Draft documentation unit, there is json
-      DocumentationUnitContent documentationUnitContent =
-        switch (documentationUnitEntity.getDocumentationUnitType()) {
-          case VERWALTUNGSVORSCHRIFTEN -> transformJson(
-            documentationUnitEntity.getJson(),
-            AdmDocumentationUnitContent.class
-          );
-          case LITERATUR_SELBSTAENDIG -> transformJson(
-            documentationUnitEntity.getJson(),
-            SliDocumentationUnitContent.class
-          );
-          case LITERATUR_UNSELBSTAENDIG -> transformJson(
-            documentationUnitEntity.getJson(),
-            UliDocumentationUnitContent.class
-          );
-        };
+      DocumentationUnitContent documentationUnitContent = transformJson(
+        documentationUnitEntity.getJson(),
+        documentationUnitContentClass
+      );
       documentationUnitIndex = createDocumentationUnitIndex(
         documentationUnitEntity,
         documentationUnitContent
