@@ -746,6 +746,33 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         await expect(results.getByText('KSNR000000001')).toBeVisible()
       })
 
+      test('ADM search should narrow the results when adding more search criterias (AND-relationship)', async ({
+        page,
+      }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // When: search for a specific seeded Inkrafttretedatum
+        await aktiv.getByRole('textbox', { name: 'Inkrafttretedatum' }).fill('01.12.2025')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: 2 results should be visible
+        const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
+        await expect(results).toBeVisible()
+        const items = results.getByRole('listitem')
+        await expect(items).toHaveCount(2)
+        await expect(results.getByText('KSNR000000001')).toBeVisible()
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with a periodikum
+        await aktiv.getByRole('combobox', { name: 'Periodikum' }).click()
+        await page.getByRole('option', { name: 'BKK' }).click()
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: 1 result should be visible
+        await expect(items).toHaveCount(1)
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+      })
+
       test('ADM search shows no-results message when nothing matches', async ({ page }) => {
         const aktiv = getAdmAktivzitierungSection(page)
 
@@ -769,6 +796,17 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         const results = aktiv.getByRole('list', { name: 'Passende Suchergebnisse' })
         const items = results.getByRole('listitem')
         await expect(items).toHaveCount(15)
+      })
+
+      test('ADM search only retrieves published documents', async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page)
+
+        // Given
+        await aktiv.getByRole('textbox', { name: 'Dokumentnummer' }).fill('KSNR000000003')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then
+        await expect(aktiv.getByText('Keine Suchergebnisse gefunden')).toBeVisible()
       })
 
       test('ADM search result can be added, clears search, cannot be edited, can be deleted, persists', async ({
