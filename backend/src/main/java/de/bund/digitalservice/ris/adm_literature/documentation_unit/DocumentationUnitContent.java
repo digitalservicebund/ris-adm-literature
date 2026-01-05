@@ -14,6 +14,11 @@ public interface DocumentationUnitContent {
   DocumentCategory documentCategory();
   String note();
 
+  /**
+   * Returns the specific documentation unit content class type for the given document category.
+   * @param documentCategory The document category
+   * @return Documentation unit content class type
+   */
   static Class<? extends DocumentationUnitContent> getDocumentationUnitContentClass(
     @NonNull DocumentCategory documentCategory
   ) {
