@@ -14,4 +14,5 @@ SELECT du.document_number,
        dui.normgeber_list_combined,
        dui.aktenzeichen_list,
        dui.aktenzeichen_list_combined
-FROM adm.documentation_unit_index dui join adm.documentation_unit du on dui.documentation_unit_id = du.id;
+FROM adm.documentation_unit_index dui join adm.documentation_unit du on dui.documentation_unit_id = du.id
+WHERE du.xml is not null;
