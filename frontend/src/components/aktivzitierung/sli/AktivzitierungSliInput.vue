@@ -32,24 +32,6 @@ const dokumenttypen = computed({
     emit('update:modelValue', { ...props.modelValue, dokumenttypen: val })
   },
 })
-
-const isCreating = computed(() => !props.modelValue.id || props.modelValue.id === '')
-
-function clearSearchFields() {
-  if (isCreating.value) {
-    emit('update:modelValue', {
-      ...props.modelValue,
-      titel: '',
-      veroeffentlichungsJahr: '',
-      dokumenttypen: [],
-      verfasser: [],
-    })
-  }
-}
-
-defineExpose({
-  clearSearchFields,
-})
 </script>
 
 <template>
