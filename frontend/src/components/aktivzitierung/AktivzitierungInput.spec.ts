@@ -1,13 +1,10 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
-
-import PrimeVue from 'primevue/config'
-import Button from 'primevue/button'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 
 // Dummy type for generic T
-type DummyT = { id: string; documentNumber?: string }
+type DummyT = { id: string; documentNumber?: string; documentTypes?: string[]; count?: number }
 
 describe('AktivzitierungInput', () => {
   it('emits "update" when save button is clicked', async () => {
@@ -18,10 +15,6 @@ describe('AktivzitierungInput', () => {
       props: {
         aktivzitierung: initial,
         showCancelButton: true,
-      },
-      global: {
-        plugins: [PrimeVue],
-        components: { Button },
       },
       slots: {
         default: `<template #default="{ modelValue, onUpdateModelValue }">
@@ -52,7 +45,6 @@ describe('AktivzitierungInput', () => {
     const user = userEvent.setup()
     const { emitted } = render(AktivzitierungInput, {
       props: { showCancelButton: true },
-      global: { plugins: [PrimeVue], components: { Button } },
     })
 
     const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
@@ -71,7 +63,6 @@ describe('AktivzitierungInput', () => {
         aktivzitierung: existing,
         showCancelButton: true,
       },
-      global: { plugins: [PrimeVue], components: { Button } },
     })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
@@ -80,6 +71,15 @@ describe('AktivzitierungInput', () => {
     const events = emitted().delete as [string][]
     expect(events).toHaveLength(1)
     expect(events[0]![0]).toBe('abc')
+  })
+
+  it('does not show or emit delete if no ID is present (creation mode)', async () => {
+    const { emitted } = render(AktivzitierungInput, {
+      props: { showCancelButton: false },
+    })
+
+    expect(screen.queryByRole('button', { name: 'Eintrag löschen' })).not.toBeInTheDocument()
+    expect(emitted().delete).toBeUndefined()
   })
 
   it('updates aktivzitierungRef when aktivzitierung prop changes', async () => {
@@ -91,7 +91,6 @@ describe('AktivzitierungInput', () => {
         aktivzitierung: initialValue,
         showCancelButton: false,
       },
-      global: { plugins: [PrimeVue] },
       slots: {
         default: `<template #default="{ modelValue }">
                     <input data-testid="docnumber" :value="modelValue.documentNumber" readonly />
@@ -109,5 +108,69 @@ describe('AktivzitierungInput', () => {
     // The slot should now show the updated value
     const updatedInput = screen.getByTestId('docnumber') as HTMLInputElement
     expect(updatedInput.value).toBe('NEW')
+
+    // Rerender with undefined aktivzitierung
+    await rerender({ aktivzitierung: undefined })
+
+    // The slot should show the existing value
+    expect(updatedInput.value).toBe('NEW')
+  })
+
+  it('disables the save button when fields are empty or only whitespace', async () => {
+    render(AktivzitierungInput, {
+      props: { showCancelButton: false },
+      slots: {
+        default: `<template #default="{ modelValue, onUpdateModelValue }">
+                      <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+                    </template>`,
+      },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    const input = screen.getByTestId('input')
+
+    // 1. Initial state (only ID exists) -> Should be empty/disabled
+    expect(saveButton).toBeDisabled()
+
+    // 2. Whitespace only -> Should be empty/disabled
+    await userEvent.type(input, '   ')
+    expect(saveButton).toBeDisabled()
+
+    // 3. Valid text -> Should be enabled
+    await userEvent.type(input, 'DOC-123')
+    expect(saveButton).toBeEnabled()
+  })
+
+  it('considers undefined as empty', async () => {
+    const initial: DummyT = { id: '1', documentNumber: undefined }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeDisabled()
+  })
+
+  it('considers empty arrays as empty', async () => {
+    const initial: DummyT = { id: '1', documentNumber: '', documentTypes: [] }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeDisabled()
+  })
+
+  it('save button is enabled for a field of type number', async () => {
+    const initial: DummyT = { id: '1', documentNumber: '', count: 10 }
+
+    render(AktivzitierungInput, {
+      props: { aktivzitierung: initial, showCancelButton: false },
+    })
+
+    const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
+    expect(saveButton).toBeEnabled()
   })
 })

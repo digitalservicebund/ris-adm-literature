@@ -155,7 +155,7 @@ class EliTest {
       TestNormgeber.createByInstitution("Abgeordnetenhaus", "BE"),
       "12345",
       "2025-01-01",
-      LocalDate.now()
+      LocalDate.of(2025, Month.JANUARY, 1)
     );
 
     // when

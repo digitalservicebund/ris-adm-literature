@@ -1,5 +1,5 @@
 import type { DocumentType } from '@/domain/documentType'
-import type { AktivzitierungLiterature } from '../AktivzitierungLiterature.ts'
+import type { AktivzitierungSli } from '../AktivzitierungSli.ts'
 import type { Page } from '@/domain/pagination'
 import type { AktivzitierungAdm } from '../AktivzitierungAdm.ts'
 
@@ -12,7 +12,7 @@ export interface SliDocumentationUnit {
   dokumentarischerTitel?: string
   hauptsachtitelZusatz?: string
   note: string
-  aktivzitierungenSli?: AktivzitierungLiterature[]
+  aktivzitierungenSli?: AktivzitierungSli[]
   aktivzitierungenAdm?: AktivzitierungAdm[]
 }
 
@@ -40,6 +40,6 @@ export interface PaginatedSliDocUnitListResponse {
 export interface SliDocUnitSearchParams {
   veroeffentlichungsJahr?: string
   titel?: string
-  dokumenttypen?: string[]
+  dokumenttypen?: DocumentType[]
   verfasser?: string[]
 }

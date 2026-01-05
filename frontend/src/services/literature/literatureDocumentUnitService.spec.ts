@@ -9,9 +9,14 @@ import {
   usePutUliDocUnit,
   usePutSliDocUnit,
   useGetSliPaginatedDocUnits,
+  useGetAdmPaginatedDocUnitsForSli,
 } from '@/services/literature/literatureDocumentUnitService'
 import { until } from '@vueuse/core'
 import { ref } from 'vue'
+import {
+  docTypeAnordnungFixture,
+  docTypeBekanntmachungFixture,
+} from '@/testing/fixtures/documentType.fixture'
 
 describe('literatureDocumentUnitService', () => {
   beforeEach(() => {
@@ -406,7 +411,7 @@ describe('literatureDocumentUnitService', () => {
         veroeffentlichungsJahr: '2025',
         verfasser: ['Müller', 'Zimmermann'],
         titel: 'DerTitel',
-        dokumenttypen: ['Anordnung', 'Bekanntmachung'],
+        dokumenttypen: [docTypeAnordnungFixture, docTypeBekanntmachungFixture],
       }),
     )
     execute()
@@ -418,5 +423,95 @@ describe('literatureDocumentUnitService', () => {
       expect.anything(),
     )
     expect(error.value).toBeFalsy()
+  })
+
+  it('gets an unfiltered paginated list of adm doc units', async () => {
+    const fetchSpy = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+
+    const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
+      ref(5),
+      100,
+      ref(undefined),
+    )
+    execute()
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+
+    expect(isFetching.value).toBe(false)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      expect.anything(),
+    )
+    expect(error.value).toBeFalsy()
+  })
+
+  it('gets an filtered paginated list of adm doc units', async () => {
+    const fetchSpy = vi
+      .spyOn(window, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+
+    const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
+      ref(5),
+      100,
+      ref({
+        documentNumber: 'KSNR2025',
+        periodikum: 'ThePeriodikum',
+        zitatstelle: 'TheZitatstelle',
+        inkrafttretedatum: '2025-01-01',
+        aktenzeichen: '§3',
+        dokumenttyp: 'VE',
+        normgeber: 'AA',
+      }),
+    )
+    execute()
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+
+    expect(isFetching.value).toBe(false)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC',
+      expect.anything(),
+    )
+    expect(error.value).toBeFalsy()
+  })
+
+  it('transforms ADM response from documentationUnits to documentationUnitsOverview', async () => {
+    const mockResponse = {
+      documentationUnits: [
+        { id: 'uuid-1', documentNumber: 'KSNR20250001' },
+        { id: 'uuid-2', documentNumber: 'KSNR20250002' },
+      ],
+      page: {
+        size: 15,
+        number: 0,
+        numberOfElements: 2,
+        totalElements: 2,
+        first: true,
+        last: true,
+      },
+    }
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(mockResponse), { status: 200 }),
+    )
+
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
+    await execute()
+
+    expect(data.value).toEqual({
+      documentationUnitsOverview: mockResponse.documentationUnits,
+      page: mockResponse.page,
+    })
+
+    expect(data.value).not.toHaveProperty('documentationUnits')
+  })
+
+  it('returns null when ADM response is null', async () => {
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
+    await execute()
+
+    expect(data.value).toBeNull()
   })
 })

@@ -28,6 +28,7 @@ function renderComponent(modelValue: AktivzitierungAdm) {
           template: `
               <input
                 aria-label="Normgeber"
+                :value="modelValue?.name || ''"
                 @input="$emit('update:modelValue', { name: $event.target.value })"
               />
             `,
@@ -39,6 +40,16 @@ function renderComponent(modelValue: AktivzitierungAdm) {
               <input
                 aria-label="Periodikum"
                 @input="$emit('update:modelValue', { abbreviation: $event.target.value })"
+              />
+            `,
+        },
+        DokumentTypDropDown: {
+          props: ['modelValue'],
+          emits: ['update:modelValue'],
+          template: `
+              <input
+                aria-label="Dokumenttyp"
+                @input="$emit('update:modelValue', $event.target.value)"
               />
             `,
         },
@@ -82,7 +93,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Normgeber',
       inputValue: 'Bundestag',
-      expectedPatch: { normgeber: 'Bundestag' },
+      expectedPatch: { normgeberList: ['Bundestag'] },
     },
     {
       label: 'Inkrafttretedatum',
@@ -92,7 +103,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Aktenzeichen',
       inputValue: '§3',
-      expectedPatch: { aktenzeichen: '§3' },
+      expectedPatch: { aktenzeichenList: ['§3'] },
     },
     {
       label: 'Periodikum',
@@ -108,6 +119,11 @@ describe('AktivzitierungAdmInput', () => {
       label: 'Dokumentnummer',
       inputValue: 'TheDocNumber',
       expectedPatch: { documentNumber: 'TheDocNumber' },
+    },
+    {
+      label: 'Dokumenttyp',
+      inputValue: 'TheDocType',
+      expectedPatch: { dokumenttyp: 'TheDocType' },
     },
   ])(
     'emits updated AktivzitierungAdm when $label changes',
@@ -131,4 +147,26 @@ describe('AktivzitierungAdmInput', () => {
       })
     },
   )
+
+  it('correctly maps the first element of normgeberList to the dropdown', () => {
+    const initialValue: AktivzitierungAdm = {
+      id: '123',
+      normgeberList: ['BVerfG', 'Other'],
+    }
+    renderComponent(initialValue)
+
+    const input = screen.getByRole('textbox', { name: 'Normgeber' })
+    expect(input).toHaveValue('BVerfG')
+  })
+
+  it('correctly handles aktenzeichenList mapping', () => {
+    const initialValue: AktivzitierungAdm = {
+      id: '123',
+      aktenzeichenList: ['1 BvR 123/25'],
+    }
+    renderComponent(initialValue)
+
+    const input = screen.getByRole('textbox', { name: 'Aktenzeichen' })
+    expect(input).toHaveValue('1 BvR 123/25')
+  })
 })

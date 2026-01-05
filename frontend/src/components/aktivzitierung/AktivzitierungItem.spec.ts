@@ -1,16 +1,12 @@
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
-import PrimeVue from 'primevue/config'
 import AktivzitierungItem from './AktivzitierungItem.vue'
 
 type DummyT = { id: string; documentNumber?: string; citationType?: string }
 
 function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean }) {
   return render(AktivzitierungItem, {
-    global: {
-      plugins: [PrimeVue],
-    },
     props,
     slots: {
       item: `
@@ -27,7 +23,7 @@ function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean })
 }
 
 describe('AktivzitierungAdmItem', () => {
-  const item: DummyT = { id: '123', documentNumber: 'DOC123', citationType: 'Anmerkung' }
+  const item: DummyT = { id: '123', citationType: 'Anmerkung' }
 
   it('renders read-only view when isEditing is false', () => {
     renderComponent({ aktivzitierung: item, isEditing: false })
@@ -35,12 +31,32 @@ describe('AktivzitierungAdmItem', () => {
     // The slot content should render
     const div = screen.getByTestId('doc-number')
     expect(div).toBeInTheDocument()
-    expect(div).toHaveTextContent('DOC123')
     expect(div).toHaveTextContent('Anmerkung')
 
     // Edit button exists
     const editButton = screen.getByRole('button', { name: 'Eintrag bearbeiten' })
     expect(editButton).toBeInTheDocument()
+
+    // Remove button does not exist
+    const remove = screen.queryByRole('button', { name: 'Eintrag löschen' })
+    expect(remove).not.toBeInTheDocument()
+  })
+
+  it('edit button is hidden and remove button is shown when aktivzitierung has a doc number', () => {
+    renderComponent({
+      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
+      isEditing: false,
+    })
+
+    const div = screen.getByTestId('doc-number')
+    expect(div).toHaveTextContent('DOC123')
+    expect(div).toHaveTextContent('Anmerkung')
+
+    const editButton = screen.queryByRole('button', { name: 'Eintrag bearbeiten' })
+    expect(editButton).not.toBeInTheDocument()
+
+    const saveButton = screen.getByRole('button', { name: 'Eintrag löschen' })
+    expect(saveButton).toBeInTheDocument()
   })
 
   it('emits editStart when edit button is clicked', async () => {
@@ -83,7 +99,30 @@ describe('AktivzitierungAdmItem', () => {
 
   it('emits delete and cancelEdit when child triggers delete', async () => {
     const user = userEvent.setup()
-    const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true })
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
+      isEditing: true,
+    })
+
+    const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
+    await user.click(deleteButton)
+
+    const emits = emitted()
+
+    // Verify events were emitted
+    expect(emits.delete).toBeTruthy()
+    expect(emits.delete![0]).toEqual(['123']) // emitted id
+
+    expect(emits.cancelEdit).toBeTruthy()
+    expect(emits.cancelEdit?.length).toBe(1)
+  })
+
+  it('emits delete for an aktivzitierung coming from search', async () => {
+    const user = userEvent.setup()
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
+      isEditing: false,
+    })
 
     const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
     await user.click(deleteButton)
