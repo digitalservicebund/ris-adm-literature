@@ -16,12 +16,14 @@ class IdentificationConverter {
     List<RisZuordnung> zuordnungen
   ) {
     String aktenzeichen = findAktenzeichen(admDocumentationUnitContent, zuordnungen);
+    String firstZitierdatum = admDocumentationUnitContent.zitierdaten().getFirst();
     Eli eli = new Eli(
       admDocumentationUnitContent.dokumenttyp(),
       admDocumentationUnitContent.normgeberList().getFirst(),
       aktenzeichen,
-      admDocumentationUnitContent.zitierdaten().getFirst(),
-      LocalDate.now()
+      firstZitierdatum,
+      // TODO: Map a real created date from migration and/or database NOSONAR
+      LocalDate.ofYearDay(Integer.parseInt(firstZitierdatum.substring(0, 4)), 1)
     );
     Identification identification = new Identification();
     identification.setFrbrWork(convertFrbrWork(admDocumentationUnitContent, eli, aktenzeichen));
