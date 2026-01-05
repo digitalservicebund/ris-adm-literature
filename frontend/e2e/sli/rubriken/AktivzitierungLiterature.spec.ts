@@ -435,6 +435,9 @@ test.describe(
 
     test('shows a correctly formatted search result: Veröffentlichungsjahr, Verfasser, Dokumentnummer, Hauptsachtitel or Dokumentarischer Titel', async () => {
       const aktiv = getSliAktivzitierungSection(page)
+      const currentYear = new Date().getFullYear()
+      const documentIdPattern = new RegExp('KALS' + currentYear)
+      const headingStructureRegex = new RegExp('Veröffentlichungsjahr: .*KALS' + currentYear + '.*')
 
       await aktiv
         .getByRole('textbox', { name: 'Hauptsachtitel / Dokumentarischer Titel' })
@@ -445,8 +448,7 @@ test.describe(
       // then
       const listItems = aktiv.getByRole('listitem')
       await expect(listItems).toHaveCount(1)
-      await expect(listItems.getByText(/KALS2025/)).toBeVisible()
-      const headingStructureRegex = /Veröffentlichungsjahr: .* \| KALS2025.*/
+      await expect(listItems.getByText(documentIdPattern)).toBeVisible()
       await expect(listItems.getByText(headingStructureRegex)).toBeVisible()
     })
 
