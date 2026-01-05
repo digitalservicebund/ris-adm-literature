@@ -23,7 +23,7 @@ public record DocumentationUnit(
   AdministrativeData administrativeData
 ) {
   public DocumentationUnit(@Nonnull String documentNumber, @Nonnull UUID id, String json) {
-    this(documentNumber, id, json, null, null);
+    this(documentNumber, id, json, null, new AdministrativeData(null, null));
   }
 
   public DocumentationUnit(
@@ -32,7 +32,7 @@ public record DocumentationUnit(
     String json,
     String xml
   ) {
-    this(documentNumber, id, json, xml, null);
+    this(documentNumber, id, json, xml, new AdministrativeData(null, null));
   }
 
   public DocumentationUnit(@Nonnull DocumentationUnit documentationUnit, @Nonnull String json) {

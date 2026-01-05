@@ -80,7 +80,8 @@ class DocumentationUnitServiceTest {
       "KSNR2025000001",
       UUID.randomUUID(),
       null,
-      xml
+      xml,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
@@ -118,7 +119,8 @@ class DocumentationUnitServiceTest {
       "KSNR2025000001",
       UUID.randomUUID(),
       null,
-      xml
+      xml,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     given(documentationUnitPersistenceService.findByDocumentNumber("KSNR2025000001")).willReturn(
       Optional.of(documentationUnit)
@@ -162,9 +164,21 @@ class DocumentationUnitServiceTest {
     String fakeXml = "<test>xml</test>";
     String fakeJson = "{\"test\":\"json\"}";
 
-    var doc = new DocumentationUnit(docNumber, UUID.randomUUID(), null, fakeXml);
+    var doc = new DocumentationUnit(
+      docNumber,
+      UUID.randomUUID(),
+      null,
+      fakeXml,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
+    );
     var content = TestAdmDocumentationUnitContent.create(docNumber, "Lange Überschrift");
-    var publishedDoc = new DocumentationUnit(docNumber, UUID.randomUUID(), fakeJson, fakeXml);
+    var publishedDoc = new DocumentationUnit(
+      docNumber,
+      UUID.randomUUID(),
+      fakeJson,
+      fakeXml,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
+    );
 
     when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
       Optional.of(doc)
@@ -185,7 +199,8 @@ class DocumentationUnitServiceTest {
       "KSNR123456789",
       UUID.randomUUID(),
       null,
-      null
+      null,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
 
     // when
@@ -227,13 +242,15 @@ class DocumentationUnitServiceTest {
       "KSNR1234567890",
       UUID.randomUUID(),
       TEST_JSON,
-      TEST_OLD_XML
+      TEST_OLD_XML,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     DocumentationUnit publishedUnit = new DocumentationUnit(
       "KSNR1234567890",
       UUID.randomUUID(),
       TEST_JSON,
-      TEST_NEW_XML
+      TEST_NEW_XML,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     AdmDocumentationUnitContent contentToPublish = TestAdmDocumentationUnitContent.create(
       "KSNR1234567890",
@@ -277,7 +294,15 @@ class DocumentationUnitServiceTest {
       "KALU123456789",
       UUID.randomUUID(),
       TEST_JSON,
-      TEST_OLD_XML
+      TEST_OLD_XML,
+      new AdministrativeData(DocumentCategory.LITERATUR_UNSELBSTAENDIG, null)
+    );
+    DocumentationUnit publishedUnit = new DocumentationUnit(
+      "KALU123456789",
+      UUID.randomUUID(),
+      TEST_JSON,
+      TEST_NEW_XML,
+      new AdministrativeData(DocumentCategory.LITERATUR_UNSELBSTAENDIG, null)
     );
     UliDocumentationUnitContent contentToPublish = TestLiteratureUnitContent.createUli(
       "KALU123456789",
@@ -286,9 +311,19 @@ class DocumentationUnitServiceTest {
     given(documentationUnitPersistenceService.findByDocumentNumber("KALU123456789")).willReturn(
       Optional.of(existingUnit)
     );
+    given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
+    given(
+      documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
+    ).willReturn(publishedUnit);
     given(objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
       TEST_NEW_XML
     );
+    given(
+      ldmlToObjectConverterService.convertToBusinessModel(
+        publishedUnit,
+        UliDocumentationUnitContent.class
+      )
+    ).willReturn(contentToPublish);
 
     // when
     Optional<DocumentationUnit> result = documentationUnitService.publish(
@@ -311,13 +346,15 @@ class DocumentationUnitServiceTest {
       "KVLS123456789",
       UUID.randomUUID(),
       TEST_JSON,
-      TEST_OLD_XML
+      TEST_OLD_XML,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     DocumentationUnit publishedUnit = new DocumentationUnit(
       "KSNR1234567890",
       UUID.randomUUID(),
       TEST_JSON,
-      TEST_NEW_XML
+      TEST_NEW_XML,
+      new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     SliDocumentationUnitContent contentToPublish = TestLiteratureUnitContent.createSli(
       "KVLS123456789",
