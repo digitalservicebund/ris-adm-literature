@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  update: [aktivzitierung: T]
+  save: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
   search: [params: AktivzitierungSearchParams]
@@ -29,7 +29,7 @@ const aktivzitierungRef = ref<T>(
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id)
 
 function onClickSave() {
-  emit('update', aktivzitierungRef.value)
+  emit('save', aktivzitierungRef.value)
   if (!isExistingEntry.value) {
     aktivzitierungRef.value = createInitialT()
   }

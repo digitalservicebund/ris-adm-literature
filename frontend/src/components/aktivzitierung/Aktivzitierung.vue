@@ -206,7 +206,7 @@ watch(error, (err) => {
         <AktivzitierungItem
           :aktivzitierung="aktivzitierung"
           :is-editing="editingItemId === aktivzitierung.id"
-          @update="updateItem"
+          @save="updateItem"
           @edit-start="startEditing(aktivzitierung.id)"
           @cancel-edit="stopEditing"
           @delete="onRemoveItem"
@@ -232,7 +232,7 @@ watch(error, (err) => {
       class="mt-16"
       :show-cancel-button="false"
       :show-delete-button="false"
-      @update="addManualEntry"
+      @save="addManualEntry"
       @search="onSearch"
     >
       <template #default="{ modelValue, onUpdateModelValue }">

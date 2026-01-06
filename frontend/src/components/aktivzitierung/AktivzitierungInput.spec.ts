@@ -31,7 +31,7 @@ describe('AktivzitierungInput', () => {
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
     await user.click(saveButton)
 
-    const events = emitted().update as [DummyT][]
+    const events = emitted().save as [DummyT][]
     expect(events).toBeTruthy()
     const payload = events[0]![0]
 
