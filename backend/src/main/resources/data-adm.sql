@@ -115,18 +115,18 @@ INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit
 SELECT gen_random_uuid(), 'KSNR000000001', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
 WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000001');
 
-INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten)
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten, inkrafttretedatum)
 SELECT gen_random_uuid(),
        du.id,
        'Alpha Global Setup Document',
        'BGB 123 VWV xyz',
        array ['BGB 123', 'VWV xyz'],
        '2024-06-17 1950-01-01',
-       array ['2024-06-17', '1950-01-01']
+       array ['2024-06-17', '1950-01-01'],
+       '2025-12-01'
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000001'
   AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
-
 
 INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
 SELECT gen_random_uuid(), 'KSNR000000002', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
@@ -142,4 +142,33 @@ SELECT gen_random_uuid(),
        array ['2024-06-18']
 FROM adm.documentation_unit du
 WHERE du.document_number = 'KSNR000000002'
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
+
+INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(), 'KSNR000000003', NULL, 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000003');
+
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift)
+SELECT gen_random_uuid(),
+       du.id,
+       'Gamma Global Setup Document'
+FROM adm.documentation_unit du
+WHERE du.document_number = 'KSNR000000003'
+  AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);
+
+INSERT INTO adm.documentation_unit (id, document_number, xml, documentation_unit_type, documentation_office)
+SELECT gen_random_uuid(), 'KSNR000000004', '', 'VERWALTUNGSVORSCHRIFTEN', 'BSG'
+WHERE NOT EXISTS (SELECT 1 FROM adm.documentation_unit WHERE document_number = 'KSNR000000004');
+
+INSERT INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten, inkrafttretedatum)
+SELECT gen_random_uuid(),
+       du.id,
+       'Delta Global Setup Document',
+       'BKK 789',
+       array ['BKK 789'],
+       '2024-06-18 2024-06-19',
+       array ['2024-06-18', '2024-06-19'],
+       '2025-12-01'
+FROM adm.documentation_unit du
+WHERE du.document_number = 'KSNR000000004'
   AND NOT EXISTS (SELECT 1 FROM adm.documentation_unit_index dui WHERE dui.documentation_unit_id = du.id);

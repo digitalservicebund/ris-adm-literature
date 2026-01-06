@@ -465,9 +465,9 @@ describe('literatureDocumentUnitService', () => {
         periodikum: 'ThePeriodikum',
         zitatstelle: 'TheZitatstelle',
         inkrafttretedatum: '2025-01-01',
-        aktenzeichen: '§3',
+        aktenzeichenList: ['§3'],
         dokumenttyp: 'VE',
-        normgeber: 'AA',
+        normgeberList: ['AA'],
       }),
     )
     execute()
