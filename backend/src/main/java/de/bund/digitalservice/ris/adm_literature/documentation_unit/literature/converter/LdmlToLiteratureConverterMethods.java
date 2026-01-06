@@ -97,7 +97,7 @@ class LdmlToLiteratureConverterMethods {
           attributes.get("veroeffentlichungsJahr"),
           attributes.get("buchtitel"),
           null,
-          List.of(attributes.get("autor")),
+          attributes.get("autor") != null ? List.of(attributes.get("autor")) : List.of(),
           null
         )
       );
