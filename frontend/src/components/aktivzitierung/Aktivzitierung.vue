@@ -182,12 +182,12 @@ function addSearchResult(result: R) {
  * Side effects
  * ------------------------------------------------------------------ */
 watch(error, (err) => {
-  if (!err) return
-
-  toast.add({
-    severity: 'error',
-    summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
-  })
+  if (err) {
+    toast.add({
+      severity: 'error',
+      summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
+    })
+  }
 })
 </script>
 
