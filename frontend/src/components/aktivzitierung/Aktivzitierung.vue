@@ -116,7 +116,7 @@ function updateItem(item: T) {
   stopEditing()
 }
 
-function addItem(item: T) {
+function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item)
   onAddItem(cleanedItem)
@@ -231,7 +231,8 @@ watch(error, (err) => {
       ref="inputRef"
       class="mt-16"
       :show-cancel-button="false"
-      @update="addItem"
+      :show-delete-button="false"
+      @update="addManualEntry"
       @search="onSearch"
     >
       <template #default="{ modelValue, onUpdateModelValue }">

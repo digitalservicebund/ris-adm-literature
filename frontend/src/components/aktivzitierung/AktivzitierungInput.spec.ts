@@ -15,6 +15,7 @@ describe('AktivzitierungInput', () => {
       props: {
         aktivzitierung: initial,
         showCancelButton: true,
+        showDeleteButton: false,
       },
       slots: {
         default: `<template #default="{ modelValue, onUpdateModelValue }">
@@ -44,7 +45,7 @@ describe('AktivzitierungInput', () => {
   it('emits "cancel" when cancel button is clicked', async () => {
     const user = userEvent.setup()
     const { emitted } = render(AktivzitierungInput, {
-      props: { showCancelButton: true },
+      props: { showCancelButton: true, showDeleteButton: false },
     })
 
     const cancelButton = screen.getByRole('button', { name: 'Abbrechen' })
@@ -62,6 +63,7 @@ describe('AktivzitierungInput', () => {
       props: {
         aktivzitierung: existing,
         showCancelButton: true,
+        showDeleteButton: true,
       },
     })
 
@@ -73,9 +75,9 @@ describe('AktivzitierungInput', () => {
     expect(events[0]![0]).toBe('abc')
   })
 
-  it('does not show or emit delete if no ID is present (creation mode)', async () => {
+  it('does not show delete button if flag is set', async () => {
     const { emitted } = render(AktivzitierungInput, {
-      props: { showCancelButton: false },
+      props: { showCancelButton: false, showDeleteButton: false },
     })
 
     expect(screen.queryByRole('button', { name: 'Eintrag löschen' })).not.toBeInTheDocument()
@@ -90,6 +92,7 @@ describe('AktivzitierungInput', () => {
       props: {
         aktivzitierung: initialValue,
         showCancelButton: false,
+        showDeleteButton: false,
       },
       slots: {
         default: `<template #default="{ modelValue }">
@@ -118,7 +121,7 @@ describe('AktivzitierungInput', () => {
 
   it('disables the save button when fields are empty or only whitespace', async () => {
     render(AktivzitierungInput, {
-      props: { showCancelButton: false },
+      props: { showCancelButton: false, showDeleteButton: false },
       slots: {
         default: `<template #default="{ modelValue, onUpdateModelValue }">
                       <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
@@ -145,7 +148,7 @@ describe('AktivzitierungInput', () => {
     const initial: DummyT = { id: '1', documentNumber: undefined }
 
     render(AktivzitierungInput, {
-      props: { aktivzitierung: initial, showCancelButton: false },
+      props: { aktivzitierung: initial, showCancelButton: false, showDeleteButton: false },
     })
 
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
@@ -156,7 +159,7 @@ describe('AktivzitierungInput', () => {
     const initial: DummyT = { id: '1', documentNumber: '', documentTypes: [] }
 
     render(AktivzitierungInput, {
-      props: { aktivzitierung: initial, showCancelButton: false },
+      props: { aktivzitierung: initial, showCancelButton: false, showDeleteButton: false },
     })
 
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })
@@ -167,7 +170,7 @@ describe('AktivzitierungInput', () => {
     const initial: DummyT = { id: '1', documentNumber: '', count: 10 }
 
     render(AktivzitierungInput, {
-      props: { aktivzitierung: initial, showCancelButton: false },
+      props: { aktivzitierung: initial, showCancelButton: false, showDeleteButton: false },
     })
 
     const saveButton = screen.getByRole('button', { name: 'Aktivzitierung übernehmen' })

@@ -74,6 +74,8 @@ function mapAdmSearchResult(result: AdmAktivzitierungListItem): AktivzitierungAd
     id: crypto.randomUUID(),
     uuid: id,
     ...rest,
+    normgeber: result.normgeberList?.[0],
+    aktenzeichen: result.aktenzeichenList?.[0],
   }
 }
 

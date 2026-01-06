@@ -6,6 +6,7 @@ import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 const props = defineProps<{
   aktivzitierung?: T
   showCancelButton: boolean
+  showDeleteButton: boolean
 }>()
 
 const emit = defineEmits<{
@@ -111,7 +112,7 @@ defineExpose({
         @click.stop="onClickCancel"
       />
       <Button
-        v-if="isExistingEntry"
+        v-if="showDeleteButton"
         class="ml-auto"
         aria-label="Eintrag löschen"
         severity="danger"
