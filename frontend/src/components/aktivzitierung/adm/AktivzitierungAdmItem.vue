@@ -14,8 +14,8 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     parts.push(aktivzitierung.citationType)
   }
 
-  if (aktivzitierung.normgeberList?.[0]) {
-    parts.push(aktivzitierung.normgeberList[0])
+  if (aktivzitierung.normgeber) {
+    parts.push(aktivzitierung.normgeber)
   }
 
   if (aktivzitierung.inkrafttretedatum) {
@@ -25,8 +25,8 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     }
   }
 
-  if (aktivzitierung.aktenzeichenList?.[0]) {
-    parts.push(aktivzitierung.aktenzeichenList[0])
+  if (aktivzitierung.aktenzeichen) {
+    parts.push(aktivzitierung.aktenzeichen)
   }
 
   return parts

@@ -11,9 +11,9 @@ const testCases = [
     data: {
       ...baseItem,
       citationType: 'VV',
-      normgeberList: ['BMJ'],
+      normgeber: 'BMJ',
       inkrafttretedatum: '2024-01-01',
-      aktenzeichenList: ['Az 123'],
+      aktenzeichen: 'Az 123',
       fundstellen: ['BGBl I S. 10'],
       dokumenttyp: 'VO',
       documentNumber: '123-A',
@@ -72,7 +72,7 @@ const testCases = [
     data: {
       ...baseItem,
       documentNumber: '123',
-      aktenzeichenList: ['II ZR 12/23', 'XX'],
+      aktenzeichen: 'II ZR 12/23',
     },
     expected: 'II ZR 12/23 | 123',
   },

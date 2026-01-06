@@ -93,7 +93,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Normgeber',
       inputValue: 'Bundestag',
-      expectedPatch: { normgeberList: ['Bundestag'] },
+      expectedPatch: { normgeber: 'Bundestag' },
     },
     {
       label: 'Inkrafttretedatum',
@@ -103,7 +103,7 @@ describe('AktivzitierungAdmInput', () => {
     {
       label: 'Aktenzeichen',
       inputValue: '§3',
-      expectedPatch: { aktenzeichenList: ['§3'] },
+      expectedPatch: { aktenzeichen: '§3' },
     },
     {
       label: 'Periodikum',
@@ -156,45 +156,5 @@ describe('AktivzitierungAdmInput', () => {
 
     const input = screen.getByRole('textbox', { name: 'Art der Zitierung' })
     expect(input).toHaveValue('')
-  })
-
-  it('correctly maps the first element of normgeberList to the dropdown, emits an empty list when cleared', async () => {
-    const user = userEvent.setup()
-    const initialValue: AktivzitierungAdm = {
-      id: '123',
-      normgeberList: ['BVerfG', 'Other'],
-    }
-
-    const { emitted } = render(AktivzitierungAdmInput, {
-      props: {
-        modelValue: initialValue,
-      },
-    })
-
-    const input = screen.getByRole('combobox', { name: 'Normgeber' })
-    expect(input).toHaveValue('BVerfG')
-
-    await user.clear(input)
-
-    const events = emitted()['update:modelValue'] as Array<[AktivzitierungAdm]>
-    const finalPayload = events[events.length - 1]![0]
-
-    expect(finalPayload).toEqual({
-      ...initialValue,
-      ...{
-        normgeberList: [],
-      },
-    })
-  })
-
-  it('correctly handles aktenzeichenList mapping', () => {
-    const initialValue: AktivzitierungAdm = {
-      id: '123',
-      aktenzeichenList: ['1 BvR 123/25'],
-    }
-    renderComponent(initialValue)
-
-    const input = screen.getByRole('textbox', { name: 'Aktenzeichen' })
-    expect(input).toHaveValue('1 BvR 123/25')
   })
 })

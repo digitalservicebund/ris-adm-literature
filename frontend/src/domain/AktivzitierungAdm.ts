@@ -6,10 +6,8 @@ export interface AktivzitierungAdm {
   periodikum?: string
   zitatstelle?: string
   inkrafttretedatum?: string
-  aktenzeichenList?: string[]
   aktenzeichen?: string
   dokumenttyp?: string
-  normgeberList?: string[]
   normgeber?: string
   langueberschrift?: string
   fundstellen?: string[]
