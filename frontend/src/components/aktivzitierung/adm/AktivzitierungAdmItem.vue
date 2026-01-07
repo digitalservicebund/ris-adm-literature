@@ -32,15 +32,7 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
   return parts
 }
 
-function calculateFundstelle(
-  fundstellen?: string[],
-  periodikum?: string,
-  zitatstelle?: string,
-): string | null {
-  if (fundstellen?.[0]) {
-    return fundstellen[0]
-  }
-
+function calculateFundstelle(periodikum?: string, zitatstelle?: string): string | null {
   if (periodikum && zitatstelle) {
     return `${periodikum} ${zitatstelle}`
   }
@@ -74,7 +66,6 @@ const metaSummary = computed(() => {
   const parts = buildBasicParts(props.aktivzitierung)
 
   const fundstelle = calculateFundstelle(
-    props.aktivzitierung.fundstellen,
     props.aktivzitierung.periodikum,
     props.aktivzitierung.zitatstelle,
   )

@@ -10,5 +10,4 @@ export interface AktivzitierungAdm {
   dokumenttyp?: string
   normgeber?: string
   langueberschrift?: string
-  fundstellen?: string[]
 }
