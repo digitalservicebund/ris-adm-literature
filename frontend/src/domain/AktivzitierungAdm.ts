@@ -1,6 +1,5 @@
 export interface AktivzitierungAdm {
   id: string
-  uuid?: string
   documentNumber?: string
   citationType?: string
   periodikum?: string

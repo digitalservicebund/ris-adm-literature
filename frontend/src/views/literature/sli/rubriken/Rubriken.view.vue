@@ -60,7 +60,6 @@ function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
 
   return {
     id: crypto.randomUUID(),
-    uuid: result.id,
     titel: result.titel,
     documentNumber: result.documentNumber,
     veroeffentlichungsJahr: result.veroeffentlichungsjahr,
@@ -76,7 +75,6 @@ function mapAdmSearchResult(result: AdmAktivzitierungListItem): AktivzitierungAd
 
   return {
     id: crypto.randomUUID(),
-    uuid: result.id,
     documentNumber: result.documentNumber,
     inkrafttretedatum: result.inkrafttretedatum,
     dokumenttyp: result.dokumenttyp,
