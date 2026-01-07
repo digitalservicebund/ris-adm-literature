@@ -178,6 +178,6 @@ function mapResponseToLiteratureDocUnit(data: UliDocumentUnitResponse | SliDocum
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
-    note: data.note || '',
+    note: data.administrativeData.note || '',
   }
 }

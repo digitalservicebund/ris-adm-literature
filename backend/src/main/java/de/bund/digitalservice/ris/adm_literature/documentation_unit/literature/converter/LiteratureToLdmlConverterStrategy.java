@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy {
 
-  private final MinimalLdmlDocument minimalLdmlDocument = new MinimalLdmlDocument();
+  private final LdmlDocumentFactory ldmlDocumentFactory;
 
   private static final String VALUE = "value";
   private static final String SOURCE = "source";
@@ -74,7 +74,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
       LiteratureDocumentationUnitContent content =
         (LiteratureDocumentationUnitContent) documentationUnitContent;
 
-      LdmlDocument ldmlDocument = minimalLdmlDocument.create(category);
+      LdmlDocument ldmlDocument = ldmlDocumentFactory.createDocument(category);
       transformToLdml(ldmlDocument, content, category);
 
       return DomXmlWriter.xmlToString(ldmlDocument.getDocument());

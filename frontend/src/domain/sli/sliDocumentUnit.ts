@@ -20,7 +20,7 @@ export interface SliDocumentUnitResponse {
   id: string
   documentNumber: string
   json: SliDocumentationUnit
-  note?: string
+  administrativeData: { note?: string }
 }
 
 export interface SliDocUnitListItem {

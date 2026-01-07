@@ -2,15 +2,12 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
@@ -54,15 +51,20 @@ public class DocumentationUnitService {
       optionalDocumentationUnit.map(DocumentationUnit::xml).isPresent()
     ) {
       // For an existing documentation unit without JSON but existing xml needs to be converted
+
       return convertLdml(optionalDocumentationUnit.get());
     }
     return optionalDocumentationUnit;
   }
 
   private Optional<DocumentationUnit> convertLdml(DocumentationUnit documentationUnit) {
+    Class<? extends DocumentationUnitContent> documentationUnitContentClass =
+      DocumentationUnitContent.getDocumentationUnitContentClass(
+        documentationUnit.administrativeData().documentCategory()
+      );
     var documentationUnitContent = ldmlToObjectConverterService.convertToBusinessModel(
       documentationUnit,
-      AdmDocumentationUnitContent.class
+      documentationUnitContentClass
     );
     String json = convertToJson(documentationUnitContent);
     return Optional.of(new DocumentationUnit(documentationUnit, json));
@@ -114,37 +116,15 @@ public class DocumentationUnitService {
       documentationUnitContent,
       documentationUnit.xml()
     );
-
-    return switch (documentationUnitContent) {
-      case SliDocumentationUnitContent sli -> {
-        String json = convertToJson(sli);
-        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-          documentNumber,
-          json,
-          xml
-        );
-        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_SELBSTAENDIG);
-        yield Optional.of(publishedDocumentationUnit);
-      }
-      case UliDocumentationUnitContent _ -> {
-        publishToPortal(documentNumber, xml, DocumentCategory.LITERATUR_UNSELBSTAENDIG);
-        // TODO: Return converted doc like for adm NOSONAR
-        yield optionalDocumentationUnit;
-      }
-      case AdmDocumentationUnitContent adm -> {
-        String json = convertToJson(adm);
-        DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
-          documentNumber,
-          json,
-          xml
-        );
-        publishToPortal(documentNumber, xml, DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
-        yield convertLdml(publishedDocumentationUnit);
-      }
-      default -> throw new IllegalStateException(
-        "Unsupported document category: " + documentationUnitContent.getClass().getSimpleName()
-      );
-    };
+    String json = convertToJson(documentationUnitContent);
+    DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
+      documentNumber,
+      json,
+      xml
+    );
+    DocumentCategory documentCategory = documentationUnitContent.documentCategory();
+    publishToPortal(documentNumber, xml, documentCategory);
+    return convertLdml(publishedDocumentationUnit);
   }
 
   private void publishToPortal(

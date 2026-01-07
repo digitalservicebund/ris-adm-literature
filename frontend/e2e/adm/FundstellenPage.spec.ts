@@ -9,6 +9,7 @@ test.describe('FundstellenPage', () => {
         documentNumber: 'KSNR054920707',
         id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
         json: null,
+        administrativeData: { note: '' },
       }
       await route.fulfill({ json })
     })
@@ -185,6 +186,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
           documentNumber: 'KSNR054920707',
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           json: documentUnit,
+          administrativeData: { note: '' },
         }
         await route.fulfill({ json })
       })
@@ -220,6 +222,7 @@ test.describe('FundstellenPageSaveAndLoad', () => {
           documentNumber: 'KSNR054920707',
           id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
           json: documentUnit,
+          administrativeData: { note: '' },
         }
         await route.fulfill({ json })
       })

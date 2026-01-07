@@ -3,15 +3,22 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
+@ExtendWith(MockitoExtension.class)
 class LdmlElementTest {
+
+  @InjectMocks
+  private LdmlDocumentFactory ldmlDocumentFactory;
 
   @Test
   void appendElementOnceAndGet() throws Exception {
     // given
-    LdmlDocument ldmlDocument = new MinimalLdmlDocument().create(LiteratureDocumentCategory.ULI);
+    LdmlDocument ldmlDocument = ldmlDocumentFactory.createDocument(LiteratureDocumentCategory.ULI);
     LdmlElement tlcRole = new LdmlElement(ldmlDocument.addReferences(), "akn:TLCRole")
       .addAttribute("eId", "eId")
       .addAttribute("showAs", "showAs");
@@ -33,7 +40,7 @@ class LdmlElementTest {
   @Test
   void appendNode() throws Exception {
     // given
-    LdmlDocument ldmlDocument = new MinimalLdmlDocument().create(LiteratureDocumentCategory.ULI);
+    LdmlDocument ldmlDocument = ldmlDocumentFactory.createDocument(LiteratureDocumentCategory.ULI);
 
     // when
     ldmlDocument
@@ -55,7 +62,7 @@ class LdmlElementTest {
   @Test
   void appendText() throws Exception {
     // given
-    LdmlDocument ldmlDocument = new MinimalLdmlDocument().create(LiteratureDocumentCategory.ULI);
+    LdmlDocument ldmlDocument = ldmlDocumentFactory.createDocument(LiteratureDocumentCategory.ULI);
 
     // when
     LdmlElement p = ldmlDocument

@@ -26,10 +26,11 @@ public class LdmlToObjectConverterService {
    * @param documentationUnit The documentation unit to convert
    * @param clazz The class of the returned business model
    * @return Business model representation of given documentation unit's xml
+   * @param <T> Return class type
    */
-  public DocumentationUnitContent convertToBusinessModel(
+  public <T extends DocumentationUnitContent> T convertToBusinessModel(
     @Nonnull DocumentationUnit documentationUnit,
-    Class<? extends DocumentationUnitContent> clazz
+    Class<T> clazz
   ) {
     log.debug("Finding converter strategy for content type: {}", clazz.getSimpleName());
 
@@ -44,6 +45,7 @@ public class LdmlToObjectConverterService {
       );
 
     log.debug("Using strategy: {}", strategy.getClass().getSimpleName());
-    return strategy.convertToBusinessModel(documentationUnit);
+    //noinspection unchecked
+    return (T) strategy.convertToBusinessModel(documentationUnit);
   }
 }

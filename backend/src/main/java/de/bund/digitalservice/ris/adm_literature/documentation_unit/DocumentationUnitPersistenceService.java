@@ -63,6 +63,7 @@ public class DocumentationUnitPersistenceService {
         String json = documentationUnitEntity.getJson();
         String note = noteService.find(documentationUnitEntity);
         if (ObjectUtils.allNotNull(json, note)) {
+          // Notes are only added if we have JSON - reading them for already published documents is not implemented.
           JsonNode jsonNode = objectMapper.readTree(json);
           ((ObjectNode) jsonNode).put("note", note);
           json = objectMapper.writeValueAsString(jsonNode);
@@ -72,7 +73,7 @@ public class DocumentationUnitPersistenceService {
           documentationUnitEntity.getId(),
           json,
           documentationUnitEntity.getXml(),
-          note
+          new AdministrativeData(documentationUnitEntity.getDocumentationUnitType(), note)
         );
       });
   }
@@ -134,7 +135,7 @@ public class DocumentationUnitPersistenceService {
           documentationUnitEntity.getId(),
           json,
           null,
-          note
+          new AdministrativeData(documentationUnitEntity.getDocumentationUnitType(), note)
         );
       })
       .orElse(null);
@@ -171,7 +172,7 @@ public class DocumentationUnitPersistenceService {
           documentationUnitEntity.getId(),
           json,
           xml,
-          note
+          new AdministrativeData(documentationUnitEntity.getDocumentationUnitType(), note)
         );
       })
       .orElse(null);

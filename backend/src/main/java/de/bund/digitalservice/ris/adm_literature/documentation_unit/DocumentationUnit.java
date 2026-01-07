@@ -13,33 +13,35 @@ import java.util.UUID;
  * @param json The JSON containing the documentation unit (persisting the frontend's pinia store state),
  *             can be {@code null} for migrated documentation units
  * @param xml The xml, can be {@code null} for new documentation units
- * @param note The note
+ * @param administrativeData Administrative data for the documentation unit
  */
 public record DocumentationUnit(
   @Nonnull String documentNumber,
   @Nonnull UUID id,
   @JsonRawValue String json,
   @JsonIgnore String xml,
-  String note
+  AdministrativeData administrativeData
 ) {
   public DocumentationUnit(@Nonnull String documentNumber, @Nonnull UUID id, String json) {
-    this(documentNumber, id, json, null, null);
+    this(documentNumber, id, json, null, new AdministrativeData(null, null));
   }
+
   public DocumentationUnit(
     @Nonnull String documentNumber,
     @Nonnull UUID id,
     String json,
     String xml
   ) {
-    this(documentNumber, id, json, xml, null);
+    this(documentNumber, id, json, xml, new AdministrativeData(null, null));
   }
+
   public DocumentationUnit(@Nonnull DocumentationUnit documentationUnit, @Nonnull String json) {
     this(
       documentationUnit.documentNumber,
       documentationUnit.id,
       json,
       null,
-      documentationUnit.note
+      documentationUnit.administrativeData
     );
   }
 }

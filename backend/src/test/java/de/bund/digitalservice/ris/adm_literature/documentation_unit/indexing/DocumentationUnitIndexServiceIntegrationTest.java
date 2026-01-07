@@ -9,7 +9,6 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Documentatio
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
 import jakarta.persistence.TypedQuery;
 import java.time.Year;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jpa.test.autoconfigure.AutoConfigureTestEntityManager;
@@ -185,7 +184,6 @@ class DocumentationUnitIndexServiceIntegrationTest {
   }
 
   @Test
-  @Disabled("Needs to be implemented with conversion from LDML to Json")
   void indexBySliDocumentationUnit_xml() {
     // given
     String xml = TestFile.readFileToString("literature/sli/ldml-example.akn.xml");
@@ -210,12 +208,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
         LiteratureIndex::getDokumenttypenCombined,
         LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly(
-        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
-        "2022ff",
-        "Ebs Gut",
-        null
-      );
+      .containsExactly("Lexikon der Spieltheorie", "2025", "Bib Ebs", null);
   }
 
   @Test
@@ -287,7 +280,6 @@ class DocumentationUnitIndexServiceIntegrationTest {
   }
 
   @Test
-  @Disabled("Needs to be implemented with conversion from LDML to Json")
   void indexBySliDocumentationUnit_jsonAndXml() {
     // given
     String json = TestFile.readFileToString("literature/sli/json-example.json");
@@ -296,7 +288,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity.setDocumentNumber("KVLS555555555");
     documentationUnitEntity.setJson(json);
     documentationUnitEntity.setXml(xml);
-    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+    documentationUnitEntity.setDocumentationUnitType(DocumentCategory.LITERATUR_SELBSTAENDIG);
     documentationUnitEntity.setDocumentationOffice(DocumentationOffice.BSG);
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
@@ -314,7 +306,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
         LiteratureIndex::getDokumenttypenCombined,
         LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs Kon", null);
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs Gut",
+        null
+      );
   }
 
   @Test
@@ -344,7 +341,6 @@ class DocumentationUnitIndexServiceIntegrationTest {
   }
 
   @Test
-  @Disabled("Needs to be implemented with conversion from LDML to Json")
   void indexByUliDocumentationUnit_xml() {
     // given
     String xml = TestFile.readFileToString("literature/uli/ldml-example.akn.xml");
@@ -369,12 +365,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
         LiteratureIndex::getDokumenttypenCombined,
         LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly(
-        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
-        "2022ff",
-        "Ebs Gut",
-        null
-      );
+      .containsExactly("Lexikon der Spieltheorie", "2025", "Bib Ebs", null);
   }
 
   @Test
@@ -446,7 +437,6 @@ class DocumentationUnitIndexServiceIntegrationTest {
   }
 
   @Test
-  @Disabled("Needs to be implemented with conversion from LDML to Json")
   void indexByUliDocumentationUnit_jsonAndXml() {
     // given
     String json = TestFile.readFileToString("literature/uli/json-example.json");
@@ -473,7 +463,12 @@ class DocumentationUnitIndexServiceIntegrationTest {
         LiteratureIndex::getDokumenttypenCombined,
         LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("", "", "Ebs Kon", null);
+      .containsExactly(
+        "Hauptsache Titel - eine Gesetzgebungsgutschrift",
+        "2022ff",
+        "Ebs Gut",
+        null
+      );
   }
 
   @Test
