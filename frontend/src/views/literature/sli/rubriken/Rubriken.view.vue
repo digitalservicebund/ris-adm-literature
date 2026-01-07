@@ -80,7 +80,6 @@ function mapAdmSearchResult(result: AdmAktivzitierungListItem): AktivzitierungAd
     documentNumber: result.documentNumber,
     inkrafttretedatum: result.inkrafttretedatum,
     dokumenttyp: result.dokumenttyp,
-    langueberschrift: result.langueberschrift,
     normgeber: result.normgeberList?.[0],
     aktenzeichen: result.aktenzeichenList?.[0],
     periodikum,

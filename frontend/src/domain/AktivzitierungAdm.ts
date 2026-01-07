@@ -9,5 +9,4 @@ export interface AktivzitierungAdm {
   aktenzeichen?: string
   dokumenttyp?: string
   normgeber?: string
-  langueberschrift?: string
 }

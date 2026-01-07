@@ -833,8 +833,6 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         await expect(aktivList.getByRole('button', { name: 'Eintrag löschen' })).toBeVisible()
         // Verify summary shows document number and title
         await expect(aktivList.getByText('KSNR000000001')).toBeVisible()
-        await expect(aktivList.getByText('Alpha Global Setup Document')).toBeVisible()
-
         // When: save + reload
         await page.getByRole('button', { name: 'Speichern' }).click()
         await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
@@ -885,7 +883,6 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         // Verify citation type appears first in summary (full name "Ablehnung", not abbreviation)
         await expect(aktivList.getByText(/Ablehnung.*KSNR000000001/)).toBeVisible()
         await expect(aktivList.getByText('KSNR000000001')).toBeVisible()
-        await expect(aktivList.getByText('Alpha Global Setup Document')).toBeVisible()
       })
     },
   )

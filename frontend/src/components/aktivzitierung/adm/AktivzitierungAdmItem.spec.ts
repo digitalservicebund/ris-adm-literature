@@ -105,14 +105,4 @@ describe('AktivzitierungAdmItem (metaSummary)', () => {
       expect(screen.getByText(expected)).toBeInTheDocument()
     }
   })
-
-  it('shows the langueberschrift', () => {
-    render(AktivzitierungAdmItem, {
-      props: {
-        aktivzitierung: { id: 'id-1', documentNumber: 'doc1', langueberschrift: 'TheTitle' },
-      },
-    })
-
-    expect(screen.getByText('TheTitle')).toBeInTheDocument()
-  })
 })

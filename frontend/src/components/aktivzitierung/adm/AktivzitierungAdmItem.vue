@@ -84,12 +84,5 @@ const metaSummary = computed(() => {
     <div class="ris-body1-regular">
       {{ metaSummary }}
     </div>
-
-    <div
-      v-if="aktivzitierung.documentNumber && aktivzitierung.langueberschrift"
-      class="ris-body2-regular text-gray-900"
-    >
-      {{ aktivzitierung.langueberschrift }}
-    </div>
   </div>
 </template>
