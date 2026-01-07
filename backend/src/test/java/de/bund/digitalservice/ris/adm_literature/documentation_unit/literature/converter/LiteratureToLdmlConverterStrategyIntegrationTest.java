@@ -254,6 +254,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       "Dies ist eine Gesamtfussnote",
       List.of(
         new AktivzitierungSli(
+          null,
           "docnum",
           "jahr",
           "titel",
@@ -323,6 +324,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       Collections.emptyList(),
       List.of(
         new de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm(
+          null,
           "doc123",
           "VwV",
           "BGBl I",

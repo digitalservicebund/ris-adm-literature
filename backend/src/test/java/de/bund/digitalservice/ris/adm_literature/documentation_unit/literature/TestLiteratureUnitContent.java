@@ -42,6 +42,7 @@ public class TestLiteratureUnitContent {
       null,
       List.of(
         new AktivzitierungSli(
+          null,
           "docnum",
           "11",
           "titel",
@@ -52,6 +53,7 @@ public class TestLiteratureUnitContent {
       ),
       List.of(
         new AktivzitierungAdm(
+          null,
           "docnum",
           "11",
           "periodikum",

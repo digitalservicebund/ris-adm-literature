@@ -9,6 +9,7 @@ import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.Doc
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathNodes;
@@ -93,6 +94,7 @@ class LdmlToLiteratureConverterMethods {
       );
       aktivzitierungenSli.add(
         new AktivzitierungSli(
+          UUID.randomUUID(),
           attributes.get("documentNumber"),
           attributes.get("veroeffentlichungsJahr"),
           attributes.get("buchtitel"),
@@ -129,6 +131,7 @@ class LdmlToLiteratureConverterMethods {
       );
       aktivzitierungenAdm.add(
         new AktivzitierungAdm(
+          UUID.randomUUID(),
           attributes.get("documentNumber"),
           attributes.get("abbreviation"),
           StringUtils.trimToNull(periodikum),
