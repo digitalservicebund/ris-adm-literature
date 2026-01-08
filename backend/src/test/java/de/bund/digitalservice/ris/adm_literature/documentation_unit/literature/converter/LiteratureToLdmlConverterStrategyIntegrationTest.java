@@ -324,7 +324,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       Collections.emptyList(),
       List.of(
         new de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm(
-          null,
+          UUID.randomUUID(),
           "doc123",
           "VwV",
           "BGBl I",
