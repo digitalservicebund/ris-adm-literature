@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Aktivzitieru
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Test class for easily creating instances of {@link UliDocumentationUnitContent}
