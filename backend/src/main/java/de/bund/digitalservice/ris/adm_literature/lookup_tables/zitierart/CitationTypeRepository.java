@@ -6,14 +6,22 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 interface CitationTypeRepository extends JpaRepository<CitationTypeEntity, UUID> {
-  Page<
-    CitationTypeEntity
-  > findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
-    @Nonnull DocumentCategory documentCategory,
-    @Nonnull String abbreviation,
-    @Nonnull String label,
+  @Query(
+    """
+    select ct from CitationTypeEntity ct where ct.sourceDocumentCategory = :sourceDocumentCategory \
+    and ct.targetDocumentCategory = :targetDocumentCategory \
+    and (upper(ct.abbreviation) like (upper(concat('%', :abbreviation, '%'))) \
+    or (upper(ct.label) like (upper(concat('%', :label, '%')))))"""
+  )
+  Page<CitationTypeEntity> findBySourceAndTargetAndAbbreviationOrLabel(
+    @Nonnull @Param("sourceDocumentCategory") DocumentCategory sourceDocumentCategory,
+    @Param("targetDocumentCategory") DocumentCategory targetDocumentCategory,
+    @Nonnull @Param("abbreviation") String abbreviation,
+    @Nonnull @Param("label") String label,
     @Nonnull Pageable pageable
   );
 }

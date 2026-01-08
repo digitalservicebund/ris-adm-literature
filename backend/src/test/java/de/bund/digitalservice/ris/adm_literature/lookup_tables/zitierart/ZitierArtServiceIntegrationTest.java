@@ -29,6 +29,7 @@ class ZitierArtServiceIntegrationTest {
       new ZitierArtQuery(
         null,
         DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        null,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
       )
     );
@@ -49,15 +50,16 @@ class ZitierArtServiceIntegrationTest {
     Page<ZitierArt> zitierArten = zitierArtService.findZitierArten(
       new ZitierArtQuery(
         null,
-        DocumentCategory.LITERATUR_UNSELBSTAENDIG,
+        DocumentCategory.LITERATUR,
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
       )
     );
 
     // then
     assertThat(zitierArten.content())
-      .hasSize(1)
+      .hasSize(4)
       .extracting(ZitierArt::abbreviation)
-      .containsExactly("XX");
+      .containsExactly("Ablehnung", "Vergleiche", "XX", "Zustimmung");
   }
 }
