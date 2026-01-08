@@ -4,7 +4,8 @@
   setup
   generic="
     T extends { id: string; documentNumber?: string },
-    R extends { id: string; documentNumber: string }
+    R extends { id: string; documentNumber: string },
+    SP extends Record<string, unknown>
   "
 >
 import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
@@ -18,7 +19,6 @@ import { usePagination } from '@/composables/usePagination'
 import SearchResults from '../SearchResults.vue'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import errorMessages from '@/i18n/errors.json'
-import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const ITEMS_PER_PAGE = 15
 
@@ -29,7 +29,7 @@ const props = defineProps<{
   fetchResultsFn: (
     page: Ref<number>,
     itemsPerPage: number,
-    searchParams: Ref<AktivzitierungSearchParams | undefined>,
+    searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>
   transformResultFn?: (result: R) => T
 }>()
@@ -63,7 +63,7 @@ const {
   firstRowIndex: Ref<number>
   totalRows: Ref<number>
   items: Ref<R[]>
-  fetchPaginatedData: (page: number, params?: AktivzitierungSearchParams) => Promise<void>
+  fetchPaginatedData: (page: number, params?: SP) => Promise<void>
   isFetching: Ref<boolean>
   error: Ref<unknown>
 }
@@ -76,7 +76,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
  * ------------------------------------------------------------------ */
 const editingItemId = ref<string | null>(null)
 const showSearchResults = ref(false)
-const searchParams = ref<AktivzitierungSearchParams>()
+const searchParams = ref<SP>()
 const citationTypeFromSearch = ref<string | undefined>()
 const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
 
@@ -131,7 +131,7 @@ async function onPageUpdate(pageState: PageState) {
   await fetchData(pageState.page)
 }
 
-function onSearch(params: AktivzitierungSearchParams) {
+function onSearch(params: SP) {
   // Safe check: does the current param type support citationType?
   if (params && 'citationType' in params && typeof params.citationType === 'string') {
     const trimmed = params.citationType.trim()
