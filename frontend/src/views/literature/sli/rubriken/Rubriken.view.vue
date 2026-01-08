@@ -75,12 +75,13 @@ useScrollToHash()
         v-model:hauptsachtitel-zusatz="hauptsachtitelZusatz"
       />
       <div>
-        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+        <p
+          class="ris-body2-regular relative pl-12 before:content-['*'] before:absolute before:left-0"
+        >
           Pflichtfelder für die Veröffentlichung
         </p>
-        <p class="pl-12">
-          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
-          werden
+        <p class="ris-body2-regular pl-12">
+          Hinweis: Entweder Hauptsachtitel oder Dokumentarischer Titel ist erforderlich
         </p>
       </div>
     </section>
@@ -90,10 +91,7 @@ useScrollToHash()
       aria-labelledby="aktivzitierung-title"
       class="flex flex-col gap-24 bg-white p-24"
     >
-      <TitleElement
-        aria-label="Inhaltliche Erschließung"
-        class="mb-24"
-        id="inhaltlicheErschliessung-title"
+      <TitleElement aria-label="Inhaltliche Erschließung" id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
       <AktivzitierungenSli v-model="aktivzitierungSli" />

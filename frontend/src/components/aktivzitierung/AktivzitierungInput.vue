@@ -1,7 +1,10 @@
-<script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
+<script
+  lang="ts"
+  setup
+  generic="T extends { id: string; documentNumber?: string }, SP extends Record<string, unknown>"
+>
 import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
-import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const props = defineProps<{
   aktivzitierung?: T
@@ -13,7 +16,7 @@ const emit = defineEmits<{
   save: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
-  search: [params: AktivzitierungSearchParams]
+  search: [params: SP]
 }>()
 
 const createInitialT = (): T => {

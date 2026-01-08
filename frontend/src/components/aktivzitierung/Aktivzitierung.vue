@@ -43,8 +43,6 @@ defineSlots<{
   input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
   // 2. Slot for rendering the search result in the search results list
   searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild
-  // 3. Slot for custom icon (optional, defaults to standard icons)
-  icon?(props: { aktivzitierung: T; isFromSearch: boolean }): VNodeChild
 }>()
 
 /** ------------------------------------------------------------------
@@ -196,7 +194,7 @@ watch(error, (err) => {
     <ol
       v-if="aktivzitierungList.length"
       aria-label="Aktivzitierung Liste"
-      class="border-t-1 border-blue-300"
+      class="border-t-1 border-blue-300 mb-16"
     >
       <li
         v-for="aktivzitierung in aktivzitierungList"
@@ -219,17 +217,12 @@ watch(error, (err) => {
           <template #input="slotProps">
             <slot name="input" v-bind="slotProps" />
           </template>
-
-          <template #icon="slotProps">
-            <slot name="icon" v-bind="slotProps" />
-          </template>
         </AktivzitierungItem>
       </li>
     </ol>
     <AktivzitierungInput
       v-if="isCreationPanelOpened || !aktivzitierungList.length"
       ref="inputRef"
-      class="mt-16"
       :show-cancel-button="false"
       :show-delete-button="false"
       @save="addManualEntry"
