@@ -15,7 +15,7 @@ import ActiveCitation from '@/domain/activeCitation'
 import { type ZitierArt } from '@/domain/zitierArt.ts'
 import RelatedDocumentation from '@/domain/relatedDocumentation'
 import ComboboxItemService from '@/services/comboboxItemService'
-import type { DocumentType } from '@/domain/documentType'
+import { DocumentCategory, type DocumentType } from '@/domain/documentType'
 import CourtDropDown from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/CourtDropDown.vue'
 import ZitierArtDropDown from '@/components/dropdown/ZitierArtDropDown.vue'
 
@@ -190,6 +190,8 @@ onMounted(() => {
         input-id="activeCitationPredicate"
         v-model="activeCitation.citationType"
         :invalid="slotProps.hasError"
+        :source-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+        :target-document-category="null"
         @focus="validationStore.remove('citationType')"
       />
     </InputField>

@@ -29,5 +29,8 @@ public class CitationTypeEntity {
   private String label;
 
   @Enumerated(EnumType.STRING)
-  private DocumentCategory documentCategory;
+  private DocumentCategory sourceDocumentCategory;
+
+  @Enumerated(EnumType.STRING)
+  private DocumentCategory targetDocumentCategory;
 }

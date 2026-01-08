@@ -23,7 +23,8 @@ public class ZitierArtController {
    * Return 'Zitierarten' (optionally with search term, pagination, sorting)
    *
    * @param searchTerm Keyword to restrict results to.
-   * @param documentCategory The document category to filter 'Zitierarten'
+   * @param sourceDocumentCategory The source document category to filter 'Zitierarten'
+   * @param targetDocumentCategory The target document category to filter 'Zitierarten'
    * @param pageNumber Which page of pagination to return?
    * @param pageSize How many elements per page in pagination?
    * @param sortByProperty Sort by what property?
@@ -38,7 +39,8 @@ public class ZitierArtController {
     @RequestParam(
       required = false,
       defaultValue = "VERWALTUNGSVORSCHRIFTEN"
-    ) DocumentCategory documentCategory,
+    ) DocumentCategory sourceDocumentCategory,
+    @RequestParam(required = false) DocumentCategory targetDocumentCategory,
     @RequestParam(defaultValue = "0") int pageNumber,
     @RequestParam(defaultValue = "3") int pageSize,
     @RequestParam(defaultValue = "abbreviation") String sortByProperty,
@@ -53,7 +55,7 @@ public class ZitierArtController {
       usePagination
     );
     var paginatedZitierArten = zitierArtService.findZitierArten(
-      new ZitierArtQuery(searchTerm, documentCategory, queryOptions)
+      new ZitierArtQuery(searchTerm, sourceDocumentCategory, targetDocumentCategory, queryOptions)
     );
     return ResponseEntity.ok(
       new ZitierArtResponse(paginatedZitierArten.content(), new PageResponse(paginatedZitierArten))

@@ -26,6 +26,7 @@ public interface DocumentationUnitContent {
       case VERWALTUNGSVORSCHRIFTEN -> AdmDocumentationUnitContent.class;
       case LITERATUR_SELBSTAENDIG -> SliDocumentationUnitContent.class;
       case LITERATUR_UNSELBSTAENDIG -> UliDocumentationUnitContent.class;
+      default -> throw new IllegalArgumentException("Unexpected value: " + documentCategory);
     };
   }
 }

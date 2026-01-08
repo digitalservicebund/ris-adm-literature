@@ -8,11 +8,13 @@ import jakarta.annotation.Nonnull;
  * The query business object used for looking up 'Zitierarten'.
  *
  * @param searchTerm String to search for in 'Zitierarten'
- * @param documentCategory The document category to search for in 'Zitierarten'
+ * @param sourceDocumentCategory The source document category to search for in 'Zitierarten'
+ * @param targetDocumentCategory The target document category to search for in 'Zitierarten'
  * @param queryOptions Details on pagination and sorting
  */
 public record ZitierArtQuery(
   String searchTerm,
-  @Nonnull DocumentCategory documentCategory,
+  @Nonnull DocumentCategory sourceDocumentCategory,
+  DocumentCategory targetDocumentCategory,
   @Nonnull QueryOptions queryOptions
 ) {}

@@ -320,7 +320,7 @@ CREATE TABLE
 
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'A') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'G') ON CONFLICT DO NOTHING;
-INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'L') ON CONFLICT DO NOTHING;
+INSERT INTO document_category (id, label) VALUES ('f915e6c2-41b7-4b5c-9dab-c9230fe864a1', 'L') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'N') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES ('b46b4247-6869-4ab3-a357-806476195c76', 'R') ON CONFLICT DO NOTHING;
 INSERT INTO document_category (id, label) VALUES (gen_random_uuid(), 'S') ON CONFLICT DO NOTHING;
@@ -363,7 +363,11 @@ INSERT INTO citation_type (id, abbreviation, label, documentation_unit_document_
 (gen_random_uuid(), 'Ablehnung', 'Ablehnung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '2'),
 (gen_random_uuid(), 'Änderung', 'Änderung', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '3'),
 (gen_random_uuid(), 'Übernahme', 'Übernahme', '6e81f59d-3b24-485f-9e74-7c309db78682', 'b46b4247-6869-4ab3-a357-806476195c76', '4'),
-(gen_random_uuid(), 'XX', 'XX', '9de5cf2d-edae-4dc3-be05-3806c86cc97b', 'b46b4247-6869-4ab3-a357-806476195c76', '5');
+(gen_random_uuid(), 'XX', 'XX', 'f915e6c2-41b7-4b5c-9dab-c9230fe864a1', 'b46b4247-6869-4ab3-a357-806476195c76', '5'),
+(gen_random_uuid(), 'Ablehnung', 'Ablehnung', 'f915e6c2-41b7-4b5c-9dab-c9230fe864a1', '6e81f59d-3b24-485f-9e74-7c309db78682', '6'),
+(gen_random_uuid(), 'Vergleiche', 'Vergleiche', 'f915e6c2-41b7-4b5c-9dab-c9230fe864a1', '6e81f59d-3b24-485f-9e74-7c309db78682', '7'),
+(gen_random_uuid(), 'Zustimmung', 'Zustimmung', 'f915e6c2-41b7-4b5c-9dab-c9230fe864a1', '6e81f59d-3b24-485f-9e74-7c309db78682', '8'),
+(gen_random_uuid(), 'XX', 'XX', 'f915e6c2-41b7-4b5c-9dab-c9230fe864a1', '6e81f59d-3b24-485f-9e74-7c309db78682', '9');
 
 CREATE TABLE
     IF NOT EXISTS

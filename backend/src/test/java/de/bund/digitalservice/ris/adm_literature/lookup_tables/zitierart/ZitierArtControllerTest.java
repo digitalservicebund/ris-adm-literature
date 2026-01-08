@@ -45,6 +45,7 @@ class ZitierArtControllerTest {
         new ZitierArtQuery(
           "",
           DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+          null,
           new QueryOptions(0, 4, "abbreviation", Sort.Direction.ASC, true)
         )
       )

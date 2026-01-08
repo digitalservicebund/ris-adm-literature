@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -46,6 +47,7 @@ class ZitierArtServiceTest {
       new ZitierArtQuery(
         null,
         DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        null,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
       )
     );
@@ -63,8 +65,9 @@ class ZitierArtServiceTest {
     citationTypeEntity.setAbbreviation("Änderung");
     citationTypeEntity.setLabel("Änderung");
     given(
-      citationTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
+      citationTypeRepository.findBySourceAndTargetAndAbbreviationOrLabel(
         eq(DocumentCategory.VERWALTUNGSVORSCHRIFTEN),
+        ArgumentMatchers.isNull(),
         eq("something"),
         eq("something"),
         any(Pageable.class)
@@ -76,6 +79,7 @@ class ZitierArtServiceTest {
       new ZitierArtQuery(
         "something",
         DocumentCategory.VERWALTUNGSVORSCHRIFTEN,
+        null,
         new QueryOptions(0, 10, "abbreviation", Sort.Direction.ASC, true)
       )
     );
@@ -89,7 +93,7 @@ class ZitierArtServiceTest {
     // given
     CitationTypeEntity probe = new CitationTypeEntity();
     probe.setAbbreviation("Änderung");
-    probe.setDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
+    probe.setSourceDocumentCategory(DocumentCategory.VERWALTUNGSVORSCHRIFTEN);
     CitationTypeEntity citationTypeEntity = new CitationTypeEntity();
     UUID uuid = UUID.randomUUID();
     citationTypeEntity.setId(uuid);
