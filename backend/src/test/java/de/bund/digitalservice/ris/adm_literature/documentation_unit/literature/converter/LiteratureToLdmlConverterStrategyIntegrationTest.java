@@ -254,7 +254,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       "Dies ist eine Gesamtfussnote",
       List.of(
         new AktivzitierungSli(
-          null,
+          UUID.randomUUID(),
           "docnum",
           "jahr",
           "titel",
