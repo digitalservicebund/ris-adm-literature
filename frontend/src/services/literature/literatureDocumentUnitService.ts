@@ -8,7 +8,12 @@ import type {
 } from '@/domain/sli/sliDocumentUnit'
 import { computed, type Ref } from 'vue'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
-import type { AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
+import type {
+  AdmAktivzitierungListItem,
+  AdmDocUnitSearchParams,
+} from '@/domain/adm/admDocumentUnit'
+import { splitTrimFirstComma } from '@/utils/stringsUtil'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
@@ -163,6 +168,25 @@ export function useGetAdmPaginatedDocUnitsForSli(
         : null,
     }),
   }).json()
+}
+
+export function mapAdmSearchResultToAktivzitierung(
+  result: AdmAktivzitierungListItem,
+): AktivzitierungAdm {
+  const [periodikum, zitatstelle] = result.fundstellen?.[0]
+    ? splitTrimFirstComma(result.fundstellen[0])
+    : []
+
+  return {
+    id: crypto.randomUUID(),
+    documentNumber: result.documentNumber,
+    inkrafttretedatum: result.inkrafttretedatum,
+    dokumenttyp: result.dokumenttyp,
+    normgeber: result.normgeberList?.[0],
+    aktenzeichen: result.aktenzeichenList?.[0],
+    periodikum,
+    zitatstelle,
+  }
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
