@@ -61,10 +61,25 @@
           
           <akn:implicitReference ris:domainTerm="Passivzitierung">
               <ris:reference ris:domainTerm="Quelle">
+                
+                <!-- identifiers for the source -->
+                
                 <ris:sourceDocumentType ris:domainTerm="Dokumenttyp">unselbstaendige-literatur</ris:sourceDocumentType>
-                <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KVLU20250000001</ris:sourceDocumentId>
-                <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KVLU20250000001.xml</ris:sourceDocumentRelativePath>
-                <!-- no metadata required, yet (like author, date or similar) -->
+                <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KALU022020426</ris:sourceDocumentId>
+                <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KALU022020426.xml</ris:sourceDocumentRelativePath>
+
+                <!-- metadata of the source -->
+                <ris:fundstelle domainTerm="Fundstelle">
+                  <ris:periodikum domainTerm="Periodikum">
+                    <ris:abkuerzung>BB</ris:abkuerzung>
+                    <ris:titel domainTerm="Titel">Die Personalakte des Arbeitnehmers</ris:titel>
+                  </ris:periodikum>
+                  <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
+                </ris:fundstelle>
+                <!-- ❓ can we have multiple Verfasser? -->
+                <!-- ❓ Should we generalize to "Autor" and not make all the creator distinctions? -->
+                <ris:verfasser domainTerm="Verfasser">Peter Gola</ris:verfasser>
+                <ris:verfasser domainTerm="Verfasser">Klaus Hümmerich</ris:verfasser>
               </ris:reference>
           </akn:implicitReference>
 
