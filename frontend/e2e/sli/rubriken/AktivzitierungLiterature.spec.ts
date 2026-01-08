@@ -619,7 +619,7 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
       await expect(aktiv.getByRole('textbox', { name: 'Dokumentnummer' })).toHaveValue('')
       const aktivList = aktiv.getByRole('list', { name: 'Aktivzitierung Liste' })
       await expect(
-        aktivList.getByText('Erstes Organ, 01.01.2024, Az 123, ABc, S. 10 (VV)', { exact: false }),
+        aktivList.getByText('Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)', { exact: false }),
       ).toBeVisible()
       await expect(aktivList.getByText('DOC-123-MANUAL')).toHaveCount(0)
 
@@ -636,7 +636,7 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         name: 'Aktivzitierung Liste',
       })
       await expect(
-        aktivListAfterReload.getByText('Erstes Organ, 01.01.2024, Az 123, ABc, S. 10 (VV)', {
+        aktivListAfterReload.getByText('Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)', {
           exact: false,
         }),
       ).toBeVisible()

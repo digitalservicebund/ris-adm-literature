@@ -34,7 +34,7 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
 
 function calculateFundstelle(periodikum?: string, zitatstelle?: string): string | null {
   if (periodikum && zitatstelle) {
-    return `${periodikum}, ${zitatstelle}`
+    return `${periodikum} ${zitatstelle}`
   }
   return periodikum || zitatstelle || null
 }
