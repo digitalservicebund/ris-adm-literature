@@ -42,7 +42,7 @@ public class TestLiteratureUnitContent {
       null,
       List.of(
         new AktivzitierungSli(
-          null,
+          UUID.randomUUID(),
           "docnum",
           "11",
           "titel",
