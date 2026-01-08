@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import AktivzitierungenAdm from './AktivzitierungenAdm.vue'
+import AktivzitierungenSli from './AktivzitierungenSli.vue'
 
 const globalStubs = {
   Aktivzitierung: {
@@ -12,26 +12,26 @@ const globalStubs = {
     props: ['modelValue', 'fetchResultsFn', 'transformResultFn'],
     emits: ['update:modelValue'],
   },
-  AktivzitierungAdmInput: { template: `<div data-testid="adm-input"/>` },
-  AktivzitierungAdmItem: { template: `<div data-testid="adm-item"/>` },
-  AktivzitierungAdmSearchResult: { template: `<div data-testid="adm-search-result"/>` },
+  AktivzitierungSliInput: { template: `<div data-testid="input"/>` },
+  AktivzitierungSliItem: { template: `<div data-testid="item"/>` },
+  AktivzitierungSliSearchResult: { template: `<div data-testid="search-result"/>` },
 }
 
-describe('AktivzitierungenAdm', () => {
+describe('AktivzitierungenSli', () => {
   it('renders correctly', () => {
-    render(AktivzitierungenAdm, {
+    render(AktivzitierungenSli, {
       global: { stubs: globalStubs },
       props: { modelValue: [] },
     })
 
     expect(
-      screen.getByRole('heading', { name: /aktivzitierung \(verwaltungsvorschrift\)/i }),
+      screen.getByRole('heading', { name: 'Aktivzitierung (selbst. Literatur)' }),
     ).toBeInTheDocument()
 
     expect(screen.getByTestId('aktivzitierung')).toBeInTheDocument()
 
-    expect(screen.getByTestId('adm-item')).toBeInTheDocument()
-    expect(screen.getByTestId('adm-input')).toBeInTheDocument()
-    expect(screen.getByTestId('adm-search-result')).toBeInTheDocument()
+    expect(screen.getByTestId('item')).toBeInTheDocument()
+    expect(screen.getByTestId('input')).toBeInTheDocument()
+    expect(screen.getByTestId('search-result')).toBeInTheDocument()
   })
 })

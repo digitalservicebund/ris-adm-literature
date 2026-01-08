@@ -11,6 +11,7 @@ import {
   useGetSliPaginatedDocUnits,
   useGetAdmPaginatedDocUnitsForSli,
   mapAdmSearchResultToAktivzitierung,
+  mapSliSearchResultToAktivzitierung,
 } from '@/services/literature/literatureDocumentUnitService'
 import { until } from '@vueuse/core'
 import { ref } from 'vue'
@@ -594,5 +595,96 @@ describe('mapAdmSearchResultToAktivzitierung', () => {
 
     expect(result.periodikum).toBeUndefined()
     expect(result.zitatstelle).toBeUndefined()
+  })
+})
+
+describe('mapSliSearchResultToAktivzitierung', () => {
+  vi.stubGlobal('crypto', {
+    randomUUID: () => 'mocked-uuid',
+  })
+
+  it('maps a normal input with document types correctly', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-1',
+      titel: 'Testtitel',
+      veroeffentlichungsjahr: '2023',
+      verfasser: ['Müller', 'Schmidt'],
+      dokumenttypen: ['Bib', 'Dis'],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result).toEqual({
+      id: 'mocked-uuid',
+      titel: 'Testtitel',
+      documentNumber: 'SLI-1',
+      veroeffentlichungsJahr: '2023',
+      verfasser: ['Müller', 'Schmidt'],
+      dokumenttypen: [
+        { abbreviation: 'Bib', name: 'Bib' },
+        { abbreviation: 'Dis', name: 'Dis' },
+      ],
+    })
+  })
+
+  it('maps empty dokumenttypen array to empty dokumenttypen', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-2',
+      titel: 'Ohne Typen',
+      veroeffentlichungsjahr: '2022',
+      verfasser: ['Müller'],
+      dokumenttypen: [],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.dokumenttypen).toEqual([])
+  })
+
+  it('handles missing dokumenttypen gracefully', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-3',
+      titel: 'Keine Typen',
+      veroeffentlichungsjahr: '2021',
+      verfasser: ['Schmidt'],
+      dokumenttypen: undefined,
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.dokumenttypen).toEqual([])
+  })
+
+  it('handles missing verfasser by defaulting to empty array', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-4',
+      titel: 'Kein Verfasser',
+      veroeffentlichungsjahr: '2020',
+      verfasser: undefined,
+      dokumenttypen: ['Bib'],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.verfasser).toEqual([])
+  })
+
+  it('keeps titel undefined if missing', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-5',
+      titel: undefined,
+      veroeffentlichungsjahr: '2019',
+      verfasser: [],
+      dokumenttypen: [],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.titel).toBeUndefined()
   })
 })

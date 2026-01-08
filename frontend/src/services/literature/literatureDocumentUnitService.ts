@@ -4,6 +4,7 @@ import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli
 import type {
   SliDocumentationUnit,
   SliDocumentUnitResponse,
+  SliDocUnitListItem,
   SliDocUnitSearchParams,
 } from '@/domain/sli/sliDocumentUnit'
 import { computed, type Ref } from 'vue'
@@ -14,6 +15,7 @@ import type {
 } from '@/domain/adm/admDocumentUnit'
 import { splitTrimFirstComma } from '@/utils/stringsUtil'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
+import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
 
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
@@ -186,6 +188,22 @@ export function mapAdmSearchResultToAktivzitierung(
     aktenzeichen: result.aktenzeichenList?.[0],
     periodikum,
     zitatstelle,
+  }
+}
+
+export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): AktivzitierungSli {
+  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
+    abbreviation: abbr,
+    name: abbr,
+  }))
+
+  return {
+    id: crypto.randomUUID(),
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    veroeffentlichungsJahr: result.veroeffentlichungsjahr,
+    verfasser: result.verfasser || [],
+    dokumenttypen: dokumenttypen || [],
   }
 }
 

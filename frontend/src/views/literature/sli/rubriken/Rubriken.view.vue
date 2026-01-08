@@ -11,14 +11,9 @@ import DokumentTyp from '@/views/literature/DokumentTyp.vue'
 import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
-import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
-import type { AktivzitierungSli as AktivzitierungSliType } from '@/domain/AktivzitierungSli'
-import AktivzitierungSliItem from '@/components/aktivzitierung/sli/AktivzitierungSliItem.vue'
-import AktivzitierungSliInput from '@/components/aktivzitierung/sli/AktivzitierungSliInput.vue'
-import { useGetSliPaginatedDocUnits } from '@/services/literature/literatureDocumentUnitService'
-import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
-import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
+import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
 import AktivzitierungenAdm from './components/AktivzitierungenAdm.vue'
+import AktivzitierungenSli from './components/AktivzitierungenSli.vue'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -38,26 +33,10 @@ const aktivzitierungAdm = computed({
 
 const aktivzitierungSli = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
-  set: (newValue: AktivzitierungSliType[]) => {
+  set: (newValue: AktivzitierungSli[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue
   },
 })
-
-function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
-  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
-    abbreviation: abbr,
-    name: abbr,
-  }))
-
-  return {
-    id: crypto.randomUUID(),
-    titel: result.titel,
-    documentNumber: result.documentNumber,
-    veroeffentlichungsJahr: result.veroeffentlichungsjahr,
-    verfasser: result.verfasser || [],
-    dokumenttypen: dokumenttypen || [],
-  }
-}
 
 useScrollToHash()
 </script>
@@ -117,40 +96,8 @@ useScrollToHash()
         id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
-      <section id="aktivzitierungSli" aria-labelledby="aktivzitierungSli-title">
-        <h2 id="aktivzitierungSli-title" class="ris-body1-bold mb-16">
-          Aktivzitierung (selbst. Literatur)
-        </h2>
-        <div class="flex flex-row gap-24 w-full">
-          <div class="flex flex-col w-full">
-            <Aktivzitierung
-              v-model="aktivzitierungSli"
-              :fetch-results-fn="useGetSliPaginatedDocUnits"
-              :transform-result-fn="mapSliSearchResult"
-            >
-              <template #item="{ aktivzitierung }">
-                <AktivzitierungSliItem :aktivzitierung="aktivzitierung" />
-              </template>
-
-              <template #input="{ modelValue, onUpdateModelValue }">
-                <AktivzitierungSliInput
-                  :modelValue="modelValue"
-                  @update:modelValue="onUpdateModelValue"
-                />
-              </template>
-
-              <template #searchResult="{ searchResult, isAdded, onAdd }">
-                <AktivzitierungSliSearchResult
-                  :searchResult="searchResult"
-                  :is-added="isAdded"
-                  @add="onAdd"
-                />
-              </template>
-            </Aktivzitierung>
-          </div>
-        </div>
-      </section>
-      <AktivzitierungenAdm v-model="aktivzitierungAdm"></AktivzitierungenAdm>
+      <AktivzitierungenSli v-model="aktivzitierungSli" />
+      <AktivzitierungenAdm v-model="aktivzitierungAdm" />
     </section>
   </div>
 </template>

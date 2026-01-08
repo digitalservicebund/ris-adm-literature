@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm.ts'
 import { parseIsoDateToLocal } from '@/utils/dateHelpers'
+import IconReceiptLongFilled from '~icons/ic/baseline-receipt-long'
+import IconReceiptLongOutline from '~icons/ic/outline-receipt-long'
 
 const props = defineProps<{
   aktivzitierung: AktivzitierungAdm
@@ -80,9 +82,13 @@ const metaSummary = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="ris-body1-regular">
-      {{ metaSummary }}
+  <div class="flex w-full items-center gap-10">
+    <IconReceiptLongFilled v-if="!!aktivzitierung.documentNumber" class="text-neutral-800" />
+    <IconReceiptLongOutline v-else class="text-neutral-800" />
+    <div class="flex flex-col">
+      <div class="ris-body1-regular">
+        {{ metaSummary }}
+      </div>
     </div>
   </div>
 </template>

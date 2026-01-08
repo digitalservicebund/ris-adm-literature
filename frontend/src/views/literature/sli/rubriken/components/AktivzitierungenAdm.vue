@@ -7,8 +7,6 @@ import {
   mapAdmSearchResultToAktivzitierung,
   useGetAdmPaginatedDocUnitsForSli,
 } from '@/services/literature/literatureDocumentUnitService'
-import IconReceiptLongFilled from '~icons/ic/baseline-receipt-long'
-import IconReceiptLongOutline from '~icons/ic/outline-receipt-long'
 import AktivzitierungAdmSearchResult from '@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue'
 
 const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>()
@@ -26,10 +24,6 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>()
           :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
           :transform-result-fn="mapAdmSearchResultToAktivzitierung"
         >
-          <template #icon="{ isFromSearch }">
-            <IconReceiptLongFilled v-if="isFromSearch" class="text-neutral-800" />
-            <IconReceiptLongOutline v-else class="text-neutral-800" />
-          </template>
           <template #item="{ aktivzitierung }">
             <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
           </template>
