@@ -27,6 +27,7 @@ import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
 import type { AdmAktivzitierungListItem } from '@/domain/adm/admDocumentUnit'
 import IconReceiptLongFilled from '~icons/ic/baseline-receipt-long'
 import IconReceiptLongOutline from '~icons/ic/outline-receipt-long'
+import { splitTrimFirstComma } from '@/utils/stringsUtil'
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
 const {
@@ -59,7 +60,6 @@ function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
 
   return {
     id: crypto.randomUUID(),
-    uuid: result.id,
     titel: result.titel,
     documentNumber: result.documentNumber,
     veroeffentlichungsJahr: result.veroeffentlichungsjahr,
@@ -69,11 +69,19 @@ function mapSliSearchResult(result: SliDocUnitListItem): AktivzitierungSliType {
 }
 
 function mapAdmSearchResult(result: AdmAktivzitierungListItem): AktivzitierungAdm {
-  const { id, ...rest } = result
+  const [periodikum, zitatstelle] = result.fundstellen?.[0]
+    ? splitTrimFirstComma(result.fundstellen[0])
+    : []
+
   return {
     id: crypto.randomUUID(),
-    uuid: id,
-    ...rest,
+    documentNumber: result.documentNumber,
+    inkrafttretedatum: result.inkrafttretedatum,
+    dokumenttyp: result.dokumenttyp,
+    normgeber: result.normgeberList?.[0],
+    aktenzeichen: result.aktenzeichenList?.[0],
+    periodikum,
+    zitatstelle,
   }
 }
 

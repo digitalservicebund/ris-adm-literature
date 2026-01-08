@@ -6,10 +6,11 @@ import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 const props = defineProps<{
   aktivzitierung?: T
   showCancelButton: boolean
+  showDeleteButton: boolean
 }>()
 
 const emit = defineEmits<{
-  update: [aktivzitierung: T]
+  save: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
   search: [params: AktivzitierungSearchParams]
@@ -28,7 +29,7 @@ const aktivzitierungRef = ref<T>(
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id)
 
 function onClickSave() {
-  emit('update', aktivzitierungRef.value)
+  emit('save', aktivzitierungRef.value)
   if (!isExistingEntry.value) {
     aktivzitierungRef.value = createInitialT()
   }
@@ -111,7 +112,7 @@ defineExpose({
         @click.stop="onClickCancel"
       />
       <Button
-        v-if="isExistingEntry"
+        v-if="showDeleteButton"
         class="ml-auto"
         aria-label="Eintrag löschen"
         severity="danger"

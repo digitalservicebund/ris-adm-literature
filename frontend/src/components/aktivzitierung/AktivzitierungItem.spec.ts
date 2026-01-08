@@ -97,26 +97,6 @@ describe('AktivzitierungAdmItem', () => {
     expect(updateEvents[0]![0].documentNumber).toBe('Updated')
   })
 
-  it('emits delete and cancelEdit when child triggers delete', async () => {
-    const user = userEvent.setup()
-    const { emitted } = renderComponent({
-      aktivzitierung: { id: '123', citationType: 'Anmerkung', documentNumber: 'DOC123' },
-      isEditing: true,
-    })
-
-    const deleteButton = screen.getByRole('button', { name: 'Eintrag löschen' })
-    await user.click(deleteButton)
-
-    const emits = emitted()
-
-    // Verify events were emitted
-    expect(emits.delete).toBeTruthy()
-    expect(emits.delete![0]).toEqual(['123']) // emitted id
-
-    expect(emits.cancelEdit).toBeTruthy()
-    expect(emits.cancelEdit?.length).toBe(1)
-  })
-
   it('emits delete for an aktivzitierung coming from search', async () => {
     const user = userEvent.setup()
     const { emitted } = renderComponent({

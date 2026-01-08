@@ -14,8 +14,8 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     parts.push(aktivzitierung.citationType)
   }
 
-  if (aktivzitierung.normgeberList?.[0]) {
-    parts.push(aktivzitierung.normgeberList[0])
+  if (aktivzitierung.normgeber) {
+    parts.push(aktivzitierung.normgeber)
   }
 
   if (aktivzitierung.inkrafttretedatum) {
@@ -25,22 +25,14 @@ function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
     }
   }
 
-  if (aktivzitierung.aktenzeichenList?.[0]) {
-    parts.push(aktivzitierung.aktenzeichenList[0])
+  if (aktivzitierung.aktenzeichen) {
+    parts.push(aktivzitierung.aktenzeichen)
   }
 
   return parts
 }
 
-function calculateFundstelle(
-  fundstellen?: string[],
-  periodikum?: string,
-  zitatstelle?: string,
-): string | null {
-  if (fundstellen?.[0]) {
-    return fundstellen[0]
-  }
-
+function calculateFundstelle(periodikum?: string, zitatstelle?: string): string | null {
   if (periodikum && zitatstelle) {
     return `${periodikum} ${zitatstelle}`
   }
@@ -74,7 +66,6 @@ const metaSummary = computed(() => {
   const parts = buildBasicParts(props.aktivzitierung)
 
   const fundstelle = calculateFundstelle(
-    props.aktivzitierung.fundstellen,
     props.aktivzitierung.periodikum,
     props.aktivzitierung.zitatstelle,
   )
@@ -92,13 +83,6 @@ const metaSummary = computed(() => {
   <div class="flex flex-col">
     <div class="ris-body1-regular">
       {{ metaSummary }}
-    </div>
-
-    <div
-      v-if="aktivzitierung.documentNumber && aktivzitierung.langueberschrift"
-      class="ris-body2-regular text-gray-900"
-    >
-      {{ aktivzitierung.langueberschrift }}
     </div>
   </div>
 </template>

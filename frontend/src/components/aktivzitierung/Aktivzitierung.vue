@@ -4,7 +4,8 @@
   setup
   generic="
     T extends { id: string; documentNumber?: string },
-    R extends { id: string; documentNumber: string }
+    R extends { id: string; documentNumber: string },
+    SP extends Record<string, unknown>
   "
 >
 import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
@@ -18,7 +19,6 @@ import { usePagination } from '@/composables/usePagination'
 import SearchResults from '../SearchResults.vue'
 import { RisPaginator } from '@digitalservicebund/ris-ui/components'
 import errorMessages from '@/i18n/errors.json'
-import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const ITEMS_PER_PAGE = 15
 
@@ -29,7 +29,7 @@ const props = defineProps<{
   fetchResultsFn: (
     page: Ref<number>,
     itemsPerPage: number,
-    searchParams: Ref<AktivzitierungSearchParams | undefined>,
+    searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>
   transformResultFn?: (result: R) => T
 }>()
@@ -63,7 +63,7 @@ const {
   firstRowIndex: Ref<number>
   totalRows: Ref<number>
   items: Ref<R[]>
-  fetchPaginatedData: (page: number, params?: AktivzitierungSearchParams) => Promise<void>
+  fetchPaginatedData: (page: number, params?: SP) => Promise<void>
   isFetching: Ref<boolean>
   error: Ref<unknown>
 }
@@ -76,7 +76,7 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
  * ------------------------------------------------------------------ */
 const editingItemId = ref<string | null>(null)
 const showSearchResults = ref(false)
-const searchParams = ref<AktivzitierungSearchParams>()
+const searchParams = ref<SP>()
 const citationTypeFromSearch = ref<string | undefined>()
 const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
 
@@ -116,7 +116,7 @@ function updateItem(item: T) {
   stopEditing()
 }
 
-function addItem(item: T) {
+function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item)
   onAddItem(cleanedItem)
@@ -131,7 +131,7 @@ async function onPageUpdate(pageState: PageState) {
   await fetchData(pageState.page)
 }
 
-function onSearch(params: AktivzitierungSearchParams) {
+function onSearch(params: SP) {
   // Safe check: does the current param type support citationType?
   if (params && 'citationType' in params && typeof params.citationType === 'string') {
     const trimmed = params.citationType.trim()
@@ -182,12 +182,12 @@ function addSearchResult(result: R) {
  * Side effects
  * ------------------------------------------------------------------ */
 watch(error, (err) => {
-  if (!err) return
-
-  toast.add({
-    severity: 'error',
-    summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
-  })
+  if (err) {
+    toast.add({
+      severity: 'error',
+      summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
+    })
+  }
 })
 </script>
 
@@ -206,7 +206,7 @@ watch(error, (err) => {
         <AktivzitierungItem
           :aktivzitierung="aktivzitierung"
           :is-editing="editingItemId === aktivzitierung.id"
-          @update="updateItem"
+          @save="updateItem"
           @edit-start="startEditing(aktivzitierung.id)"
           @cancel-edit="stopEditing"
           @delete="onRemoveItem"
@@ -231,7 +231,8 @@ watch(error, (err) => {
       ref="inputRef"
       class="mt-16"
       :show-cancel-button="false"
-      @update="addItem"
+      :show-delete-button="false"
+      @save="addManualEntry"
       @search="onSearch"
     >
       <template #default="{ modelValue, onUpdateModelValue }">
