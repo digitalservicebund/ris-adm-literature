@@ -59,29 +59,60 @@
         
         <akn:otherReferences source="#">
           
-          <akn:implicitReference ris:domainTerm="Passivzitierung">
+          <akn:implicitReference>
+            
               <ris:reference ris:domainTerm="Quelle">
                 
-                <!-- identifiers for the source -->
-                
-                <ris:sourceDocumentType ris:domainTerm="Dokumenttyp">unselbstaendige-literatur</ris:sourceDocumentType>
-                <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KALU022020426</ris:sourceDocumentId>
-                <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KALU022020426.xml</ris:sourceDocumentRelativePath>
+                <!--
+                <ris:aktivReference/>
+                <ris:fussnote/>
+                <ris:randomLink/>
+                -->
 
-                <!-- metadata of the source -->
-                <ris:fundstelle domainTerm="Fundstelle">
-                  <ris:periodikum domainTerm="Periodikum">
-                    <ris:abkuerzung>BB</ris:abkuerzung>
-                    <ris:titel domainTerm="Titel">Die Personalakte des Arbeitnehmers</ris:titel>
-                  </ris:periodikum>
-                  <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
-                </ris:fundstelle>
-                <!-- ❓ can we have multiple Verfasser? -->
-                <!-- ❓ Should we generalize to "Autor" and not make all the creator distinctions? -->
-                <ris:verfasser domainTerm="Verfasser">Peter Gola</ris:verfasser>
-                <ris:verfasser domainTerm="Verfasser">Klaus Hümmerich</ris:verfasser>
+                <!-- ❓ have the information on the type of document in a node name or in a node's value? -->
+                <ris:passiveReferenceSli ris:domainTerm="Passivzitierung unselbständige Literatur">
+                
+                  <!-- identifiers for the source -->
+
+                  <!-- ❓ this would become redundant if we use ris:passiveReferenceSli above -->
+                  <ris:sourceDocumentType ris:domainTerm="Dokumenttyp">unselbstaendige-literatur</ris:sourceDocumentType>
+                  <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KALU022020426</ris:sourceDocumentId>
+                  <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KALU022020426.xml</ris:sourceDocumentRelativePath>
+  
+                  <!-- metadata of the source -->
+                  <ris:fundstelle domainTerm="Fundstelle">
+                    <ris:periodikum domainTerm="Periodikum">
+                      <ris:abkuerzung>BB</ris:abkuerzung>
+                      <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
+                    </ris:periodikum>
+                  </ris:fundstelle>
+                  <ris:sourceDocumentTitle domainTerm="Titel">Die Personalakte des Arbeitnehmers</ris:titel>
+                  <!-- ❓ Should we generalize to "Autor" and not make all the creator distinctions?
+                       ✅ Yes. Let's join "Verfasser" und "Autor" to a single term "author"
+                  -->
+
+                  <!-- ❓ What else to join? Should we make use of the parts of "Verfasser", like "Titelzusatz"-->
+                  <ris:autor domainTerm="Autoren/Verfasser">Peter Gola, Klaus Hümmerich</ris:autor>
+                </rirs:passiveReference>
               </ris:reference>
           </akn:implicitReference>
+
+          <!-- 
+            This is how the passive of ULI was proposed in LDML Harmonization
+          -->
+
+          <akn:implicitReference ris:domainTerm="Zitierung">
+            <ris:passivLiteraturSelbststaendig domainTerm="Passivzitierung selbstständige Literatur">
+            <ris:autor domainTerm="Autor">Willke, Helmut</ris:autor>
+            <ris:titel domainTerm="Buchtitel">Ironie des Staates</ris:titel>
+            <ris:jahr domainTerm="Jahr der Veröffentlichung">1965</ris:jahr>
+            <ris:dokumentnummer domainTerm="Dokumentnummer">KSLS015481422</ris:dokumentnummer>
+            </ris:passivLiteraturSelbststaendig>
+          </akn:implicitReference>
+
+          <!-- 
+            End of active referenc
+          -->
 
           <akn:implicitReference ris:domainTerm="Passivzitierung">
               <ris:reference ris:domainTerm="Quelle">
