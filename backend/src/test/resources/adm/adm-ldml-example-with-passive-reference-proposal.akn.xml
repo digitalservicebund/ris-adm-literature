@@ -60,14 +60,9 @@
         <akn:otherReferences source="#">
           
           <akn:implicitReference>
-            
+
+              <!-- ❓ is there tangible benefit from having a single reference tag?-->
               <ris:reference ris:domainTerm="Quelle">
-                
-                <!--
-                <ris:aktivReference/>
-                <ris:fussnote/>
-                <ris:randomLink/>
-                -->
 
                 <!-- ❓ have the information on the type of document in a node name or in a node's value? -->
                 <ris:passiveReferenceSli ris:domainTerm="Passivzitierung unselbständige Literatur">
@@ -75,25 +70,38 @@
                   <!-- identifiers for the source -->
 
                   <!-- ❓ this would become redundant if we use ris:passiveReferenceSli above -->
-                  <ris:sourceDocumentType ris:domainTerm="Dokumenttyp">unselbstaendige-literatur</ris:sourceDocumentType>
-                  <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KALU022020426</ris:sourceDocumentId>
-                  <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KALU022020426.xml</ris:sourceDocumentRelativePath>
+                  <!-- ❓ is "source" still necessary? -->
+                  <ris:sourceDocumentType ris:domainTerm="Dokumentart">selbstaendige-literatur</ris:sourceDocumentType>
+                  <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KSLS013901218</ris:sourceDocumentId>
+                  <ris:sourceDocumentRelativePath>/selbstaendige-literatur/KSLS013901218.xml</ris:sourceDocumentRelativePath>
   
                   <!-- metadata of the source -->
+                  <!--🚧  ris:fundstelle not used in SLI -->
                   <ris:fundstelle domainTerm="Fundstelle">
                     <ris:periodikum domainTerm="Periodikum">
                       <ris:abkuerzung>BB</ris:abkuerzung>
-                      <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
+                      <!-- ✅ due to harmonization: also show full string -->
+                      <ris:titel>Betriebs-Berater</ris:titel>
                     </ris:periodikum>
+                    <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
                   </ris:fundstelle>
-                  <ris:sourceDocumentTitle domainTerm="Titel">Die Personalakte des Arbeitnehmers</ris:titel>
+
+                  <!-- 🚧 default to German -->
+                  <ris:sourceDocumentKindAbbreviated domainTerm="Dokumenttyp">Auf<ris:sourceDocumentKindAbbreviated>
+                  <ris:sourceDocumentKind domainTerm="🚧" >Aufsatz<ris:sourceDocumentKind>
+                  
+                  <ris:sourceDocumentTitel domainTerm="Titel">Handbuch der medizinischen Katastrophenhilfe</ris:titel>
                   <!-- ❓ Should we generalize to "Autor" and not make all the creator distinctions?
                        ✅ Yes. Let's join "Verfasser" und "Autor" to a single term "author"
                   -->
 
-                  <!-- ❓ What else to join? Should we make use of the parts of "Verfasser", like "Titelzusatz"-->
-                  <ris:autor domainTerm="Autoren/Verfasser">Peter Gola, Klaus Hümmerich</ris:autor>
-                </rirs:passiveReference>
+                  <!-- ❓ What else to join? Should we make use of the parts of "Verfasser", like "Titelzusatz"? -->
+                  <ris:autor domainTerm="Autoren/Verfasser">Ernst Rebentisch</ris:autor>
+                  
+                  <!-- ❓ how about this? -->
+                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">1974</ris:veroeffentlichungsjahr>
+                  
+                </ris:passiveReference>
               </ris:reference>
           </akn:implicitReference>
 
