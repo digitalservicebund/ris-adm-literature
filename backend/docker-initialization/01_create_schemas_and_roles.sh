@@ -139,3 +139,7 @@ grant_read_access "ris_adm_literature" "lookup_tables" "literature" "lookup_tabl
 
 echo "Grant read access on tables for referencing between document categories (Dokumentarten)"
 grant_read_access "ris_adm_literature" "adm" "literature" "adm"
+
+echo "Granting role memberships for migration"
+psql -U ${POSTGRES_USER} "ris_adm_literature" -c "GRANT references_schema TO ${POSTGRES_USER};"
+psql -U ${POSTGRES_USER} "ris_adm_literature" -c "GRANT references_schema TO adm;"
