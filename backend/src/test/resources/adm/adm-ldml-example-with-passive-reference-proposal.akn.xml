@@ -35,25 +35,23 @@
           </akn:implicitReference>
         </akn:otherReferences>
 
-          <!-- ################################### 
-           
-                Here's how a passive reference may look like.
+          <!--  
+            Here's how a passive reference may look like:
+                
+            "LDML Harmonization"
+              * Each node has a domainTerm for the human reader
+              * Each field's data is encoded as a value of a child element (not via attributes)
+              * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements
+              * We're using a custom ris:reference for the actual data
 
-                It has the following features:
-              
-                * Each node has a domainTerm for the human reader
-                * Each field's data is encoded as a value of a child element (not via attributes)
+              * We're using the prefix "sourceDocument..." to make clear that the value is about the source of the passive reference
 
-                * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements
-                * We're using a custom ris:reference for the actual data
+            "Portal requirements"
+              * The type of the source document is given so Portal can use it to build a URL
+              * The document ID of the source document is given so Portal can use it to build a URL
 
-                * We're using the prefix "sourceDocument..." to make clear that the value is about the source of the passive reference
-
-                * The type of the source document is given so Portal can use it to build a URL
-                * The document ID of the source document is given so Portal can use it to build a URL
-
-                * A relative path to the source document's XML is given, so a client can download the source without requiring the Portal's URL resolution.
-
+            "API user's delight"
+              * A relative path to the source document's XML is given, so a client can download the source without requiring the Portal's URL resolution.
           -->
 
         
