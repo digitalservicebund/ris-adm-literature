@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
@@ -17,6 +18,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.T
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +48,12 @@ class DocumentationUnitServiceTest {
 
   @Mock
   private ObjectToLdmlConverterService objectToLdmlConverterService;
+
+  @Mock
+  private SchemaExecutor schemaExecutor;
+
+  @Mock
+  private ActiveReferenceService activeReferenceService;
 
   @Spy
   private ObjectMapper objectMapper;
