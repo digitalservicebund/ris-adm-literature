@@ -2,34 +2,35 @@
 import { computed } from 'vue'
 import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm.ts'
 import { parseIsoDateToLocal } from '@/utils/dateHelpers'
+import IconReceiptLongFilled from '~icons/ic/baseline-receipt-long'
+import IconReceiptLongOutline from '~icons/ic/outline-receipt-long'
+
+type MetaSummaryParts = {
+  citationType?: string
+  mainParts: string[]
+  documentNumber?: string
+}
 
 const props = defineProps<{
   aktivzitierung: AktivzitierungAdm
 }>()
 
-function buildBasicParts(aktivzitierung: AktivzitierungAdm): string[] {
-  const parts: string[] = []
+function formatMetaSummary({ citationType, mainParts, documentNumber }: MetaSummaryParts): string {
+  const sections: string[] = []
 
-  if (aktivzitierung.citationType) {
-    parts.push(aktivzitierung.citationType)
+  if (citationType) {
+    sections.push(citationType)
   }
 
-  if (aktivzitierung.normgeber) {
-    parts.push(aktivzitierung.normgeber)
+  if (mainParts.length) {
+    sections.push(mainParts.join(', '))
   }
 
-  if (aktivzitierung.inkrafttretedatum) {
-    const formatted = parseIsoDateToLocal(aktivzitierung.inkrafttretedatum)
-    if (formatted) {
-      parts.push(formatted)
-    }
+  if (documentNumber) {
+    sections.push(documentNumber)
   }
 
-  if (aktivzitierung.aktenzeichen) {
-    parts.push(aktivzitierung.aktenzeichen)
-  }
-
-  return parts
+  return sections.join(' | ')
 }
 
 function calculateFundstelle(periodikum?: string, zitatstelle?: string): string | null {
@@ -52,37 +53,32 @@ function buildFundstellePart(fundstelle: string | null, dokumenttyp?: string): s
   return null
 }
 
-function formatSummary(parts: string[], documentNumber?: string): string {
-  const firstPart = parts.join(', ')
-
-  if (documentNumber) {
-    return firstPart ? `${firstPart} | ${documentNumber}` : documentNumber
-  }
-
-  return firstPart
+function buildMainParts(a: AktivzitierungAdm): string[] {
+  return [
+    a.normgeber,
+    a.inkrafttretedatum && parseIsoDateToLocal(a.inkrafttretedatum),
+    a.aktenzeichen,
+    buildFundstellePart(calculateFundstelle(a.periodikum, a.zitatstelle), a.dokumenttyp),
+  ].filter(Boolean) as string[]
 }
 
-const metaSummary = computed(() => {
-  const parts = buildBasicParts(props.aktivzitierung)
-
-  const fundstelle = calculateFundstelle(
-    props.aktivzitierung.periodikum,
-    props.aktivzitierung.zitatstelle,
-  )
-
-  const fundstellePart = buildFundstellePart(fundstelle, props.aktivzitierung.dokumenttyp)
-  if (fundstellePart) {
-    parts.push(fundstellePart)
-  }
-
-  return formatSummary(parts, props.aktivzitierung.documentNumber)
-})
+const metaSummary = computed(() =>
+  formatMetaSummary({
+    citationType: props.aktivzitierung.citationType,
+    mainParts: buildMainParts(props.aktivzitierung),
+    documentNumber: props.aktivzitierung.documentNumber,
+  }),
+)
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="ris-body1-regular">
-      {{ metaSummary }}
+  <div class="flex w-full items-center gap-10">
+    <IconReceiptLongFilled v-if="!!aktivzitierung.documentNumber" class="text-neutral-800" />
+    <IconReceiptLongOutline v-else class="text-neutral-800" />
+    <div class="flex flex-col">
+      <div class="ris-body1-regular">
+        {{ metaSummary }}
+      </div>
     </div>
   </div>
 </template>

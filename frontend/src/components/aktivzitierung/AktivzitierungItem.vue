@@ -1,7 +1,5 @@
 <script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import IconEdit from '~icons/ic/outline-edit'
-import IconBaselineDescription from '~icons/ic/outline-class'
-import IconBaselineDescriptionFilled from '~icons/ic/class'
 import AktivzitierungInput from './AktivzitierungInput.vue'
 import { computed, type VNodeChild } from 'vue'
 import IconClose from '~icons/ic/close'
@@ -23,8 +21,6 @@ defineSlots<{
   item(props: { aktivzitierung: T }): VNodeChild
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
   input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
-  // 3. Slot for custom icon (optional, defaults to standard icons)
-  icon?(props: { aktivzitierung: T; isFromSearch: boolean }): VNodeChild
 }>()
 
 const onExpandAccordion = () => {
@@ -70,11 +66,6 @@ const isFromSearch = computed(
     </template>
   </AktivzitierungInput>
   <div v-else class="flex w-full items-center gap-10">
-    <slot name="icon" :aktivzitierung="aktivzitierung" :isFromSearch="isFromSearch">
-      <IconBaselineDescriptionFilled v-if="isFromSearch" class="text-neutral-800" />
-      <IconBaselineDescription v-else class="text-neutral-800" />
-    </slot>
-
     <div class="flex flex-col gap-2">
       <slot name="item" :aktivzitierung="aktivzitierung"></slot>
     </div>

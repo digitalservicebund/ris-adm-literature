@@ -4,11 +4,18 @@ import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli
 import type {
   SliDocumentationUnit,
   SliDocumentUnitResponse,
+  SliDocUnitListItem,
   SliDocUnitSearchParams,
 } from '@/domain/sli/sliDocumentUnit'
 import { computed, type Ref } from 'vue'
 import { buildUrlWithParams } from '@/utils/urlHelpers'
-import type { AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
+import type {
+  AdmAktivzitierungListItem,
+  AdmDocUnitSearchParams,
+} from '@/domain/adm/admDocumentUnit'
+import { splitTrimFirstComma } from '@/utils/stringsUtil'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
+import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
 
 const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
@@ -163,6 +170,41 @@ export function useGetAdmPaginatedDocUnitsForSli(
         : null,
     }),
   }).json()
+}
+
+export function mapAdmSearchResultToAktivzitierung(
+  result: AdmAktivzitierungListItem,
+): AktivzitierungAdm {
+  const [periodikum, zitatstelle] = result.fundstellen?.[0]
+    ? splitTrimFirstComma(result.fundstellen[0])
+    : []
+
+  return {
+    id: crypto.randomUUID(),
+    documentNumber: result.documentNumber,
+    inkrafttretedatum: result.inkrafttretedatum,
+    dokumenttyp: result.dokumenttyp,
+    normgeber: result.normgeberList?.[0],
+    aktenzeichen: result.aktenzeichenList?.[0],
+    periodikum,
+    zitatstelle,
+  }
+}
+
+export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): AktivzitierungSli {
+  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
+    abbreviation: abbr,
+    name: abbr,
+  }))
+
+  return {
+    id: crypto.randomUUID(),
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    veroeffentlichungsJahr: result.veroeffentlichungsjahr,
+    verfasser: result.verfasser || [],
+    dokumenttypen: dokumenttypen || [],
+  }
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
