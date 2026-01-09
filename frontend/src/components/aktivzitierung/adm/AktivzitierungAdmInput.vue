@@ -36,8 +36,8 @@ const normgeber = computed({
   get: () => {
     return props.modelValue.normgeber
       ? ({
-          id: props.modelValue.normgeber[0],
-          name: props.modelValue.normgeber[0],
+          id: props.modelValue.normgeber,
+          name: props.modelValue.normgeber,
         } as Institution)
       : undefined
   },
