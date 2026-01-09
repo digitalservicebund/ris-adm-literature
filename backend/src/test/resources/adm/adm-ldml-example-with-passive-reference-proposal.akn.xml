@@ -44,8 +44,6 @@
               * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements
               * We're using a custom ris:reference for the actual data
 
-              * We're using the prefix "sourceDocument..." to make clear that the value is about the source of the passive reference
-
             "Portal requirements"
               * The type of the source document is given so Portal can use it to build a URL
               * The document ID of the source document is given so Portal can use it to build a URL
@@ -54,83 +52,47 @@
               * A relative path to the source document's XML is given, so a client can download the source without requiring the Portal's URL resolution.
           -->
 
-        
-        <akn:otherReferences source="#">
           
-          <akn:implicitReference>
+          <akn:otherReferences source="#">
+            
+          <!-- variant 1: abstract <ris:reference> node, ULI -->
+            <akn:implicitReference>
+              <ris:reference ris:domainTerm="Quelle"> <!-- ❓ is there tangible benefit from having a single, generic reference tag?-->
 
-              <!-- ❓ is there tangible benefit from having a single reference tag?-->
-              <ris:reference ris:domainTerm="Quelle">
-
-                <!-- ❓ have the information on the type of document in a node name or in a node's value? -->
-                <ris:passiveReferenceSli ris:domainTerm="Passivzitierung unselbständige Literatur">
+                <ris:passivReferenzUli ris:domainTerm="Passivzitierung unselbständige Literatur"> <!-- ❓ or have the kind rather in a node's value? -->
                 
-                  <!-- identifiers for the source -->
-
-                  <!-- ❓ this would become redundant if we use ris:passiveReferenceSli above -->
-                  <!-- ❓ is "source" still necessary? -->
-                  <ris:sourceDocumentType ris:domainTerm="Dokumentart">selbstaendige-literatur</ris:sourceDocumentType>
-                  <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KSLS013901218</ris:sourceDocumentId>
-                  <ris:sourceDocumentRelativePath>/selbstaendige-literatur/KSLS013901218.xml</ris:sourceDocumentRelativePath>
+                  <!-- 
+                    identifiers of the source document
+                  -->
+                  <ris:dokumentNummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentNummer>
+                  <ris:dokumentRelativerPfad>/selbstaendige-literatur/KSLU105121222.xml</ris:dokumentRelativerPfad>
   
-                  <!-- metadata of the source -->
-                  <!--🚧  ris:fundstelle not used in SLI -->
-                  <ris:fundstelle domainTerm="Fundstelle">
+                  <!-- 
+                    metadata of the source document
+                  -->
+                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung>
+                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
+          Dokumenttyp      
+                  <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel>
+
+                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string-->
+                  
+                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr>
+                  
+                  <ris:fundstelle domainTerm="Fundstelle"><!-- specific to ULI, absent in SLI -->
                     <ris:periodikum domainTerm="Periodikum">
-                      <ris:abkuerzung>BB</ris:abkuerzung>
-                      <!-- ✅ due to harmonization: also show full string -->
-                      <ris:titel>Betriebs-Berater</ris:titel>
+                      <ris:titelAbkuerzung domainTerm="Titel, abgekürzt">ErgoMed</ris:titelAbkuerzung>
+                      <ris:titel domainTerm="Titel">Ergonomics and Medicine (that's a guess)</ris:titel>
                     </ris:periodikum>
-                    <ris:zitatstelle domainTerm="Zitatstelle">1974, 1167-1172</ris:zitatstelle>
+                    <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle>
                   </ris:fundstelle>
 
-                  <!-- 🚧 default to German -->
-                  <ris:sourceDocumentKindAbbreviated domainTerm="Dokumenttyp">Auf<ris:sourceDocumentKindAbbreviated>
-                  <ris:sourceDocumentKind domainTerm="🚧" >Aufsatz<ris:sourceDocumentKind>
-                  
-                  <ris:sourceDocumentTitel domainTerm="Titel">Handbuch der medizinischen Katastrophenhilfe</ris:titel>
-                  <!-- ❓ Should we generalize to "Autor" and not make all the creator distinctions?
-                       ✅ Yes. Let's join "Verfasser" und "Autor" to a single term "author"
-                  -->
-
-                  <!-- ❓ What else to join? Should we make use of the parts of "Verfasser", like "Titelzusatz"? -->
-                  <ris:autor domainTerm="Autoren/Verfasser">Ernst Rebentisch</ris:autor>
-                  
-                  <!-- ❓ how about this? -->
-                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">1974</ris:veroeffentlichungsjahr>
-                  
-                </ris:passiveReference>
+                </ris:passivReferenzUli>
               </ris:reference>
           </akn:implicitReference>
-
-          <!-- 
-            This is how the passive of ULI was proposed in LDML Harmonization
-          -->
-
-          <akn:implicitReference ris:domainTerm="Zitierung">
-            <ris:passivLiteraturSelbststaendig domainTerm="Passivzitierung selbstständige Literatur">
-            <ris:autor domainTerm="Autor">Willke, Helmut</ris:autor>
-            <ris:titel domainTerm="Buchtitel">Ironie des Staates</ris:titel>
-            <ris:jahr domainTerm="Jahr der Veröffentlichung">1965</ris:jahr>
-            <ris:dokumentnummer domainTerm="Dokumentnummer">KSLS015481422</ris:dokumentnummer>
-            </ris:passivLiteraturSelbststaendig>
-          </akn:implicitReference>
-
-          <!-- 
-            End of active referenc
-          -->
-
-          <akn:implicitReference ris:domainTerm="Passivzitierung">
-              <ris:reference ris:domainTerm="Quelle">
-                <ris:sourceDocumentType ris:domainTerm="Dokumenttyp">unselbstaendige-literatur</ris:sourceDocumentType>
-                <ris:sourceDocumentId ris:domainTerm="Dokumentnummer">KVLU20250000002</ris:sourceDocumentId>
-                <ris:sourceDocumentRelativePath>/unselbstaendige-literatur/KVLU20250000002.xml</ris:sourceDocumentRelativePath>
-                <!-- no metadata required, yet (like author, date or similar) -->
-              </ris:reference>
-          </akn:implicitReference>
-          
+   
         </akn:otherReferences>
-          <!-- ###################################-->
+
 
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
