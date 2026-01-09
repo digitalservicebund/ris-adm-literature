@@ -195,7 +195,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -223,7 +223,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -263,7 +263,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -293,7 +293,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -324,7 +324,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -352,7 +352,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -380,7 +380,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -420,7 +420,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -450,7 +450,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
@@ -481,7 +481,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
     documentationUnitEntity = entityManager.persistFlushFind(documentationUnitEntity);
 
     // when
-    documentationUnitIndexService.updateIndex(SchemaType.LIT);
+    documentationUnitIndexService.updateIndex(SchemaType.LITERATURE);
 
     // then
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);

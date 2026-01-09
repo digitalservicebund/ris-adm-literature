@@ -39,6 +39,17 @@ public class DataSourceConfig {
   }
 
   /**
+   * Loads the data source properties for the 'references_schema' schema.
+   *
+   * @return Properties bound from 'spring.datasource.references'.
+   */
+  @Bean
+  @ConfigurationProperties("spring.datasource.references")
+  public DataSourceProperties referencesDataSourceProperties() {
+    return new DataSourceProperties();
+  }
+
+  /**
    * Creates the actual {@link DataSource} bean for the 'adm' schema.
    *
    * @return The configured 'adm' DataSource.
@@ -56,5 +67,15 @@ public class DataSourceConfig {
   @Bean(name = "litDataSource")
   public DataSource litDataSource() {
     return literatureDataSourceProperties().initializeDataSourceBuilder().build();
+  }
+
+  /**
+   * Creates the actual {@link DataSource} bean for the 'references_schema' schema.
+   *
+   * @return The configured 'references_schema' DataSource.
+   */
+  @Bean(name = "referencesDataSource")
+  public DataSource referencesDataSource() {
+    return referencesDataSourceProperties().initializeDataSourceBuilder().build();
   }
 }

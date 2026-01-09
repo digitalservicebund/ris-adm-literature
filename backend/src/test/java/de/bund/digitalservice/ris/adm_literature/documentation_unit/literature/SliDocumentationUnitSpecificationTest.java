@@ -33,7 +33,7 @@ class SliDocumentationUnitSpecificationTest {
 
   @BeforeEach
   void setUp() {
-    SchemaContextHolder.setSchema(SchemaType.LIT);
+    SchemaContextHolder.setSchema(SchemaType.LITERATURE);
   }
 
   @AfterEach

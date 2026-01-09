@@ -19,7 +19,7 @@ class SchemaRoutingDataSourceTest {
     SchemaContextHolder.setSchema(SchemaType.ADM);
     assertThat(ds.determineCurrentLookupKey()).isEqualTo(SchemaType.ADM);
 
-    SchemaContextHolder.setSchema(SchemaType.LIT);
-    assertThat(ds.determineCurrentLookupKey()).isEqualTo(SchemaType.LIT);
+    SchemaContextHolder.setSchema(SchemaType.LITERATURE);
+    assertThat(ds.determineCurrentLookupKey()).isEqualTo(SchemaType.LITERATURE);
   }
 }
