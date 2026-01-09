@@ -28,4 +28,20 @@ select source.id as source_id, source.document_category,
                                                                                                              join document_reference target on ar.target_id = target.id
 where target.document_category = 'VERWALTUNGSVORSCHRIFTEN';
 
+CREATE OR REPLACE VIEW references_schema.sli_passive_reference AS
+select source.id as source_id, source.document_category,
+       case when source.document_category = 'LITERATUR_SELBSTAENDIG' or source.document_category = 'LITERATUR_UNSELBSTAENDIG' then source.literature_document_number
+            when source.document_category = 'VERWALTUNGSVORSCHRIFTEN' then source.adm_document_number end as source_document_number,
+       target.id as target_id, target.adm_document_number as target_document_number from active_reference ar join document_reference source on ar.source_id = source.id
+                                                                                                             join document_reference target on ar.target_id = target.id
+where target.document_category = 'LITERATUR_SELBSTAENDIG';
+
+CREATE OR REPLACE VIEW references_schema.uli_passive_reference AS
+select source.id as source_id, source.document_category,
+       case when source.document_category = 'LITERATUR_SELBSTAENDIG' or source.document_category = 'LITERATUR_UNSELBSTAENDIG' then source.literature_document_number
+            when source.document_category = 'VERWALTUNGSVORSCHRIFTEN' then source.adm_document_number end as source_document_number,
+       target.id as target_id, target.adm_document_number as target_document_number from active_reference ar join document_reference source on ar.source_id = source.id
+                                                                                                             join document_reference target on ar.target_id = target.id
+where target.document_category = 'LITERATUR_UNSELBSTAENDIG';
+
 RESET ROLE;
