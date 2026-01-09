@@ -5,5 +5,6 @@ package de.bund.digitalservice.ris.adm_literature.config.multischema;
  */
 public enum SchemaType {
   ADM,
-  LIT,
+  LITERATURE,
+  REFERENCES,
 }

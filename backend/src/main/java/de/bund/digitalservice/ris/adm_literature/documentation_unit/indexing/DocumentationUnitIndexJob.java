@@ -24,7 +24,7 @@ public class DocumentationUnitIndexJob {
   @Scheduled(cron = "${cronjob.DocumentationUnitIndexJob:-}", zone = "Europe/Berlin")
   public void indexAll() {
     indexSchema(SchemaType.ADM);
-    indexSchema(SchemaType.LIT);
+    indexSchema(SchemaType.LITERATURE);
   }
 
   private void indexSchema(SchemaType schemaType) {

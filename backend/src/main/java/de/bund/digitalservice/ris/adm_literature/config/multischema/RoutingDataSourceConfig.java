@@ -45,7 +45,7 @@ public class RoutingDataSourceConfig {
 
     Map<Object, Object> targetDataSources = new HashMap<>();
     targetDataSources.put(SchemaType.ADM, admDataSource);
-    targetDataSources.put(SchemaType.LIT, litDataSource);
+    targetDataSources.put(SchemaType.LITERATURE, litDataSource);
     routingDataSource.setTargetDataSources(targetDataSources);
 
     // Set 'adm' as the default fallback

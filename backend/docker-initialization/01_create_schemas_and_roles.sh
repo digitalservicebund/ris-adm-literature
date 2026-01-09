@@ -55,6 +55,41 @@ grant_read_access() {
     psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT EXECUTE ON FUNCTIONS TO ${read_user};"
 }
 
+# Grant references access to a schema for a specific user for objects created by another user
+grant_references_access() {
+    local db_name="$1"
+    local schema="$2"
+    local read_user="$3"
+    local owner_user="$4"
+
+    # Grant REFERENCES on all existing tables, sequences, and functions
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT REFERENCES ON ALL TABLES IN SCHEMA ${schema} TO ${read_user};"
+
+    # Grant REFERENCES on all future tables, sequences, and functions (default privileges)
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT REFERENCES ON TABLES TO ${read_user};"
+}
+
+# Grant full access to a schema for a specific user for objects created by another user
+grant_full_access() {
+    local db_name="$1"
+    local schema="$2"
+    local user="$3"
+    local owner_user="$4"
+
+    # Grant usage on the schema
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT USAGE ON SCHEMA ${schema} TO ${user};"
+
+    # Grant ALL on all existing tables, sequences, and functions
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL TABLES IN SCHEMA ${schema} TO ${user};"
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL SEQUENCES IN SCHEMA ${schema} TO ${user};"
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "GRANT ALL ON ALL FUNCTIONS IN SCHEMA ${schema} TO ${user};"
+
+    # Grant ALL on all future tables, sequences, and functions (default privileges)
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON TABLES TO ${user};"
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON SEQUENCES TO ${user};"
+    psql -U ${POSTGRES_USER} "${db_name}" -ac "ALTER DEFAULT PRIVILEGES FOR ROLE ${owner_user} IN SCHEMA ${schema} GRANT ALL ON FUNCTIONS TO ${user};"
+}
+
 # Function to create a schema if it does not exist
 create_schema_if_not_exists() {
     local db_name="$1"
@@ -83,6 +118,20 @@ setup_schema_and_permissions "ris_adm_literature" "adm" "adm"
 echo "Create literature role and schema"
 create_role_if_not_exists "literature" "literature"
 setup_schema_and_permissions "ris_adm_literature" "literature" "literature"
+
+echo "Create references_schema role and set full access to references_schema schema"
+create_role_if_not_exists "references_schema" "references_schema"
+setup_schema_and_permissions "ris_adm_literature" "references_schema" "references_schema"
+
+echo "Read access to references user for fks"
+grant_read_access "ris_adm_literature" "adm" "references_schema" "adm"
+grant_read_access "ris_adm_literature" "literature" "references_schema" "literature"
+grant_references_access "ris_adm_literature" "adm" "references_schema" "adm"
+grant_references_access "ris_adm_literature" "literature" "references_schema" "literature"
+
+echo "Full access to service users for writing own entries and looking up all entries"
+grant_full_access "ris_adm_literature" "references_schema" "literature" "references_schema"
+grant_full_access "ris_adm_literature" "references_schema" "adm" "references_schema"
 
 echo "Grant read access for lookup_tables schema"
 grant_read_access "ris_adm_literature" "lookup_tables" "adm" "lookup_tables"
