@@ -1,6 +1,6 @@
 ALTER TABLE document_reference
-    DROP CONSTRAINT fk_document_reference_adm,
-    DROP CONSTRAINT fk_document_reference_literature;
+    DROP CONSTRAINT IF EXISTS fk_document_reference_adm,
+    DROP CONSTRAINT IF EXISTS fk_document_reference_literature;
 
 ALTER TABLE document_reference
     ADD CONSTRAINT fk_document_reference_adm FOREIGN KEY (adm_document_number) REFERENCES adm.documentation_unit (document_number),

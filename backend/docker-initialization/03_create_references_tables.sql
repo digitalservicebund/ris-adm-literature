@@ -10,8 +10,17 @@ CREATE TABLE IF NOT EXISTS references_schema.document_reference
         (CASE WHEN adm_document_number IS NOT NULL THEN 1 ELSE 0 END +
          CASE WHEN literature_document_number IS NOT NULL THEN 1 ELSE 0 END) = 1
         )
--- TODO UC for all columns
 );
+
+-- Enforce uniqueness for ADM within category
+CREATE UNIQUE INDEX IF NOT EXISTS uq_document_reference_adm_cat
+    ON references_schema.document_reference (adm_document_number, document_category)
+    WHERE adm_document_number IS NOT NULL;
+
+-- Enforce uniqueness for Literature within category
+CREATE UNIQUE INDEX IF NOT EXISTS uq_document_reference_lit_cat
+    ON references_schema.document_reference (literature_document_number, document_category)
+    WHERE literature_document_number IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS references_schema.active_reference
 (
