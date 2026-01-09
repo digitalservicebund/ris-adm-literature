@@ -1,26 +1,39 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.references;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.reference;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Active reference service.
+ */
 @RequiredArgsConstructor
 @Service
-public class ReferencesService {
+public class ActiveReferenceService {
 
   private final ActiveReferenceRepository activeReferenceRepository;
 
+  /**
+   * Publishes for a given source document the given targets as active references.
+   *
+   * @param source The source reference item
+   * @param targets The list of target reference items (must not be empty)
+   */
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void publish(ReferenceItem source, List<ReferenceItem> targets) {
+  public void publish(@NonNull DocumentReference source, @NonNull List<DocumentReference> targets) {
+    if (targets.isEmpty()) {
+      throw new IllegalArgumentException("Targets must not be empty.");
+    }
     DocumentReferenceEntity sourceDocumentReference = new DocumentReferenceEntity();
-    sourceDocumentReference.setReference(source);
+    sourceDocumentReference.setDocumentReference(source);
     List<ActiveReferenceEntity> activeReferenceEntities = targets
       .stream()
-      .map(ri -> {
+      .map(dr -> {
         DocumentReferenceEntity targetDocumentReference = new DocumentReferenceEntity();
-        targetDocumentReference.setReference(ri);
+        targetDocumentReference.setDocumentReference(dr);
         ActiveReferenceEntity activeReferenceEntity = new ActiveReferenceEntity();
         activeReferenceEntity.setSource(sourceDocumentReference);
         activeReferenceEntity.setTarget(targetDocumentReference);

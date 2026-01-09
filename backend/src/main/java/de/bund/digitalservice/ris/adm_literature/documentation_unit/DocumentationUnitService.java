@@ -12,8 +12,8 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.L
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.references.ReferenceItem;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.references.ReferencesService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -38,7 +38,7 @@ public class DocumentationUnitService {
   private final ObjectToLdmlConverterService objectToLdmlConverterService;
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
-  private final ReferencesService referencesService;
+  private final ActiveReferenceService referenceService;
   private final SchemaExecutor schemaExecutor;
 
   /**
@@ -133,15 +133,17 @@ public class DocumentationUnitService {
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, documentCategory);
     publisher.publish(publishOptions);
     if (documentationUnitContent instanceof SliDocumentationUnitContent sli) {
-      List<ReferenceItem> targets = sli
+      List<DocumentReference> targets = sli
         .aktivzitierungenAdm()
         .stream()
         .filter(aa -> aa.documentNumber() != null)
-        .map(aa -> new ReferenceItem(aa.documentNumber(), DocumentCategory.VERWALTUNGSVORSCHRIFTEN))
+        .map(aa ->
+          new DocumentReference(aa.documentNumber(), DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+        )
         .toList();
       schemaExecutor.executeInSchema(SchemaType.REFERENCES, () ->
-        referencesService.publish(
-          new ReferenceItem(sli.documentNumber(), sli.documentCategory()),
+        referenceService.publish(
+          new DocumentReference(sli.documentNumber(), sli.documentCategory()),
           targets
         )
       );
