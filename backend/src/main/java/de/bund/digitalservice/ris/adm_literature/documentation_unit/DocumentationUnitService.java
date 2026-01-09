@@ -1,5 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -8,13 +10,16 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.Ld
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.references.ReferenceItem;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.references.ReferencesService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.JacksonException;
@@ -33,6 +38,8 @@ public class DocumentationUnitService {
   private final ObjectToLdmlConverterService objectToLdmlConverterService;
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
+  private final ReferencesService referencesService;
+  private final SchemaExecutor schemaExecutor;
 
   /**
    * Finds a DocumentationUnit by its document number.
@@ -94,7 +101,7 @@ public class DocumentationUnitService {
    * {@code UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal()}
    * This entire operation is transactional and will be rolled back if any step fails.
    *
-   * @param documentNumber The identifier of the documentation unit to publish.
+   * @param documentNumber           The identifier of the documentation unit to publish.
    * @param documentationUnitContent The new content for the unit.
    * @return An {@link Optional} with the updated unit, or empty if the document number was not found.
    */
@@ -123,17 +130,23 @@ public class DocumentationUnitService {
       xml
     );
     DocumentCategory documentCategory = documentationUnitContent.documentCategory();
-    publishToPortal(documentNumber, xml, documentCategory);
-    return convertLdml(publishedDocumentationUnit);
-  }
-
-  private void publishToPortal(
-    @NotNull String documentNumber,
-    String xml,
-    DocumentCategory documentCategory
-  ) {
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, documentCategory);
     publisher.publish(publishOptions);
+    if (documentationUnitContent instanceof SliDocumentationUnitContent sli) {
+      List<ReferenceItem> targets = sli
+        .aktivzitierungenAdm()
+        .stream()
+        .filter(aa -> aa.documentNumber() != null)
+        .map(aa -> new ReferenceItem(aa.documentNumber(), DocumentCategory.VERWALTUNGSVORSCHRIFTEN))
+        .toList();
+      schemaExecutor.executeInSchema(SchemaType.REFERENCES, () ->
+        referencesService.publish(
+          new ReferenceItem(sli.documentNumber(), sli.documentCategory()),
+          targets
+        )
+      );
+    }
+    return convertLdml(publishedDocumentationUnit);
   }
 
   /**

@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS references_schema.document_reference
         (CASE WHEN adm_document_number IS NOT NULL THEN 1 ELSE 0 END +
          CASE WHEN literature_document_number IS NOT NULL THEN 1 ELSE 0 END) = 1
         )
+-- TODO UC for all columns
 );
 
 CREATE TABLE IF NOT EXISTS references_schema.active_reference
