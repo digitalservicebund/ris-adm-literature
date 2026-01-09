@@ -20,8 +20,8 @@ spring:
       driver-class-name: org.postgresql.Driver
     references:
       url: jdbc:postgresql://${database.host:localhost}:${database.port:5432}/${database.database:ris_adm_literature}?currentSchema=${references.database.schema:references_schema}
-      username: ${literature.database.user:references_schema}
-      password: ${literature.database.password:references_schema}
+      username: ${references.database.user:references_schema}
+      password: ${references.database.password:references_schema}
       driver-class-name: org.postgresql.Driver
   security:
     oauth2:
