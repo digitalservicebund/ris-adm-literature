@@ -198,7 +198,6 @@ jobs:
     permissions:
       id-token: write
     secrets:
-      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       GITOPS_NEURIS_APP_ID: ${{ secrets.GITOPS_NEURIS_APP_ID }}
       GITOPS_NEURIS_APP_PRIVATE_KEY: ${{ secrets.GITOPS_NEURIS_APP_PRIVATE_KEY }}
       ARGOCD_PIPELINE_PASSWORD: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}

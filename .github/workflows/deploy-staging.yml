@@ -5,8 +5,6 @@ on:
         required: true
         type: string
     secrets:
-      DEPLOY_KEY:
-        required: true
       GITOPS_NEURIS_APP_ID:
         required: true
       GITOPS_NEURIS_APP_PRIVATE_KEY:
