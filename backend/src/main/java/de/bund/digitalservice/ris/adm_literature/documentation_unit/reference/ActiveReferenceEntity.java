@@ -16,9 +16,9 @@ public class ActiveReferenceEntity {
   @GeneratedValue
   private UUID id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
   private DocumentReferenceEntity source;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
   private DocumentReferenceEntity target;
 }
