@@ -30,7 +30,7 @@
     "@digitalservicebund/ris-ui": "^3.21.0",
     "@guardian/prosemirror-invisibles": "^3.1.1",
     "@iconify-json/ic": "^1.2.4",
-    "@iconify-json/material-symbols": "^1.2.50",
+    "@iconify-json/material-symbols": "^1.2.51",
     "@iconify-json/mdi": "^1.2.2",
     "@sentry/vite-plugin": "^4.6.1",
     "@sentry/vue": "^10.32.1",
