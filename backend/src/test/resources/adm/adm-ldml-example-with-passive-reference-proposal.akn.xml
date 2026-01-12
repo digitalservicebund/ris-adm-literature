@@ -67,10 +67,10 @@
                   -->
   
                   <ris:referenceDirection risDomainTerm="Aktiv/Passivverweis">passive</ris:referenceDirection> <!-- necessary in order to get a link (❓ ask Portal) -->
-                  <!-- is it "type"? whot's needed for identifying? both kind and type?-->
+                  <!-- ❓ is it "type"? whot's needed for identifying? both kind and type?-->
                   <!-- caselaw: doctype is "Urteil" -->
                   <!-- maybe flattening the juris dimensions would be possible? -->
-                  <ris:otherDocumentType risDomainTerm="Art der Referenz">literature (or uli)</ris:otherDocumentType> <!-- mandatory --> <!-- necessary in order to get a link-->
+                  <ris:otherDocumentType risDomainTerm="Art der Referenz">uli</ris:otherDocumentType> <!-- mandatory --> <!-- necessary in order to get a link-->
                   <!-- for a link, also one of these two is necessary -->
                   <ris:otherDocumentId ris:domainTerm="Dokumentnummer">KSLU105121222</ris:otherDocumentId> <!-- rather not allow KSLUxxxxx#anchor (e.g. for "Randnummern"), but have specific <anchorlink or similar> -->
                   <ris:otherDocumentUri ris:domainTerm="Dokument-URI">.../.../</ris:otherDocumentUri> <!-- non-NeuRIS links go here -->
