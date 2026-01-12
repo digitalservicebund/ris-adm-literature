@@ -57,12 +57,13 @@ useScrollToHash()
         v-model:dokumentarischer-titel="dokumentarischerTitel"
       />
       <div>
-        <p class="relative pl-12 before:content-['*'] before:absolute before:left-0">
+        <p
+          class="ris-body2-regular relative pl-12 before:content-['*'] before:absolute before:left-0"
+        >
           Pflichtfelder für die Veröffentlichung
         </p>
-        <p class="pl-12">
-          Hinweis: Hauptsachtitel oder Dokumentarischer Titel muss für die Veröffentlichung erfasst
-          werden
+        <p class="ris-body2-regular pl-12">
+          Hinweis: Entweder Hauptsachtitel oder Dokumentarischer Titel ist erforderlich
         </p>
       </div>
     </section>
