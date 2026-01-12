@@ -42,6 +42,18 @@ public class TestDataInitializerConfiguration {
     return createInitializer(litDataSource, "data-literature.sql");
   }
 
+  /**
+   * Creates a data source initializer for schema literature.
+   * @param referencesDataSource The literature data source
+   * @return Instance of data source initializer
+   */
+  @Bean
+  public DataSourceInitializer referencesInitializer(
+    @Qualifier("referencesDataSource") DataSource referencesDataSource
+  ) {
+    return createInitializer(referencesDataSource, "data-references.sql");
+  }
+
   private DataSourceInitializer createInitializer(DataSource dataSource, String scriptPath) {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
     populator.addScript(new ClassPathResource(scriptPath));

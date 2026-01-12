@@ -39,7 +39,7 @@ public class FlywayConfig {
   }
 
   /**
-   * Defines the Flyway configuration for the LIT schema.
+   * Defines the Flyway configuration for the Literature schema.
    * This is NOT a bean, just a private helper method.
    *
    * @param litDataSource The 'lit' data source.

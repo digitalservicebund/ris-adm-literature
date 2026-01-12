@@ -36,6 +36,15 @@ const dokumenttypen = computed({
 
 <template>
   <div class="flex flex-col gap-24">
+    <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in">
+      <RisChipsInput
+        :input-id="slotProps.id"
+        v-model="verfasser"
+        aria-label="Verfasser/in"
+        :invalid="slotProps.hasError"
+      />
+    </InputField>
+
     <InputField id="titel" v-slot="slotProps" label="Hauptsachtitel / Dokumentarischer Titel">
       <InputText
         :id="slotProps.id"
@@ -46,6 +55,7 @@ const dokumenttypen = computed({
         fluid
       />
     </InputField>
+
     <div class="flex flex-row gap-24">
       <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr">
         <InputText
@@ -70,14 +80,5 @@ const dokumenttypen = computed({
         />
       </InputField>
     </div>
-
-    <InputField id="verfasser" v-slot="slotProps" label="Verfasser/in">
-      <RisChipsInput
-        :input-id="slotProps.id"
-        v-model="verfasser"
-        aria-label="Verfasser/in"
-        :invalid="slotProps.hasError"
-      />
-    </InputField>
   </div>
 </template>

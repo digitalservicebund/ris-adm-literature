@@ -18,8 +18,8 @@ class SchemaContextHolderTest {
     SchemaContextHolder.setSchema(SchemaType.ADM);
     assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.ADM);
 
-    SchemaContextHolder.setSchema(SchemaType.LIT);
-    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.LIT);
+    SchemaContextHolder.setSchema(SchemaType.LITERATURE);
+    assertThat(SchemaContextHolder.getSchema()).isEqualTo(SchemaType.LITERATURE);
   }
 
   @Test

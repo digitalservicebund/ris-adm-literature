@@ -1,11 +1,14 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import jakarta.annotation.Nonnull;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A reference to an active SLI.
  *
+ * @param id Id of the reference
  * @param documentNumber         The document number of the SLI.
  * @param veroeffentlichungsJahr The publication year of the SLI.
  * @param titel                  The main title of the SLI.
@@ -15,6 +18,7 @@ import java.util.List;
  */
 // TODO: Optional and required fields need to be clarified NOSONAR
 public record AktivzitierungSli(
+  @Nonnull UUID id,
   String documentNumber,
   String veroeffentlichungsJahr,
   String titel,

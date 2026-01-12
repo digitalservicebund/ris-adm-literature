@@ -4,10 +4,13 @@ import { onMounted, ref } from 'vue'
 import { useAutoComplete, useZitierArtSearch } from '@/composables/useAutoComplete'
 import { useFetchZitierArten } from '@/services/zitierArtService'
 import type { ZitierArt } from '@/domain/zitierArt'
+import type { DocumentCategory } from '@/domain/documentType.ts'
 
-defineProps<{
+const props = defineProps<{
   inputId: string
   invalid: boolean
+  sourceDocumentCategory: DocumentCategory
+  targetDocumentCategory: DocumentCategory | null
 }>()
 
 const modelValue = defineModel<ZitierArt | undefined>()
@@ -30,7 +33,10 @@ function onModelValueChange(id: string | undefined) {
 }
 
 onMounted(async () => {
-  const { data } = await useFetchZitierArten()
+  const { data } = await useFetchZitierArten(
+    props.sourceDocumentCategory,
+    props.targetDocumentCategory,
+  )
   zitierArten.value = data.value?.zitierArten || []
 })
 </script>

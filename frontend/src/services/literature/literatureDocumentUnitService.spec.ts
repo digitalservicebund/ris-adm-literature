@@ -10,6 +10,8 @@ import {
   usePutSliDocUnit,
   useGetSliPaginatedDocUnits,
   useGetAdmPaginatedDocUnitsForSli,
+  mapAdmSearchResultToAktivzitierung,
+  mapSliSearchResultToAktivzitierung,
 } from '@/services/literature/literatureDocumentUnitService'
 import { until } from '@vueuse/core'
 import { ref } from 'vue'
@@ -17,6 +19,7 @@ import {
   docTypeAnordnungFixture,
   docTypeBekanntmachungFixture,
 } from '@/testing/fixtures/documentType.fixture'
+import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
 
 describe('literatureDocumentUnitService', () => {
   beforeEach(() => {
@@ -519,5 +522,169 @@ describe('literatureDocumentUnitService', () => {
     await execute()
 
     expect(data.value).toBeNull()
+  })
+})
+
+describe('mapAdmSearchResultToAktivzitierung', () => {
+  vi.stubGlobal('crypto', {
+    randomUUID: () => 'mocked-uuid',
+  })
+
+  it('maps a normal input with fundstellen correctly', () => {
+    const input = {
+      id: 'be-id',
+      documentNumber: 'DOC-1',
+      inkrafttretedatum: '2024-01-01',
+      dokumenttyp: 'VV',
+      normgeberList: ['BMJ'],
+      aktenzeichenList: ['AZ-123'],
+      fundstellen: ['BAnz AT 01.01.2024, S. 1'],
+    }
+
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input)
+
+    expect(result).toEqual({
+      id: 'mocked-uuid',
+      documentNumber: 'DOC-1',
+      inkrafttretedatum: '2024-01-01',
+      dokumenttyp: 'VV',
+      normgeber: 'BMJ',
+      aktenzeichen: 'AZ-123',
+      periodikum: 'BAnz AT 01.01.2024',
+      zitatstelle: 'S. 1',
+    })
+  })
+
+  it('handles missing fundstellen gracefully', () => {
+    const input = {
+      id: 'be-id',
+      documentNumber: 'DOC-2',
+      inkrafttretedatum: '2024-01-02',
+      dokumenttyp: 'VV',
+      normgeberList: [],
+      aktenzeichenList: [],
+      fundstellen: undefined,
+    }
+
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input)
+
+    expect(result).toEqual({
+      id: 'mocked-uuid',
+      documentNumber: 'DOC-2',
+      inkrafttretedatum: '2024-01-02',
+      dokumenttyp: 'VV',
+      normgeber: undefined,
+      aktenzeichen: undefined,
+      periodikum: undefined,
+      zitatstelle: undefined,
+    })
+  })
+
+  it('handles empty fundstellen array', () => {
+    const input = {
+      id: 'be-id',
+      documentNumber: 'DOC-3',
+      inkrafttretedatum: '2024-01-03',
+      dokumenttyp: 'VV',
+      normgeberList: [],
+      aktenzeichenList: [],
+      fundstellen: [],
+    }
+
+    const result = mapAdmSearchResultToAktivzitierung(input)
+
+    expect(result.periodikum).toBeUndefined()
+    expect(result.zitatstelle).toBeUndefined()
+  })
+})
+
+describe('mapSliSearchResultToAktivzitierung', () => {
+  vi.stubGlobal('crypto', {
+    randomUUID: () => 'mocked-uuid',
+  })
+
+  it('maps a normal input with document types correctly', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-1',
+      titel: 'Testtitel',
+      veroeffentlichungsjahr: '2023',
+      verfasser: ['Müller', 'Schmidt'],
+      dokumenttypen: ['Bib', 'Dis'],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result).toEqual({
+      id: 'mocked-uuid',
+      titel: 'Testtitel',
+      documentNumber: 'SLI-1',
+      veroeffentlichungsJahr: '2023',
+      verfasser: ['Müller', 'Schmidt'],
+      dokumenttypen: [
+        { abbreviation: 'Bib', name: 'Bib' },
+        { abbreviation: 'Dis', name: 'Dis' },
+      ],
+    })
+  })
+
+  it('maps empty dokumenttypen array to empty dokumenttypen', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-2',
+      titel: 'Ohne Typen',
+      veroeffentlichungsjahr: '2022',
+      verfasser: ['Müller'],
+      dokumenttypen: [],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.dokumenttypen).toEqual([])
+  })
+
+  it('handles missing dokumenttypen gracefully', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-3',
+      titel: 'Keine Typen',
+      veroeffentlichungsjahr: '2021',
+      verfasser: ['Schmidt'],
+      dokumenttypen: undefined,
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.dokumenttypen).toEqual([])
+  })
+
+  it('handles missing verfasser by defaulting to empty array', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-4',
+      titel: 'Kein Verfasser',
+      veroeffentlichungsjahr: '2020',
+      verfasser: undefined,
+      dokumenttypen: ['Bib'],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.verfasser).toEqual([])
+  })
+
+  it('keeps titel undefined if missing', () => {
+    const input = {
+      id: 'sli-id',
+      documentNumber: 'SLI-5',
+      titel: undefined,
+      veroeffentlichungsjahr: '2019',
+      verfasser: [],
+      dokumenttypen: [],
+    }
+
+    const result = mapSliSearchResultToAktivzitierung(input)
+
+    expect(result.titel).toBeUndefined()
   })
 })

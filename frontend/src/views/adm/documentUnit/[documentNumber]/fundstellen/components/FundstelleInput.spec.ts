@@ -137,9 +137,9 @@ describe('FundstelleInput', () => {
     // then
     const emittedVal = emitted('updateFundstelle') as [Fundstelle[]]
     const updatedEntity = emittedVal?.[0][0]
-    expect(updatedEntity.id).toEqual(fundstelleFixture.id)
-    expect(updatedEntity.periodikum?.id).toEqual('bundesanzeigerTestId')
-    expect(updatedEntity.zitatstelle).toEqual('test')
+    expect(updatedEntity!.id).toEqual(fundstelleFixture.id)
+    expect(updatedEntity!.periodikum?.id).toEqual('bundesanzeigerTestId')
+    expect(updatedEntity!.zitatstelle).toEqual('test')
   })
 
   it('should create new entity', async () => {
@@ -163,8 +163,8 @@ describe('FundstelleInput', () => {
     // then
     const emittedVal = emitted('updateFundstelle') as [Fundstelle[]]
     const createdEntity = emittedVal?.[0][0]
-    expect(createdEntity.id).toEqual('mocked-uuid')
-    expect(createdEntity.periodikum?.id).toEqual('bundesanzeigerTestId')
+    expect(createdEntity!.id).toEqual('mocked-uuid')
+    expect(createdEntity!.periodikum?.id).toEqual('bundesanzeigerTestId')
   })
 
   it('should delete an existing fundstelle', async () => {

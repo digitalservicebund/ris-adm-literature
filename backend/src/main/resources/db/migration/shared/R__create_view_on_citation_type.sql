@@ -7,9 +7,13 @@ SELECT ct.id,
        ct.abbreviation,
        ct.label,
        case
-           when (dc.label = 'V') then 'VERWALTUNGSVORSCHRIFTEN'
-           when (dc.label in ('U', 'L')) then 'LITERATUR_UNSELBSTAENDIG'
-           when (dc.label = 'S') then 'LITERATUR_SELBSTAENDIG'
-       end as document_category
+           when (source.label = 'V') then 'VERWALTUNGSVORSCHRIFTEN'
+           when (source.label in ('U', 'S', 'L')) then 'LITERATUR'
+       end as source_document_category,
+       case
+           when (target.label = 'V') then 'VERWALTUNGSVORSCHRIFTEN'
+           when (target.label in ('U', 'S', 'L')) then 'LITERATUR'
+       end as target_document_category
 FROM lookup_tables.citation_type ct
-         JOIN lookup_tables.document_category dc ON ct.documentation_unit_document_category_id = dc.id
+         JOIN lookup_tables.document_category source ON ct.documentation_unit_document_category_id = source.id
+         JOIN lookup_tables.document_category target ON ct.citation_document_category_id = target.id

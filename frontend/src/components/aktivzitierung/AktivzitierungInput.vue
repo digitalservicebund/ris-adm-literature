@@ -1,18 +1,22 @@
-<script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
+<script
+  lang="ts"
+  setup
+  generic="T extends { id: string; documentNumber?: string }, SP extends Record<string, unknown>"
+>
 import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
-import type { AktivzitierungSearchParams } from '@/domain/documentUnit'
 
 const props = defineProps<{
   aktivzitierung?: T
   showCancelButton: boolean
+  showDeleteButton: boolean
 }>()
 
 const emit = defineEmits<{
-  update: [aktivzitierung: T]
+  save: [aktivzitierung: T]
   delete: [id: string]
   cancel: [void]
-  search: [params: AktivzitierungSearchParams]
+  search: [params: SP]
 }>()
 
 const createInitialT = (): T => {
@@ -28,7 +32,7 @@ const aktivzitierungRef = ref<T>(
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id)
 
 function onClickSave() {
-  emit('update', aktivzitierungRef.value)
+  emit('save', aktivzitierungRef.value)
   if (!isExistingEntry.value) {
     aktivzitierungRef.value = createInitialT()
   }
@@ -111,7 +115,7 @@ defineExpose({
         @click.stop="onClickCancel"
       />
       <Button
-        v-if="isExistingEntry"
+        v-if="showDeleteButton"
         class="ml-auto"
         aria-label="Eintrag löschen"
         severity="danger"

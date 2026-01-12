@@ -118,4 +118,32 @@ describe('AktivzitierungSliItem (metaSummary)', () => {
     expect(titleEl).toBeInTheDocument()
     expect(titleEl).toHaveTextContent('')
   })
+
+  it('renders filled icon when documentNumber exists', () => {
+    render(AktivzitierungSliItem, {
+      props: {
+        aktivzitierung: {
+          ...baseItem,
+          documentNumber: 'DOC-123',
+        },
+      },
+    })
+
+    expect(screen.getByTestId('icon-filled')).toBeInTheDocument()
+    expect(screen.queryByTestId('icon-outline')).not.toBeInTheDocument()
+  })
+
+  it('renders outline icon when documentNumber is missing', () => {
+    render(AktivzitierungSliItem, {
+      props: {
+        aktivzitierung: {
+          ...baseItem,
+          documentNumber: undefined,
+        },
+      },
+    })
+
+    expect(screen.getByTestId('icon-outline')).toBeInTheDocument()
+    expect(screen.queryByTestId('icon-filled')).not.toBeInTheDocument()
+  })
 })

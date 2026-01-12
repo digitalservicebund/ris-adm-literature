@@ -10,33 +10,25 @@ const testCases = [
     name: 'should render all fields separated by comma',
     data: {
       ...baseItem,
-      citationType: 'VV',
-      normgeberList: ['BMJ'],
+      citationType: 'Abgrenzung',
+      normgeber: 'BMJ',
       inkrafttretedatum: '2024-01-01',
-      aktenzeichenList: ['Az 123'],
-      fundstellen: ['BGBl I S. 10'],
+      aktenzeichen: 'Az 123',
+      periodikum: 'BGBl',
+      zitatstelle: 'I S. 10',
       dokumenttyp: 'VO',
       documentNumber: '123-A',
     },
-    expected: 'VV, BMJ, 01.01.2024, Az 123, BGBl I S. 10 (VO) | 123-A',
+    expected: 'Abgrenzung | BMJ, 01.01.2024, Az 123, BGBl I S. 10 (VO) | 123-A',
   },
   {
     name: 'should render only citationType and documentNumber (ignoring citationType if docNum missing)',
     data: {
       ...baseItem,
-      citationType: 'VwV',
+      citationType: 'Übernahme',
       documentNumber: '456-B',
     },
-    expected: 'VwV | 456-B',
-  },
-  {
-    name: 'should render documentNumber only if citationType is provided but docNum is empty',
-    data: {
-      ...baseItem,
-      citationType: 'VwV',
-      documentNumber: '',
-    },
-    expected: '',
+    expected: 'Übernahme | 456-B',
   },
   {
     name: 'should handle fundstelle with periodikum only',
@@ -72,7 +64,7 @@ const testCases = [
     data: {
       ...baseItem,
       documentNumber: '123',
-      aktenzeichenList: ['II ZR 12/23', 'XX'],
+      aktenzeichen: 'II ZR 12/23',
     },
     expected: 'II ZR 12/23 | 123',
   },
@@ -103,15 +95,5 @@ describe('AktivzitierungAdmItem (metaSummary)', () => {
     if (expected) {
       expect(screen.getByText(expected)).toBeInTheDocument()
     }
-  })
-
-  it('shows the langueberschrift', () => {
-    render(AktivzitierungAdmItem, {
-      props: {
-        aktivzitierung: { id: 'id-1', documentNumber: 'doc1', langueberschrift: 'TheTitle' },
-      },
-    })
-
-    expect(screen.getByText('TheTitle')).toBeInTheDocument()
   })
 })

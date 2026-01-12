@@ -42,12 +42,14 @@ public class ZitierArtService {
       ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
       : Pageable.unpaged(sort);
     CitationTypeEntity probe = new CitationTypeEntity();
-    probe.setDocumentCategory(query.documentCategory());
+    probe.setSourceDocumentCategory(query.sourceDocumentCategory());
+    probe.setTargetDocumentCategory(query.targetDocumentCategory());
     Example<CitationTypeEntity> example = Example.of(probe);
     var citationTypes = StringUtils.isBlank(searchTerm)
       ? citationTypeRepository.findAll(example, pageable)
-      : citationTypeRepository.findByDocumentCategoryAndAbbreviationContainingIgnoreCaseOrLabelContainingIgnoreCase(
-        query.documentCategory(),
+      : citationTypeRepository.findBySourceAndTargetAndAbbreviationOrLabel(
+        query.sourceDocumentCategory(),
+        query.targetDocumentCategory(),
         searchTerm,
         searchTerm,
         pageable
@@ -69,7 +71,7 @@ public class ZitierArtService {
   ) {
     CitationTypeEntity probe = new CitationTypeEntity();
     probe.setAbbreviation(abbreviation);
-    probe.setDocumentCategory(documentCategory);
+    probe.setSourceDocumentCategory(documentCategory);
     return citationTypeRepository
       .findAll(Example.of(probe))
       .stream()

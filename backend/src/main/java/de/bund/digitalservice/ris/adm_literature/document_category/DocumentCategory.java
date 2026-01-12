@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum DocumentCategory {
+  /**
+   * The combined literatur value is needed for filtering citation types only.
+   */
+  LITERATUR(null, null),
   LITERATUR_SELBSTAENDIG("LS", "publicLiteraturePublisher"),
   LITERATUR_UNSELBSTAENDIG("LU", "publicLiteraturePublisher"),
   VERWALTUNGSVORSCHRIFTEN("NR", "publicBsgPublisher");

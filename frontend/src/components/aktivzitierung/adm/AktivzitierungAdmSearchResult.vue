@@ -51,11 +51,11 @@ const line2 = computed(() => props.searchResult.langueberschrift || 'unbekannt')
 </script>
 
 <template>
-  <div class="search-result flex flex-row items-start w-full">
+  <div class="search-result flex items-center w-full">
     <Button
       aria-label="Aktivzitierung hinzufügen"
       size="small"
-      class="mr-16"
+      class="mr-16 shrink-0"
       :disabled="isAdded"
       @click="handleAdd"
     >
@@ -63,14 +63,18 @@ const line2 = computed(() => props.searchResult.langueberschrift || 'unbekannt')
     </Button>
 
     <div class="flex flex-col w-full">
-      <div class="flex flex-row items-center gap-12 flex-wrap">
-        <p class="ris-body1-regular">{{ line1 || '—' }} | {{ searchResult.documentNumber }}</p>
-        <div
-          v-if="isAdded"
-          class="ris-label2-regular flex w-[fit-content] items-center rounded-full px-4 py-2 bg-yellow-300 ml-1 shrink-0"
-        >
-          <span class="mx-2 text-yellow-900">Bereits hinzugefügt</span>
-        </div>
+      <div class="relative">
+        <p class="ris-body1-regular inline-block relative pr-8">
+          {{ line1 || '—' }} | {{ searchResult.documentNumber }}
+
+          <span
+            v-if="isAdded"
+            class="absolute top-1/2 -translate-y-1/2 ris-label2-regular rounded-full ml-10 px-6 py-2 bg-yellow-300 whitespace-nowrap"
+            aria-label="Bereits hinzugefügt"
+          >
+            <span class="text-yellow-900">Bereits hinzugefügt</span>
+          </span>
+        </p>
       </div>
 
       <p class="ris-body2-regular text-gray-900">

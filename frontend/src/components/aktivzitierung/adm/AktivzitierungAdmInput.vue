@@ -34,28 +34,15 @@ const citationType = computed({
 
 const normgeber = computed({
   get: () => {
-    return props.modelValue.normgeberList?.[0]
+    return props.modelValue.normgeber
       ? ({
-          id: props.modelValue.normgeberList[0],
-          name: props.modelValue.normgeberList[0],
+          id: props.modelValue.normgeber,
+          name: props.modelValue.normgeber,
         } as Institution)
       : undefined
   },
   set: (val: Institution | undefined) => {
-    if (val) {
-      emit('update:modelValue', { ...props.modelValue, normgeberList: [val?.name] })
-    } else {
-      emit('update:modelValue', { ...props.modelValue, normgeberList: [] })
-    }
-  },
-})
-
-const aktenzeichen = computed({
-  get: () => {
-    return props.modelValue.aktenzeichenList?.[0] ? props.modelValue.aktenzeichenList[0] : ''
-  },
-  set: (val: string) => {
-    emit('update:modelValue', { ...props.modelValue, aktenzeichenList: [val].filter(Boolean) })
+    emit('update:modelValue', { ...props.modelValue, normgeber: val?.name })
   },
 })
 
@@ -78,7 +65,13 @@ const periodikum = computed({
   <div class="flex flex-col gap-24">
     <div class="flex flex-row gap-24">
       <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
-        <ZitierArtDropDown :input-id="slotProps.id" v-model="citationType" :invalid="false" />
+        <ZitierArtDropDown
+          :input-id="slotProps.id"
+          v-model="citationType"
+          :invalid="false"
+          :source-document-category="DocumentCategory.LITERATUR"
+          :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+        />
       </InputField>
       <InputField id="normgeber" label="Normgeber" v-slot="slotProps">
         <InstitutionDropDown :input-id="slotProps.id" v-model="normgeber" :isInvalid="false" />
@@ -102,7 +95,10 @@ const periodikum = computed({
       <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
         <InputText
           :id="slotProps.id"
-          v-model="aktenzeichen"
+          :model-value="modelValue?.aktenzeichen"
+          @update:model-value="
+            (aktenzeichen) => emit('update:modelValue', { ...props.modelValue, aktenzeichen })
+          "
           aria-label="Aktenzeichen"
           :invalid="slotProps.hasError"
           fluid
