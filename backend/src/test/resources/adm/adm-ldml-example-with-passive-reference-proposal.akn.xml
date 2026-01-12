@@ -38,77 +38,78 @@
           <!--  
             Here's how a passive reference may look like:
                 
+            "NeuRIS Modeling"
+              * We have a single, generic reference element (+ schema) that is standardized across streams in order to reduce the number of variants that we and our users need to understand
+            
+            "Portal requirements"
+              * We provide all data that the portal needs for building a link to NeuRIS documents (type, document ID) 
+              * We support arbitrary URIs (for non-NeuRIS references)
+              * We support plain text references (e.g. for non-NeuRIS references)
+
+            "API user's requirements"
+              * We support data that a client can use to download the source (not relying on the link built in the portal's UI)
+
             "LDML Harmonization"
               * Each node has a domainTerm for the human reader
               * Each field's data is encoded as a value of a child element (not via attributes)
-              * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements
-              * We're using a custom ris:reference for the actual data
-
-            "Portal requirements"
-              * The type of the source document is given so Portal can use it to build a URL
-              * The document ID of the source document is given so Portal can use it to build a URL
-
-            "API user's delight"
-              * A relative path to the source document's XML is given, so a client can download the source without requiring the Portal's URL resolution.
+              * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements and we're using a custom ris:reference for the actual data
           -->
 
           
           <akn:otherReferences source="#">
-            
-          <!-- variant 1: abstract <ris:reference> node, ULI -->
+
             <akn:implicitReference>
+
               <ris:reference ris:domainTerm="Referenz"> 
-                <!-- ❓ is there tangible benefit from having a single, generic reference tag?-->
-                <!-- ✅ Standardized way across streams reduces number of variants we (and our users) need to understand 
-                        ideally one XML element, one XML schema
-                -->
 
-                <!--
-                <ris:passivReferenzUli ris:domainTerm="Passivzitierung unselbständige Literatur"> <!-- ❓ or have the kind rather in a node's value? -->
-                -->
-                  
                   <!-- 
-                    necessary identifiers of the source document
+                    identifiers of the other (here: source) document
                   -->
-                  <ris:referenceDirection risDomainTerm="Aktiv/Passivverweis">passive</ris:referenceType> 
-                  <ris:otherDocumentType risDomainTerm="Art der Referenz">uli</ris:referenceType> 
-                  <!-- if it should be a link: we need to have one of these two -->
-                  <ris:otherDocumentId ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentNummer> <!-- ❓ rather not allow KSLUxxxxx#anchor, but have specific <anchorlink or similar> -->
-                  <ris:otherDocumentUri ris:domainTerm="Dokument-URI"></ris:otherDocumentUri>
-                  <!-- this does not make a link (e.g. keywords that helps the documentalist; old norms references ) -->
-                  <ris:otherDocumentTextualIdentification></ris:otherDocumentTextualIdentification>
-
+  
+                  <ris:referenceDirection risDomainTerm="Aktiv/Passivverweis">passive</ris:referenceDirection> <!-- necessary in order to get a link (❓ ask Portal) -->
+                  <ris:otherDocumentType risDomainTerm="Art der Referenz">uli</ris:otherDocumentType> <!-- necessary in order to get a link-->
+                  <!-- for a link, also one of these two is necessary -->
+                  <ris:otherDocumentId ris:domainTerm="Dokumentnummer">KSLU105121222</ris:otherDocumentId> <!-- rather not allow KSLUxxxxx#anchor (e.g. for "Randnummern"), but have specific <anchorlink or similar> -->
+                  <ris:otherDocumentUri ris:domainTerm="Dokument-URI"></ris:otherDocumentUri> <!-- non-NeuRIS links go here -->
                   
+                  <ris:otherDocumentTextualIdentification></ris:otherDocumentTextualIdentification><!-- this does not make a link (e.g. keywords that helps the documentalist; old norms references ) -->
 
+                  <!-- 
+                    where would the API user go to get the document? 
                     
-                  <ris:dokumentRelativerPfad>/selbstaendige-literatur/KSLU105121222.xml</ris:dokumentRelativerPfad>
+                    🚧: not agreed, yet
+                  -->
+
+                  <ris:otherDocumentRelativePath ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:otherDocumentRelativePath>
   
                   <!-- 
                     metadata of the source document
-                  -->
-      
-                  <!-- ❓ have some description/logics about how the portal would "format" this information (e.g. if author, then put it first, ...)
-                    
-                  <!-- ❓ is there a better domain term for --> <!-- norms/caselaw/lit docKind; docType uli/sli/adm --> 
-                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung>
-                    <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
-          Dokumenttyp      
-                  <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel>
 
-                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string-->
+                    (🚧 Missing: some description/logics about how the portal would "format" this information in a label (e.g. if there is an author, put it first; put commas between the non-empty data)
+                  -->  
                   
-                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr>
                   
-                  <ris:fundstelle domainTerm="Fundstelle"><!-- specific to ULI, absent in SLI -->
+                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung> <!-- ❓ is there a better domain term for "Typ", here? -->  <!-- up to now: docKind is "norms" or "caselaw" etc. while docType one of "uli", "sli" etc. --> 
+                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp> <!-- shown by portal if exists-->
+          Dokumenttyp      
+                  
+                  <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel> <!-- shown by portal if exists-->
+
+                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string--> <!-- shown by portal if exists-->
+                  
+                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr> <!-- shown by portal if exists-->
+                  
+                  <!-- fundstelle is specific to ULI, absent in SLI -->
+                  <ris:fundstelle domainTerm="Fundstelle">
                     <ris:periodikum domainTerm="Periodikum">
                       <ris:titelAbkuerzung domainTerm="Titel, abgekürzt">ErgoMed</ris:titelAbkuerzung>
-                      <ris:titel domainTerm="Titel">Ergonomics and Medicine (that's a guess)</ris:titel>
+                      <ris:titel domainTerm="Titel">Ergonomics and Medicine (that's a guess)</ris:titel> <!-- shown by portal if exists-->
                     </ris:periodikum>
-                    <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle>
+                    <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle> <!-- shown by portal if exists-->
                   </ris:fundstelle>
 
-                </ris:passivReferenzUli>
               </ris:reference>
+              
           </akn:implicitReference>
    
         </akn:otherReferences>
