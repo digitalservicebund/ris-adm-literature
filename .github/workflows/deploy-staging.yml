@@ -36,13 +36,14 @@ jobs:
     steps:
       - uses: chainguard-dev/actions/setup-gitsign@7d647f470c4d3692286221bd17ca78206976a61c
       - name: Deploy new images
-        uses: digitalservicebund/argocd-deploy@4fac1bb67c92ed168f6d9b22f8779ce241a9e412 # v1.0.0
+        uses: digitalservicebund/argocd-deploy@faa88406a1d6afa918aad127b19735c6e54d7fb1
         with:
           environment: staging
           version: ${{ inputs.container-image-version }}
           deploying_repo: ris-adm-literature-frontend,ris-adm-literature-backend
           infra_repo: ris-adm-literature-infra
-          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          github_app_id: ${{ secrets.GITOPS_NEURIS_APP_ID }}
+          github_app_private_key: ${{ secrets.GITOPS_NEURIS_APP_PRIVATE_KEY }}
           app: ris-adm-literature-staging
           argocd_pipeline_password: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
           argocd_server: ${{ secrets.ARGOCD_SERVER }}
