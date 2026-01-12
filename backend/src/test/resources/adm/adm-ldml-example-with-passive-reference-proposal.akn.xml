@@ -57,21 +57,41 @@
             
           <!-- variant 1: abstract <ris:reference> node, ULI -->
             <akn:implicitReference>
-              <ris:reference ris:domainTerm="Quelle"> <!-- ❓ is there tangible benefit from having a single, generic reference tag?-->
+              <ris:reference ris:domainTerm="Referenz"> 
+                <!-- ❓ is there tangible benefit from having a single, generic reference tag?-->
+                <!-- ✅ Standardized way across streams reduces number of variants we (and our users) need to understand 
+                        ideally one XML element, one XML schema
+                -->
 
+                <!--
                 <ris:passivReferenzUli ris:domainTerm="Passivzitierung unselbständige Literatur"> <!-- ❓ or have the kind rather in a node's value? -->
-                
+                -->
+                  
                   <!-- 
-                    identifiers of the source document
+                    necessary identifiers of the source document
                   -->
-                  <ris:dokumentNummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentNummer>
+                  <ris:referenceDirection risDomainTerm="Aktiv/Passivverweis">passive</ris:referenceType> 
+                  <ris:otherDocumentType risDomainTerm="Art der Referenz">uli</ris:referenceType> 
+                  <!-- if it should be a link: we need to have one of these two -->
+                  <ris:otherDocumentId ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentNummer> <!-- ❓ rather not allow KSLUxxxxx#anchor, but have specific <anchorlink or similar> -->
+                  <ris:otherDocumentUri ris:domainTerm="Dokument-URI"></ris:otherDocumentUri>
+                  <!-- this does not make a link (e.g. keywords that helps the documentalist; old norms references ) -->
+                  <ris:otherDocumentTextualIdentification></ris:otherDocumentTextualIdentification>
+
+                  
+
+                    
                   <ris:dokumentRelativerPfad>/selbstaendige-literatur/KSLU105121222.xml</ris:dokumentRelativerPfad>
   
                   <!-- 
                     metadata of the source document
                   -->
+      
+                  <!-- ❓ have some description/logics about how the portal would "format" this information (e.g. if author, then put it first, ...)
+                    
+                  <!-- ❓ is there a better domain term for --> <!-- norms/caselaw/lit docKind; docType uli/sli/adm --> 
                   <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung>
-                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
+                    <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
           Dokumenttyp      
                   <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel>
 
