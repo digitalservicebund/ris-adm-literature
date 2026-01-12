@@ -6,6 +6,7 @@ spring:
     # Disable Hibernate's automatic table creation.
     hibernate:
       ddl-auto: none
+    show-sql: true
 
   datasource:
     adm:
@@ -65,3 +66,7 @@ s3:
         access-key: ${s3.literature.public.access-key:test}
         access-key-id: ${s3.literature.public.access-key-id:test}
         bucket-name-ref: ${s3.bucket.literature.public.bucket-name:local-mock-bucket.literature}
+
+logging:
+  level:
+    org.hibernate.SQL: INFO

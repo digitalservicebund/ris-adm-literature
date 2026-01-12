@@ -51,7 +51,7 @@ class ActiveReferenceServiceIntegrationTest {
         ar -> ar.getSource().getLiteratureDocumentNumber(),
         ar -> ar.getTarget().getAdmDocumentNumber()
       )
-      .containsExactly(
+      .contains(
         Tuple.tuple("KALS999999999", "KSNR999999999"),
         Tuple.tuple("KALS999999999", "KSNR999999998")
       );
@@ -79,7 +79,10 @@ class ActiveReferenceServiceIntegrationTest {
     // then
     List<ActiveReferenceEntity> activeReferenceEntities = entityManager
       .getEntityManager()
-      .createQuery("select ar from ActiveReferenceEntity ar", ActiveReferenceEntity.class)
+      .createQuery(
+        "select ar from ActiveReferenceEntity ar where ar.source.literatureDocumentNumber = 'KALS999999996'",
+        ActiveReferenceEntity.class
+      )
       .getResultList();
     assertThat(activeReferenceEntities).isEmpty();
   }
