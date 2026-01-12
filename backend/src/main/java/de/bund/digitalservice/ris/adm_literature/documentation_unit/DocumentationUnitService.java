@@ -132,7 +132,10 @@ public class DocumentationUnitService {
     DocumentCategory documentCategory = documentationUnitContent.documentCategory();
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, documentCategory);
     publisher.publish(publishOptions);
-    if (documentationUnitContent instanceof SliDocumentationUnitContent sli) {
+    if (
+      documentationUnitContent instanceof SliDocumentationUnitContent sli &&
+      sli.aktivzitierungenAdm() != null
+    ) {
       List<DocumentReference> targets = sli
         .aktivzitierungenAdm()
         .stream()
