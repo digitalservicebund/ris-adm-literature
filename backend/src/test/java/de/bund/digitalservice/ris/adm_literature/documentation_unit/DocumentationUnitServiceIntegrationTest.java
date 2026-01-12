@@ -7,9 +7,11 @@ import static org.mockito.Mockito.doThrow;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.TestLiteratureUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
+import de.bund.digitalservice.ris.adm_literature.test.WithMockLitUser;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +99,7 @@ class DocumentationUnitServiceIntegrationTest {
   }
 
   @Test
-  void publish() {
+  void publish_adm() {
     // given
     DocumentationUnit documentationUnit = documentationUnitService.create(
       DocumentCategory.VERWALTUNGSVORSCHRIFTEN
@@ -164,5 +166,29 @@ class DocumentationUnitServiceIntegrationTest {
       documentNumber
     );
     assertThat(actual).isPresent().hasValueSatisfying(dun -> assertThat(dun.json()).isNull());
+  }
+
+  @Test
+  @WithMockLitUser
+  void publish_sli() {
+    // given
+    DocumentationUnit documentationUnit = documentationUnitService.create(
+      DocumentCategory.LITERATUR_SELBSTAENDIG
+    );
+
+    // when
+    Optional<DocumentationUnit> published = documentationUnitService.publish(
+      documentationUnit.documentNumber(),
+      TestLiteratureUnitContent.createSli(documentationUnit.documentNumber(), "2026")
+    );
+
+    // then
+    assertThat(published)
+      .isPresent()
+      .hasValueSatisfying(dun ->
+        assertThat(dun.json()).contains(
+          "\"documentNumber\":\"" + documentationUnit.documentNumber() + "\""
+        )
+      );
   }
 }

@@ -139,6 +139,7 @@ public class DocumentationUnitService {
       List<DocumentReference> targets = sli
         .aktivzitierungenAdm()
         .stream()
+        // Only document references from search are published, manual document references are skipped
         .filter(aa -> aa.documentNumber() != null)
         .map(aa ->
           new DocumentReference(aa.documentNumber(), DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
