@@ -199,6 +199,8 @@ jobs:
       id-token: write
     secrets:
       DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      GITOPS_NEURIS_APP_ID: ${{ secrets.GITOPS_NEURIS_APP_ID }}
+      GITOPS_NEURIS_APP_PRIVATE_KEY: ${{ secrets.GITOPS_NEURIS_APP_PRIVATE_KEY }}
       ARGOCD_PIPELINE_PASSWORD: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
       ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
       METRICS_DEPLOYMENT_WEBHOOK_URL: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
