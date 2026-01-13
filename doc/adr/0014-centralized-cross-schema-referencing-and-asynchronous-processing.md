@@ -63,6 +63,10 @@ checks the passive views for updates. When detecting a change, this process trig
 the service that owns the cited document, i.e., adding the passive reference to the document. This mechanism ensures that the system remains consistent. This maintains
 strict decoupling, as the citing service is never required for the operations of the service being cited.
 
+### 4. Deletion/Unpublishing & Updating
+- Unpublishing: To unpublish references, the publish method is called with an empty list of targets. This removes records from active_references.
+- Updating: Updated references will be overwritten by the publish call.
+
 ## Consequences
 
 * **Consistency:** Database-level FKs ensure that we cannot reference a document that does not exist or has been deleted.
@@ -91,4 +95,4 @@ allowing them to monitor incoming citations without gaining direct access to the
 
 ### Open Question:
 - How to handle references without a document number?
-- how to deal with unpublishing / deletion of referenced / referencing documents?
+- how to deal with changes in the referenced documents?
