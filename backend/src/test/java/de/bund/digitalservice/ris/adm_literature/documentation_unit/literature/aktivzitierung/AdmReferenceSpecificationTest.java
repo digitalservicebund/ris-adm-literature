@@ -111,7 +111,7 @@ class AdmReferenceSpecificationTest {
   }
 
   @Test
-  @DisplayName("toPredicate with zitatstelle should add like clause on reference view")
+  @DisplayName("toPredicate with fundstelle should add like clause on reference view")
   void toPredicate_withZitatstelleOnly() {
     // given
     AdmReferenceSpecification spec = new AdmReferenceSpecification(
