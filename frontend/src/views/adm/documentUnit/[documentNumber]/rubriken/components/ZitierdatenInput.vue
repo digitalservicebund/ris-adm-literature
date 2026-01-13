@@ -1,43 +1,43 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import InputField from '@/components/input/InputField.vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
-import { useValidationStore } from '@/composables/useValidationStore'
-import { parseIsoDateToLocal, parseLocalDateToIso } from '@/utils/dateHelpers'
-import { getFutureDateErrMessage, getInvalidDateErrMessage } from '@/utils/validators'
+import { ref } from "vue";
+import InputField from "@/components/input/InputField.vue";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import { RisChipsInput } from "@digitalservicebund/ris-ui/components";
+import { useValidationStore } from "@/composables/useValidationStore";
+import { parseIsoDateToLocal, parseLocalDateToIso } from "@/utils/dateHelpers";
+import { getFutureDateErrMessage, getInvalidDateErrMessage } from "@/utils/validators";
 
-const docUnitStore = useAdmDocUnitStore()
-const validationStore = useValidationStore<'zitierdaten'>()
+const docUnitStore = useAdmDocUnitStore();
+const validationStore = useValidationStore<"zitierdaten">();
 
 const zitierdaten = ref<string[]>(
   docUnitStore
     .documentUnit!.zitierdaten?.map((d) => parseIsoDateToLocal(d))
     .filter((d) => d !== null) || [],
-)
+);
 
 function onUpdate(dates: string[]) {
-  zitierdaten.value = dates
-  const isValid = validate(dates)
+  zitierdaten.value = dates;
+  const isValid = validate(dates);
   if (isValid) {
     docUnitStore.documentUnit!.zitierdaten = zitierdaten.value
       .map((d) => parseLocalDateToIso(d))
-      .filter((d) => d !== null)
+      .filter((d) => d !== null);
   }
 }
 
 function validate(dates: string[]): boolean {
   const firstMessage = [getInvalidDateErrMessage(dates), getFutureDateErrMessage(dates)].find(
     Boolean,
-  )
+  );
 
   if (firstMessage) {
-    validationStore.add(firstMessage, 'zitierdaten')
-    return false
+    validationStore.add(firstMessage, "zitierdaten");
+    return false;
   }
 
-  validationStore.remove('zitierdaten')
-  return true
+  validationStore.remove("zitierdaten");
+  return true;
 }
 </script>
 

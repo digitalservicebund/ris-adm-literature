@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
-  size?: 'small'
-}>()
-const sizeClasses = props.size === 'small' ? 'h-24 w-24' : 'h-32 w-32'
+  size?: "small";
+}>();
+const sizeClasses = props.size === "small" ? "h-24 w-24" : "h-32 w-32";
 </script>
 
 <template>

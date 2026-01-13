@@ -1,48 +1,48 @@
 <script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
-import IconEdit from '~icons/ic/outline-edit'
-import AktivzitierungInput from './AktivzitierungInput.vue'
-import { computed, type VNodeChild } from 'vue'
-import IconClose from '~icons/ic/close'
+import IconEdit from "~icons/ic/outline-edit";
+import AktivzitierungInput from "./AktivzitierungInput.vue";
+import { computed, type VNodeChild } from "vue";
+import IconClose from "~icons/ic/close";
 
 const props = defineProps<{
-  aktivzitierung: T
-  isEditing: boolean
-}>()
+  aktivzitierung: T;
+  isEditing: boolean;
+}>();
 
 const emit = defineEmits<{
-  update: [aktivzitierung: T]
-  delete: [id: string]
-  editStart: [id: string]
-  cancelEdit: [void]
-}>()
+  update: [aktivzitierung: T];
+  delete: [id: string];
+  editStart: [id: string];
+  cancelEdit: [void];
+}>();
 
 defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
-  item(props: { aktivzitierung: T }): VNodeChild
+  item(props: { aktivzitierung: T }): VNodeChild;
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
-}>()
+  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild;
+}>();
 
 const onExpandAccordion = () => {
-  emit('editStart', props.aktivzitierung.id)
-}
+  emit("editStart", props.aktivzitierung.id);
+};
 
 const onUpdate = (item: T) => {
-  emit('update', item)
-}
+  emit("update", item);
+};
 
 const onClickCancel = () => {
-  emit('cancelEdit')
-}
+  emit("cancelEdit");
+};
 
 const onDelete = (id: string) => {
-  emit('delete', id)
-  emit('cancelEdit')
-}
+  emit("delete", id);
+  emit("cancelEdit");
+};
 
 const isFromSearch = computed(
   () => !!props.aktivzitierung.documentNumber, // search-based if documentNumber set
-)
+);
 </script>
 
 <template>

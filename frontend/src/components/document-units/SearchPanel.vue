@@ -1,51 +1,51 @@
 <script lang="ts" setup>
-import type { AdmDocUnitSearchParams } from '@/domain/adm/admDocumentUnit'
-import { Button, InputText } from 'primevue'
-import { computed, ref } from 'vue'
-import DateInput from '@/components/input/DateInput.vue'
-import InputField from '@/components/input/InputField.vue'
-import type { ValidationError } from '@/components/input/types.ts'
-import messages from '@/i18n/messages.json'
+import type { AdmDocUnitSearchParams } from "@/domain/adm/admDocumentUnit";
+import { Button, InputText } from "primevue";
+import { computed, ref } from "vue";
+import DateInput from "@/components/input/DateInput.vue";
+import InputField from "@/components/input/InputField.vue";
+import type { ValidationError } from "@/components/input/types.ts";
+import messages from "@/i18n/messages.json";
 
 const props = defineProps<{
-  loading: boolean
-}>()
+  loading: boolean;
+}>();
 
 const emit = defineEmits<{
-  search: [value: AdmDocUnitSearchParams]
-}>()
+  search: [value: AdmDocUnitSearchParams];
+}>();
 
 const searchParams = ref<AdmDocUnitSearchParams>({
-  documentNumber: '',
-  langueberschrift: '',
-  fundstellen: '',
-  zitierdaten: '',
-})
+  documentNumber: "",
+  langueberschrift: "",
+  fundstellen: "",
+  zitierdaten: "",
+});
 
-const zitierdatumKey = ref<number>(0)
+const zitierdatumKey = ref<number>(0);
 
-const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params))
-const hasValidationError = ref<boolean>(false)
+const isSearchEmpty = computed(() => Object.values(searchParams.value).every((params) => !params));
+const hasValidationError = ref<boolean>(false);
 async function handleSearch() {
   if (hasValidationError.value) {
-    return
+    return;
   }
-  emit('search', searchParams.value)
+  emit("search", searchParams.value);
 }
 
 function onValidationError(ve: ValidationError | undefined) {
-  hasValidationError.value = !!ve
+  hasValidationError.value = !!ve;
 }
 
 function onClickReset() {
   searchParams.value = {
-    documentNumber: '',
-    langueberschrift: '',
-    fundstellen: '',
-    zitierdaten: '',
-  }
-  zitierdatumKey.value++
-  emit('search', searchParams.value)
+    documentNumber: "",
+    langueberschrift: "",
+    fundstellen: "",
+    zitierdaten: "",
+  };
+  zitierdatumKey.value++;
+  emit("search", searchParams.value);
 }
 </script>
 

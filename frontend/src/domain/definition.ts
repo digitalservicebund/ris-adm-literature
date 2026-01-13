@@ -1,3 +1,3 @@
 export interface Definition {
-  begriff: string
+  begriff: string;
 }

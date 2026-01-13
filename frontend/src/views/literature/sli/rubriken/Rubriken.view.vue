@@ -1,44 +1,44 @@
 <script lang="ts" setup>
-import TitleElement from '@/components/TitleElement.vue'
-import InputField from '@/components/input/InputField.vue'
-import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { useSliDocumentUnitStore } from '@/stores/sliDocStore'
-import { DocumentCategory } from '@/domain/documentType'
-import { useScrollToHash } from '@/composables/useScroll'
-import InputText from 'primevue/inputtext'
-import TitelSection from '@/views/literature/sli/rubriken/components/TitelSection.vue'
-import DokumentTyp from '@/views/literature/DokumentTyp.vue'
-import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
-import { computed } from 'vue'
-import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
-import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
-import AktivzitierungenAdm from './components/AktivzitierungenAdm.vue'
-import AktivzitierungenSli from './components/AktivzitierungenSli.vue'
+import TitleElement from "@/components/TitleElement.vue";
+import InputField from "@/components/input/InputField.vue";
+import { useStoreForRoute } from "@/composables/useStoreForRoute";
+import type { useSliDocumentUnitStore } from "@/stores/sliDocStore";
+import { DocumentCategory } from "@/domain/documentType";
+import { useScrollToHash } from "@/composables/useScroll";
+import InputText from "primevue/inputtext";
+import TitelSection from "@/views/literature/sli/rubriken/components/TitelSection.vue";
+import DokumentTyp from "@/views/literature/DokumentTyp.vue";
+import { useLiteratureRubriken } from "@/views/literature/useLiteratureRubriken";
+import { computed } from "vue";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
+import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import AktivzitierungenAdm from "./components/AktivzitierungenAdm.vue";
+import AktivzitierungenSli from "./components/AktivzitierungenSli.vue";
 
-const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>()
+const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>();
 const {
   veroeffentlichungsjahr,
   dokumenttypen,
   hauptsachtitel,
   dokumentarischerTitel,
   hauptsachtitelZusatz,
-} = useLiteratureRubriken(store)
+} = useLiteratureRubriken(store);
 
 const aktivzitierungAdm = computed({
   get: () => store.documentUnit!.aktivzitierungenAdm ?? [],
   set: (newValue: AktivzitierungAdm[]) => {
-    store.documentUnit!.aktivzitierungenAdm = newValue
+    store.documentUnit!.aktivzitierungenAdm = newValue;
   },
-})
+});
 
 const aktivzitierungSli = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungSli[]) => {
-    store.documentUnit!.aktivzitierungenSli = newValue
+    store.documentUnit!.aktivzitierungenSli = newValue;
   },
-})
+});
 
-useScrollToHash()
+useScrollToHash();
 </script>
 
 <template>

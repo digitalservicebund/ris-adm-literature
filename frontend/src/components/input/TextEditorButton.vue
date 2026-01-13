@@ -1,68 +1,68 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import type { Component } from 'vue'
-import IconDropdown from '~icons/ic/baseline-arrow-drop-down'
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import type { Component } from "vue";
+import IconDropdown from "~icons/ic/baseline-arrow-drop-down";
 
-const props = defineProps<EditorButton>()
+const props = defineProps<EditorButton>();
 
 const emits = defineEmits<{
-  toggle: [value: EditorButton]
-}>()
+  toggle: [value: EditorButton];
+}>();
 
-const showDropdown = ref(false)
-const clickedInside = ref(false)
+const showDropdown = ref(false);
+const clickedInside = ref(false);
 
-const button = ref<HTMLElement>()
-const children = ref<HTMLElement[]>([])
+const button = ref<HTMLElement>();
+const children = ref<HTMLElement[]>([]);
 
 function onClickToggle(button: EditorButton) {
-  clickedInside.value = true
-  if (!button.childButtons || button.type === 'more') emits('toggle', button)
-  else if (button.type === 'menu') showDropdown.value = !showDropdown.value
+  clickedInside.value = true;
+  if (!button.childButtons || button.type === "more") emits("toggle", button);
+  else if (button.type === "menu") showDropdown.value = !showDropdown.value;
 }
 
 const closeDropDownWhenClickOutSide = () => {
   if (clickedInside.value) {
-    clickedInside.value = false
-    return
+    clickedInside.value = false;
+    return;
   }
-  showDropdown.value = false
-}
+  showDropdown.value = false;
+};
 
 onMounted(() => {
-  document.addEventListener('click', closeDropDownWhenClickOutSide)
-})
+  document.addEventListener("click", closeDropDownWhenClickOutSide);
+});
 onUnmounted(() => {
-  document.removeEventListener('click', closeDropDownWhenClickOutSide)
-})
-defineExpose({ button, children })
+  document.removeEventListener("click", closeDropDownWhenClickOutSide);
+});
+defineExpose({ button, children });
 
 watch(
   () => props.disabled,
   (isDisabled) => {
     if (isDisabled) {
-      showDropdown.value = false
+      showDropdown.value = false;
     }
   },
-)
+);
 
 export interface EditorButton {
-  type: string
-  icon: Component
-  ariaLabel: string
-  childButtons?: EditorButton[]
-  tabIndex?: number
-  isLast?: boolean
-  isActive?: boolean
-  isCollapsable?: boolean
-  disabled?: boolean
-  group?: string
-  callback?: () => void
-  shortcut?: string
+  type: string;
+  icon: Component;
+  ariaLabel: string;
+  childButtons?: EditorButton[];
+  tabIndex?: number;
+  isLast?: boolean;
+  isActive?: boolean;
+  isCollapsable?: boolean;
+  disabled?: boolean;
+  group?: string;
+  callback?: () => void;
+  shortcut?: string;
 }
 
 const getTooltipText = (button: EditorButton) =>
-  button.shortcut ? `${button.ariaLabel}\n${button.shortcut}` : button.ariaLabel
+  button.shortcut ? `${button.ariaLabel}\n${button.shortcut}` : button.ariaLabel;
 </script>
 
 <template>

@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-import type { AdmDocUnitListItem } from '@/domain/adm/admDocumentUnit'
-import dayjs from 'dayjs'
-import Button from 'primevue/button'
-import Column from 'primevue/column'
-import DataTable from 'primevue/datatable'
-import IconEdit from '~icons/ic/outline-edit'
-import messages from '@/i18n/messages.json'
+import type { AdmDocUnitListItem } from "@/domain/adm/admDocumentUnit";
+import dayjs from "dayjs";
+import Button from "primevue/button";
+import Column from "primevue/column";
+import DataTable from "primevue/datatable";
+import IconEdit from "~icons/ic/outline-edit";
+import messages from "@/i18n/messages.json";
 
 export interface DocumentUnitListProps {
-  docUnits: AdmDocUnitListItem[]
-  firstRowIndex: number
-  rowsPerPage: number
-  totalRows: number
-  loading: boolean
+  docUnits: AdmDocUnitListItem[];
+  firstRowIndex: number;
+  rowsPerPage: number;
+  totalRows: number;
+  loading: boolean;
 }
-defineProps<DocumentUnitListProps>()
+defineProps<DocumentUnitListProps>();
 
 const zitierdatenLabel = (zitierdaten: string[]) =>
   zitierdaten?.length > 0
-    ? zitierdaten.map((zitierdatum) => dayjs(zitierdatum).format('DD.MM.YYYY')).join(', ')
-    : '--'
+    ? zitierdaten.map((zitierdatum) => dayjs(zitierdatum).format("DD.MM.YYYY")).join(", ")
+    : "--";
 </script>
 
 <template>
@@ -76,7 +76,7 @@ const zitierdatenLabel = (zitierdaten: string[]) =>
       </template>
     </Column>
     <template #empty>
-      <div>{{ loading ? '' : messages.NO_SEARCH_RESULTS.message }}</div>
+      <div>{{ loading ? "" : messages.NO_SEARCH_RESULTS.message }}</div>
     </template>
   </DataTable>
 </template>

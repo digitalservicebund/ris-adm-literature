@@ -1,5 +1,5 @@
-import { computed, ref } from 'vue'
-import type { UseFetchReturn } from '@vueuse/core'
+import { computed, ref } from "vue";
+import type { UseFetchReturn } from "@vueuse/core";
 
 /**
  * Generic factory function for creating a document-unit store.
@@ -31,81 +31,81 @@ export function defineDocumentUnitStore<DocumentationUnit>({
   publishDocument,
   missingFields,
 }: {
-  getDocument: (documentNumber: string) => UseFetchReturn<DocumentationUnit>
-  putDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>
-  publishDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>
-  missingFields: (doc: DocumentationUnit) => string[]
+  getDocument: (documentNumber: string) => UseFetchReturn<DocumentationUnit>;
+  putDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>;
+  publishDocument: (doc: DocumentationUnit) => UseFetchReturn<DocumentationUnit>;
+  missingFields: (doc: DocumentationUnit) => string[];
 }) {
-  const documentUnit = ref<DocumentationUnit | null>(null)
-  const isLoading = ref(false)
-  const error = ref<Error | null>(null)
+  const documentUnit = ref<DocumentationUnit | null>(null);
+  const isLoading = ref(false);
+  const error = ref<Error | null>(null);
 
   async function load(documentNumber: string): Promise<void> {
-    isLoading.value = true
-    error.value = null
+    isLoading.value = true;
+    error.value = null;
 
-    const { data, error: fetchError, execute } = getDocument(documentNumber)
-    await execute()
+    const { data, error: fetchError, execute } = getDocument(documentNumber);
+    await execute();
 
     if (fetchError.value) {
-      error.value = fetchError.value
-      documentUnit.value = null
+      error.value = fetchError.value;
+      documentUnit.value = null;
     } else {
-      documentUnit.value = data.value ?? null
+      documentUnit.value = data.value ?? null;
     }
 
-    isLoading.value = false
+    isLoading.value = false;
   }
 
   async function update(): Promise<boolean> {
-    if (!documentUnit.value) return false
+    if (!documentUnit.value) return false;
 
-    isLoading.value = true
-    error.value = null
+    isLoading.value = true;
+    error.value = null;
 
-    const { data, error: putError, statusCode, execute } = putDocument(documentUnit.value)
-    await execute()
+    const { data, error: putError, statusCode, execute } = putDocument(documentUnit.value);
+    await execute();
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300 && data.value) {
-      documentUnit.value = data.value
-      isLoading.value = false
-      return true
+      documentUnit.value = data.value;
+      isLoading.value = false;
+      return true;
     }
 
-    error.value = putError.value || new Error('Update failed')
-    isLoading.value = false
-    return false
+    error.value = putError.value || new Error("Update failed");
+    isLoading.value = false;
+    return false;
   }
 
   async function publish(): Promise<boolean> {
-    if (!documentUnit.value) return false
+    if (!documentUnit.value) return false;
 
-    isLoading.value = true
-    error.value = null
+    isLoading.value = true;
+    error.value = null;
 
-    const { error: putError, statusCode, execute } = publishDocument(documentUnit.value)
-    await execute()
+    const { error: putError, statusCode, execute } = publishDocument(documentUnit.value);
+    await execute();
 
     if (statusCode.value && statusCode.value >= 200 && statusCode.value < 300) {
-      isLoading.value = false
-      return true
+      isLoading.value = false;
+      return true;
     }
 
-    error.value = putError.value || new Error('Publish failed')
-    isLoading.value = false
-    return false
+    error.value = putError.value || new Error("Publish failed");
+    isLoading.value = false;
+    return false;
   }
 
   function unload() {
-    documentUnit.value = null
+    documentUnit.value = null;
   }
 
   const missingRequiredFields = computed<string[]>(() => {
-    const docUnit = documentUnit.value
-    if (!docUnit) return []
+    const docUnit = documentUnit.value;
+    if (!docUnit) return [];
 
-    return missingFields(docUnit)
-  })
+    return missingFields(docUnit);
+  });
 
   return {
     documentUnit,
@@ -116,5 +116,5 @@ export function defineDocumentUnitStore<DocumentationUnit>({
     publish,
     unload,
     missingRequiredFields,
-  }
+  };
 }

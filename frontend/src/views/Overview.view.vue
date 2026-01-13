@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import { useRoute } from 'vue-router'
-import IconAdd from '~icons/material-symbols/add'
+import Button from "primevue/button";
+import { useRoute } from "vue-router";
+import IconAdd from "~icons/material-symbols/add";
 
 defineProps<{
-  title: string
-}>()
+  title: string;
+}>();
 
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <template>

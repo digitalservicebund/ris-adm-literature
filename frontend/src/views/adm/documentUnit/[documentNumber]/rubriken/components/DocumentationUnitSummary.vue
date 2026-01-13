@@ -1,25 +1,25 @@
 <script lang="ts" setup generic="T extends ListItem">
-import { computed } from 'vue'
-import DecisionSummary from './DecisionSummary.vue'
-import IconBadge from '@/components/IconBadge.vue'
-import ActiveCitation from '@/domain/activeCitation'
-import ListItem from '@/domain/editableListItem' // NOSONAR: import is needed for extension
-import IconBaselineDescription from '~icons/ic/baseline-description'
-import IconError from '~icons/ic/baseline-error'
-import IconOutlineDescription from '~icons/ic/outline-description'
+import { computed } from "vue";
+import DecisionSummary from "./DecisionSummary.vue";
+import IconBadge from "@/components/IconBadge.vue";
+import ActiveCitation from "@/domain/activeCitation";
+import ListItem from "@/domain/editableListItem"; // NOSONAR: import is needed for extension
+import IconBaselineDescription from "~icons/ic/baseline-description";
+import IconError from "~icons/ic/baseline-error";
+import IconOutlineDescription from "~icons/ic/outline-description";
 
 const props = defineProps<{
-  data: T
-}>()
+  data: T;
+}>();
 
 const showErrorBadge = computed(() => {
   if (props.data instanceof ActiveCitation) {
     return props.data?.hasForeignSource
       ? !props.data.citationTypeIsSet
-      : props.data?.hasMissingRequiredFields
+      : props.data?.hasMissingRequiredFields;
   }
-  return props.data?.hasMissingRequiredFields
-})
+  return props.data?.hasMissingRequiredFields;
+});
 </script>
 
 <template>

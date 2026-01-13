@@ -1,65 +1,65 @@
 <script lang="ts" setup>
-import { ref, type Ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
-import DocumentUnitInfoPanel from '@/components/DocumentUnitInfoPanel.vue'
-import FlexContainer from '@/components/FlexContainer.vue'
-import NavbarSide from '@/components/NavbarSide.vue'
-import SideToggle from '@/components/SideToggle.vue'
-import { getAdmVwvMenuItems, getUliMenuItems, getSliMenuItems } from '@/utils/menuItems'
-import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
-import { useToast } from 'primevue'
-import errorMessages from '@/i18n/errors.json'
-import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { DocumentUnitStore } from '@/stores/types'
-import { DocumentCategory } from '@/domain/documentType'
+import { ref, type Ref, onMounted, onBeforeUnmount, watch, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
+import DocumentUnitInfoPanel from "@/components/DocumentUnitInfoPanel.vue";
+import FlexContainer from "@/components/FlexContainer.vue";
+import NavbarSide from "@/components/NavbarSide.vue";
+import SideToggle from "@/components/SideToggle.vue";
+import { getAdmVwvMenuItems, getUliMenuItems, getSliMenuItems } from "@/utils/menuItems";
+import ExtraContentSidePanel from "@/components/ExtraContentSidePanel.vue";
+import { useToast } from "primevue";
+import errorMessages from "@/i18n/errors.json";
+import { useStoreForRoute } from "@/composables/useStoreForRoute";
+import type { DocumentUnitStore } from "@/stores/types";
+import { DocumentCategory } from "@/domain/documentType";
 
 const props = defineProps<{
-  documentNumber: string
-}>()
+  documentNumber: string;
+}>();
 
-const toast = useToast()
+const toast = useToast();
 
-const store = useStoreForRoute<DocumentUnitStore>()
+const store = useStoreForRoute<DocumentUnitStore>();
 
-const { documentUnit, error } = storeToRefs(store)
+const { documentUnit, error } = storeToRefs(store);
 
-const route = useRoute()
+const route = useRoute();
 const menuItems = computed(() => {
   if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
-    return getUliMenuItems(props.documentNumber, route.query)
+    return getUliMenuItems(props.documentNumber, route.query);
   }
   if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
-    return getSliMenuItems(props.documentNumber, route.query)
+    return getSliMenuItems(props.documentNumber, route.query);
   }
-  return getAdmVwvMenuItems(props.documentNumber, route.query)
-})
+  return getAdmVwvMenuItems(props.documentNumber, route.query);
+});
 
-const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== 'false')
+const showNavigationPanelRef: Ref<boolean> = ref(route.query.showNavigationPanel !== "false");
 
 function toggleNavigationPanel(expand?: boolean) {
-  showNavigationPanelRef.value = expand === undefined ? !showNavigationPanelRef.value : expand
+  showNavigationPanelRef.value = expand === undefined ? !showNavigationPanelRef.value : expand;
 }
 
 onBeforeUnmount(async () => {
-  await store.unload()
-})
+  await store.unload();
+});
 
 onMounted(async () => {
-  await store.load(props.documentNumber)
-})
+  await store.load(props.documentNumber);
+});
 
 watch(
   () => error,
   (err) => {
     if (err) {
       toast.add({
-        severity: 'error',
+        severity: "error",
         summary: errorMessages.DOCUMENT_UNIT_COULD_NOT_BE_LOADED.title,
-      })
+      });
     }
   },
-)
+);
 </script>
 
 <template>

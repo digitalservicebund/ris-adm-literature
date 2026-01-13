@@ -1,88 +1,88 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-import InputMask from 'primevue/inputmask'
-import { computed, onMounted, ref, watch } from 'vue'
-import type { ValidationError } from '@/components/input/types'
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import InputMask from "primevue/inputmask";
+import { computed, onMounted, ref, watch } from "vue";
+import type { ValidationError } from "@/components/input/types";
 
 interface Props {
-  id: string
-  modelValue: string | undefined
-  hasError?: boolean
+  id: string;
+  modelValue: string | undefined;
+  hasError?: boolean;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | undefined]
-  'update:validationError': [value?: ValidationError]
-}>()
+  "update:modelValue": [value: string | undefined];
+  "update:validationError": [value?: ValidationError];
+}>();
 
 const inputCompleted = computed(() => {
-  return !!inputValue.value && /\d{4}/.test(inputValue.value)
-})
+  return !!inputValue.value && /\d{4}/.test(inputValue.value);
+});
 
-const inputValue = ref(props.modelValue ? dayjs(props.modelValue).format('YYYY') : undefined)
+const inputValue = ref(props.modelValue ? dayjs(props.modelValue).format("YYYY") : undefined);
 
-dayjs.extend(customParseFormat)
+dayjs.extend(customParseFormat);
 
 const isValidYear = computed(() => {
-  return dayjs(inputValue.value, 'YYYY', true).isValid()
-})
+  return dayjs(inputValue.value, "YYYY", true).isValid();
+});
 
 function validateInput() {
   if (!inputValue.value) {
-    emit('update:validationError', undefined)
-    return
+    emit("update:validationError", undefined);
+    return;
   }
   if (!inputCompleted.value) {
-    emit('update:validationError', {
-      message: 'Unvollständiges Jahr',
+    emit("update:validationError", {
+      message: "Unvollständiges Jahr",
       instance: props.id,
-    })
-    return
+    });
+    return;
   }
 
   if (isValidYear.value) {
-    emit('update:validationError', undefined)
+    emit("update:validationError", undefined);
   } else {
-    emit('update:validationError', {
-      message: 'Kein valides Jahr',
+    emit("update:validationError", {
+      message: "Kein valides Jahr",
       instance: props.id,
-    })
+    });
   }
 }
 
 onMounted(() => {
-  if (inputValue.value) validateInput()
-})
+  if (inputValue.value) validateInput();
+});
 
 function backspaceDelete() {
-  emit('update:validationError', undefined)
-  if (inputValue.value === '') emit('update:modelValue', inputValue.value)
+  emit("update:validationError", undefined);
+  if (inputValue.value === "") emit("update:modelValue", inputValue.value);
 }
 
 function onBlur() {
-  validateInput()
+  validateInput();
 }
 
 watch(
   () => props.modelValue,
   () => {
-    inputValue.value = props.modelValue
+    inputValue.value = props.modelValue;
   },
-)
+);
 
 watch(inputValue, () => {
-  if (inputValue.value === '') emit('update:modelValue', undefined)
+  if (inputValue.value === "") emit("update:modelValue", undefined);
   if (isValidYear.value && inputCompleted.value) {
-    emit('update:modelValue', inputValue.value)
+    emit("update:modelValue", inputValue.value);
   }
 
   if (inputCompleted.value) {
-    validateInput()
+    validateInput();
   }
-})
+});
 </script>
 
 <template>

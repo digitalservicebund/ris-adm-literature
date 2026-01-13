@@ -1,41 +1,41 @@
 <script lang="ts" setup>
-import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
-import { type Fundstelle } from '@/domain/fundstelle'
-import FundstelleInput from './FundstelleInput.vue'
-import IconBadge from '@/components/IconBadge.vue'
-import { ref } from 'vue'
+import IconArrowDown from "~icons/ic/baseline-keyboard-arrow-down";
+import { type Fundstelle } from "@/domain/fundstelle";
+import FundstelleInput from "./FundstelleInput.vue";
+import IconBadge from "@/components/IconBadge.vue";
+import { ref } from "vue";
 
 const props = defineProps<{
-  fundstelle: Fundstelle
-}>()
+  fundstelle: Fundstelle;
+}>();
 const emit = defineEmits<{
-  updateFundstelle: [fundstelle: Fundstelle]
-  deleteFundstelle: [id: string]
-}>()
+  updateFundstelle: [fundstelle: Fundstelle];
+  deleteFundstelle: [id: string];
+}>();
 
-const isEditMode = ref<boolean>(false)
+const isEditMode = ref<boolean>(false);
 
 const toggleEditMode = () => {
-  isEditMode.value = !isEditMode.value
-}
+  isEditMode.value = !isEditMode.value;
+};
 
 const onExpandAccordion = () => {
-  toggleEditMode()
-}
+  toggleEditMode();
+};
 
 const onUpdateFundstelle = (fundstelle: Fundstelle) => {
-  emit('updateFundstelle', fundstelle)
-  isEditMode.value = false
-}
+  emit("updateFundstelle", fundstelle);
+  isEditMode.value = false;
+};
 
 const onClickCancel = () => {
-  toggleEditMode()
-}
+  toggleEditMode();
+};
 
 const onDeleteFundstelle = (fundstelleId: string) => {
-  emit('deleteFundstelle', fundstelleId)
-  toggleEditMode()
-}
+  emit("deleteFundstelle", fundstelleId);
+  toggleEditMode();
+};
 </script>
 
 <template>

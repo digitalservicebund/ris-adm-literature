@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import InputField from '@/components/input/InputField.vue'
-import { Textarea } from 'primevue'
-import { computed } from 'vue'
+import InputField from "@/components/input/InputField.vue";
+import { Textarea } from "primevue";
+import { computed } from "vue";
 
-const hauptsachtitel = defineModel<string>('hauptsachtitel')
-const hauptsachtitelZusatz = defineModel<string>('hauptsachtitelZusatz')
-const dokumentarischerTitel = defineModel<string>('dokumentarischerTitel')
+const hauptsachtitel = defineModel<string>("hauptsachtitel");
+const hauptsachtitelZusatz = defineModel<string>("hauptsachtitelZusatz");
+const dokumentarischerTitel = defineModel<string>("dokumentarischerTitel");
 
 const hauptsachtitelLabel = computed(() =>
-  dokumentarischerTitel.value ? 'Hauptsachtitel' : 'Hauptsachtitel *',
-)
+  dokumentarischerTitel.value ? "Hauptsachtitel" : "Hauptsachtitel *",
+);
 const dokumentarischerTitelLabel = computed(() =>
-  hauptsachtitel.value ? 'Dokumentarischer Titel' : 'Dokumentarischer Titel *',
-)
+  hauptsachtitel.value ? "Dokumentarischer Titel" : "Dokumentarischer Titel *",
+);
 </script>
 
 <template>

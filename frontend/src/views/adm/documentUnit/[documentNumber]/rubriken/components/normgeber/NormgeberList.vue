@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import NormgeberListItem from './NormgeberListItem.vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import { computed } from 'vue'
-import NormgeberInput from './NormgeberInput.vue'
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
-import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
+import NormgeberListItem from "./NormgeberListItem.vue";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import { computed } from "vue";
+import NormgeberInput from "./NormgeberInput.vue";
+import Button from "primevue/button";
+import IconAdd from "~icons/material-symbols/add";
+import { useEditableList } from "@/views/adm/documentUnit/[documentNumber]/useEditableList";
 
-const store = useAdmDocUnitStore()
+const store = useAdmDocUnitStore();
 
 const normgeberList = computed({
   get: () => store.documentUnit!.normgeberList ?? [],
   set: (newValue) => {
-    store.documentUnit!.normgeberList = newValue
+    store.documentUnit!.normgeberList = newValue;
   },
-})
+});
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
-  useEditableList(normgeberList)
+  useEditableList(normgeberList);
 </script>
 
 <template>

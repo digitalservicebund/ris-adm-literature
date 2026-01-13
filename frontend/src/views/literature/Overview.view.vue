@@ -1,28 +1,28 @@
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import { useRoute, useRouter } from 'vue-router'
-import IconAdd from '~icons/material-symbols/add'
-import RisTabs from './RisTabs.vue'
-import { ROUTE_NAMES } from '@/constants/routes'
-import { DocumentCategory } from '@/domain/documentType'
+import Button from "primevue/button";
+import { useRoute, useRouter } from "vue-router";
+import IconAdd from "~icons/material-symbols/add";
+import RisTabs from "./RisTabs.vue";
+import { ROUTE_NAMES } from "@/constants/routes";
+import { DocumentCategory } from "@/domain/documentType";
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 const tabs = [
   {
-    id: '0',
+    id: "0",
     routeName: ROUTE_NAMES.ULI.START_PAGE,
-    label: 'Unselbständige Literatur',
+    label: "Unselbständige Literatur",
     documentCategory: DocumentCategory.LITERATUR_UNSELBSTAENDIG,
   },
   {
-    id: '1',
+    id: "1",
     routeName: ROUTE_NAMES.SLI.START_PAGE,
-    label: 'Selbständige Literatur',
+    label: "Selbständige Literatur",
     documentCategory: DocumentCategory.LITERATUR_SELBSTAENDIG,
   },
-]
+];
 </script>
 
 <template>

@@ -1,78 +1,78 @@
-import { ROUTE_NAMES } from '@/constants/routes'
-import type MenuItem from '@/domain/menuItem'
-import type { LocationQuery } from 'vue-router'
+import { ROUTE_NAMES } from "@/constants/routes";
+import type MenuItem from "@/domain/menuItem";
+import type { LocationQuery } from "vue-router";
 
 export function getAdmVwvMenuItems(
   documentNumber: string | undefined,
   routeQuery: LocationQuery,
 ): MenuItem[] {
   if (!documentNumber) {
-    console.warn('documentNumber is required to generate menu items.')
-    return []
+    console.warn("documentNumber is required to generate menu items.");
+    return [];
   }
 
   const baseRoute = {
     params: { documentNumber },
     query: routeQuery,
-  }
+  };
 
   return [
     {
-      label: 'Fundstellen',
+      label: "Fundstellen",
       route: {
         ...baseRoute,
         name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.FUNDSTELLEN,
       },
     },
     {
-      label: 'Rubriken',
+      label: "Rubriken",
       route: {
         name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
         ...baseRoute,
       },
       children: [
         {
-          label: 'Formaldaten',
+          label: "Formaldaten",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#formaldaten',
+            hash: "#formaldaten",
           },
         },
         {
-          label: 'Gliederung',
+          label: "Gliederung",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#gliederung',
+            hash: "#gliederung",
           },
         },
         {
-          label: 'Inhaltliche Erschließung',
+          label: "Inhaltliche Erschließung",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#inhaltlicheErschliessung',
+            hash: "#inhaltlicheErschliessung",
           },
         },
         {
-          label: 'Kurzreferat',
+          label: "Kurzreferat",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#kurzreferat',
+            hash: "#kurzreferat",
           },
         },
       ],
     },
     {
-      label: 'Abgabe',
+      label: "Abgabe",
       route: {
         ...baseRoute,
         name: ROUTE_NAMES.ADM.DOCUMENT_UNIT.ABGABE,
       },
     },
-  ]
+  ];
 }
 
 export function getUliMenuItems(
@@ -80,41 +80,41 @@ export function getUliMenuItems(
   routeQuery: LocationQuery,
 ): MenuItem[] {
   if (!documentNumber) {
-    console.warn('documentNumber is required to generate menu items.')
-    return []
+    console.warn("documentNumber is required to generate menu items.");
+    return [];
   }
 
   const baseRoute = {
     params: { documentNumber },
     query: routeQuery,
-  }
+  };
 
   return [
     {
-      label: 'Rubriken',
+      label: "Rubriken",
       route: {
         name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN,
         ...baseRoute,
       },
       children: [
         {
-          label: 'Formaldaten',
+          label: "Formaldaten",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#formaldaten',
+            hash: "#formaldaten",
           },
         },
       ],
     },
     {
-      label: 'Abgabe',
+      label: "Abgabe",
       route: {
         ...baseRoute,
         name: ROUTE_NAMES.ULI.DOCUMENT_UNIT.ABGABE,
       },
     },
-  ]
+  ];
 }
 
 export function getSliMenuItems(
@@ -122,47 +122,47 @@ export function getSliMenuItems(
   routeQuery: LocationQuery,
 ): MenuItem[] {
   if (!documentNumber) {
-    console.warn('documentNumber is required to generate menu items.')
-    return []
+    console.warn("documentNumber is required to generate menu items.");
+    return [];
   }
 
   const baseRoute = {
     params: { documentNumber },
     query: routeQuery,
-  }
+  };
 
   return [
     {
-      label: 'Rubriken',
+      label: "Rubriken",
       route: {
         name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
         ...baseRoute,
       },
       children: [
         {
-          label: 'Formaldaten',
+          label: "Formaldaten",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#formaldaten',
+            hash: "#formaldaten",
           },
         },
         {
-          label: 'Inhaltliche Erschließung',
+          label: "Inhaltliche Erschließung",
           route: {
             ...baseRoute,
             name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.RUBRIKEN,
-            hash: '#inhaltlicheErschliessung',
+            hash: "#inhaltlicheErschliessung",
           },
         },
       ],
     },
     {
-      label: 'Abgabe',
+      label: "Abgabe",
       route: {
         ...baseRoute,
         name: ROUTE_NAMES.SLI.DOCUMENT_UNIT.ABGABE,
       },
     },
-  ]
+  ];
 }

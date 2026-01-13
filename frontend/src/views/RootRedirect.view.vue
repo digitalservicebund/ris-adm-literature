@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ROUTE_NAMES } from '@/constants/routes'
-import Button from 'primevue/button'
+import { ROUTE_NAMES } from "@/constants/routes";
+import Button from "primevue/button";
 </script>
 
 <template>

@@ -1,248 +1,248 @@
 <script lang="ts" setup>
-import { commands, selectActiveState } from '@guardian/prosemirror-invisibles'
-import { Editor } from '@tiptap/vue-3'
-import { computed, ref } from 'vue'
-import TextEditorButton, { type EditorButton } from '@/components/input/TextEditorButton.vue'
-import { useCollapsingMenuBar } from '@/composables/useCollapsingMenuBar'
-import IconExpand from '~icons/ic/sharp-expand'
-import IconAlignCenter from '~icons/ic/sharp-format-align-center'
-import IconAlignLeft from '~icons/ic/sharp-format-align-left'
-import IconAlignRight from '~icons/ic/sharp-format-align-right'
-import IconBold from '~icons/ic/sharp-format-bold'
-import IndentDecrease from '~icons/ic/sharp-format-indent-decrease'
-import IndentIncrease from '~icons/ic/sharp-format-indent-increase'
-import IconItalic from '~icons/ic/sharp-format-italic'
-import IconUnorderedList from '~icons/ic/sharp-format-list-bulleted'
-import IconOrderedList from '~icons/ic/sharp-format-list-numbered'
-import IconBlockquote from '~icons/ic/sharp-format-quote'
-import IconStrikethrough from '~icons/ic/sharp-format-strikethrough'
-import IconUnderline from '~icons/ic/sharp-format-underlined'
-import IconRedo from '~icons/ic/sharp-redo'
-import IconSubscript from '~icons/ic/sharp-subscript'
-import IconSuperscript from '~icons/ic/sharp-superscript'
-import IconUndo from '~icons/ic/sharp-undo'
-import IconParagraph from '~icons/material-symbols/format-paragraph'
+import { commands, selectActiveState } from "@guardian/prosemirror-invisibles";
+import { Editor } from "@tiptap/vue-3";
+import { computed, ref } from "vue";
+import TextEditorButton, { type EditorButton } from "@/components/input/TextEditorButton.vue";
+import { useCollapsingMenuBar } from "@/composables/useCollapsingMenuBar";
+import IconExpand from "~icons/ic/sharp-expand";
+import IconAlignCenter from "~icons/ic/sharp-format-align-center";
+import IconAlignLeft from "~icons/ic/sharp-format-align-left";
+import IconAlignRight from "~icons/ic/sharp-format-align-right";
+import IconBold from "~icons/ic/sharp-format-bold";
+import IndentDecrease from "~icons/ic/sharp-format-indent-decrease";
+import IndentIncrease from "~icons/ic/sharp-format-indent-increase";
+import IconItalic from "~icons/ic/sharp-format-italic";
+import IconUnorderedList from "~icons/ic/sharp-format-list-bulleted";
+import IconOrderedList from "~icons/ic/sharp-format-list-numbered";
+import IconBlockquote from "~icons/ic/sharp-format-quote";
+import IconStrikethrough from "~icons/ic/sharp-format-strikethrough";
+import IconUnderline from "~icons/ic/sharp-format-underlined";
+import IconRedo from "~icons/ic/sharp-redo";
+import IconSubscript from "~icons/ic/sharp-subscript";
+import IconSuperscript from "~icons/ic/sharp-superscript";
+import IconUndo from "~icons/ic/sharp-undo";
+import IconParagraph from "~icons/material-symbols/format-paragraph";
 
 interface Props {
-  editorExpanded: boolean
-  ariaLabel: string
-  buttonsDisabled: boolean
-  editor: Editor
-  containerWidth?: number
-  showFormattingButtons?: boolean
+  editorExpanded: boolean;
+  ariaLabel: string;
+  buttonsDisabled: boolean;
+  editor: Editor;
+  containerWidth?: number;
+  showFormattingButtons?: boolean;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-const emit = defineEmits<{ onEditorExpandedChanged: [boolean] }>()
+const emit = defineEmits<{ onEditorExpandedChanged: [boolean] }>();
 
 const buttons = computed(() => {
   const displayedButtons = [
     {
-      type: 'expand',
+      type: "expand",
       icon: IconExpand,
-      ariaLabel: 'Erweitern',
-      group: 'display',
+      ariaLabel: "Erweitern",
+      group: "display",
       isCollapsable: false,
-      callback: () => emit('onEditorExpandedChanged', !props.editorExpanded),
+      callback: () => emit("onEditorExpandedChanged", !props.editorExpanded),
     },
     {
-      type: 'invisible-characters',
+      type: "invisible-characters",
       icon: IconParagraph,
-      ariaLabel: 'Nicht-druckbare Zeichen',
-      shortcut: 'Strg + Alt + #',
-      group: 'display',
+      ariaLabel: "Nicht-druckbare Zeichen",
+      shortcut: "Strg + Alt + #",
+      group: "display",
       isCollapsable: false,
       callback: () => commands.toggleActiveState()(props.editor.state, props.editor.view.dispatch),
     },
-  ]
+  ];
   if (props.showFormattingButtons) {
     displayedButtons.push(
       {
-        type: 'bold',
+        type: "bold",
         icon: IconBold,
-        ariaLabel: 'Fett',
-        shortcut: 'Strg + b',
-        group: 'Formatierung',
+        ariaLabel: "Fett",
+        shortcut: "Strg + b",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('bold').run(),
+        callback: () => props.editor.chain().focus().toggleMark("bold").run(),
       },
       {
-        type: 'italic',
+        type: "italic",
         icon: IconItalic,
-        ariaLabel: 'Kursiv',
-        shortcut: 'Strg + i',
-        group: 'Formatierung',
+        ariaLabel: "Kursiv",
+        shortcut: "Strg + i",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('italic').run(),
+        callback: () => props.editor.chain().focus().toggleMark("italic").run(),
       },
       {
-        type: 'underline',
+        type: "underline",
         icon: IconUnderline,
-        ariaLabel: 'Unterstrichen',
-        shortcut: 'Strg + u',
-        group: 'Formatierung',
+        ariaLabel: "Unterstrichen",
+        shortcut: "Strg + u",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('underline').run(),
+        callback: () => props.editor.chain().focus().toggleMark("underline").run(),
       },
       {
-        type: 'strike',
+        type: "strike",
         icon: IconStrikethrough,
-        ariaLabel: 'Durchgestrichen',
-        shortcut: 'Strg + ⇧ + s',
-        group: 'Formatierung',
+        ariaLabel: "Durchgestrichen",
+        shortcut: "Strg + ⇧ + s",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('strike').run(),
+        callback: () => props.editor.chain().focus().toggleMark("strike").run(),
       },
       {
-        type: 'superscript',
+        type: "superscript",
         icon: IconSuperscript,
-        ariaLabel: 'Tiefgestellt',
-        shortcut: 'Strg + .',
-        group: 'Formatierung',
+        ariaLabel: "Tiefgestellt",
+        shortcut: "Strg + .",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('superscript').run(),
+        callback: () => props.editor.chain().focus().toggleMark("superscript").run(),
       },
       {
-        type: 'subscript',
+        type: "subscript",
         icon: IconSubscript,
-        ariaLabel: 'Hochgestellt',
-        shortcut: 'Strg + ,',
-        group: 'Formatierung',
+        ariaLabel: "Hochgestellt",
+        shortcut: "Strg + ,",
+        group: "Formatierung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().toggleMark('subscript').run(),
+        callback: () => props.editor.chain().focus().toggleMark("subscript").run(),
       },
       {
-        type: 'left',
+        type: "left",
         icon: IconAlignLeft,
-        ariaLabel: 'Linksbündig',
-        shortcut: 'Strg + ⇧ + l',
-        group: 'Ausrichtung',
+        ariaLabel: "Linksbündig",
+        shortcut: "Strg + ⇧ + l",
+        group: "Ausrichtung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().setTextAlign('left').run(),
+        callback: () => props.editor.chain().focus().setTextAlign("left").run(),
       },
       {
-        type: 'center',
+        type: "center",
         icon: IconAlignCenter,
-        ariaLabel: 'Zentriert',
-        shortcut: 'Strg + ⇧ + e',
-        group: 'Ausrichtung',
+        ariaLabel: "Zentriert",
+        shortcut: "Strg + ⇧ + e",
+        group: "Ausrichtung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().setTextAlign('center').run(),
+        callback: () => props.editor.chain().focus().setTextAlign("center").run(),
       },
       {
-        type: 'right',
+        type: "right",
         icon: IconAlignRight,
-        ariaLabel: 'Rechtsbündig',
-        shortcut: 'Strg + ⇧ + r',
-        group: 'Ausrichtung',
+        ariaLabel: "Rechtsbündig",
+        shortcut: "Strg + ⇧ + r",
+        group: "Ausrichtung",
         isCollapsable: true,
-        callback: () => props.editor.chain().focus().setTextAlign('right').run(),
+        callback: () => props.editor.chain().focus().setTextAlign("right").run(),
       },
       {
-        type: 'orderedList',
+        type: "orderedList",
         icon: IconOrderedList,
-        ariaLabel: 'Nummerierte Liste',
-        shortcut: 'Strg + ⇧ + 7',
-        group: 'indent',
+        ariaLabel: "Nummerierte Liste",
+        shortcut: "Strg + ⇧ + 7",
+        group: "indent",
         isCollapsable: false,
         callback: () => props.editor.chain().focus().toggleOrderedList().run(),
       },
       {
-        type: 'bulletList',
+        type: "bulletList",
         icon: IconUnorderedList,
-        ariaLabel: 'Aufzählungsliste',
-        shortcut: 'Strg + ⇧ + 8',
-        group: 'indent',
+        ariaLabel: "Aufzählungsliste",
+        shortcut: "Strg + ⇧ + 8",
+        group: "indent",
         isCollapsable: false,
         callback: () => props.editor.chain().focus().toggleBulletList().run(),
       },
       {
-        type: 'outdent',
+        type: "outdent",
         icon: IndentDecrease,
-        ariaLabel: 'Einzug verringern',
-        group: 'indent',
+        ariaLabel: "Einzug verringern",
+        group: "indent",
         isCollapsable: false,
         callback: () => props.editor.chain().focus().outdent().run(),
       },
       {
-        type: 'indent',
+        type: "indent",
         icon: IndentIncrease,
-        ariaLabel: 'Einzug vergrößern',
-        group: 'indent',
+        ariaLabel: "Einzug vergrößern",
+        group: "indent",
         isCollapsable: false,
         callback: () => props.editor.chain().focus().indent().run(),
       },
       {
-        type: 'blockquote',
+        type: "blockquote",
         icon: IconBlockquote,
-        ariaLabel: 'Zitat einfügen',
-        shortcut: 'Strg + ⇧ + B',
-        group: 'blockquote',
+        ariaLabel: "Zitat einfügen",
+        shortcut: "Strg + ⇧ + B",
+        group: "blockquote",
         isCollapsable: false,
         callback: () => props.editor.chain().focus().toggleBlockquote().run(),
       },
-    )
+    );
   }
-  return displayedButtons
-})
+  return displayedButtons;
+});
 
 const fixButtons = [
   {
-    type: 'undo',
+    type: "undo",
     icon: IconUndo,
-    ariaLabel: 'Rückgängig machen',
-    shortcut: 'Strg + z',
-    group: 'arrow',
+    ariaLabel: "Rückgängig machen",
+    shortcut: "Strg + z",
+    group: "arrow",
     isCollapsable: false,
     callback: () => props.editor.chain().focus().undo().run(),
   },
   {
-    type: 'redo',
+    type: "redo",
     icon: IconRedo,
-    ariaLabel: 'Wiederherstellen',
-    shortcut: 'Strg + ⇧ + z',
-    group: 'arrow',
+    ariaLabel: "Wiederherstellen",
+    shortcut: "Strg + ⇧ + z",
+    group: "arrow",
     isCollapsable: false,
     callback: () => props.editor.chain().focus().redo().run(),
   },
-]
+];
 
 const editorButtons = computed(() =>
   buttons.value.map((button) => {
-    let isActive
+    let isActive;
 
-    if (button.group === 'alignment') {
-      isActive = props.editor.isActive({ textAlign: button.type })
-    } else if (button.type === 'invisible-characters') {
-      isActive = selectActiveState(props.editor.view.state)
-    } else if (button.type === 'expand') {
-      isActive = props.editorExpanded
+    if (button.group === "alignment") {
+      isActive = props.editor.isActive({ textAlign: button.type });
+    } else if (button.type === "invisible-characters") {
+      isActive = selectActiveState(props.editor.view.state);
+    } else if (button.type === "expand") {
+      isActive = props.editorExpanded;
     } else {
-      isActive = props.editor.isActive(button.type)
+      isActive = props.editor.isActive(button.type);
     }
 
     return {
       ...button,
       isActive,
-    }
+    };
   }),
-)
-const buttonSize = 48
+);
+const buttonSize = 48;
 const maxButtonEntries = computed(() =>
   props.containerWidth !== undefined
     ? Math.floor((props.containerWidth - 100) / buttonSize)
     : Number.MAX_VALUE,
-)
-const { collapsedButtons } = useCollapsingMenuBar(editorButtons, maxButtonEntries)
+);
+const { collapsedButtons } = useCollapsingMenuBar(editorButtons, maxButtonEntries);
 
 function handleButtonClick(button: EditorButton) {
-  if (button.callback) button.callback()
+  if (button.callback) button.callback();
 }
 
-const menuBar = ref<HTMLElement>()
-const fixButtonElements = ref<(typeof TextEditorButton)[]>([])
-const collapsedButtonElements = ref<(typeof TextEditorButton)[]>([])
+const menuBar = ref<HTMLElement>();
+const fixButtonElements = ref<(typeof TextEditorButton)[]>([]);
+const collapsedButtonElements = ref<(typeof TextEditorButton)[]>([]);
 // All the HTML <button> elements of the TextEditorButtons, so we can call .focus() on them
 const buttonElements = computed<HTMLElement[]>(() =>
   [...collapsedButtonElements.value, ...fixButtonElements.value]
@@ -252,37 +252,37 @@ const buttonElements = computed<HTMLElement[]>(() =>
       ...(buttonComponent?.children ?? []),
     ])
     .filter((button) => !!button),
-)
+);
 
-const focusedButtonIndex = ref(0)
+const focusedButtonIndex = ref(0);
 const focusNextButton = () => {
   if (focusedButtonIndex.value < buttonElements.value.length) {
-    focusedButtonIndex.value++
+    focusedButtonIndex.value++;
   }
-  focusCurrentButton()
-}
+  focusCurrentButton();
+};
 const focusPreviousButton = () => {
   if (focusedButtonIndex.value > 0) {
-    focusedButtonIndex.value--
+    focusedButtonIndex.value--;
   }
-  focusCurrentButton()
-}
+  focusCurrentButton();
+};
 const focusCurrentButton = () => {
   if (focusedButtonIndex.value >= buttonElements.value.length) {
     // If menu buttons are removed (collapsable), the index might be too high
-    focusedButtonIndex.value = buttonElements.value.length - 1
+    focusedButtonIndex.value = buttonElements.value.length - 1;
   }
-  const buttonElement = buttonElements.value?.[focusedButtonIndex.value]
+  const buttonElement = buttonElements.value?.[focusedButtonIndex.value];
   if (buttonElement && !props.buttonsDisabled) {
-    buttonElement.focus()
+    buttonElement.focus();
   } else if (props.buttonsDisabled) {
     // When navigating from a previous element the buttons are initially disabled.
     // We don't want to focus the toolbar but the EditorContent instead
-    props.editor.commands.focus()
+    props.editor.commands.focus();
   }
-}
+};
 
-const ariaLabel = props.ariaLabel ? props.ariaLabel : null
+const ariaLabel = props.ariaLabel ? props.ariaLabel : null;
 </script>
 
 <template>

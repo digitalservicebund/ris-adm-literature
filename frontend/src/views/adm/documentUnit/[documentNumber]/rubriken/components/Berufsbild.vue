@@ -1,22 +1,22 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
-import InputField from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
+import { computed, ref } from "vue";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import { RisChipsInput } from "@digitalservicebund/ris-ui/components";
+import InputField from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import IconAdd from "~icons/material-symbols/add";
 
-const store = useAdmDocUnitStore()
+const store = useAdmDocUnitStore();
 
 const berufsbilder = computed({
   get: () => store.documentUnit!.berufsbilder ?? [],
   set: (newValues: string[]) => {
-    store.documentUnit!.berufsbilder = newValues
+    store.documentUnit!.berufsbilder = newValues;
   },
-})
+});
 
-const showChips = ref(false)
+const showChips = ref(false);
 </script>
 
 <template>

@@ -1,66 +1,66 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
-import { DocumentUnitCategoriesEnum } from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/field-of-law/enumDocumentUnitCategories'
-import FieldOfLawSummary from './FieldOfLawSummary.vue'
-import InputField, { LabelPosition } from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import RadioButton from 'primevue/radiobutton'
-import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-import IconAdd from '~icons/ic/baseline-add'
+import { computed, nextTick, ref, watch } from "vue";
+import { DocumentUnitCategoriesEnum } from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/field-of-law/enumDocumentUnitCategories";
+import FieldOfLawSummary from "./FieldOfLawSummary.vue";
+import InputField, { LabelPosition } from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import RadioButton from "primevue/radiobutton";
+import { type FieldOfLaw } from "@/domain/fieldOfLaw";
+import IconAdd from "~icons/ic/baseline-add";
 
 const props = defineProps<{
-  fieldsOfLaw: FieldOfLaw[]
-  isResetButtonVisible: boolean
-}>()
+  fieldsOfLaw: FieldOfLaw[];
+  isResetButtonVisible: boolean;
+}>();
 
 const emit = defineEmits<{
-  'node:remove': [node: FieldOfLaw]
-  'node:clicked': [node: FieldOfLaw]
-  editingDone: [void]
-  resetSearch: [void]
-  inputMethodSelected: [method: InputMethod]
-}>()
+  "node:remove": [node: FieldOfLaw];
+  "node:clicked": [node: FieldOfLaw];
+  editingDone: [void];
+  resetSearch: [void];
+  inputMethodSelected: [method: InputMethod];
+}>();
 
-const titleRef = ref<HTMLElement | null>(null)
-const isExpanded = ref(false)
-const inputMethod = ref(InputMethod.DIRECT)
+const titleRef = ref<HTMLElement | null>(null);
+const isExpanded = ref(false);
+const inputMethod = ref(InputMethod.DIRECT);
 
 const expandButtonLabel = computed(() => {
-  return props.fieldsOfLaw.length > 0 ? 'Weitere Angabe' : 'Sachgebiete hinzufügen'
-})
+  return props.fieldsOfLaw.length > 0 ? "Weitere Angabe" : "Sachgebiete hinzufügen";
+});
 
 function removeNode(node: FieldOfLaw) {
-  emit('node:remove', node)
+  emit("node:remove", node);
 }
 
 function nodeClicked(node: FieldOfLaw) {
-  emit('node:clicked', node)
-  enterEditMode()
+  emit("node:clicked", node);
+  enterEditMode();
 }
 
 function enterEditMode() {
-  isExpanded.value = true
+  isExpanded.value = true;
 }
 
 async function exitEditMode() {
-  isExpanded.value = false
-  await nextTick()
-  titleRef.value?.scrollIntoView({ block: 'nearest' })
-  emit('editingDone')
+  isExpanded.value = false;
+  await nextTick();
+  titleRef.value?.scrollIntoView({ block: "nearest" });
+  emit("editingDone");
 }
 
 watch(
   inputMethod,
   () => {
-    emit('inputMethodSelected', inputMethod.value)
+    emit("inputMethodSelected", inputMethod.value);
   },
   { deep: true },
-)
+);
 </script>
 <script lang="ts">
 export enum InputMethod {
-  DIRECT = 'direct',
-  SEARCH = 'search',
+  DIRECT = "direct",
+  SEARCH = "search",
 }
 </script>
 <template>

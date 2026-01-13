@@ -1,10 +1,10 @@
-import path from 'path'
-import { sentryVitePlugin } from '@sentry/vite-plugin'
+import path from "path";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
-import { defineConfig } from 'vite'
-import Icons from 'unplugin-icons/vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import { defineConfig } from "vite";
+import Icons from "unplugin-icons/vite";
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,16 +15,16 @@ export default defineConfig({
     vue(),
     vueJsx(),
     sentryVitePlugin({
-      org: 'digitalservice',
-      project: 'ris-adm-vwv',
+      org: "digitalservice",
+      project: "ris-adm-vwv",
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
   ],
 
   server: {
     proxy: {
-      '^/(api|environment)': {
-        target: 'http://localhost:8080',
+      "^/(api|environment)": {
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
       },
@@ -33,12 +33,12 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '~': path.resolve(__dirname, 'test'),
+      "@": path.resolve(__dirname, "src"),
+      "~": path.resolve(__dirname, "test"),
     },
   },
 
   build: {
     sourcemap: true,
   },
-})
+});

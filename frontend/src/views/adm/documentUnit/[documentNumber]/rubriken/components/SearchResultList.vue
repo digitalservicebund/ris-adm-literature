@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import DecisionSummary from './DecisionSummary.vue'
-import { DisplayMode } from './enumDisplayMode'
-import FlexContainer from '@/components/FlexContainer.vue'
-import IconBadge from '@/components/IconBadge.vue'
-import Button from 'primevue/button'
-import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import RelatedDocumentation from '@/domain/relatedDocumentation'
-import errorMessages from '@/i18n/errors.json'
-import IconAdd from '~icons/ic/baseline-add'
+import { watch } from "vue";
+import DecisionSummary from "./DecisionSummary.vue";
+import { DisplayMode } from "./enumDisplayMode";
+import FlexContainer from "@/components/FlexContainer.vue";
+import IconBadge from "@/components/IconBadge.vue";
+import Button from "primevue/button";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import RelatedDocumentation from "@/domain/relatedDocumentation";
+import errorMessages from "@/i18n/errors.json";
+import IconAdd from "~icons/ic/baseline-add";
 
 const props = defineProps<{
-  searchResults?: SearchResults<RelatedDocumentation>
-  isLoading: boolean
-  allowMultipleLinks?: boolean
-  displayMode?: DisplayMode
-}>()
-const emits = defineEmits<(event: 'linkDecision', decision: RelatedDocumentation) => void>()
+  searchResults?: SearchResults<RelatedDocumentation>;
+  isLoading: boolean;
+  allowMultipleLinks?: boolean;
+  displayMode?: DisplayMode;
+}>();
+const emits = defineEmits<(event: "linkDecision", decision: RelatedDocumentation) => void>();
 watch(
   () => props.searchResults,
   async () => {},
   { immediate: true },
-)
+);
 </script>
 
 <script lang="ts">
 export type SearchResults<Type extends RelatedDocumentation> = {
-  decision: Type
-  isLinked: boolean
-}[]
+  decision: Type;
+  isLinked: boolean;
+}[];
 </script>
 
 <template>

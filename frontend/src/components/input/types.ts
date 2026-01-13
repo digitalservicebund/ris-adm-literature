@@ -1,91 +1,91 @@
-import type { UseFetchReturn } from '@vueuse/core'
-import { LabelPosition } from '@/components/input/InputField.vue'
-import type { ZitierArt } from '@/domain/zitierArt.ts'
-import type { Ref } from 'vue'
-import type { ComboboxResult } from '@/domain/comboboxResult.ts'
-import type { VerweisTypEnum } from '@/domain/activeReference.ts'
-import type { FieldOfLaw } from '@/domain/fieldOfLaw'
-import type { Court } from '@/domain/court'
-import { type Institution, type Region } from '@/domain/normgeber'
-import type { DocumentType } from '@/domain/documentType'
+import type { UseFetchReturn } from "@vueuse/core";
+import { LabelPosition } from "@/components/input/InputField.vue";
+import type { ZitierArt } from "@/domain/zitierArt.ts";
+import type { Ref } from "vue";
+import type { ComboboxResult } from "@/domain/comboboxResult.ts";
+import type { VerweisTypEnum } from "@/domain/activeReference.ts";
+import type { FieldOfLaw } from "@/domain/fieldOfLaw";
+import type { Court } from "@/domain/court";
+import { type Institution, type Region } from "@/domain/normgeber";
+import type { DocumentType } from "@/domain/documentType";
 
 export enum InputType {
-  TEXT = 'text',
-  FILE = 'file',
-  DROPDOWN = 'dropdown',
-  DATE = 'date',
-  CHECKBOX = 'checkbox',
-  RADIO = 'radio',
-  NESTED = 'nested',
-  COMBOBOX = 'combobox',
-  TEXTAREA = 'textarea',
-  DATE_TIME = 'date_time',
-  YEAR = 'year',
-  TIME = 'time',
-  UNDEFINED_DATE = 'undefined_date',
+  TEXT = "text",
+  FILE = "file",
+  DROPDOWN = "dropdown",
+  DATE = "date",
+  CHECKBOX = "checkbox",
+  RADIO = "radio",
+  NESTED = "nested",
+  COMBOBOX = "combobox",
+  TEXTAREA = "textarea",
+  DATE_TIME = "date_time",
+  YEAR = "year",
+  TIME = "time",
+  UNDEFINED_DATE = "undefined_date",
 }
 
 //BASE
 export interface BaseInputAttributes {
-  ariaLabel: string
-  validationError?: ValidationError
-  labelPosition?: LabelPosition
+  ariaLabel: string;
+  validationError?: ValidationError;
+  labelPosition?: LabelPosition;
 }
 
 export interface BaseInputField {
-  name: string
-  type: InputType
-  label: string
-  required?: boolean
-  inputAttributes: BaseInputAttributes
+  name: string;
+  type: InputType;
+  label: string;
+  required?: boolean;
+  inputAttributes: BaseInputAttributes;
 }
 
 //NESTED INPUT
 export interface NestedInputModelType {
   fields: {
-    parent: ModelType
-    child: ModelType
-  }
+    parent: ModelType;
+    child: ModelType;
+  };
 }
 
 export interface NestedInputAttributes extends BaseInputAttributes {
-  fields: { parent: InputField; child: InputField }
+  fields: { parent: InputField; child: InputField };
 }
 
-export interface NestedInputField extends Omit<BaseInputField, 'name'> {
-  name: `nestedInputOf${Capitalize<string>}And${Capitalize<string>}`
-  type: InputType.NESTED
-  inputAttributes: NestedInputAttributes
+export interface NestedInputField extends Omit<BaseInputField, "name"> {
+  name: `nestedInputOf${Capitalize<string>}And${Capitalize<string>}`;
+  type: InputType.NESTED;
+  inputAttributes: NestedInputAttributes;
 }
 
 //DATE
 export interface DateAttributes extends BaseInputAttributes {
-  isFutureDate?: boolean
+  isFutureDate?: boolean;
 }
 
 export interface DateInputField extends BaseInputField {
-  placeholder?: string
-  type: InputType.DATE
-  inputAttributes: DateAttributes
+  placeholder?: string;
+  type: InputType.DATE;
+  inputAttributes: DateAttributes;
 }
 
-export type DateInputModelType = string | undefined
+export type DateInputModelType = string | undefined;
 
 //DROPDOWN
 
 export type DropdownItem = {
-  label: string
-  value: string
-}
+  label: string;
+  value: string;
+};
 
 export interface DropdownAttributes extends BaseInputAttributes {
-  placeholder?: string
-  items: DropdownItem[]
+  placeholder?: string;
+  items: DropdownItem[];
 }
 
 export interface DropdownInputField extends BaseInputField {
-  type: InputType.DROPDOWN
-  inputAttributes: DropdownAttributes
+  type: InputType.DROPDOWN;
+  inputAttributes: DropdownAttributes;
 }
 
 //COMBOBOX
@@ -96,42 +96,42 @@ export type ComboboxInputModelType =
   | ZitierArt
   | VerweisTypEnum
   | Institution
-  | Region
+  | Region;
 
 export type ComboboxItem = {
-  label: string
-  value?: ComboboxInputModelType
-  labelCssClasses?: string
-  additionalInformation?: string
-  sideInformation?: string
-}
+  label: string;
+  value?: ComboboxInputModelType;
+  labelCssClasses?: string;
+  additionalInformation?: string;
+  sideInformation?: string;
+};
 
 export interface ComboboxAttributes extends BaseInputAttributes {
   itemService: (
     filter: Ref<string | undefined>,
-  ) => ComboboxResult<ComboboxItem[]> | UseFetchReturn<ComboboxItem[]>
-  placeholder?: string
-  manualEntry?: boolean
-  noClear?: boolean
+  ) => ComboboxResult<ComboboxItem[]> | UseFetchReturn<ComboboxItem[]>;
+  placeholder?: string;
+  manualEntry?: boolean;
+  noClear?: boolean;
 }
 
 export interface ComboboxInputField extends BaseInputField {
-  type: InputType.COMBOBOX
-  inputAttributes: ComboboxAttributes
+  type: InputType.COMBOBOX;
+  inputAttributes: ComboboxAttributes;
 }
 
 //TEXTAREA
 export interface TextAreaInputAttributes extends BaseInputAttributes {
-  placeholder?: string
-  readOnly?: boolean
-  autosize?: boolean
-  rows?: number
-  fieldSize: 'max' | 'big' | 'medium' | 'small'
+  placeholder?: string;
+  readOnly?: boolean;
+  autosize?: boolean;
+  rows?: number;
+  fieldSize: "max" | "big" | "medium" | "small";
 }
 
 export interface TextAreaInputField extends BaseInputField {
-  type: InputType.TEXTAREA
-  inputAttributes: TextAreaInputAttributes
+  type: InputType.TEXTAREA;
+  inputAttributes: TextAreaInputAttributes;
 }
 
 export type InputField =
@@ -139,19 +139,19 @@ export type InputField =
   | DateInputField
   | NestedInputField
   | ComboboxInputField
-  | TextAreaInputField
+  | TextAreaInputField;
 
 export type InputAttributes =
   | DropdownAttributes
   | NestedInputAttributes
   | DateAttributes
   | ComboboxAttributes
-  | TextAreaInputAttributes
+  | TextAreaInputAttributes;
 
-export type ModelType = string | DateInputModelType | NestedInputModelType | ComboboxInputModelType
+export type ModelType = string | DateInputModelType | NestedInputModelType | ComboboxInputModelType;
 
 export type ValidationError = {
-  code?: string
-  message: string
-  instance: string
-}
+  code?: string;
+  message: string;
+  instance: string;
+};

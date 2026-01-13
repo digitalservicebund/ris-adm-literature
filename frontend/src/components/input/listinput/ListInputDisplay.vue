@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import Button from 'primevue/button'
-import { computed } from 'vue'
-import IconAdd from '~icons/material-symbols/add'
+import Button from "primevue/button";
+import { computed } from "vue";
+import IconAdd from "~icons/material-symbols/add";
 
 const props = defineProps<{
-  label: string
-  chips: string[]
-}>()
+  label: string;
+  chips: string[];
+}>();
 
 const emit = defineEmits<{
-  toggle: []
-}>()
+  toggle: [];
+}>();
 
 function normalize(str: string) {
-  return str.replaceAll(/[^A-Z0-9]/gi, '_').toLowerCase()
+  return str.replaceAll(/[^A-Z0-9]/gi, "_").toLowerCase();
 }
 
 const buttonLabel = computed(() =>
   props.chips.length > 0 ? `${props.label} bearbeiten` : `${props.label} hinzufügen`,
-)
+);
 </script>
 
 <template>

@@ -8,19 +8,19 @@
     SP extends Record<string, unknown>
   "
 >
-import { computed, ref, watch, type Ref, type VNodeChild } from 'vue'
-import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
-import AktivzitierungInput from './AktivzitierungInput.vue'
-import AktivzitierungItem from './AktivzitierungItem.vue'
-import IconAdd from '~icons/material-symbols/add'
-import { Button, useToast, type PageState } from 'primevue'
-import type { UseFetchReturn } from '@vueuse/core'
-import { usePagination } from '@/composables/usePagination'
-import SearchResults from '../SearchResults.vue'
-import { RisPaginator } from '@digitalservicebund/ris-ui/components'
-import errorMessages from '@/i18n/errors.json'
+import { computed, ref, watch, type Ref, type VNodeChild } from "vue";
+import { useEditableList } from "@/views/adm/documentUnit/[documentNumber]/useEditableList";
+import AktivzitierungInput from "./AktivzitierungInput.vue";
+import AktivzitierungItem from "./AktivzitierungItem.vue";
+import IconAdd from "~icons/material-symbols/add";
+import { Button, useToast, type PageState } from "primevue";
+import type { UseFetchReturn } from "@vueuse/core";
+import { usePagination } from "@/composables/usePagination";
+import SearchResults from "../SearchResults.vue";
+import { RisPaginator } from "@digitalservicebund/ris-ui/components";
+import errorMessages from "@/i18n/errors.json";
 
-const ITEMS_PER_PAGE = 15
+const ITEMS_PER_PAGE = 15;
 
 /** ------------------------------------------------------------------
  * Props / v-model / slots
@@ -30,25 +30,25 @@ const props = defineProps<{
     page: Ref<number>,
     itemsPerPage: number,
     searchParams: Ref<SP | undefined>,
-  ) => UseFetchReturn<R>
-  transformResultFn?: (result: R) => T
-}>()
+  ) => UseFetchReturn<R>;
+  transformResultFn?: (result: R) => T;
+}>();
 
-const aktivzitierungList = defineModel<T[]>({ default: () => [] })
+const aktivzitierungList = defineModel<T[]>({ default: () => [] });
 
 defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
-  item(props: { aktivzitierung: T }): VNodeChild
+  item(props: { aktivzitierung: T }): VNodeChild;
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild
+  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild;
   // 2. Slot for rendering the search result in the search results list
-  searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild
-}>()
+  searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild;
+}>();
 
 /** ------------------------------------------------------------------
  * Composables
  * ------------------------------------------------------------------ */
-const toast = useToast()
+const toast = useToast();
 
 const {
   firstRowIndex,
@@ -57,123 +57,123 @@ const {
   fetchPaginatedData,
   isFetching,
   error,
-} = usePagination(props.fetchResultsFn, ITEMS_PER_PAGE, 'documentationUnitsOverview') as {
-  firstRowIndex: Ref<number>
-  totalRows: Ref<number>
-  items: Ref<R[]>
-  fetchPaginatedData: (page: number, params?: SP) => Promise<void>
-  isFetching: Ref<boolean>
-  error: Ref<unknown>
-}
+} = usePagination(props.fetchResultsFn, ITEMS_PER_PAGE, "documentationUnitsOverview") as {
+  firstRowIndex: Ref<number>;
+  totalRows: Ref<number>;
+  items: Ref<R[]>;
+  fetchPaginatedData: (page: number, params?: SP) => Promise<void>;
+  isFetching: Ref<boolean>;
+  error: Ref<unknown>;
+};
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
-  useEditableList(aktivzitierungList)
+  useEditableList(aktivzitierungList);
 
 /** ------------------------------------------------------------------
  * Local state
  * ------------------------------------------------------------------ */
-const editingItemId = ref<string | null>(null)
-const showSearchResults = ref(false)
-const searchParams = ref<SP>()
-const citationTypeFromSearch = ref<string | undefined>()
-const inputRef = ref<{ clearSearchFields: () => void } | null>(null)
+const editingItemId = ref<string | null>(null);
+const showSearchResults = ref(false);
+const searchParams = ref<SP>();
+const citationTypeFromSearch = ref<string | undefined>();
+const inputRef = ref<{ clearSearchFields: () => void } | null>(null);
 
 /** ------------------------------------------------------------------
  * Computed
  * ------------------------------------------------------------------ */
 const addedDocumentNumbers = computed(() => {
-  return new Set(aktivzitierungList.value.map((entry) => entry.documentNumber).filter(Boolean))
-})
+  return new Set(aktivzitierungList.value.map((entry) => entry.documentNumber).filter(Boolean));
+});
 
-const isEditing = computed(() => editingItemId.value !== null)
+const isEditing = computed(() => editingItemId.value !== null);
 
 /** ------------------------------------------------------------------
  * Handlers
  * ------------------------------------------------------------------ */
 function startEditing(itemId: string) {
-  isCreationPanelOpened.value = false
-  editingItemId.value = itemId
+  isCreationPanelOpened.value = false;
+  editingItemId.value = itemId;
 }
 
 function stopEditing() {
-  editingItemId.value = null
+  editingItemId.value = null;
 }
 
 function removeDocumentNumber(item: T): T {
   // Remove documentNumber from manual entries (as only the search results should have it)
-  const itemObj = item as Record<string, unknown>
+  const itemObj = item as Record<string, unknown>;
   return Object.fromEntries(
-    Object.entries(itemObj).filter(([key]) => key !== 'documentNumber'),
-  ) as T
+    Object.entries(itemObj).filter(([key]) => key !== "documentNumber"),
+  ) as T;
 }
 
 function updateItem(item: T) {
   // Remove the documentNumber if this is a manual entry
-  const cleanedItem = removeDocumentNumber(item)
-  onUpdateItem(cleanedItem)
-  stopEditing()
+  const cleanedItem = removeDocumentNumber(item);
+  onUpdateItem(cleanedItem);
+  stopEditing();
 }
 
 function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
-  const cleanedItem = removeDocumentNumber(item)
-  onAddItem(cleanedItem)
-  isCreationPanelOpened.value = true
+  const cleanedItem = removeDocumentNumber(item);
+  onAddItem(cleanedItem);
+  isCreationPanelOpened.value = true;
 }
 
 async function fetchData(page = 0) {
-  await fetchPaginatedData(page, searchParams.value)
+  await fetchPaginatedData(page, searchParams.value);
 }
 
 async function onPageUpdate(pageState: PageState) {
-  await fetchData(pageState.page)
+  await fetchData(pageState.page);
 }
 
 function onSearch(params: SP) {
   // Safe check: does the current param type support citationType?
-  if (params && 'citationType' in params && typeof params.citationType === 'string') {
-    const trimmed = params.citationType.trim()
-    citationTypeFromSearch.value = trimmed || undefined
+  if (params && "citationType" in params && typeof params.citationType === "string") {
+    const trimmed = params.citationType.trim();
+    citationTypeFromSearch.value = trimmed || undefined;
   } else {
-    citationTypeFromSearch.value = undefined
+    citationTypeFromSearch.value = undefined;
   }
 
-  searchParams.value = params
-  showSearchResults.value = true
-  fetchData(0)
+  searchParams.value = params;
+  showSearchResults.value = true;
+  fetchData(0);
 }
 
 function addSearchResult(result: R) {
-  if (addedDocumentNumbers.value.has(result.documentNumber)) return
+  if (addedDocumentNumbers.value.has(result.documentNumber)) return;
 
   const baseEntry: T = props.transformResultFn
     ? props.transformResultFn(result)
-    : (result as unknown as T)
+    : (result as unknown as T);
 
   const citationTypeValue =
     citationTypeFromSearch.value ||
     ((searchParams.value as Record<string, unknown> | undefined)?.citationType as
       | string
-      | undefined)
+      | undefined);
 
-  const baseEntryObj = baseEntry as Record<string, unknown>
+  const baseEntryObj = baseEntry as Record<string, unknown>;
 
   const entryObj: Record<string, unknown> = {
     ...baseEntryObj,
     id: crypto.randomUUID(),
-    ...(citationTypeValue && citationTypeValue.trim() !== ''
+    ...(citationTypeValue && citationTypeValue.trim() !== ""
       ? { citationType: citationTypeValue.trim() }
       : {}),
-  }
+  };
 
-  const entry: T = entryObj as T
+  const entry: T = entryObj as T;
 
-  onAddItem(entry)
-  isCreationPanelOpened.value = true
-  showSearchResults.value = false
-  searchParams.value = undefined
-  citationTypeFromSearch.value = undefined
-  inputRef.value?.clearSearchFields()
+  onAddItem(entry);
+  isCreationPanelOpened.value = true;
+  showSearchResults.value = false;
+  searchParams.value = undefined;
+  citationTypeFromSearch.value = undefined;
+  inputRef.value?.clearSearchFields();
 }
 
 /** ------------------------------------------------------------------
@@ -182,11 +182,11 @@ function addSearchResult(result: R) {
 watch(error, (err) => {
   if (err) {
     toast.add({
-      severity: 'error',
+      severity: "error",
       summary: errorMessages.DOCUMENT_UNITS_COULD_NOT_BE_LOADED.title,
-    })
+    });
   }
-})
+});
 </script>
 
 <template>

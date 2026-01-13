@@ -1,68 +1,68 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
-import { type ValidationError } from '@/components/input/types'
-import DateInput from '@/components/input/DateInput.vue'
-import InputField from '@/components/input/InputField.vue'
-import InputText from 'primevue/inputtext'
-import YearInput from '@/components/input/YearInput.vue'
-import { useValidationStore } from '@/composables/useValidationStore'
-import SingleNorm, { type SingleNormValidationInfo } from '@/domain/singleNorm'
-import IconClear from '~icons/material-symbols/close-small'
+import { computed, onMounted, ref } from "vue";
+import { type ValidationError } from "@/components/input/types";
+import DateInput from "@/components/input/DateInput.vue";
+import InputField from "@/components/input/InputField.vue";
+import InputText from "primevue/inputtext";
+import YearInput from "@/components/input/YearInput.vue";
+import { useValidationStore } from "@/composables/useValidationStore";
+import SingleNorm, { type SingleNormValidationInfo } from "@/domain/singleNorm";
+import IconClear from "~icons/material-symbols/close-small";
 
 const props = withDefaults(
   defineProps<{
-    modelValue: SingleNorm
-    normAbbreviation: string
-    showSingleNormInput?: boolean
-    showDateOfRelevanceButton?: boolean
-    index: number
+    modelValue: SingleNorm;
+    normAbbreviation: string;
+    showSingleNormInput?: boolean;
+    showDateOfRelevanceButton?: boolean;
+    index: number;
   }>(),
   { showSingleNormInput: true, showDateOfRelevanceButton: true },
-)
+);
 
 const emit = defineEmits<{
-  'update:modelValue': [value: SingleNorm]
-  removeEntry: [void]
-  'update:validationError': [value?: ValidationError, field?: string]
-}>()
+  "update:modelValue": [value: SingleNorm];
+  removeEntry: [void];
+  "update:validationError": [value?: ValidationError, field?: string];
+}>();
 
-const validationStore = useValidationStore<(typeof SingleNorm.fields)[number]>()
-const singleNormInput = ref<InstanceType<typeof InputText> | null>(null)
+const validationStore = useValidationStore<(typeof SingleNorm.fields)[number]>();
+const singleNormInput = ref<InstanceType<typeof InputText> | null>(null);
 
 const singleNorm = computed({
   get: () => {
-    return props.modelValue
+    return props.modelValue;
   },
   set: (value) => {
-    if (value) emit('update:modelValue', value)
+    if (value) emit("update:modelValue", value);
   },
-})
+});
 
 /**
  * Validates a given single norm against with a given norm abbreviation against a validation endpoint.
  * The validation endpint either responds with "Ok" oder "Validation error". In the latter case a validation error is emitted to the parent.
  */
 async function validateNorm() {
-  validationStore.reset()
-  emit('update:validationError', undefined, 'singleNorm')
+  validationStore.reset();
+  emit("update:validationError", undefined, "singleNorm");
 
   if (singleNorm.value?.singleNorm) {
     const singleNormValidationInfo: SingleNormValidationInfo = {
       singleNorm: singleNorm.value?.singleNorm,
       normAbbreviation: props.normAbbreviation,
-    }
+    };
 
-    if (singleNormValidationInfo.singleNorm === '2021, Seite 21') {
-      validationStore.add('Inhalt nicht valide', 'singleNorm')
+    if (singleNormValidationInfo.singleNorm === "2021, Seite 21") {
+      validationStore.add("Inhalt nicht valide", "singleNorm");
 
       emit(
-        'update:validationError',
+        "update:validationError",
         {
-          message: 'Inhalt nicht valide',
-          instance: 'singleNorm',
+          message: "Inhalt nicht valide",
+          instance: "singleNorm",
         },
-        'singleNorm',
-      )
+        "singleNorm",
+      );
     }
   }
 }
@@ -70,7 +70,7 @@ async function validateNorm() {
  * Emits the 'removeEntry' event to the parent, where the data entry is removed from the model value.
  */
 async function removeSingleNormEntry() {
-  emit('removeEntry')
+  emit("removeEntry");
 }
 
 /**
@@ -84,15 +84,15 @@ async function removeSingleNormEntry() {
 function updateDateFormatValidation(validationError: ValidationError | undefined, field: string) {
   if (validationError) {
     emit(
-      'update:validationError',
+      "update:validationError",
       {
         message: validationError.message,
         instance: validationError.instance,
       },
       field,
-    )
+    );
   } else {
-    emit('update:validationError', undefined, field)
+    emit("update:validationError", undefined, field);
   }
 }
 
@@ -102,13 +102,13 @@ function updateDateFormatValidation(validationError: ValidationError | undefined
  */
 onMounted(async () => {
   if (props.modelValue.singleNorm) {
-    await validateNorm()
+    await validateNorm();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const inputElement = (singleNormInput.value as any)?.$el.querySelector('input')
-  inputElement?.focus() // This works without TypeScript errors
-})
+  const inputElement = (singleNormInput.value as any)?.$el.querySelector("input");
+  inputElement?.focus(); // This works without TypeScript errors
+});
 </script>
 
 <template>

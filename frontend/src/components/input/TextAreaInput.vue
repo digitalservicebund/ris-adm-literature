@@ -1,44 +1,44 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { type ValidationError } from '@/components/input/types'
-import { useTextareaAutosize } from '@vueuse/core'
+import { computed, ref } from "vue";
+import { type ValidationError } from "@/components/input/types";
+import { useTextareaAutosize } from "@vueuse/core";
 
 type Props = {
-  id: string
-  modelValue: string
-  ariaLabel: string
-  placeholder?: string
-  readOnly?: boolean
-  autosize?: boolean
-  resize?: 'none' | 'both' | 'horizontal' | 'vertical'
-  size?: 'regular' | 'medium' | 'small'
-  hasError?: boolean
-  customClasses?: string
-}
+  id: string;
+  modelValue: string;
+  ariaLabel: string;
+  placeholder?: string;
+  readOnly?: boolean;
+  autosize?: boolean;
+  resize?: "none" | "both" | "horizontal" | "vertical";
+  size?: "regular" | "medium" | "small";
+  hasError?: boolean;
+  customClasses?: string;
+};
 
 const props = withDefaults(defineProps<Props>(), {
-  placeholder: '',
+  placeholder: "",
   validationError: undefined,
   readOnly: false,
   autosize: false,
-  resize: 'none',
-  size: 'regular',
-  customClasses: '',
-})
+  resize: "none",
+  size: "regular",
+  customClasses: "",
+});
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
-  'update:validationError': [value: ValidationError | undefined]
-}>()
+  "update:modelValue": [value: string];
+  "update:validationError": [value: ValidationError | undefined];
+}>();
 
 const localValue = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(value: string) {
-    emit('update:modelValue', value)
+    emit("update:modelValue", value);
   },
-})
+});
 
 /* -------------------------------------------------- *
  * Autosizing                                         *
@@ -46,20 +46,20 @@ const localValue = computed({
 
 const { textarea, input } = props.autosize
   ? useTextareaAutosize({
-      styleProp: 'height',
+      styleProp: "height",
       input: localValue,
     })
-  : { textarea: ref(<HTMLTextAreaElement | null>null), input: localValue }
+  : { textarea: ref(<HTMLTextAreaElement | null>null), input: localValue };
 
 /* -------------------------------------------------- *
  * Public interface                                   *
  * -------------------------------------------------- */
 
 function focus() {
-  textarea.value?.focus()
+  textarea.value?.focus();
 }
 
-defineExpose({ focus })
+defineExpose({ focus });
 </script>
 
 <template>

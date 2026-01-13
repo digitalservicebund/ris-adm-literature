@@ -1,35 +1,35 @@
 <script lang="ts" setup generic="T extends EditableListItem">
-import type { Component, ComponentPublicInstance, Ref } from 'vue'
-import { computed, nextTick, ref, watch } from 'vue'
-import DefaultSummary from './DefaultSummary.vue'
-import Button from 'primevue/button'
-import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
-import IconAdd from '~icons/material-symbols/add'
-import type EditableListItem from '@/domain/editableListItem'
+import type { Component, ComponentPublicInstance, Ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
+import DefaultSummary from "./DefaultSummary.vue";
+import Button from "primevue/button";
+import IconArrowDown from "~icons/ic/baseline-keyboard-arrow-down";
+import IconAdd from "~icons/material-symbols/add";
+import type EditableListItem from "@/domain/editableListItem";
 
 const props = withDefaults(
   defineProps<{
-    editComponent: Component
-    summaryComponent?: Component
-    modelValue?: T[]
-    defaultValue: T
+    editComponent: Component;
+    summaryComponent?: Component;
+    modelValue?: T[];
+    defaultValue: T;
   }>(),
   {
     summaryComponent: DefaultSummary,
     modelValue: () => [],
   },
-)
+);
 
 const emit = defineEmits<{
-  'update:modelValue': [value: T[]]
-}>()
+  "update:modelValue": [value: T[]];
+}>();
 
-const editEntry = ref<T | undefined>() as Ref<T | undefined>
-const displayDefaultValue = ref(false)
-const modelValueList = ref<T[]>([...props.modelValue]) as Ref<T[]>
+const editEntry = ref<T | undefined>() as Ref<T | undefined>;
+const displayDefaultValue = ref(false);
+const modelValueList = ref<T[]>([...props.modelValue]) as Ref<T[]>;
 
-const editedItemRef = ref<Map<number, HTMLElement | ComponentPublicInstance>>(new Map())
-const containerRef = ref<HTMLElement | null>(null)
+const editedItemRef = ref<Map<number, HTMLElement | ComponentPublicInstance>>(new Map());
+const containerRef = ref<HTMLElement | null>(null);
 
 /**
  * Computed mergedValues is a list for rendering only. It's a computed helper list to keep the default value
@@ -38,8 +38,8 @@ const containerRef = ref<HTMLElement | null>(null)
 const mergedValues = computed(() => {
   return displayDefaultValue.value
     ? [...modelValueList.value, props.defaultValue]
-    : [...modelValueList.value]
-})
+    : [...modelValueList.value];
+});
 
 /**
  * Scrolls the edited item at the specified index into view (if needed).
@@ -48,15 +48,15 @@ const mergedValues = computed(() => {
  * @returns A promise that resolves after the DOM updates.
  */
 async function scrollToEditedItem(index: number) {
-  await nextTick()
-  const refToScroll = editedItemRef.value.get(index)
+  await nextTick();
+  const refToScroll = editedItemRef.value.get(index);
   if (refToScroll) {
     // If ref is a Vue component, access the DOM element via $el
-    const editedItemSummary = '$el' in refToScroll ? refToScroll.$el : refToScroll
-    if (editedItemSummary instanceof HTMLElement && 'scrollIntoView' in editedItemSummary) {
+    const editedItemSummary = "$el" in refToScroll ? refToScroll.$el : refToScroll;
+    if (editedItemSummary instanceof HTMLElement && "scrollIntoView" in editedItemSummary) {
       editedItemSummary.scrollIntoView({
-        block: 'nearest',
-      })
+        block: "nearest",
+      });
     }
   }
 }
@@ -67,11 +67,11 @@ async function scrollToEditedItem(index: number) {
  * @returns A promise that resolves after the DOM updates.
  */
 async function scrollToContainer() {
-  await nextTick()
-  if (containerRef.value instanceof HTMLElement && 'scrollIntoView' in containerRef.value) {
+  await nextTick();
+  if (containerRef.value instanceof HTMLElement && "scrollIntoView" in containerRef.value) {
     containerRef.value.scrollIntoView({
-      block: 'nearest',
-    })
+      block: "nearest",
+    });
   }
 }
 
@@ -81,17 +81,17 @@ async function scrollToContainer() {
  * @param index (is needed in case we want to scroll into view of list item summary)
  */
 async function toggleDisplayDefaultValue(shouldDisplay: boolean, index?: number) {
-  const hasModeSwitched = shouldDisplay !== displayDefaultValue.value
+  const hasModeSwitched = shouldDisplay !== displayDefaultValue.value;
   if (shouldDisplay) {
-    displayDefaultValue.value = true
-    const { defaultValue } = props
-    setEditEntry(defaultValue as T)
+    displayDefaultValue.value = true;
+    const { defaultValue } = props;
+    setEditEntry(defaultValue as T);
     if (hasModeSwitched && index !== undefined) {
-      await scrollToEditedItem(index)
+      await scrollToEditedItem(index);
     }
   } else {
-    displayDefaultValue.value = false
-    setEditEntry()
+    displayDefaultValue.value = false;
+    setEditEntry();
   }
 }
 
@@ -100,15 +100,15 @@ async function toggleDisplayDefaultValue(shouldDisplay: boolean, index?: number)
  * @param entry
  */
 function setEditEntry(entry?: T) {
-  editEntry.value = entry
+  editEntry.value = entry;
 }
 
 /**
  * Resetting the edit to undefined, to show all list items in summary mode
  */
 async function cancelEdit(index: number) {
-  await toggleDisplayDefaultValue(false, index)
-  await scrollToEditedItem(index)
+  await toggleDisplayDefaultValue(false, index);
+  await scrollToEditedItem(index);
 }
 
 /**
@@ -118,10 +118,10 @@ async function cancelEdit(index: number) {
  * @param entry
  */
 async function removeEntry(entry: T) {
-  const updatedEntries = filterEntries(props.modelValue, entry)
-  emit('update:modelValue', updatedEntries)
-  setEditEntry()
-  await scrollToContainer()
+  const updatedEntries = filterEntries(props.modelValue, entry);
+  emit("update:modelValue", updatedEntries);
+  setEditEntry();
+  await scrollToContainer();
 }
 
 /**
@@ -131,15 +131,15 @@ async function removeEntry(entry: T) {
  * @returns {T[]} A new array with the specified entry removed.
  */
 function filterEntries(entries: T[], entryToRemove?: T): T[] {
-  if (!entryToRemove) return entries
-  return [...entries].filter((item) => !entryToRemove.equals(item))
+  if (!entryToRemove) return entries;
+  return [...entries].filter((item) => !entryToRemove.equals(item));
 }
 
 function isSelected(entry: T): boolean {
   if (editEntry.value !== undefined) {
-    return editEntry.value.equals(entry)
+    return editEntry.value.equals(entry);
   }
-  return false
+  return false;
 }
 
 /**
@@ -147,9 +147,9 @@ function isSelected(entry: T): boolean {
  */
 function isSaved(entries: T[], entry?: T): boolean {
   if (entry) {
-    return entries.some((item) => entry.equals(item))
+    return entries.some((item) => entry.equals(item));
   }
-  return false
+  return false;
 }
 
 /**
@@ -157,8 +157,8 @@ function isSaved(entries: T[], entry?: T): boolean {
  * decides to click the save button in edit mode. The edit index is reset, to show list in summary mode.
  */
 async function updateModel(index: number) {
-  emit('update:modelValue', modelValueList.value)
-  await toggleDisplayDefaultValue(true, index)
+  emit("update:modelValue", modelValueList.value);
+  await toggleDisplayDefaultValue(true, index);
 }
 
 /**
@@ -171,13 +171,13 @@ watch(
     // Update modelValueList based on the newValue while keeping the edit item intact
     modelValueList.value = [...newValue].map((item) =>
       editEntry.value !== undefined && editEntry.value.equals(item) ? editEntry.value : item,
-    )
+    );
   },
   {
     immediate: true,
     deep: true,
   },
-)
+);
 
 /**
  * When the local model value list is empty, (e.g. on mount or by removing an item) a default entry is displayed
@@ -186,14 +186,14 @@ watch(
   () => modelValueList,
   async () => {
     if (modelValueList.value.length == 0) {
-      await toggleDisplayDefaultValue(true)
+      await toggleDisplayDefaultValue(true);
     }
   },
   {
     immediate: true,
     deep: true,
   },
-)
+);
 </script>
 
 <template>
@@ -220,8 +220,8 @@ watch(
           :data-testid="`list-entry-${index}`"
           @click="
             () => {
-              toggleDisplayDefaultValue(false)
-              setEditEntry(entry as T)
+              toggleDisplayDefaultValue(false);
+              setEditEntry(entry as T);
             }
           "
         >

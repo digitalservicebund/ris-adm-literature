@@ -1,36 +1,36 @@
 <script lang="ts" setup>
-import { createNode, type FieldOfLaw } from '@/domain/fieldOfLaw'
+import { createNode, type FieldOfLaw } from "@/domain/fieldOfLaw";
 
 interface Props {
-  text: string
-  keywords: string[]
+  text: string;
+  keywords: string[];
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  'linked-field:clicked': [node: FieldOfLaw]
-}>()
+  "linked-field:clicked": [node: FieldOfLaw];
+}>();
 
 type Token = {
-  content: string
-  isLink: boolean
-}
+  content: string;
+  isLink: boolean;
+};
 
 function tokenizeText(): Token[] {
   if (props.keywords.length === 0) {
-    return [{ content: props.text, isLink: false }]
+    return [{ content: props.text, isLink: false }];
   }
-  return props.text.split(new RegExp(`(${props.keywords.join('|')})`)).map((part) => ({
+  return props.text.split(new RegExp(`(${props.keywords.join("|")})`)).map((part) => ({
     content: part,
     isLink: props.keywords.includes(part),
-  }))
+  }));
 }
 
 function handleTokenClick(token: Token) {
-  if (!token.isLink) return
-  const toNode = createNode(token.content)
-  emit('linked-field:clicked', toNode)
+  if (!token.isLink) return;
+  const toNode = createNode(token.content);
+  emit("linked-field:clicked", toNode);
 }
 </script>
 

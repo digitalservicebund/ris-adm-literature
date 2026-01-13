@@ -1,52 +1,52 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
-import IconBaselineDescription from '~icons/ic/outline-class'
-import IconBaselineDescriptionFilled from '~icons/ic/class'
+import { computed } from "vue";
+import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import IconBaselineDescription from "~icons/ic/outline-class";
+import IconBaselineDescriptionFilled from "~icons/ic/class";
 
 const props = defineProps<{
-  aktivzitierung: AktivzitierungSli
-}>()
+  aktivzitierung: AktivzitierungSli;
+}>();
 
 const normalizedAuthors = computed(
   () =>
     props.aktivzitierung.verfasser
-      ?.map((author) => author.trim().replace(/,$/, ''))
+      ?.map((author) => author.trim().replace(/,$/, ""))
       .filter(Boolean)
-      .join(', ') || '',
-)
+      .join(", ") || "",
+);
 
 const documentTypeAbbreviations = computed(
   () =>
     props.aktivzitierung.dokumenttypen
       ?.map((dt) => dt.abbreviation)
       .filter(Boolean)
-      .join(', ') || '',
-)
+      .join(", ") || "",
+);
 
 const metaSummary = computed(() => {
-  const parts: string[] = []
+  const parts: string[] = [];
 
   if (props.aktivzitierung.veroeffentlichungsJahr) {
-    parts.push(props.aktivzitierung.veroeffentlichungsJahr)
+    parts.push(props.aktivzitierung.veroeffentlichungsJahr);
   }
 
   if (normalizedAuthors.value) {
-    parts.push(normalizedAuthors.value)
+    parts.push(normalizedAuthors.value);
   }
 
-  const main = parts.join(', ')
+  const main = parts.join(", ");
 
   if (documentTypeAbbreviations.value) {
     return main
       ? `${main} (${documentTypeAbbreviations.value})`
-      : `(${documentTypeAbbreviations.value})`
+      : `(${documentTypeAbbreviations.value})`;
   }
 
-  return main
-})
+  return main;
+});
 
-const titleSummary = computed(() => props.aktivzitierung.titel ?? '')
+const titleSummary = computed(() => props.aktivzitierung.titel ?? "");
 </script>
 
 <template>

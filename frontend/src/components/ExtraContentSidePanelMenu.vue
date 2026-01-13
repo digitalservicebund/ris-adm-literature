@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import IconStickyNote from '~icons/ic/outline-sticky-note-2'
+import Button from "primevue/button";
+import IconStickyNote from "~icons/ic/outline-sticky-note-2";
 
 const props = defineProps<{
-  hidePanelModeBar?: boolean
-}>()
+  hidePanelModeBar?: boolean;
+}>();
 </script>
 
 <template>
