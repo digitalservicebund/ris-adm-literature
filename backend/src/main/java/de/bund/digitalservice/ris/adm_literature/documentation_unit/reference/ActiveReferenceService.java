@@ -37,12 +37,18 @@ public class ActiveReferenceService {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void publish(@NonNull DocumentReference source, @NonNull List<DocumentReference> targets) {
     final DocumentReferenceEntity sourceDocumentReference = findOrCreateDocumentReference(source);
-    // # 1. Delete all active references with given source -> removed entries in the UI are removed on the database
+    // # 1. Delete all active references which are not given anymore
     ActiveReferenceEntity probe = new ActiveReferenceEntity();
     probe.setSource(sourceDocumentReference);
+    List<ActiveReferenceEntity> existingActiveReferences = activeReferenceRepository.findAll(
+      Example.of(probe)
+    );
     // Results into SQL: delete from active_reference where id in ()
     activeReferenceRepository.deleteAllInBatch(
-      activeReferenceRepository.findAll(Example.of(probe))
+      existingActiveReferences
+        .stream()
+        .filter(ar -> !targets.contains(new DocumentReference(ar.getTarget())))
+        .toList()
     );
     if (targets.isEmpty()) {
       log.info("Deleted active references for source {}.", sourceDocumentReference);
@@ -50,9 +56,14 @@ public class ActiveReferenceService {
     }
     // Flush needed before inserting new active references
     activeReferenceRepository.flush();
-    // # 2. Create new active references by source and target
+    // # 2. Create only active references which are new
+    List<DocumentReference> existingTargets = existingActiveReferences
+      .stream()
+      .map(ar -> new DocumentReference(ar.getTarget()))
+      .toList();
     List<ActiveReferenceEntity> activeReferenceEntities = targets
       .stream()
+      .filter(ar -> !existingTargets.contains(ar))
       .map(target -> {
         // Find or create the target document reference
         DocumentReferenceEntity targetDocumentReference = findOrCreateDocumentReference(target);
@@ -62,7 +73,7 @@ public class ActiveReferenceService {
         return activeReferenceEntity;
       })
       .toList();
-    // # 3. Saves all created active references
+    // # 3. Saves all newly created active references
     activeReferenceRepository.saveAll(activeReferenceEntities);
     log.info(
       "Saved {} active references for source {}.",

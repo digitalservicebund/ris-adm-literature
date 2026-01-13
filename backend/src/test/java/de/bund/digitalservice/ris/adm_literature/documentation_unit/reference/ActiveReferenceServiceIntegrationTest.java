@@ -58,6 +58,47 @@ class ActiveReferenceServiceIntegrationTest {
   }
 
   @Test
+  @DisplayName(
+    "Saves one new active reference and deletes one existing and reads them from the database"
+  )
+  void publish_update() {
+    // given
+    // Documentation units KALS999999980, KSNR999999981, KSNR999999982, and KSNR999999983 are
+    // already created by data initialization.
+    activeReferenceService.publish(
+      new DocumentReference("KALS999999980", DocumentCategory.LITERATUR_SELBSTAENDIG),
+      List.of(
+        new DocumentReference("KSNR999999981", DocumentCategory.VERWALTUNGSVORSCHRIFTEN),
+        new DocumentReference("KSNR999999982", DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+      )
+    );
+
+    // when
+    activeReferenceService.publish(
+      new DocumentReference("KALS999999980", DocumentCategory.LITERATUR_SELBSTAENDIG),
+      List.of(
+        new DocumentReference("KSNR999999981", DocumentCategory.VERWALTUNGSVORSCHRIFTEN),
+        new DocumentReference("KSNR999999983", DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
+      )
+    );
+
+    // then
+    List<ActiveReferenceEntity> activeReferenceEntities = entityManager
+      .getEntityManager()
+      .createQuery("select ar from ActiveReferenceEntity ar", ActiveReferenceEntity.class)
+      .getResultList();
+    assertThat(activeReferenceEntities)
+      .extracting(
+        ar -> ar.getSource().getLiteratureDocumentNumber(),
+        ar -> ar.getTarget().getAdmDocumentNumber()
+      )
+      .contains(
+        Tuple.tuple("KALS999999980", "KSNR999999981"),
+        Tuple.tuple("KALS999999980", "KSNR999999983")
+      );
+  }
+
+  @Test
   @DisplayName("Deletes active references on calling publish with empty target list")
   void publish_deleteOnly() {
     // given

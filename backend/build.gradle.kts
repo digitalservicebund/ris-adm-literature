@@ -220,8 +220,14 @@ spotless {
   }
 }
 
+checkstyle {
+  toolVersion = "13.0.0"
+}
+
 tasks.named<Checkstyle>("checkstyleMain") {
   source = sourceSets["main"].allJava
+  // Set due to https://github.com/checkstyle/checkstyle/issues/17052
+  exclude("**/documentation_unit/reference/DocumentReference.java")
   configFile = rootProject.file("checkstyle/config-main.xml")
 }
 
