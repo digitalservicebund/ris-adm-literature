@@ -66,7 +66,6 @@ const getTooltipText = (button: EditorButton) =>
 </script>
 
 <template>
-  <!-- eslint-disable vuejs-accessibility/no-static-element-interactions -->
   <div @keydown.esc="showDropdown = false">
     <div class="flex flex-row">
       <button

@@ -15,7 +15,6 @@ test.describe("RubrikenPage - Zitierdatum", () => {
       await expect(page.getByText("Zitierdatum *")).toBeVisible();
 
       const zitierdatenGroup = page.getByRole("group", { name: "Zitierdatum" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator("input");
       await expect(newZitierdatumInput).toHaveCount(1);
 
@@ -48,7 +47,6 @@ test.describe("RubrikenPage - Zitierdatum", () => {
       await page.getByRole("link", { name: "Rubriken" }).click();
 
       const zitierdatenGroup = page.getByRole("group", { name: "Zitierdatum" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator("input");
       await expect(newZitierdatumInput).toHaveCount(1);
 
@@ -79,7 +77,6 @@ test.describe("RubrikenPage - Zitierdatum", () => {
       await page.getByRole("link", { name: "Rubriken" }).click();
 
       const zitierdatenGroup = page.getByRole("group", { name: "Zitierdatum" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator("input");
       await expect(newZitierdatumInput).toHaveCount(1);
       const tomorrow = dayjs().add(1, "day").format("DD.MM.YYYY");
@@ -112,7 +109,6 @@ test.describe("RubrikenPage - Zitierdatum", () => {
       await page.getByRole("link", { name: "Rubriken" }).click();
 
       const zitierdatenGroup = page.getByRole("group", { name: "Zitierdatum" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator("input");
       await expect(newZitierdatumInput).toHaveCount(1);
 
@@ -143,7 +139,6 @@ test.describe("RubrikenPage - Zitierdatum", () => {
 
       // given
       const zitierdatenGroup = page.getByRole("group", { name: "Zitierdatum" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newZitierdatumInput = zitierdatenGroup.locator("input");
       await newZitierdatumInput.fill("15.01.2025");
       await page.getByRole("button", { name: "Speichern", exact: true }).click();

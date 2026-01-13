@@ -234,7 +234,6 @@ describe("InputField", () => {
     renderComponent({ label: "foo", labelClass: "ris-label1-regular" });
 
     const element = screen.getByText("foo");
-    // eslint-disable-next-line testing-library/no-node-access
     expect(element.parentNode).toHaveClass("ris-label1-regular");
   });
 });

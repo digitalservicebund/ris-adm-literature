@@ -33,7 +33,6 @@ test.describe("StartPage SLI", () => {
       const secondDocNumber = await page.getByText(/KALS\d{10}/).textContent();
 
       // then
-      // eslint-disable-next-line playwright/prefer-web-first-assertions
       expect(secondDocNumber).not.toBe(firstDocNumber);
       // Second should be alphanumerically larger
       expect(secondDocNumber! > firstDocNumber!).toBe(true);

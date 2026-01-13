@@ -20,7 +20,6 @@ test.describe("RubrikenPage - Berufsbild", () => {
       await expect(berufsbildGroup).toBeVisible();
 
       // when
-      // eslint-disable-next-line playwright/no-raw-locators
       const berufsbildInput = berufsbildGroup.locator("input");
       await expect(berufsbildInput).toHaveCount(1);
       await berufsbildInput.fill("Brillenschleifer");

@@ -155,7 +155,6 @@ const resizeObserver = new ResizeObserver((entries) => {
 </script>
 
 <template>
-  <!-- eslint-disable vuejs-accessibility/no-static-element-interactions -->
   <div
     id="text-editor"
     ref="editorElement"

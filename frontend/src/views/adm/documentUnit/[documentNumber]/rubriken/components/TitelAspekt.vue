@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";

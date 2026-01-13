@@ -45,9 +45,8 @@ export function useSaveToRemote<T extends { update: () => Promise<boolean> }>(st
       } else {
         lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title };
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       lastSaveError.value = { title: "Verbindung fehlgeschlagen" };
     } finally {
       saveIsInProgress.value = false;

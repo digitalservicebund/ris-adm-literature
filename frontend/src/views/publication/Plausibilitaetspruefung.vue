@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import IconCheck from "~icons/material-symbols/check";
 import IconErrorOutline from "~icons/ic/baseline-error-outline";

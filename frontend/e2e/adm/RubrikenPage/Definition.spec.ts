@@ -20,7 +20,6 @@ test.describe("RubrikenPage - Definition", () => {
       await expect(definitionsGroup).toBeVisible();
 
       // when
-      // eslint-disable-next-line playwright/no-raw-locators
       const definitionInput = definitionsGroup.locator("input");
       await expect(definitionInput).toHaveCount(1);
       await definitionInput.fill("Sachgesamtheit");

@@ -102,7 +102,6 @@ test.describe("RubrikenPage - Gliederung", () => {
       await gliederungEditorElement.click();
       await page.keyboard.type("Gliederung: Neuer Text 1");
 
-      // eslint-disable-next-line playwright/no-raw-locators
       const linebreakIndicator = gliederungEditorElement.locator("br");
       await expect(linebreakIndicator).toHaveCount(1);
 

@@ -39,7 +39,6 @@ test.describe("RubrikenPage - Formatdaten", () => {
           await expect(page.getByRole("link", { name: "Rubriken" })).toHaveCount(1);
 
           const aktenzeichenGroup = page.getByRole("group", { name: "Aktenzeichen" });
-          // eslint-disable-next-line playwright/no-raw-locators
           const newAktenzeichenInput = aktenzeichenGroup.locator("input");
           const aktenzeichenWithSpecialCharacters = "123äöüß$%&";
 
@@ -64,7 +63,6 @@ test.describe("RubrikenPage - Formatdaten", () => {
         async ({ page }) => {
           await page.goto("/verwaltungsvorschriften/dokumentationseinheit/KSNR054920707/rubriken");
           const aktenzeichenGroup = page.getByRole("group", { name: "Aktenzeichen" });
-          // eslint-disable-next-line playwright/no-raw-locators
           const newAktenzeichenInput = aktenzeichenGroup.locator("input");
           await newAktenzeichenInput.fill("Az1");
           await newAktenzeichenInput.press("Enter");
@@ -89,7 +87,6 @@ test.describe("RubrikenPage - Formatdaten", () => {
       await page.getByRole("link", { name: "Rubriken" }).click();
 
       const aktenzeichenGroup = page.getByRole("group", { name: "Aktenzeichen" });
-      // eslint-disable-next-line playwright/no-raw-locators
       const newAktenzeichenInput = aktenzeichenGroup.locator("input");
 
       // when
@@ -327,7 +324,6 @@ test.describe("RubrikenPage - Formatdaten", () => {
       await expect(titelAspektGroup).toBeVisible();
 
       // when
-      // eslint-disable-next-line playwright/no-raw-locators
       const titelAspektInput = titelAspektGroup.locator("input");
       await expect(titelAspektInput).toHaveCount(1);
       await titelAspektInput.fill("Gemeinsamer Bundesausschuss");

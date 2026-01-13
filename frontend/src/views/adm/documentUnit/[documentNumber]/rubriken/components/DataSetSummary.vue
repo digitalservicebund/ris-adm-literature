@@ -20,7 +20,6 @@ function wrappedSummarizer(dataEntry: T): VNode {
 </script>
 
 <script lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function defaultSummarizer(dataEntry: any): string {
   if (["string", "boolean", "number"].includes(typeof dataEntry)) {
     return `${dataEntry}`;
@@ -48,10 +47,7 @@ export function defaultSummarizer(dataEntry: any): string {
  * This is especially useful when the DataSetSummary component is passed as
  * property to another component.
  */
-export function withSummarizer(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  summarizer: (dataEntry: any) => string | VNode,
-) {
+export function withSummarizer(summarizer: (dataEntry: any) => string | VNode) {
   return defineComponent({
     props: {
       data: {

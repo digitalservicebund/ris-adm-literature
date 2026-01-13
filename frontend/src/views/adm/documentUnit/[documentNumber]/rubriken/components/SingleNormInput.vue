@@ -105,7 +105,6 @@ onMounted(async () => {
     await validateNorm();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputElement = (singleNormInput.value as any)?.$el.querySelector("input");
   inputElement?.focus(); // This works without TypeScript errors
 });

@@ -98,13 +98,13 @@ npm run test:e2e -- --ui
 npm run test:e2e -- --headed
 ```
 
-### Lint With [ESLint](https://eslint.org/)
+### Lint With [Oxlint](https://oxc.rs/)
 
 ```sh
 npm run lint
 ```
 
-### Format With [Prettier](https://prettier.io)
+### Format With [Oxfmt](https://oxc.rs/)
 
 ```sh
 npm run format

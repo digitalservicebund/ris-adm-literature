@@ -62,7 +62,6 @@ test.describe("ULI Rubriken - DokumentTyp", () => {
       await expect(chipItem).toBeVisible();
 
       // when
-      // eslint-disable-next-line playwright/no-raw-locators
       const removeIcon = page.locator('svg[data-pc-section="removeicon"]');
       await expect(removeIcon).toBeVisible();
       await removeIcon.click();

@@ -287,7 +287,6 @@ const ariaLabel = props.ariaLabel ? props.ariaLabel : null;
 
 <template>
   <!-- Menu bar can be focused so that you can navigate between the buttons with arrow left and right -->
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
   <div
     ref="menuBar"
     :aria-label="ariaLabel + ' Button Leiste'"

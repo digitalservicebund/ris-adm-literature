@@ -23,7 +23,6 @@ function renderComponent(props?: {
 }
 
 describe("TitelSection", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   global.ResizeObserver = require("resize-observer-polyfill");
 
   test("renders all three textareas", async () => {

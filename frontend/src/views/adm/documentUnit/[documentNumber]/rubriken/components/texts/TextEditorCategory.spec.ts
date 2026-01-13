@@ -4,7 +4,6 @@ import { userEvent } from "@testing-library/user-event";
 import TextEditorCategory from "./TextEditorCategory.vue";
 
 describe("TextEditorCategory", async () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   global.ResizeObserver = require("resize-observer-polyfill");
 
   const renderComponent = (shouldShowButton: boolean) =>

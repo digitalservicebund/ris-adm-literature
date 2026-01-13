@@ -27,7 +27,6 @@ test.describe("SLI Rubriken – Dokumenttyp", () => {
       await overlay.getByRole("option", { name: "Bib" }).click();
 
       // then – chip displays Bib while overlay stays open
-      // eslint-disable-next-line playwright/no-raw-locators
       const chipList = page
         .getByTestId("document-type-autocomplete")
         .locator('[role="listbox"][aria-orientation="horizontal"]');
@@ -58,14 +57,12 @@ test.describe("SLI Rubriken – Dokumenttyp", () => {
         .getByRole("option", { name: "Bib" })
         .click();
 
-      // eslint-disable-next-line playwright/no-raw-locators
       const chipList = page
         .getByTestId("document-type-autocomplete")
         .locator('[role="listbox"][aria-orientation="horizontal"]');
       await expect(chipList.getByRole("option", { name: "Bib" })).toBeVisible();
 
       // when – user clicks the X icon on the chip
-      // eslint-disable-next-line playwright/no-raw-locators
       await chipList
         .getByRole("option", { name: "Bib", exact: true })
         .locator('svg[data-pc-section="removeicon"]')
@@ -104,7 +101,6 @@ test.describe("SLI Rubriken – Dokumenttyp", () => {
       await page.reload();
 
       // then – both chips are still visible
-      // eslint-disable-next-line playwright/no-raw-locators
       const chipList = page
         .getByTestId("document-type-autocomplete")
         .locator('[role="listbox"][aria-orientation="horizontal"]');

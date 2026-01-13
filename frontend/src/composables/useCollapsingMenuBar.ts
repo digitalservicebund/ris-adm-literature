@@ -11,7 +11,7 @@ function setIsLast(buttonList: EditorButton[]) {
 
 export function useCollapsingMenuBar(buttons: Ref<EditorButton[]>, maxBarEntries: Ref<number>) {
   const collapsedButtons = computed(() => {
-    let buttonList = new Array(...buttons.value);
+    let buttonList = [...buttons.value];
     while (buttonList.length > maxBarEntries.value) {
       const collapsableButtonsWithGroup = buttonList.filter(
         (button) => button.group != undefined && button.isCollapsable === true,

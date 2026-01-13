@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-> **Note** 
+> **Note**
 >
 > This proposal follows a non-public [RFC in our internal Confluence](https://digitalservicebund.atlassian.net/wiki/spaces/VER/pages/866615297/RFC+0001+-+Frontend+stack).
 
@@ -45,8 +45,8 @@ Additional tooling:
 - **Vite** as our development server and bundler
 - **Vitest** for unit testing
 - **Playwright** for end-to-end testing
-- **ESLint** for code quality checking and enforcing code standards
-- **Prettier** for formatting
+- **Oxlint** for linting
+- **Oxfmt** for formatting
 - **license-checker** for enforcing requirements for licenses in dependencies.
 
 ## Consequences

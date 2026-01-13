@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-node-access */
 import { userEvent } from "@testing-library/user-event";
 import { render, screen, waitFor } from "@testing-library/vue";
 import { flushPromises } from "@vue/test-utils";
@@ -21,7 +20,6 @@ export const mockDocumentForProsemirror = () => {
     return { ...rec, toJSON: () => rec };
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   class FakeDOMRectList extends DOMRect {
     item(index: any) {
       return (this as any)[index];
@@ -52,7 +50,6 @@ describe("text editor toolbar", async () => {
     await flushPromises();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   global.ResizeObserver = require("resize-observer-polyfill");
   const router = createRouter({
     history: createWebHistory(),

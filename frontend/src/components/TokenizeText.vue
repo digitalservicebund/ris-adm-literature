@@ -35,8 +35,6 @@ function handleTokenClick(token: Token) {
 </script>
 
 <template>
-  <!-- eslint-disable vue/require-v-for-key -->
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
   <span
     v-for="token in tokenizeText()"
     class="text-left"
