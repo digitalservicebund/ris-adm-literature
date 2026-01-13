@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
-import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,14 +16,12 @@ public class SchemaExecutor {
    *
    * @param schema The target {@link SchemaType} to switch to.
    * @param action The logic to execute while the target schema is active.
-   * @param <T>    The return type of the action.
-   * @return The result produced by the action.
    */
-  public <T> T executeInSchema(SchemaType schema, Supplier<T> action) {
+  public void executeInSchema(SchemaType schema, Runnable action) {
     SchemaType originalSchema = SchemaContextHolder.getSchema();
     try {
       SchemaContextHolder.setSchema(schema);
-      return action.get();
+      action.run();
     } finally {
       if (originalSchema != null) {
         SchemaContextHolder.setSchema(originalSchema);

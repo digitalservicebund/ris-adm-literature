@@ -55,7 +55,7 @@ public class TestLiteratureUnitContent {
       List.of(
         new AktivzitierungAdm(
           UUID.randomUUID(),
-          "docnum",
+          "KSNR999999990",
           "11",
           "periodikum",
           "zitstelle",
