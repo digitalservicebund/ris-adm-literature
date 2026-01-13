@@ -79,17 +79,17 @@ strict decoupling, as the citing service is never required for the operations of
 
 The integrity of the centralized registry relies on a strict division of data ownership and access rights.
 The `references_schema` (owned by `references_schema` user) maintains the global index of all referenceable entities.
-While the domain schemas (such as `adm` or `literature`) retain full ownership and control over their respective document tables,
-they grant `SELECT` and `REFERENCES` permissions to the `references_schema` user to facilitate cross-schema foreign keys.
-Conversely, domain users are granted read-only access to the passive views within the registry schema,
-allowing them to monitor incoming citations without gaining direct access to the internal data of other services.
+While the respective documentation unit owners (e.g. `adm` or `literature`) have full ownership and control over their respective tables,
+they grant `SELECT` and `REFERENCES` permissions to the `references_schema` user to enable cross-schema foreign keys.
+Conversely, the documentation unit users are granted read-only access to the passive views within the registry schema,
+allowing them to access referencing citations without gaining direct access to the internal data of other services.
 
-| Component / Table                                     | Schema Owner                 | Authorized Users              | Access Level           |
-|:------------------------------------------------------|:-----------------------------|:------------------------------|:-----------------------|
-| **Registry Tables** (`document_reference`)            | `references_schema`          | `adm`, `literature` `caselaw` | Full access            |
-| **Active Links** (`active_reference`)                 | `references_schema`          | `adm`, `literature` `caselaw` | Full access            |
-| **Domain Documents** (e.g., `adm.documentation_unit`) | `adm` `literature` `caselaw` | `references_schema`           | `REFERENCES` (for FKs) |
-| **Passive Views** (e.g., `adm_passive_reference`)     | `references_schema`          | `adm`, `literature` `caselaw` | `SELECT`               |
+| Component / Table                                      | Schema Owner                 | Authorized Users              | Access Level           |
+|:-------------------------------------------------------|:-----------------------------|:------------------------------|:-----------------------|
+| **Registry Tables** (`document_reference`)             | `references_schema`          | `adm`, `literature` `caselaw` | Full access            |
+| **Active Links** (`active_reference`)                  | `references_schema`          | `adm`, `literature` `caselaw` | Full access            |
+| **Service Documents** (e.g., `adm.documentation_unit`) | `adm` `literature` `caselaw` | `references_schema`           | `REFERENCES` (for FKs) |
+| **Passive Views** (e.g., `adm_passive_reference`)      | `references_schema`          | `adm`, `literature` `caselaw` | `SELECT`               |
 
 ---
 
