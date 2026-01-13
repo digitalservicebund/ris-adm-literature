@@ -20,7 +20,7 @@ const selectedInstitutionId = ref<string | undefined>(modelValue.value?.id);
 
 const searchFn = useInstitutionSearch(institutions);
 
-const { suggestions, onComplete, onDropdownClick, onItemSelect } = useAutoComplete(searchFn);
+const { suggestions, onComplete } = useAutoComplete(searchFn);
 
 function onModelValueChange(id: string | undefined) {
   selectedInstitutionId.value = id;
@@ -46,11 +46,9 @@ onMounted(async () => {
     typeahead
     dropdown
     dropdown-mode="blank"
-    :auto-option-focus="!selectedInstitutionId"
+    force-selection
     complete-on-focus
     @update:model-value="onModelValueChange"
     @complete="onComplete"
-    @dropdown-click="onDropdownClick"
-    @item-select="onItemSelect"
   />
 </template>

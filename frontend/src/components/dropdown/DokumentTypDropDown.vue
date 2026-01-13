@@ -39,7 +39,7 @@ onMounted(async () => {
     typeahead
     dropdown
     dropdown-mode="blank"
-    :auto-option-focus="!model"
+    force-selection
     complete-on-focus
     @complete="onComplete"
     @dropdown-click="onDropdownClick"
