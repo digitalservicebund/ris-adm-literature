@@ -86,3 +86,9 @@ allowing them to monitor incoming citations without gaining direct access to the
 | **Active Links** (`active_reference`)                 | `references_schema`          | `adm`, `literature` `caselaw` | Full access            |
 | **Domain Documents** (e.g., `adm.documentation_unit`) | `adm` `literature` `caselaw` | `references_schema`           | `REFERENCES` (for FKs) |
 | **Passive Views** (e.g., `adm_passive_reference`)     | `references_schema`          | `adm`, `literature` `caselaw` | `SELECT`               |
+
+---
+
+### Open Question:
+- How to handle references without a document number?
+- how to deal with unpublishing / deletion of referenced / referencing documents?
