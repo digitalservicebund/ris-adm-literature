@@ -111,6 +111,34 @@ class AdmReferenceSpecificationTest {
   }
 
   @Test
+  @DisplayName("toPredicate with fundstelle should add like clause on reference view")
+  void toPredicate_withZitatstelleOnly() {
+    // given
+    AdmReferenceSpecification spec = new AdmReferenceSpecification(
+      null,
+      null,
+      "Seite 2",
+      null,
+      null,
+      null,
+      null,
+      null
+    );
+    CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
+    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
+    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+
+    // when
+    Predicate predicate = spec.toPredicate(root, cb);
+
+    // then
+    String sql = SQLExtractor.from(
+      entityManager.getEntityManager().createQuery(query.where(predicate))
+    );
+    assertThat(sql).contains("lower(are1_0.fundstellen_combined) like ?");
+  }
+
+  @Test
   @DisplayName("toPredicate with aktenzeichen should use combined field")
   void toPredicate_withAktenzeichenOnly() {
     // given
