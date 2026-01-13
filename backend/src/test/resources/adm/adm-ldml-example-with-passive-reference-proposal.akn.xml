@@ -44,7 +44,8 @@
             "Portal requirements"
               * We provide all data that the portal needs for building a link to NeuRIS documents (type, document ID) 
               * We support arbitrary URIs (for non-NeuRIS references)
-              * We support plain text references (e.g. for non-NeuRIS references)
+              * We support plain text references (e.g. for non-NeuRIS references, also not yet in NeuRIS)
+                * ❓ how is this different to incomplete references?
 
             "API user's requirements"
               * We support data that a client can use to download the source (not relying on the link built in the portal's UI)
@@ -52,7 +53,10 @@
             "LDML Harmonization"
               * Each node has a domainTerm for the human reader
               * Each field's data is encoded as a value of a child element (not via attributes)
-              * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements and we're using a custom ris:reference for the actual data
+              * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements and we're using a custom <ris:reference> for the actual data
+                * 🚧 ❓ LDML's implicitReference is not meant to be referenced from within a reference (but it may be the only place where we can put "arbitrary" custom data on references
+                * ❓ LDML's <references> <activeRef> <passiveRef> -> could we use these?
+                * ❓ "analysys" may be a place for "inferred/implicit" information, not made explicit in the document
           -->
 
           
@@ -60,22 +64,30 @@
 
             <akn:implicitReference>
 
-              <ris:reference ris:domainTerm="Referenz"> 
+              <ris:referenz ris:domainTerm="Referenz"> 
+
+                  <!-- open tasks-
+                    use German terms => done
+                    type/art => art is enough to identify the document
+                    is "other" required? Alternative: take context (parent elements) into account => taken out
+                    textualIdentification needed => not needed now
+                  -->
 
                   <!-- 
                     identifiers of the other (here: source) document
                   -->
   
-                  <ris:referenceDirection risDomainTerm="Aktiv/Passivverweis">passive</ris:referenceDirection> <!-- necessary in order to get a link (❓ ask Portal) -->
-                  <!-- ❓ is it "type"? whot's needed for identifying? both kind and type?-->
-                  <!-- caselaw: doctype is "Urteil" -->
-                  <!-- maybe flattening the juris dimensions would be possible? -->
-                  <ris:otherDocumentType risDomainTerm="Art der Referenz">uli</ris:otherDocumentType> <!-- mandatory --> <!-- necessary in order to get a link-->
+                  <ris:richtung risDomainTerm="Richtung der Referenz">passiv</ris:richtung> <!-- necessary in order to get a link (❓ ask Portal) -->
+
+                  <!-- possible values in caselaw: caselaw, as "/caselaw/documentNumer" would be enough-->
+                  <!-- possible values in VALID: uli/sli/adm, as "/uli/documentNumer" would be enough-->
+                  <ris:referenzArt risDomainTerm="Art der Referenz">uli</ris:referenzArt> <!-- mandatory --> <!-- necessary in order to get a link-->
                   <!-- for a link, also one of these two is necessary -->
-                  <ris:otherDocumentId ris:domainTerm="Dokumentnummer">KSLU105121222</ris:otherDocumentId> <!-- rather not allow KSLUxxxxx#anchor (e.g. for "Randnummern"), but have specific <anchorlink or similar> -->
-                  <ris:otherDocumentUri ris:domainTerm="Dokument-URI">.../.../</ris:otherDocumentUri> <!-- non-NeuRIS links go here -->
+                  <ris:dokumentnummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentnummer> <!-- rather not allow KSLUxxxxx#anchor (e.g. for "Randnummern"), but have specific <anchorlink or similar> -->
+                  <ris:uri ris:domainTerm="Dokument-URI">.../.../something.something</ris:uri> <!-- non-NeuRIS links go here -->
                   
-                  <ris:otherDocumentTextualIdentification></ris:otherDocumentTextualIdentification><!-- this does not make a link (e.g. keywords that helps the documentalist; old norms references ) -->
+                  <!--🚧 not necessary now; not used in caselow nor VALID -->
+                  <ris:notiz>Announcement by body X from Feb 2026</ris:notiz><!-- this does not make a link (e.g. keywords that helps the documentalist identify the document; old norms references ) -->
 
                   <!-- 
                     where would the API user go to get the document? 
@@ -83,7 +95,8 @@
                     🚧: not agreed, yet
                   -->
 
-                  <ris:otherDocumentRelativePath ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:otherDocumentRelativePath>
+                  <!-- this should match the URI in the <akn:identification> work/expression FRBR-URIs eventually-->
+                  <ris:relativerPfad ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:relativerPfad>
   
                   <!-- 
                     metadata of the source document
@@ -91,7 +104,7 @@
                     (🚧 Missing: some description/logics about how the portal would "format" this information in a label (e.g. if there is an author, put it first; put commas between the non-empty data)
                   -->  
                   
-                  
+                  <!-- 🚧 do we need the Abkürzung? As basis for the lookup tables-->
                   <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung> <!-- ❓ is there a better domain term for "Typ", here? -->  <!-- up to now: docKind is "norms" or "caselaw" etc. while docType one of "uli", "sli" etc. --> 
                   <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp> <!-- shown by portal if exists-->
           Dokumenttyp      
@@ -111,7 +124,9 @@
                     <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle> <!-- shown by portal if exists-->
                   </ris:fundstelle>
 
-              </ris:reference>
+                  <!-- 🚧 caselaw "fundstelle" has more fields -->
+
+              </ris:referenz>
               
           </akn:implicitReference>
    
