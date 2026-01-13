@@ -61,7 +61,7 @@ public class ActiveReferenceService {
       .stream()
       .map(ar -> new DocumentReference(ar.getTarget()))
       .toList();
-    List<ActiveReferenceEntity> activeReferenceEntities = targets
+    List<ActiveReferenceEntity> activeReferenceEntitiesToCreate = targets
       .stream()
       .filter(ar -> !existingTargets.contains(ar))
       .map(target -> {
@@ -74,10 +74,10 @@ public class ActiveReferenceService {
       })
       .toList();
     // # 3. Saves all newly created active references
-    activeReferenceRepository.saveAll(activeReferenceEntities);
+    activeReferenceRepository.saveAll(activeReferenceEntitiesToCreate);
     log.info(
-      "Saved {} active references for source {}.",
-      activeReferenceEntities.size(),
+      "Saved {} newly created active references for source {}.",
+      activeReferenceEntitiesToCreate.size(),
       sourceDocumentReference
     );
   }
