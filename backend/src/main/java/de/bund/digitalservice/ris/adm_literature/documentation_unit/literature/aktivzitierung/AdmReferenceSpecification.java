@@ -43,7 +43,7 @@ public record AdmReferenceSpecification(
     addPredicate(predicates, from.get("documentNumber"), documentNumber, criteriaBuilder);
     var admIndex = from.get("admIndex");
     addPredicate(predicates, admIndex.get("fundstellenCombined"), periodikum, criteriaBuilder);
-    addPredicate(predicates, admIndex.get("zitierdatenCombined"), zitatstelle, criteriaBuilder);
+    addPredicate(predicates, admIndex.get("fundstellenCombined"), zitatstelle, criteriaBuilder);
     addPredicate(predicates, admIndex.get("inkrafttretedatum"), inkrafttretedatum, criteriaBuilder);
     addPredicate(
       predicates,

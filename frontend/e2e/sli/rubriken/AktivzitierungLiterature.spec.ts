@@ -798,6 +798,13 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
 
         // Then: result should still be visible
         await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with Zitatstelle
+        await aktiv.getByRole('textbox', { name: 'Zitatstelle' }).fill('789')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result should still be visible
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
       })
 
       test('ADM search shows no-results message when nothing matches', async ({ page }) => {
