@@ -48,15 +48,24 @@
                 * ❓ how is this different to incomplete references?
 
             "API user's requirements"
-              * We support data that a client can use to download the source (not relying on the link built in the portal's UI)
+              * We provide data that a client can use to download the source (without relying on the link built in the portal's UI)
+
+            "Stream requirements"
+              * We support all data that the streams need to have in their passive references
+              * The stream's requirements may overlap, but all the "metadata" fields will be optional in the schema
 
             "LDML Harmonization"
+              * We use German node names
               * Each node has a domainTerm for the human reader
               * Each field's data is encoded as a value of a child element (not via attributes)
               * We're staying in the LDML standard's <akn:otherReferences> and <akn:implicitReferences> elements and we're using a custom <ris:reference> for the actual data
-                * 🚧 ❓ LDML's implicitReference is not meant to be referenced from within a reference (but it may be the only place where we can put "arbitrary" custom data on references
-                * ❓ LDML's <references> <activeRef> <passiveRef> -> could we use these?
-                * ❓ "analysys" may be a place for "inferred/implicit" information, not made explicit in the document
+                * ❓ LDML's implicitReference is maybe not meant to be referenced from within a reference (but it may be the only place where we can put "arbitrary" custom data on references
+                  * ❓ LDML's <references> <activeRef> <passiveRef> -> could we use these?
+                  * ❓ "analysys" may be a place for "inferred/implicit" information, not made explicit in the document
+
+            "Additional rules on the XML"
+              * We don't add (parent node) context information to the node name, but error on the side of simple node names.
+                * <reference></dokumentnummer></reference> is good enough information for not taking </dokumentnummer> for the current document's number
           -->
 
           
@@ -66,65 +75,48 @@
 
               <ris:referenz ris:domainTerm="Referenz"> 
 
-                  <!-- open tasks-
-                    use German terms => done
-                    type/art => art is enough to identify the document
-                    is "other" required? Alternative: take context (parent elements) into account => taken out
-                    textualIdentification needed => not needed now
-                  -->
-
                   <!-- 
-                    identifiers of the other (here: source) document
+                    active/passive and identifiers of the referenced (here: source) document (from NeuRIS internal links to external links to a free-text fallback)
                   -->
-  
-                  <ris:richtung risDomainTerm="Richtung der Referenz">passiv</ris:richtung> <!-- necessary in order to get a link (❓ ask Portal) -->
-
-                  <!-- possible values in caselaw: caselaw, as "/caselaw/documentNumer" would be enough-->
-                  <!-- possible values in VALID: uli/sli/adm, as "/uli/documentNumer" would be enough-->
-                  <ris:referenzArt risDomainTerm="Art der Referenz">uli</ris:referenzArt> <!-- mandatory --> <!-- necessary in order to get a link-->
-                  <!-- for a link, also one of these two is necessary -->
-                  <ris:dokumentnummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentnummer> <!-- rather not allow KSLUxxxxx#anchor (e.g. for "Randnummern"), but have specific <anchorlink or similar> -->
-                  <ris:uri ris:domainTerm="Dokument-URI">.../.../something.something</ris:uri> <!-- non-NeuRIS links go here -->
+                  <ris:richtung risDomainTerm="Richtung der Referenzierung">passiv</ris:richtung>
                   
-                  <!--🚧 not necessary now; not used in caselow nor VALID -->
-                  <ris:notiz>Announcement by body X from Feb 2026</ris:notiz><!-- this does not make a link (e.g. keywords that helps the documentalist identify the document; old norms references ) -->
+
+                  <ris:referenzArt risDomainTerm="Art der Referenz">uli</ris:referenzArt> <!-- necessary in order to get a NeuRIS link--> <!-- no further type/kind required for identification in caselaw/valid -->
+                  <ris:dokumentnummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentnummer> <!-- necessary in order to get a NeuRIS link--> <!-- not meant for anchors like "KSLUxxxxx#anchor" -->
+
+                  <ris:uri ris:domainTerm="Dokument-URI">.../.../something.something</ris:uri> <!-- necessary for Non-NeuRIS links -->
+                  <ris:notiz>Announcement by body X from Feb 2026</ris:notiz><!-- this does not make a link --> <!-- it's not to be interpreted by a machine, but meant as a fallback field for any arbitrary text that helps the documentalist identify the document -->
 
                   <!-- 
-                    where would the API user go to get the document? 
-                    
-                    🚧: not agreed, yet
+                    API user: where to get the document?
                   -->
-
-                  <!-- this should match the URI in the <akn:identification> work/expression FRBR-URIs eventually-->
-                  <ris:relativerPfad ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:relativerPfad>
+                  <ris:relativerPfad ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:relativerPfad> <!-- this should match the URI in the <akn:identification> work/expression FRBR-URIs eventually-->
   
                   <!-- 
                     metadata of the source document
-
-                    (🚧 Missing: some description/logics about how the portal would "format" this information in a label (e.g. if there is an author, put it first; put commas between the non-empty data)
                   -->  
+                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung> 
+                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
+                  Dokumenttyp      
                   
-                  <!-- 🚧 do we need the Abkürzung? As basis for the lookup tables-->
-                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung> <!-- ❓ is there a better domain term for "Typ", here? -->  <!-- up to now: docKind is "norms" or "caselaw" etc. while docType one of "uli", "sli" etc. --> 
-                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp> <!-- shown by portal if exists-->
-          Dokumenttyp      
+                  <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel>
                   
-                  <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel> <!-- shown by portal if exists-->
-
-                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string--> <!-- shown by portal if exists-->
+                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string--> 
                   
-                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr> <!-- shown by portal if exists-->
+                  <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr>
                   
-                  <!-- fundstelle is specific to ULI, absent in SLI -->
+                  <!-- VALID: fundstelle is specific to ULI, absent in SLI -->
+                  <!-- caselaw: "fundstelle" has more fields -->
                   <ris:fundstelle domainTerm="Fundstelle">
                     <ris:periodikum domainTerm="Periodikum">
                       <ris:titelAbkuerzung domainTerm="Titel, abgekürzt">ErgoMed</ris:titelAbkuerzung>
-                      <ris:titel domainTerm="Titel">Ergonomics and Medicine (that's a guess)</ris:titel> <!-- shown by portal if exists-->
+                      <ris:titel domainTerm="Titel">Ergonomics and Medicine (that's a guess)</ris:titel>
                     </ris:periodikum>
-                    <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle> <!-- shown by portal if exists-->
+                    <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle>
                   </ris:fundstelle>
 
-                  <!-- 🚧 caselaw "fundstelle" has more fields -->
+                  <!-- 🚧 not agreed on -->
+                  <ris:standardzusammenfassung>Ursula Schies, Andreas Albrecht, Gesundheitsgefährdung durch Taubenkot, Aufsatz, Ergonomics and Medicine (that's a guess), 2003, 166-277</ris:standardzusammenfassung><!-- suggestion for a sensible default of what the client could show (just a suggestion!) -->
 
               </ris:referenz>
               
@@ -132,7 +124,7 @@
    
         </akn:otherReferences>
 
-
+        
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
         <ris:meta>
