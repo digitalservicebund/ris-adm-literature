@@ -2,9 +2,6 @@
   "name": "ris-adm-vwv-frontend",
   "version": "0.0.0",
   "private": true,
-  "engines": {
-    "node": "25.2.1"
-  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,8 +17,8 @@
     "type-check": "vue-tsc --noEmit",
     "lint": "oxlint --fix",
     "lint:check": "oxlint",
-    "format": "prettier --write src/ e2e/",
-    "format:check": "prettier --check src/ e2e/",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "audit:licences": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv",
     "preinstall": "echo 'Please disable script execution: npm config set ignore-scripts true' && exit 1"
   },
@@ -84,6 +81,7 @@
     "eslint-plugin-vue": "^10.6.2",
     "jsdom": "^26.1.0",
     "license-checker-rseidelsohn": "^4.4.2",
+    "oxfmt": "^0.24.0",
     "oxlint": "^1.39.0",
     "pinia": "^3.0.4",
     "prettier": "^3.7.4",
@@ -98,5 +96,8 @@
     "vite": {
       "esbuild": "0.25.0"
     }
+  },
+  "engines": {
+    "node": "25.2.1"
   }
 }
