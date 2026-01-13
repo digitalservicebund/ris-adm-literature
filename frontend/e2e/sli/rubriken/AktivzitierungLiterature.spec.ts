@@ -771,6 +771,40 @@ test.describe('SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)', () 
         // Then: 1 result should be visible
         await expect(items).toHaveCount(1)
         await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with normgeber
+        const normgeber = aktiv.getByRole('combobox', { name: 'Normgeber' })
+        await normgeber.click()
+        await expect(page.getByRole('listbox', { name: 'Optionsliste' })).toBeVisible()
+        await page.getByRole('option', { name: 'Erstes Organ' }).click()
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result should still be visible
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with aktenzeichen
+        await aktiv.getByRole('textbox', { name: 'Aktenzeichen' }).fill('Akt 1')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result should still be visible
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with dokumenttyp
+        const dokumenttyp = aktiv.getByRole('combobox', { name: 'Dokumenttyp' })
+        await dokumenttyp.click()
+        await expect(page.getByRole('listbox', { name: 'Optionsliste' })).toBeVisible()
+        await page.getByRole('option', { name: 'VR' }).click()
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result should still be visible
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
+
+        // When: narrowing the search with Zitatstelle
+        await aktiv.getByRole('textbox', { name: 'Zitatstelle' }).fill('789')
+        await aktiv.getByRole('button', { name: 'Suchen' }).click()
+
+        // Then: result should still be visible
+        await expect(results.getByText('KSNR000000004')).toBeVisible()
       })
 
       test('ADM search shows no-results message when nothing matches', async ({ page }) => {

@@ -5,7 +5,9 @@ on:
         required: true
         type: string
     secrets:
-      DEPLOY_KEY:
+      GITOPS_NEURIS_APP_ID:
+        required: true
+      GITOPS_NEURIS_APP_PRIVATE_KEY:
         required: true
       ARGOCD_PIPELINE_PASSWORD:
         required: true
@@ -34,15 +36,16 @@ jobs:
     permissions:
       id-token: write # Enable OIDC for gitsign
     steps:
-      - uses: chainguard-dev/actions/setup-gitsign@3e8a2a226fad9e1ecbf2d359b8a7697554a4ac6d
+      - uses: chainguard-dev/actions/setup-gitsign@7d647f470c4d3692286221bd17ca78206976a61c
       - name: Deploy new images
-        uses: digitalservicebund/argocd-deploy@4fac1bb67c92ed168f6d9b22f8779ce241a9e412 # v1.0.0
+        uses: digitalservicebund/argocd-deploy@4e758f584953506c571951ffcba33d6a6246e856
         with:
           environment: staging
           version: ${{ inputs.container-image-version }}
           deploying_repo: ris-adm-literature-frontend,ris-adm-literature-backend
           infra_repo: ris-adm-literature-infra
-          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          github_app_id: ${{ secrets.GITOPS_NEURIS_APP_ID }}
+          github_app_private_key: ${{ secrets.GITOPS_NEURIS_APP_PRIVATE_KEY }}
           app: ris-adm-literature-staging
           argocd_pipeline_password: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
           argocd_server: ${{ secrets.ARGOCD_SERVER }}
