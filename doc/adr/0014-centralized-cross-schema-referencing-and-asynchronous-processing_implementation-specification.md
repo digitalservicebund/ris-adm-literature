@@ -1,4 +1,4 @@
-# ADR 0014: Centralized cross-schema referencing and asynchronous processing
+# ADR 0014: Centralized cross-schema referencing and asynchronous processing implementation specification
 
 Date: 2026-01-13
 
