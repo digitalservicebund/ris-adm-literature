@@ -8,29 +8,29 @@ Accepted
 
 ## Context
 
-Our application architecture consists of multiple services (ADM & Literature, Caselaw, possibly more) that share a single database but operate in their own schemas.
+Our application architecture consists of multiple services (ADM & Literature, Caselaw, possibly more) that share a single database but process logic in their own schemas.
 To satisfy the requirements of `Zitierungen`, documents in one schema need to reference documents in others (e.g., a literature entry citing an administrative regulation).
 These references must be asynchronously processed in the respective services.
 
 We identified the following requirements:
 1.  **Referential Integrity:** Referenced documents must exist in their respective schemas.
 2.  **Bi-directional Discovery:** Services must be able to identify both their outgoing (**active**) and incoming (**passive**) references.
-3.  **Cross-Schema Communication:** Since schemas are isolated, we need a controlled way to "bridge" them without giving every service user full access to every other schema.
-4.  **Asynchronous Processing:** If a document's reference is updated, the service of the document's passive reference must process the change asynchronously. This should not block the main publication transaction.
+3.  **Cross-Schema Communication:** Since schemas are isolated, we need a way to "bridge" them without giving every service user full access to every other schema.
+4.  **Asynchronous Processing:** If a document's reference is updated, the service of the document's passive reference must process the change asynchronously. This should not block the main publication transaction in the other service.
 
 ## Decision
 
 We have implemented a *centralized registry model* via the `references_schema`.
 
 ### 1. Database Design
-The `references_schema` acts as the single source of truth for all cross-domain links.
-* **`document_reference` table:** A registry of all referenceable documents. It uses a `CHECK` constraint to ensure exactly one foreign key to a domain table (e.g., `adm.documentation_unit`) is populated.
+The `references_schema` acts as the single source of truth for all references.
+* **`document_reference` table:** A registry of all referenceable documents. It uses a `CHECK` constraint to ensure exactly one foreign key to a table in another schema (e.g., `adm.documentation_unit`) is populated.
 * **`active_reference` table:** A table representing the directed reference (Source -> Target).
-* **Passive Views:** For every domain, we provide a view (e.g., `adm_passive_reference`) that filters the global references for incoming links relevant only to that service.
+* **Passive Views:** For every document category, we provide a view (e.g., `adm_passive_reference`) that filters the global references for incoming links relevant only to that service.
 ![references_tables.png](references_tables.png)
 
 ### 2. Technical Implementation
-* **Context Switching:** We use a `SchemaExecutor` utility to programmatically switch the `SchemaContextHolder` to the `REFERENCES` schema during the publication flow.
+* **Context Switching:** We use a `SchemaExecutor` to programmatically switch the `SchemaContextHolder` to the `REFERENCES` schema during the publication flow.
 ```
 public void executeInSchema(SchemaType schema, Runnable action) {
   SchemaType originalSchema = SchemaContextHolder.getSchema();
