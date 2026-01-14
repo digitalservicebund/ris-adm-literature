@@ -53,8 +53,8 @@ onMounted(async () => {
     append-to="self"
     typeahead
     dropdown
+    force-selection
     complete-on-focus
-    :auto-option-focus="!selectedZitierArtId"
     @update:model-value="onModelValueChange"
     @complete="onComplete"
   />

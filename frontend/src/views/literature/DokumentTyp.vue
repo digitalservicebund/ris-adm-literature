@@ -70,7 +70,6 @@ const openOverlay = () => {
     fluid
     force-selection
     disable-dropdown-tab-navigation
-    auto-option-focus
     @complete="onComplete"
     @focus="openOverlay"
   />
