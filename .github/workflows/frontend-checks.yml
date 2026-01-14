@@ -35,7 +35,9 @@ jobs:
       - name: Install dependencies (with bun for speed)
         working-directory: ./frontend
         run: |
-          curl -fsSL https://bun.sh/install | bash 
+          curl -fsSL https://bun.sh/install | bash
+          source /home/runner/.bash_profile 
+          which bun
           bun install ci
 
       - name: Lint check
