@@ -24,16 +24,24 @@ jobs:
           path: |
             ./frontend/node_modules
           key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
+      # - name: Install dependencies
+      #   if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     npm ci
+      #   working-directory: ./frontend
+      
+      - name: Install dependencies (via pnpm for speed)
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
-          npm ci
+          wget -qO- https://get.pnpm.io/install.sh | sh -
+          pnpm install
         working-directory: ./frontend
+      
       - name: Lint check
-        run: npm run lint:check
+        run: pnpm run lint:check
         working-directory: ./frontend
       - name: Format check
-        run: npm run format:check
+        run: pnpm run format:check
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
