@@ -36,7 +36,7 @@ jobs:
         working-directory: ./frontend
         run: |
           curl -fsSL https://bun.sh/install | bash
-          source /home/runner/.bash_profile 
+          echo "PATH=$PATH:~/.bun/bin/" >> "$GITHUB_ENV"
           which bun
           echo $PATH
           bun install ci
