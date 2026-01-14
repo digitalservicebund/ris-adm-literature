@@ -28,7 +28,7 @@ jobs:
       #   run: |
       #     npm ci
       #   working-directory: ./frontend
-      
+
       # btw: once this works, we may even use it for the linting and formatting
       #      as long as we don't run our app
       - name: Install bun for library management and node scripts (not for running/building!)
@@ -37,6 +37,7 @@ jobs:
         run: |
           curl -fsSL https://bun.sh/install | bash
           echo "~/.bun/bin" >> $GITHUB_PATH
+          echo $PATH
       - name: Install dependencies
         # if: steps.node-modules-cache.outputs.cache-hit != 'true'
         working-directory: ./frontend
@@ -45,13 +46,12 @@ jobs:
 
       - name: Lint check
         working-directory: ./frontend
-        run:  |
+        run: |
           echo $PATH
-          which bun
-          ~/.bun/bin/bun run lint:check
+          bun run lint:check
       - name: Format check
         working-directory: ./frontend
-        run: ~/.bun/bin/bun run format:check
+        run: bun run format:check
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
