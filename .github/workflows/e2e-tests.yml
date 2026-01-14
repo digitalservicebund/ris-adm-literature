@@ -71,18 +71,26 @@ jobs:
       - name: Start backend
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
-      # setup frontend
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
+        # setup frontend
+        
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        id: node-modules-cache
         with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-
-      - name: Install dependencies
+          path: |
+            ./frontend/node_modules
+          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
+      # Not intended for building/running the application!
+      - name: Install bun for library management and node scripts (not for running/building)
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "~/.bun/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: bun install ci
 
       - name: Get Playwright version
         working-directory: ./frontend
