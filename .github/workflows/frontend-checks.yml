@@ -25,20 +25,22 @@ jobs:
             ./frontend/node_modules
           key: modules-${{ hashFiles('./frontend/package-lock.json') }}
       # - name: Install dependencies
-      #   if: steps.node-modules-cache.outputs.cache-hit != 'true'
       #   run: |
       #     npm ci
       #   working-directory: ./frontend
-
+      
       # btw: once this works, we may even use it for the linting and formatting
       #      as long as we don't run our app
-      - name: Install dependencies (with bun for speed)
+      - name: Install bun for library management and node scripts (not for running/building!)
+        # use ~/.bun/bin/bun for calling the binary directly
         working-directory: ./frontend
         run: |
           curl -fsSL https://bun.sh/install | bash
-          echo "PATH=$PATH:~/.bun/bin/" >> "$GITHUB_ENV"
-          which bun
-          echo $PATH
+          echo "~/.bun/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        # if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: |
           bun install ci
 
       - name: Lint check
@@ -46,7 +48,7 @@ jobs:
         run:  |
           echo $PATH
           which bun
-          bun run lint:check
+          ~/.bun/bin/bun run lint:check
       - name: Format check
         working-directory: ./frontend
         run: ~/.bun/bin/bun run format:check
