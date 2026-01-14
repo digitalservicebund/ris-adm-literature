@@ -34,14 +34,14 @@ jobs:
         # if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
           wget -qO- https://get.pnpm.io/install.sh | sh -
-          /home/runner/.local/share/pnpm install ci
+          /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm install ci
         working-directory: ./frontend
       
       - name: Lint check
-        run: /home/runner/.local/share/pnpm run lint:check
+        run: /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm run lint:check
         working-directory: ./frontend
       - name: Format check
-        run: /home/runner/.local/share/pnpm run format:check
+        run: /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm run format:check
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
