@@ -37,6 +37,7 @@ jobs:
         run: |
           curl -fsSL https://bun.sh/install | bash 
           export PATH="~/.bun/bin/:$PATH"
+          source /home/runner/.bash_profile
           bun install
 
       - name: Lint check
