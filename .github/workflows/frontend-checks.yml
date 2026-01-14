@@ -33,6 +33,7 @@ jobs:
       # btw: once this works, we may even use it for the linting and formatting
       #      as long as we don't run our app
       - name: Install dependencies (with bun for speed)
+        working-directory: ./frontend
         run: |
           curl -fsSL https://bun.sh/install | bash 
           export PATH="~/.bun/bin/:$PATH"
