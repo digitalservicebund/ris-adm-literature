@@ -1,0 +1,76 @@
+on:
+  workflow_call:
+    inputs:
+      container-image-version:
+        required: true
+        type: string
+    secrets:
+      GITOPS_NEURIS_APP_ID:
+        required: true
+      GITOPS_NEURIS_APP_PRIVATE_KEY:
+        required: true
+      ARGOCD_PIPELINE_PASSWORD:
+        required: true
+      ARGOCD_SERVER:
+        required: true
+      METRICS_DEPLOYMENT_WEBHOOK_URL:
+        required: true
+      METRICS_WEBHOOK_TOKEN:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      SENTRY_ORG:
+        required: true
+      SENTRY_PROJECT:
+        required: true
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: true
+    environment: staging
+    permissions:
+      id-token: write # Enable OIDC for gitsign
+    steps:
+      - uses: chainguard-dev/actions/setup-gitsign@7d647f470c4d3692286221bd17ca78206976a61c
+      - name: Deploy new images
+        uses: digitalservicebund/argocd-deploy@4e758f584953506c571951ffcba33d6a6246e856
+        with:
+          environment: staging
+          version: ${{ inputs.container-image-version }}
+          deploying_repo: ris-adm-literature-frontend,ris-adm-literature-backend
+          infra_repo: ris-adm-literature-infra
+          github_app_id: ${{ secrets.GITOPS_NEURIS_APP_ID }}
+          github_app_private_key: ${{ secrets.GITOPS_NEURIS_APP_PRIVATE_KEY }}
+          app: ris-adm-literature-staging
+          argocd_pipeline_password: ${{ secrets.ARGOCD_PIPELINE_PASSWORD }}
+          argocd_server: ${{ secrets.ARGOCD_SERVER }}
+          argocd_sync_timeout: 300
+      - name: Track deploy
+        continue-on-error: true
+        uses: digitalservicebund/track-deployment@5a2815e150e1268983aac5ca04c8c046ed1b614a # v1.0.0
+        with:
+          project: ris-adm-literature
+          environment: staging
+          metrics_deployment_webhook_url: ${{ secrets.METRICS_DEPLOYMENT_WEBHOOK_URL }}
+          metrics_webhook_token: ${{ secrets.METRICS_WEBHOOK_TOKEN }}
+      - name: Send status to Slack
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+        if: ${{ failure() }}
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Create Sentry release
+        uses: getsentry/action-release@c7b892f71890f69a78665ce3549545be34f24466
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: staging

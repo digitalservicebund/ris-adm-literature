@@ -1,0 +1,57 @@
+on:
+  workflow_call:
+    inputs:
+      run-id:
+        required: true
+        type: string
+      container-registry:
+        required: true
+        type: string
+      image-ref:
+        required: true
+        type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  frontend-push-image-to-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v5
+        with:
+          path: /tmp/images
+          key: docker-frontend-images-cache-${{ inputs.run-id }}
+          restore-keys: docker-frontend-images-cache-${{ inputs.run-id }}
+      - name: load image
+        shell: bash
+        run: docker load -i /tmp/images/frontend-image.tar
+      - name: Log into container registry
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
+        with:
+          registry: ${{ inputs.container-registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish frontend container image
+        run: docker push ${{ inputs.image-ref }}
+      - name: Install cosign
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad
+      - name: Sign the published Docker image
+        run: cosign sign --yes ${{ inputs.image-ref }}
+      - name: Download cosign vulnerability scan record
+        uses: actions/download-artifact@v7
+        with:
+          name: "frontend-cosign-vuln.json"
+      - name: Attest vulnerability scan
+        run: cosign attest --yes --replace --predicate frontend-cosign-vuln.json --type vuln ${{ inputs.image-ref }}
+      - name: Send status to Slack
+        # Third-party action, pin to commit SHA!
+        # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+        uses: digitalservicebund/notify-on-failure-gha@814d0c4b2ad6a3443e89c991f8657b10126510bf # v1.5.0
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        with:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
