@@ -1,6 +1,6 @@
 # 2. Frontend stack
 
-Date: 2025-01-22
+Date: 2026-01-14 (Previous version: 2025-01-22)
 
 ## Status
 
