@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
+      # - name: Setup Node
+      #   uses: actions/setup-node@v6
+      #   with:
+      #     node-version-file: ./frontend/.node-version
+      #     cache: npm
+      #     cache-dependency-path: ./frontend/package-lock.json
       - name: Cache node_modules
         uses: actions/cache@v5
         id: node-modules-cache
