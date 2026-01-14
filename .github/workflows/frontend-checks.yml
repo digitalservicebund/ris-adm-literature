@@ -66,7 +66,7 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
-          npm install ci
+          npm ci
         working-directory: ./frontend
       - name: Build
         run: npm run build
