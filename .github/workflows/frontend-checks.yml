@@ -29,7 +29,7 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         working-directory: ./frontend
         run: |
-          bun install --frozen-lockfile
+          bun install --frozen-lockfile --ignore-scripts
       - name: Lint check
         working-directory: ./frontend
         run: |
@@ -99,7 +99,7 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
-          bun install --frozen-lockfile
+          bun install --frozen-lockfile --ignore-scripts
         working-directory: ./frontend
       - name: Unit tests
         run: |
@@ -148,7 +148,7 @@ jobs:
           curl -fsSL https://bun.sh/install | bash
           echo "~/.bun/bin" >> $GITHUB_PATH
       - name: Install node modules
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --ignore-scripts
         working-directory: ./frontend
       - name: Run coverage
         run: bun run test:coverage
@@ -187,7 +187,7 @@ jobs:
           curl -fsSL https://bun.sh/install | bash
           echo "~/.bun/bin" >> $GITHUB_PATH
       - name: Install node modules
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --ignore-scripts
         working-directory: ./frontend
       - name: Run license scanner
         run: bun run audit:licences
