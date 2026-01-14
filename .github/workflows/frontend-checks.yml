@@ -38,11 +38,15 @@ jobs:
           curl -fsSL https://bun.sh/install | bash
           source /home/runner/.bash_profile 
           which bun
+          echo $PATH
           bun install ci
 
       - name: Lint check
         working-directory: ./frontend
-        run:  bun run lint:check
+        run:  |
+          echo $PATH
+          which bun
+          bun run lint:check
       - name: Format check
         working-directory: ./frontend
         run: ~/.bun/bin/bun run format:check
