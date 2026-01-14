@@ -31,10 +31,10 @@ jobs:
       #   working-directory: ./frontend
       
       - name: Install dependencies (via pnpm for speed)
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        # if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
           wget -qO- https://get.pnpm.io/install.sh | sh -
-          pnpm install
+          pnpm install ci
         working-directory: ./frontend
       
       - name: Lint check
