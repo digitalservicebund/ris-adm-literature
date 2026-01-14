@@ -1,27 +1,27 @@
 <script lang="ts" setup>
-import TokenizeText from '@/components/TokenizeText.vue'
-import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-import MaterialSymbolsClose from '~icons/material-symbols/close'
+import TokenizeText from "@/components/TokenizeText.vue";
+import { type FieldOfLaw } from "@/domain/fieldOfLaw";
+import MaterialSymbolsClose from "~icons/material-symbols/close";
 
 defineProps<{
-  fieldsOfLaw: FieldOfLaw[]
-}>()
+  fieldsOfLaw: FieldOfLaw[];
+}>();
 
 const emit = defineEmits<{
-  'node:remove': [node: FieldOfLaw]
-  'node:clicked': [node: FieldOfLaw]
-}>()
+  "node:remove": [node: FieldOfLaw];
+  "node:clicked": [node: FieldOfLaw];
+}>();
 
 function removeFieldOfLaw(fieldOfLaw: FieldOfLaw) {
-  emit('node:remove', fieldOfLaw)
+  emit("node:remove", fieldOfLaw);
 }
 
 function fieldOfLawClicked(fieldOfLaw: FieldOfLaw) {
-  emit('node:clicked', fieldOfLaw)
+  emit("node:clicked", fieldOfLaw);
 }
 
 function isNotationNew(fieldOfLaw: FieldOfLaw) {
-  return fieldOfLaw.notation && fieldOfLaw.notation == 'NEW'
+  return fieldOfLaw.notation && fieldOfLaw.notation == "NEW";
 }
 </script>
 

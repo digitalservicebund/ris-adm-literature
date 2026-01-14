@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import { computed } from 'vue'
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
-import { useEditableList } from '@/views/adm/documentUnit/[documentNumber]/useEditableList'
-import FundstelleListItem from './FundstelleListItem.vue'
-import FundstelleInput from './FundstelleInput.vue'
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import { computed } from "vue";
+import Button from "primevue/button";
+import IconAdd from "~icons/material-symbols/add";
+import { useEditableList } from "@/views/adm/documentUnit/[documentNumber]/useEditableList";
+import FundstelleListItem from "./FundstelleListItem.vue";
+import FundstelleInput from "./FundstelleInput.vue";
 
-const store = useAdmDocUnitStore()
+const store = useAdmDocUnitStore();
 
 const fundstellenList = computed({
   get: () => store.documentUnit!.fundstellen ?? [],
   set: (newValue) => {
-    store.documentUnit!.fundstellen = newValue
+    store.documentUnit!.fundstellen = newValue;
   },
-})
+});
 
 const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
-  useEditableList(fundstellenList)
+  useEditableList(fundstellenList);
 </script>
 
 <template>

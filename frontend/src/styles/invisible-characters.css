@@ -6,7 +6,7 @@
   color: #4466ff;
 }
 .invisible--tab:before {
-  content: '→';
+  content: "→";
   display: inline;
   position: absolute;
 }
@@ -14,12 +14,12 @@
   vertical-align: text-top;
 }
 .invisible--nb-space:before {
-  content: '°';
+  content: "°";
   line-height: 0;
   top: 4px;
 }
 .invisible--blockquote:before {
-  content: '“';
+  content: "“";
   font-weight: bold;
   font-size: x-large;
   margin-left: 30px;

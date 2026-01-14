@@ -2,17 +2,17 @@ import type {
   AdmDocumentationUnit,
   AdmDocumentUnitResponse,
   AdmDocUnitSearchParams,
-} from '@/domain/adm/admDocumentUnit'
-import ActiveCitation from '@/domain/activeCitation'
-import ActiveReference from '@/domain/activeReference.ts'
-import SingleNorm from '@/domain/singleNorm.ts'
-import NormReference from '@/domain/normReference'
-import { useApiFetch } from '../apiService'
-import { type UseFetchReturn } from '@vueuse/core'
-import { buildUrlWithParams } from '@/utils/urlHelpers'
-import { computed, type Ref } from 'vue'
+} from "@/domain/adm/admDocumentUnit";
+import ActiveCitation from "@/domain/activeCitation";
+import ActiveReference from "@/domain/activeReference.ts";
+import SingleNorm from "@/domain/singleNorm.ts";
+import NormReference from "@/domain/normReference";
+import { useApiFetch } from "../apiService";
+import { type UseFetchReturn } from "@vueuse/core";
+import { buildUrlWithParams } from "@/utils/urlHelpers";
+import { computed, type Ref } from "vue";
 
-const ADM_DOCUMENTATION_UNITS_URL = '/adm/documentation-units'
+const ADM_DOCUMENTATION_UNITS_URL = "/adm/documentation-units";
 
 export function usePutPublishAdmDocUnit(
   documentUnit: AdmDocumentationUnit,
@@ -21,16 +21,16 @@ export function usePutPublishAdmDocUnit(
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToAdmDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
   })
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 export function usePostAdmDocUnit(): UseFetchReturn<AdmDocumentationUnit> {
-  return useApiFetch(ADM_DOCUMENTATION_UNITS_URL).json().post()
+  return useApiFetch(ADM_DOCUMENTATION_UNITS_URL).json().post();
 }
 
 export function useGetAdmPaginatedDocUnits(
@@ -46,12 +46,12 @@ export function useGetAdmPaginatedDocUnits(
       fundstellen: search?.value?.fundstellen?.toString(),
       langueberschrift: search?.value?.langueberschrift?.toString(),
       zitierdaten: search?.value?.zitierdaten?.toString(),
-      sortByProperty: 'documentNumber',
-      sortDirection: 'DESC',
+      sortByProperty: "documentNumber",
+      sortDirection: "DESC",
     }),
-  )
+  );
 
-  return useApiFetch(urlWithParams).json()
+  return useApiFetch(urlWithParams).json();
 }
 
 export function useGetAdmDocUnit(documentNumber: string): UseFetchReturn<AdmDocumentationUnit> {
@@ -59,10 +59,10 @@ export function useGetAdmDocUnit(documentNumber: string): UseFetchReturn<AdmDocu
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToAdmDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
-  }).json()
+  }).json();
 }
 
 export function usePutAdmDocUnit(
@@ -72,12 +72,12 @@ export function usePutAdmDocUnit(
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToAdmDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
   })
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentationUnit {
@@ -85,13 +85,13 @@ function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentatio
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
-    note: data.administrativeData.note || '',
-  }
+    note: data.administrativeData.note || "",
+  };
 
-  documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || []
+  documentUnit.fieldsOfLaw = documentUnit.fieldsOfLaw || [];
   documentUnit.activeCitations = documentUnit.activeCitations?.map(
     (activeCitation) => new ActiveCitation({ ...activeCitation }),
-  )
+  );
   documentUnit.activeReferences = documentUnit.activeReferences?.map(
     (activeReference) =>
       new ActiveReference({
@@ -103,7 +103,7 @@ function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentatio
             }),
         ),
       }),
-  )
+  );
   documentUnit.normReferences = documentUnit.normReferences?.map(
     (normReference) =>
       new NormReference({
@@ -115,6 +115,6 @@ function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentatio
             }),
         ),
       }),
-  )
-  return documentUnit
+  );
+  return documentUnit;
 }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   useGetUliDocUnit,
   useGetSliDocUnit,
@@ -12,483 +12,495 @@ import {
   useGetAdmPaginatedDocUnitsForSli,
   mapAdmSearchResultToAktivzitierung,
   mapSliSearchResultToAktivzitierung,
-} from '@/services/literature/literatureDocumentUnitService'
-import { until } from '@vueuse/core'
-import { ref } from 'vue'
+} from "@/services/literature/literatureDocumentUnitService";
+import { until } from "@vueuse/core";
+import { ref } from "vue";
 import {
   docTypeAnordnungFixture,
   docTypeBekanntmachungFixture,
-} from '@/testing/fixtures/documentType.fixture'
-import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
+} from "@/testing/fixtures/documentType.fixture";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 
-describe('literatureDocumentUnitService', () => {
+describe("literatureDocumentUnitService", () => {
   beforeEach(() => {
-    vi.resetAllMocks()
-    vi.resetModules()
-  })
+    vi.resetAllMocks();
+    vi.resetModules();
+  });
 
-  it('fetches a ULI doc unit', async () => {
+  it("fetches a ULI doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSNR054920707',
-      note: '',
-    }
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSNR054920707",
+      note: "",
+    };
 
     const docUnitResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSNR054920707',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSNR054920707",
       json: docUnit,
-      administrativeData: { note: '' },
-    }
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(docUnitResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = useGetUliDocUnit('KSLU054920707')
-    await execute()
+    const { data, error, isFetching, execute } = useGetUliDocUnit("KSLU054920707");
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value).toEqual(docUnit)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value).toEqual(docUnit);
+  });
 
-  it('data is null when ULI fetch returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when ULI fetch returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
-    const { data, execute } = useGetUliDocUnit('KSLU054920707')
-    await execute()
+    const { data, execute } = useGetUliDocUnit("KSLU054920707");
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('returns an error on failed ULI fetch ', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed ULI fetch ", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
-    const { data, error, isFetching, execute } = useGetUliDocUnit('KSLU054920708')
-    await execute()
+    const { data, error, isFetching, execute } = useGetUliDocUnit("KSLU054920708");
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('updates a ULI doc unit', async () => {
+  it("updates a ULI doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    }
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    };
 
     const updatedResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
       json: {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KSLU054920707',
+        id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+        documentNumber: "KSLU054920707",
       },
-      administrativeData: { note: '' },
-    }
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(updatedResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = usePutUliDocUnit(docUnit)
-    await execute()
+    const { data, error, isFetching, execute } = usePutUliDocUnit(docUnit);
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value?.id).toBe(docUnit.id)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value?.id).toBe(docUnit.id);
+  });
 
-  it('returns an error on failed ULI update', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed ULI update", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
     const { data, error, isFetching, execute } = usePutUliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    });
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('data is null when ULI update call returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when ULI update call returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
     const { data, execute } = usePutUliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    });
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('publishes a uli doc unit', async () => {
+  it("publishes a uli doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    }
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    };
 
     const publishedResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
       json: {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KSLU054920707',
+        id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+        documentNumber: "KSLU054920707",
       },
-      administrativeData: { note: '' },
-    }
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(publishedResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = usePutPublishUliDocUnit(docUnit)
-    await execute()
+    const { data, error, isFetching, execute } = usePutPublishUliDocUnit(docUnit);
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value?.id).toBe(docUnit.id)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value?.id).toBe(docUnit.id);
+  });
 
-  it('returns an error on failed uli publication', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed uli publication", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
     const { data, error, isFetching, execute } = usePutPublishUliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    });
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('data is null when publish a uli doc returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when publish a uli doc returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
     const { data, execute } = usePutPublishUliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KSLU054920707',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KSLU054920707",
+      note: "",
+    });
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('returns an error on failed ULI creation', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed ULI creation", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
-    const { data, error, isFetching, execute } = usePostUliDocUnit()
-    await execute()
+    const { data, error, isFetching, execute } = usePostUliDocUnit();
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('fetches a SLI doc unit', async () => {
+  it("fetches a SLI doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-      veroeffentlichungsjahr: '2025',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+      veroeffentlichungsjahr: "2025",
       aktivzitierungenSli: [],
-    }
+    };
 
     const docUnitResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
       json: docUnit,
-      administrativeData: { note: '' },
-    }
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(docUnitResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = useGetSliDocUnit('KALS2025000001')
-    await execute()
+    const { data, error, isFetching, execute } = useGetSliDocUnit("KALS2025000001");
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value).toEqual(docUnit)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value).toEqual(docUnit);
+  });
 
-  it('data is null when SLI fetch returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when SLI fetch returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
-    const { data, execute } = useGetSliDocUnit('KALS2025000001')
-    await execute()
+    const { data, execute } = useGetSliDocUnit("KALS2025000001");
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('returns an error on failed SLI fetch', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed SLI fetch", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
-    const { data, error, isFetching, execute } = useGetSliDocUnit('KALS2025000001')
-    await execute()
+    const { data, error, isFetching, execute } = useGetSliDocUnit("KALS2025000001");
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('updates a SLI doc unit', async () => {
+  it("updates a SLI doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-      veroeffentlichungsjahr: '2025',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+      veroeffentlichungsjahr: "2025",
       aktivzitierungenSli: [],
-    }
+    };
 
     const updatedResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
       json: docUnit,
-      administrativeData: { note: '' },
-    }
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(updatedResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = usePutSliDocUnit(docUnit)
-    await execute()
+    const { data, error, isFetching, execute } = usePutSliDocUnit(docUnit);
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value).toEqual(docUnit)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value).toEqual(docUnit);
+  });
 
-  it('returns an error on failed SLI update', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed SLI update", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
     const { data, error, isFetching, execute } = usePutSliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
       aktivzitierungenSli: [],
-    })
-    await execute()
+    });
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('data is null when SLI update call returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when SLI update call returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
     const { data, execute } = usePutSliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+    });
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('creates a SLI doc unit', async () => {
+  it("creates a SLI doc unit", async () => {
     const createResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
       json: {
-        id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-        documentNumber: 'KALS2025000001',
-        note: '',
+        id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+        documentNumber: "KALS2025000001",
+        note: "",
       },
-    }
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(createResp), { status: 201 }),
-    )
+    );
 
-    const { data, error, isFetching, isFinished } = usePostSliDocUnit()
-    await until(isFinished).toBe(true)
+    const { data, error, isFetching, isFinished } = usePostSliDocUnit();
+    await until(isFinished).toBe(true);
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value).toEqual(createResp)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value).toEqual(createResp);
+  });
 
-  it('returns an error on failed SLI creation', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed SLI creation", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
-    const { data, error, isFetching, execute } = usePostSliDocUnit()
-    await execute()
+    const { data, error, isFetching, execute } = usePostSliDocUnit();
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('publishes a sli doc unit', async () => {
+  it("publishes a sli doc unit", async () => {
     const docUnit = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-    }
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+    };
 
     const publishedResp = {
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      json: { id: '8de5e4a0-6b67-4d65-98db-efe877a260c4', documentNumber: 'KALS2025000001' },
-      administrativeData: { note: '' },
-    }
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      json: { id: "8de5e4a0-6b67-4d65-98db-efe877a260c4", documentNumber: "KALS2025000001" },
+      administrativeData: { note: "" },
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(publishedResp), { status: 200 }),
-    )
+    );
 
-    const { data, error, isFetching, execute } = usePutPublishSliDocUnit(docUnit)
-    await execute()
+    const { data, error, isFetching, execute } = usePutPublishSliDocUnit(docUnit);
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeFalsy()
-    expect(data.value?.id).toBe(docUnit.id)
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeFalsy();
+    expect(data.value?.id).toBe(docUnit.id);
+  });
 
-  it('returns an error on failed sli publication', async () => {
-    vi.spyOn(window, 'fetch').mockRejectedValue(new Error('fetch failed'))
+  it("returns an error on failed sli publication", async () => {
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
 
     const { data, error, isFetching, execute } = usePutPublishSliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+    });
+    await execute();
 
-    expect(isFetching.value).toBe(false)
-    expect(error.value).toBeTruthy()
-    expect(data.value).toBeNull()
-  })
+    expect(isFetching.value).toBe(false);
+    expect(error.value).toBeTruthy();
+    expect(data.value).toBeNull();
+  });
 
-  it('data is null when publish a sli doc returns a null body', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("data is null when publish a sli doc returns a null body", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
     const { data, execute } = usePutPublishSliDocUnit({
-      id: '8de5e4a0-6b67-4d65-98db-efe877a260c4',
-      documentNumber: 'KALS2025000001',
-      note: '',
-    })
-    await execute()
+      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
+      documentNumber: "KALS2025000001",
+      note: "",
+    });
+    await execute();
 
-    expect(data.value).toEqual(null)
-  })
+    expect(data.value).toEqual(null);
+  });
 
-  it('gets an unfiltered paginated list of sli doc units', async () => {
+  it("gets an unfiltered paginated list of sli doc units", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+      .spyOn(window, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
 
-    const { error, isFetching, execute } = useGetSliPaginatedDocUnits(ref(5), 100, ref(undefined))
-    execute()
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    const { error, isFetching, execute } = useGetSliPaginatedDocUnits(ref(5), 100, ref(undefined));
+    execute();
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    expect(isFetching.value).toBe(false)
+    expect(isFetching.value).toBe(false);
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      "/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC",
       expect.anything(),
-    )
-    expect(error.value).toBeFalsy()
-  })
+    );
+    expect(error.value).toBeFalsy();
+  });
 
-  it('gets an filtered paginated list of sli doc units', async () => {
+  it("gets an filtered paginated list of sli doc units", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+      .spyOn(window, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
 
     const { error, isFetching, execute } = useGetSliPaginatedDocUnits(
       ref(5),
       100,
       ref({
-        veroeffentlichungsJahr: '2025',
-        verfasser: ['Müller', 'Zimmermann'],
-        titel: 'DerTitel',
+        veroeffentlichungsJahr: "2025",
+        verfasser: ["Müller", "Zimmermann"],
+        titel: "DerTitel",
         dokumenttypen: [docTypeAnordnungFixture, docTypeBekanntmachungFixture],
       }),
-    )
-    execute()
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    );
+    execute();
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    expect(isFetching.value).toBe(false)
+    expect(isFetching.value).toBe(false);
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&titel=DerTitel&veroeffentlichungsjahr=2025&dokumenttypen=Anordnung%2CBekanntmachung&verfasser=M%C3%BCller%2CZimmermann&sortByProperty=documentNumber&sortDirection=DESC',
+      "/api/literature/sli/documentation-units?pageNumber=5&pageSize=100&titel=DerTitel&veroeffentlichungsjahr=2025&dokumenttypen=Anordnung%2CBekanntmachung&verfasser=M%C3%BCller%2CZimmermann&sortByProperty=documentNumber&sortDirection=DESC",
       expect.anything(),
-    )
-    expect(error.value).toBeFalsy()
-  })
+    );
+    expect(error.value).toBeFalsy();
+  });
 
-  it('gets an unfiltered paginated list of adm doc units', async () => {
+  it("gets an unfiltered paginated list of adm doc units", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+      .spyOn(window, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
 
     const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
       ref(5),
       100,
       ref(undefined),
-    )
-    execute()
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    );
+    execute();
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    expect(isFetching.value).toBe(false)
+    expect(isFetching.value).toBe(false);
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC',
+      "/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&sortByProperty=documentNumber&sortDirection=DESC",
       expect.anything(),
-    )
-    expect(error.value).toBeFalsy()
-  })
+    );
+    expect(error.value).toBeFalsy();
+  });
 
-  it('gets an filtered paginated list of adm doc units', async () => {
+  it("gets an filtered paginated list of adm doc units", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }))
+      .spyOn(window, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
 
     const { error, isFetching, execute } = useGetAdmPaginatedDocUnitsForSli(
       ref(5),
       100,
       ref({
-        documentNumber: 'KSNR2025',
-        periodikum: 'ThePeriodikum',
-        zitatstelle: 'TheZitatstelle',
-        inkrafttretedatum: '2025-01-01',
-        aktenzeichen: '§3',
-        dokumenttyp: 'VE',
-        normgeber: 'AA',
+        documentNumber: "KSNR2025",
+        periodikum: "ThePeriodikum",
+        zitatstelle: "TheZitatstelle",
+        inkrafttretedatum: "2025-01-01",
+        aktenzeichen: "§3",
+        dokumenttyp: "VE",
+        normgeber: "AA",
       }),
-    )
-    execute()
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    );
+    execute();
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    expect(isFetching.value).toBe(false)
+    expect(isFetching.value).toBe(false);
     expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC',
+      "/api/literature/aktivzitierungen/adm?pageNumber=5&pageSize=100&documentNumber=KSNR2025&periodikum=ThePeriodikum&zitatstelle=TheZitatstelle&inkrafttretedatum=2025-01-01&aktenzeichen=%C2%A73&dokumenttyp=VE&normgeber=AA&sortByProperty=documentNumber&sortDirection=DESC",
       expect.anything(),
-    )
-    expect(error.value).toBeFalsy()
-  })
+    );
+    expect(error.value).toBeFalsy();
+  });
 
-  it('transforms ADM response from documentationUnits to documentationUnitsOverview', async () => {
+  it("transforms ADM response from documentationUnits to documentationUnitsOverview", async () => {
     const mockResponse = {
       documentationUnits: [
-        { id: 'uuid-1', documentNumber: 'KSNR20250001' },
-        { id: 'uuid-2', documentNumber: 'KSNR20250002' },
+        { id: "uuid-1", documentNumber: "KSNR20250001" },
+        { id: "uuid-2", documentNumber: "KSNR20250002" },
       ],
       page: {
         size: 15,
@@ -498,193 +510,195 @@ describe('literatureDocumentUnitService', () => {
         first: true,
         last: true,
       },
-    }
+    };
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
+    vi.spyOn(window, "fetch").mockResolvedValue(
       new Response(JSON.stringify(mockResponse), { status: 200 }),
-    )
+    );
 
-    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
-    await execute()
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined));
+    await execute();
 
     expect(data.value).toEqual({
       documentationUnitsOverview: mockResponse.documentationUnits,
       page: mockResponse.page,
-    })
+    });
 
-    expect(data.value).not.toHaveProperty('documentationUnits')
-  })
+    expect(data.value).not.toHaveProperty("documentationUnits");
+  });
 
-  it('returns null when ADM response is null', async () => {
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }))
+  it("returns null when ADM response is null", async () => {
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(null), { status: 200 }),
+    );
 
-    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined))
-    await execute()
+    const { data, execute } = useGetAdmPaginatedDocUnitsForSli(ref(0), 15, ref(undefined));
+    await execute();
 
-    expect(data.value).toBeNull()
-  })
-})
+    expect(data.value).toBeNull();
+  });
+});
 
-describe('mapAdmSearchResultToAktivzitierung', () => {
-  vi.stubGlobal('crypto', {
-    randomUUID: () => 'mocked-uuid',
-  })
+describe("mapAdmSearchResultToAktivzitierung", () => {
+  vi.stubGlobal("crypto", {
+    randomUUID: () => "mocked-uuid",
+  });
 
-  it('maps a normal input with fundstellen correctly', () => {
+  it("maps a normal input with fundstellen correctly", () => {
     const input = {
-      id: 'be-id',
-      documentNumber: 'DOC-1',
-      inkrafttretedatum: '2024-01-01',
-      dokumenttyp: 'VV',
-      normgeberList: ['BMJ'],
-      aktenzeichenList: ['AZ-123'],
-      fundstellen: ['BAnz AT 01.01.2024, S. 1'],
-    }
+      id: "be-id",
+      documentNumber: "DOC-1",
+      inkrafttretedatum: "2024-01-01",
+      dokumenttyp: "VV",
+      normgeberList: ["BMJ"],
+      aktenzeichenList: ["AZ-123"],
+      fundstellen: ["BAnz AT 01.01.2024, S. 1"],
+    };
 
-    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input)
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
 
     expect(result).toEqual({
-      id: 'mocked-uuid',
-      documentNumber: 'DOC-1',
-      inkrafttretedatum: '2024-01-01',
-      dokumenttyp: 'VV',
-      normgeber: 'BMJ',
-      aktenzeichen: 'AZ-123',
-      periodikum: 'BAnz AT 01.01.2024',
-      zitatstelle: 'S. 1',
-    })
-  })
+      id: "mocked-uuid",
+      documentNumber: "DOC-1",
+      inkrafttretedatum: "2024-01-01",
+      dokumenttyp: "VV",
+      normgeber: "BMJ",
+      aktenzeichen: "AZ-123",
+      periodikum: "BAnz AT 01.01.2024",
+      zitatstelle: "S. 1",
+    });
+  });
 
-  it('handles missing fundstellen gracefully', () => {
+  it("handles missing fundstellen gracefully", () => {
     const input = {
-      id: 'be-id',
-      documentNumber: 'DOC-2',
-      inkrafttretedatum: '2024-01-02',
-      dokumenttyp: 'VV',
+      id: "be-id",
+      documentNumber: "DOC-2",
+      inkrafttretedatum: "2024-01-02",
+      dokumenttyp: "VV",
       normgeberList: [],
       aktenzeichenList: [],
       fundstellen: undefined,
-    }
+    };
 
-    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input)
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
 
     expect(result).toEqual({
-      id: 'mocked-uuid',
-      documentNumber: 'DOC-2',
-      inkrafttretedatum: '2024-01-02',
-      dokumenttyp: 'VV',
+      id: "mocked-uuid",
+      documentNumber: "DOC-2",
+      inkrafttretedatum: "2024-01-02",
+      dokumenttyp: "VV",
       normgeber: undefined,
       aktenzeichen: undefined,
       periodikum: undefined,
       zitatstelle: undefined,
-    })
-  })
+    });
+  });
 
-  it('handles empty fundstellen array', () => {
+  it("handles empty fundstellen array", () => {
     const input = {
-      id: 'be-id',
-      documentNumber: 'DOC-3',
-      inkrafttretedatum: '2024-01-03',
-      dokumenttyp: 'VV',
+      id: "be-id",
+      documentNumber: "DOC-3",
+      inkrafttretedatum: "2024-01-03",
+      dokumenttyp: "VV",
       normgeberList: [],
       aktenzeichenList: [],
       fundstellen: [],
-    }
+    };
 
-    const result = mapAdmSearchResultToAktivzitierung(input)
+    const result = mapAdmSearchResultToAktivzitierung(input);
 
-    expect(result.periodikum).toBeUndefined()
-    expect(result.zitatstelle).toBeUndefined()
-  })
-})
+    expect(result.periodikum).toBeUndefined();
+    expect(result.zitatstelle).toBeUndefined();
+  });
+});
 
-describe('mapSliSearchResultToAktivzitierung', () => {
-  vi.stubGlobal('crypto', {
-    randomUUID: () => 'mocked-uuid',
-  })
+describe("mapSliSearchResultToAktivzitierung", () => {
+  vi.stubGlobal("crypto", {
+    randomUUID: () => "mocked-uuid",
+  });
 
-  it('maps a normal input with document types correctly', () => {
+  it("maps a normal input with document types correctly", () => {
     const input = {
-      id: 'sli-id',
-      documentNumber: 'SLI-1',
-      titel: 'Testtitel',
-      veroeffentlichungsjahr: '2023',
-      verfasser: ['Müller', 'Schmidt'],
-      dokumenttypen: ['Bib', 'Dis'],
-    }
+      id: "sli-id",
+      documentNumber: "SLI-1",
+      titel: "Testtitel",
+      veroeffentlichungsjahr: "2023",
+      verfasser: ["Müller", "Schmidt"],
+      dokumenttypen: ["Bib", "Dis"],
+    };
 
-    const result = mapSliSearchResultToAktivzitierung(input)
+    const result = mapSliSearchResultToAktivzitierung(input);
 
     expect(result).toEqual({
-      id: 'mocked-uuid',
-      titel: 'Testtitel',
-      documentNumber: 'SLI-1',
-      veroeffentlichungsJahr: '2023',
-      verfasser: ['Müller', 'Schmidt'],
+      id: "mocked-uuid",
+      titel: "Testtitel",
+      documentNumber: "SLI-1",
+      veroeffentlichungsJahr: "2023",
+      verfasser: ["Müller", "Schmidt"],
       dokumenttypen: [
-        { abbreviation: 'Bib', name: 'Bib' },
-        { abbreviation: 'Dis', name: 'Dis' },
+        { abbreviation: "Bib", name: "Bib" },
+        { abbreviation: "Dis", name: "Dis" },
       ],
-    })
-  })
+    });
+  });
 
-  it('maps empty dokumenttypen array to empty dokumenttypen', () => {
+  it("maps empty dokumenttypen array to empty dokumenttypen", () => {
     const input = {
-      id: 'sli-id',
-      documentNumber: 'SLI-2',
-      titel: 'Ohne Typen',
-      veroeffentlichungsjahr: '2022',
-      verfasser: ['Müller'],
+      id: "sli-id",
+      documentNumber: "SLI-2",
+      titel: "Ohne Typen",
+      veroeffentlichungsjahr: "2022",
+      verfasser: ["Müller"],
       dokumenttypen: [],
-    }
+    };
 
-    const result = mapSliSearchResultToAktivzitierung(input)
+    const result = mapSliSearchResultToAktivzitierung(input);
 
-    expect(result.dokumenttypen).toEqual([])
-  })
+    expect(result.dokumenttypen).toEqual([]);
+  });
 
-  it('handles missing dokumenttypen gracefully', () => {
+  it("handles missing dokumenttypen gracefully", () => {
     const input = {
-      id: 'sli-id',
-      documentNumber: 'SLI-3',
-      titel: 'Keine Typen',
-      veroeffentlichungsjahr: '2021',
-      verfasser: ['Schmidt'],
+      id: "sli-id",
+      documentNumber: "SLI-3",
+      titel: "Keine Typen",
+      veroeffentlichungsjahr: "2021",
+      verfasser: ["Schmidt"],
       dokumenttypen: undefined,
-    }
+    };
 
-    const result = mapSliSearchResultToAktivzitierung(input)
+    const result = mapSliSearchResultToAktivzitierung(input);
 
-    expect(result.dokumenttypen).toEqual([])
-  })
+    expect(result.dokumenttypen).toEqual([]);
+  });
 
-  it('handles missing verfasser by defaulting to empty array', () => {
+  it("handles missing verfasser by defaulting to empty array", () => {
     const input = {
-      id: 'sli-id',
-      documentNumber: 'SLI-4',
-      titel: 'Kein Verfasser',
-      veroeffentlichungsjahr: '2020',
+      id: "sli-id",
+      documentNumber: "SLI-4",
+      titel: "Kein Verfasser",
+      veroeffentlichungsjahr: "2020",
       verfasser: undefined,
-      dokumenttypen: ['Bib'],
-    }
+      dokumenttypen: ["Bib"],
+    };
 
-    const result = mapSliSearchResultToAktivzitierung(input)
+    const result = mapSliSearchResultToAktivzitierung(input);
 
-    expect(result.verfasser).toEqual([])
-  })
+    expect(result.verfasser).toEqual([]);
+  });
 
-  it('keeps titel undefined if missing', () => {
+  it("keeps titel undefined if missing", () => {
     const input = {
-      id: 'sli-id',
-      documentNumber: 'SLI-5',
+      id: "sli-id",
+      documentNumber: "SLI-5",
       titel: undefined,
-      veroeffentlichungsjahr: '2019',
+      veroeffentlichungsjahr: "2019",
       verfasser: [],
       dokumenttypen: [],
-    }
+    };
 
-    const result = mapSliSearchResultToAktivzitierung(input)
+    const result = mapSliSearchResultToAktivzitierung(input);
 
-    expect(result.titel).toBeUndefined()
-  })
-})
+    expect(result.titel).toBeUndefined();
+  });
+});

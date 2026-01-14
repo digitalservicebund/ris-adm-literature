@@ -3,87 +3,87 @@
   setup
   generic="T extends { id: string; documentNumber?: string }, SP extends Record<string, unknown>"
 >
-import { computed, ref, watch } from 'vue'
-import Button from 'primevue/button'
+import { computed, ref, watch } from "vue";
+import Button from "primevue/button";
 
 const props = defineProps<{
-  aktivzitierung?: T
-  showCancelButton: boolean
-  showDeleteButton: boolean
-}>()
+  aktivzitierung?: T;
+  showCancelButton: boolean;
+  showDeleteButton: boolean;
+}>();
 
 const emit = defineEmits<{
-  save: [aktivzitierung: T]
-  delete: [id: string]
-  cancel: [void]
-  search: [params: SP]
-}>()
+  save: [aktivzitierung: T];
+  delete: [id: string];
+  cancel: [void];
+  search: [params: SP];
+}>();
 
 const createInitialT = (): T => {
-  return { id: crypto.randomUUID() } as T
-}
+  return { id: crypto.randomUUID() } as T;
+};
 
 const aktivzitierungRef = ref<T>(
   props.aktivzitierung
     ? { ...props.aktivzitierung } // Use a copy of the prop data
     : createInitialT(),
-)
+);
 
-const isExistingEntry = computed(() => !!props.aktivzitierung?.id)
+const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
-  emit('save', aktivzitierungRef.value)
+  emit("save", aktivzitierungRef.value);
   if (!isExistingEntry.value) {
-    aktivzitierungRef.value = createInitialT()
+    aktivzitierungRef.value = createInitialT();
   }
 }
 
 function onClickCancel() {
-  emit('cancel')
+  emit("cancel");
 }
 
 function onClickDelete() {
-  emit('delete', aktivzitierungRef.value.id)
+  emit("delete", aktivzitierungRef.value.id);
 }
 
 const onUpdate = (newValue: T) => {
-  aktivzitierungRef.value = newValue
-}
+  aktivzitierungRef.value = newValue;
+};
 
 watch(
   () => props.aktivzitierung,
   (newVal: T | undefined) => {
     if (newVal) {
-      aktivzitierungRef.value = { ...newVal } as T
+      aktivzitierungRef.value = { ...newVal } as T;
     }
   },
-)
+);
 
 const isEmpty = computed(() => {
-  const value = aktivzitierungRef.value as Record<string, unknown>
-  const entries = Object.entries(value).filter(([key]) => key !== 'id')
+  const value = aktivzitierungRef.value as Record<string, unknown>;
+  const entries = Object.entries(value).filter(([key]) => key !== "id");
 
-  if (entries.length === 0) return true
+  if (entries.length === 0) return true;
 
   return entries.every(([, v]) => {
-    if (v === undefined || v === null) return true
-    if (typeof v === 'string') return v.trim() === ''
-    if (Array.isArray(v)) return v.length === 0
-    return false
-  })
-})
+    if (v === undefined || v === null) return true;
+    if (typeof v === "string") return v.trim() === "";
+    if (Array.isArray(v)) return v.length === 0;
+    return false;
+  });
+});
 
 function clearSearchFields() {
-  aktivzitierungRef.value = createInitialT()
+  aktivzitierungRef.value = createInitialT();
 }
 
 function onClickSearch() {
-  emit('search', aktivzitierungRef.value)
+  emit("search", aktivzitierungRef.value);
 }
 
 defineExpose({
   clearSearchFields,
-})
+});
 </script>
 
 <template>

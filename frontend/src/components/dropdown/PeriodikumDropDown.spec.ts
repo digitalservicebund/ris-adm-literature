@@ -1,146 +1,146 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { amtsblattFixture, bundesanzeigerFixture } from '@/testing/fixtures/periodikum.fixture'
-import PeriodikumDropDown from './PeriodikumDropDown.vue'
-import type { Periodikum } from '@/domain/fundstelle'
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { amtsblattFixture, bundesanzeigerFixture } from "@/testing/fixtures/periodikum.fixture";
+import PeriodikumDropDown from "./PeriodikumDropDown.vue";
+import type { Periodikum } from "@/domain/fundstelle";
 
-vi.mock('@digitalservicebund/ris-ui/components', () => ({
+vi.mock("@digitalservicebund/ris-ui/components", () => ({
   RisAutoComplete: {
-    name: 'RisAutoComplete',
+    name: "RisAutoComplete",
     template: `<div data-testid="autocomplete-wrapper" :data-initial-label="initialLabel">
                 <input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" />
                </div>`,
-    props: ['modelValue', 'suggestions', 'initialLabel'],
+    props: ["modelValue", "suggestions", "initialLabel"],
   },
-}))
+}));
 
-describe('PeriodikumDropDown', () => {
+describe("PeriodikumDropDown", () => {
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('renders correctly', async () => {
+  it("renders correctly", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
+      .spyOn(window, "fetch")
       .mockResolvedValue(
         new Response(
           JSON.stringify({ legalPeriodicals: [bundesanzeigerFixture, amtsblattFixture] }),
           { status: 200 },
         ),
-      )
+      );
 
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    const input = wrapper.find('[data-testid="autocomplete"]')
-    expect(input.exists()).toBe(true)
-  })
+    const input = wrapper.find('[data-testid="autocomplete"]');
+    expect(input.exists()).toBe(true);
+  });
 
-  it('renders correctly on fetching error', async () => {
-    const fetchSpy = vi.spyOn(window, 'fetch').mockRejectedValue('fetch error')
+  it("renders correctly on fetching error", async () => {
+    const fetchSpy = vi.spyOn(window, "fetch").mockRejectedValue("fetch error");
 
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    const input = wrapper.find('[data-testid="autocomplete"]')
-    expect(input.exists()).toBe(true)
-  })
+    const input = wrapper.find('[data-testid="autocomplete"]');
+    expect(input.exists()).toBe(true);
+  });
 
-  it('emits updated model value when selection changes', async () => {
+  it("emits updated model value when selection changes", async () => {
     const fetchSpy = vi
-      .spyOn(window, 'fetch')
+      .spyOn(window, "fetch")
       .mockResolvedValue(
         new Response(
           JSON.stringify({ legalPeriodicals: [bundesanzeigerFixture, amtsblattFixture] }),
           { status: 200 },
         ),
-      )
+      );
 
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1))
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
     // when
-    const input = wrapper.find('[data-testid="autocomplete"]')
-    await input.setValue('bundesanzeigerTestId')
+    const input = wrapper.find('[data-testid="autocomplete"]');
+    await input.setValue("bundesanzeigerTestId");
 
     // then
-    const emitted = wrapper.emitted('update:modelValue')!
-    expect(emitted).toHaveLength(1)
-    expect(emitted[0]?.[0]).toEqual(bundesanzeigerFixture)
+    const emitted = wrapper.emitted("update:modelValue")!;
+    expect(emitted).toHaveLength(1);
+    expect(emitted[0]?.[0]).toEqual(bundesanzeigerFixture);
 
     // when
-    await input.setValue('unknownId')
+    await input.setValue("unknownId");
 
     // then undefined is emitted
-    expect(emitted).toHaveLength(2)
-    expect(emitted[1]?.[0]).toEqual(undefined)
-  })
+    expect(emitted).toHaveLength(2);
+    expect(emitted[1]?.[0]).toEqual(undefined);
+  });
 
-  it('returns a combined string when both abbreviation and title are present', () => {
+  it("returns a combined string when both abbreviation and title are present", () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: {
-          id: '1',
-          abbreviation: 'BGBI',
-          title: 'Bundesgesetzblatt',
+          id: "1",
+          abbreviation: "BGBI",
+          title: "Bundesgesetzblatt",
         },
       },
-    })
+    });
 
-    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
-    expect(autoComplete.props('initialLabel')).toBe('BGBI | Bundesgesetzblatt')
-  })
+    const autoComplete = wrapper.findComponent({ name: "RisAutoComplete" });
+    expect(autoComplete.props("initialLabel")).toBe("BGBI | Bundesgesetzblatt");
+  });
 
-  it('returns only the abbreviation when title is missing', () => {
+  it("returns only the abbreviation when title is missing", () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: {
-          id: '2',
-          abbreviation: 'JK',
+          id: "2",
+          abbreviation: "JK",
           // title is missing
         } as Periodikum,
       },
-    })
+    });
 
-    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
-    expect(autoComplete.props('initialLabel')).toBe('JK')
-  })
+    const autoComplete = wrapper.findComponent({ name: "RisAutoComplete" });
+    expect(autoComplete.props("initialLabel")).toBe("JK");
+  });
 
-  it('returns an empty string when modelValue is undefined', () => {
+  it("returns an empty string when modelValue is undefined", () => {
     const wrapper = mount(PeriodikumDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         invalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    const autoComplete = wrapper.findComponent({ name: 'RisAutoComplete' })
-    expect(autoComplete.props('initialLabel')).toBe('')
-  })
-})
+    const autoComplete = wrapper.findComponent({ name: "RisAutoComplete" });
+    expect(autoComplete.props("initialLabel")).toBe("");
+  });
+});

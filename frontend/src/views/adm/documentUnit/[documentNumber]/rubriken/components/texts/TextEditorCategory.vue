@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-import { nextTick } from 'vue'
-import CategoryWrapper from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/CategoryWrapper.vue'
-import type { TextAreaInputAttributes } from '@/components/input/types'
-import TextEditor from '@/components/input/TextEditor.vue'
+import { nextTick } from "vue";
+import CategoryWrapper from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/CategoryWrapper.vue";
+import type { TextAreaInputAttributes } from "@/components/input/types";
+import TextEditor from "@/components/input/TextEditor.vue";
 
 interface Props {
-  id: string
-  label: string
-  shouldShowButton: boolean
-  modelValue?: string
-  fieldSize?: TextAreaInputAttributes['fieldSize']
-  showFormattingButtons?: boolean
+  id: string;
+  label: string;
+  shouldShowButton: boolean;
+  modelValue?: string;
+  fieldSize?: TextAreaInputAttributes["fieldSize"];
+  showFormattingButtons?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: undefined,
-  fieldSize: 'big',
+  fieldSize: "big",
   showFormattingButtons: true,
-})
+});
 
 defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+  "update:modelValue": [value: string];
+}>();
 
 async function focusEditor() {
-  await nextTick()
-  const editorElement = document.getElementById(props.id)?.firstElementChild as HTMLElement
-  editorElement?.focus()
+  await nextTick();
+  const editorElement = document.getElementById(props.id)?.firstElementChild as HTMLElement;
+  editorElement?.focus();
 }
 </script>
 

@@ -1,13 +1,13 @@
-import { InstitutionType, type Institution, type Normgeber } from '@/domain/normgeber'
+import { InstitutionType, type Institution, type Normgeber } from "@/domain/normgeber";
 
 const institutionFixture: Institution = {
-  id: 'testInstId',
-  name: '',
+  id: "testInstId",
+  name: "",
   type: InstitutionType.LegalEntity,
-}
+};
 
 export const normgeberFixture: Normgeber = {
-  id: 'testNormgeberId',
+  id: "testNormgeberId",
   institution: institutionFixture,
   regions: [],
-}
+};

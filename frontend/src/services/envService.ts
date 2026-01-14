@@ -1,4 +1,4 @@
-import type { Env } from '@/types/env'
+import type { Env } from "@/types/env";
 
 /**
  * Fetches configuration for the current environment. This function uses the
@@ -9,11 +9,11 @@ import type { Env } from '@/types/env'
  * @returns Configuration for the current environment
  */
 export async function getEnv(): Promise<Env> {
-  const response = await fetch('/environment')
+  const response = await fetch("/environment");
 
   if (!response.ok) {
-    throw new Error(`Failed to load configuration: ${response.statusText}`)
+    throw new Error(`Failed to load configuration: ${response.statusText}`);
   }
 
-  return response.json()
+  return response.json();
 }

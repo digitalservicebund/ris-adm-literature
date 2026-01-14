@@ -1,4 +1,4 @@
-import { BulletList } from '@tiptap/extension-list'
+import { BulletList } from "@tiptap/extension-list";
 
 export const CustomBulletList = BulletList.extend({
   addAttributes() {
@@ -6,17 +6,17 @@ export const CustomBulletList = BulletList.extend({
       ...this.parent?.(),
       style: {
         default: null,
-        parseHTML: (element) => element.getAttribute('style'),
+        parseHTML: (element) => element.getAttribute("style"),
         renderHTML: (attributes) => {
           return {
             style: attributes.style,
-            class: 'list-disc',
-          }
+            class: "list-disc",
+          };
         },
       },
-    }
+    };
   },
   addInputRules() {
-    return []
+    return [];
   },
-})
+});

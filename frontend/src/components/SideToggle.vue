@@ -1,47 +1,47 @@
 <script lang="ts" setup>
-import { type Component, computed } from 'vue'
-import IconChevronLeft from '~icons/ic/baseline-chevron-left'
-import IconChevronRight from '~icons/ic/baseline-chevron-right'
-import { OpeningDirection } from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/enumDisplayMode'
+import { type Component, computed } from "vue";
+import IconChevronLeft from "~icons/ic/baseline-chevron-left";
+import IconChevronRight from "~icons/ic/baseline-chevron-right";
+import { OpeningDirection } from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/enumDisplayMode";
 
 interface Props {
-  isExpanded?: boolean
-  openingDirection?: OpeningDirection
-  label?: string
-  shortcut?: string
-  icon?: Component
-  customButtonClasses?: string
+  isExpanded?: boolean;
+  openingDirection?: OpeningDirection;
+  label?: string;
+  shortcut?: string;
+  icon?: Component;
+  customButtonClasses?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isExpanded: false,
   openingDirection: OpeningDirection.RIGHT,
-  label: 'side toggle',
+  label: "side toggle",
   shortcut: undefined,
   icon: undefined,
-  customButtonClasses: '',
-})
+  customButtonClasses: "",
+});
 
 const emit = defineEmits<{
-  'update:isExpanded': [value: boolean]
-}>()
+  "update:isExpanded": [value: boolean];
+}>();
 
-const postFix = computed(() => (props.isExpanded ? 'schließen' : 'öffnen'))
+const postFix = computed(() => (props.isExpanded ? "schließen" : "öffnen"));
 
 const classes = computed(() => ({
-  'pl-24': props.openingDirection == OpeningDirection.RIGHT && !props.isExpanded,
-  'pr-24': props.openingDirection == OpeningDirection.LEFT && !props.isExpanded,
-}))
+  "pl-24": props.openingDirection == OpeningDirection.RIGHT && !props.isExpanded,
+  "pr-24": props.openingDirection == OpeningDirection.LEFT && !props.isExpanded,
+}));
 
 const buttonClasses = computed(() => ({
-  'right-0 -mr-16': props.openingDirection == OpeningDirection.RIGHT,
-  'left-0 -ml-16': props.openingDirection == OpeningDirection.LEFT,
+  "right-0 -mr-16": props.openingDirection == OpeningDirection.RIGHT,
+  "left-0 -ml-16": props.openingDirection == OpeningDirection.LEFT,
   [props.customButtonClasses]: props.customButtonClasses,
-}))
+}));
 
 const toggle = () => {
-  emit('update:isExpanded', !props.isExpanded)
-}
+  emit("update:isExpanded", !props.isExpanded);
+};
 </script>
 
 <template>

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import DocumentationUnitSummary from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/DocumentationUnitSummary.vue'
-import Button from 'primevue/button'
-import ActiveCitation from '@/domain/activeCitation'
-import IconBaselineContentCopy from '~icons/ic/baseline-content-copy'
+import DocumentationUnitSummary from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/DocumentationUnitSummary.vue";
+import Button from "primevue/button";
+import ActiveCitation from "@/domain/activeCitation";
+import IconBaselineContentCopy from "~icons/ic/baseline-content-copy";
 
 const props = defineProps<{
-  data: ActiveCitation
-}>()
+  data: ActiveCitation;
+}>();
 
 async function copySummary() {
-  if (props.data) await navigator.clipboard.writeText(props.data.renderSummary)
+  if (props.data) await navigator.clipboard.writeText(props.data.renderSummary);
 }
 </script>
 

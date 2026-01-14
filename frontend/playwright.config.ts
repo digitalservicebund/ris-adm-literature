@@ -1,40 +1,40 @@
-import process from 'node:process'
-import { defineConfig, devices } from '@playwright/test'
+import process from "node:process";
+import { defineConfig, devices } from "@playwright/test";
 
 const docTypeToAuthFile = {
-  adm: '../frontend/e2e/.auth/adm.json',
-  uli: '../frontend/e2e/.auth/user-bag.json',
-  sli: '../frontend/e2e/.auth/user-bag.json',
-}
+  adm: "../frontend/e2e/.auth/adm.json",
+  uli: "../frontend/e2e/.auth/user-bag.json",
+  sli: "../frontend/e2e/.auth/user-bag.json",
+};
 
 // Map browsers to their devices
 const browsers = {
-  chromium: devices['Desktop Chrome'],
-  firefox: devices['Desktop Firefox'],
-  msedge: devices['Desktop Edge'],
+  chromium: devices["Desktop Chrome"],
+  firefox: devices["Desktop Firefox"],
+  msedge: devices["Desktop Edge"],
   // Safari intentionally excluded because of storageState issues
   // https://github.com/microsoft/playwright/issues/20301
   // https://github.com/microsoft/playwright/issues/35712
-}
+};
 
 const docTypeProjects = Object.entries(docTypeToAuthFile).flatMap(([docType, authFile]) =>
   Object.entries(browsers).map(([browserName, browserDevice]) => ({
-    dependencies: ['setup', 'seed data'],
+    dependencies: ["setup", "seed data"],
     name: `${browserName}-${docType}`,
     testMatch: new RegExp(`.*/${docType}/.*\\.spec\\.ts`),
     use: {
       ...browserDevice,
       storageState: authFile,
     },
-    testIgnore: 'Login.spec.ts',
+    testIgnore: "Login.spec.ts",
   })),
-)
+);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './e2e',
+  testDir: "./e2e",
   fullyParallel: true, // ignored in CI, as workers are 1, there
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
@@ -53,9 +53,9 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'frontend-e2e-test-report-html' }],
-    ['json', { outputFile: 'frontend-e2e-test-report.json' }],
-    ['blob', { outputFile: 'frontend-e2e-test-report.blob' }],
+    ["html", { outputFolder: "frontend-e2e-test-report-html" }],
+    ["json", { outputFile: "frontend-e2e-test-report.json" }],
+    ["blob", { outputFile: "frontend-e2e-test-report.blob" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -64,50 +64,50 @@ export default defineConfig({
     actionTimeout: 5 * 1000,
     /* Base URL to use in actions like `await page.goto('/')`.
     needs to be in sync with "webserver" config below*/
-    baseURL: 'http://localhost:5173',
+    baseURL: "http://localhost:5173",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
 
-    screenshot: process.env.CI ? 'off' : 'only-on-failure',
+    screenshot: process.env.CI ? "off" : "only-on-failure",
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'setup',
-      testMatch: 'auth-setup.ts',
+      name: "setup",
+      testMatch: "auth-setup.ts",
     },
     {
-      dependencies: ['setup'],
-      name: 'seed data',
-      testMatch: 'seed-data.ts',
+      dependencies: ["setup"],
+      name: "seed data",
+      testMatch: "seed-data.ts",
       use: {
-        storageState: docTypeToAuthFile['adm'],
+        storageState: docTypeToAuthFile["adm"],
       },
-      testIgnore: 'Login.spec.ts',
+      testIgnore: "Login.spec.ts",
     },
     // The following tests test the login functionality itself, so they need to be separate projects which run without
     // the playwright login as a dependency.
     {
-      name: 'loginChromium',
-      testMatch: 'login.spec.ts',
+      name: "loginChromium",
+      testMatch: "login.spec.ts",
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices["Desktop Chrome"],
       },
     },
     {
-      name: 'loginFirefox',
-      testMatch: 'login.spec.ts',
+      name: "loginFirefox",
+      testMatch: "login.spec.ts",
       use: {
-        ...devices['Desktop Firefox'],
+        ...devices["Desktop Firefox"],
       },
     },
     {
-      name: 'loginEdge',
-      testMatch: 'login.spec.ts',
+      name: "loginEdge",
+      testMatch: "login.spec.ts",
       use: {
-        ...devices['Desktop Edge'],
+        ...devices["Desktop Edge"],
       },
     },
 
@@ -122,9 +122,9 @@ export default defineConfig({
      * Playwright will re-use the local server if there is already a dev-server running.
      */
     // command: process.env.CI ? 'npm run preview' : 'npm run dev',
-    command: 'npm run dev',
+    command: "npm run dev",
     // port: process.env.CI ? 4173 : 5173,
     port: 5173,
     reuseExistingServer: !process.env.CI,
   },
-})
+});

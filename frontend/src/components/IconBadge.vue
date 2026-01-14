@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { type Component } from 'vue'
+import { type Component } from "vue";
 
 defineProps<{
-  label: string
-  icon?: Component
-  color: string
-  backgroundColor: string
-}>()
+  label: string;
+  icon?: Component;
+  color: string;
+  backgroundColor: string;
+}>();
 </script>
 
 <script lang="ts">
 export interface IconBadgeProps {
-  label: string
-  icon: Component
-  backgroundColor: string
-  color: string
+  label: string;
+  icon: Component;
+  backgroundColor: string;
+  color: string;
 }
 </script>
 

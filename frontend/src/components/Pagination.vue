@@ -1,44 +1,43 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import Button from 'primevue/button'
-import FlexContainer from '@/components/FlexContainer.vue'
-import IconArrowBack from '~icons/ic/baseline-arrow-back'
-import IconArrowForward from '~icons/ic/baseline-arrow-forward'
+import Button from "primevue/button";
+import FlexContainer from "@/components/FlexContainer.vue";
+import IconArrowBack from "~icons/ic/baseline-arrow-back";
+import IconArrowForward from "~icons/ic/baseline-arrow-forward";
 
 const props = withDefaults(
   defineProps<{
-    page?: Page
-    navigationPosition?: 'top' | 'bottom'
-    isLoading?: boolean
+    page?: Page;
+    navigationPosition?: "top" | "bottom";
+    isLoading?: boolean;
   }>(),
-  { page: undefined, navigationPosition: 'top', isLoading: false },
-)
+  { page: undefined, navigationPosition: "top", isLoading: false },
+);
 
-const emits = defineEmits<(e: 'updatePage', page: number) => void>()
+const emits = defineEmits<(e: "updatePage", page: number) => void>();
 
 async function nextPage(): Promise<void> {
   if (props.page && !props.page.last) {
-    emits('updatePage', props.page.number + 1)
+    emits("updatePage", props.page.number + 1);
   }
 }
 
 async function previousPage(): Promise<void> {
   if (props.page && !props.page?.first) {
-    emits('updatePage', props.page.number - 1)
+    emits("updatePage", props.page.number - 1);
   }
 }
 </script>
 
 <script lang="ts">
 export type Page = {
-  size: number
-  number: number
-  numberOfElements: number
-  totalElements?: number
-  first: boolean
-  last: boolean
-  empty: boolean
-}
+  size: number;
+  number: number;
+  numberOfElements: number;
+  totalElements?: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+};
 </script>
 
 <template>
@@ -72,10 +71,10 @@ export type Page = {
       <FlexContainer flex-direction="flex-row">
         {{
           page.numberOfElements == 1
-            ? page.numberOfElements + ' Ergebnis'
-            : page.numberOfElements + ' Ergebnisse'
+            ? page.numberOfElements + " Ergebnis"
+            : page.numberOfElements + " Ergebnisse"
         }}
-        {{ page.first && page.last ? 'gefunden' : 'angezeigt' }}
+        {{ page.first && page.last ? "gefunden" : "angezeigt" }}
       </FlexContainer>
     </FlexContainer>
     <Button

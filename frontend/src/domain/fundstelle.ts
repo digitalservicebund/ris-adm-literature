@@ -1,15 +1,15 @@
 export interface Periodikum {
-  readonly id: string
-  abbreviation: string
-  title: string
-  subtitle?: string
-  citationStyle?: string
-  publicId?: string
+  readonly id: string;
+  abbreviation: string;
+  title: string;
+  subtitle?: string;
+  citationStyle?: string;
+  publicId?: string;
 }
 
 export interface Fundstelle {
-  readonly id: string
-  zitatstelle: string
-  periodikum?: Periodikum
-  ambiguousPeriodikum?: string
+  readonly id: string;
+  zitatstelle: string;
+  periodikum?: Periodikum;
+  ambiguousPeriodikum?: string;
 }

@@ -1,71 +1,71 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import ComboboxInput from '@/views/adm/documentUnit/[documentNumber]/ComboboxInput.vue'
-import TitleElement from '@/components/TitleElement.vue'
-import InputField from '@/components/input/InputField.vue'
-import DateInput from '@/components/input/DateInput.vue'
-import ComboboxItemService from '@/services/comboboxItemService.ts'
-import Textarea from 'primevue/textarea'
-import InputText from 'primevue/inputtext'
-import KeyWords from './components/KeyWords.vue'
-import TextEditorCategory from './components/texts/TextEditorCategory.vue'
-import NormReferences from './components/norm-reference/NormReferences.vue'
-import ActiveReferences from './components/active-reference/ActiveReferences.vue'
-import ActiveCitations from './components/active-citation/ActiveCitations.vue'
-import FieldsOfLaw from './components/field-of-law/FieldsOfLaw.vue'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import NormgeberList from './components/normgeber/NormgeberList.vue'
-import type { DocumentType } from '@/domain/documentType'
-import ZitierdatenInput from './components/ZitierdatenInput.vue'
-import { RisChipsInput } from '@digitalservicebund/ris-ui/components'
-import Berufsbild from './components/Berufsbild.vue'
-import TitelAspekt from './components/TitelAspekt.vue'
-import Definitionen from './components/Definitionen.vue'
-import { useScrollToHash } from '@/composables/useScroll'
+import { computed } from "vue";
+import ComboboxInput from "@/views/adm/documentUnit/[documentNumber]/ComboboxInput.vue";
+import TitleElement from "@/components/TitleElement.vue";
+import InputField from "@/components/input/InputField.vue";
+import DateInput from "@/components/input/DateInput.vue";
+import ComboboxItemService from "@/services/comboboxItemService.ts";
+import Textarea from "primevue/textarea";
+import InputText from "primevue/inputtext";
+import KeyWords from "./components/KeyWords.vue";
+import TextEditorCategory from "./components/texts/TextEditorCategory.vue";
+import NormReferences from "./components/norm-reference/NormReferences.vue";
+import ActiveReferences from "./components/active-reference/ActiveReferences.vue";
+import ActiveCitations from "./components/active-citation/ActiveCitations.vue";
+import FieldsOfLaw from "./components/field-of-law/FieldsOfLaw.vue";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import NormgeberList from "./components/normgeber/NormgeberList.vue";
+import type { DocumentType } from "@/domain/documentType";
+import ZitierdatenInput from "./components/ZitierdatenInput.vue";
+import { RisChipsInput } from "@digitalservicebund/ris-ui/components";
+import Berufsbild from "./components/Berufsbild.vue";
+import TitelAspekt from "./components/TitelAspekt.vue";
+import Definitionen from "./components/Definitionen.vue";
+import { useScrollToHash } from "@/composables/useScroll";
 
-const store = useAdmDocUnitStore()
+const store = useAdmDocUnitStore();
 
 const langueberschrift = computed({
   get: () => store.documentUnit!.langueberschrift,
   set: (newValue) => {
-    store.documentUnit!.langueberschrift = newValue
+    store.documentUnit!.langueberschrift = newValue;
   },
-})
+});
 
 const inkrafttretedatum = computed({
   get: () => store.documentUnit!.inkrafttretedatum,
   set: (newValue) => {
-    store.documentUnit!.inkrafttretedatum = newValue
+    store.documentUnit!.inkrafttretedatum = newValue;
   },
-})
+});
 
 const ausserkrafttretedatum = computed({
   get: () => store.documentUnit!.ausserkrafttretedatum,
   set: (newValue) => {
-    store.documentUnit!.ausserkrafttretedatum = newValue
+    store.documentUnit!.ausserkrafttretedatum = newValue;
   },
-})
+});
 
 const gliederung = computed({
   get: () => store.documentUnit!.gliederung,
   set: (newValue) => {
-    store.documentUnit!.gliederung = newValue
+    store.documentUnit!.gliederung = newValue;
   },
-})
+});
 
 const kurzreferat = computed({
   get: () => store.documentUnit!.kurzreferat,
   set: (newValue) => {
-    store.documentUnit!.kurzreferat = newValue
+    store.documentUnit!.kurzreferat = newValue;
   },
-})
+});
 
 const aktenzeichen = computed({
   get: () => store.documentUnit!.aktenzeichen || [],
   set: (newValue) => {
-    store.documentUnit!.aktenzeichen = newValue
+    store.documentUnit!.aktenzeichen = newValue;
   },
-})
+});
 
 const dokumenttyp = computed({
   get: () =>
@@ -77,18 +77,18 @@ const dokumenttyp = computed({
         }
       : undefined,
   set: (newValue: DocumentType) => {
-    store.documentUnit!.dokumenttyp = newValue
+    store.documentUnit!.dokumenttyp = newValue;
   },
-})
+});
 
 const dokumenttypZusatz = computed({
   get: () => store.documentUnit!.dokumenttypZusatz,
   set: (newValue) => {
-    store.documentUnit!.dokumenttypZusatz = newValue
+    store.documentUnit!.dokumenttypZusatz = newValue;
   },
-})
+});
 
-useScrollToHash()
+useScrollToHash();
 </script>
 
 <template>

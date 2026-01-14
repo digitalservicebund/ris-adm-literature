@@ -1,252 +1,252 @@
 <script setup lang="ts" generic="T extends InputModelProps">
-import { useDebounceFn } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import FlexContainer from '@/components/FlexContainer.vue'
+import { useDebounceFn } from "@vueuse/core";
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
+import FlexContainer from "@/components/FlexContainer.vue";
 import type {
   ComboboxAttributes,
   ComboboxInputModelType,
   ComboboxItem,
-} from '@/components/input/types'
-import IconKeyboardArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
-import IconKeyboardArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
-import IconClear from '~icons/material-symbols/close-small'
+} from "@/components/input/types";
+import IconKeyboardArrowDown from "~icons/ic/baseline-keyboard-arrow-down";
+import IconKeyboardArrowUp from "~icons/ic/baseline-keyboard-arrow-up";
+import IconClear from "~icons/material-symbols/close-small";
 
 const props = defineProps<{
-  id: string
-  itemService: ComboboxAttributes['itemService']
-  modelValue: T
-  ariaLabel: string
-  placeholder?: string
-  clearOnChoosingItem?: boolean
-  manualEntry?: boolean
-  noClear?: boolean
-  hasError?: boolean
-  readOnly?: boolean
-}>()
+  id: string;
+  itemService: ComboboxAttributes["itemService"];
+  modelValue: T;
+  ariaLabel: string;
+  placeholder?: string;
+  clearOnChoosingItem?: boolean;
+  manualEntry?: boolean;
+  noClear?: boolean;
+  hasError?: boolean;
+  readOnly?: boolean;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value?: ComboboxInputModelType]
-  focus: [void]
-}>()
+  "update:modelValue": [value?: ComboboxInputModelType];
+  focus: [void];
+}>();
 
-const isDefined = <A,>(item: A | undefined): item is A => !!item
+const isDefined = <A,>(item: A | undefined): item is A => !!item;
 
-const NO_MATCHING_ENTRY = 'Kein passender Eintrag'
+const NO_MATCHING_ENTRY = "Kein passender Eintrag";
 
-const candidateForSelection = ref<ComboboxItem>() // <-- the top search result
-const inputText = ref<string>()
+const candidateForSelection = ref<ComboboxItem>(); // <-- the top search result
+const inputText = ref<string>();
 const currentlyDisplayedItems = computed<ComboboxItem[]>(() =>
   [...(existingItems.value ?? []), createNewItem.value].filter(isDefined),
-)
-const createNewItem = ref<ComboboxItem>()
-const showDropdown = ref(false)
-const filter = ref<string>()
-const dropdownContainerRef = ref<HTMLElement>()
-const dropdownItemsRef = shallowRef<HTMLElement[]>([])
-const inputFieldRef = ref<HTMLInputElement>()
-const focusedItemIndex = ref<number>(-1)
+);
+const createNewItem = ref<ComboboxItem>();
+const showDropdown = ref(false);
+const filter = ref<string>();
+const dropdownContainerRef = ref<HTMLElement>();
+const dropdownItemsRef = shallowRef<HTMLElement[]>([]);
+const inputFieldRef = ref<HTMLInputElement>();
+const focusedItemIndex = ref<number>(-1);
 
 const ariaLabelDropdownIcon = computed(() =>
-  showDropdown.value ? 'Dropdown schließen' : 'Dropdown öffnen',
-)
+  showDropdown.value ? "Dropdown schließen" : "Dropdown öffnen",
+);
 
 const conditionalClasses = computed(() => ({
-  '!shadow-red-900 !bg-red-200': props.hasError,
-  '!shadow-none !bg-blue-300': props.readOnly,
-}))
+  "!shadow-red-900 !bg-red-200": props.hasError,
+  "!shadow-none !bg-blue-300": props.readOnly,
+}));
 
 const toggleDropdown = async () => {
-  focusedItemIndex.value = -1
-  showDropdown.value = !showDropdown.value
+  focusedItemIndex.value = -1;
+  showDropdown.value = !showDropdown.value;
   if (showDropdown.value) {
-    filter.value = inputText.value
-    await updateCurrentItems()
-    inputFieldRef.value?.focus()
+    filter.value = inputText.value;
+    await updateCurrentItems();
+    inputFieldRef.value?.focus();
   }
-}
+};
 
 const showUpdatedDropdown = async () => {
-  emit('focus')
-  focusedItemIndex.value = -1
-  showDropdown.value = true
-  filter.value = inputText.value
-  await updateCurrentItems()
-}
+  emit("focus");
+  focusedItemIndex.value = -1;
+  showDropdown.value = true;
+  filter.value = inputText.value;
+  await updateCurrentItems();
+};
 
 const clearDropdown = async () => {
-  if (props.noClear) return
+  if (props.noClear) return;
 
-  emit('update:modelValue', undefined)
-  filter.value = ''
-  inputText.value = ''
-  focusedItemIndex.value = -1
+  emit("update:modelValue", undefined);
+  filter.value = "";
+  inputText.value = "";
+  focusedItemIndex.value = -1;
   if (showDropdown.value) {
-    await updateCurrentItems()
+    await updateCurrentItems();
   }
-  inputFieldRef.value?.focus()
-}
+  inputFieldRef.value?.focus();
+};
 
 const setChosenItem = (item: ComboboxItem) => {
-  if (item.label === NO_MATCHING_ENTRY) return
-  showDropdown.value = false
-  emit('update:modelValue', item.value)
+  if (item.label === NO_MATCHING_ENTRY) return;
+  showDropdown.value = false;
+  emit("update:modelValue", item.value);
   if (props.clearOnChoosingItem) {
-    filter.value = ''
-    inputText.value = ''
+    filter.value = "";
+    inputText.value = "";
   } else {
-    filter.value = item.label
+    filter.value = item.label;
   }
-  candidateForSelection.value = undefined
-}
+  candidateForSelection.value = undefined;
+};
 
 /** When user hits enter while fetching -> wait for results before executing enter action */
-const hasQueuedEnter = ref(false)
+const hasQueuedEnter = ref(false);
 const onEnter = async () => {
   if (isFetchingOrTyping.value) {
-    hasQueuedEnter.value = true
+    hasQueuedEnter.value = true;
   } else {
-    hasQueuedEnter.value = false
+    hasQueuedEnter.value = false;
     if (candidateForSelection.value) {
-      setChosenItem(candidateForSelection.value)
-      return
+      setChosenItem(candidateForSelection.value);
+      return;
     }
-    await toggleDropdown()
+    await toggleDropdown();
   }
-}
+};
 
 const onInput = async () => {
-  if (inputText.value === '') {
-    if (!props.noClear) emit('update:modelValue', undefined)
+  if (inputText.value === "") {
+    if (!props.noClear) emit("update:modelValue", undefined);
   }
 
-  await showUpdatedDropdown()
-}
+  await showUpdatedDropdown();
+};
 
 const keyArrowUp = () => {
   if (focusedItemIndex.value > 0) {
-    focusedItemIndex.value -= 1
+    focusedItemIndex.value -= 1;
   }
-  updateFocusedItem()
-}
+  updateFocusedItem();
+};
 
 const keyArrowDown = () => {
   if (focusedItemIndex.value < dropdownItemsRef.value.length - 1) {
-    focusedItemIndex.value += 1
+    focusedItemIndex.value += 1;
   }
-  updateFocusedItem()
-}
+  updateFocusedItem();
+};
 
 const updateFocusedItem = () => {
-  candidateForSelection.value = undefined
-  const item = dropdownItemsRef.value[focusedItemIndex.value]
-  if (item && item.innerText !== NO_MATCHING_ENTRY) item.focus()
-}
+  candidateForSelection.value = undefined;
+  const item = dropdownItemsRef.value[focusedItemIndex.value];
+  if (item && item.innerText !== NO_MATCHING_ENTRY) item.focus();
+};
 
-const isFetchingOrTyping = ref(false)
+const isFetchingOrTyping = ref(false);
 
 /**
  * When a new request is started while a previous one is still running -> cancel the old one.
  * The canceled one should not unset the isFetching state as it is followed by a new request.
  */
 async function updateCurrentItems() {
-  isFetchingOrTyping.value = true
+  isFetchingOrTyping.value = true;
   if (canAbort.value) {
-    abort()
+    abort();
   }
-  const response = await debouncedFetchItems()
-  const wasCanceled = !response
-  if (!wasCanceled) isFetchingOrTyping.value = false
+  const response = await debouncedFetchItems();
+  const wasCanceled = !response;
+  if (!wasCanceled) isFetchingOrTyping.value = false;
 }
 
 /** We do not want to select the first result on enter when a request is running, the selection is deferred until the results are in */
 watch(isFetchingOrTyping, async (isFetching, wasFetching) => {
   if (wasFetching === true && isFetching === false) {
     if (hasQueuedEnter.value) {
-      hasQueuedEnter.value = false
-      await onEnter()
+      hasQueuedEnter.value = false;
+      await onEnter();
     }
   }
-})
+});
 
-const { data: existingItems, execute: fetchItems, canAbort, abort } = props.itemService(filter)
-const debouncedFetchItems = useDebounceFn(fetchItems, 200)
+const { data: existingItems, execute: fetchItems, canAbort, abort } = props.itemService(filter);
+const debouncedFetchItems = useDebounceFn(fetchItems, 200);
 
-const noMatchingItems = [{ label: NO_MATCHING_ENTRY }]
+const noMatchingItems = [{ label: NO_MATCHING_ENTRY }];
 
 /**
  * When the search result (existingItems) was fetched, we update the displayed items.
  * (Special cases: no results, createNewItem "neu erstellen")
  */
 watch(existingItems, () => {
-  if (existingItems.value === null) return
-  if (existingItems.value === noMatchingItems) return
+  if (existingItems.value === null) return;
+  if (existingItems.value === noMatchingItems) return;
 
-  const noMatchesFound = !existingItems.value.length
-  const hasManualEntry = props.manualEntry && inputText.value
+  const noMatchesFound = !existingItems.value.length;
+  const hasManualEntry = props.manualEntry && inputText.value;
   if (!hasManualEntry && noMatchesFound) {
-    existingItems.value = noMatchingItems
-    candidateForSelection.value = undefined
-    return
+    existingItems.value = noMatchingItems;
+    candidateForSelection.value = undefined;
+    return;
   }
 
-  const exactMatchFound = existingItems.value?.find((item) => item.label === filter.value?.trim())
+  const exactMatchFound = existingItems.value?.find((item) => item.label === filter.value?.trim());
   if (!exactMatchFound && hasManualEntry) {
     createNewItem.value = {
       label: `${inputText.value} neu erstellen`,
       value: { label: inputText.value! },
-      labelCssClasses: 'ris-label1-bold text-blue-800 underline',
-    }
+      labelCssClasses: "ris-label1-bold text-blue-800 underline",
+    };
   } else {
-    createNewItem.value = undefined
+    createNewItem.value = undefined;
   }
 
-  candidateForSelection.value = existingItems.value?.[0] ?? createNewItem.value
-  focusedItemIndex.value = 0
-})
+  candidateForSelection.value = existingItems.value?.[0] ?? createNewItem.value;
+  focusedItemIndex.value = 0;
+});
 
 const handleClickOutside = (event: MouseEvent) => {
-  const dropdown = dropdownContainerRef.value
+  const dropdown = dropdownContainerRef.value;
   if (
     !dropdown ||
     (event.target as HTMLElement) === dropdown ||
     event.composedPath().includes(dropdown)
   )
-    return
-  closeDropdownAndRevertToLastSavedValue()
-}
+    return;
+  closeDropdownAndRevertToLastSavedValue();
+};
 
 const selectAllText = () => {
-  if (!props.readOnly) inputFieldRef.value?.select()
-}
+  if (!props.readOnly) inputFieldRef.value?.select();
+};
 
 const closeDropdownAndRevertToLastSavedValue = () => {
-  showDropdown.value = false
-  inputText.value = props.modelValue?.label
-}
+  showDropdown.value = false;
+  inputText.value = props.modelValue?.label;
+};
 
 watch(
   props,
   () => {
-    inputText.value = props.modelValue?.label
+    inputText.value = props.modelValue?.label;
   },
   { immediate: true },
-)
+);
 
 onMounted(() => {
-  globalThis.addEventListener('click', handleClickOutside)
-})
+  globalThis.addEventListener("click", handleClickOutside);
+});
 
 onBeforeUnmount(() => {
-  globalThis.removeEventListener('click', handleClickOutside)
-})
+  globalThis.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <script lang="ts">
 export type InputModelProps =
   | {
-      label: string
+      label: string;
     }
-  | undefined
+  | undefined;
 </script>
 
 <template>

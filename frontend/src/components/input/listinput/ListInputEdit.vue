@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
-import Checkbox from 'primevue/checkbox'
-import InputField, { LabelPosition } from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
+import { computed, nextTick, ref, watch } from "vue";
+import Checkbox from "primevue/checkbox";
+import InputField, { LabelPosition } from "@/components/input/InputField.vue";
+import Button from "primevue/button";
 
 const props = defineProps<{
-  label: string
-  modelValue: string
-  sortAlphabetically: boolean
-  listItemCount: number
-}>()
+  label: string;
+  modelValue: string;
+  sortAlphabetically: boolean;
+  listItemCount: number;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
-  toggle: []
-  toggleSorting: [value: boolean]
-}>()
+  "update:modelValue": [value: string];
+  toggle: [];
+  toggleSorting: [value: boolean];
+}>();
 
-const localModelValue = ref(props.modelValue)
+const localModelValue = ref(props.modelValue);
 
 /**
  * Computed property to manage sorting alphabetically.
@@ -28,17 +28,17 @@ const localModelValue = ref(props.modelValue)
 const sortAlphabetically = computed({
   get: () => props.sortAlphabetically,
   set: (value) => {
-    emit('toggleSorting', value)
+    emit("toggleSorting", value);
   },
-})
+});
 
 /**
  * Cancels the edit mode and toggles back to the display mode, if there is content.
  * When no content, this resets the list input to show the category wrapper.
  */
 const cancelEdit = () => {
-  emit('toggle')
-}
+  emit("toggle");
+};
 
 /**
  * Adjusts the height of the textarea dynamically based on its content.
@@ -47,10 +47,10 @@ const cancelEdit = () => {
  */
 const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
   if (textarea) {
-    textarea.style.height = 'auto'
-    textarea.style.height = `${textarea.scrollHeight}px `
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px `;
   }
-}
+};
 
 /**
  * Watches the `localModelValue` to adjust the textarea height when the content changes.
@@ -59,12 +59,12 @@ const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
 watch(
   localModelValue,
   async () => {
-    await nextTick() // Wait for DOM render
-    const textarea = document.querySelector('textarea')
-    adjustTextareaHeight(textarea as HTMLTextAreaElement)
+    await nextTick(); // Wait for DOM render
+    const textarea = document.querySelector("textarea");
+    adjustTextareaHeight(textarea as HTMLTextAreaElement);
   },
   { immediate: true },
-)
+);
 </script>
 
 <template>

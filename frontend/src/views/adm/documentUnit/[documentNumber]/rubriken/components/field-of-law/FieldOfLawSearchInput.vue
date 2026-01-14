@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import InputField from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import IconSearch from '~icons/ic/baseline-search'
+import InputField from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import IconSearch from "~icons/ic/baseline-search";
 
 defineProps<{
-  errorLabel?: string
-}>()
+  errorLabel?: string;
+}>();
 
 const emit = defineEmits<{
-  search: [void]
-}>()
+  search: [void];
+}>();
 
-const identifier = defineModel<string>('identifier')
-const description = defineModel<string>('description')
-const norm = defineModel<string>('norm')
+const identifier = defineModel<string>("identifier");
+const description = defineModel<string>("description");
+const norm = defineModel<string>("norm");
 </script>
 
 <template>

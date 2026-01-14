@@ -1,32 +1,32 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-import { computed, onMounted } from 'vue'
-import ExtraContentSidePanelMenu from '@/components/ExtraContentSidePanelMenu.vue'
-import InputField from '@/components/input/InputField.vue'
-import TextAreaInput from '@/components/input/TextAreaInput.vue'
-import SideToggle from '@/components/SideToggle.vue'
-import { OpeningDirection } from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/enumDisplayMode'
-import { useExtraContentSidePanelStore } from '@/stores/extraContentSidePanelStore'
-import { useRoute } from 'vue-router'
-import type { DocumentationUnit } from '@/domain/documentUnit'
+import type { Component } from "vue";
+import { computed, onMounted } from "vue";
+import ExtraContentSidePanelMenu from "@/components/ExtraContentSidePanelMenu.vue";
+import InputField from "@/components/input/InputField.vue";
+import TextAreaInput from "@/components/input/TextAreaInput.vue";
+import SideToggle from "@/components/SideToggle.vue";
+import { OpeningDirection } from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/enumDisplayMode";
+import { useExtraContentSidePanelStore } from "@/stores/extraContentSidePanelStore";
+import { useRoute } from "vue-router";
+import type { DocumentationUnit } from "@/domain/documentUnit";
 
 const props = defineProps<{
-  documentUnit?: DocumentationUnit
-  showEditButton?: boolean
-  hidePanelModeBar?: boolean
-  sidePanelShortcut?: string
-  icon?: Component
-}>()
+  documentUnit?: DocumentationUnit;
+  showEditButton?: boolean;
+  hidePanelModeBar?: boolean;
+  sidePanelShortcut?: string;
+  icon?: Component;
+}>();
 
-const store = useExtraContentSidePanelStore()
+const store = useExtraContentSidePanelStore();
 
-const route = useRoute()
+const route = useRoute();
 
 const hasNote = computed(() => {
-  return !!props.documentUnit!.note && props.documentUnit!.note.length > 0
-})
+  return !!props.documentUnit!.note && props.documentUnit!.note.length > 0;
+});
 
-const shortCut = computed(() => props.sidePanelShortcut ?? '<')
+const shortCut = computed(() => props.sidePanelShortcut ?? "<");
 
 /**
  * Expands or collapses the panel.
@@ -35,7 +35,7 @@ const shortCut = computed(() => props.sidePanelShortcut ?? '<')
  * @param expand optional boolean to enforce expanding or collapsing
  */
 function togglePanel(expand?: boolean): boolean {
-  return store.togglePanel(expand)
+  return store.togglePanel(expand);
 }
 
 /**
@@ -48,11 +48,11 @@ function togglePanel(expand?: boolean): boolean {
  */
 onMounted(() => {
   if (route.query.showNotePanel) {
-    store.isExpanded = route.query.showNotePanel === 'true'
+    store.isExpanded = route.query.showNotePanel === "true";
   } else {
-    store.isExpanded = hasNote.value || false
+    store.isExpanded = hasNote.value || false;
   }
-})
+});
 </script>
 
 <template>

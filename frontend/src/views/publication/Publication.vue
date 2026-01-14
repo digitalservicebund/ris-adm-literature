@@ -1,19 +1,18 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import Button from 'primevue/button'
-import IconCheck from '~icons/material-symbols/check'
-import { Message } from 'primevue'
+import Button from "primevue/button";
+import IconCheck from "~icons/material-symbols/check";
+import { Message } from "primevue";
 
 defineProps<{
-  isLoading: boolean
-  isPublished: boolean
-  isDisabled: boolean
-  error: Error | null
-}>()
+  isLoading: boolean;
+  isPublished: boolean;
+  isDisabled: boolean;
+  error: Error | null;
+}>();
 
 defineEmits<{
-  publish: [void]
-}>()
+  publish: [void];
+}>();
 </script>
 
 <template>

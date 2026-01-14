@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-import TitleElement from '@/components/TitleElement.vue'
-import InputField from '@/components/input/InputField.vue'
-import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { useUliDocumentUnitStore } from '@/stores/uliDocStore'
-import DokumentTyp from '@/views/literature/DokumentTyp.vue'
-import { DocumentCategory } from '@/domain/documentType'
-import TitelSection from './TitelSection.vue'
-import { useScrollToHash } from '@/composables/useScroll'
-import InputText from 'primevue/inputtext'
-import { useLiteratureRubriken } from '@/views/literature/useLiteratureRubriken'
+import TitleElement from "@/components/TitleElement.vue";
+import InputField from "@/components/input/InputField.vue";
+import { useStoreForRoute } from "@/composables/useStoreForRoute";
+import type { useUliDocumentUnitStore } from "@/stores/uliDocStore";
+import DokumentTyp from "@/views/literature/DokumentTyp.vue";
+import { DocumentCategory } from "@/domain/documentType";
+import TitelSection from "./TitelSection.vue";
+import { useScrollToHash } from "@/composables/useScroll";
+import InputText from "primevue/inputtext";
+import { useLiteratureRubriken } from "@/views/literature/useLiteratureRubriken";
 
-const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>()
+const store = useStoreForRoute<ReturnType<typeof useUliDocumentUnitStore>>();
 const {
   veroeffentlichungsjahr,
   dokumenttypen,
   hauptsachtitel,
   dokumentarischerTitel,
   hauptsachtitelZusatz,
-} = useLiteratureRubriken(store)
+} = useLiteratureRubriken(store);
 
-useScrollToHash()
+useScrollToHash();
 </script>
 
 <template>

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import TitleElement from '@/components/TitleElement.vue'
-import { onUnmounted, ref } from 'vue'
-import Plausibilitaetspruefung from './Plausibilitaetspruefung.vue'
-import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { DocumentUnitStore } from '@/stores/types'
-import { storeToRefs } from 'pinia'
-import Publication from './Publication.vue'
+import TitleElement from "@/components/TitleElement.vue";
+import { onUnmounted, ref } from "vue";
+import Plausibilitaetspruefung from "./Plausibilitaetspruefung.vue";
+import { useStoreForRoute } from "@/composables/useStoreForRoute";
+import type { DocumentUnitStore } from "@/stores/types";
+import { storeToRefs } from "pinia";
+import Publication from "./Publication.vue";
 
-const store = useStoreForRoute<DocumentUnitStore>()
+const store = useStoreForRoute<DocumentUnitStore>();
 
-const { error, isLoading, missingRequiredFields } = storeToRefs(store)
-const isPublished = ref(false)
+const { error, isLoading, missingRequiredFields } = storeToRefs(store);
+const isPublished = ref(false);
 
 async function onClickPublish() {
-  isPublished.value = await store.publish()
+  isPublished.value = await store.publish();
 }
 
-onUnmounted(() => (error.value = null))
+onUnmounted(() => (error.value = null));
 </script>
 
 <template>

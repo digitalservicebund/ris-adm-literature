@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import ActiveCitationInput from './ActiveCitationInput.vue'
-import ActiveCitationSummary from './ActiveCitationSummary.vue'
-import EditableList from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/EditableList.vue'
-import ActiveCitation from '@/domain/activeCitation'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
+import { computed } from "vue";
+import ActiveCitationInput from "./ActiveCitationInput.vue";
+import ActiveCitationSummary from "./ActiveCitationSummary.vue";
+import EditableList from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/EditableList.vue";
+import ActiveCitation from "@/domain/activeCitation";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
 
-const store = useAdmDocUnitStore()
+const store = useAdmDocUnitStore();
 
 const activeCitations = computed({
   get: () => store.documentUnit!.activeCitations ?? [],
   set: (newValues: ActiveCitation[]) => {
-    store.documentUnit!.activeCitations = newValues
+    store.documentUnit!.activeCitations = newValues;
   },
-})
+});
 
-const defaultValue = new ActiveCitation() as ActiveCitation
+const defaultValue = new ActiveCitation() as ActiveCitation;
 </script>
 
 <template>

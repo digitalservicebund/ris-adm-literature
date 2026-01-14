@@ -1,25 +1,25 @@
-import { useApiFetch } from '../apiService'
-import { type UseFetchReturn } from '@vueuse/core'
-import type { UliDocumentationUnit, UliDocumentUnitResponse } from '@/domain/uli/uliDocumentUnit'
+import { useApiFetch } from "../apiService";
+import { type UseFetchReturn } from "@vueuse/core";
+import type { UliDocumentationUnit, UliDocumentUnitResponse } from "@/domain/uli/uliDocumentUnit";
 import type {
   SliDocumentationUnit,
   SliDocumentUnitResponse,
   SliDocUnitListItem,
   SliDocUnitSearchParams,
-} from '@/domain/sli/sliDocumentUnit'
-import { computed, type Ref } from 'vue'
-import { buildUrlWithParams } from '@/utils/urlHelpers'
+} from "@/domain/sli/sliDocumentUnit";
+import { computed, type Ref } from "vue";
+import { buildUrlWithParams } from "@/utils/urlHelpers";
 import type {
   AdmAktivzitierungListItem,
   AdmDocUnitSearchParams,
-} from '@/domain/adm/admDocumentUnit'
-import { splitTrimFirstComma } from '@/utils/stringsUtil'
-import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
-import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
+} from "@/domain/adm/admDocumentUnit";
+import { splitTrimFirstComma } from "@/utils/stringsUtil";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
+import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
 
-const LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/documentation-units'
-const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/uli/documentation-units'
-const SLI_LITERATURE_DOCUMENTATION_UNITS_URL = '/literature/sli/documentation-units'
+const LITERATURE_DOCUMENTATION_UNITS_URL = "/literature/documentation-units";
+const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = "/literature/uli/documentation-units";
+const SLI_LITERATURE_DOCUMENTATION_UNITS_URL = "/literature/sli/documentation-units";
 
 export function usePutPublishUliDocUnit(
   documentUnit: UliDocumentationUnit,
@@ -30,13 +30,13 @@ export function usePutPublishUliDocUnit(
       afterFetch: ({ data }) => {
         return {
           data: data ? mapResponseToUliDocUnit(data) : null,
-        }
+        };
       },
       immediate: false,
     },
   )
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 export function usePutPublishSliDocUnit(
@@ -48,21 +48,21 @@ export function usePutPublishSliDocUnit(
       afterFetch: ({ data }) => {
         return {
           data: data ? mapResponseToSliDocUnit(data) : null,
-        }
+        };
       },
       immediate: false,
     },
   )
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 export function usePostUliDocUnit(): UseFetchReturn<UliDocumentationUnit> {
-  return useApiFetch(ULI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
+  return useApiFetch(ULI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post();
 }
 
 export function usePostSliDocUnit(): UseFetchReturn<SliDocumentationUnit> {
-  return useApiFetch(SLI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post()
+  return useApiFetch(SLI_LITERATURE_DOCUMENTATION_UNITS_URL).json().post();
 }
 
 export function useGetUliDocUnit(documentNumber: string): UseFetchReturn<UliDocumentationUnit> {
@@ -70,10 +70,10 @@ export function useGetUliDocUnit(documentNumber: string): UseFetchReturn<UliDocu
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToUliDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
-  }).json()
+  }).json();
 }
 
 export function useGetSliDocUnit(documentNumber: string): UseFetchReturn<SliDocumentationUnit> {
@@ -81,10 +81,10 @@ export function useGetSliDocUnit(documentNumber: string): UseFetchReturn<SliDocu
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToSliDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
-  }).json()
+  }).json();
 }
 
 export function usePutUliDocUnit(
@@ -94,12 +94,12 @@ export function usePutUliDocUnit(
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToUliDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
   })
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 export function usePutSliDocUnit(
@@ -109,12 +109,12 @@ export function usePutSliDocUnit(
     afterFetch: ({ data }) => {
       return {
         data: data ? mapResponseToSliDocUnit(data) : null,
-      }
+      };
     },
     immediate: false,
   })
     .json()
-    .put(documentUnit)
+    .put(documentUnit);
 }
 
 export function useGetSliPaginatedDocUnits(
@@ -130,12 +130,12 @@ export function useGetSliPaginatedDocUnits(
       veroeffentlichungsjahr: search?.value?.veroeffentlichungsJahr?.toString(),
       dokumenttypen: search?.value?.dokumenttypen?.map((d) => d.abbreviation).join(),
       verfasser: search?.value?.verfasser?.join(),
-      sortByProperty: 'documentNumber',
-      sortDirection: 'DESC',
+      sortByProperty: "documentNumber",
+      sortDirection: "DESC",
     }),
-  )
+  );
 
-  return useApiFetch(urlWithParams, { immediate: false }).json()
+  return useApiFetch(urlWithParams, { immediate: false }).json();
 }
 
 export function useGetAdmPaginatedDocUnitsForSli(
@@ -144,7 +144,7 @@ export function useGetAdmPaginatedDocUnitsForSli(
   search: Ref<AdmDocUnitSearchParams | undefined>,
 ) {
   const urlWithParams = computed(() =>
-    buildUrlWithParams('/literature/aktivzitierungen/adm', {
+    buildUrlWithParams("/literature/aktivzitierungen/adm", {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
       documentNumber: search?.value?.documentNumber?.toString(),
@@ -154,10 +154,10 @@ export function useGetAdmPaginatedDocUnitsForSli(
       aktenzeichen: search?.value?.aktenzeichen,
       dokumenttyp: search?.value?.dokumenttyp?.toString(),
       normgeber: search?.value?.normgeber,
-      sortByProperty: 'documentNumber',
-      sortDirection: 'DESC',
+      sortByProperty: "documentNumber",
+      sortDirection: "DESC",
     }),
-  )
+  );
 
   return useApiFetch(urlWithParams, {
     immediate: false,
@@ -169,7 +169,7 @@ export function useGetAdmPaginatedDocUnitsForSli(
           }
         : null,
     }),
-  }).json()
+  }).json();
 }
 
 export function mapAdmSearchResultToAktivzitierung(
@@ -177,7 +177,7 @@ export function mapAdmSearchResultToAktivzitierung(
 ): AktivzitierungAdm {
   const [periodikum, zitatstelle] = result.fundstellen?.[0]
     ? splitTrimFirstComma(result.fundstellen[0])
-    : []
+    : [];
 
   return {
     id: crypto.randomUUID(),
@@ -188,14 +188,14 @@ export function mapAdmSearchResultToAktivzitierung(
     aktenzeichen: result.aktenzeichenList?.[0],
     periodikum,
     zitatstelle,
-  }
+  };
 }
 
 export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): AktivzitierungSli {
   const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
     abbreviation: abbr,
     name: abbr,
-  }))
+  }));
 
   return {
     id: crypto.randomUUID(),
@@ -204,15 +204,15 @@ export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): 
     veroeffentlichungsJahr: result.veroeffentlichungsjahr,
     verfasser: result.verfasser || [],
     dokumenttypen: dokumenttypen || [],
-  }
+  };
 }
 
 function mapResponseToSliDocUnit(data: SliDocumentUnitResponse): SliDocumentationUnit {
-  return mapResponseToLiteratureDocUnit(data)
+  return mapResponseToLiteratureDocUnit(data);
 }
 
 function mapResponseToUliDocUnit(data: UliDocumentUnitResponse): UliDocumentationUnit {
-  return mapResponseToLiteratureDocUnit(data)
+  return mapResponseToLiteratureDocUnit(data);
 }
 
 function mapResponseToLiteratureDocUnit(data: UliDocumentUnitResponse | SliDocumentUnitResponse) {
@@ -220,6 +220,6 @@ function mapResponseToLiteratureDocUnit(data: UliDocumentUnitResponse | SliDocum
     ...data.json,
     id: data.id,
     documentNumber: data.documentNumber,
-    note: data.administrativeData.note || '',
-  }
+    note: data.administrativeData.note || "",
+  };
 }

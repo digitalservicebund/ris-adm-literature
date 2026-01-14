@@ -1,50 +1,50 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect, Page } from "@playwright/test";
 
-const getFormaldatenSection = (page: Page) => page.getByRole('region', { name: 'Formaldaten' })
+const getFormaldatenSection = (page: Page) => page.getByRole("region", { name: "Formaldaten" });
 
-test.describe('SLI Rubriken - Veroeffentlichungsjahr', () => {
+test.describe("SLI Rubriken - Veroeffentlichungsjahr", () => {
   test(
-    'Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading. Dates can be deleted again and persisted.',
-    { tag: ['@RISDEV-10142', '@RISDEV-10119', '@RISDEV-10287'] },
+    "Veröffentlichungsjahr is a mandatory field (*), accepts alphanumeric input, and persists after saving and reloading. Dates can be deleted again and persisted.",
+    { tag: ["@RISDEV-10142", "@RISDEV-10119", "@RISDEV-10287"] },
     async ({ page }) => {
       // given
-      await page.goto('/literatur-selbstaendig')
-      await page.getByRole('button', { name: 'Neue Dokumentationseinheit' }).click()
-      await page.waitForURL(/dokumentationseinheit/)
-      const formaldaten = getFormaldatenSection(page)
+      await page.goto("/literatur-selbstaendig");
+      await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
+      await page.waitForURL(/dokumentationseinheit/);
+      const formaldaten = getFormaldatenSection(page);
 
       // then - field marked as required
-      await expect(formaldaten.getByText('Veröffentlichungsjahr *')).toBeVisible()
+      await expect(formaldaten.getByText("Veröffentlichungsjahr *")).toBeVisible();
 
       // when - enter alphanumeric input (variable length)
-      const veroeffentlichungsjahrInput = formaldaten.getByRole('textbox', {
-        name: 'Veröffentlichungsjahr',
-      })
-      await veroeffentlichungsjahrInput.fill('2020 bis 2025 $%&abc123 🎇')
+      const veroeffentlichungsjahrInput = formaldaten.getByRole("textbox", {
+        name: "Veröffentlichungsjahr",
+      });
+      await veroeffentlichungsjahrInput.fill("2020 bis 2025 $%&abc123 🎇");
 
       // when - save
-      await page.getByRole('button', { name: 'Speichern' }).click()
+      await page.getByRole("button", { name: "Speichern" }).click();
 
       // then - shows save confirmation
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
 
       // when - reload
-      await page.reload()
+      await page.reload();
 
       // then - value persists
-      await expect(veroeffentlichungsjahrInput).toHaveValue('2020 bis 2025 $%&abc123 🎇')
+      await expect(veroeffentlichungsjahrInput).toHaveValue("2020 bis 2025 $%&abc123 🎇");
 
-      await veroeffentlichungsjahrInput.fill('')
-      await page.getByText('Speichern').click()
+      await veroeffentlichungsjahrInput.fill("");
+      await page.getByText("Speichern").click();
 
       // then
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible()
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
 
       // when
-      await page.reload()
+      await page.reload();
 
       // then
-      await expect(veroeffentlichungsjahrInput).toHaveValue('')
+      await expect(veroeffentlichungsjahrInput).toHaveValue("");
     },
-  )
-})
+  );
+});

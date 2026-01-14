@@ -3,54 +3,54 @@
 // https://github.com/ueberdosis/tiptap/issues/1036#issuecomment-981094752
 // https://github.com/django-tiptap/django_tiptap/blob/main/django_tiptap/templates/forms/tiptap_textarea.html#L453-L602
 
-import { type CommandProps, Extension, type KeyboardShortcutCommand } from '@tiptap/core'
-import { TextSelection, Transaction } from 'prosemirror-state'
+import { type CommandProps, Extension, type KeyboardShortcutCommand } from "@tiptap/core";
+import { TextSelection, Transaction } from "prosemirror-state";
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     indent: {
-      indent: () => ReturnType
-      outdent: () => ReturnType
-    }
+      indent: () => ReturnType;
+      outdent: () => ReturnType;
+    };
   }
 }
 
 type IndentOptions = {
-  names: string[]
-  indentRange: number
-  minIndentLevel: number
-  maxIndentLevel: number
-  defaultIndentLevel: number
-  HTMLAttributes: Record<string, unknown>
-}
+  names: string[];
+  indentRange: number;
+  minIndentLevel: number;
+  maxIndentLevel: number;
+  defaultIndentLevel: number;
+  HTMLAttributes: Record<string, unknown>;
+};
 
-type IndentType = 'indent' | 'outdent'
+type IndentType = "indent" | "outdent";
 
-const clamp = (val: number, min: number, max: number): number => Math.min(Math.max(val, min), max)
+const clamp = (val: number, min: number, max: number): number => Math.min(Math.max(val, min), max);
 
 const updateIndentLevel = (
   transaction: Transaction,
   options: IndentOptions,
   type: IndentType,
 ): Transaction => {
-  const { doc, selection } = transaction
-  if (!doc || !selection || !(selection instanceof TextSelection)) return transaction
+  const { doc, selection } = transaction;
+  if (!doc || !selection || !(selection instanceof TextSelection)) return transaction;
 
-  const { from, to } = selection
+  const { from, to } = selection;
   doc.nodesBetween(from, to, (node, pos) => {
     if (options.names.includes(node.type.name)) {
       transaction = setNodeIndentMarkup(
         transaction,
         pos,
-        options.indentRange * (type === 'indent' ? 1 : -1),
+        options.indentRange * (type === "indent" ? 1 : -1),
         options,
-      )
-      return false
+      );
+      return false;
     }
-    return true
-  })
-  return transaction
-}
+    return true;
+  });
+  return transaction;
+};
 
 const setNodeIndentMarkup = (
   transaction: Transaction,
@@ -58,40 +58,40 @@ const setNodeIndentMarkup = (
   delta: number,
   options: IndentOptions,
 ): Transaction => {
-  const node = transaction.doc?.nodeAt(pos)
-  if (!node) return transaction
+  const node = transaction.doc?.nodeAt(pos);
+  if (!node) return transaction;
 
   const indent = clamp(
     (node.attrs.indent ?? 0) + delta,
     options.minIndentLevel * options.indentRange,
     options.maxIndentLevel * options.indentRange,
-  )
-  if (indent === node.attrs.indent) return transaction
+  );
+  if (indent === node.attrs.indent) return transaction;
 
-  return transaction.setNodeMarkup(pos, node.type, { ...node.attrs, indent }, node.marks)
-}
+  return transaction.setNodeMarkup(pos, node.type, { ...node.attrs, indent }, node.marks);
+};
 
 const getOutdent =
   (): KeyboardShortcutCommand =>
   ({ editor }) => {
     // If the cursor is not at the start of the node, don't unindent
-    if (editor.state.selection.$head.parentOffset > 0) return false
+    if (editor.state.selection.$head.parentOffset > 0) return false;
 
-    return editor.chain().focus().outdent().run()
-  }
+    return editor.chain().focus().outdent().run();
+  };
 
 export const Indent = Extension.create<IndentOptions>({
-  name: 'indent',
+  name: "indent",
 
   addOptions() {
     return {
-      names: ['heading', 'paragraph'],
+      names: ["heading", "paragraph"],
       indentRange: 40,
       minIndentLevel: 0,
       maxIndentLevel: 10,
       defaultIndentLevel: 0,
       HTMLAttributes: {},
-    }
+    };
   },
 
   addGlobalAttributes() {
@@ -112,7 +112,7 @@ export const Indent = Extension.create<IndentOptions>({
           },
         },
       },
-    ]
+    ];
   },
 
   addCommands() {
@@ -120,39 +120,39 @@ export const Indent = Extension.create<IndentOptions>({
       indent:
         () =>
         ({ tr, state, dispatch }: CommandProps) => {
-          tr = updateIndentLevel(tr.setSelection(state.selection), this.options, 'indent')
+          tr = updateIndentLevel(tr.setSelection(state.selection), this.options, "indent");
           if (tr.docChanged && dispatch) {
-            dispatch(tr)
-            return true
+            dispatch(tr);
+            return true;
           }
-          return false
+          return false;
         },
       outdent:
         () =>
         ({ tr, state, dispatch }: CommandProps) => {
-          tr = updateIndentLevel(tr.setSelection(state.selection), this.options, 'outdent')
+          tr = updateIndentLevel(tr.setSelection(state.selection), this.options, "outdent");
           if (tr.docChanged && dispatch) {
-            dispatch(tr)
-            return true
+            dispatch(tr);
+            return true;
           }
-          return false
+          return false;
         },
-    }
+    };
   },
 
   addKeyboardShortcuts() {
     return {
       Backspace: getOutdent(),
-    }
+    };
   },
 
   onUpdate() {
-    const { editor } = this
-    if (editor.isActive('listItem')) {
-      const node = editor.state.selection.$head.node()
+    const { editor } = this;
+    if (editor.isActive("listItem")) {
+      const node = editor.state.selection.$head.node();
       if (node.attrs.indent) {
-        editor.commands.updateAttributes(node.type.name, { indent: 0 })
+        editor.commands.updateAttributes(node.type.name, { indent: 0 });
       }
     }
   },
-})
+});

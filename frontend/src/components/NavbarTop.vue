@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import IconBadge from '@/components/IconBadge.vue'
-import { useAuthentication } from '@/services/auth'
-import IconPermIdentity from '~icons/ic/baseline-perm-identity'
-import IconLogout from '~icons/ic/baseline-logout'
-import FlexContainer from '@/components/FlexContainer.vue'
-import FlexItem from '@/components/FlexItem.vue'
-import { useRoute } from 'vue-router'
-import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
-import { DocumentCategory } from '@/domain/documentType'
+import { computed } from "vue";
+import IconBadge from "@/components/IconBadge.vue";
+import { useAuthentication } from "@/services/auth";
+import IconPermIdentity from "~icons/ic/baseline-perm-identity";
+import IconLogout from "~icons/ic/baseline-logout";
+import FlexContainer from "@/components/FlexContainer.vue";
+import FlexItem from "@/components/FlexItem.vue";
+import { useRoute } from "vue-router";
+import { ROUTE_NAMES, ROUTE_PATHS } from "@/constants/routes";
+import { DocumentCategory } from "@/domain/documentType";
 
-const { getUsername, logout, getGroup } = useAuthentication()
-const route = useRoute()
+const { getUsername, logout, getGroup } = useAuthentication();
+const route = useRoute();
 
 const searchPath = computed(() => {
   if (route.meta.documentCategory === DocumentCategory.LITERATUR_UNSELBSTAENDIG) {
-    return ROUTE_PATHS.ULI.BASE
+    return ROUTE_PATHS.ULI.BASE;
   }
   if (route.meta.documentCategory === DocumentCategory.LITERATUR_SELBSTAENDIG) {
-    return ROUTE_PATHS.SLI.BASE
+    return ROUTE_PATHS.SLI.BASE;
   }
   if (route.meta.documentCategory === DocumentCategory.VERWALTUNGSVORSCHRIFTEN) {
-    return ROUTE_PATHS.ADM.BASE
+    return ROUTE_PATHS.ADM.BASE;
   }
-  return '/'
-})
+  return "/";
+});
 
-const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`))
+const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`));
 </script>
 
 <template>
@@ -49,7 +49,7 @@ const group = computed(() => (getGroup() ? `${getGroup()} | Staging` : `Staging`
       <FlexContainer alignItems="items-center">
         <IconPermIdentity data-testid="iconPermIdentity" />
         <FlexItem>
-          {{ getUsername() ?? 'Vorname Nachname' }}
+          {{ getUsername() ?? "Vorname Nachname" }}
         </FlexItem>
         <FlexItem>
           <IconBadge :background-color="'bg-red-300'" color="text-black" :label="group" />

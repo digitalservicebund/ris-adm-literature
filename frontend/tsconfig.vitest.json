@@ -5,11 +5,7 @@
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
     "lib": [],
-    "types": [
-      "node",
-      "jsdom",
-      "unplugin-icons/types/vue"
-    ],
+    "types": ["node", "jsdom", "unplugin-icons/types/vue"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],

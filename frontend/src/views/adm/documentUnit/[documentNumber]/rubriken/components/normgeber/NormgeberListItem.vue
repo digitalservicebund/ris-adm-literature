@@ -1,47 +1,47 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
-import { type Normgeber } from '@/domain/normgeber'
-import NormgeberInput from './NormgeberInput.vue'
+import { computed, ref } from "vue";
+import IconArrowDown from "~icons/ic/baseline-keyboard-arrow-down";
+import { type Normgeber } from "@/domain/normgeber";
+import NormgeberInput from "./NormgeberInput.vue";
 
 const props = defineProps<{
-  normgeber: Normgeber
-}>()
+  normgeber: Normgeber;
+}>();
 const emit = defineEmits<{
-  updateNormgeber: [normgeber: Normgeber]
-  deleteNormgeber: [id: string]
-}>()
+  updateNormgeber: [normgeber: Normgeber];
+  deleteNormgeber: [id: string];
+}>();
 
-const isEditMode = ref<boolean>(false)
+const isEditMode = ref<boolean>(false);
 
 const toggleEditMode = () => {
-  isEditMode.value = !isEditMode.value
-}
+  isEditMode.value = !isEditMode.value;
+};
 
 const onExpandAccordion = () => {
-  toggleEditMode()
-}
+  toggleEditMode();
+};
 
 const onUpdateNormgeber = (normgeber: Normgeber) => {
-  emit('updateNormgeber', normgeber)
-  isEditMode.value = false
-}
+  emit("updateNormgeber", normgeber);
+  isEditMode.value = false;
+};
 
 const onClickCancel = () => {
-  toggleEditMode()
-}
+  toggleEditMode();
+};
 
 const onDeleteNormgeber = (normgeberId: string) => {
-  emit('deleteNormgeber', normgeberId)
-  toggleEditMode()
-}
+  emit("deleteNormgeber", normgeberId);
+  toggleEditMode();
+};
 
 const label = computed(() =>
   [...props.normgeber.regions.map((r) => r.code), props.normgeber.institution.name]
     .filter(Boolean)
-    .join(', ')
+    .join(", ")
     .toString(),
-)
+);
 </script>
 
 <template>

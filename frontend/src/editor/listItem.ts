@@ -1,4 +1,4 @@
-import { ListItem } from '@tiptap/extension-list'
+import { ListItem } from "@tiptap/extension-list";
 
 export const CustomListItem = ListItem.extend({
   addAttributes() {
@@ -7,15 +7,15 @@ export const CustomListItem = ListItem.extend({
       style: {
         default: null,
         parseHTML: (element) => {
-          return element.getAttribute('style')
+          return element.getAttribute("style");
         },
         renderHTML: (attributes) => {
-          return { style: attributes.style }
+          return { style: attributes.style };
         },
       },
-    }
+    };
   },
   addInputRules() {
-    return []
+    return [];
   },
-})
+});

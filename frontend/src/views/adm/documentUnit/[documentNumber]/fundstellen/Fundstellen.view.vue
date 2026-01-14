@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FundstellenList from './components/FundstellenList.vue'
+import FundstellenList from "./components/FundstellenList.vue";
 </script>
 
 <template>

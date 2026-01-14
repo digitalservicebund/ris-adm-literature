@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import TokenizeText from '@/components/TokenizeText.vue'
-import { type FieldOfLaw } from '@/domain/fieldOfLaw'
+import TokenizeText from "@/components/TokenizeText.vue";
+import { type FieldOfLaw } from "@/domain/fieldOfLaw";
 
 defineProps<{
-  fieldOfLaw: FieldOfLaw
-}>()
+  fieldOfLaw: FieldOfLaw;
+}>();
 
 const emit = defineEmits<{
-  'node:add': [node: FieldOfLaw]
-  'linked-field:clicked': [node: FieldOfLaw]
-}>()
+  "node:add": [node: FieldOfLaw];
+  "linked-field:clicked": [node: FieldOfLaw];
+}>();
 </script>
 
 <template>

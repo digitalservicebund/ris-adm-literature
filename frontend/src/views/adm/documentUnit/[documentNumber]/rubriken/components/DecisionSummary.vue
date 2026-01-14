@@ -1,20 +1,20 @@
 <script lang="ts" setup>
-import { computed, toRaw, ref } from 'vue'
-import type { Component } from 'vue'
-import { DisplayMode } from './enumDisplayMode'
-import IconBadge from '@/components/IconBadge.vue'
-import { useStatusBadge } from '@/composables/useStatusBadge'
-import { PublicationState } from '@/domain/publicationStatus'
-import { type PublicationStatus } from '@/domain/publicationStatus'
-import BaselineArrowOutward from '~icons/ic/baseline-arrow-outward'
+import { computed, toRaw, ref } from "vue";
+import type { Component } from "vue";
+import { DisplayMode } from "./enumDisplayMode";
+import IconBadge from "@/components/IconBadge.vue";
+import { useStatusBadge } from "@/composables/useStatusBadge";
+import { PublicationState } from "@/domain/publicationStatus";
+import { type PublicationStatus } from "@/domain/publicationStatus";
+import BaselineArrowOutward from "~icons/ic/baseline-arrow-outward";
 
 interface Props {
-  summary: string
-  status?: PublicationStatus
-  documentNumber?: string
-  displayMode?: DisplayMode
-  icon?: Component
-  linkClickable?: boolean
+  summary: string;
+  status?: PublicationStatus;
+  documentNumber?: string;
+  displayMode?: DisplayMode;
+  icon?: Component;
+  linkClickable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,22 +23,22 @@ const props = withDefaults(defineProps<Props>(), {
   documentNumber: undefined,
   icon: undefined,
   linkClickable: true,
-})
+});
 const statusBadge = ref(
   useStatusBadge({
     publicationStatus: PublicationState.UNPUBLISHED,
   }).value,
-)
+);
 
-const summary = computed(() => (props.status ? `${props.summary},  ` : props.summary))
+const summary = computed(() => (props.status ? `${props.summary},  ` : props.summary));
 
-const divider = computed(() => (props.documentNumber ? ` | ` : undefined))
+const divider = computed(() => (props.documentNumber ? ` | ` : undefined));
 
 const href = computed(() =>
   props.documentNumber
     ? `https://ris-search.dev.ds4g.net/case-law/${props.documentNumber}`
     : undefined,
-)
+);
 </script>
 
 <template>

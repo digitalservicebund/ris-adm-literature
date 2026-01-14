@@ -1,28 +1,28 @@
-import { useRoute } from 'vue-router'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import { useUliDocumentUnitStore } from '@/stores/uliDocStore'
-import { useSliDocumentUnitStore } from '@/stores/sliDocStore'
-import { DocumentCategory } from '@/domain/documentType'
+import { useRoute } from "vue-router";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import { useUliDocumentUnitStore } from "@/stores/uliDocStore";
+import { useSliDocumentUnitStore } from "@/stores/sliDocStore";
+import { DocumentCategory } from "@/domain/documentType";
 
 const storeMap = {
   [DocumentCategory.VERWALTUNGSVORSCHRIFTEN]: useAdmDocUnitStore,
   [DocumentCategory.LITERATUR_UNSELBSTAENDIG]: useUliDocumentUnitStore,
   [DocumentCategory.LITERATUR_SELBSTAENDIG]: useSliDocumentUnitStore,
-} as const
+} as const;
 
-type StoreMap = typeof storeMap
+type StoreMap = typeof storeMap;
 
 /**
  * Returns the Pinia store associated with the current route.
  * Requires route.meta.documentCategory to be set.
  */
 export function useStoreForRoute<T>() {
-  const route = useRoute()
-  const documentCategory = route.meta.documentCategory as keyof StoreMap
-  const factory = storeMap[documentCategory]
+  const route = useRoute();
+  const documentCategory = route.meta.documentCategory as keyof StoreMap;
+  const factory = storeMap[documentCategory];
 
   if (!factory)
-    throw new Error(`No store found for route meta.documentCategory="${documentCategory}"`)
+    throw new Error(`No store found for route meta.documentCategory="${documentCategory}"`);
 
-  return factory() as T
+  return factory() as T;
 }

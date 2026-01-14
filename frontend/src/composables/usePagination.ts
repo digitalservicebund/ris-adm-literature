@@ -1,5 +1,5 @@
-import type { UseFetchReturn } from '@vueuse/core'
-import { computed, ref, type Ref } from 'vue'
+import type { UseFetchReturn } from "@vueuse/core";
+import { computed, ref, type Ref } from "vue";
 
 /**
  * usePagination
@@ -48,29 +48,28 @@ export function usePagination<T, S>(
     page: Ref<number>,
     itemsPerPage: number,
     searchParams: Ref<S | undefined>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => UseFetchReturn<any>,
   itemsPerPage: number,
   paginatedResponseKey: string,
 ) {
-  const pageNumber = ref<number>(0)
-  const searchParams = ref<S | undefined>()
+  const pageNumber = ref<number>(0);
+  const searchParams = ref<S | undefined>();
 
-  const { data, error, isFetching, execute } = fetchData(pageNumber, itemsPerPage, searchParams)
+  const { data, error, isFetching, execute } = fetchData(pageNumber, itemsPerPage, searchParams);
 
-  const items = computed<T[]>(() => data.value?.[paginatedResponseKey] || [])
-  const totalRows = computed<number>(() => data.value?.page?.totalElements ?? 0)
-  const firstRowIndex = computed<number>(() => pageNumber.value * itemsPerPage)
+  const items = computed<T[]>(() => data.value?.[paginatedResponseKey] || []);
+  const totalRows = computed<number>(() => data.value?.page?.totalElements ?? 0);
+  const firstRowIndex = computed<number>(() => pageNumber.value * itemsPerPage);
 
   const fetchPaginatedData = async (page: number = 0, newSearch?: S) => {
-    pageNumber.value = page
+    pageNumber.value = page;
 
     if (newSearch !== undefined) {
-      searchParams.value = newSearch
+      searchParams.value = newSearch;
     }
 
-    await execute()
-  }
+    await execute();
+  };
 
   return {
     isFetching,
@@ -79,5 +78,5 @@ export function usePagination<T, S>(
     items,
     fetchPaginatedData,
     error,
-  }
+  };
 }

@@ -6,38 +6,38 @@ export default class LegalForce {
    * The unique identifier for the legal force.
    * @type {string | undefined}
    */
-  uuid?: string
+  uuid?: string;
 
   /**
    * The type of legal force.
    * @type {LegalForceType | undefined}
    * @description Typ der Ges.-Kraft
    */
-  type?: LegalForceType
+  type?: LegalForceType;
 
   /**
    * The region associated with the legal force.
    * @type {LegalForceRegion | undefined}
    * @description Geltungsbereich
    */
-  region?: LegalForceRegion
+  region?: LegalForceRegion;
 
   /**
    * List of required fields for the legal force.
    */
-  static readonly requiredFields = ['type', 'region'] as const
+  static readonly requiredFields = ["type", "region"] as const;
 
   /**
    * List of all fields for the legal force.
    */
-  static readonly fields = ['type', 'region'] as const
+  static readonly fields = ["type", "region"] as const;
 
   /**
    * Creates an instance of LegalForce.
    * @param {Partial<LegalForce>} [data={}] - Partial data to initialize the LegalForce instance.
    */
   constructor(data: Partial<LegalForce> = {}) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   /**
@@ -47,7 +47,7 @@ export default class LegalForce {
    * @returns {boolean} `true` if the field is empty; otherwise, `false`.
    */
   private fieldIsEmpty(value: LegalForce[(typeof LegalForce.fields)[number]]): boolean {
-    return value === undefined || !value || Object.keys(value).length === 0
+    return value === undefined || !value || Object.keys(value).length === 0;
   }
 
   /**
@@ -56,7 +56,7 @@ export default class LegalForce {
    * @readonly
    */
   get hasMissingRequiredFields(): boolean {
-    return this.missingRequiredFields.length > 0
+    return this.missingRequiredFields.length > 0;
   }
 
   /**
@@ -65,7 +65,7 @@ export default class LegalForce {
    * @readonly
    */
   get missingRequiredFields() {
-    return LegalForce.requiredFields.filter((field) => this.fieldIsEmpty(this[field]))
+    return LegalForce.requiredFields.filter((field) => this.fieldIsEmpty(this[field]));
   }
 }
 
@@ -76,9 +76,9 @@ export default class LegalForce {
  * @property {string} abbreviation - The abbreviation of the legal force type.
  */
 export type LegalForceType = {
-  uuid?: string
-  abbreviation: string
-}
+  uuid?: string;
+  abbreviation: string;
+};
 
 /**
  * Type representing the legal force region.
@@ -88,7 +88,7 @@ export type LegalForceType = {
  * @property {string} longText - The long text description of the legal force region.
  */
 export type LegalForceRegion = {
-  uuid?: string
-  code?: string
-  longText: string
-}
+  uuid?: string;
+  code?: string;
+  longText: string;
+};

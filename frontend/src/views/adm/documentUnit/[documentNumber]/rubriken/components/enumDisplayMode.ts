@@ -1,9 +1,9 @@
 export enum DisplayMode {
-  TAB = 'tab',
-  SIDEPANEL = 'sidepanel',
+  TAB = "tab",
+  SIDEPANEL = "sidepanel",
 }
 
 export enum OpeningDirection {
-  LEFT = 'left',
-  RIGHT = 'right',
+  LEFT = "left",
+  RIGHT = "right",
 }

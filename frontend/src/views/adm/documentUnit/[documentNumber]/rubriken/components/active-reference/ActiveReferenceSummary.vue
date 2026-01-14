@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import IconBadge from '@/components/IconBadge.vue'
-import IconError from '~icons/ic/baseline-error'
-import IconOutlineDescription from '~icons/ic/outline-description'
-import IconBook from '~icons/material-symbols/book-2'
-import IconBreakingNews from '~icons/material-symbols/breaking-news'
-import IconArrowRight from '~icons/material-symbols/subdirectory-arrow-right'
-import ActiveReference, { ActiveReferenceDocumentType } from '@/domain/activeReference.ts'
+import IconBadge from "@/components/IconBadge.vue";
+import IconError from "~icons/ic/baseline-error";
+import IconOutlineDescription from "~icons/ic/outline-description";
+import IconBook from "~icons/material-symbols/book-2";
+import IconBreakingNews from "~icons/material-symbols/breaking-news";
+import IconArrowRight from "~icons/material-symbols/subdirectory-arrow-right";
+import ActiveReference, { ActiveReferenceDocumentType } from "@/domain/activeReference.ts";
 
 const props = defineProps<{
-  data: ActiveReference
-}>()
+  data: ActiveReference;
+}>();
 </script>
 
 <template>
@@ -35,11 +35,11 @@ const props = defineProps<{
             "
             class="ris-link1-bold mr-8"
           >
-            {{ data.renderSummary + ', ' + data.singleNorms[0].renderSummary }}
+            {{ data.renderSummary + ", " + data.singleNorms[0].renderSummary }}
           </button>
         </div>
         <div v-if="data.singleNorms[0].legalForce" class="flex flex-row items-center">
-          {{ ' | ' }}
+          {{ " | " }}
           <component :is="IconBreakingNews" class="mx-8" />
           {{ data.singleNorms[0].renderLegalForce }}
           <IconBadge
@@ -96,9 +96,9 @@ const props = defineProps<{
           <div v-for="(singleNorm, index) in data.singleNorms" :key="index">
             <div v-if="!singleNorm.isEmpty" class="flex flex-row items-center">
               <component :is="IconArrowRight" class="mr-8" />
-              {{ data.renderSummary + ', ' + data.singleNorms[index].renderSummary }}
+              {{ data.renderSummary + ", " + data.singleNorms[index].renderSummary }}
               <div v-if="data.singleNorms[index].legalForce" class="flex flex-row items-center">
-                {{ ' | ' }}
+                {{ " | " }}
                 <component :is="IconBreakingNews" class="mx-8" />
                 {{ data.singleNorms[index].renderLegalForce }}
                 <IconBadge

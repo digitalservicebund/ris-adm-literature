@@ -1,24 +1,24 @@
 <script setup lang="ts" generic="R extends { id: string }">
-import ProgressSpinner from 'primevue/progressspinner'
-import errorMessages from '@/i18n/errors.json'
-import { ref, watch } from 'vue'
-import { useScrollToElement } from '@/composables/useScroll'
+import ProgressSpinner from "primevue/progressspinner";
+import errorMessages from "@/i18n/errors.json";
+import { ref, watch } from "vue";
+import { useScrollToElement } from "@/composables/useScroll";
 
 const props = defineProps<{
-  searchResults: R[]
-  isLoading: boolean
-}>()
+  searchResults: R[];
+  isLoading: boolean;
+}>();
 
-const resultsContainer = ref<HTMLElement | null>(null)
+const resultsContainer = ref<HTMLElement | null>(null);
 
 watch(
   () => props.searchResults,
   (newResults, oldResults) => {
     if (newResults !== oldResults && newResults?.length > 0) {
-      useScrollToElement(resultsContainer)
+      useScrollToElement(resultsContainer);
     }
   },
-)
+);
 </script>
 
 <template>

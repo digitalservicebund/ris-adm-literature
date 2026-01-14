@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import FlexContainer from '@/components/FlexContainer.vue'
-import FlexItem from '@/components/FlexItem.vue'
-import type MenuItem from '@/domain/menuItem'
-import StringsUtil from '@/utils/stringsUtil'
+import { useRoute } from "vue-router";
+import FlexContainer from "@/components/FlexContainer.vue";
+import FlexItem from "@/components/FlexItem.vue";
+import type MenuItem from "@/domain/menuItem";
+import StringsUtil from "@/utils/stringsUtil";
 
 interface Props {
-  menuItems: MenuItem[]
-  isChild?: boolean
+  menuItems: MenuItem[];
+  isChild?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isChild: false,
-})
+});
 
-const currentRoute = useRoute()
+const currentRoute = useRoute();
 
 const isChildActive = (currentNavItem: MenuItem) => {
-  return currentNavItem.route.hash === currentRoute.hash
-}
+  return currentNavItem.route.hash === currentRoute.hash;
+};
 
 const isParentActive = (currentNavItem: MenuItem) => {
-  if (currentNavItem.route.name == undefined || currentRoute.name == undefined) return false
+  if (currentNavItem.route.name == undefined || currentRoute.name == undefined) return false;
 
-  return currentNavItem.route.name == currentRoute.name
-}
+  return currentNavItem.route.name == currentRoute.name;
+};
 
 const isOnlyParentActive = (currentNavItem: MenuItem) => {
   if (!(StringsUtil.isEmpty(currentNavItem.route.hash) && StringsUtil.isEmpty(currentRoute.hash))) {
-    return isParentActive(currentNavItem) && currentNavItem.route.hash == currentRoute.hash
+    return isParentActive(currentNavItem) && currentNavItem.route.hash == currentRoute.hash;
   }
-  return isParentActive(currentNavItem)
-}
+  return isParentActive(currentNavItem);
+};
 </script>
 
 <template>
