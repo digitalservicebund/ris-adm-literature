@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: |
-          bun install ci
+          bun install --frozen-lockfile
         working-directory: ./frontend
 
       - name: Download blob reports from GitHub Actions Artifacts
