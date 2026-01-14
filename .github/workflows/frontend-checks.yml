@@ -36,16 +36,14 @@ jobs:
         working-directory: ./frontend
         run: |
           curl -fsSL https://bun.sh/install | bash 
-          export PATH="~/.bun/bin/:$PATH"
-          source /home/runner/.bash_profile
           ~/.bun/bin/bun install
 
       - name: Lint check
+        working-directory: ./frontend
         run: ~/.bun/bin/bun run lint:check
-        working-directory: ./frontend
       - name: Format check
-        run: bun run format:check
         working-directory: ./frontend
+        run: ~/.bun/bin/bun run format:check
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
