@@ -1,63 +1,63 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { type NodeHelperInterface } from './FieldOfLawNode'
-import FlexContainer from '@/components/FlexContainer.vue'
-import Checkbox from 'primevue/checkbox'
-import { type FieldOfLaw } from '@/domain/fieldOfLaw'
-import IconArrowDown from '~icons/ic/baseline-keyboard-arrow-down'
-import IconArrowUp from '~icons/ic/baseline-keyboard-arrow-up'
+import { computed, ref, watch } from "vue";
+import { type NodeHelperInterface } from "./FieldOfLawNode";
+import FlexContainer from "@/components/FlexContainer.vue";
+import Checkbox from "primevue/checkbox";
+import { type FieldOfLaw } from "@/domain/fieldOfLaw";
+import IconArrowDown from "~icons/ic/baseline-keyboard-arrow-down";
+import IconArrowUp from "~icons/ic/baseline-keyboard-arrow-up";
 
 interface Props {
-  node: FieldOfLaw
-  selectedNodes: FieldOfLaw[]
-  showNorms: boolean
-  nodeHelper: NodeHelperInterface
-  searchResults?: FieldOfLaw[]
-  expandedNodes: FieldOfLaw[]
-  isRoot?: boolean
-  rootChild?: boolean
-  nodeOfInterest?: FieldOfLaw
+  node: FieldOfLaw;
+  selectedNodes: FieldOfLaw[];
+  showNorms: boolean;
+  nodeHelper: NodeHelperInterface;
+  searchResults?: FieldOfLaw[];
+  expandedNodes: FieldOfLaw[];
+  isRoot?: boolean;
+  rootChild?: boolean;
+  nodeOfInterest?: FieldOfLaw;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  'node:add': [node: FieldOfLaw]
-  'node:remove': [node: FieldOfLaw]
-  'node:expand': [node: FieldOfLaw]
-  'node:expandRoot': []
-  'node:collapse': [node: FieldOfLaw]
-  'node-of-interest:reset': []
-}>()
+  "node:add": [node: FieldOfLaw];
+  "node:remove": [node: FieldOfLaw];
+  "node:expand": [node: FieldOfLaw];
+  "node:expandRoot": [];
+  "node:collapse": [node: FieldOfLaw];
+  "node-of-interest:reset": [];
+}>();
 
-const isExpanded = ref(false)
-const children = ref<FieldOfLaw[]>([])
-const isSearchCandidate = ref<boolean>(false)
+const isExpanded = ref(false);
+const children = ref<FieldOfLaw[]>([]);
+const isSearchCandidate = ref<boolean>(false);
 const isSelected = computed({
   get: () => props.selectedNodes.some(({ identifier }) => identifier === props.node.identifier),
   set: (value) => {
     if (value) {
-      emit('node:add', props.node)
+      emit("node:add", props.node);
     } else {
-      emit('node:remove', props.node)
+      emit("node:remove", props.node);
     }
   },
-})
+});
 
 function toggleExpanded() {
-  isExpanded.value = !isExpanded.value
+  isExpanded.value = !isExpanded.value;
   if (isExpanded.value) {
-    if (props.isRoot) emit('node:expandRoot')
-    else emit('node:expand', props.node)
+    if (props.isRoot) emit("node:expandRoot");
+    else emit("node:expand", props.node);
   } else {
-    emit('node:collapse', props.node)
+    emit("node:collapse", props.node);
     if (props.nodeOfInterest && props.rootChild) {
       // when searching, the tree is truncated to show only
       // branches attached to the nodeOfInterest
       // But when a root-child is collapsed, the reset
       // of the nodeOfInterest will trigger the re-load and
       // show of the whole tree with all root children
-      emit('node-of-interest:reset')
+      emit("node-of-interest:reset");
     }
   }
 }
@@ -66,24 +66,24 @@ watch(
   () => props.expandedNodes,
   async () => {
     isExpanded.value = props.expandedNodes.some((expandedNode) => {
-      return expandedNode.identifier == props.node.identifier
-    })
+      return expandedNode.identifier == props.node.identifier;
+    });
     if (isExpanded.value) {
       if (props.nodeOfInterest && props.isRoot) {
         // Filter children of root (1st level) to only parent node of interest.
         // For example, if nodeOfInterest is 'PR-05-01', only display 'PR' under root
         children.value = (await props.nodeHelper.getChildren(props.node)).filter((fol) =>
           props.expandedNodes.some((expandedNode) => {
-            return expandedNode.identifier == fol.identifier
+            return expandedNode.identifier == fol.identifier;
           }),
-        )
+        );
       } else {
-        children.value = await props.nodeHelper.getChildren(props.node)
+        children.value = await props.nodeHelper.getChildren(props.node);
       }
     }
   },
   { immediate: true },
-)
+);
 
 watch(
   () => props.searchResults,
@@ -92,14 +92,14 @@ watch(
       if (newValue) {
         isSearchCandidate.value = newValue
           .map((item) => item.identifier)
-          .includes(props.node.identifier)
+          .includes(props.node.identifier);
       } else {
-        isSearchCandidate.value = false
+        isSearchCandidate.value = false;
       }
     }
   },
   { immediate: true },
-)
+);
 </script>
 
 <template>
@@ -158,7 +158,7 @@ watch(
           <FlexContainer class="text-[14px] text-[#66522e]" flex-wrap="flex-wrap">
             <span v-for="(norm, idx) in node.norms" :key="idx">
               <strong>{{ norm.singleNormDescription }}</strong>
-              {{ norm.abbreviation }}{{ idx < node.norms.length - 1 ? ',&nbsp;' : '' }}
+              {{ norm.abbreviation }}{{ idx < node.norms.length - 1 ? ",&nbsp;" : "" }}
             </span>
           </FlexContainer>
         </FlexContainer>

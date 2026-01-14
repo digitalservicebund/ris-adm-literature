@@ -1,66 +1,66 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { SliDocUnitListItem } from '@/domain/sli/sliDocumentUnit'
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
+import { computed } from "vue";
+import type { SliDocUnitListItem } from "@/domain/sli/sliDocumentUnit";
+import Button from "primevue/button";
+import IconAdd from "~icons/material-symbols/add";
 
 const props = defineProps<{
-  searchResult: SliDocUnitListItem
-  isAdded: boolean
-  documentTypeNameToAbbreviation?: Map<string, string>
-}>()
+  searchResult: SliDocUnitListItem;
+  isAdded: boolean;
+  documentTypeNameToAbbreviation?: Map<string, string>;
+}>();
 
 const emit = defineEmits<{
-  add: [searchResult: SliDocUnitListItem]
-}>()
+  add: [searchResult: SliDocUnitListItem];
+}>();
 
 function handleAdd() {
   if (!props.isAdded) {
-    emit('add', props.searchResult)
+    emit("add", props.searchResult);
   }
 }
 
 const { veroeffentlichungsjahr, verfasser, documentNumber, titel, dokumenttypen } =
-  props.searchResult
+  props.searchResult;
 
 const documentTypeAbbreviations = computed(() => {
   if (!dokumenttypen || dokumenttypen.length === 0 || !props.documentTypeNameToAbbreviation) {
-    return dokumenttypen || []
+    return dokumenttypen || [];
   }
   return dokumenttypen
     .map((name) => props.documentTypeNameToAbbreviation?.get(name) || name)
-    .filter(Boolean)
-})
+    .filter(Boolean);
+});
 
 function formatHeading(): string {
-  const parts = []
+  const parts = [];
 
   if (veroeffentlichungsjahr) {
-    parts.push(veroeffentlichungsjahr)
+    parts.push(veroeffentlichungsjahr);
   }
 
   if (verfasser && verfasser.length > 0) {
-    parts.push(verfasser.join(', '))
+    parts.push(verfasser.join(", "));
   }
 
-  const citationPart = parts.join(', ')
+  const citationPart = parts.join(", ");
 
-  let result = citationPart
+  let result = citationPart;
   if (documentTypeAbbreviations.value.length > 0) {
-    const docTypes = documentTypeAbbreviations.value.join(', ')
+    const docTypes = documentTypeAbbreviations.value.join(", ");
     if (docTypes) {
       if (citationPart) {
-        result = `${citationPart} (${docTypes})`
+        result = `${citationPart} (${docTypes})`;
       } else {
-        result = `(${docTypes})`
+        result = `(${docTypes})`;
       }
     }
   }
   if (result) {
-    return `${result} | ${documentNumber}`
+    return `${result} | ${documentNumber}`;
   }
 
-  return documentNumber
+  return documentNumber;
 }
 </script>
 
@@ -92,7 +92,7 @@ function formatHeading(): string {
       </div>
 
       <p class="ris-body2-regular text-gray-900">
-        {{ titel || 'unbekannt' }}
+        {{ titel || "unbekannt" }}
       </p>
     </div>
   </div>

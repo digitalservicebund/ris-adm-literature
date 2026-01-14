@@ -1,10 +1,10 @@
-import type { KeycloakConfig } from 'keycloak-js'
-import Keycloak from 'keycloak-js'
+import type { KeycloakConfig } from "keycloak-js";
+import Keycloak from "keycloak-js";
 
-export type AuthenticationConfig = KeycloakConfig
+export type AuthenticationConfig = KeycloakConfig;
 
 function createAuthentication() {
-  let keycloak: Keycloak | undefined = undefined
+  let keycloak: Keycloak | undefined = undefined;
 
   /**
    * Initializes the authentication with the specified configuration. Once
@@ -20,18 +20,18 @@ function createAuthentication() {
    *  invalid configuration.
    */
   async function configure(config: AuthenticationConfig): Promise<void> {
-    keycloak = new Keycloak(config)
+    keycloak = new Keycloak(config);
 
     try {
       await keycloak.init({
-        onLoad: 'login-required',
+        onLoad: "login-required",
         checkLoginIframe: false,
-        pkceMethod: 'S256',
-        scope: 'profile email',
-      })
+        pkceMethod: "S256",
+        scope: "profile email",
+      });
     } catch (e) {
-      keycloak = undefined
-      throw new Error('Failed to initialize authentication', { cause: e })
+      keycloak = undefined;
+      throw new Error("Failed to initialize authentication", { cause: e });
     }
   }
 
@@ -42,7 +42,7 @@ function createAuthentication() {
    * @returns True if the user has the role, otherwise false.
    */
   function hasRealmRole(role: string): boolean {
-    return keycloak?.hasRealmRole(role) ?? false
+    return keycloak?.hasRealmRole(role) ?? false;
   }
 
   /**
@@ -51,7 +51,7 @@ function createAuthentication() {
    * @returns An array of role strings, or an empty array if not available.
    */
   function getRealmRoles(): string[] {
-    return keycloak?.realmAccess?.roles ?? []
+    return keycloak?.realmAccess?.roles ?? [];
   }
 
   /**
@@ -60,10 +60,10 @@ function createAuthentication() {
    * @returns A string, or an empty string if not available.
    */
   function getGroup(): string {
-    const groups = keycloak?.idTokenParsed?.groups || []
+    const groups = keycloak?.idTokenParsed?.groups || [];
     // Extract name from group path e.g. /literature/BAG
-    const groupNames = groups.map((path: string) => path.split('/').pop())
-    return groupNames[0] ?? ''
+    const groupNames = groups.map((path: string) => path.split("/").pop());
+    return groupNames[0] ?? "";
   }
 
   /**
@@ -71,7 +71,7 @@ function createAuthentication() {
    * @returns True if authenticated, otherwise false.
    */
   function isAuthenticated(): boolean {
-    return keycloak?.authenticated ?? false
+    return keycloak?.authenticated ?? false;
   }
 
   /**
@@ -83,9 +83,9 @@ function createAuthentication() {
    * @returns New headers
    */
   function addAuthorizationHeader(init?: HeadersInit): HeadersInit {
-    init ??= {}
-    if (!keycloak?.token) return init
-    return { ...init, Authorization: `Bearer ${keycloak?.token}` }
+    init ??= {};
+    if (!keycloak?.token) return init;
+    return { ...init, Authorization: `Bearer ${keycloak?.token}` };
   }
 
   /**
@@ -95,16 +95,16 @@ function createAuthentication() {
    * @returns Name of the logged in user if known
    */
   function getUsername(): string | undefined {
-    return keycloak?.idTokenParsed?.name
+    return keycloak?.idTokenParsed?.name;
   }
 
   function logout(): Promise<void> | undefined {
-    const redirectUri = globalThis.location.origin
+    const redirectUri = globalThis.location.origin;
 
-    return keycloak?.logout({ redirectUri: redirectUri })
+    return keycloak?.logout({ redirectUri: redirectUri });
   }
 
-  let pendingRefresh: Promise<boolean> | null = null
+  let pendingRefresh: Promise<boolean> | null = null;
 
   /**
    * Attempts to refresh the token. If the refresh fails (e.g. because the user
@@ -121,16 +121,16 @@ function createAuthentication() {
    *  hasn't been initialized, or the refresh has failed.
    */
   async function tryRefresh(): Promise<boolean> {
-    if (!keycloak) return false
+    if (!keycloak) return false;
 
     try {
-      pendingRefresh ??= keycloak.updateToken()
-      await pendingRefresh
-      return true
+      pendingRefresh ??= keycloak.updateToken();
+      await pendingRefresh;
+      return true;
     } catch {
-      return false
+      return false;
     } finally {
-      pendingRefresh = null
+      pendingRefresh = null;
     }
   }
 
@@ -144,11 +144,11 @@ function createAuthentication() {
     isAuthenticated,
     getRealmRoles,
     getGroup,
-  })
+  });
 }
 
 /**
  * Exposes utilities related to authenticating users and requests in the
  * frontend.
  */
-export const useAuthentication = createAuthentication()
+export const useAuthentication = createAuthentication();

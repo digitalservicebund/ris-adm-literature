@@ -1,77 +1,77 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import InstitutionDropDown from './InstitutionDropDown.vue'
-import { useFetchInstitutions } from '@/services/institutionService'
-import { InstitutionType, type Institution } from '@/domain/normgeber'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import InstitutionDropDown from "./InstitutionDropDown.vue";
+import { useFetchInstitutions } from "@/services/institutionService";
+import { InstitutionType, type Institution } from "@/domain/normgeber";
 
-vi.mock('@digitalservicebund/ris-ui/components', () => ({
+vi.mock("@digitalservicebund/ris-ui/components", () => ({
   RisAutoComplete: {
-    name: 'RisAutoComplete',
+    name: "RisAutoComplete",
     template: `<div><input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" /></div>`,
-    props: ['modelValue', 'suggestions', 'initialLabel'],
+    props: ["modelValue", "suggestions", "initialLabel"],
   },
-}))
+}));
 
-vi.mock('@/services/institutionService', () => ({
+vi.mock("@/services/institutionService", () => ({
   useFetchInstitutions: vi.fn(),
-}))
+}));
 
 const mockInstitutions: Institution[] = [
   {
-    id: '1',
-    name: 'inst1',
-    officialName: 'Inst 1',
+    id: "1",
+    name: "inst1",
+    officialName: "Inst 1",
     type: InstitutionType.LegalEntity,
     regions: [],
   },
   {
-    id: '2',
-    name: 'inst2',
-    officialName: 'Inst 2',
+    id: "2",
+    name: "inst2",
+    officialName: "Inst 2",
     type: InstitutionType.LegalEntity,
     regions: [],
   },
-]
+];
 
-describe('InstitutionDropDown', () => {
+describe("InstitutionDropDown", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    ;(useFetchInstitutions as ReturnType<typeof vi.fn>).mockResolvedValue({
+    vi.clearAllMocks();
+    (useFetchInstitutions as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: { value: { institutions: mockInstitutions } },
-    })
-  })
+    });
+  });
 
-  it('renders the component and fetches institutions', async () => {
+  it("renders the component and fetches institutions", async () => {
     const wrapper = mount(InstitutionDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         isInvalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    const input = wrapper.find('[data-testid="autocomplete"]')
-    expect(input.exists()).toBe(true)
-    expect(useFetchInstitutions).toHaveBeenCalled()
-  })
+    const input = wrapper.find('[data-testid="autocomplete"]');
+    expect(input.exists()).toBe(true);
+    expect(useFetchInstitutions).toHaveBeenCalled();
+  });
 
-  it('emits updated model value when selection changes', async () => {
+  it("emits updated model value when selection changes", async () => {
     const wrapper = mount(InstitutionDropDown, {
       props: {
-        inputId: 'foo',
+        inputId: "foo",
         isInvalid: false,
         modelValue: undefined,
       },
-    })
+    });
 
-    const input = wrapper.find('[data-testid="autocomplete"]')
+    const input = wrapper.find('[data-testid="autocomplete"]');
     // Simulate selecting the institution with id '1'
-    await input.setValue('1')
+    await input.setValue("1");
     // Simulate change event
-    await input.trigger('input')
+    await input.trigger("input");
 
-    const emitted = wrapper.emitted('update:modelValue')!
-    expect(emitted).toHaveLength(2)
-    expect(emitted[1]?.[0]).toEqual(mockInstitutions[0])
-  })
-})
+    const emitted = wrapper.emitted("update:modelValue")!;
+    expect(emitted).toHaveLength(2);
+    expect(emitted[1]?.[0]).toEqual(mockInstitutions[0]);
+  });
+});

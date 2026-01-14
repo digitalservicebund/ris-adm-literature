@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import Aktivzitierung from '@/components/aktivzitierung/Aktivzitierung.vue'
+import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
 import {
   mapSliSearchResultToAktivzitierung,
   useGetSliPaginatedDocUnits,
-} from '@/services/literature/literatureDocumentUnitService'
-import type { AktivzitierungSli } from '@/domain/AktivzitierungSli'
-import AktivzitierungSliInput from '@/components/aktivzitierung/sli/AktivzitierungSliInput.vue'
-import AktivzitierungSliItem from '@/components/aktivzitierung/sli/AktivzitierungSliItem.vue'
-import AktivzitierungSliSearchResult from '@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue'
+} from "@/services/literature/literatureDocumentUnitService";
+import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import AktivzitierungSliInput from "@/components/aktivzitierung/sli/AktivzitierungSliInput.vue";
+import AktivzitierungSliItem from "@/components/aktivzitierung/sli/AktivzitierungSliItem.vue";
+import AktivzitierungSliSearchResult from "@/components/aktivzitierung/sli/AktivzitierungSliSearchResult.vue";
 
-const aktivzitierungSli = defineModel<AktivzitierungSli[]>()
+const aktivzitierungSli = defineModel<AktivzitierungSli[]>();
 </script>
 
 <template>

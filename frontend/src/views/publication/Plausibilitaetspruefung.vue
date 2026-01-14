@@ -1,38 +1,37 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
-import IconCheck from '~icons/material-symbols/check'
-import IconErrorOutline from '~icons/ic/baseline-error-outline'
-import { Button } from 'primevue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import IconCheck from "~icons/material-symbols/check";
+import IconErrorOutline from "~icons/ic/baseline-error-outline";
+import { Button } from "primevue";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 defineProps<{
-  missingFields: string[]
-}>()
+  missingFields: string[];
+}>();
 
-const route = useRoute()
+const route = useRoute();
 
 function getLabel(field: string): string {
   return (
     {
-      langueberschrift: 'Amtl. Langüberschrift',
-      inkrafttretedatum: 'Datum des Inkrafttretens',
-      dokumenttyp: 'Dokumenttyp',
-      normgeberList: 'Normgeber',
-      zitierdaten: 'Zitierdatum',
-      dokumenttypen: 'Dokumenttyp',
-      veroeffentlichungsjahr: 'Veröffentlichungsjahr',
-      hauptsachtitel: 'Hauptsachtitel / Dokumentarischer Titel',
+      langueberschrift: "Amtl. Langüberschrift",
+      inkrafttretedatum: "Datum des Inkrafttretens",
+      dokumenttyp: "Dokumenttyp",
+      normgeberList: "Normgeber",
+      zitierdaten: "Zitierdatum",
+      dokumenttypen: "Dokumenttyp",
+      veroeffentlichungsjahr: "Veröffentlichungsjahr",
+      hauptsachtitel: "Hauptsachtitel / Dokumentarischer Titel",
     }[field] || field
-  )
+  );
 }
 
 const rubrikenPath = computed(() => {
-  const segments = route.path.split('/').filter(Boolean)
-  if (segments.length === 0) return '/rubriken'
-  segments[segments.length - 1] = 'rubriken'
-  return '/' + segments.join('/')
-})
+  const segments = route.path.split("/").filter(Boolean);
+  if (segments.length === 0) return "/rubriken";
+  segments[segments.length - 1] = "rubriken";
+  return "/" + segments.join("/");
+});
 </script>
 <template>
   <h2 class="ris-label1-bold">Plausibilitätsprüfung</h2>

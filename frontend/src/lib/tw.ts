@@ -1,5 +1,5 @@
 const tag = (strings: TemplateStringsArray, ...values: unknown[]) =>
-  String.raw({ raw: strings }, ...values)
+  String.raw({ raw: strings }, ...values);
 
 /**
  * Tagged template string for Tailwind classes. The tag itself doesn't do
@@ -11,4 +11,4 @@ const tag = (strings: TemplateStringsArray, ...values: unknown[]) =>
  * const classes = tw`px-16 bg-blue-200`
  * ```
  */
-export const tw = tag
+export const tw = tag;

@@ -1,34 +1,36 @@
-import '@testing-library/jest-dom/vitest'
-import { beforeAll, vi } from 'vitest'
-import PrimeVue from 'primevue/config'
-import { config } from '@vue/test-utils'
-import ResizeObserverPolyfill from 'resize-observer-polyfill'
+import "@testing-library/jest-dom/vitest";
+import { beforeAll, vi } from "vitest";
+import PrimeVue from "primevue/config";
+import { config } from "@vue/test-utils";
+import ResizeObserverPolyfill from "resize-observer-polyfill";
 
 // Mock ResizeObserver for PrimeVue components (e.g., TabList)
-globalThis.ResizeObserver = ResizeObserverPolyfill
+globalThis.ResizeObserver = ResizeObserverPolyfill;
 
 // Simple mock to satisfy devtools and any browser storage users
-Object.defineProperty(globalThis, 'localStorage', {
+Object.defineProperty(globalThis, "localStorage", {
   value: {
-    getItem: vi.fn(function() { return null }),
+    getItem: vi.fn(function () {
+      return null;
+    }),
     setItem: vi.fn(),
     removeItem: vi.fn(),
     clear: vi.fn(),
   },
   writable: true,
-})
+});
 
-vi.mock('@/services/auth', () => {
+vi.mock("@/services/auth", () => {
   return {
     useAuthentication: () => ({
       addAuthorizationHeader: (init: HeadersInit) => ({ ...init }),
       tryRefresh: vi.fn().mockReturnValue(true),
-      getUsername: () => 'vorname nachname',
+      getUsername: () => "vorname nachname",
     }),
-  }
-})
+  };
+});
 
 beforeAll(() => {
-  config.global.plugins = [PrimeVue]
-  config.global.directives.tooltip = () =>{}
-})
+  config.global.plugins = [PrimeVue];
+  config.global.directives.tooltip = () => {};
+});

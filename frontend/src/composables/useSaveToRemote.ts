@@ -1,10 +1,10 @@
-import { computed, ref } from 'vue'
-import errorMessages from '@/i18n/errors.json'
+import { computed, ref } from "vue";
+import errorMessages from "@/i18n/errors.json";
 
 function getCurrentTime(dateSaved: Date) {
-  const fullHour = ('0' + dateSaved.getHours()).slice(-2)
-  const fullMinute = ('0' + dateSaved.getMinutes()).slice(-2)
-  return `${fullHour}:${fullMinute}`
+  const fullHour = ("0" + dateSaved.getHours()).slice(-2);
+  const fullMinute = ("0" + dateSaved.getMinutes()).slice(-2);
+  return `${fullHour}:${fullMinute}`;
 }
 
 /**
@@ -23,34 +23,33 @@ function getCurrentTime(dateSaved: Date) {
  * }}
  */
 export function useSaveToRemote<T extends { update: () => Promise<boolean> }>(store: T) {
-  const saveIsInProgress = ref(false)
-  const lastSaveError = ref<{ title: string } | undefined>(undefined)
-  const lastSavedOn = ref<Date | undefined>(undefined)
+  const saveIsInProgress = ref(false);
+  const lastSaveError = ref<{ title: string } | undefined>(undefined);
+  const lastSavedOn = ref<Date | undefined>(undefined);
 
   const formattedLastSavedOn = computed(
     () => lastSavedOn.value && getCurrentTime(lastSavedOn.value),
-  )
+  );
 
   async function triggerSave(): Promise<void> {
-    if (saveIsInProgress.value) return
+    if (saveIsInProgress.value) return;
 
-    saveIsInProgress.value = true
-    lastSaveError.value = undefined
+    saveIsInProgress.value = true;
+    lastSaveError.value = undefined;
 
     try {
-      const success = await store.update()
+      const success = await store.update();
 
       if (success) {
-        lastSavedOn.value = new Date()
+        lastSavedOn.value = new Date();
       } else {
-        lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title }
+        lastSaveError.value = { title: errorMessages.DOCUMENT_UNIT_UPDATE_FAILED.title };
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      lastSaveError.value = { title: 'Verbindung fehlgeschlagen' }
+      console.error(error);
+      lastSaveError.value = { title: "Verbindung fehlgeschlagen" };
     } finally {
-      saveIsInProgress.value = false
+      saveIsInProgress.value = false;
     }
   }
 
@@ -59,5 +58,5 @@ export function useSaveToRemote<T extends { update: () => Promise<boolean> }>(st
     triggerSave,
     lastSaveError,
     formattedLastSavedOn,
-  }
+  };
 }

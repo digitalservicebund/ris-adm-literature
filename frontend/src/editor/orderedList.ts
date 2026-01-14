@@ -1,4 +1,4 @@
-import { OrderedList } from '@tiptap/extension-list'
+import { OrderedList } from "@tiptap/extension-list";
 
 export const CustomOrderedList = OrderedList.extend({
   addAttributes() {
@@ -6,17 +6,17 @@ export const CustomOrderedList = OrderedList.extend({
       ...this.parent?.(),
       style: {
         default: null,
-        parseHTML: (element) => element.getAttribute('style'),
+        parseHTML: (element) => element.getAttribute("style"),
         renderHTML: (attributes) => {
           return {
             style: attributes.style,
-            class: 'list-decimal',
-          }
+            class: "list-decimal",
+          };
         },
       },
-    }
+    };
   },
   addInputRules() {
-    return []
+    return [];
   },
-})
+});

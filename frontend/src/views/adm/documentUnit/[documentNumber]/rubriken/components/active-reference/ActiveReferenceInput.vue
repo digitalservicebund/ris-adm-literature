@@ -1,45 +1,45 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { type ValidationError } from '@/components/input/types'
-import InputField, { LabelPosition } from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import SingleNormInput from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/SingleNormInput.vue'
-import { useValidationStore } from '@/composables/useValidationStore'
-import LegalForce from '@/domain/legalForce'
-import { type NormAbbreviation } from '@/domain/normAbbreviation'
-import SingleNorm from '@/domain/singleNorm'
-import IconAdd from '~icons/ic/baseline-add'
-import ActiveReference, { ActiveReferenceDocumentType } from '@/domain/activeReference.ts'
-import RadioButton from 'primevue/radiobutton'
-import labels from './activeReferenceInputLabels.json'
-import NormAbbreviationsDropDown from '../NormAbbreviationsDropDown.vue'
-import VerweisTypDropDown from './VerweisTypDropDown.vue'
-import type { VerweisTyp } from '@/domain/verweisTyp.ts'
+import { computed, ref, watch } from "vue";
+import { type ValidationError } from "@/components/input/types";
+import InputField, { LabelPosition } from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import SingleNormInput from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/SingleNormInput.vue";
+import { useValidationStore } from "@/composables/useValidationStore";
+import LegalForce from "@/domain/legalForce";
+import { type NormAbbreviation } from "@/domain/normAbbreviation";
+import SingleNorm from "@/domain/singleNorm";
+import IconAdd from "~icons/ic/baseline-add";
+import ActiveReference, { ActiveReferenceDocumentType } from "@/domain/activeReference.ts";
+import RadioButton from "primevue/radiobutton";
+import labels from "./activeReferenceInputLabels.json";
+import NormAbbreviationsDropDown from "../NormAbbreviationsDropDown.vue";
+import VerweisTypDropDown from "./VerweisTypDropDown.vue";
+import type { VerweisTyp } from "@/domain/verweisTyp.ts";
 
 const props = defineProps<{
-  modelValue?: ActiveReference
-  modelValueList?: ActiveReference[]
-}>()
+  modelValue?: ActiveReference;
+  modelValueList?: ActiveReference[];
+}>();
 const emit = defineEmits<{
-  'update:modelValue': [value: ActiveReference]
-  addEntry: [void]
-  cancelEdit: [void]
-  removeEntry: [void]
-}>()
+  "update:modelValue": [value: ActiveReference];
+  addEntry: [void];
+  cancelEdit: [void];
+  removeEntry: [void];
+}>();
 
 const validationStore =
   useValidationStore<
-    ['verweisTyp', 'normAbbreviation', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number]
-  >()
+    ["verweisTyp", "normAbbreviation", "singleNorm", "dateOfVersion", "dateOfRelevance"][number]
+  >();
 
-const activeReference = ref(new ActiveReference({ ...props.modelValue }))
-const lastSavedModelValue = ref(new ActiveReference({ ...props.modelValue }))
+const activeReference = ref(new ActiveReference({ ...props.modelValue }));
+const lastSavedModelValue = ref(new ActiveReference({ ...props.modelValue }));
 
 const singleNorms = ref(
   props.modelValue?.singleNorms
     ? props.modelValue?.singleNorms?.map((norm) => new SingleNorm({ ...norm }))
     : ([] as SingleNorm[]),
-)
+);
 
 /**
  * Data restructuring from norm abbreviation props to combobox item. When item in combobox set, it is validated
@@ -48,29 +48,29 @@ const singleNorms = ref(
 const normAbbreviation = computed({
   get: () => activeReference.value.normAbbreviation,
   set: (newValue) => {
-    const newNormAbbreviation = { ...newValue } as NormAbbreviation
+    const newNormAbbreviation = { ...newValue } as NormAbbreviation;
     if (newValue) {
-      validationStore.remove('normAbbreviation')
+      validationStore.remove("normAbbreviation");
       // Check if newValue.abbreviation is already in singleNorms
       const isAbbreviationPresent = props.modelValueList?.some(
         (norm) => norm.normAbbreviation?.abbreviation === newNormAbbreviation.abbreviation,
-      )
+      );
       if (isAbbreviationPresent) {
-        validationStore.add('RIS-Abkürzung bereits eingegeben', 'normAbbreviation')
+        validationStore.add("RIS-Abkürzung bereits eingegeben", "normAbbreviation");
       } else {
-        activeReference.value.normAbbreviation = newNormAbbreviation
+        activeReference.value.normAbbreviation = newNormAbbreviation;
       }
     }
   },
-})
+});
 
 const verweisTyp = computed<VerweisTyp | undefined>({
   get: () => activeReference.value.verweisTyp,
   set: (newValue) => {
-    validationStore.remove('verweisTyp')
-    activeReference.value.verweisTyp = newValue
+    validationStore.remove("verweisTyp");
+    activeReference.value.verweisTyp = newValue;
   },
-})
+});
 
 /**
  * If there are no format validations, the new norm references is emitted to the parent and automatically
@@ -78,14 +78,14 @@ const verweisTyp = computed<VerweisTyp | undefined>({
  */
 async function addNormReference() {
   if (!activeReference.value.verweisTyp) {
-    validationStore.add('Art der Verweisung fehlt', 'verweisTyp')
+    validationStore.add("Art der Verweisung fehlt", "verweisTyp");
   }
   if (
-    !validationStore.getByField('verweisTyp') &&
-    !validationStore.getByField('singleNorm') &&
-    !validationStore.getByField('dateOfVersion') &&
-    !validationStore.getByField('dateOfRelevance') &&
-    !validationStore.getByMessage('RIS-Abkürzung bereits eingegeben').length
+    !validationStore.getByField("verweisTyp") &&
+    !validationStore.getByField("singleNorm") &&
+    !validationStore.getByField("dateOfVersion") &&
+    !validationStore.getByField("dateOfRelevance") &&
+    !validationStore.getByMessage("RIS-Abkürzung bereits eingegeben").length
   ) {
     const normRef = new ActiveReference({
       ...activeReference.value,
@@ -101,9 +101,9 @@ async function addNormReference() {
             : null,
         )
         .filter((norm) => norm !== null) as SingleNorm[],
-    })
-    emit('update:modelValue', normRef)
-    emit('addEntry')
+    });
+    emit("update:modelValue", normRef);
+    emit("addEntry");
   }
 }
 
@@ -112,16 +112,16 @@ async function addNormReference() {
  * boolean value indicates, that the edit index should be resetted to undefined, ergo show all list items in summary mode.
  */
 function removeNormReference() {
-  singleNorms.value = []
-  activeReference.value.normAbbreviation = undefined
-  emit('removeEntry')
+  singleNorms.value = [];
+  activeReference.value.normAbbreviation = undefined;
+  emit("removeEntry");
 }
 
 /**
  * Adds a new single norm entry to the local single norms list.
  */
 function addSingleNormEntry() {
-  singleNorms.value.push(new SingleNorm())
+  singleNorms.value.push(new SingleNorm());
 }
 
 /**
@@ -129,15 +129,15 @@ function addSingleNormEntry() {
  * @param {number} index - The index of the list item to be removed
  */
 function removeSingleNormEntry(index: number) {
-  singleNorms.value.splice(index, 1)
+  singleNorms.value.splice(index, 1);
 }
 
 function cancelEdit() {
   if (new ActiveReference({ ...props.modelValue }).isEmpty) {
-    removeNormReference()
-    addSingleNormEntry()
+    removeNormReference();
+    addSingleNormEntry();
   }
-  emit('cancelEdit')
+  emit("cancelEdit");
 }
 
 /**
@@ -151,16 +151,16 @@ function updateFormatValidation(validationError: ValidationError | undefined, fi
     validationStore.add(
       validationError.message,
       validationError.instance as [
-        'verweisTyp',
-        'singleNorm',
-        'dateOfVersion',
-        'dateOfRelevance',
+        "verweisTyp",
+        "singleNorm",
+        "dateOfVersion",
+        "dateOfRelevance",
       ][number],
-    )
+    );
   } else {
     validationStore.remove(
-      field as ['verweisTyp', 'singleNorm', 'dateOfVersion', 'dateOfRelevance'][number],
-    )
+      field as ["verweisTyp", "singleNorm", "dateOfVersion", "dateOfRelevance"][number],
+    );
   }
 }
 
@@ -173,11 +173,11 @@ function removeMultipleSingleNorms() {
         ...norm,
         singleNorm: undefined,
         dateOfRelevance: undefined,
-      }))
+      }));
   } else {
     // As there is no 'Weitere Einzelnorm' button for administrative regulation on switch we have to
     // add one entry ro restore the UI.
-    addSingleNormEntry()
+    addSingleNormEntry();
   }
 }
 
@@ -190,17 +190,17 @@ function removeMultipleSingleNorms() {
 watch(
   () => props.modelValue,
   () => {
-    activeReference.value = new ActiveReference({ ...props.modelValue })
-    lastSavedModelValue.value = new ActiveReference({ ...props.modelValue })
+    activeReference.value = new ActiveReference({ ...props.modelValue });
+    lastSavedModelValue.value = new ActiveReference({ ...props.modelValue });
     if (lastSavedModelValue.value.isEmpty) {
-      validationStore.reset()
+      validationStore.reset();
     } else if (lastSavedModelValue.value.hasAmbiguousNormReference) {
-      validationStore.add('Mehrdeutiger Verweis', 'normAbbreviation')
+      validationStore.add("Mehrdeutiger Verweis", "normAbbreviation");
     }
-    if (singleNorms.value?.length == 0 || !singleNorms.value) addSingleNormEntry()
+    if (singleNorms.value?.length == 0 || !singleNorms.value) addSingleNormEntry();
   },
   { immediate: true, deep: true },
-)
+);
 </script>
 
 <template>

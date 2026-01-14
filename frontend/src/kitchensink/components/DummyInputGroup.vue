@@ -1,41 +1,41 @@
 <script lang="ts" setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
-import InputField from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import DummyListItem from '@/kitchensink/domain/dummyListItem'
+import { ref, watch, onBeforeUnmount } from "vue";
+import InputField from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import DummyListItem from "@/kitchensink/domain/dummyListItem";
 
 const props = defineProps<{
-  modelValue?: DummyListItem
-}>()
+  modelValue?: DummyListItem;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: DummyListItem]
-  addEntry: [void]
-  cancelEdit: [void]
-  removeEntry: [value?: boolean]
-}>()
+  "update:modelValue": [value: DummyListItem];
+  addEntry: [void];
+  cancelEdit: [void];
+  removeEntry: [value?: boolean];
+}>();
 
-const lastSavedModelValue = ref(new DummyListItem({ ...props.modelValue }))
-const listEntry = ref(new DummyListItem({ ...props.modelValue }))
+const lastSavedModelValue = ref(new DummyListItem({ ...props.modelValue }));
+const listEntry = ref(new DummyListItem({ ...props.modelValue }));
 
 async function addListEntry() {
-  emit('update:modelValue', listEntry.value as DummyListItem)
-  emit('addEntry')
+  emit("update:modelValue", listEntry.value as DummyListItem);
+  emit("addEntry");
 }
 
 watch(
   () => props.modelValue,
   () => {
-    listEntry.value = new DummyListItem({ ...props.modelValue })
-    lastSavedModelValue.value = new DummyListItem({ ...props.modelValue })
+    listEntry.value = new DummyListItem({ ...props.modelValue });
+    lastSavedModelValue.value = new DummyListItem({ ...props.modelValue });
   },
   { immediate: true },
-)
+);
 
 onBeforeUnmount(() => {
-  if (listEntry.value.isEmpty) emit('removeEntry')
-})
+  if (listEntry.value.isEmpty) emit("removeEntry");
+});
 </script>
 
 <template>

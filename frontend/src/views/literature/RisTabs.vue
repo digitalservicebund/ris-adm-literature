@@ -1,43 +1,43 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import Tabs from 'primevue/tabs'
-import TabList from 'primevue/tablist'
-import Tab from 'primevue/tab'
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import Tabs from "primevue/tabs";
+import TabList from "primevue/tablist";
+import Tab from "primevue/tab";
 
 export type RisTab = {
-  id: string
-  routeName: string
-  label: string
-  documentCategory?: string
-}
+  id: string;
+  routeName: string;
+  label: string;
+  documentCategory?: string;
+};
 
 const props = defineProps<{
-  tabs: RisTab[]
-  defaultTab?: string
-}>()
+  tabs: RisTab[];
+  defaultTab?: string;
+}>();
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
 const activeTabValue = computed(() => {
   if (route.meta.documentCategory) {
     const matchingTab = props.tabs.find(
       (tab) => tab.documentCategory === route.meta.documentCategory,
-    )
+    );
     if (matchingTab) {
-      return matchingTab.id
+      return matchingTab.id;
     }
   }
 
-  return props.defaultTab || props.tabs[0]?.id || ''
-})
+  return props.defaultTab || props.tabs[0]?.id || "";
+});
 
 function handleTabChange(value: string | number) {
-  const tabId = String(value)
-  const tab = props.tabs.find((t) => t.id === tabId)
+  const tabId = String(value);
+  const tab = props.tabs.find((t) => t.id === tabId);
   if (tab) {
-    router.push({ name: tab.routeName })
+    router.push({ name: tab.routeName });
   }
 }
 </script>

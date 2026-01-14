@@ -1,74 +1,74 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import InputField from '@/components/input/InputField.vue'
-import { type Fundstelle, type Periodikum } from '@/domain/fundstelle'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import { useValidationStore } from '@/composables/useValidationStore'
-import PeriodikumDropDown from '@/components/dropdown/PeriodikumDropDown.vue'
+import { ref, watch } from "vue";
+import InputField from "@/components/input/InputField.vue";
+import { type Fundstelle, type Periodikum } from "@/domain/fundstelle";
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+import { useValidationStore } from "@/composables/useValidationStore";
+import PeriodikumDropDown from "@/components/dropdown/PeriodikumDropDown.vue";
 
 const props = defineProps<{
-  fundstelle?: Fundstelle
-  showCancelButton: boolean
-}>()
+  fundstelle?: Fundstelle;
+  showCancelButton: boolean;
+}>();
 
 const emit = defineEmits<{
-  updateFundstelle: [fundstelle: Fundstelle]
-  deleteFundstelle: [id: string]
-  cancel: [void]
-}>()
+  updateFundstelle: [fundstelle: Fundstelle];
+  deleteFundstelle: [id: string];
+  cancel: [void];
+}>();
 
-const validationStore = useValidationStore<['periodikum', 'zitatstelle'][number]>()
+const validationStore = useValidationStore<["periodikum", "zitatstelle"][number]>();
 
-const periodikum = ref<Periodikum | undefined>(props.fundstelle?.periodikum || undefined)
-const zitatstelle = ref<string>(props.fundstelle?.zitatstelle || '')
+const periodikum = ref<Periodikum | undefined>(props.fundstelle?.periodikum || undefined);
+const zitatstelle = ref<string>(props.fundstelle?.zitatstelle || "");
 
 const onClickSave = () => {
-  const isValid = validate()
+  const isValid = validate();
   if (isValid) {
     const fundstelle = {
       id: props.fundstelle ? props.fundstelle.id : crypto.randomUUID(),
       periodikum: periodikum.value!,
       zitatstelle: zitatstelle.value,
-    }
+    };
 
-    emit('updateFundstelle', fundstelle)
+    emit("updateFundstelle", fundstelle);
   }
-}
+};
 
 const onClickCancel = () => {
-  periodikum.value = props.fundstelle?.periodikum || undefined
-  zitatstelle.value = props.fundstelle?.zitatstelle || ''
-  emit('cancel')
-}
+  periodikum.value = props.fundstelle?.periodikum || undefined;
+  zitatstelle.value = props.fundstelle?.zitatstelle || "";
+  emit("cancel");
+};
 
 const onClickDelete = () => {
-  emit('deleteFundstelle', props.fundstelle!.id)
-}
+  emit("deleteFundstelle", props.fundstelle!.id);
+};
 
 const validate = () => {
-  let isValid = true
+  let isValid = true;
   if (!periodikum.value) {
-    validationStore.add('Pflichtfeld nicht befüllt', 'periodikum')
-    isValid = false
+    validationStore.add("Pflichtfeld nicht befüllt", "periodikum");
+    isValid = false;
   }
   if (!zitatstelle.value) {
-    validationStore.add('Pflichtfeld nicht befüllt', 'zitatstelle')
-    isValid = false
+    validationStore.add("Pflichtfeld nicht befüllt", "zitatstelle");
+    isValid = false;
   }
-  return isValid
-}
+  return isValid;
+};
 
 watch(
   () => props.fundstelle,
   (fundstelle) => {
-    validationStore.remove('periodikum')
+    validationStore.remove("periodikum");
     if (!!fundstelle?.ambiguousPeriodikum && !fundstelle?.periodikum) {
-      validationStore.add('Mehrdeutiger Verweis', 'periodikum')
+      validationStore.add("Mehrdeutiger Verweis", "periodikum");
     }
   },
   { immediate: true },
-)
+);
 </script>
 
 <template>

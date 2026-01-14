@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import IconBadge from '@/components/IconBadge.vue'
-import NormReference from '@/domain/normReference'
-import IconError from '~icons/ic/baseline-error'
-import IconBook from '~icons/material-symbols/book-2'
-import IconBreakingNews from '~icons/material-symbols/breaking-news'
-import IconArrowRight from '~icons/material-symbols/subdirectory-arrow-right'
+import IconBadge from "@/components/IconBadge.vue";
+import NormReference from "@/domain/normReference";
+import IconError from "~icons/ic/baseline-error";
+import IconBook from "~icons/material-symbols/book-2";
+import IconBreakingNews from "~icons/material-symbols/breaking-news";
+import IconArrowRight from "~icons/material-symbols/subdirectory-arrow-right";
 
 const props = defineProps<{
-  data: NormReference
-}>()
+  data: NormReference;
+}>();
 </script>
 
 <template>
@@ -17,10 +17,10 @@ const props = defineProps<{
       <div v-if="data.singleNorms?.length === 1" class="flex flex-row items-center">
         <component :is="IconBook" class="mr-8" />
         <div class="ris-label1-regular mr-8">
-          {{ data.renderSummary + ', ' + data.singleNorms[0].renderSummary }}
+          {{ data.renderSummary + ", " + data.singleNorms[0].renderSummary }}
         </div>
         <div v-if="data.singleNorms[0].legalForce" class="flex flex-row items-center">
-          {{ ' | ' }}
+          {{ " | " }}
           <component :is="IconBreakingNews" class="mx-8" />
           {{ data.singleNorms[0].renderLegalForce }}
           <IconBadge
@@ -59,9 +59,9 @@ const props = defineProps<{
           <div v-for="(singleNorm, index) in data.singleNorms" :key="index">
             <div v-if="!singleNorm.isEmpty" class="flex flex-row items-center">
               <component :is="IconArrowRight" class="mr-8" />
-              {{ data.renderSummary + ', ' + data.singleNorms[index].renderSummary }}
+              {{ data.renderSummary + ", " + data.singleNorms[index].renderSummary }}
               <div v-if="data.singleNorms[index].legalForce" class="flex flex-row items-center">
-                {{ ' | ' }}
+                {{ " | " }}
                 <component :is="IconBreakingNews" class="mx-8" />
                 {{ data.singleNorms[index].renderLegalForce }}
                 <IconBadge

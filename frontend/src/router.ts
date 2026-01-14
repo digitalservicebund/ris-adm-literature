@@ -1,21 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { ROUTE_NAMES, ROUTE_PATHS } from '@/constants/routes'
-import { useAuthentication } from '@/services/auth'
-import { roleToHomeRouteMap, USER_ROLES } from '@/config/roles'
-import ErrorNotFound from '@/views/ErrorNotFound.view.vue'
-import AbgabePage from '@/views/publication/Abgabe.view.vue'
-import AdmRubriken from '@/views/adm/documentUnit/[documentNumber]/rubriken/Rubriken.view.vue'
-import FundstellenPage from '@/views/adm/documentUnit/[documentNumber]/fundstellen/Fundstellen.view.vue'
-import NewDocument from '@/views/NewDocument.view.vue'
-import Forbidden from '@/views/Forbidden.view.vue'
-import StartPageTemplate from '@/views/Overview.view.vue'
-import LiteratureOverviewPage from '@/views/literature/Overview.view.vue'
-import DocumentUnits from './components/document-units/DocumentUnits.vue'
-import EditDocument from '@/views/EditDocument.view.vue'
-import UliRubriken from '@/views/literature/uli/Rubriken.view.vue'
-import SliRubriken from '@/views/literature/sli/rubriken/Rubriken.view.vue'
-import { DocumentCategory } from './domain/documentType'
-import RootRedirectPage from '@/views/RootRedirect.view.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import { ROUTE_NAMES, ROUTE_PATHS } from "@/constants/routes";
+import { useAuthentication } from "@/services/auth";
+import { roleToHomeRouteMap, USER_ROLES } from "@/config/roles";
+import ErrorNotFound from "@/views/ErrorNotFound.view.vue";
+import AbgabePage from "@/views/publication/Abgabe.view.vue";
+import AdmRubriken from "@/views/adm/documentUnit/[documentNumber]/rubriken/Rubriken.view.vue";
+import FundstellenPage from "@/views/adm/documentUnit/[documentNumber]/fundstellen/Fundstellen.view.vue";
+import NewDocument from "@/views/NewDocument.view.vue";
+import Forbidden from "@/views/Forbidden.view.vue";
+import StartPageTemplate from "@/views/Overview.view.vue";
+import LiteratureOverviewPage from "@/views/literature/Overview.view.vue";
+import DocumentUnits from "./components/document-units/DocumentUnits.vue";
+import EditDocument from "@/views/EditDocument.view.vue";
+import UliRubriken from "@/views/literature/uli/Rubriken.view.vue";
+import SliRubriken from "@/views/literature/sli/rubriken/Rubriken.view.vue";
+import { DocumentCategory } from "./domain/documentType";
+import RootRedirectPage from "@/views/RootRedirect.view.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,28 +25,28 @@ const router = createRouter({
       name: ROUTE_NAMES.ROOT_REDIRECT,
       component: RootRedirectPage,
       beforeEnter: (to, from, next) => {
-        const auth = useAuthentication()
-        const userRoles = auth.getRealmRoles()
+        const auth = useAuthentication();
+        const userRoles = auth.getRealmRoles();
 
         // Not authenticated or no roles
         if (!auth.isAuthenticated() || userRoles.length === 0) {
-          next({ path: ROUTE_PATHS.FORBIDDEN })
-          return
+          next({ path: ROUTE_PATHS.FORBIDDEN });
+          return;
         }
 
         // Exactly one role: redirect
         if (userRoles.length === 1 && userRoles[0]) {
-          const routeName = roleToHomeRouteMap[userRoles[0]]
+          const routeName = roleToHomeRouteMap[userRoles[0]];
           if (routeName) {
-            next({ name: routeName })
+            next({ name: routeName });
           } else {
-            next({ path: ROUTE_PATHS.FORBIDDEN })
+            next({ path: ROUTE_PATHS.FORBIDDEN });
           }
-          return
+          return;
         }
 
         // Multiple roles: stay on RootRedirectPage
-        next()
+        next();
       },
     },
     {
@@ -57,12 +57,12 @@ const router = createRouter({
       },
       children: [
         {
-          path: '',
+          path: "",
           component: StartPageTemplate,
-          props: { title: 'Übersicht Verwaltungsvorschriften' },
+          props: { title: "Übersicht Verwaltungsvorschriften" },
           children: [
             {
-              path: '',
+              path: "",
               name: ROUTE_NAMES.ADM.START_PAGE,
               component: DocumentUnits,
             },
@@ -103,19 +103,19 @@ const router = createRouter({
       ],
     },
     {
-      path: '/literatur-unselbststaendig/:pathMatch(.*)*',
+      path: "/literatur-unselbststaendig/:pathMatch(.*)*",
       redirect: (to) => {
-        const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : ''
-        const newPath = oldSuffix ? `${ROUTE_PATHS.ULI.BASE}/${oldSuffix}` : ROUTE_PATHS.ULI.BASE
-        return { path: newPath }
+        const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join("/") : "";
+        const newPath = oldSuffix ? `${ROUTE_PATHS.ULI.BASE}/${oldSuffix}` : ROUTE_PATHS.ULI.BASE;
+        return { path: newPath };
       },
     },
     {
-      path: '/literatur-selbststaendig/:pathMatch(.*)*',
+      path: "/literatur-selbststaendig/:pathMatch(.*)*",
       redirect: (to) => {
-        const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : ''
-        const newPath = oldSuffix ? `${ROUTE_PATHS.SLI.BASE}/${oldSuffix}` : ROUTE_PATHS.SLI.BASE
-        return { path: newPath }
+        const oldSuffix = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join("/") : "";
+        const newPath = oldSuffix ? `${ROUTE_PATHS.SLI.BASE}/${oldSuffix}` : ROUTE_PATHS.SLI.BASE;
+        return { path: newPath };
       },
     },
     {
@@ -126,7 +126,7 @@ const router = createRouter({
       },
       children: [
         {
-          path: '',
+          path: "",
           name: ROUTE_NAMES.ULI.START_PAGE,
           component: LiteratureOverviewPage,
         },
@@ -165,7 +165,7 @@ const router = createRouter({
       },
       children: [
         {
-          path: '',
+          path: "",
           name: ROUTE_NAMES.SLI.START_PAGE,
           component: LiteratureOverviewPage,
         },
@@ -199,7 +199,7 @@ const router = createRouter({
 
     {
       // cf. https://router.vuejs.org/guide/essentials/dynamic-matching.html
-      path: '/:pathMatch(.*)*',
+      path: "/:pathMatch(.*)*",
       name: ROUTE_NAMES.NOT_FOUND,
       component: ErrorNotFound,
     },
@@ -209,25 +209,25 @@ const router = createRouter({
       component: Forbidden,
     },
   ],
-})
+});
 
 router.beforeEach((to, from, next) => {
-  const auth = useAuthentication()
-  const requiredRoles = to.meta.requiresRole as string[] | undefined
+  const auth = useAuthentication();
+  const requiredRoles = to.meta.requiresRole as string[] | undefined;
 
   if (requiredRoles && requiredRoles.length > 0 && auth.isAuthenticated()) {
-    const hasRequiredRole = requiredRoles.some((role) => auth.hasRealmRole(role))
+    const hasRequiredRole = requiredRoles.some((role) => auth.hasRealmRole(role));
 
     if (hasRequiredRole) {
-      next()
+      next();
     } else {
       // User does not have the required role, redirect to the 'Forbidden' page
-      next({ name: ROUTE_NAMES.FORBIDDEN })
+      next({ name: ROUTE_NAMES.FORBIDDEN });
     }
   } else {
     // bareId / keycloak manages it
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;

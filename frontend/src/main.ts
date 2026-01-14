@@ -1,25 +1,25 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import PrimeVue from 'primevue/config'
-import { RisUiLocale } from '@digitalservicebund/ris-ui/primevue'
-import RisValidUiTheme from '@/lib/theme'
-import '@digitalservicebund/ris-ui/fonts.css'
-import App from './App.vue'
-import * as Sentry from '@sentry/vue'
-import '@/styles/global.css'
-import router from '@/router.ts'
-import { ToastService } from 'primevue'
-import { useAuthentication } from '@/services/auth.ts'
-import { getEnv } from '@/services/envService.ts'
-import Tooltip from 'primevue/tooltip'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import PrimeVue from "primevue/config";
+import { RisUiLocale } from "@digitalservicebund/ris-ui/primevue";
+import RisValidUiTheme from "@/lib/theme";
+import "@digitalservicebund/ris-ui/fonts.css";
+import App from "./App.vue";
+import * as Sentry from "@sentry/vue";
+import "@/styles/global.css";
+import router from "@/router.ts";
+import { ToastService } from "primevue";
+import { useAuthentication } from "@/services/auth.ts";
+import { getEnv } from "@/services/envService.ts";
+import Tooltip from "primevue/tooltip";
 
 try {
   // Fetch environment configuration
-  const env = await getEnv()
+  const env = await getEnv();
 
-  const app = createApp(App)
+  const app = createApp(App);
 
-  app.directive('tooltip', Tooltip)
+  app.directive("tooltip", Tooltip);
 
   // env.PROD does not mean the "prod" environment, but should be true for all hosted
   // environments (as opposed to local development), cf: https://vite.dev/guide/env-and-mode
@@ -28,18 +28,18 @@ try {
     Sentry.init({
       app,
       environment: globalThis.location.host,
-      dsn: 'https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160',
+      dsn: "https://7c56d29d5dd2c9bd48fc72a8edaffe57@o1248831.ingest.us.sentry.io/4508482613084160",
       integrations: [],
-    })
+    });
   }
 
   // Configure authentication
-  const auth = useAuthentication()
+  const auth = useAuthentication();
   await auth.configure({
     url: env.authUrl,
     clientId: env.authClientId,
     realm: env.authRealm,
-  })
+  });
 
   app
     .use(createPinia())
@@ -50,23 +50,23 @@ try {
     })
     .use(router)
     .use(ToastService)
-    .mount('#app')
+    .mount("#app");
 } catch (e: unknown) {
   // If an error occurs above, catch it here
 
   // Get references to the error message container and the loading message
-  const errorContainer = document.getElementById('error-container')
-  const loadingMessage = document.querySelector('.fallback p')
+  const errorContainer = document.getElementById("error-container");
+  const loadingMessage = document.querySelector(".fallback p");
 
   if (errorContainer) {
-    errorContainer.removeAttribute('hidden')
+    errorContainer.removeAttribute("hidden");
     if (loadingMessage) {
-      loadingMessage.setAttribute('hidden', 'true')
+      loadingMessage.setAttribute("hidden", "true");
     }
     if (e instanceof Error) {
-      const errorDetails = errorContainer.querySelector('#error-detail')
+      const errorDetails = errorContainer.querySelector("#error-detail");
       if (errorDetails) {
-        errorDetails.textContent = e.message
+        errorDetails.textContent = e.message;
       }
     }
   }

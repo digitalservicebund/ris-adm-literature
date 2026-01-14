@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import IconBadge from '@/components/IconBadge.vue'
-import type EditableListItem from '@/domain/editableListItem'
-import IconError from '~icons/ic/baseline-error'
-import IcBaselinePerson from '~icons/ic/baseline-person'
+import { computed } from "vue";
+import IconBadge from "@/components/IconBadge.vue";
+import type EditableListItem from "@/domain/editableListItem";
+import IconError from "~icons/ic/baseline-error";
+import IcBaselinePerson from "~icons/ic/baseline-person";
 
 const props = defineProps<{
-  data: EditableListItem
-}>()
+  data: EditableListItem;
+}>();
 
 const iconComponent = computed(() => {
-  return IcBaselinePerson
-})
+  return IcBaselinePerson;
+});
 
 const showErrorBadge = computed(() => {
-  return props.data?.hasMissingRequiredFields
-})
+  return props.data?.hasMissingRequiredFields;
+});
 </script>
 
 <template>

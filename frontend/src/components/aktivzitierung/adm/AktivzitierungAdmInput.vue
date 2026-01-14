@@ -1,36 +1,36 @@
 <script lang="ts" setup>
-import InputField from '@/components/input/InputField.vue'
-import InputText from 'primevue/inputtext'
-import type { AktivzitierungAdm } from '@/domain/AktivzitierungAdm'
-import { computed } from 'vue'
-import type { ZitierArt } from '@/domain/zitierArt'
-import ZitierArtDropDown from '@/components/dropdown/ZitierArtDropDown.vue'
-import InstitutionDropDown from '@/components/dropdown/InstitutionDropDown.vue'
-import type { Institution } from '@/domain/normgeber'
-import DateInput from '@/components/input/DateInput.vue'
-import PeriodikumDropDown from '@/components/dropdown/PeriodikumDropDown.vue'
-import type { Periodikum } from '@/domain/fundstelle'
-import DokumentTypDropDown from '@/components/dropdown/DokumentTypDropDown.vue'
-import { DocumentCategory } from '@/domain/documentType'
+import InputField from "@/components/input/InputField.vue";
+import InputText from "primevue/inputtext";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
+import { computed } from "vue";
+import type { ZitierArt } from "@/domain/zitierArt";
+import ZitierArtDropDown from "@/components/dropdown/ZitierArtDropDown.vue";
+import InstitutionDropDown from "@/components/dropdown/InstitutionDropDown.vue";
+import type { Institution } from "@/domain/normgeber";
+import DateInput from "@/components/input/DateInput.vue";
+import PeriodikumDropDown from "@/components/dropdown/PeriodikumDropDown.vue";
+import type { Periodikum } from "@/domain/fundstelle";
+import DokumentTypDropDown from "@/components/dropdown/DokumentTypDropDown.vue";
+import { DocumentCategory } from "@/domain/documentType";
 
 const props = defineProps<{
-  modelValue: AktivzitierungAdm
-}>()
+  modelValue: AktivzitierungAdm;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: AktivzitierungAdm]
-}>()
+  "update:modelValue": [value: AktivzitierungAdm];
+}>();
 
 const citationType = computed({
   get: () => {
     return props.modelValue.citationType
       ? ({ id: props.modelValue.citationType, label: props.modelValue.citationType } as ZitierArt)
-      : undefined
+      : undefined;
   },
   set: (val: ZitierArt | undefined) => {
-    emit('update:modelValue', { ...props.modelValue, citationType: val?.abbreviation })
+    emit("update:modelValue", { ...props.modelValue, citationType: val?.abbreviation });
   },
-})
+});
 
 const normgeber = computed({
   get: () => {
@@ -39,12 +39,12 @@ const normgeber = computed({
           id: props.modelValue.normgeber,
           name: props.modelValue.normgeber,
         } as Institution)
-      : undefined
+      : undefined;
   },
   set: (val: Institution | undefined) => {
-    emit('update:modelValue', { ...props.modelValue, normgeber: val?.name })
+    emit("update:modelValue", { ...props.modelValue, normgeber: val?.name });
   },
-})
+});
 
 const periodikum = computed({
   get: () => {
@@ -53,12 +53,12 @@ const periodikum = computed({
           id: props.modelValue.periodikum,
           abbreviation: props.modelValue.periodikum,
         } as Periodikum)
-      : undefined
+      : undefined;
   },
   set: (val: Periodikum | undefined) => {
-    emit('update:modelValue', { ...props.modelValue, periodikum: val?.abbreviation })
+    emit("update:modelValue", { ...props.modelValue, periodikum: val?.abbreviation });
   },
-})
+});
 </script>
 
 <template>

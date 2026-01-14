@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavbarTop from './components/NavbarTop.vue'
-import Toast from 'primevue/toast'
+import NavbarTop from "./components/NavbarTop.vue";
+import Toast from "primevue/toast";
 </script>
 
 <template>

@@ -13,6 +13,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Development Tooling
 
 ### Node version
+
 The `.node-version` file specifies the node version used in this project. You can use [nodenv](https://github.com/nodenv/nodenv) to switch between versions.
 
 ```sh
@@ -97,13 +98,13 @@ npm run test:e2e -- --ui
 npm run test:e2e -- --headed
 ```
 
-### Lint With [ESLint](https://eslint.org/)
+### Lint With [Oxlint](https://oxc.rs/)
 
 ```sh
 npm run lint
 ```
 
-### Format With [Prettier](https://prettier.io)
+### Format With [Oxfmt](https://oxc.rs/)
 
 ```sh
 npm run format

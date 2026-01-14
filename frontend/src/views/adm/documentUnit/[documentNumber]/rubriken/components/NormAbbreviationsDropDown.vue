@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import { RisAutoComplete } from '@digitalservicebund/ris-ui/components'
-import { onMounted, ref } from 'vue'
-import { useAutoComplete, useNormAbbreviationsSearch } from '@/composables/useAutoComplete'
-import type { NormAbbreviation } from '@/domain/normAbbreviation'
-import { useFetchNormAbbreviations } from '@/services/normAbbreviationService'
+import { RisAutoComplete } from "@digitalservicebund/ris-ui/components";
+import { onMounted, ref } from "vue";
+import { useAutoComplete, useNormAbbreviationsSearch } from "@/composables/useAutoComplete";
+import type { NormAbbreviation } from "@/domain/normAbbreviation";
+import { useFetchNormAbbreviations } from "@/services/normAbbreviationService";
 
 defineProps<{
-  inputId: string
-  invalid: boolean
-  ariaLabel?: string
-  placeholder?: string
-}>()
+  inputId: string;
+  invalid: boolean;
+  ariaLabel?: string;
+  placeholder?: string;
+}>();
 
-const modelValue = defineModel<NormAbbreviation | undefined>()
+const modelValue = defineModel<NormAbbreviation | undefined>();
 const emit = defineEmits<{
-  'update:modelValue': [value: NormAbbreviation | undefined]
-}>()
+  "update:modelValue": [value: NormAbbreviation | undefined];
+}>();
 
-const autoComplete = ref<typeof RisAutoComplete | null>(null)
-const normAbbreviations = ref<NormAbbreviation[]>([])
-const selectedNormAbbrId = ref<string | undefined>(modelValue.value?.id)
+const autoComplete = ref<typeof RisAutoComplete | null>(null);
+const normAbbreviations = ref<NormAbbreviation[]>([]);
+const selectedNormAbbrId = ref<string | undefined>(modelValue.value?.id);
 
-const searchFn = useNormAbbreviationsSearch(normAbbreviations)
+const searchFn = useNormAbbreviationsSearch(normAbbreviations);
 
-const { suggestions, onComplete } = useAutoComplete(searchFn)
+const { suggestions, onComplete } = useAutoComplete(searchFn);
 
 function onModelValueChange(id: string | undefined) {
-  selectedNormAbbrId.value = id
-  const selectedAbbr = normAbbreviations.value.find((c: NormAbbreviation) => c.id === id)
-  emit('update:modelValue', selectedAbbr)
+  selectedNormAbbrId.value = id;
+  const selectedAbbr = normAbbreviations.value.find((c: NormAbbreviation) => c.id === id);
+  emit("update:modelValue", selectedAbbr);
 }
 
 onMounted(async () => {
-  const { data } = await useFetchNormAbbreviations()
-  normAbbreviations.value = data.value?.normAbbreviations || []
-})
+  const { data } = await useFetchNormAbbreviations();
+  normAbbreviations.value = data.value?.normAbbreviations || [];
+});
 </script>
 
 <template>

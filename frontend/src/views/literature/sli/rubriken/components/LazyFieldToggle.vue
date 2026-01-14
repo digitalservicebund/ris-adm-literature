@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import Button from 'primevue/button'
-import IconAdd from '~icons/material-symbols/add'
+import { computed } from "vue";
+import Button from "primevue/button";
+import IconAdd from "~icons/material-symbols/add";
 
-const visibleModel = defineModel<boolean>('visible', { default: false })
-const show = computed(() => visibleModel.value)
+const visibleModel = defineModel<boolean>("visible", { default: false });
+const show = computed(() => visibleModel.value);
 
-const props = defineProps<{ buttonLabel: string; disabled?: boolean }>()
+const props = defineProps<{ buttonLabel: string; disabled?: boolean }>();
 
 function open() {
-  visibleModel.value = true
+  visibleModel.value = true;
 }
 </script>
 

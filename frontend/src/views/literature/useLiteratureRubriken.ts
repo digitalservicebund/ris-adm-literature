@@ -1,5 +1,5 @@
-import { computed } from 'vue'
-import type { DocumentType } from '@/domain/documentType'
+import { computed } from "vue";
+import type { DocumentType } from "@/domain/documentType";
 
 /**
  * Shared composable for literature document unit rubriken fields.
@@ -8,48 +8,48 @@ import type { DocumentType } from '@/domain/documentType'
 export function useLiteratureRubriken<
   T extends {
     documentUnit: {
-      veroeffentlichungsjahr?: string
-      dokumenttypen?: DocumentType[]
-      hauptsachtitel?: string
-      dokumentarischerTitel?: string
-      hauptsachtitelZusatz?: string
-    } | null
+      veroeffentlichungsjahr?: string;
+      dokumenttypen?: DocumentType[];
+      hauptsachtitel?: string;
+      dokumentarischerTitel?: string;
+      hauptsachtitelZusatz?: string;
+    } | null;
   },
 >(store: T) {
   const veroeffentlichungsjahr = computed({
     get: () => store.documentUnit?.veroeffentlichungsjahr,
     set: (newValue) => {
-      store.documentUnit!.veroeffentlichungsjahr = newValue
+      store.documentUnit!.veroeffentlichungsjahr = newValue;
     },
-  })
+  });
 
   const dokumenttypen = computed({
     get: () => store.documentUnit?.dokumenttypen || [],
     set: (newValue) => {
-      store.documentUnit!.dokumenttypen = newValue
+      store.documentUnit!.dokumenttypen = newValue;
     },
-  })
+  });
 
   const hauptsachtitel = computed({
-    get: () => store.documentUnit?.hauptsachtitel ?? '',
+    get: () => store.documentUnit?.hauptsachtitel ?? "",
     set: (newValue) => {
-      store.documentUnit!.hauptsachtitel = newValue
+      store.documentUnit!.hauptsachtitel = newValue;
     },
-  })
+  });
 
   const dokumentarischerTitel = computed({
-    get: () => store.documentUnit?.dokumentarischerTitel ?? '',
+    get: () => store.documentUnit?.dokumentarischerTitel ?? "",
     set: (newValue) => {
-      store.documentUnit!.dokumentarischerTitel = newValue
+      store.documentUnit!.dokumentarischerTitel = newValue;
     },
-  })
+  });
 
   const hauptsachtitelZusatz = computed({
-    get: () => store.documentUnit?.hauptsachtitelZusatz ?? '',
+    get: () => store.documentUnit?.hauptsachtitelZusatz ?? "",
     set: (newValue) => {
-      store.documentUnit!.hauptsachtitelZusatz = newValue
+      store.documentUnit!.hauptsachtitelZusatz = newValue;
     },
-  })
+  });
 
   return {
     veroeffentlichungsjahr,
@@ -57,5 +57,5 @@ export function useLiteratureRubriken<
     hauptsachtitel,
     dokumentarischerTitel,
     hauptsachtitelZusatz,
-  }
+  };
 }

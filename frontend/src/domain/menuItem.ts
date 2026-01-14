@@ -1,8 +1,8 @@
-import type Route from '@/domain/route'
+import type Route from "@/domain/route";
 
 export default interface MenuItem {
-  label: string
-  route: Route
-  isDisabled?: boolean
-  children?: MenuItem[]
+  label: string;
+  route: Route;
+  isDisabled?: boolean;
+  children?: MenuItem[];
 }

@@ -1,6 +1,6 @@
 type DocumentationOffice = {
-  id: string
-  abbreviation: string
-}
+  id: string;
+  abbreviation: string;
+};
 
-export type { DocumentationOffice as default }
+export type { DocumentationOffice as default };

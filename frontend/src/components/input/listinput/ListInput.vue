@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { ref, computed, nextTick, watch } from 'vue'
-import ListInputDisplay from './ListInputDisplay.vue'
-import ListInputEdit from './ListInputEdit.vue'
+import { ref, computed, nextTick, watch } from "vue";
+import ListInputDisplay from "./ListInputDisplay.vue";
+import ListInputEdit from "./ListInputEdit.vue";
 
 const props = defineProps<{
-  label: string
-  modelValue: string[] | undefined
-}>()
+  label: string;
+  modelValue: string[] | undefined;
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string[]]
-  reset: []
-}>()
+  "update:modelValue": [value: string[]];
+  reset: [];
+}>();
 
-const list = ref(props.modelValue ?? [])
-const editMode = ref(false)
-const sortAlphabetically = ref(false)
+const list = ref(props.modelValue ?? []);
+const editMode = ref(false);
+const sortAlphabetically = ref(false);
 
 /**
  * Computed property to manage the list input value.
@@ -25,32 +25,32 @@ const sortAlphabetically = ref(false)
  * @returns {string} The joined string of list items separated by newlines.
  */
 const listInputValue = computed<string>({
-  get: () => list.value.join('\n'),
+  get: () => list.value.join("\n"),
   set: async (newValues: string) => {
     list.value = newValues
-      .split('\n')
+      .split("\n")
       .map((listItem) => listItem.trim())
-      .filter((listItem) => listItem !== '')
+      .filter((listItem) => listItem !== "");
 
     // Sort alphabetically if the option is set
     if (sortAlphabetically.value && list.value) {
-      list.value = list.value.sort((a: string, b: string) => a.localeCompare(b))
+      list.value = list.value.sort((a: string, b: string) => a.localeCompare(b));
     }
 
     // Remove duplicates
-    list.value = [...new Set(list.value)] as string[]
+    list.value = [...new Set(list.value)] as string[];
 
     // Emit the updated value
-    emit('update:modelValue', list.value)
+    emit("update:modelValue", list.value);
 
-    await toggleEditMode()
+    await toggleEditMode();
 
     // Reset sorting option
-    sortAlphabetically.value = false
+    sortAlphabetically.value = false;
   },
-})
+});
 
-const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(null)
+const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(null);
 
 /**
  * Emit reset if the list is empty, to show the category wrapper again.
@@ -58,16 +58,16 @@ const listInputDisplayRef = ref<InstanceType<typeof ListInputDisplay> | null>(nu
  */
 async function toggleEditMode() {
   // Reset sorting option
-  sortAlphabetically.value = false
+  sortAlphabetically.value = false;
 
-  editMode.value = !editMode.value
+  editMode.value = !editMode.value;
 
   if (!editMode.value) {
     // Toggle from edit to display: As height of display mode can be less than edit mode -> scroll into view.
-    await nextTick()
+    await nextTick();
     listInputDisplayRef.value?.$el?.scrollIntoView({
-      block: 'nearest',
-    })
+      block: "nearest",
+    });
   }
 }
 
@@ -75,11 +75,11 @@ watch(
   () => props.modelValue,
   () => {
     if (props.modelValue) {
-      list.value = props.modelValue
+      list.value = props.modelValue;
     }
   },
   { deep: true },
-)
+);
 </script>
 
 <template>

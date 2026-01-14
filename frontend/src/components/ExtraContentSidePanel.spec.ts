@@ -1,29 +1,29 @@
-import { createTestingPinia } from '@pinia/testing'
-import { userEvent } from '@testing-library/user-event'
-import { render, screen } from '@testing-library/vue'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { createRouter, createWebHistory, type Router } from 'vue-router'
-import ExtraContentSidePanel from '@/components/ExtraContentSidePanel.vue'
-import type { AdmDocumentationUnit } from '@/domain/adm/admDocumentUnit'
-import type { Fundstelle } from '@/domain/fundstelle'
+import { createTestingPinia } from "@pinia/testing";
+import { userEvent } from "@testing-library/user-event";
+import { render, screen } from "@testing-library/vue";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { createRouter, createWebHistory, type Router } from "vue-router";
+import ExtraContentSidePanel from "@/components/ExtraContentSidePanel.vue";
+import type { AdmDocumentationUnit } from "@/domain/adm/admDocumentUnit";
+import type { Fundstelle } from "@/domain/fundstelle";
 
-let router: Router
+let router: Router;
 
 function renderComponent(
   options: {
-    note?: string
-    fundstellen?: Fundstelle[]
-    showEditButton?: boolean
-    isEditable?: boolean
-    hidePanelModeBar?: boolean
+    note?: string;
+    fundstellen?: Fundstelle[];
+    showEditButton?: boolean;
+    isEditable?: boolean;
+    hidePanelModeBar?: boolean;
   } = {},
 ) {
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
   const documentUnit = <AdmDocumentationUnit>{
-    documentNumber: '1234567891234',
-    note: options.note ?? '',
-  }
+    documentNumber: "1234567891234",
+    note: options.note ?? "",
+  };
 
   return {
     user,
@@ -49,28 +49,28 @@ function renderComponent(
         ],
       },
     }),
-  }
+  };
 }
 
-describe('ExtraContentSidePanel', () => {
+describe("ExtraContentSidePanel", () => {
   beforeEach(() => {
     router = createRouter({
       history: createWebHistory(),
       routes: [
         {
-          path: '/',
-          name: 'home',
+          path: "/",
+          name: "home",
           component: {},
         },
       ],
-    })
-  })
+    });
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  describe('Open/close the panel', () => {
+  describe("Open/close the panel", () => {
     const testCases = [
       {
         hasNote: false,
@@ -84,68 +84,68 @@ describe('ExtraContentSidePanel', () => {
       },
       {
         hasNote: false,
-        queryParam: 'true',
+        queryParam: "true",
         expectedIsOpen: false,
       },
       {
         hasNote: true,
-        queryParam: 'false',
+        queryParam: "false",
         expectedIsOpen: true,
       },
       {
         hasNote: false,
-        queryParam: 'false',
+        queryParam: "false",
         expectedIsOpen: false,
       },
-    ]
+    ];
     testCases.forEach(({ hasNote, queryParam, expectedIsOpen }) =>
-      test(`panel inititally ${expectedIsOpen ? 'opened' : 'closed'} ${hasNote ? 'with' : 'without'} note with query param ${queryParam}`, async () => {
+      test(`panel inititally ${expectedIsOpen ? "opened" : "closed"} ${hasNote ? "with" : "without"} note with query param ${queryParam}`, async () => {
         await router.push({
-          path: '',
-        })
+          path: "",
+        });
 
         renderComponent({
-          note: hasNote ? 'note' : '',
-        })
+          note: hasNote ? "note" : "",
+        });
 
         await screen.findByLabelText(
-          expectedIsOpen ? 'Seitenpanel schließen' : 'Seitenpanel öffnen',
-        )
+          expectedIsOpen ? "Seitenpanel schließen" : "Seitenpanel öffnen",
+        );
 
         if (expectedIsOpen) {
-          expect(screen.getByLabelText('Notiz anzeigen')).toBeVisible()
+          expect(screen.getByLabelText("Notiz anzeigen")).toBeVisible();
         } else {
-          expect(screen.getByLabelText('Notiz anzeigen')).not.toBeVisible()
+          expect(screen.getByLabelText("Notiz anzeigen")).not.toBeVisible();
         }
       }),
-    )
-  })
+    );
+  });
 
-  test('toggle panel open and closed', async () => {
-    const { user } = renderComponent()
-    expect(await screen.findByLabelText('Seitenpanel öffnen')).toBeVisible()
+  test("toggle panel open and closed", async () => {
+    const { user } = renderComponent();
+    expect(await screen.findByLabelText("Seitenpanel öffnen")).toBeVisible();
 
     // Opening side panel
-    await user.click(screen.getByLabelText('Seitenpanel öffnen'))
-    expect(await screen.findByLabelText('Seitenpanel schließen')).toBeVisible()
+    await user.click(screen.getByLabelText("Seitenpanel öffnen"));
+    expect(await screen.findByLabelText("Seitenpanel schließen")).toBeVisible();
 
     // Closing side panel
-    await user.click(screen.getByLabelText('Seitenpanel schließen'))
-    expect(await screen.findByLabelText('Seitenpanel öffnen')).toBeVisible()
-  })
+    await user.click(screen.getByLabelText("Seitenpanel schließen"));
+    expect(await screen.findByLabelText("Seitenpanel öffnen")).toBeVisible();
+  });
 
-  describe('Select panel content', () => {
-    test('initially open note without note', async () => {
-      const { user } = renderComponent()
-      await user.click(screen.getByLabelText('Seitenpanel öffnen'))
+  describe("Select panel content", () => {
+    test("initially open note without note", async () => {
+      const { user } = renderComponent();
+      await user.click(screen.getByLabelText("Seitenpanel öffnen"));
 
-      expect(await screen.findByLabelText('Notiz Eingabefeld')).toBeVisible()
-    })
+      expect(await screen.findByLabelText("Notiz Eingabefeld")).toBeVisible();
+    });
 
-    test('initially open note with note', async () => {
-      renderComponent({ note: 'some note' })
+    test("initially open note with note", async () => {
+      renderComponent({ note: "some note" });
 
-      expect(await screen.findByDisplayValue('some note')).toBeVisible()
-    })
-  })
-})
+      expect(await screen.findByDisplayValue("some note")).toBeVisible();
+    });
+  });
+});

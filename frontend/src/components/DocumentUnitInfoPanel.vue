@@ -1,37 +1,37 @@
 <script lang="ts" setup>
-import { ref, toRaw } from 'vue'
-import IconBadge from '@/components/IconBadge.vue'
-import { useSaveToRemote } from '@/composables/useSaveToRemote'
-import Button from 'primevue/button'
-import { useStatusBadge } from '@/composables/useStatusBadge'
-import { PublicationState } from '@/domain/publicationStatus'
-import { useStoreForRoute } from '@/composables/useStoreForRoute'
-import type { DocumentUnitStore } from '@/stores/types'
+import { ref, toRaw } from "vue";
+import IconBadge from "@/components/IconBadge.vue";
+import { useSaveToRemote } from "@/composables/useSaveToRemote";
+import Button from "primevue/button";
+import { useStatusBadge } from "@/composables/useStatusBadge";
+import { PublicationState } from "@/domain/publicationStatus";
+import { useStoreForRoute } from "@/composables/useStoreForRoute";
+import type { DocumentUnitStore } from "@/stores/types";
 
 interface Props {
-  heading?: string
-  hideSaveButton?: boolean
+  heading?: string;
+  hideSaveButton?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  heading: '',
+  heading: "",
   hideSaveButton: false,
-})
+});
 
-const store = useStoreForRoute<DocumentUnitStore>()
+const store = useStoreForRoute<DocumentUnitStore>();
 
 const statusBadge = ref(
   useStatusBadge({
     publicationStatus: PublicationState.UNPUBLISHED,
   }).value,
-)
+);
 
-const formattedInfo = ''
+const formattedInfo = "";
 
 const { saveIsInProgress, triggerSave, lastSaveError, formattedLastSavedOn } =
-  useSaveToRemote(store)
+  useSaveToRemote(store);
 
-const getErrorDetails = () => (lastSaveError.value?.title ? ': ' + lastSaveError.value.title : '')
+const getErrorDetails = () => (lastSaveError.value?.title ? ": " + lastSaveError.value.title : "");
 </script>
 
 <template>

@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
+import { useRouter } from "vue-router";
+import Button from "primevue/button";
 
-const router = useRouter()
+const router = useRouter();
 
 interface Props {
-  title?: string
-  description?: string
-  backButtonLabel?: string
+  title?: string;
+  description?: string;
+  backButtonLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   description: undefined,
-  backButtonLabel: 'Zurück zur Startseite',
-})
+  backButtonLabel: "Zurück zur Startseite",
+});
 </script>
 
 <template>

@@ -1,63 +1,63 @@
-import type EditableListItem from './editableListItem'
-import { type NormAbbreviation } from './normAbbreviation'
-import SingleNorm from './singleNorm'
+import type EditableListItem from "./editableListItem";
+import { type NormAbbreviation } from "./normAbbreviation";
+import SingleNorm from "./singleNorm";
 
 export default class NormReference implements EditableListItem {
-  public normAbbreviation?: NormAbbreviation
-  public singleNorms?: SingleNorm[]
-  public normAbbreviationRawValue?: string
+  public normAbbreviation?: NormAbbreviation;
+  public singleNorms?: SingleNorm[];
+  public normAbbreviationRawValue?: string;
 
-  static readonly fields = ['normAbbreviation', 'normAbbreviationRawValue'] as const
+  static readonly fields = ["normAbbreviation", "normAbbreviationRawValue"] as const;
 
   constructor(data: Partial<NormReference> = {}) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   get id() {
-    return this.normAbbreviation ? this.normAbbreviation.id : this.normAbbreviationRawValue
+    return this.normAbbreviation ? this.normAbbreviation.id : this.normAbbreviationRawValue;
   }
 
   get hasAmbiguousNormReference(): boolean {
-    return !this.normAbbreviation && !!this.normAbbreviationRawValue
+    return !this.normAbbreviation && !!this.normAbbreviationRawValue;
   }
 
   equals(entry: NormReference): boolean {
-    if (entry.isEmpty) return true
-    let isEquals = false
+    if (entry.isEmpty) return true;
+    let isEquals = false;
     if (this.normAbbreviation) {
       isEquals = entry.normAbbreviation
         ? this.normAbbreviation?.abbreviation == entry.normAbbreviation.abbreviation
-        : false
+        : false;
     } else if (this.normAbbreviationRawValue) {
-      isEquals = this.normAbbreviationRawValue == entry.normAbbreviationRawValue
+      isEquals = this.normAbbreviationRawValue == entry.normAbbreviationRawValue;
     }
-    return isEquals
+    return isEquals;
   }
 
   get renderSummary(): string {
-    let result: string[]
+    let result: string[];
     if (this.normAbbreviation?.abbreviation) {
-      result = [`${this.normAbbreviation?.abbreviation}`]
+      result = [`${this.normAbbreviation?.abbreviation}`];
     } else if (this.normAbbreviationRawValue) {
-      result = [`${this.normAbbreviationRawValue}`]
+      result = [`${this.normAbbreviationRawValue}`];
     } else {
-      result = []
+      result = [];
     }
-    return [...result].join(', ')
+    return [...result].join(", ");
   }
 
   get isEmpty(): boolean {
-    let isEmpty = true
+    let isEmpty = true;
 
     NormReference.fields.map((key) => {
       if (!this.fieldIsEmpty(this[key])) {
-        isEmpty = false
+        isEmpty = false;
       }
-    })
-    return isEmpty
+    });
+    return isEmpty;
   }
 
   private fieldIsEmpty(value: NormReference[(typeof NormReference.fields)[number]]) {
-    return value === undefined || !value || Object.keys(value).length === 0
+    return value === undefined || !value || Object.keys(value).length === 0;
   }
 }

@@ -1,15 +1,15 @@
-import { ref } from 'vue'
-import type { ValidationError } from '@/components/input/types'
+import { ref } from "vue";
+import type { ValidationError } from "@/components/input/types";
 
 type ValidationStore<T> = {
-  getAll: () => ValidationError[]
-  getByField: (field: T) => ValidationError | undefined
-  getByMessage: (message: string) => ValidationError[]
-  add: (message: string, instance: T) => void
-  remove: (field: T) => void
-  reset: () => void
-  isValid: () => boolean
-}
+  getAll: () => ValidationError[];
+  getByField: (field: T) => ValidationError | undefined;
+  getByMessage: (message: string) => ValidationError[];
+  add: (message: string, instance: T) => void;
+  remove: (field: T) => void;
+  reset: () => void;
+  isValid: () => boolean;
+};
 
 /**
  * A composable for managing validation errors in a reactive store.
@@ -29,23 +29,23 @@ type ValidationStore<T> = {
  * - `reset`: Clears all validation errors.
  */
 export function useValidationStore<T extends string>(): ValidationStore<T> {
-  const validationErrors = ref<ValidationError[]>([])
+  const validationErrors = ref<ValidationError[]>([]);
 
   function getAll() {
-    return validationErrors.value
+    return validationErrors.value;
   }
 
   function add(message: string, instance: T) {
-    remove(instance)
-    validationErrors.value?.push({ message, instance })
+    remove(instance);
+    validationErrors.value?.push({ message, instance });
   }
 
   function getByField(field: T): ValidationError | undefined {
-    return validationErrors.value.find((error) => error.instance == field)
+    return validationErrors.value.find((error) => error.instance == field);
   }
 
   function getByMessage(message: string): ValidationError[] {
-    return validationErrors.value.filter((error) => error.message == message)
+    return validationErrors.value.filter((error) => error.message == message);
   }
 
   function remove(field: T) {
@@ -53,15 +53,15 @@ export function useValidationStore<T extends string>(): ValidationStore<T> {
       validationErrors.value.splice(
         validationErrors.value.findIndex((error) => error.instance == field),
         1,
-      )
+      );
   }
 
   function isValid(): boolean {
-    return getAll().length == 0
+    return getAll().length == 0;
   }
 
   function reset() {
-    validationErrors.value = []
+    validationErrors.value = [];
   }
 
   return {
@@ -72,5 +72,5 @@ export function useValidationStore<T extends string>(): ValidationStore<T> {
     remove,
     reset,
     isValid,
-  }
+  };
 }

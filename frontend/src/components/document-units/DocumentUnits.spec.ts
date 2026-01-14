@@ -1,34 +1,34 @@
-import { fireEvent, render, screen } from '@testing-library/vue'
-import { describe, expect, it, vi } from 'vitest'
-import DocumentUnits from './DocumentUnits.vue'
-import { ref } from 'vue'
-import { flushPromises } from '@vue/test-utils'
+import { fireEvent, render, screen } from "@testing-library/vue";
+import { describe, expect, it, vi } from "vitest";
+import DocumentUnits from "./DocumentUnits.vue";
+import { ref } from "vue";
+import { flushPromises } from "@vue/test-utils";
 
-const fetchPaginatedDataMock = vi.fn()
+const fetchPaginatedDataMock = vi.fn();
 
-vi.mock('@/composables/usePagination', () => {
+vi.mock("@/composables/usePagination", () => {
   return {
     usePagination: () => ({
       isFetching: ref(false),
       firstRowIndex: ref(0),
       totalRows: ref(2),
       items: ref([
-        { id: 1, name: 'Item 1' },
-        { id: 2, name: 'Item 2' },
+        { id: 1, name: "Item 1" },
+        { id: 2, name: "Item 2" },
       ]),
       ITEMS_PER_PAGE: ref(10),
       fetchPaginatedData: fetchPaginatedDataMock,
       error: ref(null),
     }),
-  }
-})
+  };
+});
 
-const addToastMock = vi.fn()
-vi.mock('primevue', () => ({
+const addToastMock = vi.fn();
+vi.mock("primevue", () => ({
   useToast: vi.fn(() => ({
     add: addToastMock,
   })),
-}))
+}));
 
 function renderComponent(props = {}) {
   return {
@@ -48,45 +48,45 @@ function renderComponent(props = {}) {
         },
       },
     }),
-  }
+  };
 }
 
-describe('DocumentUnits', () => {
-  it('renders', async () => {
-    const { container } = renderComponent()
+describe("DocumentUnits", () => {
+  it("renders", async () => {
+    const { container } = renderComponent();
 
-    expect(container).toBeTruthy()
-  })
+    expect(container).toBeTruthy();
+  });
 
-  it('calls fetchPaginatedData on page update', async () => {
-    renderComponent()
+  it("calls fetchPaginatedData on page update", async () => {
+    renderComponent();
 
-    const risPaginator = screen.getByTestId('ris-paginator')
+    const risPaginator = screen.getByTestId("ris-paginator");
     // when
-    await fireEvent(risPaginator, new CustomEvent('page', { detail: { page: 1 } }))
+    await fireEvent(risPaginator, new CustomEvent("page", { detail: { page: 1 } }));
     // then
-    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(1, undefined)
-  })
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(1, undefined);
+  });
 
-  it('clears items and calls fetchPaginatedData with new search parameters on search', async () => {
-    renderComponent()
-    fetchPaginatedDataMock.mockClear()
+  it("clears items and calls fetchPaginatedData with new search parameters on search", async () => {
+    renderComponent();
+    fetchPaginatedDataMock.mockClear();
 
-    const searchForm = screen.getByTestId('search-form')
-    const searchParams = { langueberschrift: 'test' }
+    const searchForm = screen.getByTestId("search-form");
+    const searchParams = { langueberschrift: "test" };
 
-    await fireEvent(searchForm, new CustomEvent('search', { detail: searchParams }))
+    await fireEvent(searchForm, new CustomEvent("search", { detail: searchParams }));
 
-    expect(fetchPaginatedDataMock).toHaveBeenCalled()
+    expect(fetchPaginatedDataMock).toHaveBeenCalled();
 
-    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, searchParams)
-  })
+    expect(fetchPaginatedDataMock).toHaveBeenCalledWith(0, searchParams);
+  });
 
-  it('should show an error toast on fetching error', async () => {
-    vi.resetModules()
-    const errorRef = ref()
+  it("should show an error toast on fetching error", async () => {
+    vi.resetModules();
+    const errorRef = ref();
 
-    vi.doMock('@/composables/usePagination', () => {
+    vi.doMock("@/composables/usePagination", () => {
       return {
         usePagination: () => ({
           isFetching: ref(false),
@@ -97,10 +97,10 @@ describe('DocumentUnits', () => {
           fetchPaginatedData: vi.fn(),
           error: errorRef,
         }),
-      }
-    })
+      };
+    });
 
-    const { default: DocumentUnits } = await import('./DocumentUnits.vue')
+    const { default: DocumentUnits } = await import("./DocumentUnits.vue");
 
     render(DocumentUnits, {
       global: {
@@ -110,14 +110,14 @@ describe('DocumentUnits', () => {
           SearchPanel: true,
         },
       },
-    })
+    });
 
-    errorRef.value = new Error('fetch error')
-    await flushPromises()
+    errorRef.value = new Error("fetch error");
+    await flushPromises();
 
     expect(addToastMock).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Dokumentationseinheiten konnten nicht geladen werden.',
-    })
-  })
-})
+      severity: "error",
+      summary: "Dokumentationseinheiten konnten nicht geladen werden.",
+    });
+  });
+});

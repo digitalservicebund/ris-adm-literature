@@ -1,42 +1,42 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
-import { type ValidationError } from '@/components/input/types'
+import { computed, onMounted, ref, watch } from "vue";
+import { type ValidationError } from "@/components/input/types";
 import SearchResultList, {
   type SearchResults,
-} from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/SearchResultList.vue'
-import ComboboxInput from '@/views/adm/documentUnit/[documentNumber]/ComboboxInput.vue'
-import DateInput from '@/components/input/DateInput.vue'
-import InputField from '@/components/input/InputField.vue'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Pagination, { type Page } from '@/components/Pagination.vue'
-import { useValidationStore } from '@/composables/useValidationStore'
-import ActiveCitation from '@/domain/activeCitation'
-import { type ZitierArt } from '@/domain/zitierArt.ts'
-import RelatedDocumentation from '@/domain/relatedDocumentation'
-import ComboboxItemService from '@/services/comboboxItemService'
-import { DocumentCategory, type DocumentType } from '@/domain/documentType'
-import CourtDropDown from '@/views/adm/documentUnit/[documentNumber]/rubriken/components/CourtDropDown.vue'
-import ZitierArtDropDown from '@/components/dropdown/ZitierArtDropDown.vue'
+} from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/SearchResultList.vue";
+import ComboboxInput from "@/views/adm/documentUnit/[documentNumber]/ComboboxInput.vue";
+import DateInput from "@/components/input/DateInput.vue";
+import InputField from "@/components/input/InputField.vue";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import Pagination, { type Page } from "@/components/Pagination.vue";
+import { useValidationStore } from "@/composables/useValidationStore";
+import ActiveCitation from "@/domain/activeCitation";
+import { type ZitierArt } from "@/domain/zitierArt.ts";
+import RelatedDocumentation from "@/domain/relatedDocumentation";
+import ComboboxItemService from "@/services/comboboxItemService";
+import { DocumentCategory, type DocumentType } from "@/domain/documentType";
+import CourtDropDown from "@/views/adm/documentUnit/[documentNumber]/rubriken/components/CourtDropDown.vue";
+import ZitierArtDropDown from "@/components/dropdown/ZitierArtDropDown.vue";
 
 const props = defineProps<{
-  modelValue?: ActiveCitation
-  modelValueList?: ActiveCitation[]
-}>()
+  modelValue?: ActiveCitation;
+  modelValueList?: ActiveCitation[];
+}>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: ActiveCitation]
-  addEntry: [void]
-  cancelEdit: [void]
-  removeEntry: [value?: boolean]
-}>()
+  "update:modelValue": [value: ActiveCitation];
+  addEntry: [void];
+  cancelEdit: [void];
+  removeEntry: [value?: boolean];
+}>();
 
-const lastSearchInput = ref(new ActiveCitation())
-const lastSavedModelValue = ref(new ActiveCitation({ ...props.modelValue }))
-const activeCitation = ref(new ActiveCitation({ ...props.modelValue }))
+const lastSearchInput = ref(new ActiveCitation());
+const lastSavedModelValue = ref(new ActiveCitation({ ...props.modelValue }));
+const activeCitation = ref(new ActiveCitation({ ...props.modelValue }));
 
-const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>()
-const isLoading = ref(false)
+const validationStore = useValidationStore<(typeof ActiveCitation.fields)[number]>();
+const isLoading = ref(false);
 
 const activeCitationDocumentType = computed({
   get: () =>
@@ -48,21 +48,21 @@ const activeCitationDocumentType = computed({
         }
       : undefined,
   set: (newValue: DocumentType) => {
-    activeCitation.value.documentType = newValue
+    activeCitation.value.documentType = newValue;
   },
-})
+});
 
-const searchResultsCurrentPage = ref<Page>()
-const searchResults = ref<SearchResults<RelatedDocumentation>>()
+const searchResultsCurrentPage = ref<Page>();
+const searchResults = ref<SearchResults<RelatedDocumentation>>();
 
 async function search() {
-  isLoading.value = true
+  isLoading.value = true;
   const activeCitationRef = new ActiveCitation({
     ...activeCitation.value,
-  })
+  });
 
   if (activeCitationRef.citationType) {
-    delete activeCitationRef['citationType']
+    delete activeCitationRef["citationType"];
   }
 
   const response = {
@@ -70,18 +70,18 @@ async function search() {
     data: {
       activeCitations: [
         new ActiveCitation({
-          uuid: '123',
+          uuid: "123",
           court: {
-            id: 'courtId',
-            type: 'type1',
-            location: 'location1',
+            id: "courtId",
+            type: "type1",
+            location: "location1",
           },
-          decisionDate: '2022-02-01',
+          decisionDate: "2022-02-01",
           documentType: {
-            abbreviation: 'VV',
-            name: 'Verwaltungsvorschrift',
+            abbreviation: "VV",
+            name: "Verwaltungsvorschrift",
           },
-          fileNumber: 'test fileNumber1',
+          fileNumber: "test fileNumber1",
         }),
       ],
       page: {
@@ -94,88 +94,88 @@ async function search() {
         empty: false,
       },
     },
-  }
+  };
   if (response.data) {
-    searchResultsCurrentPage.value = response.data.page
+    searchResultsCurrentPage.value = response.data.page;
     searchResults.value = response.data.activeCitations.map((searchResult) => {
       return {
         decision: new RelatedDocumentation({ ...searchResult }),
         isLinked: searchResult.isLinkedWith(props.modelValueList),
-      }
-    })
+      };
+    });
   } else {
-    searchResultsCurrentPage.value = undefined
-    searchResults.value = undefined
+    searchResultsCurrentPage.value = undefined;
+    searchResults.value = undefined;
   }
-  lastSearchInput.value = activeCitationRef
-  isLoading.value = false
+  lastSearchInput.value = activeCitationRef;
+  isLoading.value = false;
 }
 
 function validateRequiredInput() {
-  validationStore.reset()
+  validationStore.reset();
 
   for (const missingField of activeCitation.value.missingRequiredFields) {
-    validationStore.add('Pflichtfeld nicht befüllt', missingField)
+    validationStore.add("Pflichtfeld nicht befüllt", missingField);
   }
 }
 
 async function addActiveCitation() {
   if (
-    !validationStore.getByMessage('Kein valides Datum').length &&
-    !validationStore.getByMessage('Unvollständiges Datum').length &&
-    !validationStore.getByMessage('Das Datum darf nicht in der Zukunft liegen').length
+    !validationStore.getByMessage("Kein valides Datum").length &&
+    !validationStore.getByMessage("Unvollständiges Datum").length &&
+    !validationStore.getByMessage("Das Datum darf nicht in der Zukunft liegen").length
   ) {
-    await validateRequiredInput()
-    emit('update:modelValue', activeCitation.value as ActiveCitation)
-    emit('addEntry')
+    await validateRequiredInput();
+    emit("update:modelValue", activeCitation.value as ActiveCitation);
+    emit("addEntry");
   }
 }
 
 async function addActiveCitationFromSearch(decision: RelatedDocumentation) {
   const newActiveCitationType = {
     ...activeCitation.value.citationType,
-  } as ZitierArt
+  } as ZitierArt;
   activeCitation.value = new ActiveCitation({
     ...decision,
     citationType: newActiveCitationType,
-  })
-  emit('update:modelValue', activeCitation.value as ActiveCitation)
-  emit('addEntry')
+  });
+  emit("update:modelValue", activeCitation.value as ActiveCitation);
+  emit("addEntry");
   // await scrollIntoViewportById('activeCitations')
 }
 
 function updateDateFormatValidation(validationError: ValidationError | undefined) {
-  if (validationError) validationStore.add(validationError.message, 'decisionDate')
-  else validationStore.remove('decisionDate')
+  if (validationError) validationStore.add(validationError.message, "decisionDate");
+  else validationStore.remove("decisionDate");
 }
 
 watch(
   activeCitation,
   () => {
     if (!activeCitation.value.citationTypeIsSet && !activeCitation.value.isEmpty) {
-      validationStore.add('Pflichtfeld nicht befüllt', 'citationType')
+      validationStore.add("Pflichtfeld nicht befüllt", "citationType");
     } else if (activeCitation.value.citationTypeIsSet) {
-      validationStore.remove('citationType')
+      validationStore.remove("citationType");
     }
   },
   { deep: true },
-)
+);
 
 watch(
   () => props.modelValue,
   () => {
-    activeCitation.value = new ActiveCitation({ ...props.modelValue })
-    lastSavedModelValue.value = new ActiveCitation({ ...props.modelValue })
-    if (lastSavedModelValue.value.isEmpty) validationStore.reset()
+    activeCitation.value = new ActiveCitation({ ...props.modelValue });
+    lastSavedModelValue.value = new ActiveCitation({ ...props.modelValue });
+    if (lastSavedModelValue.value.isEmpty) validationStore.reset();
   },
-)
+);
 
 onMounted(() => {
   if (props.modelValue?.isEmpty !== undefined) {
-    validateRequiredInput()
+    validateRequiredInput();
   }
-  activeCitation.value = new ActiveCitation({ ...props.modelValue })
-})
+  activeCitation.value = new ActiveCitation({ ...props.modelValue });
+});
 </script>
 
 <template>

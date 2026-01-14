@@ -1,5 +1,5 @@
 export interface VerweisTyp {
-  readonly id: string
-  name: string
-  typNummer: string
+  readonly id: string;
+  name: string;
+  typNummer: string;
 }

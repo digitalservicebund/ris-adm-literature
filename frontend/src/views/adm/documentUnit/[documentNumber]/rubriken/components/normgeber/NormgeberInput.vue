@@ -1,59 +1,59 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import InputField from '@/components/input/InputField.vue'
-import { type Institution, InstitutionType, type Normgeber, type Region } from '@/domain/normgeber'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import { useValidationStore } from '@/composables/useValidationStore'
-import { useAdmDocUnitStore } from '@/stores/admDocumentUnitStore'
-import InstitutionDropDown from '@/components/dropdown/InstitutionDropDown.vue'
-import RegionDropDown from './RegionDropDown.vue'
+import { computed, ref, watch } from "vue";
+import InputField from "@/components/input/InputField.vue";
+import { type Institution, InstitutionType, type Normgeber, type Region } from "@/domain/normgeber";
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+import { useValidationStore } from "@/composables/useValidationStore";
+import { useAdmDocUnitStore } from "@/stores/admDocumentUnitStore";
+import InstitutionDropDown from "@/components/dropdown/InstitutionDropDown.vue";
+import RegionDropDown from "./RegionDropDown.vue";
 
 const props = defineProps<{
-  normgeber?: Normgeber
-  showCancelButton: boolean
-}>()
+  normgeber?: Normgeber;
+  showCancelButton: boolean;
+}>();
 
 const emit = defineEmits<{
-  updateNormgeber: [normgeber: Normgeber]
-  deleteNormgeber: [id: string]
-  cancel: [void]
-}>()
+  updateNormgeber: [normgeber: Normgeber];
+  deleteNormgeber: [id: string];
+  cancel: [void];
+}>();
 
-const docUnitStore = useAdmDocUnitStore()
-const validationStore = useValidationStore<'institution'>()
+const docUnitStore = useAdmDocUnitStore();
+const validationStore = useValidationStore<"institution">();
 
-const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined)
-const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined)
+const institution = ref<Institution | undefined>(props.normgeber?.institution || undefined);
+const selectedRegion = ref<Region | undefined>(props.normgeber?.regions[0] || undefined);
 
 const isInvalid = computed(
   () =>
     !institution.value ||
     (institution.value.type === InstitutionType.Institution && !selectedRegion.value) ||
     !validationStore.isValid(),
-)
+);
 const existingInstitutionIds = computed<string[]>(
   () => docUnitStore.documentUnit?.normgeberList?.map((n) => n.institution.id) || [],
-)
+);
 
 const regionsInputText = computed(() => {
-  const isLegalEntity = institution.value && institution.value.type === InstitutionType.LegalEntity
+  const isLegalEntity = institution.value && institution.value.type === InstitutionType.LegalEntity;
   const hasRegions =
-    institution.value && institution.value.regions && institution.value.regions.length > 0
+    institution.value && institution.value.regions && institution.value.regions.length > 0;
   if (isLegalEntity && hasRegions) {
-    return institution.value?.regions?.map((r) => r.code).join(', ')
+    return institution.value?.regions?.map((r) => r.code).join(", ");
   } else if (isLegalEntity && !hasRegions) {
-    return 'Keine Region zugeordnet'
+    return "Keine Region zugeordnet";
   } else {
-    return ''
+    return "";
   }
-})
+});
 
 const regionIsReadonly = computed(
   () => !institution.value || institution.value.type === InstitutionType.LegalEntity,
-)
+);
 
-const regionLabel = computed(() => (regionIsReadonly.value ? 'Region' : 'Region *'))
+const regionLabel = computed(() => (regionIsReadonly.value ? "Region" : "Region *"));
 
 const onClickSave = () => {
   const normgeber = {
@@ -63,42 +63,42 @@ const onClickSave = () => {
       institution.value!.type === InstitutionType.LegalEntity
         ? (institution.value?.regions as Region[])
         : ([selectedRegion.value] as Region[]),
-  }
+  };
 
-  emit('updateNormgeber', normgeber)
-}
+  emit("updateNormgeber", normgeber);
+};
 
 const onClickCancel = () => {
-  institution.value = props.normgeber?.institution || undefined
-  selectedRegion.value = props.normgeber?.regions[0] || undefined
-  emit('cancel')
-}
+  institution.value = props.normgeber?.institution || undefined;
+  selectedRegion.value = props.normgeber?.regions[0] || undefined;
+  emit("cancel");
+};
 
 const onClickDelete = () => {
-  emit('deleteNormgeber', props.normgeber!.id)
-}
+  emit("deleteNormgeber", props.normgeber!.id);
+};
 
 const validateInstitution = () => {
-  const institutionId = institution.value?.id
+  const institutionId = institution.value?.id;
   if (
     institutionId &&
     existingInstitutionIds.value.includes(institutionId) &&
     props.normgeber?.institution.id !== institutionId
   ) {
-    validationStore.add('Normgeber bereits eingegeben', 'institution')
+    validationStore.add("Normgeber bereits eingegeben", "institution");
   } else {
-    validationStore.remove('institution')
+    validationStore.remove("institution");
   }
-}
+};
 
 // Reset the selected region on institution change
 // Triggers validation
 watch(institution, (newVal, oldVal) => {
   if (newVal?.id !== oldVal?.id) {
-    selectedRegion.value = undefined
-    validateInstitution()
+    selectedRegion.value = undefined;
+    validateInstitution();
   }
-})
+});
 </script>
 
 <template>

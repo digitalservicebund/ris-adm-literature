@@ -1,19 +1,19 @@
-import { ref, type Ref } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
-import type { AutoCompleteDropdownClickEvent } from 'primevue/autocomplete'
-import type { Institution, Region } from '@/domain/normgeber'
-import type { Periodikum } from '@/domain/fundstelle'
-import type { Court } from '@/domain/court.ts'
-import type { NormAbbreviation } from '@/domain/normAbbreviation'
-import type { VerweisTyp } from '@/domain/verweisTyp'
-import type { DocumentType } from '@/domain/documentType'
-import type { ZitierArt } from '@/domain/zitierArt.ts'
+import { ref, type Ref } from "vue";
+import { useDebounceFn } from "@vueuse/core";
+import type { AutoCompleteDropdownClickEvent } from "primevue/autocomplete";
+import type { Institution, Region } from "@/domain/normgeber";
+import type { Periodikum } from "@/domain/fundstelle";
+import type { Court } from "@/domain/court.ts";
+import type { NormAbbreviation } from "@/domain/normAbbreviation";
+import type { VerweisTyp } from "@/domain/verweisTyp";
+import type { DocumentType } from "@/domain/documentType";
+import type { ZitierArt } from "@/domain/zitierArt.ts";
 
 // Should be exported from ris-ui
 export interface AutoCompleteSuggestion {
-  id: string
-  label: string
-  secondaryLabel?: string
+  id: string;
+  label: string;
+  secondaryLabel?: string;
 }
 
 /**
@@ -38,13 +38,13 @@ export interface AutoCompleteSuggestion {
  * ```
  */
 export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSuggestion[]) {
-  const suggestions = ref<AutoCompleteSuggestion[]>([])
+  const suggestions = ref<AutoCompleteSuggestion[]>([]);
 
   const search = (query?: string) => {
-    suggestions.value = searchFn(query)
-  }
+    suggestions.value = searchFn(query);
+  };
 
-  const searchDebounced = useDebounceFn(search, 0)
+  const searchDebounced = useDebounceFn(search, 0);
 
   /*
   Workaround for loading prop being ignored in PrimeVue AutoComplete:
@@ -59,35 +59,35 @@ export function useAutoComplete(searchFn: (query?: string) => AutoCompleteSugges
   const onComplete = (event: AutoCompleteDropdownClickEvent | { query: undefined }) => {
     if (event.query) {
       // normal search for entered query
-      searchDebounced(event.query)
+      searchDebounced(event.query);
     } else {
       // dropdown was opened without any text entered or value pre-selected
       // a copy of the default suggestions is required since the loading
-      searchDebounced()
+      searchDebounced();
     }
-  }
+  };
 
   const onDropdownClick = (event: AutoCompleteDropdownClickEvent | { query: undefined }) => {
     if (event.query === undefined) {
       // dropdown has been closed
-      suggestions.value = []
+      suggestions.value = [];
     } else {
       // onComplete will also fire, but with an empty query
       // therefore, call it again
-      onComplete(event)
+      onComplete(event);
     }
-  }
+  };
 
   const onItemSelect = () => {
-    suggestions.value = []
-  }
+    suggestions.value = [];
+  };
 
   return {
     suggestions,
     onComplete,
     onDropdownClick,
     onItemSelect,
-  }
+  };
 }
 
 export function useInstitutionSearch(institutions: Ref<Institution[]>) {
@@ -98,8 +98,8 @@ export function useInstitutionSearch(institutions: Ref<Institution[]>) {
         id: inst.id,
         label: inst.name,
         secondaryLabel: inst.officialName,
-      }))
-  }
+      }));
+  };
 }
 
 export function useRegionSearch(regions: Ref<Region[]>) {
@@ -110,8 +110,8 @@ export function useRegionSearch(regions: Ref<Region[]>) {
         id: region.id,
         label: region.code,
         secondaryLabel: region.longText,
-      }))
-  }
+      }));
+  };
 }
 
 export function usePeriodikumSearch(periodika: Ref<Periodikum[]>) {
@@ -127,9 +127,9 @@ export function usePeriodikumSearch(periodika: Ref<Periodikum[]>) {
       .map((p) => ({
         id: p.id,
         label: `${p.abbreviation} | ${p.title}`,
-        secondaryLabel: p.subtitle || '',
-      }))
-  }
+        secondaryLabel: p.subtitle || "",
+      }));
+  };
 }
 
 export function useCourtSearch(courts: Ref<Court[]>) {
@@ -145,9 +145,9 @@ export function useCourtSearch(courts: Ref<Court[]>) {
       .map((c) => ({
         id: c.id,
         label: `${c.type} ${c.location}`,
-        secondaryLabel: c.revoked || '',
-      }))
-  }
+        secondaryLabel: c.revoked || "",
+      }));
+  };
 }
 
 export function useNormAbbreviationsSearch(normAbbreviations: Ref<NormAbbreviation[]>) {
@@ -163,8 +163,8 @@ export function useNormAbbreviationsSearch(normAbbreviations: Ref<NormAbbreviati
         id: abbr.id,
         label: abbr.abbreviation,
         secondaryLabel: abbr.officialLongTitle || undefined,
-      }))
-  }
+      }));
+  };
 }
 
 export function useVerweisTypSearch(verweisTypen: Ref<VerweisTyp[]>) {
@@ -174,8 +174,8 @@ export function useVerweisTypSearch(verweisTypen: Ref<VerweisTyp[]>) {
       .map((type) => ({
         id: type.id,
         label: type.name,
-      }))
-  }
+      }));
+  };
 }
 
 export function useDokumentTypSearch(docTypes: Ref<DocumentType[]>) {
@@ -192,8 +192,8 @@ export function useDokumentTypSearch(docTypes: Ref<DocumentType[]>) {
         id: docType.abbreviation, // or return id from BE
         label: docType.abbreviation,
         secondaryLabel: docType.name,
-      }))
-  }
+      }));
+  };
 }
 
 export function useZitierArtSearch(zitierArten: Ref<ZitierArt[]>) {
@@ -208,6 +208,6 @@ export function useZitierArtSearch(zitierArten: Ref<ZitierArt[]>) {
       .map((za) => ({
         id: za.id,
         label: za.label,
-      }))
-  }
+      }));
+  };
 }
