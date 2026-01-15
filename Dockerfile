@@ -3,11 +3,14 @@ FROM node:25.3.0
 # make the 'app' folder the current working directory
 WORKDIR /frontend
 
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY /frontend/package*.json ./
+# Install pnpm
+RUN npm install -g pnpm
+
+# copy both 'package.json' and 'pnpm-lock.yaml'
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
 # install project dependencies
-RUN pnpm install --ignore-scripts
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
