@@ -44,7 +44,8 @@ jobs:
           - playwright-project: { name: "loginChromium", install: "chromium" }
           # not relevant for the PUSH_MATRIX - no idea how to make this conditional
           - playwright-project: { name: "loginFirefox", install: "firefox" }
-          - playwright-project: { name: "loginEdge", install: "msedge chromium" }
+          - playwright-project:
+              { name: "loginEdge", install: "msedge chromium" }
 
     runs-on: ubuntu-latest
 
@@ -76,8 +77,6 @@ jobs:
       # setup frontend
       - name: Setup Frontend
         uses: ./.github/actions/setup-frontend
-        with:
-          skip_node_install: "true"
 
       - name: Get Playwright version
         working-directory: ./frontend
