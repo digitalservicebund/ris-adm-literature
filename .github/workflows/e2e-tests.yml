@@ -56,6 +56,7 @@ jobs:
           sudo dpkg-reconfigure -f noninteractive man-db
 
       - uses: actions/checkout@v6
+
       # setup backend
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -71,18 +72,10 @@ jobs:
       - name: Start backend
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
+
       # setup frontend
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
+      - name: Setup Frontend
+        uses: ./.github/actions/setup-frontend
 
       - name: Get Playwright version
         working-directory: ./frontend
@@ -121,7 +114,7 @@ jobs:
           if [[ -n "${{ matrix.shardIndex }}" ]]; then
             SHARD_ARG="--shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
           fi
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} $SHARD_ARG
+          pnpm run test:e2e -- --project ${{ matrix.playwright-project.name }} $SHARD_ARG
 
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend
