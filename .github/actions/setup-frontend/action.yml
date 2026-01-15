@@ -1,5 +1,13 @@
 name: 'Setup Frontend'
 description: 'Install pnpm, setup node and install dependencies'
+
+inputs:
+  
+  skip_node_install:
+      description: 'Set to "true" and skip setting up node and cache (e.g. not required for job)'
+      required: false    # Is it mandatory?
+      default: 'false'   # Optional default value
+
 runs:
   using: "composite"
   steps:
@@ -9,6 +17,7 @@ runs:
         package_json_file: ./frontend/package.json
 
     - name: Setup Node & Cache
+      if: ${{ inputs.skip_node_install != 'true' }}
       uses: actions/setup-node@v6
       with:
         node-version-file: ./frontend/.node-version
