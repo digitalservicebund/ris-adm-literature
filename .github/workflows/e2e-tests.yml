@@ -76,6 +76,8 @@ jobs:
       # setup frontend
       - name: Setup Frontend
         uses: ./.github/actions/setup-frontend
+        with:
+          skip_node_install: "true"
 
       - name: Get Playwright version
         working-directory: ./frontend
