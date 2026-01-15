@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-frontend
+        with:
+          skip_node_install: "true"
       - name: Lint check
         run: pnpm run lint:check
         working-directory: ./frontend
