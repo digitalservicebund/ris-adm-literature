@@ -1,0 +1,21 @@
+name: 'Setup Frontend'
+description: 'Install pnpm, setup node and install dependencies'
+runs:
+  using: "composite"
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        package_json_file: ./frontend/package.json
+
+    - name: Setup Node & Cache
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: ./frontend/.node-version
+        cache: pnpm
+        cache-dependency-path: ./frontend/pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile --ignore-scripts
+      working-directory: ./frontend

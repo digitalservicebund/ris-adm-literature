@@ -11,37 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      # - name: Setup Node
-      #   uses: actions/setup-node@v6
-      #   with:
-      #     node-version-file: ./frontend/.node-version
-      #     cache: npm
-      #     cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      # - name: Install dependencies
-      #   if: steps.node-modules-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #     npm ci
-      #   working-directory: ./frontend
-      
-      - name: Install dependencies (via pnpm for speed)
-        # if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          wget -qO- https://get.pnpm.io/install.sh | sh -
-          /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm install ci
-        working-directory: ./frontend
-      
+      - uses: ./.github/actions/setup-frontend
       - name: Lint check
-        run: /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm run lint:check
+        run: pnpm run lint:check
         working-directory: ./frontend
       - name: Format check
-        run: /home/runner/.local/share/pnpm/.tools/pnpm-exe/10.28.0/pnpm run format:check
+        run: pnpm run format:check
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
@@ -55,26 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Build
-        run: npm run build
+        run: pnpm run build
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
