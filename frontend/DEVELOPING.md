@@ -24,7 +24,7 @@ nodenv install # Install the missing node version
 ### Installing Dependencies
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### Compilation and Startup Variants
@@ -32,7 +32,7 @@ npm install
 #### Development Mode (Hot Reload)
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 #### Production Build via a Docker Build
@@ -45,25 +45,25 @@ docker run -p 5173:5173 ris-adm-vwv-frontend-local:dev
 ### Type-Check, Compile and Minify for Production
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 ### Run Unit Tests With [Vitest](https://vitest.dev/)
 
 ```sh
-npm run test:unit
+pnpm run test:unit
 ```
 
 ### Continuously Run Unit Tests With [Vitest](https://vitest.dev/) in Watcher Mode
 
 ```sh
-npm run test:watch
+pnpm run test:watch
 ```
 
 ### Run Unit Test and Check Coverage with [Vitest](https://vitest.dev/)
 
 ```sh
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 The reports (summaries as well as line-by-line details) can be found in `./frontend/coverage`.
@@ -77,35 +77,35 @@ When running e2e tests locally you need to have the backend running already.
 npx playwright install
 
 # Create test-data.json
-npm run test:e2e -- e2e/seed-data.ts
+pnpm run test:e2e -- e2e/seed-data.ts
 
 # Not required locally, but when testing on CI we must build the project first
-npm run build
+pnpm run build
 
 # Runs the end-to-end tests
-npm run test:e2e
+pnpm run test:e2e
 # Runs the tests only on Chromium
-npm run test:e2e -- --project=chromium
+pnpm run test:e2e -- --project=chromium
 # Runs the tests of a specific file
-npm run test:e2e -- e2e/AbgabePage.spec.ts
+pnpm run test:e2e -- e2e/AbgabePage.spec.ts
 # Runs the tests in debug mode
-npm run test:e2e -- --debug
+pnpm run test:e2e -- --debug
 # Runs the tests only on Chromium and for a specific file and in debug mode
-npm run test:e2e -- e2e/AbgabePage.spec.ts --debug --project=chromium
+pnpm run test:e2e -- e2e/AbgabePage.spec.ts --debug --project=chromium
 # Run tests in interactive UI mode.
-npm run test:e2e -- --ui
+pnpm run test:e2e -- --ui
 # Run tests in headed browsers
-npm run test:e2e -- --headed
+pnpm run test:e2e -- --headed
 ```
 
 ### Lint With [Oxlint](https://oxc.rs/)
 
 ```sh
-npm run lint
+pnpm run lint
 ```
 
 ### Format With [Oxfmt](https://oxc.rs/)
 
 ```sh
-npm run format
+pnpm run format
 ```

@@ -20,7 +20,7 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "audit:licences": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv",
-    "preinstall": "echo 'Please disable script execution: npm config set ignore-scripts true' && exit 1"
+    "preinstall": "echo 'Please disable script execution: pnpm config set ignore-scripts true' && exit 1"
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.1",

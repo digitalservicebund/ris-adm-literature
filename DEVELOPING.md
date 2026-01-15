@@ -41,7 +41,7 @@ cd ./backend
 
 ```bash
 cd ./frontend
-npm run dev
+pnpm run dev
 ```
 
 The last step will tell you where to point your browser in order to access the app.
