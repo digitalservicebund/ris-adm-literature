@@ -1,3 +1,3 @@
 #!/bin/sh
-npm run lint
-npm run format
+bun run lint
+bun run format

@@ -7,13 +7,13 @@ WORKDIR /frontend
 COPY /frontend/package*.json ./
 
 # install project dependencies
-RUN npm install --ignore-scripts
+RUN bun install --ignore-scripts
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY /frontend/. .
 
 # build app for production with minification
-RUN npm run build
+RUN bun run build
 
 EXPOSE 5173
 CMD [ "npm", "run", "dev", "--", "--host" ]
