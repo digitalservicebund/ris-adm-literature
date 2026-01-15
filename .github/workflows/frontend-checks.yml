@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: |
-          bun install --frozen-lockfile --ignore-scripts
+          bun ci --ignore-scripts
       - name: Lint check
         run: bun run lint:check
         working-directory: ./frontend
