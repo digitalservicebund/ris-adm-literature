@@ -81,11 +81,6 @@
     "typescript": "~5.9.3",
     "vitest": "^4.0.5"
   },
-  "overrides": {
-    "vite": {
-      "esbuild": "0.25.0"
-    }
-  },
   "engines": {
     "node": "25.3.0"
   }
