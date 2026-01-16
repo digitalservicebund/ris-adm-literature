@@ -10,5 +10,5 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile --ignore-scripts
+      run: pnpm install --frozen-lockfile
       working-directory: ./frontend
