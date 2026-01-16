@@ -114,7 +114,7 @@ jobs:
           if [[ -n "${{ matrix.shardIndex }}" ]]; then
             SHARD_ARG="--shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
           fi
-          pnpm exec playwright test -- --project ${{ matrix.playwright-project.name }} $SHARD_ARG
+          pnpm exec playwright test --project ${{ matrix.playwright-project.name }} $SHARD_ARG
 
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend
