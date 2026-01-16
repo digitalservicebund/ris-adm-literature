@@ -74,7 +74,7 @@ When running e2e tests locally you need to have the backend running already.
 
 ```sh
 # Install browsers for the first run
-npx playwright install
+pnpm dlx playwright install
 
 # Create test-data.json
 pnpm run test:e2e -- e2e/seed-data.ts
