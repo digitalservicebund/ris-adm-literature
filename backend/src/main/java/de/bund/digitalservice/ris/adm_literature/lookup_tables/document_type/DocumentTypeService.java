@@ -5,8 +5,10 @@ import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +28,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentTypeService {
 
   private final DocumentTypeRepository documentTypeRepository;
+
+  /**
+   * Retrieves a map of document type abbreviations to their corresponding names
+   * for the specified document category.
+   *
+   * @return A map where keys represent document type abbreviations and values
+   *         represent the corresponding document type names.
+   */
+  @Transactional(readOnly = true)
+  public Map<String, String> getDocumentTypeNames() {
+    return documentTypeRepository
+      .findAllByDocumentCategory(DocumentCategory.LITERATUR_SELBSTAENDIG)
+      .stream()
+      .collect(
+        Collectors.toMap(
+          DocumentTypeEntity::getAbbreviation,
+          DocumentTypeEntity::getName,
+          (existing, _) -> existing // Safety merge in case of duplicate keys
+        )
+      );
+  }
 
   /**
    * Finds a paginated list of document types based on a search query.

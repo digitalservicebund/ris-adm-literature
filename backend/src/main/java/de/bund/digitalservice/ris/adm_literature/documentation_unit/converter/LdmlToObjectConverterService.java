@@ -30,7 +30,7 @@ public class LdmlToObjectConverterService {
    */
   public <T extends DocumentationUnitContent> T convertToBusinessModel(
     @Nonnull DocumentationUnit documentationUnit,
-    Class<T> clazz
+    @Nonnull Class<T> clazz
   ) {
     log.debug("Finding converter strategy for content type: {}", clazz.getSimpleName());
 

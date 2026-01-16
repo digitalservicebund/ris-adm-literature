@@ -28,6 +28,9 @@ public class ImplicitReference {
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private RisFundstelle fundstelle;
 
+  @XmlElement(namespace = XmlNamespace.RIS_NS)
+  private RisReferenz reference;
+
   /**
    * Returns the type of this reference.
    * @return The implicit reference type

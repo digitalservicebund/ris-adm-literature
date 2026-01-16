@@ -20,6 +20,7 @@ public class FlywayConfig {
 
   private static final String MIGRATION_LOCATION = "classpath:db/migration/shared";
   private static final String MIGRATION_ADM_LOCATION = "classpath:db/migration/adm";
+  private static final String MIGRATION_LITERATURE_LOCATION = "classpath:db/migration/literature";
 
   /**
    * Defines the Flyway configuration for the ADM schema.
@@ -50,7 +51,7 @@ public class FlywayConfig {
     return Flyway.configure()
       .dataSource(litDataSource)
       .schemas(litSchema)
-      .locations(MIGRATION_LOCATION)
+      .locations(MIGRATION_LOCATION, MIGRATION_LITERATURE_LOCATION)
       .baselineOnMigrate(true)
       .load();
   }

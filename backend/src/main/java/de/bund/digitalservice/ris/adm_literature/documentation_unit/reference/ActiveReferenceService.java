@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Active reference service.
+ * Active reference service for writing active references.
  */
 @RequiredArgsConstructor
 @Service

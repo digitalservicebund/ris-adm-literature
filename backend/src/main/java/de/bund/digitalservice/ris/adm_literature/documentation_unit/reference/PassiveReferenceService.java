@@ -6,14 +6,26 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Passive reference service for reading passive references.
+ */
 @RequiredArgsConstructor
 @Service
 public class PassiveReferenceService {
 
   private final AdmPassiveReferenceRepository admPassiveReferenceRepository;
 
-  public List<PassiveReference> findPassiveReferences(@NonNull DocumentCategory documentCategory) {
+  /**
+   * Returns all passive references for the given document category.
+   *
+   * @param documentCategory The document category
+   * @return Passive references
+   */
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public List<PassiveReference> findAll(@NonNull DocumentCategory documentCategory) {
     List<PassiveReference> passiveReferences;
     switch (documentCategory) {
       case VERWALTUNGSVORSCHRIFTEN -> passiveReferences = admPassiveReferenceRepository

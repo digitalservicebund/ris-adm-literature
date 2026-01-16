@@ -20,6 +20,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.P
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -191,7 +192,7 @@ class DocumentationUnitServiceTest {
     when(documentationUnitPersistenceService.findByDocumentNumber(docNumber)).thenReturn(
       Optional.of(doc)
     );
-    when(objectToLdmlConverterService.convertToLdml(any(), any())).thenReturn(fakeXml);
+    when(objectToLdmlConverterService.convertToLdml(any(), any(), any())).thenReturn(fakeXml);
     when(documentationUnitPersistenceService.publish(any(), any(), any())).thenReturn(publishedDoc);
 
     documentationUnitService.publish(docNumber, content);
@@ -267,9 +268,9 @@ class DocumentationUnitServiceTest {
     given(documentationUnitPersistenceService.findByDocumentNumber("KSNR1234567890")).willReturn(
       Optional.of(existingUnit)
     );
-    given(objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
-      TEST_NEW_XML
-    );
+    given(
+      objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML, List.of())
+    ).willReturn(TEST_NEW_XML);
     given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
     given(
       documentationUnitPersistenceService.publish("KSNR1234567890", TEST_JSON, TEST_NEW_XML)
@@ -323,9 +324,9 @@ class DocumentationUnitServiceTest {
     given(
       documentationUnitPersistenceService.publish("KALU123456789", TEST_JSON, TEST_NEW_XML)
     ).willReturn(publishedUnit);
-    given(objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
-      TEST_NEW_XML
-    );
+    given(
+      objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML, List.of())
+    ).willReturn(TEST_NEW_XML);
     given(
       ldmlToObjectConverterService.convertToBusinessModel(
         publishedUnit,
@@ -371,9 +372,9 @@ class DocumentationUnitServiceTest {
     given(documentationUnitPersistenceService.findByDocumentNumber("KVLS123456789")).willReturn(
       Optional.of(existingUnit)
     );
-    given(objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML)).willReturn(
-      TEST_NEW_XML
-    );
+    given(
+      objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML, List.of())
+    ).willReturn(TEST_NEW_XML);
 
     given(objectMapper.writeValueAsString(contentToPublish)).willReturn(TEST_JSON);
     given(

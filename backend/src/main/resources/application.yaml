@@ -43,6 +43,7 @@ springdoc:
 
 # Every hour between 8:00 and 18:00 every day between Monday and Friday
 cronjob.DocumentationUnitIndexJob: "0 0 8-18 * * Mon-Fri"
+cronjob.UpdatePassivzitierungJob: "0 30 8-18 * * Mon-Fri"
 
 frontend:
   auth:

@@ -52,7 +52,8 @@ created AS (
         </akn:FRBRManifestation>
       </akn:identification>
       <akn:classification source="doktyp">
-        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Wob" value="Wob"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Bib" value="Bib"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Dis" value="Dis"/>
       </akn:classification>
       <akn:classification source="schlagwort">
         <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Grundbegriff" value="Grundbegriff"/>
@@ -125,12 +126,14 @@ created AS (
     RETURNING id AS created_documentation_unit_id
 )
 INSERT
-INTO literature.documentation_unit_index (id, documentation_unit_id, titel, veroeffentlichungsjahr, dokumenttypen, dokumenttypen_combined)
+INTO literature.documentation_unit_index (id, documentation_unit_id, titel, veroeffentlichungsjahr, dokumenttypen, dokumenttypen_combined, verfasser_list, verfasser_list_combined)
 SELECT gen_random_uuid(),
        created.created_documentation_unit_id,
        'Lexikon Soziologie und Sozialtheorie',
        '2015',
-       array ['Wob'],
-       'Wob'
+       array ['Bib', 'Dis'],
+       'Bib Dis',
+        array ['Farzin, Sina', 'Jordan, Stefan'],
+       'Farzin, Sina Jordan, Stefan'
 FROM created
 ON CONFLICT DO NOTHING;

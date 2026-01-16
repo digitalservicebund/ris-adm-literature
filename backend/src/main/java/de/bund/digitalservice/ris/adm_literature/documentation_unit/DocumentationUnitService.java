@@ -110,6 +110,27 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
+    return publish(documentNumber, documentationUnitContent, List.of());
+  }
+
+  /**
+   * Updates and publishes a DocumentationUnit with new content.
+   * <p>
+   * The update is persisted to the database and then published to an external bucket.
+   * The {@link UserDocumentDetails} decide to which bucket to publish (to be implemented):
+   * {@code UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal()}
+   * This entire operation is transactional and will be rolled back if any step fails.
+   *
+   * @param documentNumber           The identifier of the documentation unit to publish.
+   * @param documentationUnitContent The new content for the unit.
+   * @param referencedByList List of documents which are referencing the given document (passive references)
+   * @return An {@link Optional} with the updated unit, or empty if the document number was not found.
+   */
+  private Optional<DocumentationUnit> publish(
+    @Nonnull String documentNumber,
+    @Nonnull DocumentationUnitContent documentationUnitContent,
+    @Nonnull List<DocumentReference> referencedByList
+  ) {
     var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
       documentNumber
     );
@@ -121,7 +142,8 @@ public class DocumentationUnitService {
     DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
     String xml = objectToLdmlConverterService.convertToLdml(
       documentationUnitContent,
-      documentationUnit.xml()
+      documentationUnit.xml(),
+      referencedByList
     );
     String json = convertToJson(documentationUnitContent);
     DocumentationUnit publishedDocumentationUnit = documentationUnitPersistenceService.publish(
@@ -153,6 +175,37 @@ public class DocumentationUnitService {
       );
     }
     return convertLdml(publishedDocumentationUnit);
+  }
+
+  /**
+   * Publishes the given document with the given passive references.
+   *
+   * @param documentNumber The identifier of the documentation unit to publish.
+   * @param referencedByList The document which are referencing the document to publish
+   */
+  @Transactional
+  public void publishPassiveReferences(
+    @Nonnull String documentNumber,
+    @Nonnull List<DocumentReference> referencedByList
+  ) {
+    DocumentationUnit documentationUnit = documentationUnitPersistenceService
+      .findByDocumentNumber(documentNumber)
+      .orElseThrow();
+    DocumentationUnitContent documentationUnitContent;
+    Class<? extends DocumentationUnitContent> documentationUnitContentClass =
+      DocumentationUnitContent.getDocumentationUnitContentClass(
+        documentationUnit.administrativeData().documentCategory()
+      );
+    String json = documentationUnit.json();
+    if (json == null) {
+      documentationUnitContent = ldmlToObjectConverterService.convertToBusinessModel(
+        documentationUnit,
+        documentationUnitContentClass
+      );
+    } else {
+      documentationUnitContent = objectMapper.readValue(json, documentationUnitContentClass);
+    }
+    publish(documentNumber, documentationUnitContent, referencedByList);
   }
 
   /**

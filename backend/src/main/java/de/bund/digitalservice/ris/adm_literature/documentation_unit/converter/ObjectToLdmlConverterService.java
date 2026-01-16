@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.converter;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,14 @@ public class ObjectToLdmlConverterService {
    *
    * @param content            The documentation unit content to convert
    * @param previousXmlVersion Previous xml version, or null if none exists.
+   * @param referencedByList List of documents which are referencing the given document (passive references)
    * @return LDML xml representation
    * @throws IllegalArgumentException if no matching converter strategy is found
    */
   public String convertToLdml(
     @Nonnull DocumentationUnitContent content,
-    String previousXmlVersion
+    String previousXmlVersion,
+    List<DocumentReference> referencedByList
   ) {
     log.debug(
       "Finding converter strategy for content type: {}",
@@ -47,6 +50,6 @@ public class ObjectToLdmlConverterService {
       );
 
     log.debug("Using strategy: {}", strategy.getClass().getSimpleName());
-    return strategy.convertToLdml(content, previousXmlVersion);
+    return strategy.convertToLdml(content, previousXmlVersion, referencedByList);
   }
 }
