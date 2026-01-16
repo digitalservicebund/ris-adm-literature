@@ -1,3 +1,3 @@
 #!/bin/sh
-npm run lint
-npm run format
+pnpm run lint
+pnpm run format

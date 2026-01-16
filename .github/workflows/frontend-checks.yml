@@ -11,29 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Lint check
-        run: npm run lint:check
+        run: pnpm run lint:check
         working-directory: ./frontend
       - name: Format check
-        run: npm run format:check
+        run: pnpm run format:check
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
@@ -47,26 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Build
-        run: npm run build
+        run: pnpm run build
         working-directory: ./frontend
       - name: Send status to Slack
         # Third-party action, pin to commit SHA!
@@ -80,27 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Unit tests
         run: |
-          npm run test:unit
+          pnpm run test:unit
         working-directory: ./frontend
       - name: Upload unit test JSON report
         if: always()
@@ -131,24 +80,9 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache npm cache
-        uses: actions/cache@v5
-        id: cache-npm-cache
-        with:
-          # The docs discourage caching `node-modules`, cf. https://github.com/actions/cache/blob/main/examples.md#node---npm
-          path: /home/runner/.npm
-          key: npm-cache-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install node modules
-        run: npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Run coverage
-        run: npm run test:coverage
+        run: pnpm run test:coverage
         working-directory: ./frontend
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7.0.0
@@ -170,24 +104,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache npm cache
-        uses: actions/cache@v5
-        id: cache-npm-cache
-        with:
-          # The docs discourage caching `node-modules`, cf. https://github.com/actions/cache/blob/main/examples.md#node---npm
-          path: /home/runner/.npm
-          key: npm-cache-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install node modules
-        run: npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
       - name: Run license scanner
-        run: npm run audit:licences
+        run: pnpm run audit:licences
         working-directory: ./frontend
       - name: Upload licence report
         if: always()

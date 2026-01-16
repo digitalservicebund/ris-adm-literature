@@ -16,7 +16,7 @@ jobs:
         id: set_output
         run: |
           # Simplified matrix on push events, chromium only
-          PUSH_MATRIX='[{ name: "chromium-adm", install: "chromium" }, { name: "chromium-uli", install: "chromium" }, { name: "chromium-sli", install: "chromium" }]'
+          PUSH_MATRIX='[{ "name": "chromium-adm", "install": "chromium" }, { "name": "chromium-uli", "install": "chromium" }, { "name": "chromium-sli", "install": "chromium" }]'
 
           # Complex matrix for scheduled events (chromium, firefox, msedge)
           SCHEDULE_MATRIX='[{ name: "chromium-adm", install: "chromium" },{ name: "firefox-adm", install: "firefox" },{ name: "msedge-adm", install: "msedge chromium" },{ name: "chromium-uli", install: "chromium" },{ name: "firefox-uli", install: "firefox" },{ name: "msedge-uli", install: "msedge chromium" },{ name: "chromium-sli", install: "chromium" },{ name: "firefox-sli", install: "firefox" },{ name: "msedge-sli", install: "msedge chromium" }]'
@@ -56,6 +56,7 @@ jobs:
           sudo dpkg-reconfigure -f noninteractive man-db
 
       - uses: actions/checkout@v6
+
       # setup backend
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -71,18 +72,10 @@ jobs:
       - name: Start backend
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
+
       # setup frontend
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
+      - name: Setup Frontend
+        uses: ./.github/actions/setup-frontend
 
       - name: Get Playwright version
         working-directory: ./frontend
@@ -100,7 +93,7 @@ jobs:
         if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
         # Always install chromium (for the 'setup' project) + the matrix browser
-        run: npx playwright install chromium ${{ matrix.playwright-project.install }}
+        run: pnpx playwright install chromium ${{ matrix.playwright-project.install }}
 
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
@@ -112,7 +105,7 @@ jobs:
 
       - name: Run Playwright setup and seed data
         working-directory: ./frontend
-        run: npx playwright test --project=setup --project="seed data"
+        run: pnpm exec playwright test --project=setup --project="seed data"
 
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
@@ -121,7 +114,7 @@ jobs:
           if [[ -n "${{ matrix.shardIndex }}" ]]; then
             SHARD_ARG="--shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
           fi
-          npm run test:e2e -- --project ${{ matrix.playwright-project.name }} $SHARD_ARG
+          pnpm exec playwright test --project ${{ matrix.playwright-project.name }} $SHARD_ARG
 
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend

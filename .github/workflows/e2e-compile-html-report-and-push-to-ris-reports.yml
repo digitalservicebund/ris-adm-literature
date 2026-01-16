@@ -6,7 +6,7 @@ on:
 
 jobs:
   compile-and-push-e2e-HTML-report:
-    continue-on-error: 
+    continue-on-error:
       true
     runs-on: ubuntu-latest
     env:
@@ -17,24 +17,7 @@ jobs:
       # Compile e2e reports (from their various workflows)
       ###############################
       - uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ./frontend/.node-version
-          cache: npm
-          cache-dependency-path: ./frontend/package-lock.json
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node-modules-cache
-        with:
-          path: |
-            ./frontend/node_modules
-          key: modules-${{ hashFiles('./frontend/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: |
-          npm ci
-        working-directory: ./frontend
+      - uses: ./.github/actions/setup-frontend
 
       - name: Download blob reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v7
@@ -47,7 +30,7 @@ jobs:
       - name: Generate HTML report out of all the blobs
         working-directory: ./frontend
         run: |
-          npx playwright merge-reports --reporter html ../tmp/e2e-test-report
+          pnpx playwright merge-reports --reporter html ../tmp/e2e-test-report
       - name: Upload e2e HTML test report
         if: always()
         uses: actions/upload-artifact@v6
@@ -61,7 +44,7 @@ jobs:
       # Note: actually pushing the reports is a separate step after all these
       ########################################################################
 
-      
+
       # This special step needs to happen before any "add-ris-report" action
       # (otherwise the folder is not git repository and does not support git commands)
       - name: Checkout ris-reports
