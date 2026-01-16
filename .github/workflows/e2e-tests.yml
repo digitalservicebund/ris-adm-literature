@@ -93,7 +93,7 @@ jobs:
         if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
         # Always install chromium (for the 'setup' project) + the matrix browser
-        run: pnpm dlx playwright install chromium ${{ matrix.playwright-project.install }}
+        run: pnpx playwright install chromium ${{ matrix.playwright-project.install }}
 
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
@@ -105,7 +105,7 @@ jobs:
 
       - name: Run Playwright setup and seed data
         working-directory: ./frontend
-        run: pnpm dlx playwright test --project=setup --project="seed data"
+        run: pnpx playwright test --project=setup --project="seed data"
 
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
