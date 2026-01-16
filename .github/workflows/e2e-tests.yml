@@ -105,7 +105,7 @@ jobs:
 
       - name: Run Playwright setup and seed data
         working-directory: ./frontend
-        run: pnpx playwright test --project=setup --project="seed data"
+        run: pnpm exec playwright test --project=setup --project="seed data"
 
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
