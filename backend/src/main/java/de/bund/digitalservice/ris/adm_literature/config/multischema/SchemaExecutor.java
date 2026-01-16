@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.config.multischema;
 
+import java.util.concurrent.Callable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -7,6 +8,32 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SchemaExecutor {
+
+  /**
+   * Executes a functional action within the context of a specific database schema.
+   * * <p>Temporarily switches the {@link SchemaContextHolder} to the target schema,
+   * performs the action, and ensures the original schema context is restored
+   * even if an exception occurs.</p>
+   *
+   * @param schema The target {@link SchemaType} to switch to.
+   * @param action The logic to execute while the target schema is active.
+   * @return The result of the the action
+   */
+  public <V> V executeInSchema(SchemaType schema, Callable<V> action) {
+    SchemaType originalSchema = SchemaContextHolder.getSchema();
+    try {
+      SchemaContextHolder.setSchema(schema);
+      return action.call();
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
+    } finally {
+      if (originalSchema != null) {
+        SchemaContextHolder.setSchema(originalSchema);
+      } else {
+        SchemaContextHolder.clear();
+      }
+    }
+  }
 
   /**
    * Executes a functional action within the context of a specific database schema.

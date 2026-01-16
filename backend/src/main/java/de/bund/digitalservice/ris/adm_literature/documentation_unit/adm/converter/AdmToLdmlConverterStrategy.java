@@ -2,19 +2,24 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.convert
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstelle;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.jaxb.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlReader;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.institution.InstitutionType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +43,8 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
 
   private final JaxbXmlReader jaxbXmlReader;
   private final JaxbXmlWriter jaxbXmlWriter;
+  private final LiteratureReferenceRepository literatureReferenceRepository;
+  private final DocumentTypeService documentTypeService;
   private final DomXmlReader domXmlReader = new DomXmlReader();
 
   @Override
@@ -48,14 +55,15 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
   /**
    * Converts the given business model to LDML xml.
    *
-   * @param content The documentation unit content to convert
-   * @param previousXmlVersion       Previous xml version of the documentation unit if it was once published, if not set to {@code null}
+   * @param content            The documentation unit content to convert
+   * @param previousXmlVersion Previous xml version of the documentation unit if it was once published, if not set to {@code null}
    * @return LDML xml representation of the given documentation unit content
    */
   @Override
   public String convertToLdml(
     @Nonnull DocumentationUnitContent content,
-    String previousXmlVersion
+    String previousXmlVersion,
+    @Nonnull List<DocumentReference> referencedByList
   ) {
     // This cast is safe because the 'supports' method is checked first
     AdmDocumentationUnitContent admDocumentationUnitContent = (AdmDocumentationUnitContent) content;
@@ -105,6 +113,7 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
     setBerufsbilder(meta, admDocumentationUnitContent.berufsbilder());
     setTitelAspekte(meta, admDocumentationUnitContent.titelAspekte());
     setDefinitionen(meta, admDocumentationUnitContent.definitionen());
+    setPassiveReferences(meta, referencedByList);
     return jaxbXmlWriter.writeXml(akomaNtoso);
   }
 
@@ -470,6 +479,78 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
 
       RisMeta risMeta = meta.getOrCreateProprietary().getMeta();
       risMeta.setDefinitionen(risDefinitionen);
+    }
+  }
+
+  private void setPassiveReferences(Meta meta, List<DocumentReference> referencedByList) {
+    if (CollectionUtils.isNotEmpty(referencedByList)) {
+      OtherReferences otherReferences = meta.getOrCreateAnalysis().getOtherReferences().getFirst();
+      otherReferences
+        .getImplicitReferences()
+        .addAll(
+          referencedByList
+            .stream()
+            .map(referencedBy -> {
+              RisReferenz risReferenz = new RisReferenz();
+              risReferenz.setRichtung(new RisDomainTerm("Richtung der Referenzierung", "passiv"));
+              risReferenz.setReferenzArt(new RisDomainTerm("Art der Referenz", "sli"));
+              risReferenz.setDokumentnummer(
+                new RisDomainTerm("Dokumentnummer", referencedBy.documentNumber())
+              );
+              risReferenz.setRelativerPfad(
+                new RisDomainTerm("Pfad zur Referenz", referencedBy.documentNumber())
+              );
+              switch (referencedBy.documentCategory()) {
+                case LITERATUR_SELBSTAENDIG -> {
+                  LiteratureIndex literatureIndex = literatureReferenceRepository
+                    .findById(referencedBy.documentNumber())
+                    .map(LiteratureReferenceEntity::getLiteratureIndex)
+                    .orElseThrow();
+                  String dokumenttypAbkuerzungen = String.join(
+                    ", ",
+                    literatureIndex.getDokumenttypen()
+                  );
+                  risReferenz.setDokumenttypAbkuerzung(
+                    new RisDomainTerm("Dokumenttyp, abgekürzt", dokumenttypAbkuerzungen)
+                  );
+                  final Map<String, String> documentTypeNames =
+                    documentTypeService.getDocumentTypeNames();
+                  String dokumenttyp = literatureIndex
+                    .getDokumenttypen()
+                    .stream()
+                    .map(documentTypeNames::get)
+                    .collect(Collectors.joining(", "));
+                  risReferenz.setDokumenttyp(new RisDomainTerm("Dokumenttyp", dokumenttyp));
+                  String titel = literatureIndex.getTitel();
+                  risReferenz.setTitel(new RisDomainTerm("Titel", titel));
+                  String verfasser = String.join(", ", literatureIndex.getVerfasserList());
+                  risReferenz.setAutor(new RisDomainTerm("Autor(en)", verfasser));
+                  risReferenz.setVeroeffentlichungsjahr(
+                    new RisDomainTerm(
+                      "Veröffentlichungsjahr",
+                      literatureIndex.getVeroeffentlichungsjahr()
+                    )
+                  );
+                  risReferenz.setStandardzusammenfassung(
+                    String.join(
+                      ", ",
+                      verfasser,
+                      titel,
+                      dokumenttypAbkuerzungen,
+                      literatureIndex.getVeroeffentlichungsjahr()
+                    )
+                  );
+                }
+                case LITERATUR,
+                  LITERATUR_UNSELBSTAENDIG,
+                  VERWALTUNGSVORSCHRIFTEN -> throw new IllegalStateException("Not supported");
+              }
+              ImplicitReference implicitReference = new ImplicitReference();
+              implicitReference.setReference(risReferenz);
+              return implicitReference;
+            })
+            .toList()
+        );
     }
   }
 

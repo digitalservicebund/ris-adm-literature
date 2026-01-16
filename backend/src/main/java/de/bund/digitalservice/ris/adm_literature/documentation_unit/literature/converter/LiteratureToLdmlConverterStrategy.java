@@ -10,6 +10,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.L
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -53,7 +54,8 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
   @Override
   public String convertToLdml(
     @Nonnull DocumentationUnitContent documentationUnitContent,
-    String previousXmlVersion
+    String previousXmlVersion,
+    @Nonnull List<DocumentReference> referencedByList
   ) {
     try {
       if (previousXmlVersion != null) {

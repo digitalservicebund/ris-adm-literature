@@ -16,4 +16,8 @@ public enum ImplicitReferenceType {
    * Reference type for active citation of caselaw documents (in German 'Aktivzitierung Rechtssprechung').
    */
   ACTIVE_CITATION,
+  /**
+   * Reference type for passive references from SLI.
+   */
+  SLI_PASSIVE_REFERENCE,
 }

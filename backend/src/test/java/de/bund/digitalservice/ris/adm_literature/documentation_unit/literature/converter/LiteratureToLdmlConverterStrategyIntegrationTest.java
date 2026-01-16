@@ -49,7 +49,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -68,7 +72,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -98,7 +106,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -126,7 +138,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -152,7 +168,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(uliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      uliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -181,7 +201,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -232,7 +256,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     DocumentationUnitContent unsupportedContent = Mockito.mock(AdmDocumentationUnitContent.class);
 
     // when and then
-    assertThatThrownBy(() -> literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null)
+    assertThatThrownBy(() ->
+      literatureLdmlConverterStrategy.convertToLdml(unsupportedContent, null, List.of())
     )
       .isInstanceOf(PublishingFailedException.class)
       .hasMessageContaining("Failed to convert Literature content to LDML")
@@ -268,7 +293,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
@@ -297,7 +326,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     // when
     String xml = literatureLdmlConverterStrategy.convertToLdml(
       uliDocumentationUnitContent,
-      previousXmlVersion
+      previousXmlVersion,
+      List.of()
     );
 
     // then
@@ -339,7 +369,11 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = literatureLdmlConverterStrategy.convertToLdml(sliDocumentationUnitContent, null);
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
