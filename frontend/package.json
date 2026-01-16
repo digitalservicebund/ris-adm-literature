@@ -69,7 +69,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/node": "^25.0.6",
     "@vitest/coverage-istanbul": "^4.0.16",
-    "@vitest/ui": "^4.0.5",
+    "@vitest/ui": "^4.0.17",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^26.1.0",
     "license-checker-rseidelsohn": "^4.4.2",
