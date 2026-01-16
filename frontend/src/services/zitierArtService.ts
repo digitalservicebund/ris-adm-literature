@@ -9,7 +9,7 @@ const ZITIER_ARTEN_URL = "/lookup-tables/zitier-arten";
 
 export function useFetchZitierArten(
   sourceDocumentCategory: DocumentCategory,
-  targetDocumentCategory: DocumentCategory,
+  targetDocumentCategory: DocumentCategory | null,
 ): UseFetchReturn<{
   zitierArten: ZitierArt[];
 }> {

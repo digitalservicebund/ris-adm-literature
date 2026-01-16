@@ -8,6 +8,7 @@ import {
 } from "@/composables/useAutoComplete";
 import { useFetchDocumentTypes } from "@/services/documentTypeService";
 import type { DocumentCategory, DocumentType } from "@/domain/documentType";
+import type { AutoCompleteDropdownClickEvent } from "primevue";
 
 const props = defineProps<{
   inputId: string;
@@ -37,6 +38,7 @@ const selectedItems = computed<AutoCompleteSuggestion[]>({
 
 const autoCompleteMultipleRef = ref<typeof RisAutoCompleteMultiple | null>(null);
 const documentTypeOptions = ref<DocumentType[]>([]);
+const autoOptionFocus = ref(false);
 
 const searchFn = useDokumentTypSearch(documentTypeOptions);
 
@@ -47,12 +49,21 @@ onMounted(async () => {
   documentTypeOptions.value = data.value?.documentTypes || [];
 });
 
-const openOverlay = () => {
+function openOverlay() {
   onComplete({ query: undefined });
   if (autoCompleteMultipleRef?.value?.autoCompleteRef) {
     autoCompleteMultipleRef.value.autoCompleteRef.show();
   }
-};
+}
+
+function handleComplete(event: AutoCompleteDropdownClickEvent) {
+  onComplete(event);
+  autoOptionFocus.value = true;
+}
+
+function unsetAutoOptionFocus() {
+  autoOptionFocus.value = false;
+}
 </script>
 
 <template>
@@ -70,7 +81,10 @@ const openOverlay = () => {
     fluid
     force-selection
     disable-dropdown-tab-navigation
-    @complete="onComplete"
+    :auto-option-focus="autoOptionFocus"
+    @complete="handleComplete"
     @focus="openOverlay"
+    @hide="unsetAutoOptionFocus"
+    @dropdown-click="unsetAutoOptionFocus"
   />
 </template>
