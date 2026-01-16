@@ -73,9 +73,17 @@ jobs:
         working-directory: ./backend
         run: ./gradlew bootRun & # we'll wait for the backend to respond right before running the tests
 
-      # setup frontend
-      - name: Setup Frontend
-        uses: ./.github/actions/setup-frontend
+    # frontend
+
+      - uses: oven-sh/setup-bun@v2
+      - name: Install libraries
+        working-directory: ./frontend
+        run:  bun install
+
+      # why is this done here?
+      - name: Run license scanner
+        run: bun run audit:licences
+        working-directory: ./frontend
 
       - name: Get Playwright version
         working-directory: ./frontend
