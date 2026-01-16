@@ -1,48 +1,24 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
 import InstitutionDropDown from "./InstitutionDropDown.vue";
-import { useFetchInstitutions } from "@/services/institutionService";
-import { InstitutionType, type Institution } from "@/domain/normgeber";
+import { institutionFixture, legalEntityFixture } from "@/testing/fixtures/institution.fixture";
+import type { Institution } from "@/domain/normgeber";
 
-vi.mock("@digitalservicebund/ris-ui/components", () => ({
-  RisAutoComplete: {
-    name: "RisAutoComplete",
-    template: `<div><input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" /></div>`,
-    props: ["modelValue", "suggestions", "initialLabel"],
-  },
-}));
-
-vi.mock("@/services/institutionService", () => ({
-  useFetchInstitutions: vi.fn(),
-}));
-
-const mockInstitutions: Institution[] = [
-  {
-    id: "1",
-    name: "inst1",
-    officialName: "Inst 1",
-    type: InstitutionType.LegalEntity,
-    regions: [],
-  },
-  {
-    id: "2",
-    name: "inst2",
-    officialName: "Inst 2",
-    type: InstitutionType.LegalEntity,
-    regions: [],
-  },
-];
-
-describe("InstitutionDropDown", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    (useFetchInstitutions as ReturnType<typeof vi.fn>).mockResolvedValue({
-      data: { value: { institutions: mockInstitutions } },
-    });
+describe("InstitutionDropdown", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  it("renders the component and fetches institutions", async () => {
-    const wrapper = mount(InstitutionDropDown, {
+  it("renders correctly", async () => {
+    const fetchSpy = vi.spyOn(window, "fetch");
+    fetchSpy.mockResolvedValueOnce(
+      new Response(JSON.stringify({ zitierArten: [legalEntityFixture, institutionFixture] }), {
+        status: 200,
+      }),
+    );
+
+    render(InstitutionDropDown, {
       props: {
         inputId: "foo",
         isInvalid: false,
@@ -50,13 +26,37 @@ describe("InstitutionDropDown", () => {
       },
     });
 
-    const input = wrapper.find('[data-testid="autocomplete"]');
-    expect(input.exists()).toBe(true);
-    expect(useFetchInstitutions).toHaveBeenCalled();
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
+    expect(screen.getByRole("combobox", { name: "Normgeber" })).toBeVisible();
+  });
+
+  it("renders correctly on fetching error", async () => {
+    const fetchSpy = vi.spyOn(window, "fetch");
+    fetchSpy.mockRejectedValueOnce("fetch error");
+
+    render(InstitutionDropDown, {
+      props: {
+        inputId: "foo",
+        isInvalid: false,
+        modelValue: undefined,
+      },
+    });
+
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
+
+    expect(screen.getByRole("combobox", { name: "Normgeber" })).toBeVisible();
   });
 
   it("emits updated model value when selection changes", async () => {
-    const wrapper = mount(InstitutionDropDown, {
+    const user = userEvent.setup();
+    const fetchSpy = vi.spyOn(window, "fetch");
+    fetchSpy.mockResolvedValueOnce(
+      new Response(JSON.stringify({ institutions: [legalEntityFixture, institutionFixture] }), {
+        status: 200,
+      }),
+    );
+
+    const { emitted } = render(InstitutionDropDown, {
       props: {
         inputId: "foo",
         isInvalid: false,
@@ -64,14 +64,32 @@ describe("InstitutionDropDown", () => {
       },
     });
 
-    const input = wrapper.find('[data-testid="autocomplete"]');
-    // Simulate selecting the institution with id '1'
-    await input.setValue("1");
-    // Simulate change event
-    await input.trigger("input");
+    await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    const emitted = wrapper.emitted("update:modelValue")!;
-    expect(emitted).toHaveLength(2);
-    expect(emitted[1]?.[0]).toEqual(mockInstitutions[0]);
+    // when
+    const input = screen.getByRole("combobox", { name: "Normgeber" });
+    await user.type(input, "legalEntity");
+
+    const option = await screen.getByRole("option", { name: "legalEntity" });
+
+    // then
+    await vi.waitFor(() => {
+      expect(option).toBeVisible();
+    });
+
+    // when
+    await user.click(option);
+
+    // then
+    const events = emitted()["update:modelValue"] as Array<[Institution]>;
+    const finalPayload = events[events.length - 1]![0];
+    expect(finalPayload).toEqual(legalEntityFixture);
+
+    // when
+    const removeButton = screen.getByRole("button", { name: "Entfernen" });
+    await user.click(removeButton);
+
+    // then
+    expect(events[events.length - 1]![0]).toEqual(undefined);
   });
 });

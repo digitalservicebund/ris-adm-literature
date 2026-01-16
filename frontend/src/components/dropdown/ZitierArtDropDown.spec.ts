@@ -1,18 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { mount } from "@vue/test-utils";
 import {
   zitierArtAbgrenzungFixture,
   zitierArtUebernahmeFixture,
 } from "@/testing/fixtures/zitierArt.fixture.ts";
 import ZitierArtDropDown from "./ZitierArtDropDown.vue";
-
-vi.mock("@digitalservicebund/ris-ui/components", () => ({
-  RisAutoComplete: {
-    name: "RisAutoComplete",
-    template: `<div><input data-testid="autocomplete" @input="$emit('update:model-value', $event.target.value)" /></div>`,
-    props: ["modelValue", "suggestions", "initialLabel"],
-  },
-}));
+import { DocumentCategory } from "@/domain/documentType";
+import { render, screen } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
+import type { ZitierArt } from "@/domain/zitierArt";
 
 describe("ZitierArtDropDown", () => {
   afterEach(() => {
@@ -30,39 +25,41 @@ describe("ZitierArtDropDown", () => {
       ),
     );
 
-    const wrapper = mount(ZitierArtDropDown, {
+    render(ZitierArtDropDown, {
       props: {
         inputId: "foo",
         invalid: false,
         modelValue: undefined,
+        sourceDocumentCategory: DocumentCategory.LITERATUR,
+        targetDocumentCategory: null,
       },
     });
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
-
-    const input = wrapper.find('[data-testid="autocomplete"]');
-    expect(input.exists()).toBe(true);
+    expect(screen.getByRole("combobox", { name: "Art der Zitierung" })).toBeVisible();
   });
 
   it("renders correctly on fetching error", async () => {
     const fetchSpy = vi.spyOn(window, "fetch");
     fetchSpy.mockRejectedValueOnce("fetch error");
 
-    const wrapper = mount(ZitierArtDropDown, {
+    render(ZitierArtDropDown, {
       props: {
         inputId: "foo",
         invalid: false,
         modelValue: undefined,
+        sourceDocumentCategory: DocumentCategory.LITERATUR,
+        targetDocumentCategory: null,
       },
     });
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
-    const input = wrapper.find('[data-testid="autocomplete"]');
-    expect(input.exists()).toBe(true);
+    expect(screen.getByRole("combobox", { name: "Art der Zitierung" })).toBeVisible();
   });
 
   it("emits updated model value when selection changes", async () => {
+    const user = userEvent.setup();
     const fetchSpy = vi.spyOn(window, "fetch");
     fetchSpy.mockResolvedValueOnce(
       new Response(
@@ -73,30 +70,42 @@ describe("ZitierArtDropDown", () => {
       ),
     );
 
-    const wrapper = mount(ZitierArtDropDown, {
+    const { emitted } = render(ZitierArtDropDown, {
       props: {
         inputId: "foo",
         invalid: false,
         modelValue: undefined,
+        sourceDocumentCategory: DocumentCategory.LITERATUR,
+        targetDocumentCategory: null,
       },
     });
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
 
     // when
-    const input = wrapper.find('[data-testid="autocomplete"]');
-    await input.setValue("abgrenzungId");
+    const input = screen.getByRole("combobox", { name: "Art der Zitierung" });
+    await user.type(input, "Abgrenzung");
+
+    const option = await screen.getByRole("option", { name: "Abgrenzung" });
 
     // then
-    const emitted = wrapper.emitted("update:modelValue")!;
-    expect(emitted).toHaveLength(1);
-    expect(emitted[0]?.[0]).toEqual(zitierArtAbgrenzungFixture);
+    await vi.waitFor(() => {
+      expect(option).toBeVisible();
+    });
 
     // when
-    await input.setValue("unknownId");
+    await user.click(option);
 
-    // then undefined is emitted
-    expect(emitted).toHaveLength(2);
-    expect(emitted[1]?.[0]).toEqual(undefined);
+    // then
+    const events = emitted()["update:modelValue"] as Array<[ZitierArt]>;
+    const finalPayload = events[events.length - 1]![0];
+    expect(finalPayload).toEqual(zitierArtAbgrenzungFixture);
+
+    // when
+    const removeButton = screen.getByRole("button", { name: "Entfernen" });
+    await user.click(removeButton);
+
+    // then
+    expect(events[events.length - 1]![0]).toEqual(undefined);
   });
 });

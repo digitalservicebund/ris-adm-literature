@@ -109,4 +109,31 @@ describe("DokumentTyp", () => {
     expect(listEl[0]).toBeVisible();
     expect(listEl[0]).toHaveTextContent("Anordnung");
   });
+
+  it("set focus on first option after first search", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ documentTypes: [docTypeAnordnungFixture] }), { status: 200 }),
+    );
+
+    render(DokumentTyp, {
+      props: { ...baseProps, modelValue: [] },
+    });
+
+    const dropdownButton = screen.getByLabelText("Vorschläge anzeigen");
+    await user.click(dropdownButton);
+
+    const option = await screen.getByRole("option", { name: "Anordnung" });
+
+    expect(option).toHaveAttribute("data-p-focused", "false");
+
+    const input = screen.getByRole("combobox");
+    await user.type(input, "An");
+
+    expect(input).toHaveValue("An");
+    await vi.waitFor(() => {
+      expect(option).toHaveAttribute("data-p-focused", "true");
+      expect(option).toHaveClass("p-focus");
+    });
+  });
 });
