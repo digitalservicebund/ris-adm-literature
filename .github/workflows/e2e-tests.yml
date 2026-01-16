@@ -93,7 +93,7 @@ jobs:
         if: ${{ ! matrix.playwright-project.requiresInstallWithDeps }}
         working-directory: ./frontend
         # Always install chromium (for the 'setup' project) + the matrix browser
-        run: pnpx playwright install chromium ${{ matrix.playwright-project.install }}
+        run: bunx playwright install chromium ${{ matrix.playwright-project.install }}
 
       - name: Wait for backend to serve the health Actuator (max 5min)
         timeout-minutes: 5
@@ -105,7 +105,7 @@ jobs:
 
       - name: Run Playwright setup and seed data
         working-directory: ./frontend
-        run: pnpm exec playwright test --project=setup --project="seed data"
+        run: bunx playwright test --project=setup --project="seed data"
 
       - name: Run e2e tests (project ${{ matrix.playwright-project.name }})
         working-directory: ./frontend
@@ -114,7 +114,7 @@ jobs:
           if [[ -n "${{ matrix.shardIndex }}" ]]; then
             SHARD_ARG="--shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
           fi
-          pnpm exec playwright test --project ${{ matrix.playwright-project.name }} $SHARD_ARG
+          bunx playwright test --project ${{ matrix.playwright-project.name }} $SHARD_ARG
 
       - name: Rename ${{ matrix.playwright-project.name }} test report blob
         working-directory: ./frontend

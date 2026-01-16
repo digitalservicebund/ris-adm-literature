@@ -94,6 +94,5 @@
   },
   "engines": {
     "node": "25.3.0"
-  },
-  "packageManager": "pnpm@10.24.0"
+  }
 }

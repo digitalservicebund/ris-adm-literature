@@ -1,3 +1,3 @@
 #!/bin/sh
-pnpm run lint
-pnpm run format
+bun run lint
+bun run format

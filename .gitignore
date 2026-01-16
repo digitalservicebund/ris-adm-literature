@@ -29,9 +29,6 @@ replay_pid*
 /.vscode/
 ris-adm-literature.code-workspace
 
-### tooling ###
-frontend/bun.lock
-
 # temp files
 cve-list.txt
 cves-with-libraries.txt
