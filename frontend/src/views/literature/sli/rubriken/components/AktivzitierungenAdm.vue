@@ -3,10 +3,7 @@ import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
 import AktivzitierungAdmInput from "@/components/aktivzitierung/adm/AktivzitierungAdmInput.vue";
 import AktivzitierungAdmItem from "@/components/aktivzitierung/adm/AktivzitierungAdmItem.vue";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
-import {
-  mapAdmSearchResultToAktivzitierung,
-  useGetAdmPaginatedDocUnitsForSli,
-} from "@/services/literature/literatureDocumentUnitService";
+import { useGetAdmPaginatedDocUnitsForSli } from "@/services/literature/literatureDocumentUnitService";
 import AktivzitierungAdmSearchResult from "@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue";
 
 const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
@@ -22,7 +19,6 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
         <Aktivzitierung
           v-model="aktivzitierungAdm"
           :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
-          :transform-result-fn="mapAdmSearchResultToAktivzitierung"
         >
           <template #item="{ aktivzitierung }">
             <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />

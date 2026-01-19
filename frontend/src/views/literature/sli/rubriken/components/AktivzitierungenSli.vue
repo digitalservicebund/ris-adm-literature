@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
-import {
-  mapSliSearchResultToAktivzitierung,
-  useGetSliPaginatedDocUnits,
-} from "@/services/literature/literatureDocumentUnitService";
+import { useGetSliPaginatedDocUnits } from "@/services/literature/literatureDocumentUnitService";
 import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
 import AktivzitierungSliInput from "@/components/aktivzitierung/sli/AktivzitierungSliInput.vue";
 import AktivzitierungSliItem from "@/components/aktivzitierung/sli/AktivzitierungSliItem.vue";
@@ -19,11 +16,7 @@ const aktivzitierungSli = defineModel<AktivzitierungSli[]>();
     </h2>
     <div class="flex flex-row gap-24 w-full">
       <div class="flex flex-col w-full">
-        <Aktivzitierung
-          v-model="aktivzitierungSli"
-          :fetch-results-fn="useGetSliPaginatedDocUnits"
-          :transform-result-fn="mapSliSearchResultToAktivzitierung"
-        >
+        <Aktivzitierung v-model="aktivzitierungSli" :fetch-results-fn="useGetSliPaginatedDocUnits">
           <template #item="{ aktivzitierung }">
             <AktivzitierungSliItem :aktivzitierung="aktivzitierung" />
           </template>

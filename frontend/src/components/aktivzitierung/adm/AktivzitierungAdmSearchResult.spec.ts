@@ -91,8 +91,13 @@ describe("Aktivzitierung search result", () => {
     await user.click(screen.getByRole("button", { name: "Aktivzitierung hinzufügen" }));
 
     expect(emitted().add).toBeTruthy();
-    // The payload should be the searchResult object
-    expect(emitted().add?.[0]).toEqual([searchResult]);
+    // The payload should be the aktivzitierung object
+    expect(emitted().add?.[0]).toEqual([
+      expect.objectContaining({
+        documentNumber: "DOC-123",
+        normgeber: "TEST-GEBER",
+      }),
+    ]);
   });
 
   it('disables button and shows "Bereits hinzugefügt" when isAdded is true', async () => {

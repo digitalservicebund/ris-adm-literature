@@ -3,6 +3,8 @@ import { computed } from "vue";
 import type { SliDocUnitListItem } from "@/domain/sli/sliDocumentUnit";
 import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
+import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import { mapSliSearchResultToAktivzitierung } from "@/services/literature/literatureDocumentUnitService";
 
 const props = defineProps<{
   searchResult: SliDocUnitListItem;
@@ -11,12 +13,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  add: [searchResult: SliDocUnitListItem];
+  add: [searchResult: AktivzitierungSli];
 }>();
 
 function handleAdd() {
   if (!props.isAdded) {
-    emit("add", props.searchResult);
+    emit("add", mapSliSearchResultToAktivzitierung(props.searchResult));
   }
 }
 

@@ -4,6 +4,8 @@ import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
 import { parseIsoDateToLocal } from "@/utils/dateHelpers";
 import type { AdmAktivzitierungListItem } from "@/domain/adm/admDocumentUnit";
+import { mapAdmSearchResultToAktivzitierung } from "@/services/literature/literatureDocumentUnitService";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 
 const props = defineProps<{
   searchResult: AdmAktivzitierungListItem;
@@ -11,11 +13,11 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  add: [searchResult: AdmAktivzitierungListItem];
+  add: [searchResult: AktivzitierungAdm];
 }>();
 
 function handleAdd() {
-  if (!props.isAdded) emit("add", props.searchResult);
+  if (!props.isAdded) emit("add", mapAdmSearchResultToAktivzitierung(props.searchResult));
 }
 
 const line1 = computed(() => {

@@ -29,7 +29,6 @@ const props = defineProps<{
     itemsPerPage: number,
     searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>;
-  transformResultFn?: (result: R) => T;
 }>();
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] });
@@ -152,9 +151,7 @@ function onSearch(params: SP) {
 function addSearchResult(result: R) {
   if (addedDocumentNumbers.value.has(result.documentNumber)) return;
 
-  const baseEntry: T = props.transformResultFn
-    ? props.transformResultFn(result)
-    : (result as unknown as T);
+  const baseEntry: T = result as unknown as T;
 
   const citationTypeValue =
     citationTypeFromSearch.value ||
