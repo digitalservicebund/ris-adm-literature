@@ -94,7 +94,7 @@ useScrollToHash();
       <TitleElement aria-label="Inhaltliche Erschließung" id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
-      <!-- <AktivzitierungenSli v-model="aktivzitierungSli" /> -->
+      <AktivzitierungenSli v-model="aktivzitierungSli" />
       <AktivzitierungenAdm v-model="aktivzitierungAdm" />
     </section>
   </div>

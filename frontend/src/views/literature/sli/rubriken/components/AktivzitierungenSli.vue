@@ -28,10 +28,25 @@ const aktivzitierungSli = defineModel<AktivzitierungSli[]>();
             <AktivzitierungSliItem :aktivzitierung="aktivzitierung" />
           </template>
 
-          <template #input="{ modelValue, onUpdateModelValue }">
+          <template
+            #input="{
+              aktivzitierung,
+              showCancelButton,
+              showDeleteButton,
+              onSave,
+              onDelete,
+              onCancel,
+              onSearch,
+            }"
+          >
             <AktivzitierungSliInput
-              :modelValue="modelValue"
-              @update:modelValue="onUpdateModelValue"
+              :aktivzitierung="aktivzitierung"
+              :show-cancel-button="showCancelButton"
+              :show-delete-button="showDeleteButton"
+              @save="onSave"
+              @delete="onDelete"
+              @cancel="onCancel"
+              @search="onSearch"
             />
           </template>
 

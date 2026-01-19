@@ -39,7 +39,6 @@ function renderComponent(props: {
           template: `<input aria-label="Dokumenttyp" :value="modelValue || ''" @input="$emit('update:modelValue', $event.target.value)" />`,
         },
         DateInput: InputText,
-        // Stubbing PrimeVue Button to ensure it renders its label/content
         Button: {
           template: `<button v-bind="$attrs"><slot /></button>`,
         },
@@ -99,8 +98,10 @@ describe("AktivzitierungInput", () => {
 
       await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
 
-      const savedData = emitted().save[0][0] as AktivzitierungAdm;
-      expect(savedData[expectedKey as keyof AktivzitierungAdm]).toBe(inputValue);
+      const saveEvents = emitted().save as Array<[AktivzitierungAdm]>;
+      const lastEventPayload = saveEvents[0]![0];
+
+      expect(lastEventPayload[expectedKey as keyof AktivzitierungAdm]).toBe(inputValue);
     },
   );
 
