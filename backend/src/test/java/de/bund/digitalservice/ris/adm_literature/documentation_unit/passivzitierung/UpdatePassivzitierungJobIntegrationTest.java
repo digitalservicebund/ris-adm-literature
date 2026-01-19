@@ -79,12 +79,11 @@ class UpdatePassivzitierungJobIntegrationTest {
     literatureReferenceEntity.setDocumentationOffice(
       sliDocumentationUnitEntity.getDocumentationOffice()
     );
-    LiteratureIndex literatureIndex = new LiteratureIndex();
+    LiteratureIndex literatureIndex = literatureReferenceEntity.getLiteratureIndex();
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
     literatureIndex.setTitel("Hauptsache Titel");
     literatureIndex.setVeroeffentlichungsjahr("2025");
     literatureIndex.setVerfasserList(List.of("Name, Vorname"));
-    literatureReferenceEntity.setLiteratureIndex(literatureIndex);
     given(
       literatureReferenceRepository.findById(sliDocumentationUnitEntity.getDocumentNumber())
     ).willReturn(Optional.of(literatureReferenceEntity));
