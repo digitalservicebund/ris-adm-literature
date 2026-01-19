@@ -19,7 +19,7 @@ const emit = defineEmits<{
   save: [aktivzitierung: AktivzitierungSli];
   delete: [id: string];
   cancel: [void];
-  search: [params: SliDocUnitSearchParams];
+  search: [params: Record<string, unknown>];
 }>();
 
 function createInitialT() {

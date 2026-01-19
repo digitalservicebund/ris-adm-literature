@@ -25,7 +25,7 @@ const emit = defineEmits<{
   save: [aktivzitierung: AktivzitierungAdm];
   delete: [id: string];
   cancel: [void];
-  search: [params: AdmDocUnitSearchParams];
+  search: [params: Record<string, unknown>];
 }>();
 
 function createInitialT() {

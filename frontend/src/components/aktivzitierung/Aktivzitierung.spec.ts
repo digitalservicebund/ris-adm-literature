@@ -70,11 +70,29 @@ function renderComponent(props: {
             <div data-testid="item">{{aktivzitierung.citationType}} {{aktivzitierung.title}} {{ aktivzitierung.documentNumber }}</div>
           </template>`,
       input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input-title" :value="modelValue.title" @input="onUpdateModelValue({ ...modelValue, title: $event.target.value })"/>
-            <input data-testid="input-citationType" :value="modelValue.citationType" @input="onUpdateModelValue({ ...modelValue, citationType: $event.target.value })"/>
-          </template>
-          `,
+        <template #input="{
+          aktivzitierung,
+          onSave,
+          onCancel,
+          onSearch,
+          showCancelButton
+        }">
+          <input
+            data-testid="input-title"
+            :value="aktivzitierung?.title ?? ''"
+            @input="e => local = { ...(aktivzitierung ?? { id: 'tmp' }), title: e.target.value }"
+          />
+          <input
+            data-testid="input-citationType"
+            :value="aktivzitierung?.citationType ?? ''"
+            @input="e => local = { ...(local ?? aktivzitierung ?? { id: 'tmp' }), citationType: e.target.value }"
+          />
+
+          <button @click="onSave(local)">Aktivzitierung übernehmen</button>
+          <button v-if="showCancelButton" @click="onCancel">Abbrechen</button>
+          <button @click="onSearch(local)">Dokumente Suchen</button>
+        </template>
+      `,
       searchResult: `
         <template #default="{ searchResult, isAdded, onAdd }">
           <div data-testid="search-result-title">{{ searchResult.title }}</div>
