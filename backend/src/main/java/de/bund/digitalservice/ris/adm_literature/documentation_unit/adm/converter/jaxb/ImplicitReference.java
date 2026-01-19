@@ -29,10 +29,11 @@ public class ImplicitReference {
   private RisFundstelle fundstelle;
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
-  private RisReferenz reference;
+  private RisReferenz referenz;
 
   /**
    * Returns the type of this reference.
+   *
    * @return The implicit reference type
    */
   public ImplicitReferenceType getReferenceType() {
@@ -41,6 +42,8 @@ public class ImplicitReference {
       referenceType = ImplicitReferenceType.ACTIVE_REFERENCE;
     } else if (caselawReference != null) {
       referenceType = ImplicitReferenceType.ACTIVE_CITATION;
+    } else if (referenz != null) {
+      referenceType = ImplicitReferenceType.SLI_PASSIVE_REFERENCE;
     }
     return referenceType;
   }

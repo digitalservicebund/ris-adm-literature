@@ -546,7 +546,7 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                   VERWALTUNGSVORSCHRIFTEN -> throw new IllegalStateException("Not supported");
               }
               ImplicitReference implicitReference = new ImplicitReference();
-              implicitReference.setReference(risReferenz);
+              implicitReference.setReferenz(risReferenz);
               return implicitReference;
             })
             .toList()

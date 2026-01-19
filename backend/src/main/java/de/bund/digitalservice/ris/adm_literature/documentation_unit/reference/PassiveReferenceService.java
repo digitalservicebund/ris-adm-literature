@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class PassiveReferenceService {
 
   private final AdmPassiveReferenceRepository admPassiveReferenceRepository;
@@ -41,6 +43,10 @@ public class PassiveReferenceService {
           )
         )
         .toList();
+      case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
+        passiveReferences = new ArrayList<>();
+        log.info("Passive references for literature is not supported.");
+      }
       default -> passiveReferences = new ArrayList<>();
     }
     return passiveReferences;

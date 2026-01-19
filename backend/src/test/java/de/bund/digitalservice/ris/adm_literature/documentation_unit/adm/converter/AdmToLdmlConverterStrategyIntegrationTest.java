@@ -1112,7 +1112,7 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     assertThat(xml).contains(
       """
       <akn:implicitReference>
-          <ris:reference domainTerm="Referenz">
+          <ris:referenz domainTerm="Referenz">
               <ris:richtung domainTerm="Richtung der Referenzierung">passiv</ris:richtung>
               <ris:referenzArt domainTerm="Art der Referenz">sli</ris:referenzArt>
               <ris:dokumentnummer domainTerm="Dokumentnummer">KALS999999999</ris:dokumentnummer>
@@ -1123,7 +1123,7 @@ class AdmToLdmlConverterStrategyIntegrationTest {
               <ris:autor domainTerm="Autor(en)">Verfasser 1, Verfasser 2</ris:autor>
               <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2026</ris:veroeffentlichungsjahr>
               <ris:standardzusammenfassung>Verfasser 1, Verfasser 2, Titel, Bib, Dis, 2026</ris:standardzusammenfassung>
-          </ris:reference>
+          </ris:referenz>
       </akn:implicitReference>
       """.indent(20)
     );
