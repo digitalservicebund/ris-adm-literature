@@ -89,7 +89,7 @@ function renderComponent(props: {
           />
 
           <button @click="onSave(local)">Aktivzitierung übernehmen</button>
-          <button v-if="showCancelButton" @click="onCancel">Abbrechen</button>
+          <button @click="onCancel">Abbrechen</button>
           <button @click="onSearch(local)">Dokumente Suchen</button>
         </template>
       `,

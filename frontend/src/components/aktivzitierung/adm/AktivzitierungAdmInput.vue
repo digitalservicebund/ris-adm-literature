@@ -12,7 +12,6 @@ import PeriodikumDropDown from "@/components/dropdown/PeriodikumDropDown.vue";
 import type { Periodikum } from "@/domain/fundstelle";
 import DokumentTypDropDown from "@/components/dropdown/DokumentTypDropDown.vue";
 import { DocumentCategory } from "@/domain/documentType";
-import type { AdmDocUnitSearchParams } from "@/domain/adm/admDocumentUnit";
 import { Button } from "primevue";
 
 const props = defineProps<{
@@ -32,7 +31,7 @@ function createInitialT() {
   return { id: crypto.randomUUID() } as AktivzitierungAdm;
 }
 
-const aktivzitierungRef = ref<AktivzitierungAdm>(
+const aktivzitierungAdmRef = ref<AktivzitierungAdm>(
   props.aktivzitierung
     ? { ...props.aktivzitierung } // Use a copy of the prop data
     : createInitialT(),
@@ -40,43 +39,43 @@ const aktivzitierungRef = ref<AktivzitierungAdm>(
 
 const citationType = computed({
   get: () => {
-    return aktivzitierungRef.value.citationType
+    return aktivzitierungAdmRef.value.citationType
       ? ({
-          id: aktivzitierungRef.value.citationType,
-          label: aktivzitierungRef.value.citationType,
+          id: aktivzitierungAdmRef.value.citationType,
+          label: aktivzitierungAdmRef.value.citationType,
         } as ZitierArt)
       : undefined;
   },
   set: (val: ZitierArt | undefined) => {
-    aktivzitierungRef.value.citationType = val?.abbreviation;
+    aktivzitierungAdmRef.value.citationType = val?.abbreviation;
   },
 });
 
 const normgeber = computed({
   get: () => {
-    return aktivzitierungRef.value.normgeber
+    return aktivzitierungAdmRef.value.normgeber
       ? ({
-          id: aktivzitierungRef.value.normgeber,
-          name: aktivzitierungRef.value.normgeber,
+          id: aktivzitierungAdmRef.value.normgeber,
+          name: aktivzitierungAdmRef.value.normgeber,
         } as Institution)
       : undefined;
   },
   set: (val: Institution | undefined) => {
-    aktivzitierungRef.value.normgeber = val?.name;
+    aktivzitierungAdmRef.value.normgeber = val?.name;
   },
 });
 
 const periodikum = computed({
   get: () => {
-    return aktivzitierungRef.value.periodikum
+    return aktivzitierungAdmRef.value.periodikum
       ? ({
-          id: aktivzitierungRef.value.periodikum,
-          abbreviation: aktivzitierungRef.value.periodikum,
+          id: aktivzitierungAdmRef.value.periodikum,
+          abbreviation: aktivzitierungAdmRef.value.periodikum,
         } as Periodikum)
       : undefined;
   },
   set: (val: Periodikum | undefined) => {
-    aktivzitierungRef.value.periodikum = val?.abbreviation;
+    aktivzitierungAdmRef.value.periodikum = val?.abbreviation;
   },
 });
 
@@ -84,13 +83,13 @@ watch(
   () => props.aktivzitierung,
   (newVal: AktivzitierungAdm | undefined) => {
     if (newVal) {
-      aktivzitierungRef.value = { ...newVal };
+      aktivzitierungAdmRef.value = { ...newVal };
     }
   },
 );
 
 const isEmpty = computed(() => {
-  const value = aktivzitierungRef.value as Record<string, unknown>;
+  const value = aktivzitierungAdmRef.value as Record<string, unknown>;
   const entries = Object.entries(value).filter(([key]) => key !== "id");
 
   if (entries.length === 0) return true;
@@ -106,9 +105,9 @@ const isEmpty = computed(() => {
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
-  emit("save", aktivzitierungRef.value);
+  emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
-    aktivzitierungRef.value = createInitialT();
+    aktivzitierungAdmRef.value = createInitialT();
   }
 }
 
@@ -117,11 +116,11 @@ function onClickCancel() {
 }
 
 function onClickDelete() {
-  emit("delete", aktivzitierungRef.value.id);
+  emit("delete", aktivzitierungAdmRef.value.id);
 }
 
 function onClickSearch() {
-  emit("search", aktivzitierungRef.value);
+  emit("search", aktivzitierungAdmRef.value);
 }
 </script>
 
@@ -146,7 +145,7 @@ function onClickSearch() {
         <InputField id="inkrafttretedatum" label="Datum des Inkrafttretens" v-slot="slotProps">
           <DateInput
             :id="slotProps.id"
-            v-model="aktivzitierungRef.inkrafttretedatum"
+            v-model="aktivzitierungAdmRef.inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
             is-future-date
@@ -156,7 +155,7 @@ function onClickSearch() {
         <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
           <InputText
             :id="slotProps.id"
-            v-model="aktivzitierungRef.aktenzeichen"
+            v-model="aktivzitierungAdmRef.aktenzeichen"
             aria-label="Aktenzeichen"
             :invalid="slotProps.hasError"
             fluid
@@ -170,7 +169,7 @@ function onClickSearch() {
         <InputField id="zitatstelle" v-slot="slotProps" label="Zitatstelle">
           <InputText
             :id="slotProps.id"
-            v-model="aktivzitierungRef.zitatstelle"
+            v-model="aktivzitierungAdmRef.zitatstelle"
             aria-label="Zitatstelle"
             :invalid="slotProps.hasError"
             fluid
@@ -181,7 +180,7 @@ function onClickSearch() {
         <InputField id="documentNumber" v-slot="slotProps" label="Dokumentnummer">
           <InputText
             :id="slotProps.id"
-            v-model="aktivzitierungRef.documentNumber"
+            v-model="aktivzitierungAdmRef.documentNumber"
             aria-label="Dokumentnummer"
             :invalid="slotProps.hasError"
             fluid
@@ -190,7 +189,7 @@ function onClickSearch() {
         <InputField id="docType" label="Dokumenttyp" v-slot="slotProps">
           <DokumentTypDropDown
             :input-id="slotProps.id"
-            v-model="aktivzitierungRef.dokumenttyp"
+            v-model="aktivzitierungAdmRef.dokumenttyp"
             aria-label="Dokumenttyp"
             :isInvalid="false"
             :document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"

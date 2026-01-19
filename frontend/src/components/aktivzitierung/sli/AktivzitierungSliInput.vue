@@ -5,7 +5,6 @@ import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
 import { DocumentCategory } from "@/domain/documentType";
 import DokumentTyp from "@/views/literature/DokumentTyp.vue";
 import { RisChipsInput } from "@digitalservicebund/ris-ui/components";
-import type { SliDocUnitSearchParams } from "@/domain/sli/sliDocumentUnit";
 import { computed, ref, watch } from "vue";
 import { Button } from "primevue";
 
@@ -26,7 +25,7 @@ function createInitialT() {
   return { id: crypto.randomUUID() } as AktivzitierungSli;
 }
 
-const aktivzitierungRef = ref<AktivzitierungSli>(
+const aktivzitierungSliRef = ref<AktivzitierungSli>(
   props.aktivzitierung
     ? { ...props.aktivzitierung } // Use a copy of the prop data
     : createInitialT(),
@@ -34,17 +33,17 @@ const aktivzitierungRef = ref<AktivzitierungSli>(
 
 // Ensure verfasser is always an array - use computed to provide default
 const verfasser = computed({
-  get: () => aktivzitierungRef.value.verfasser || [],
+  get: () => aktivzitierungSliRef.value.verfasser || [],
   set: (val: string[]) => {
-    aktivzitierungRef.value.verfasser = val;
+    aktivzitierungSliRef.value.verfasser = val;
   },
 });
 
 // Ensure dokumenttypen is always an array
 const dokumenttypen = computed({
-  get: () => aktivzitierungRef.value.dokumenttypen || [],
+  get: () => aktivzitierungSliRef.value.dokumenttypen || [],
   set: (val) => {
-    aktivzitierungRef.value.dokumenttypen = val;
+    aktivzitierungSliRef.value.dokumenttypen = val;
   },
 });
 
@@ -52,13 +51,13 @@ watch(
   () => props.aktivzitierung,
   (newVal: AktivzitierungSli | undefined) => {
     if (newVal) {
-      aktivzitierungRef.value = { ...newVal };
+      aktivzitierungSliRef.value = { ...newVal };
     }
   },
 );
 
 const isEmpty = computed(() => {
-  const value = aktivzitierungRef.value as Record<string, unknown>;
+  const value = aktivzitierungSliRef.value as Record<string, unknown>;
   const entries = Object.entries(value).filter(([key]) => key !== "id");
 
   if (entries.length === 0) return true;
@@ -74,9 +73,9 @@ const isEmpty = computed(() => {
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
-  emit("save", aktivzitierungRef.value);
+  emit("save", aktivzitierungSliRef.value);
   if (!isExistingEntry.value) {
-    aktivzitierungRef.value = createInitialT();
+    aktivzitierungSliRef.value = createInitialT();
   }
 }
 
@@ -85,11 +84,11 @@ function onClickCancel() {
 }
 
 function onClickDelete() {
-  emit("delete", aktivzitierungRef.value.id);
+  emit("delete", aktivzitierungSliRef.value.id);
 }
 
 function onClickSearch() {
-  emit("search", aktivzitierungRef.value);
+  emit("search", aktivzitierungSliRef.value);
 }
 </script>
 
@@ -108,7 +107,7 @@ function onClickSearch() {
       <InputField id="titel" v-slot="slotProps" label="Hauptsachtitel / Dokumentarischer Titel">
         <InputText
           :id="slotProps.id"
-          v-model="aktivzitierungRef.titel"
+          v-model="aktivzitierungSliRef.titel"
           aria-label="Hauptsachtitel / Dokumentarischer Titel"
           :invalid="slotProps.hasError"
           fluid
@@ -119,7 +118,7 @@ function onClickSearch() {
         <InputField id="veroeffentlichungsjahr" v-slot="slotProps" label="Veröffentlichungsjahr">
           <InputText
             :id="slotProps.id"
-            v-model="aktivzitierungRef.veroeffentlichungsJahr"
+            v-model="aktivzitierungSliRef.veroeffentlichungsJahr"
             aria-label="Veröffentlichungsjahr"
             fluid
           />
