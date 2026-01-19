@@ -28,10 +28,25 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
             <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />
           </template>
 
-          <template #input="{ modelValue, onUpdateModelValue }">
+          <template
+            #input="{
+              aktivzitierung,
+              showCancelButton,
+              showDeleteButton,
+              onSave,
+              onDelete,
+              onCancel,
+              onSearch,
+            }"
+          >
             <AktivzitierungAdmInput
-              :modelValue="modelValue"
-              @update:modelValue="onUpdateModelValue"
+              :aktivzitierung="aktivzitierung"
+              :show-cancel-button="showCancelButton"
+              :show-delete-button="showDeleteButton"
+              @save="onSave"
+              @delete="onDelete"
+              @cancel="onCancel"
+              @search="onSearch"
             />
           </template>
 

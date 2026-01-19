@@ -9,7 +9,6 @@
 >
 import { computed, ref, watch, type Ref, type VNodeChild } from "vue";
 import { useEditableList } from "@/views/adm/documentUnit/[documentNumber]/useEditableList";
-import AktivzitierungInput from "./AktivzitierungInput.vue";
 import AktivzitierungItem from "./AktivzitierungItem.vue";
 import IconAdd from "~icons/material-symbols/add";
 import { Button, useToast, type PageState } from "primevue";
@@ -39,7 +38,15 @@ defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
   item(props: { aktivzitierung: T }): VNodeChild;
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild;
+  input(props: {
+    aktivzitierung?: T;
+    showCancelButton: boolean;
+    showDeleteButton: boolean;
+    onSave: (value: T) => void;
+    onDelete: (id: string) => void;
+    onCancel: () => void;
+    onSearch: (value: SP) => void;
+  }): VNodeChild;
   // 2. Slot for rendering the search result in the search results list
   searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild;
 }>();
@@ -75,7 +82,7 @@ const editingItemId = ref<string | null>(null);
 const showSearchResults = ref(false);
 const searchParams = ref<SP>();
 const citationTypeFromSearch = ref<string | undefined>();
-const inputRef = ref<{ clearSearchFields: () => void } | null>(null);
+const creationPanelKey = ref(0);
 
 /** ------------------------------------------------------------------
  * Computed
@@ -172,7 +179,11 @@ function addSearchResult(result: R) {
   showSearchResults.value = false;
   searchParams.value = undefined;
   citationTypeFromSearch.value = undefined;
-  inputRef.value?.clearSearchFields();
+  resetInputForm();
+}
+
+function resetInputForm() {
+  creationPanelKey.value++;
 }
 
 /** ------------------------------------------------------------------
@@ -219,22 +230,22 @@ watch(error, (err) => {
         </AktivzitierungItem>
       </li>
     </ol>
-    <AktivzitierungInput
+
+    <div
+      :key="creationPanelKey"
       v-if="isCreationPanelOpened || !aktivzitierungList.length"
-      ref="inputRef"
-      :show-cancel-button="false"
-      :show-delete-button="false"
-      @save="addManualEntry"
-      @search="onSearch"
+      class="mt-16"
     >
-      <template #default="{ modelValue, onUpdateModelValue }">
-        <slot
-          name="input"
-          :modelValue="modelValue as T"
-          :onUpdateModelValue="onUpdateModelValue"
-        ></slot>
-      </template>
-    </AktivzitierungInput>
+      <slot
+        name="input"
+        :show-cancel-button="false"
+        :show-delete-button="false"
+        :on-save="addManualEntry"
+        :on-cancel="() => (isCreationPanelOpened = false)"
+        :on-search="onSearch"
+        :on-delete="() => {}"
+      />
+    </div>
 
     <!-- Add button -->
     <Button
