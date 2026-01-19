@@ -7,6 +7,7 @@ import DokumentTyp from "@/views/literature/DokumentTyp.vue";
 import { RisChipsInput } from "@digitalservicebund/ris-ui/components";
 import { computed, ref, watch } from "vue";
 import { Button } from "primevue";
+import { isAktivzitierungEmpty } from "@/utils/validators";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungSli;
@@ -56,19 +57,7 @@ watch(
   },
 );
 
-const isEmpty = computed(() => {
-  const value = aktivzitierungSliRef.value as Record<string, unknown>;
-  const entries = Object.entries(value).filter(([key]) => key !== "id");
-
-  if (entries.length === 0) return true;
-
-  return entries.every(([, v]) => {
-    if (v === undefined || v === null) return true;
-    if (typeof v === "string") return v.trim() === "";
-    if (Array.isArray(v)) return v.length === 0;
-    return false;
-  });
-});
+const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungSliRef.value));
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 

@@ -13,6 +13,7 @@ import type { Periodikum } from "@/domain/fundstelle";
 import DokumentTypDropDown from "@/components/dropdown/DokumentTypDropDown.vue";
 import { DocumentCategory } from "@/domain/documentType";
 import { Button } from "primevue";
+import { isAktivzitierungEmpty } from "@/utils/validators";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
@@ -88,19 +89,7 @@ watch(
   },
 );
 
-const isEmpty = computed(() => {
-  const value = aktivzitierungAdmRef.value as Record<string, unknown>;
-  const entries = Object.entries(value).filter(([key]) => key !== "id");
-
-  if (entries.length === 0) return true;
-
-  return entries.every(([, v]) => {
-    if (v === undefined || v === null) return true;
-    if (typeof v === "string") return v.trim() === "";
-    if (Array.isArray(v)) return v.length === 0;
-    return false;
-  });
-});
+const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value));
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 

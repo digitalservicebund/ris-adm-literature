@@ -43,9 +43,9 @@ defineSlots<{
     showCancelButton: boolean;
     showDeleteButton: boolean;
     onSave: (value: T) => void;
-    onDelete: (id: string) => void;
-    onCancel: () => void;
-    onSearch: (value: SP) => void;
+    onDelete?: (id: string) => void;
+    onCancel?: () => void;
+    onSearch?: (value: SP) => void;
   }): VNodeChild;
   // 2. Slot for rendering the search result in the search results list
   searchResult(props: { searchResult: R; isAdded: boolean; onAdd: (value: R) => void }): VNodeChild;
@@ -241,9 +241,7 @@ watch(error, (err) => {
         :show-cancel-button="false"
         :show-delete-button="false"
         :on-save="addManualEntry"
-        :on-cancel="() => (isCreationPanelOpened = false)"
         :on-search="onSearch"
-        :on-delete="() => {}"
       />
     </div>
 

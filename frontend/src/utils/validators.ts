@@ -69,3 +69,21 @@ function missingLiteratureDocumentUnitFields(doc: {
 
   return missingFields;
 }
+
+/**
+ * Checks if an object is "empty" based on its properties.
+ * Ignores the 'id' field.
+ * Returns true if all other fields are null, undefined, empty strings, or empty arrays.
+ */
+export function isAktivzitierungEmpty(value: Record<string, unknown>): boolean {
+  const entries = Object.entries(value).filter(([key]) => key !== "id");
+
+  if (entries.length === 0) return true;
+
+  return entries.every(([, v]) => {
+    if (v === undefined || v === null) return true;
+    if (typeof v === "string") return v.trim() === "";
+    if (Array.isArray(v)) return v.length === 0;
+    return false;
+  });
+}

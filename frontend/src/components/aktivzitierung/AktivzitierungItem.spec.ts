@@ -78,7 +78,6 @@ describe("AktivzitierungAdmItem", () => {
   it("renders AktivzitierungInput when isEditing is true", () => {
     renderComponent({ aktivzitierung: item, isEditing: true });
 
-    // Save button inside AktivzitierungInput exists
     const saveButton = screen.getByRole("button", { name: "Übernehmen" });
     expect(saveButton).toBeInTheDocument();
   });
@@ -87,12 +86,13 @@ describe("AktivzitierungAdmItem", () => {
     const user = userEvent.setup();
     const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true });
 
-    // Click 'Übernehmen' (defined in our slot stub)
     await user.click(screen.getByRole("button", { name: "Übernehmen" }));
 
-    // Check emitted save (renamed from update)
     expect(emitted().save).toBeTruthy();
-    expect(emitted().save[0][0]).toEqual(
+
+    const saveEvents = emitted().save as Array<[{ id: string; title: string }]>;
+    const lastEventPayload = saveEvents[0]![0];
+    expect(lastEventPayload).toEqual(
       expect.objectContaining({
         id: "123",
         title: "NEW_ITEM",
@@ -112,9 +112,8 @@ describe("AktivzitierungAdmItem", () => {
 
     const emits = emitted();
 
-    // Verify events were emitted
     expect(emits.delete).toBeTruthy();
-    expect(emits.delete![0]).toEqual(["123"]); // emitted id
+    expect(emits.delete![0]).toEqual(["123"]);
 
     expect(emits.cancelEdit).toBeTruthy();
     expect(emits.cancelEdit?.length).toBe(1);
