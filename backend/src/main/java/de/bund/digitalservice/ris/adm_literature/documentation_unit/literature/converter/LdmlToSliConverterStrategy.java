@@ -5,6 +5,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Documentatio
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -43,7 +44,9 @@ public class LdmlToSliConverterStrategy implements LdmlToObjectConverterStrategy
         converterMethods.mapAktivzitierungSli(ldmlDocument, xPath),
         converterMethods.mapAktivzitierungAdm(ldmlDocument, xPath)
       );
-    } catch (IOException | SAXException | XPathExpressionException e) {
+    } catch (
+      IOException | SAXException | XPathExpressionException | ParserConfigurationException e
+    ) {
       throw new IllegalStateException(e);
     }
   }

@@ -19,16 +19,15 @@ import org.xml.sax.SAXException;
 @Component
 public class LdmlDocumentFactory {
 
-  private final DocumentBuilder documentBuilder;
+  private final DocumentBuilderFactory documentBuilderFactory;
 
   /**
    * Creates a new instance of this class.
    */
   private LdmlDocumentFactory() {
     try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-      documentBuilder = documentBuilderFactory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
       log.error("Could not create DocumentBuilderFactory", e);
       throw new IllegalStateException("Could not create DocumentBuilderFactory", e);
@@ -45,7 +44,8 @@ public class LdmlDocumentFactory {
    */
   public LdmlDocument createDocument(
     @NonNull LiteratureDocumentCategory literatureDocumentCategory
-  ) throws IOException, SAXException {
+  ) throws IOException, SAXException, ParserConfigurationException {
+    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
     return new MinimalLdmlDocument().create(documentBuilder, literatureDocumentCategory);
   }
 
@@ -57,7 +57,9 @@ public class LdmlDocumentFactory {
    * @throws IOException If an I/O error occurs
    * @throws SAXException If a parse error occurs
    */
-  public LdmlDocument createDocument(@NonNull String xml) throws IOException, SAXException {
+  public LdmlDocument createDocument(@NonNull String xml)
+    throws IOException, SAXException, ParserConfigurationException {
+    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
     return new LdmlDocument(documentBuilder.parse(new InputSource(new StringReader(xml))));
   }
 }

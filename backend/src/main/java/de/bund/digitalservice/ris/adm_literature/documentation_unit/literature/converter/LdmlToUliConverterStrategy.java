@@ -5,6 +5,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Documentatio
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
 import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -41,7 +42,9 @@ public class LdmlToUliConverterStrategy implements LdmlToObjectConverterStrategy
         converterMethods.mapDokumentarischerTitel(ldmlDocument, xPath),
         null
       );
-    } catch (IOException | SAXException | XPathExpressionException e) {
+    } catch (
+      IOException | SAXException | XPathExpressionException | ParserConfigurationException e
+    ) {
       throw new IllegalStateException(e);
     }
   }
