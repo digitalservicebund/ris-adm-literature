@@ -28,14 +28,14 @@ const emit = defineEmits<{
   search: [params: Record<string, unknown>];
 }>();
 
-function createInitialT() {
-  return { id: crypto.randomUUID() } as AktivzitierungAdm;
+function createInitial(): AktivzitierungAdm {
+  return { id: crypto.randomUUID() };
 }
 
 const aktivzitierungAdmRef = ref<AktivzitierungAdm>(
   props.aktivzitierung
     ? { ...props.aktivzitierung } // Use a copy of the prop data
-    : createInitialT(),
+    : createInitial(),
 );
 
 const citationType = computed({
@@ -96,7 +96,7 @@ const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 function onClickSave() {
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
-    aktivzitierungAdmRef.value = createInitialT();
+    aktivzitierungAdmRef.value = createInitial();
   }
 }
 

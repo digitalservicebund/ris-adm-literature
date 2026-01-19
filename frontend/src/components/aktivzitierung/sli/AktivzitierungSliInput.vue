@@ -22,17 +22,22 @@ const emit = defineEmits<{
   search: [params: Record<string, unknown>];
 }>();
 
-function createInitialT() {
-  return { id: crypto.randomUUID() } as AktivzitierungSli;
+function createInitial(): AktivzitierungSli {
+  return {
+    id: crypto.randomUUID(),
+    titel: "",
+    veroeffentlichungsJahr: "",
+    dokumenttypen: [],
+    verfasser: [],
+  };
 }
 
 const aktivzitierungSliRef = ref<AktivzitierungSli>(
   props.aktivzitierung
     ? { ...props.aktivzitierung } // Use a copy of the prop data
-    : createInitialT(),
+    : createInitial(),
 );
 
-// Ensure verfasser is always an array - use computed to provide default
 const verfasser = computed({
   get: () => aktivzitierungSliRef.value.verfasser || [],
   set: (val: string[]) => {
@@ -40,7 +45,6 @@ const verfasser = computed({
   },
 });
 
-// Ensure dokumenttypen is always an array
 const dokumenttypen = computed({
   get: () => aktivzitierungSliRef.value.dokumenttypen || [],
   set: (val) => {
@@ -64,7 +68,7 @@ const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 function onClickSave() {
   emit("save", aktivzitierungSliRef.value);
   if (!isExistingEntry.value) {
-    aktivzitierungSliRef.value = createInitialT();
+    aktivzitierungSliRef.value = createInitial();
   }
 }
 

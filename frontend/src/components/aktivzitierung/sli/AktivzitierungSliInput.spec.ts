@@ -41,9 +41,6 @@ function renderComponent(props: {
             />
           `,
         },
-        Button: {
-          template: `<button v-bind="$attrs"><slot /></button>`,
-        },
       },
     },
   });
@@ -166,5 +163,56 @@ describe("AktivzitierungSliInput", () => {
     await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
 
     expect(input).toHaveValue("");
+  });
+
+  it("emits 'search' with current state when search button is clicked", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungSli = {
+      id: "123",
+      titel: "Search Query",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
+    await user.click(searchButton);
+
+    expect(emitted().search).toBeTruthy();
+    expect(emitted().search![0]).toEqual([
+      expect.objectContaining({
+        id: "123",
+        titel: "Search Query",
+      }),
+    ]);
+  });
+
+  it("emits 'cancel' when cancel button is clicked", async () => {
+    const user = userEvent.setup();
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: "123" },
+      showCancelButton: true,
+    });
+
+    const cancelButton = screen.getByRole("button", { name: "Abbrechen" });
+    await user.click(cancelButton);
+
+    expect(emitted().cancel).toBeTruthy();
+    expect(emitted().cancel).toHaveLength(1);
+  });
+
+  it("updates internal state when 'aktivzitierung' prop changes (watch)", async () => {
+    const initialValue: AktivzitierungSli = { id: "123", titel: "Initial Title" };
+    const newValue: AktivzitierungSli = { id: "123", titel: "Updated via Prop" };
+
+    const { rerender } = renderComponent({ aktivzitierung: initialValue });
+
+    const input = screen.getByRole("textbox", {
+      name: "Hauptsachtitel / Dokumentarischer Titel",
+    });
+    expect(input).toHaveValue("Initial Title");
+
+    await rerender({ aktivzitierung: newValue });
+
+    expect(input).toHaveValue("Updated via Prop");
   });
 });

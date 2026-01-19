@@ -39,9 +39,6 @@ function renderComponent(props: {
           template: `<input aria-label="Dokumenttyp" :value="modelValue || ''" @input="$emit('update:modelValue', $event.target.value)" />`,
         },
         DateInput: InputText,
-        Button: {
-          template: `<button v-bind="$attrs"><slot /></button>`,
-        },
       },
     },
   });
@@ -60,17 +57,13 @@ describe("AktivzitierungInput", () => {
     const input = screen.getByRole("textbox", { name: "Dokumentnummer" });
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
 
-    // 1. Change internal state
     await user.clear(input);
     await user.type(input, "NEWVALUE");
 
-    // 2. Ensure no update:modelValue is emitted (since we removed it)
     expect(emitted()["update:modelValue"]).toBeUndefined();
 
-    // 3. Click Save
     await user.click(saveButton);
 
-    // 4. Check 'save' event
     expect(emitted().save![0]).toEqual([
       expect.objectContaining({
         id: "123",
@@ -137,7 +130,57 @@ describe("AktivzitierungInput", () => {
     renderComponent({ aktivzitierung: undefined });
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
 
-    // Check for the disabled attribute (PrimeVue Button usually passes this to native button)
     expect(saveButton).toBeDisabled();
+  });
+
+  it("emits 'search' with current state when search button is clicked", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungAdm = {
+      id: "123",
+      zitatstelle: "Search Query",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
+    await user.click(searchButton);
+
+    expect(emitted().search).toBeTruthy();
+    expect(emitted().search![0]).toEqual([
+      expect.objectContaining({
+        id: "123",
+        zitatstelle: "Search Query",
+      }),
+    ]);
+  });
+
+  it("emits 'cancel' when cancel button is clicked", async () => {
+    const user = userEvent.setup();
+    const { emitted } = renderComponent({
+      aktivzitierung: { id: "123" },
+      showCancelButton: true,
+    });
+
+    const cancelButton = screen.getByRole("button", { name: "Abbrechen" });
+    await user.click(cancelButton);
+
+    expect(emitted().cancel).toBeTruthy();
+    expect(emitted().cancel).toHaveLength(1);
+  });
+
+  it("updates internal state when 'aktivzitierung' prop changes (watch)", async () => {
+    const initialValue: AktivzitierungAdm = { id: "123", zitatstelle: "Initial Title" };
+    const newValue: AktivzitierungAdm = { id: "123", zitatstelle: "Updated via Prop" };
+
+    const { rerender } = renderComponent({ aktivzitierung: initialValue });
+
+    const input = screen.getByRole("textbox", {
+      name: "Zitatstelle",
+    });
+    expect(input).toHaveValue("Initial Title");
+
+    await rerender({ aktivzitierung: newValue });
+
+    expect(input).toHaveValue("Updated via Prop");
   });
 });

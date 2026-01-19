@@ -352,7 +352,7 @@ describe("Validators functions", () => {
         titel: null,
         verfasser: undefined,
       };
-      expect(isAktivzitierungEmpty(input as any)).toBe(true);
+      expect(isAktivzitierungEmpty(input)).toBe(true);
     });
 
     it("returns true if strings are only whitespace", () => {
@@ -370,7 +370,7 @@ describe("Validators functions", () => {
         verfasser: [],
         dokumenttypen: [],
       };
-      expect(isAktivzitierungEmpty(input as any)).toBe(true);
+      expect(isAktivzitierungEmpty(input)).toBe(true);
     });
 
     it("returns false if at least one string field has content", () => {
@@ -386,14 +386,12 @@ describe("Validators functions", () => {
         id: "123",
         verfasser: ["Müller"],
       };
-      expect(isAktivzitierungEmpty(input as any)).toBe(false);
+      expect(isAktivzitierungEmpty(input)).toBe(false);
     });
 
     it("returns false even if a value is 0 (number)", () => {
-      // Current logic: only null/undefined/string/array are "empty"
-      // If a number is provided, it returns false (not empty)
       const input = { id: "123", someNumber: 0 };
-      expect(isAktivzitierungEmpty(input as any)).toBe(false);
+      expect(isAktivzitierungEmpty(input)).toBe(false);
     });
   });
 });
