@@ -26,6 +26,8 @@ public class UpdatePassivzitierungService {
 
   /**
    * Updates all 'Passivzitierungen'.
+   *
+   * @param documentCategory The document category to update
    */
   public void updateAllByDocumentCategory(@NonNull DocumentCategory documentCategory) {
     List<PassiveReference> passiveReferences = schemaExecutor.executeInSchema(

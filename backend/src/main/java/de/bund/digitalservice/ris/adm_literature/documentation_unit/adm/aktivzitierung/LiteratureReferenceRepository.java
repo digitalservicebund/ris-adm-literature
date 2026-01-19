@@ -7,6 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+/**
+ * Literature reference JPA repository.
+ */
 public interface LiteratureReferenceRepository
   extends
     JpaRepository<LiteratureReferenceEntity, String>,

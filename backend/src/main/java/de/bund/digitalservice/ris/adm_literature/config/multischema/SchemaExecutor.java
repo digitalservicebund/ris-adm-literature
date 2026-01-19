@@ -17,7 +17,8 @@ public class SchemaExecutor {
    *
    * @param schema The target {@link SchemaType} to switch to.
    * @param action The logic to execute while the target schema is active.
-   * @return The result of the the action
+   * @param <V> Return class type
+   * @return The result of the action
    */
   public <V> V executeInSchema(SchemaType schema, Callable<V> action) {
     SchemaType originalSchema = SchemaContextHolder.getSchema();
