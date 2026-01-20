@@ -10,12 +10,16 @@ function renderComponent(props?: { aktivzitierung: DummyT; isEditing: boolean })
     props,
     slots: {
       item: `
-          <template #default="{ aktivzitierung }">
+          <template #item="{ aktivzitierung }">
             <div data-testid="doc-number">{{ Object.values(aktivzitierung).join(',') }}</div>
           </template>`,
       input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input" :value="modelValue.documentNumber" @input="onUpdateModelValue({ ...modelValue, documentNumber: $event.target.value })"/>
+          <template #input="{ aktivzitierung, onSave, onCancel, onDelete }">
+            <div data-testid="input-slot-wrapper">
+              <button @click="onSave({ ...aktivzitierung, title: 'NEW_ITEM' })">Übernehmen</button>
+              <button @click="onCancel">Abbrechen</button>
+              <button @click="onDelete(aktivzitierung.id)">Löschen</button>
+            </div>
           </template>
           `,
     },
@@ -74,27 +78,26 @@ describe("AktivzitierungAdmItem", () => {
   it("renders AktivzitierungInput when isEditing is true", () => {
     renderComponent({ aktivzitierung: item, isEditing: true });
 
-    // Save button inside AktivzitierungInput exists
-    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    const saveButton = screen.getByRole("button", { name: "Übernehmen" });
     expect(saveButton).toBeInTheDocument();
   });
 
-  it("passes update and cancelEdit events through AktivzitierungInput", async () => {
+  it("passes save event through the input slot", async () => {
     const user = userEvent.setup();
     const { emitted } = renderComponent({ aktivzitierung: item, isEditing: true });
 
-    // Change input and click save
-    const input = screen.getByRole("textbox");
-    await user.clear(input);
-    await user.type(input, "Updated");
+    await user.click(screen.getByRole("button", { name: "Übernehmen" }));
 
-    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
-    await user.click(saveButton);
+    expect(emitted().save).toBeTruthy();
 
-    // Check emitted update
-    const updateEvents = emitted().update as Array<[DummyT]>;
-    expect(updateEvents).toBeTruthy();
-    expect(updateEvents[0]![0].documentNumber).toBe("Updated");
+    const saveEvents = emitted().save as Array<[{ id: string; title: string }]>;
+    const lastEventPayload = saveEvents[0]![0];
+    expect(lastEventPayload).toEqual(
+      expect.objectContaining({
+        id: "123",
+        title: "NEW_ITEM",
+      }),
+    );
   });
 
   it("emits delete for an aktivzitierung coming from search", async () => {
@@ -109,9 +112,8 @@ describe("AktivzitierungAdmItem", () => {
 
     const emits = emitted();
 
-    // Verify events were emitted
     expect(emits.delete).toBeTruthy();
-    expect(emits.delete![0]).toEqual(["123"]); // emitted id
+    expect(emits.delete![0]).toEqual(["123"]);
 
     expect(emits.cancelEdit).toBeTruthy();
     expect(emits.cancelEdit?.length).toBe(1);

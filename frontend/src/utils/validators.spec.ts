@@ -6,6 +6,7 @@ import {
   missingAdmDocumentUnitFields,
   missingUliDocumentUnitFields,
   missingSliDocumentUnitFields,
+  isAktivzitierungEmpty,
 } from "./validators";
 import dayjs from "dayjs";
 import type { AdmDocumentationUnit } from "@/domain/adm/admDocumentUnit";
@@ -336,6 +337,61 @@ describe("Validators functions", () => {
         "veroeffentlichungsjahr",
         "hauptsachtitel",
       ]);
+    });
+  });
+
+  describe("isAktivzitierungEmpty", () => {
+    it("returns true if the object only contains an id", () => {
+      const input = { id: "uuid-123" };
+      expect(isAktivzitierungEmpty(input)).toBe(true);
+    });
+
+    it("returns true if fields are null or undefined", () => {
+      const input = {
+        id: "123",
+        titel: null,
+        verfasser: undefined,
+      };
+      expect(isAktivzitierungEmpty(input)).toBe(true);
+    });
+
+    it("returns true if strings are only whitespace", () => {
+      const input = {
+        id: "123",
+        titel: "   ",
+        veroeffentlichungsJahr: "",
+      };
+      expect(isAktivzitierungEmpty(input)).toBe(true);
+    });
+
+    it("returns true if arrays are empty", () => {
+      const input = {
+        id: "123",
+        verfasser: [],
+        dokumenttypen: [],
+      };
+      expect(isAktivzitierungEmpty(input)).toBe(true);
+    });
+
+    it("returns false if at least one string field has content", () => {
+      const input = {
+        id: "123",
+        titel: "Grundgesetz",
+      };
+      expect(isAktivzitierungEmpty(input)).toBe(false);
+    });
+
+    it("returns false if at least one array has items", () => {
+      const input = {
+        id: "123",
+        verfasser: ["Müller"],
+      };
+      expect(isAktivzitierungEmpty(input)).toBe(false);
+    });
+
+    it("returns false even if a value is 0 (number)", () => {
+      const input = { id: "123", someNumber: 0 };
+      expect(isAktivzitierungEmpty(input)).toBe(false);
     });
   });
 });

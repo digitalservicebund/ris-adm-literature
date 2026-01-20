@@ -1,6 +1,5 @@
 <script lang="ts" setup generic="T extends { id: string; documentNumber?: string }">
 import IconEdit from "~icons/ic/outline-edit";
-import AktivzitierungInput from "./AktivzitierungInput.vue";
 import { computed, type VNodeChild } from "vue";
 import IconClose from "~icons/ic/close";
 
@@ -10,7 +9,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  update: [aktivzitierung: T];
+  save: [aktivzitierung: T];
   delete: [id: string];
   editStart: [id: string];
   cancelEdit: [void];
@@ -20,15 +19,24 @@ defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
   item(props: { aktivzitierung: T }): VNodeChild;
   // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
-  input(props: { modelValue: T; onUpdateModelValue: (value: T) => void }): VNodeChild;
+  input(props: {
+    aktivzitierung: T;
+    showCancelButton: boolean;
+    showDeleteButton: boolean;
+    showSearchButton: boolean;
+    onSave: (value: T) => void;
+    onDelete: (id: string) => void;
+    onCancel: () => void;
+    onSearch: (params: any) => void;
+  }): VNodeChild;
 }>();
 
 const onExpandAccordion = () => {
   emit("editStart", props.aktivzitierung.id);
 };
 
-const onUpdate = (item: T) => {
-  emit("update", item);
+const onSave = (item: T) => {
+  emit("save", item);
 };
 
 const onClickCancel = () => {
@@ -46,25 +54,19 @@ const isFromSearch = computed(
 </script>
 
 <template>
-  <AktivzitierungInput
-    v-if="isEditing"
-    ref="inputRef"
-    class="mt-16"
-    :aktivzitierung="aktivzitierung"
-    @save="onUpdate"
-    @cancel="onClickCancel"
-    @delete="onDelete"
-    :show-cancel-button="true"
-    :show-delete-button="!isFromSearch"
-  >
-    <template #default="{ modelValue, onUpdateModelValue }">
-      <slot
-        name="input"
-        :modelValue="modelValue as T"
-        :onUpdateModelValue="onUpdateModelValue"
-      ></slot>
-    </template>
-  </AktivzitierungInput>
+  <div v-if="isEditing" class="mt-16">
+    <slot
+      name="input"
+      :aktivzitierung="aktivzitierung"
+      :show-cancel-button="true"
+      :show-delete-button="!isFromSearch"
+      :show-search-button="false"
+      :on-save="onSave"
+      :on-delete="onDelete"
+      :on-cancel="onClickCancel"
+      :on-search="() => {}"
+    />
+  </div>
   <div v-else class="flex w-full items-center gap-10">
     <div class="flex flex-col gap-2">
       <slot name="item" :aktivzitierung="aktivzitierung"></slot>

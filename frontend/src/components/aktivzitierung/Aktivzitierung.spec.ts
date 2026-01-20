@@ -53,16 +53,11 @@ vi.mock("@/composables/usePagination", () => ({
   usePagination: vi.fn(() => mockPagination),
 }));
 
-function renderComponent(props: {
-  modelValue: DummyT[];
-  fetchResultsFn: FetchResultsFunction;
-  transformResultFn?: (R: DummySearchResult) => DummyT;
-}) {
+function renderComponent(props: { modelValue: DummyT[]; fetchResultsFn: FetchResultsFunction }) {
   return render(Aktivzitierung, {
     props: {
       modelValue: props.modelValue,
       fetchResultsFn: props.fetchResultsFn,
-      transformResultFn: props.transformResultFn,
     },
     slots: {
       item: `
@@ -70,11 +65,29 @@ function renderComponent(props: {
             <div data-testid="item">{{aktivzitierung.citationType}} {{aktivzitierung.title}} {{ aktivzitierung.documentNumber }}</div>
           </template>`,
       input: `
-          <template #default="{ modelValue, onUpdateModelValue }">
-            <input data-testid="input-title" :value="modelValue.title" @input="onUpdateModelValue({ ...modelValue, title: $event.target.value })"/>
-            <input data-testid="input-citationType" :value="modelValue.citationType" @input="onUpdateModelValue({ ...modelValue, citationType: $event.target.value })"/>
-          </template>
-          `,
+        <template #input="{
+          aktivzitierung,
+          onSave,
+          onCancel,
+          onSearch,
+          showCancelButton
+        }">
+          <input
+            data-testid="input-title"
+            :value="aktivzitierung?.title ?? ''"
+            @input="e => local = { ...(aktivzitierung ?? { id: 'tmp' }), title: e.target.value }"
+          />
+          <input
+            data-testid="input-citationType"
+            :value="aktivzitierung?.citationType ?? ''"
+            @input="e => local = { ...(local ?? aktivzitierung ?? { id: 'tmp' }), citationType: e.target.value }"
+          />
+
+          <button @click="onSave(local)">Aktivzitierung übernehmen</button>
+          <button @click="onCancel">Abbrechen</button>
+          <button @click="onSearch(local)">Dokumente Suchen</button>
+        </template>
+      `,
       searchResult: `
         <template #default="{ searchResult, isAdded, onAdd }">
           <div data-testid="search-result-title">{{ searchResult.title }}</div>
@@ -396,28 +409,6 @@ describe("Aktivzitierung", () => {
     await user.click(screen.getByRole("button", { name: "Add" }));
 
     expect(screen.getByText("Anordnung Found Item DOC-123")).toBeInTheDocument();
-  });
-
-  it("result is transformed when a transformer is provided", async () => {
-    mockPagination.fetchPaginatedData.mockImplementation(async () => {
-      mockPagination.items.value = [
-        { id: "uuid-1", documentNumber: "DOC-123", title: "Found Item" },
-      ];
-      mockPagination.totalRows.value = 20;
-    });
-
-    const user = userEvent.setup();
-    const fetchResultsFn = vi.fn();
-    const transformResultFn = (result: DummySearchResult) => ({ ...result, title: "Transformed" });
-
-    renderComponent({ modelValue: [], fetchResultsFn, transformResultFn });
-
-    const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
-    await user.click(searchButton);
-
-    await user.click(screen.getByRole("button", { name: "Add" }));
-
-    expect(screen.getByText("Transformed DOC-123")).toBeInTheDocument();
   });
 
   it("prevents adding the same document number twice", async () => {
