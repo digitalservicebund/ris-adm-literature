@@ -9,12 +9,14 @@ function renderComponent(props: {
   aktivzitierung?: AktivzitierungAdm;
   showCancelButton?: boolean;
   showDeleteButton?: boolean;
+  showSearchButton?: boolean;
 }) {
   return render(AktivzitierungAdmInput, {
     props: {
       aktivzitierung: props.aktivzitierung,
       showCancelButton: props.showCancelButton ?? false,
       showDeleteButton: props.showDeleteButton ?? false,
+      showSearchButton: props.showSearchButton ?? false,
     },
     global: {
       stubs: {
@@ -140,7 +142,7 @@ describe("AktivzitierungInput", () => {
       zitatstelle: "Search Query",
     };
 
-    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+    const { emitted } = renderComponent({ aktivzitierung: initialValue, showSearchButton: true });
 
     const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
     await user.click(searchButton);

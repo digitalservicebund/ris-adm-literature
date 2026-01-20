@@ -29,6 +29,7 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
               aktivzitierung,
               showCancelButton,
               showDeleteButton,
+              showSearchButton,
               onSave,
               onDelete,
               onCancel,
@@ -39,6 +40,7 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
               :aktivzitierung="aktivzitierung"
               :show-cancel-button="showCancelButton"
               :show-delete-button="showDeleteButton"
+              :show-search-button="showSearchButton"
               @save="onSave"
               @delete="onDelete"
               @cancel="onCancel"

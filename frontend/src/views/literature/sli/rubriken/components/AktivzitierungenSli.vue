@@ -26,6 +26,7 @@ const aktivzitierungSli = defineModel<AktivzitierungSli[]>();
               aktivzitierung,
               showCancelButton,
               showDeleteButton,
+              showSearchButton,
               onSave,
               onDelete,
               onCancel,
@@ -36,6 +37,7 @@ const aktivzitierungSli = defineModel<AktivzitierungSli[]>();
               :aktivzitierung="aktivzitierung"
               :show-cancel-button="showCancelButton"
               :show-delete-button="showDeleteButton"
+              :show-search-button="showSearchButton"
               @save="onSave"
               @delete="onDelete"
               @cancel="onCancel"

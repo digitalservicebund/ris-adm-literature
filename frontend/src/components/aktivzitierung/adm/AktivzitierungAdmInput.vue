@@ -19,6 +19,7 @@ const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
   showCancelButton: boolean;
   showDeleteButton: boolean;
+  showSearchButton: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -188,6 +189,7 @@ function onClickSearch() {
     </div>
     <div class="flex w-full gap-16 mt-16">
       <Button
+        v-if="showSearchButton"
         aria-label="Dokumente Suchen"
         label="Suchen"
         size="small"

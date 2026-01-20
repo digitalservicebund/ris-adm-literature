@@ -41,6 +41,7 @@ defineSlots<{
     aktivzitierung?: T;
     showCancelButton: boolean;
     showDeleteButton: boolean;
+    showSearchButton: boolean;
     onSave: (value: T) => void;
     onDelete?: (id: string) => void;
     onCancel?: () => void;
@@ -237,6 +238,7 @@ watch(error, (err) => {
         name="input"
         :show-cancel-button="false"
         :show-delete-button="false"
+        :show-search-button="true"
         :on-save="addManualEntry"
         :on-search="onSearch"
       />

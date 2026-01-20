@@ -23,6 +23,7 @@ defineSlots<{
     aktivzitierung: T;
     showCancelButton: boolean;
     showDeleteButton: boolean;
+    showSearchButton: boolean;
     onSave: (value: T) => void;
     onDelete: (id: string) => void;
     onCancel: () => void;
@@ -59,6 +60,7 @@ const isFromSearch = computed(
       :aktivzitierung="aktivzitierung"
       :show-cancel-button="true"
       :show-delete-button="!isFromSearch"
+      :show-search-button="false"
       :on-save="onSave"
       :on-delete="onDelete"
       :on-cancel="onClickCancel"
