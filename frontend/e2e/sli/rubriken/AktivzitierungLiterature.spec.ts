@@ -47,18 +47,9 @@ test.describe("SLI Rubriken – Aktivzitierung Literatur", () => {
       // when – user transfers values to the list
       await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
-      // creation panel stays open and inputs are cleared after Übernehmen
-      await expect(aktiv.getByRole("textbox", { name: "Hauptsachtitel" })).toHaveValue("");
-      await expect(aktiv.getByRole("textbox", { name: "Veröffentlichungsjahr" })).toHaveValue("");
-
-      const dokumenttypChipList = aktiv
-        .getByTestId("document-type-autocomplete")
-        .locator('[role="listbox"][aria-orientation="horizontal"]');
-
-      await expect(dokumenttypChipList.locator(".p-autocomplete-input-chip")).toHaveCount(0);
-
-      const verfasserGroupAfter = aktiv.getByLabel("Verfasser/in");
-      await expect(verfasserGroupAfter.getByRole("textbox")).toHaveValue("");
+      // creation panel closes
+      await expect(aktiv.getByText("Hauptsachtitel")).not.toBeVisible();
+      await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
 
       // then – entry appears in the Aktivzitierung list
       const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
@@ -508,9 +499,6 @@ test.describe(
       const listItems = aktivList.getByRole("listitem");
       await expect(listItems).toHaveCount(1);
       await expect(listItems.getByText(titleDoc1)).toBeVisible();
-      await expect(
-        aktiv.getByRole("textbox", { name: "Hauptsachtitel / Dokumentarischer Titel" }),
-      ).toBeEmpty();
       await expect(listItems.getByRole("button", { name: "Eintrag löschen" })).toBeVisible();
       await expect(
         listItems.getByRole("button", { name: "Eintrag bearbeiten" }),
@@ -614,11 +602,8 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
       // And: user clicks Übernehmen
       await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
-      // Then: fields are cleared and summary shows data without manual document number
-      await expect(aktiv.getByRole("textbox", { name: "Inkrafttretedatum" })).toHaveValue("");
-      await expect(aktiv.getByRole("textbox", { name: "Aktenzeichen" })).toHaveValue("");
-      await expect(aktiv.getByRole("textbox", { name: "Zitatstelle" })).toHaveValue("");
-      await expect(aktiv.getByRole("textbox", { name: "Dokumentnummer" })).toHaveValue("");
+      // Then: creation panel is closed and summary shows data without manual document number
+      await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
       const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
       await expect(
         aktivList.getByText("Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)", { exact: false }),
@@ -859,10 +844,10 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         // When
         await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
 
-        // Then: entry in list, search fields cleared, not editable, deletable
+        // Then: entry in list, creation panel closed, not editable, deletable
         const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
         await expect(aktivList.getByRole("listitem")).toHaveCount(1);
-        await expect(aktiv.getByRole("textbox", { name: "Dokumentnummer" })).toHaveValue("");
+        await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
         await expect(
           aktivList.getByRole("button", { name: "Eintrag bearbeiten" }),
         ).not.toBeAttached();

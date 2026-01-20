@@ -124,8 +124,7 @@ function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item);
   onAddItem(cleanedItem);
-  isCreationPanelOpened.value = false;
-  showSearchResults.value = false;
+  resetCreationPanel();
 }
 
 async function fetchData(page = 0) {
@@ -174,14 +173,14 @@ function addSearchResult(result: R) {
   const entry: T = entryObj as T;
 
   onAddItem(entry);
-  isCreationPanelOpened.value = true;
+  resetCreationPanel();
+}
+
+function resetCreationPanel() {
+  isCreationPanelOpened.value = false;
   showSearchResults.value = false;
   searchParams.value = undefined;
   citationTypeFromSearch.value = undefined;
-  resetInputForm();
-}
-
-function resetInputForm() {
   creationPanelKey.value++;
 }
 
@@ -243,9 +242,31 @@ watch(error, (err) => {
         :on-save="addManualEntry"
         :on-search="onSearch"
       />
+
+      <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
+        <SearchResults :search-results="searchResults" :is-loading="isFetching">
+          <template #default="{ searchResult }">
+            <slot
+              name="searchResult"
+              :searchResult="searchResult"
+              :isAdded="addedDocumentNumbers.has(searchResult.documentNumber)"
+              :onAdd="addSearchResult"
+            />
+          </template>
+        </SearchResults>
+
+        <RisPaginator
+          v-if="searchResults.length"
+          class="mt-20"
+          :first="firstRowIndex"
+          :rows="ITEMS_PER_PAGE"
+          :total-records="totalRows"
+          :is-loading="isFetching"
+          @page="onPageUpdate"
+        />
+      </div>
     </div>
 
-    <!-- Add button -->
     <Button
       v-else-if="!isEditing"
       class="mt-16"
@@ -257,27 +278,5 @@ watch(error, (err) => {
     >
       <template #icon><IconAdd /></template>
     </Button>
-    <div v-if="showSearchResults" class="bg-blue-200 p-16 mt-16">
-      <SearchResults :search-results="searchResults" :is-loading="isFetching">
-        <template #default="{ searchResult }">
-          <slot
-            name="searchResult"
-            :searchResult="searchResult"
-            :isAdded="addedDocumentNumbers.has(searchResult.documentNumber)"
-            :onAdd="addSearchResult"
-          />
-        </template>
-      </SearchResults>
-
-      <RisPaginator
-        v-if="searchResults.length"
-        class="mt-20"
-        :first="firstRowIndex"
-        :rows="ITEMS_PER_PAGE"
-        :total-records="totalRows"
-        :is-loading="isFetching"
-        @page="onPageUpdate"
-      />
-    </div>
   </div>
 </template>
