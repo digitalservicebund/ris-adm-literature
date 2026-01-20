@@ -124,7 +124,8 @@ function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item);
   onAddItem(cleanedItem);
-  isCreationPanelOpened.value = true;
+  isCreationPanelOpened.value = false;
+  showSearchResults.value = false;
 }
 
 async function fetchData(page = 0) {
