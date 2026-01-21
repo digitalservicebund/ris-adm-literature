@@ -191,6 +191,13 @@ public class DocumentationUnitService {
     DocumentationUnit documentationUnit = documentationUnitPersistenceService
       .findByDocumentNumber(documentNumber)
       .orElseThrow();
+    if (!documentationUnit.isPublished()) {
+      log.info(
+        "Skip re-publishing of documentation unit with document number {}, as this is not published yet.",
+        documentNumber
+      );
+      return;
+    }
     DocumentationUnitContent documentationUnitContent;
     Class<? extends DocumentationUnitContent> documentationUnitContentClass =
       DocumentationUnitContent.getDocumentationUnitContentClass(

@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.passivzitie
 
 import static java.util.stream.Collectors.*;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
@@ -34,6 +35,7 @@ public class UpdatePassivzitierungService {
       SchemaType.REFERENCES,
       () -> passiveReferenceService.findAll(documentCategory)
     );
+    SchemaContextHolder.setSchema(documentCategory.getSchemaType());
     passiveReferences
       .stream()
       .collect(

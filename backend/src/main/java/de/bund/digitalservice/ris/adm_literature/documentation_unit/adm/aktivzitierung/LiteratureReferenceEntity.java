@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 /**
- * Literature reference entity points to a view in the literature database schema.
+ * Literature reference entity points to a view in the literature database schema (literature 'RefView').
+ * <p>
+ *   This entity is only for reading. The ownership for the table has schema 'literature'.
+ * </p>
  */
 @Entity
 @Table(name = "literature_reference_view", schema = "literature")

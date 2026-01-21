@@ -8,11 +8,11 @@ import java.util.UUID;
 /**
  * Documentation unit business object.
  *
- * @param documentNumber The publicly known number of the document
- * @param id The internal (database) id of the document
- * @param json The JSON containing the documentation unit (persisting the frontend's pinia store state),
- *             can be {@code null} for migrated documentation units
- * @param xml The xml, can be {@code null} for new documentation units
+ * @param documentNumber     The publicly known number of the document
+ * @param id                 The internal (database) id of the document
+ * @param json               The JSON containing the documentation unit (persisting the frontend's pinia store state),
+ *                           can be {@code null} for migrated documentation units
+ * @param xml                The xml, can be {@code null} for new documentation units
  * @param administrativeData Administrative data for the documentation unit
  */
 public record DocumentationUnit(
@@ -43,5 +43,14 @@ public record DocumentationUnit(
       null,
       documentationUnit.administrativeData
     );
+  }
+
+  /**
+   * Returns whether this documentation unit is published or not.
+   *
+   * @return {@code true} if this documentation unit is published, {@code false} otherwise
+   */
+  public boolean isPublished() {
+    return xml != null;
   }
 }
