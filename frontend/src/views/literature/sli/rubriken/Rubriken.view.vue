@@ -105,7 +105,7 @@ useScrollToHash();
       >
       <AktivzitierungenRechtsprechung v-model="aktivzitierungRechtsprechung" />
       <AktivzitierungenSli v-model="aktivzitierungSli" />
-      <AktivzitierungenAdm v-model="aktivzitierungAdm" />
+      <AktivzitierungenAdm v-model="aktivzitierungAdm" require-citation-type />
     </section>
   </div>
 </template>
