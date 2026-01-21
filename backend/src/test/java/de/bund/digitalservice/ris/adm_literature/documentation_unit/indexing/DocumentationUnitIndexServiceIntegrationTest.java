@@ -365,7 +365,7 @@ class DocumentationUnitIndexServiceIntegrationTest {
         LiteratureIndex::getDokumenttypenCombined,
         LiteratureIndex::getVerfasserListCombined
       )
-      .containsExactly("Lexikon der Spieltheorie", "2025", "Bib Ebs", null);
+      .containsExactly("Lexikon der Spieltheorie", "2025", "Auf Ebs", null);
   }
 
   @Test

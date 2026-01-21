@@ -73,7 +73,7 @@ class LdmlToUliConverterStrategyIntegrationTest {
       .asInstanceOf(InstanceOfAssertFactories.list(DocumentType.class))
       .extracting(DocumentType::abbreviation, DocumentType::name)
       .containsExactly(
-        Tuple.tuple("Bib", "Bibliographie"),
+        Tuple.tuple("Auf", "Aufsatz"),
         Tuple.tuple("Ebs", "Entscheidungsbesprechung")
       );
   }

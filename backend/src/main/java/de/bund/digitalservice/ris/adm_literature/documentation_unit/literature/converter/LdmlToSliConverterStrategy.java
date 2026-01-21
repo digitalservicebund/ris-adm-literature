@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.converter;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterStrategy;
@@ -36,7 +37,11 @@ public class LdmlToSliConverterStrategy implements LdmlToObjectConverterStrategy
         documentationUnit.id(),
         documentationUnit.documentNumber(),
         converterMethods.mapVeroeffentlichungsJahr(ldmlDocument, xPath),
-        converterMethods.mapDokumenttypen(ldmlDocument, xPath),
+        converterMethods.mapDokumenttypen(
+          ldmlDocument,
+          xPath,
+          DocumentCategory.LITERATUR_SELBSTAENDIG
+        ),
         converterMethods.mapHauptsachtitel(ldmlDocument, xPath),
         converterMethods.mapHauptsachtitelZusatz(ldmlDocument, xPath),
         converterMethods.mapDokumentarischerTitel(ldmlDocument, xPath),
