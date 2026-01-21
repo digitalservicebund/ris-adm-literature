@@ -1,12 +1,14 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.Fundstelle;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestNormgeber;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceRepository;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.court.Court;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
@@ -17,12 +19,14 @@ import de.bund.digitalservice.ris.adm_literature.lookup_tables.zitierart.ZitierA
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -30,6 +34,9 @@ class AdmToLdmlConverterStrategyIntegrationTest {
 
   @Autowired
   private AdmToLdmlConverterStrategy admLdmlConverterStrategy;
+
+  @MockitoBean
+  private LiteratureReferenceRepository literatureReferenceRepository;
 
   @Test
   @DisplayName("Conversion of document with document number results into xml with FRBRalias")
@@ -39,7 +46,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
       TestAdmDocumentationUnitContent.create("KSNR00000011", "Lange Überschrift");
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -63,7 +74,8 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     // when
     String xml = admLdmlConverterStrategy.convertToLdml(
       admDocumentationUnitContent,
-      previousXmlVersion
+      previousXmlVersion,
+      List.of()
     );
 
     // then
@@ -106,7 +118,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -151,7 +167,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -197,7 +217,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -242,7 +266,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -287,7 +315,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -331,7 +363,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -371,7 +407,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -419,7 +459,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -467,7 +511,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -546,7 +594,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -607,7 +659,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -686,7 +742,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -735,7 +795,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     String previousXml = TestFile.readFileToString("adm/ldml-example-historic-data.akn.xml");
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, previousXml);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      previousXml,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -798,7 +862,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -869,7 +937,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then: Assert that all HTML entities were correctly converted or escaped.
     assertThat(xml)
@@ -931,7 +1003,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     String expectedXmlFragment =
@@ -983,7 +1059,11 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     );
 
     // when
-    String xml = admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null);
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      List.of()
+    );
 
     // then
     assertThat(xml).contains(
@@ -997,6 +1077,54 @@ class AdmToLdmlConverterStrategyIntegrationTest {
       <ris:definitionen>
           <ris:definition begriff="Sachgesamtheit"/>
       </ris:definitionen>
+      """.indent(20)
+    );
+  }
+
+  @Test
+  @DisplayName("Conversion of document with document number results into xml with FRBRalias")
+  void convertToLdml_sliPassiveReferences() {
+    // given
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung SLI");
+    List<DocumentReference> referencedByList = List.of(
+      new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
+    );
+    LiteratureReferenceEntity literatureReferenceEntity = new LiteratureReferenceEntity();
+    LiteratureIndex literatureIndex = new LiteratureIndex();
+    literatureIndex.setTitel("Titel");
+    literatureIndex.setVerfasserList(List.of("Verfasser 1", "Verfasser 2"));
+    literatureIndex.setVeroeffentlichungsjahr("2026");
+    literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
+    literatureReferenceEntity.setLiteratureIndex(literatureIndex);
+    given(literatureReferenceRepository.findById("KALS999999999")).willReturn(
+      Optional.of(literatureReferenceEntity)
+    );
+
+    // when
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      referencedByList
+    );
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:implicitReference>
+          <ris:referenz domainTerm="Referenz">
+              <ris:richtung domainTerm="Richtung der Referenzierung">passiv</ris:richtung>
+              <ris:referenzArt domainTerm="Art der Referenz">sli</ris:referenzArt>
+              <ris:dokumentnummer domainTerm="Dokumentnummer">KALS999999999</ris:dokumentnummer>
+              <ris:relativerPfad domainTerm="Pfad zur Referenz">KALS999999999</ris:relativerPfad>
+              <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Bib, Dis</ris:dokumenttypAbkuerzung>
+              <ris:dokumenttyp domainTerm="Dokumenttyp">Bibliographie, Dissertation</ris:dokumenttyp>
+              <ris:titel domainTerm="Titel">Titel</ris:titel>
+              <ris:autor domainTerm="Autor(en)">Verfasser 1, Verfasser 2</ris:autor>
+              <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2026</ris:veroeffentlichungsjahr>
+              <ris:standardzusammenfassung>Verfasser 1, Verfasser 2, Titel, Bib, Dis, 2026</ris:standardzusammenfassung>
+          </ris:referenz>
+      </akn:implicitReference>
       """.indent(20)
     );
   }

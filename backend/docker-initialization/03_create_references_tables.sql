@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS references_schema.document_reference
     adm_document_number        VARCHAR,
     literature_document_number VARCHAR,
     document_category          VARCHAR(255),
-    CONSTRAINT check_exactly_one_fk CHECK (
+    CONSTRAINT check_document_reference_only_one_fk CHECK (
         (CASE WHEN adm_document_number IS NOT NULL THEN 1 ELSE 0 END +
          CASE WHEN literature_document_number IS NOT NULL THEN 1 ELSE 0 END) = 1
         )
@@ -32,9 +32,10 @@ CREATE TABLE IF NOT EXISTS references_schema.active_reference
     CONSTRAINT uc_active_reference UNIQUE (source_id, target_id)
 );
 
-CREATE OR REPLACE VIEW references_schema.adm_passive_reference AS
-select source.id                                   as source_id,
-       source.document_category,
+CREATE OR REPLACE VIEW references_schema.adm_passive_reference_view AS
+select ar.id                                       as active_reference_id,
+       source.id                                   as source_id,
+       source.document_category                    as source_document_category,
        case
            when source.document_category = 'LITERATUR_SELBSTAENDIG' or
                 source.document_category = 'LITERATUR_UNSELBSTAENDIG' then source.literature_document_number
@@ -47,9 +48,10 @@ from active_reference ar
          join document_reference target on ar.target_id = target.id
 where target.document_category = 'VERWALTUNGSVORSCHRIFTEN';
 
-CREATE OR REPLACE VIEW references_schema.sli_passive_reference AS
-select source.id                                   as source_id,
-       source.document_category,
+CREATE OR REPLACE VIEW references_schema.sli_passive_reference_view AS
+select ar.id                                       as active_reference_id,
+       source.id                                   as source_id,
+       source.document_category                    as source_document_category,
        case
            when source.document_category = 'LITERATUR_SELBSTAENDIG' or
                 source.document_category = 'LITERATUR_UNSELBSTAENDIG' then source.literature_document_number
@@ -62,9 +64,10 @@ from active_reference ar
          join document_reference target on ar.target_id = target.id
 where target.document_category = 'LITERATUR_SELBSTAENDIG';
 
-CREATE OR REPLACE VIEW references_schema.uli_passive_reference AS
-select source.id                                   as source_id,
-       source.document_category,
+CREATE OR REPLACE VIEW references_schema.uli_passive_reference_view AS
+select ar.id                                       as active_reference_id,
+       source.id                                   as source_id,
+       source.document_category                    as source_document_category,
        case
            when source.document_category = 'LITERATUR_SELBSTAENDIG' or
                 source.document_category = 'LITERATUR_UNSELBSTAENDIG' then source.literature_document_number

@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 /**
- * Adm reference entity points to a view in the adm database schema.
+ * Adm reference entity points to a view in the adm database schema (adm 'RefView').
+ * <p>
+ *   This entity is only for reading. The ownership for the table has schema 'adm'.
+ * </p>
  */
 @Entity
 @Table(name = "adm_reference_view", schema = "adm")
