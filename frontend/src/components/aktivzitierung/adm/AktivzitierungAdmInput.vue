@@ -14,6 +14,8 @@ import DokumentTypDropDown from "@/components/dropdown/DokumentTypDropDown.vue";
 import { DocumentCategory } from "@/domain/documentType";
 import { Button } from "primevue";
 import { isAktivzitierungEmpty } from "@/utils/validators";
+import { useValidationStore } from "@/composables/useValidationStore";
+import { useCitationTypeRequirement } from "@/components/useCitationaTypeRequirement";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
@@ -112,19 +114,33 @@ function onClickDelete() {
 function onClickSearch() {
   emit("search", aktivzitierungAdmRef.value);
 }
+
+const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement();
+const dateValidationStore = useValidationStore<"inkrafttretedatum">();
+
+function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
+  clear();
+  setCurrentCitationType(selectedCitationType?.abbreviation);
+}
 </script>
 
 <template>
   <div>
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
-        <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
+        <InputField
+          id="activeCitationPredicate"
+          label="Art der Zitierung"
+          v-slot="slotProps"
+          :validation-error="validationStore.getByField('citationType')"
+        >
           <ZitierArtDropDown
             :input-id="slotProps.id"
             v-model="citationType"
-            :invalid="false"
+            :invalid="slotProps.hasError"
             :source-document-category="DocumentCategory.LITERATUR"
             :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+            @update:modelValue="onCitationTypeUpdate($event as ZitierArt | undefined)"
           />
         </InputField>
         <InputField id="normgeber" label="Normgeber" v-slot="slotProps">
@@ -132,15 +148,28 @@ function onClickSearch() {
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <InputField id="inkrafttretedatum" label="Datum des Inkrafttretens" v-slot="slotProps">
+        <InputField
+          id="inkrafttretedatum"
+          label="Datum des Inkrafttretens"
+          v-slot="slotProps"
+          :validation-error="dateValidationStore.getByField('inkrafttretedatum')"
+          @update:validation-error="
+            (validationError) =>
+              validationError
+                ? dateValidationStore.add(validationError.message, 'inkrafttretedatum')
+                : dateValidationStore.remove('inkrafttretedatum')
+          "
+        >
           <DateInput
             :id="slotProps.id"
             v-model="aktivzitierungAdmRef.inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
             is-future-date
-            :has-error="false"
-          ></DateInput>
+            :has-error="slotProps.hasError"
+            @focus="dateValidationStore.remove('inkrafttretedatum')"
+            @update:validation-error="slotProps.updateValidationError"
+          />
         </InputField>
         <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
           <InputText

@@ -17,7 +17,9 @@ import { usePagination } from "@/composables/usePagination";
 import SearchResults from "../SearchResults.vue";
 import { RisPaginator } from "@digitalservicebund/ris-ui/components";
 import errorMessages from "@/i18n/errors.json";
+import { useCitationTypeRequirement } from "@/components/useCitationaTypeRequirement";
 
+const { currentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
 
 /** ------------------------------------------------------------------
@@ -29,6 +31,7 @@ const props = defineProps<{
     itemsPerPage: number,
     searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>;
+  requireCitationType?: boolean;
 }>();
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] });
@@ -155,10 +158,17 @@ function addSearchResult(result: R) {
   const baseEntry: T = result as unknown as T;
 
   const citationTypeValue =
-    citationTypeFromSearch.value ||
+    currentCitationType.value ??
+    citationTypeFromSearch.value ??
     ((searchParams.value as Record<string, unknown> | undefined)?.citationType as
       | string
       | undefined);
+
+  // add this block here
+  if (props.requireCitationType && !citationTypeValue?.trim()) {
+    markMissingAndScroll();
+    return;
+  }
 
   const baseEntryObj = baseEntry as Record<string, unknown>;
 
