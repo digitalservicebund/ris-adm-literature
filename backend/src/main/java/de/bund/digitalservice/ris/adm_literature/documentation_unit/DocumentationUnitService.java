@@ -110,6 +110,7 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
+    // TODO: RISDEV-10816 Read passive references for given document number - NOSONAR
     return publish(documentNumber, documentationUnitContent, List.of());
   }
 
