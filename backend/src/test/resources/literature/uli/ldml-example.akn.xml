@@ -37,7 +37,7 @@
         </akn:FRBRManifestation>
       </akn:identification>
       <akn:classification source="doktyp">
-        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Bib" value="Bib"/>
+        <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Auf" value="Auf"/>
         <akn:keyword dictionary="attributsemantik-noch-undefiniert" showAs="Ebs" value="Ebs"/>
       </akn:classification>
       <akn:classification source="schlagwort">

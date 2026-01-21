@@ -36,8 +36,11 @@ class LdmlToLiteratureConverterMethods {
     return concatenateNodeTextContent(risVeroeffentlichungsjahreNodes);
   }
 
-  List<DocumentType> mapDokumenttypen(LdmlDocument ldmlDocument, XPath xPath)
-    throws XPathExpressionException {
+  List<DocumentType> mapDokumenttypen(
+    LdmlDocument ldmlDocument,
+    XPath xPath,
+    DocumentCategory documentCategory
+  ) throws XPathExpressionException {
     XPathNodes dokumenttypenNodes = xPath.evaluateExpression(
       "/akomaNtoso/doc/meta/classification[@source='doktyp']/keyword/@value",
       ldmlDocument.getDocument(),
@@ -47,7 +50,7 @@ class LdmlToLiteratureConverterMethods {
     for (Node dokumenttypNode : dokumenttypenNodes) {
       String abbreviation = dokumenttypNode.getTextContent();
       documentTypeService
-        .findDocumentTypeByAbbreviation(abbreviation, DocumentCategory.LITERATUR_SELBSTAENDIG)
+        .findDocumentTypeByAbbreviation(abbreviation, documentCategory)
         .ifPresent(documentTypes::add);
     }
     return documentTypes;
