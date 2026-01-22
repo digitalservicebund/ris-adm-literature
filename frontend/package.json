@@ -16,7 +16,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "lint": "oxlint --fix",
-    "lint:check": "oxlint",
+    "lint:check": "oxlint --max-warnings=0",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "audit:licences": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow \"$(. ./joinAllowedLicenses.sh)\" --csv --out ./frontend-licence-report.csv",
