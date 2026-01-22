@@ -113,7 +113,7 @@ describe("active citations", () => {
     renderComponent();
     expect((await screen.findAllByLabelText("Listen Eintrag")).length).toBe(1);
     expect(screen.getByLabelText("Art der Zitierung")).toBeVisible();
-    expect(screen.getByLabelText("Gericht Aktivzitierung")).toBeVisible();
+    expect(screen.getByLabelText("Gericht")).toBeVisible();
     expect(screen.getByLabelText("Entscheidungsdatum Aktivzitierung")).toBeVisible();
     expect(screen.getByLabelText("Aktenzeichen Aktivzitierung")).toBeInTheDocument();
     expect(screen.getByLabelText("Dokumenttyp Aktivzitierung")).toBeInTheDocument();
@@ -305,7 +305,7 @@ describe("active citations", () => {
     await user.click(itemHeader);
 
     const fileNumberInput = await screen.findByLabelText("Aktenzeichen Aktivzitierung");
-    const courtInput = await screen.findByLabelText("Gericht Aktivzitierung");
+    const courtInput = await screen.findByLabelText("Gericht");
 
     await user.clear(fileNumberInput);
     await user.clear(courtInput);

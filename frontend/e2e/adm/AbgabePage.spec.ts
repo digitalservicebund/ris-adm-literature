@@ -213,7 +213,7 @@ test.describe("ADM AbgabePage", () => {
     // aktivzitierung rechtsprechung
     await page.getByText("Art der Zitierung *").click();
     await page.getByText("Ablehnung").click();
-    await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+    await page.getByRole("combobox", { name: "Gericht" }).click();
     await page.getByText("AG Aachen").click();
     await page.getByText("Entscheidungsdatum *").fill("15.01.2025");
     await page.getByText("Aktenzeichen *").fill("Az1");

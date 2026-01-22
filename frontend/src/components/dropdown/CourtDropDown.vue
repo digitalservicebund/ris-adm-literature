@@ -43,12 +43,12 @@ onMounted(async () => {
     :input-id="inputId"
     :invalid="invalid"
     :initial-label="modelValue && `${modelValue.type} ${modelValue.location}`"
-    aria-label="Gericht Aktivzitierung"
+    aria-label="Gericht"
     append-to="self"
     typeahead
     dropdown
     complete-on-focus
-    :auto-option-focus="!selectedCourtId"
+    force-selection
     @update:model-value="onModelValueChange"
     @complete="onComplete"
   />

@@ -25,7 +25,7 @@ test.describe("RubrikenPage - Aktivzitierung - Mocked routes", () => {
     await page.getByTestId("list-entry-0").click();
     await expect(page.getByText("Pflichtfeld nicht befüllt")).toHaveCount(3);
     await expect(page.getByText("Gericht *")).toBeVisible();
-    await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+    await page.getByRole("combobox", { name: "Gericht" }).click();
     await page.getByText("AG Aachen").click();
     await page.getByRole("button", { name: "Aktivzitierung speichern" }).click();
     await expect(page.getByText("Übernahme, AG Aachen")).toBeVisible();
@@ -92,7 +92,7 @@ test.describe("RubrikenPage - Aktivzitierung - Mocked routes", () => {
       await page.getByRole("combobox", { name: "Art der Zitierung" }).click();
       await page.getByText("Ablehnung").click();
       await expect(page.getByText("Gericht *")).toBeVisible();
-      await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+      await page.getByRole("combobox", { name: "Gericht" }).click();
       await page.getByText("AG Aachen").click();
       await page.getByRole("textbox", { name: "Entscheidungsdatum" }).fill("15.01.2025");
       await page.getByRole("textbox", { name: "Aktenzeichen Aktivzitierung" }).fill("Az1");
@@ -102,7 +102,7 @@ test.describe("RubrikenPage - Aktivzitierung - Mocked routes", () => {
 
       await page.getByRole("combobox", { name: "Art der Zitierung" }).click();
       await page.getByText("Übernahme").click();
-      await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+      await page.getByRole("combobox", { name: "Gericht" }).click();
       await page.getByText("Berufsgericht für Architekten Bremen").click();
       await page.getByRole("textbox", { name: "Entscheidungsdatum" }).fill("31.12.2024");
       await page.getByRole("textbox", { name: "Aktenzeichen Aktivzitierung" }).fill("Az2");
@@ -200,7 +200,7 @@ test.describe("RubrikenPage - Aktivzitierung - Mocked routes", () => {
       await page.getByRole("combobox", { name: "Art der Zitierung" }).click();
       await page.getByText("Ablehnung").click();
       await expect(page.getByText("Gericht *")).toBeVisible();
-      await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+      await page.getByRole("combobox", { name: "Gericht" }).click();
       await page.getByText("AG Aachen").click();
       await page.getByRole("button", { name: "Aktivzitierung speichern" }).click();
       await expect(page.getByText("Ablehnung, AG Aachen")).toBeVisible();
@@ -228,7 +228,7 @@ test.describe("RubrikenPage - Aktivzitierung", () => {
       await page.getByRole("combobox", { name: "Art der Zitierung" }).fill("Abgr");
       await page.getByText("Abgrenzung").click();
       await expect(page.getByText("Gericht *")).toBeVisible();
-      await page.getByRole("combobox", { name: "Gericht Aktivzitierung" }).click();
+      await page.getByRole("combobox", { name: "Gericht" }).click();
       await page.getByText("AG Aachen").click();
       await page.getByRole("textbox", { name: "Entscheidungsdatum" }).fill("15.01.2025");
       await page.getByRole("textbox", { name: "Aktenzeichen Aktivzitierung" }).fill("Az1");
