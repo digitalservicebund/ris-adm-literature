@@ -14,6 +14,8 @@ import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
 import AktivzitierungenAdm from "./components/AktivzitierungenAdm.vue";
 import AktivzitierungenSli from "./components/AktivzitierungenSli.vue";
+import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
+import AktivzitierungenRechtsprechung from "./components/AktivzitierungenRechtsprechung.vue";
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>();
 const {
@@ -35,6 +37,13 @@ const aktivzitierungSli = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungSli[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue;
+  },
+});
+
+const aktivzitierungRechtsprechung = computed({
+  get: () => store.documentUnit!.aktivzitierungenRechtsprechung ?? [],
+  set: (newValue: AktivzitierungRechtsprechung[]) => {
+    store.documentUnit!.aktivzitierungenRechtsprechung = newValue;
   },
 });
 
@@ -96,6 +105,7 @@ useScrollToHash();
       >
       <AktivzitierungenSli v-model="aktivzitierungSli" />
       <AktivzitierungenAdm v-model="aktivzitierungAdm" />
+      <AktivzitierungenRechtsprechung v-model="aktivzitierungRechtsprechung" />
     </section>
   </div>
 </template>

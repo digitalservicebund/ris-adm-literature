@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RisAutoComplete } from "@digitalservicebund/ris-ui/components";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useAutoComplete, useCourtSearch } from "@/composables/useAutoComplete";
 import type { Court } from "@/domain/court.ts";
 import { useFetchCourts } from "@/services/courtService.ts";
@@ -33,6 +33,13 @@ onMounted(async () => {
   const { data } = await useFetchCourts();
   courts.value = data.value?.courts || [];
 });
+
+const initialLabel = computed(() => {
+  const item = modelValue.value;
+  if (!item?.type) return "";
+
+  return [item.type, item.location].filter(Boolean).join(" ");
+});
 </script>
 
 <template>
@@ -42,7 +49,7 @@ onMounted(async () => {
     :suggestions="suggestions"
     :input-id="inputId"
     :invalid="invalid"
-    :initial-label="modelValue && `${modelValue.type} ${modelValue.location}`"
+    :initial-label="initialLabel"
     aria-label="Gericht"
     append-to="self"
     typeahead
