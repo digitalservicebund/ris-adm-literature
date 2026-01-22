@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter;
 
+import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
@@ -514,7 +515,9 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                     new RisDomainTerm("Dokumenttyp, abgekürzt", dokumenttypAbkuerzungen)
                   );
                   final Map<String, String> documentTypeNames =
-                    documentTypeService.getDocumentTypeNames();
+                    documentTypeService.getDocumentTypeNames(
+                      DocumentCategory.LITERATUR_SELBSTAENDIG
+                    );
                   String dokumenttyp = literatureIndex
                     .getDokumenttypen()
                     .stream()
@@ -523,7 +526,7 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                   risReferenz.setDokumenttyp(new RisDomainTerm("Dokumenttyp", dokumenttyp));
                   String titel = literatureIndex.getTitel();
                   risReferenz.setTitel(new RisDomainTerm("Titel", titel));
-                  String verfasser = String.join(", ", literatureIndex.getVerfasserList());
+                  String verfasser = StringUtils.join(literatureIndex.getVerfasserList(), ", ");
                   risReferenz.setAutor(new RisDomainTerm("Autor(en)", verfasser));
                   risReferenz.setVeroeffentlichungsjahr(
                     new RisDomainTerm(
