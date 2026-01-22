@@ -17,7 +17,7 @@ import { usePagination } from "@/composables/usePagination";
 import SearchResults from "../SearchResults.vue";
 import { RisPaginator } from "@digitalservicebund/ris-ui/components";
 import errorMessages from "@/i18n/errors.json";
-import { useCitationTypeRequirement } from "@/components/useCitationaTypeRequirement";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 const { currentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
@@ -90,8 +90,16 @@ const creationPanelKey = ref(0);
 /** ------------------------------------------------------------------
  * Computed
  * ------------------------------------------------------------------ */
-const addedDocumentNumbers = computed(() => {
-  return new Set(aktivzitierungList.value.map((entry) => entry.documentNumber).filter(Boolean));
+ const addedEntries = computed(() => {
+  return new Set(
+    aktivzitierungList.value
+      .map((entry) => {
+        const docNum = entry.documentNumber;
+        const citationType = (entry as Record<string, unknown>).citationType as string | undefined;
+        return docNum && citationType ? `${docNum}|${citationType.trim()}` : null;
+      })
+      .filter(Boolean)
+  );
 });
 
 const isEditing = computed(() => editingItemId.value !== null);
@@ -127,6 +135,7 @@ function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item);
   onAddItem(cleanedItem);
+  isCreationPanelOpened.value = true;
   resetCreationPanel();
 }
 
@@ -153,8 +162,6 @@ function onSearch(params: SP) {
 }
 
 function addSearchResult(result: R) {
-  if (addedDocumentNumbers.value.has(result.documentNumber)) return;
-
   const baseEntry: T = result as unknown as T;
 
   const citationTypeValue =
@@ -164,9 +171,17 @@ function addSearchResult(result: R) {
       | string
       | undefined);
 
-  // add this block here
   if (props.requireCitationType && !citationTypeValue?.trim()) {
     markMissingAndScroll();
+    return;
+  }
+
+  // Check if this exact combination (documentNumber + citationType) already exists
+  const entryKey = result.documentNumber && citationTypeValue?.trim()
+    ? `${result.documentNumber}|${citationTypeValue.trim()}`
+    : null;
+
+  if (entryKey && addedEntries.value.has(entryKey)) {
     return;
   }
 
@@ -192,6 +207,12 @@ function resetCreationPanel() {
   searchParams.value = undefined;
   citationTypeFromSearch.value = undefined;
   creationPanelKey.value++;
+}
+
+function isSearchResultAdded(searchResult: R): boolean {
+  if (!searchResult.documentNumber || !currentCitationType.value) return false;
+  const key = `${searchResult.documentNumber}|${currentCitationType.value.trim()}`;
+  return addedEntries.value.has(key);
 }
 
 /** ------------------------------------------------------------------
