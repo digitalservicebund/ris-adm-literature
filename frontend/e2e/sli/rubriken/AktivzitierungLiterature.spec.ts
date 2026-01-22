@@ -830,12 +830,18 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
       });
 
-      test("ADM search result can be added, clears search, cannot be edited, can be deleted, persists", async ({
+      test("ADM search result can be added with citation type, clears search, cannot be edited, can be deleted, persists", async ({
         page,
       }) => {
         const aktiv = getAdmAktivzitierungSection(page);
 
-        // Given
+        // Given: user selects a citation type
+        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+        const options = page.getByRole("listbox", { name: "Optionsliste" });
+        await expect(options).toBeVisible();
+        await options.getByRole("option", { name: "Vergleiche" }).click();
+
+        // Then: user searches for a document
         await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
         await aktiv.getByRole("button", { name: "Suchen" }).click();
         const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
@@ -853,7 +859,9 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         ).not.toBeAttached();
         await expect(aktivList.getByRole("button", { name: "Eintrag löschen" })).toBeVisible();
         // Verify summary shows document number and title
+        await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
         await expect(aktivList.getByText("KSNR000000001")).toBeVisible();
+
         // When: save + reload
         await page.getByRole("button", { name: "Speichern" }).click();
         await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
@@ -864,6 +872,7 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
           name: "Aktivzitierung Liste",
         });
         await expect(aktivListAfterReload.getByRole("listitem")).toHaveCount(1);
+        await expect(aktivListAfterReload.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
         await expect(aktivListAfterReload.getByText("KSNR000000001")).toBeVisible();
 
         // When: delete + save + reload
@@ -879,31 +888,71 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         ).toHaveCount(0);
       });
 
-      test("ADM search result with citation type shows citation type first in summary", async ({
+      test("ADM search result cannot be added without citation type, shows validation error", async ({
         page,
       }) => {
         const aktiv = getAdmAktivzitierungSection(page);
 
-        // Given: user selects a citation type
-        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
-        const options = page.getByRole("listbox", { name: "Optionsliste" });
-        await expect(options).toBeVisible();
-        await expect(options.getByRole("option", { name: "Ablehnung" })).toBeVisible();
-        await options.getByRole("option", { name: "Ablehnung" }).click();
-
-        // When: search for seeded document and add result
+        // Given: search without selecting citation type
         await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
         await aktiv.getByRole("button", { name: "Suchen" }).click();
         const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
         await expect(results.getByText("KSNR000000001")).toBeVisible();
+
+        // When: try to add without citation type
         await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
 
-        // Then: summary shows citation type (full name) first, followed by document number and title
+        // Then: validation error appears, no entry added
+        const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+        await expect(citationTypeField).toBeInViewport();
+        await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+        await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+        // When: user selects citation type
+        await citationTypeField.click();
+        await page.getByRole("option", { name: "Vergleiche" }).click();
+
+        // Then: error clears
+        await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+        // When: click add again
+        await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+        // Then: entry is added
+        await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+      });
+
+      test("ADM allows adding same document with different citation types", async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page);
+
+        // Given: add document with citation type "Ablehnung"
+        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+        await page.getByRole("option", { name: "Ablehnung" }).click();
+        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+        await aktiv.getByRole("button", { name: "Suchen" }).click();
+        await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+        // Then: first entry added
         const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
         await expect(aktivList.getByRole("listitem")).toHaveCount(1);
-        // Verify citation type appears first in summary (full name "Ablehnung", not abbreviation)
-        await expect(aktivList.getByText(/Ablehnung.*KSNR000000001/)).toBeVisible();
-        await expect(aktivList.getByText("KSNR000000001")).toBeVisible();
+
+        // When: search again, change citation type to "Vergleiche", add again
+        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+        await aktiv.getByRole("button", { name: "Suchen" }).click();
+        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+        await page.getByRole("option", { name: "Vergleiche" }).click();
+        await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+        // Then: second entry added (different citation type)
+        await expect(aktivList.getByRole("listitem")).toHaveCount(2);
+
+        // When: try to add same document + same citation type again
+        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+        await aktiv.getByRole("button", { name: "Suchen" }).click();
+        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+        await expect(results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first()).toBeDisabled();
+        await expect(results.getByText("Bereits hinzugefügt")).toBeVisible();
       });
     },
   );

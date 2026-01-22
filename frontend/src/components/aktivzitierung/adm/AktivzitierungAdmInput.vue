@@ -15,7 +15,7 @@ import { DocumentCategory } from "@/domain/documentType";
 import { Button } from "primevue";
 import { isAktivzitierungEmpty } from "@/utils/validators";
 import { useValidationStore } from "@/composables/useValidationStore";
-import { useCitationTypeRequirement } from "@/components/useCitationaTypeRequirement";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
