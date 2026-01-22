@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,13 +34,14 @@ public class DocumentTypeService {
    * Retrieves a map of document type abbreviations to their corresponding names
    * for the specified document category.
    *
+   * @param documentCategory The document category to filter for
    * @return A map where keys represent document type abbreviations and values
    *         represent the corresponding document type names.
    */
   @Transactional(readOnly = true)
-  public Map<String, String> getDocumentTypeNames() {
+  public Map<String, String> getDocumentTypeNames(@NonNull DocumentCategory documentCategory) {
     return documentTypeRepository
-      .findAllByDocumentCategory(DocumentCategory.LITERATUR_SELBSTAENDIG)
+      .findAllByDocumentCategory(documentCategory)
       .stream()
       .collect(
         Collectors.toMap(
