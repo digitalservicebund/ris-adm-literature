@@ -94,9 +94,25 @@ watch(
 
 const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value));
 
+const hasValidationErrors = computed(() => {
+  const citationTypeError = validationStore.getByField("citationType");
+  const dateError = dateValidationStore.getByField("inkrafttretedatum");
+  
+  return !!citationTypeError || !!dateError;
+});
+
+const isInvalid = computed(() => isEmpty.value || hasValidationErrors.value);
+
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
+  if (!aktivzitierungAdmRef.value.citationType?.trim()) {
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+    const citationTypeField = document.getElementById("activeCitationPredicate");
+    citationTypeField?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
     aktivzitierungAdmRef.value = createInitial();
@@ -229,7 +245,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
         label="Übernehmen"
         severity="secondary"
         size="small"
-        :disabled="isEmpty"
+        :disabled="isInvalid"
         @click.stop="onClickSave"
       />
       <Button

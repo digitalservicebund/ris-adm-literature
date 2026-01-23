@@ -4,7 +4,6 @@ import { useValidationStore } from "@/composables/useValidationStore";
 
 const validationStore = useValidationStore<"citationType">();
 
-// this golds the latest citation type
 const currentCitationType = ref<string | undefined>();
 
 function setCurrentCitationType(value: string | undefined) {
@@ -12,7 +11,7 @@ function setCurrentCitationType(value: string | undefined) {
 }
 
 function markMissingAndScroll() {
-  validationStore.add("Pflichtfeld nicht befüllt", "citationType"); //wording? got this from gogle translate
+  validationStore.add("Pflichtfeld nicht befüllt", "citationType");
 
   const citationTypeInputField = document.getElementById("activeCitationPredicate");
   citationTypeInputField?.scrollIntoView({ behavior: "smooth", block: "center" });
