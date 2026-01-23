@@ -8,7 +8,7 @@ plugins {
   id("jacoco")
   id("org.sonarqube") version "7.2.2.6593"
   id("com.github.jk1.dependency-license-report") version "3.0.1"
-  id("com.diffplug.spotless") version "8.1.0"
+  id("com.diffplug.spotless") version "8.2.0"
   id("checkstyle")
   id("io.freefair.lombok") version "9.2.0"
 }
