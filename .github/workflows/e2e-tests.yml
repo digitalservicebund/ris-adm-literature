@@ -79,7 +79,7 @@ jobs:
 
       - name: Get Playwright version
         working-directory: ./frontend
-        run: echo "PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/@playwright/test"].version' package-lock.json)" >> $GITHUB_ENV
+        run: echo "PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | awk '{print $NF}')" >> $GITHUB_ENV
 
       - name: Cache browser binaries
         id: cache-browser-binaries
