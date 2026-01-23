@@ -689,48 +689,48 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
     page,
   }) => {
     const aktiv = getAdmAktivzitierungSection(page);
-  
+
     // Given: user fills some fields but NOT citation type
     const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
     await aktenzeichenInput.fill("AZ-123");
-  
+
     // When: click Übernehmen
     await aktiv.getByRole("button", { name: "Übernehmen" }).click();
-  
+
     // Then: validation error appears, no entry added
     const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
     await expect(citationTypeField).toBeInViewport();
     await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
     const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
     await expect(aktivList.getByRole("listitem")).toHaveCount(0);
-  
+
     // When: user selects citation type
     await citationTypeField.click();
     await page.getByRole("option", { name: "Vergleiche" }).click();
-  
+
     // Then: error clears, Übernehmen enabled
     await expect(aktiv.getByText("Pflichtfeld nicht befügen")).not.toBeVisible();
     const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
     await expect(saveButton).toBeEnabled();
-  
+
     // When: click Übernehmen again
     await saveButton.click();
-  
+
     // Then: entry is added
     await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
-  
+
   test("ADM 'Übernehmen' is disabled when date has validation error", async ({ page }) => {
     const aktiv = getAdmAktivzitierungSection(page);
-  
+
     // Given: user selects citation type and fills invalid date
     await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
     await page.getByRole("option", { name: "Vergleiche" }).click();
-    
+
     const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
     await dateInput.fill("00.00.00");
     await dateInput.blur(); // trigger validation
-  
+
     // Then: Übernehmen should be disabled
     const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
     await expect(saveButton).toBeDisabled();
@@ -1018,13 +1018,15 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
         await aktiv.getByRole("button", { name: "Suchen" }).click();
         const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first()).toBeDisabled();
+        await expect(
+          results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first(),
+        ).toBeDisabled();
         await expect(results.getByText("Bereits hinzugefügt")).toBeVisible();
       });
 
       test("ADM uses latest citation type when changed after search", async ({ page }) => {
         const aktiv = getAdmAktivzitierungSection(page);
-      
+
         // Given: select "Ablehnung", search
         const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
         await citationTypeInput.click();
@@ -1037,7 +1039,7 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         await aktiv.getByRole("button", { name: "Suchen" }).click();
         const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
         await expect(results.getByText("KSNR000000001")).toBeVisible();
-      
+
         // When: clear citation type, then select "Vergleiche" (without re-searching)
         await citationTypeInput.clear();
         await citationTypeInput.fill("Ve");
@@ -1045,10 +1047,10 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         const vergleicheOption = options.getByRole("option", { name: "Vergleiche" });
         await expect(vergleicheOption).toBeVisible();
         await vergleicheOption.click();
-      
+
         // Then: click add
         await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
-      
+
         // Then: entry has "Vergleiche" (not "Ablehnung")
         const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
         await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
