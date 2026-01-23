@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,8 +31,8 @@ class PassiveReferenceServiceTest {
     // given
     given(admPassiveReferenceRepository.findAll()).willReturn(
       List.of(
-        createAdmPassiveReference("KSLS20260000001", "KSNR20260000001"),
-        createAdmPassiveReference("KSLS20260000001", "KSNR20260000002")
+        createAdmPassiveReference("KSNR20260000001", "KSLS20260000001"),
+        createAdmPassiveReference("KSNR20260000001", "KSLS20260000002")
       )
     );
 
@@ -44,22 +46,66 @@ class PassiveReferenceServiceTest {
       .hasSize(2)
       .extracting(pr -> pr.target().documentNumber(), pr -> pr.referencedBy().documentNumber())
       .containsExactly(
-        Tuple.tuple("KSLS20260000001", "KSNR20260000001"),
-        Tuple.tuple("KSLS20260000001", "KSNR20260000002")
+        Tuple.tuple("KSNR20260000001", "KSLS20260000001"),
+        Tuple.tuple("KSNR20260000001", "KSLS20260000002")
       );
   }
 
-  @Test
-  void findAll_sli() {
+  @ParameterizedTest
+  @EnumSource(
+    value = DocumentCategory.class,
+    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
+  )
+  void findAll_unsupported(DocumentCategory documentCategory) {
     // given
 
     // when
-    List<PassiveReference> passiveReferences = passiveReferenceService.findAll(
-      DocumentCategory.LITERATUR_SELBSTAENDIG
-    );
+    List<PassiveReference> passiveReferences = passiveReferenceService.findAll(documentCategory);
 
     // then
     assertThat(passiveReferences).isEmpty();
+  }
+
+  @Test
+  void findByDocumentNumber() {
+    // given
+    given(admPassiveReferenceRepository.findByTargetDocumentNumber("KSNR20260000333")).willReturn(
+      List.of(
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000001"),
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000002"),
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000003")
+      )
+    );
+
+    // when
+    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
+      "KSNR20260000333",
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
+
+    // then
+    assertThat(referencedBy)
+      .hasSize(3)
+      .extracting(DocumentReference::documentNumber)
+      .containsExactly("KSLS20260000001", "KSLS20260000002", "KSLS20260000003");
+  }
+
+  @ParameterizedTest
+  @EnumSource(
+    value = DocumentCategory.class,
+    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
+  )
+  void findByDocumentNumber_unsupported(DocumentCategory documentCategory) {
+    // given
+
+    // when
+    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
+      "documentNumber",
+      documentCategory
+    );
+
+    // then
+    assertThat(referencedBy).isEmpty();
   }
 
   private AdmPassiveReferenceEntity createAdmPassiveReference(String target, String source) {
