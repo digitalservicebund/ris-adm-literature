@@ -2,6 +2,7 @@ import type { DocumentType } from "@/domain/documentType";
 import type { AktivzitierungSli } from "../AktivzitierungSli.ts";
 import type { Page } from "@/domain/pagination";
 import type { AktivzitierungAdm } from "../AktivzitierungAdm.ts";
+import type { AktivzitierungRechtsprechung } from "../AktivzitierungRechtsprechung.ts";
 
 export interface SliDocumentationUnit {
   readonly id: string;
@@ -14,6 +15,7 @@ export interface SliDocumentationUnit {
   note: string;
   aktivzitierungenSli?: AktivzitierungSli[];
   aktivzitierungenAdm?: AktivzitierungAdm[];
+  aktivzitierungenRechtsprechung?: AktivzitierungRechtsprechung[];
 }
 
 export interface SliDocumentUnitResponse {

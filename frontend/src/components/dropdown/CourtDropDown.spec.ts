@@ -91,20 +91,23 @@ describe("CourtDropdown", () => {
     expect(events[events.length - 1]![0]).toEqual(undefined);
   });
 
-  it("shows type and location as initial label", () => {
-    render(CourtDropDown, {
-      props: {
-        inputId: "foo",
-        invalid: false,
-        modelValue: {
-          id: "2",
-          type: "AG",
-          location: "Aachen",
+  describe("CourtDropdown - initialLabel logic", () => {
+    it.each([
+      [{ id: "1", type: "AG", location: "Aachen" }, "AG Aachen"],
+      [{ id: "2", type: "BGH", location: "" }, "BGH"],
+      [{ id: "3", type: "", location: "Aachen" }, ""],
+      [undefined, ""],
+    ])("should show initial value %s for modelValue %j", (modelValue, expected) => {
+      render(CourtDropDown, {
+        props: {
+          inputId: "foo",
+          invalid: false,
+          modelValue: modelValue as Court | undefined,
         },
-      },
-    });
+      });
 
-    const input = screen.getByRole("combobox", { name: "Gericht" });
-    expect(input).toHaveValue("AG Aachen");
+      const input = screen.getByRole("combobox", { name: "Gericht" });
+      expect(input).toHaveValue(expected);
+    });
   });
 });
