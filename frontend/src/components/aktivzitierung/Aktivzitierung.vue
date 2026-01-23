@@ -95,8 +95,16 @@ const creationPanelKey = ref(0);
     aktivzitierungList.value
       .map((entry) => {
         const docNum = entry.documentNumber;
-        const citationType = (entry as Record<string, unknown>).citationType as string | undefined;
-        return docNum && citationType ? `${docNum}|${citationType.trim()}` : null;
+        if (!docNum) return null;
+        
+        if (props.requireCitationType) {
+          const citationType = (entry as Record<string, unknown>).citationType as string | undefined;
+          return citationType?.trim() 
+            ? `${docNum}|${citationType.trim()}` 
+            : docNum; // Fallback to documentNumber if citationType missing
+        }
+        
+        return docNum;
       })
       .filter(Boolean)
   );
@@ -135,7 +143,6 @@ function addManualEntry(item: T) {
   // Remove documentNumber from manual entries (only search results should have it)
   const cleanedItem = removeDocumentNumber(item);
   onAddItem(cleanedItem);
-  isCreationPanelOpened.value = true;
   resetCreationPanel();
 }
 
@@ -176,10 +183,19 @@ function addSearchResult(result: R) {
     return;
   }
 
-  // Check if this exact combination (documentNumber + citationType) already exists
-  const entryKey = result.documentNumber && citationTypeValue?.trim()
-    ? `${result.documentNumber}|${citationTypeValue.trim()}`
-    : null;
+  // Check if this exact combination already exists
+  // If requireCitationType is true: use documentNumber|citationType (allows same doc with different types)
+  // Otherwise: use just documentNumber (blocks all duplicates)
+  let entryKey: string | null = null;
+  if (result.documentNumber) {
+    if (props.requireCitationType && citationTypeValue?.trim()) {
+      // ADM section: allow same document with different citation types
+      entryKey = `${result.documentNumber}|${citationTypeValue.trim()}`;
+    } else {
+      // SLI section or no citation type: block all duplicates
+      entryKey = result.documentNumber;
+    }
+  }
 
   if (entryKey && addedEntries.value.has(entryKey)) {
     return;
@@ -210,9 +226,21 @@ function resetCreationPanel() {
 }
 
 function isSearchResultAdded(searchResult: R): boolean {
-  if (!searchResult.documentNumber || !currentCitationType.value) return false;
-  const key = `${searchResult.documentNumber}|${currentCitationType.value.trim()}`;
-  return addedEntries.value.has(key);
+  if (!searchResult.documentNumber) return false;
+  
+  // If requireCitationType is true, check with citation type
+  if (props.requireCitationType) {
+    if (currentCitationType.value?.trim()) {
+      const key = `${searchResult.documentNumber}|${currentCitationType.value.trim()}`;
+      return addedEntries.value.has(key);
+    }
+    // If requireCitationType is true but no citation type selected yet,
+    // check by documentNumber only (will be blocked when trying to add)
+    return addedEntries.value.has(searchResult.documentNumber);
+  }
+  
+  // Otherwise, check by documentNumber only (blocks all duplicates)
+  return addedEntries.value.has(searchResult.documentNumber);
 }
 
 /** ------------------------------------------------------------------
@@ -276,7 +304,7 @@ watch(error, (err) => {
             <slot
               name="searchResult"
               :searchResult="searchResult"
-              :isAdded="addedDocumentNumbers.has(searchResult.documentNumber)"
+              :isAdded="isSearchResultAdded(searchResult)"
               :onAdd="addSearchResult"
             />
           </template>

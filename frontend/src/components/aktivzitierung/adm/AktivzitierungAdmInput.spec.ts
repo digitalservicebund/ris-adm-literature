@@ -56,6 +56,10 @@ describe("AktivzitierungInput", () => {
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
 
+    // Set citation type first (required for save)
+    const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+    await user.type(citationTypeInput, "Vergleiche");
+
     const input = screen.getByRole("textbox", { name: "Dokumentnummer" });
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
 
@@ -88,6 +92,12 @@ describe("AktivzitierungInput", () => {
       const user = userEvent.setup();
       const { emitted } = renderComponent({ aktivzitierung: { id: "123" } });
 
+      // Set citation type first if it's not the field being tested (required for save)
+      if (expectedKey !== "citationType") {
+        const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+        await user.type(citationTypeInput, "Vergleiche");
+      }
+
       const input = screen.getByRole("textbox", { name: label });
       await user.type(input, inputValue);
 
@@ -105,6 +115,10 @@ describe("AktivzitierungInput", () => {
     vi.stubGlobal("crypto", { randomUUID: () => "new-uuid" });
 
     const { emitted } = renderComponent({ aktivzitierung: undefined });
+
+    // Set citation type first (required for save)
+    const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+    await user.type(citationTypeInput, "Vergleiche");
 
     const input = screen.getByRole("textbox", { name: "Aktenzeichen" });
     await user.type(input, "TEST-AZ");
