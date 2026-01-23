@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,14 +51,16 @@ class PassiveReferenceServiceTest {
       );
   }
 
-  @Test
-  void findAll_sli() {
+  @ParameterizedTest
+  @EnumSource(
+    value = DocumentCategory.class,
+    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
+  )
+  void findAll_unsupported(DocumentCategory documentCategory) {
     // given
 
     // when
-    List<PassiveReference> passiveReferences = passiveReferenceService.findAll(
-      DocumentCategory.LITERATUR_SELBSTAENDIG
-    );
+    List<PassiveReference> passiveReferences = passiveReferenceService.findAll(documentCategory);
 
     // then
     assertThat(passiveReferences).isEmpty();
@@ -84,6 +88,24 @@ class PassiveReferenceServiceTest {
       .hasSize(3)
       .extracting(DocumentReference::documentNumber)
       .containsExactly("KSLS20260000001", "KSLS20260000002", "KSLS20260000003");
+  }
+
+  @ParameterizedTest
+  @EnumSource(
+    value = DocumentCategory.class,
+    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
+  )
+  void findByDocumentNumber_unsupported(DocumentCategory documentCategory) {
+    // given
+
+    // when
+    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
+      "documentNumber",
+      documentCategory
+    );
+
+    // then
+    assertThat(referencedBy).isEmpty();
   }
 
   private AdmPassiveReferenceEntity createAdmPassiveReference(String target, String source) {
