@@ -19,6 +19,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.U
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.PassiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
 import java.util.List;
 import java.util.Optional;
@@ -50,11 +51,14 @@ class DocumentationUnitServiceTest {
   @Mock
   private ObjectToLdmlConverterService objectToLdmlConverterService;
 
-  @Mock
+  @Spy
   private SchemaExecutor schemaExecutor;
 
   @Mock
   private ActiveReferenceService activeReferenceService;
+
+  @Mock
+  private PassiveReferenceService passiveReferenceService;
 
   @Spy
   private ObjectMapper objectMapper;
@@ -247,6 +251,12 @@ class DocumentationUnitServiceTest {
   @Test
   void publish_shouldUseBsgPublisher_whenCategoryIsVerwaltungsvorschriften() {
     // given
+    given(
+      passiveReferenceService.findByDocumentNumber(
+        "KSNR1234567890",
+        DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+      )
+    ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KSNR1234567890",
       UUID.randomUUID(),
@@ -299,6 +309,12 @@ class DocumentationUnitServiceTest {
   @Test
   void publish_shouldUseLiteraturePublisher_whenCategoryIsUli() {
     // given
+    given(
+      passiveReferenceService.findByDocumentNumber(
+        "KALU123456789",
+        DocumentCategory.LITERATUR_UNSELBSTAENDIG
+      )
+    ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KALU123456789",
       UUID.randomUUID(),
@@ -351,6 +367,12 @@ class DocumentationUnitServiceTest {
   @Test
   void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() {
     // given
+    given(
+      passiveReferenceService.findByDocumentNumber(
+        "KVLS123456789",
+        DocumentCategory.LITERATUR_SELBSTAENDIG
+      )
+    ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(
       "KVLS123456789",
       UUID.randomUUID(),
@@ -359,7 +381,7 @@ class DocumentationUnitServiceTest {
       new AdministrativeData(DocumentCategory.VERWALTUNGSVORSCHRIFTEN, null)
     );
     DocumentationUnit publishedUnit = new DocumentationUnit(
-      "KSNR1234567890",
+      "KVLS123456789",
       UUID.randomUUID(),
       TEST_JSON,
       TEST_NEW_XML,

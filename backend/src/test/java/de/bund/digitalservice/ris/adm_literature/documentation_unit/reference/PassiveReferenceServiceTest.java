@@ -29,8 +29,8 @@ class PassiveReferenceServiceTest {
     // given
     given(admPassiveReferenceRepository.findAll()).willReturn(
       List.of(
-        createAdmPassiveReference("KSLS20260000001", "KSNR20260000001"),
-        createAdmPassiveReference("KSLS20260000001", "KSNR20260000002")
+        createAdmPassiveReference("KSNR20260000001", "KSLS20260000001"),
+        createAdmPassiveReference("KSNR20260000001", "KSLS20260000002")
       )
     );
 
@@ -44,8 +44,8 @@ class PassiveReferenceServiceTest {
       .hasSize(2)
       .extracting(pr -> pr.target().documentNumber(), pr -> pr.referencedBy().documentNumber())
       .containsExactly(
-        Tuple.tuple("KSLS20260000001", "KSNR20260000001"),
-        Tuple.tuple("KSLS20260000001", "KSNR20260000002")
+        Tuple.tuple("KSNR20260000001", "KSLS20260000001"),
+        Tuple.tuple("KSNR20260000001", "KSLS20260000002")
       );
   }
 
@@ -60,6 +60,30 @@ class PassiveReferenceServiceTest {
 
     // then
     assertThat(passiveReferences).isEmpty();
+  }
+
+  @Test
+  void findByDocumentNumber() {
+    // given
+    given(admPassiveReferenceRepository.findByTargetDocumentNumber("KSNR20260000333")).willReturn(
+      List.of(
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000001"),
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000002"),
+        createAdmPassiveReference("KSNR20260000333", "KSLS20260000003")
+      )
+    );
+
+    // when
+    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
+      "KSNR20260000333",
+      DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+    );
+
+    // then
+    assertThat(referencedBy)
+      .hasSize(3)
+      .extracting(DocumentReference::documentNumber)
+      .containsExactly("KSLS20260000001", "KSLS20260000002", "KSLS20260000003");
   }
 
   private AdmPassiveReferenceEntity createAdmPassiveReference(String target, String source) {

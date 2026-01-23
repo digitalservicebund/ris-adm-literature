@@ -21,9 +21,9 @@ public class PassiveReferenceService {
   private final AdmPassiveReferenceRepository admPassiveReferenceRepository;
 
   /**
-   * Returns all passive references for the given document category.
+   * Returns all passive references for the given target document category.
    *
-   * @param documentCategory The document category
+   * @param documentCategory The target document category
    * @return Passive references
    */
   @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -50,5 +50,35 @@ public class PassiveReferenceService {
       default -> passiveReferences = new ArrayList<>();
     }
     return passiveReferences;
+  }
+
+  /**
+   * Returns the referenced-by document references for the given document number and category.
+   *
+   * @param documentNumber The document number of the target
+   * @param documentCategory The document category of the target
+   * @return Referenced-by list
+   */
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public List<DocumentReference> findByDocumentNumber(
+    @NonNull String documentNumber,
+    @NonNull DocumentCategory documentCategory
+  ) {
+    List<DocumentReference> referencedBy;
+    switch (documentCategory) {
+      case VERWALTUNGSVORSCHRIFTEN -> referencedBy = admPassiveReferenceRepository
+        .findByTargetDocumentNumber(documentNumber)
+        .stream()
+        .map(apr ->
+          new DocumentReference(apr.getSourceDocumentNumber(), apr.getSourceDocumentCategory())
+        )
+        .toList();
+      case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
+        referencedBy = new ArrayList<>();
+        log.info("Passive references for literature is not supported.");
+      }
+      default -> referencedBy = new ArrayList<>();
+    }
+    return referencedBy;
   }
 }

@@ -14,6 +14,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.S
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.PassiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
 import java.util.List;
@@ -39,6 +40,7 @@ public class DocumentationUnitService {
   private final ObjectMapper objectMapper;
   private final Publisher publisher;
   private final ActiveReferenceService referenceService;
+  private final PassiveReferenceService passiveReferenceService;
   private final SchemaExecutor schemaExecutor;
 
   /**
@@ -110,8 +112,15 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
-    // TODO: RISDEV-10816 Read passive references for given document number - NOSONAR
-    return publish(documentNumber, documentationUnitContent, List.of());
+    List<DocumentReference> referencedByList = schemaExecutor.executeInSchema(
+      SchemaType.REFERENCES,
+      () ->
+        passiveReferenceService.findByDocumentNumber(
+          documentNumber,
+          documentationUnitContent.documentCategory()
+        )
+    );
+    return publish(documentNumber, documentationUnitContent, referencedByList);
   }
 
   /**
