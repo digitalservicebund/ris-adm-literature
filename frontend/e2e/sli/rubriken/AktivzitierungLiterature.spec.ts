@@ -637,10 +637,13 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
       const aktiv = getAdmAktivzitierungSection(page);
 
       // Given: ADM fields are visible
-      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+      const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+      await citationTypeInput.fill("Ve");
       const options = page.getByRole("listbox", { name: "Optionsliste" });
       await expect(options).toBeVisible();
-      await page.getByRole("option", { name: "Vergleiche" }).click();
+      const vergleicheOption = options.getByRole("option", { name: "Vergleiche" });
+      await expect(vergleicheOption).toBeVisible();
+      await vergleicheOption.click();
       const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
       await aktenzeichenInput.fill("Az 123");
       await aktiv.getByRole("button", { name: "Übernehmen" }).click();
