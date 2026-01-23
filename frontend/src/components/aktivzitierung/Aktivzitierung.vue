@@ -90,23 +90,23 @@ const creationPanelKey = ref(0);
 /** ------------------------------------------------------------------
  * Computed
  * ------------------------------------------------------------------ */
- const addedEntries = computed(() => {
+const addedEntries = computed(() => {
   return new Set(
     aktivzitierungList.value
       .map((entry) => {
         const docNum = entry.documentNumber;
         if (!docNum) return null;
-        
+
         if (props.requireCitationType) {
-          const citationType = (entry as Record<string, unknown>).citationType as string | undefined;
-          return citationType?.trim() 
-            ? `${docNum}|${citationType.trim()}` 
-            : docNum; // Fallback to documentNumber if citationType missing
+          const citationType = (entry as Record<string, unknown>).citationType as
+            | string
+            | undefined;
+          return citationType?.trim() ? `${docNum}|${citationType.trim()}` : docNum; // Fallback to documentNumber if citationType missing
         }
-        
+
         return docNum;
       })
-      .filter(Boolean)
+      .filter(Boolean),
   );
 });
 
@@ -227,7 +227,7 @@ function resetCreationPanel() {
 
 function isSearchResultAdded(searchResult: R): boolean {
   if (!searchResult.documentNumber) return false;
-  
+
   // If requireCitationType is true, check with citation type
   if (props.requireCitationType) {
     if (currentCitationType.value?.trim()) {
@@ -238,7 +238,7 @@ function isSearchResultAdded(searchResult: R): boolean {
     // check by documentNumber only (will be blocked when trying to add)
     return addedEntries.value.has(searchResult.documentNumber);
   }
-  
+
   // Otherwise, check by documentNumber only (blocks all duplicates)
   return addedEntries.value.has(searchResult.documentNumber);
 }

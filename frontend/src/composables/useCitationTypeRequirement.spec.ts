@@ -22,40 +22,35 @@ describe("useCitationTypeRequirement", () => {
 
   describe("setCurrentCitationType", () => {
     it("sets currentCitationType with trimmed value", () => {
-      const { setCurrentCitationType, currentCitationType } =
-        useCitationTypeRequirement();
+      const { setCurrentCitationType, currentCitationType } = useCitationTypeRequirement();
 
       setCurrentCitationType("  Vergleiche  ");
       expect(currentCitationType.value).toBe("Vergleiche");
     });
 
     it("sets currentCitationType to undefined for empty string", () => {
-      const { setCurrentCitationType, currentCitationType } =
-        useCitationTypeRequirement();
+      const { setCurrentCitationType, currentCitationType } = useCitationTypeRequirement();
 
       setCurrentCitationType("");
       expect(currentCitationType.value).toBeUndefined();
     });
 
     it("sets currentCitationType to undefined for whitespace-only string", () => {
-      const { setCurrentCitationType, currentCitationType } =
-        useCitationTypeRequirement();
+      const { setCurrentCitationType, currentCitationType } = useCitationTypeRequirement();
 
       setCurrentCitationType("   ");
       expect(currentCitationType.value).toBeUndefined();
     });
 
     it("sets currentCitationType to undefined when passed undefined", () => {
-      const { setCurrentCitationType, currentCitationType } =
-        useCitationTypeRequirement();
+      const { setCurrentCitationType, currentCitationType } = useCitationTypeRequirement();
 
       setCurrentCitationType(undefined);
       expect(currentCitationType.value).toBeUndefined();
     });
 
     it("preserves value without whitespace", () => {
-      const { setCurrentCitationType, currentCitationType } =
-        useCitationTypeRequirement();
+      const { setCurrentCitationType, currentCitationType } = useCitationTypeRequirement();
 
       setCurrentCitationType("Ablehnung");
       expect(currentCitationType.value).toBe("Ablehnung");
@@ -64,8 +59,7 @@ describe("useCitationTypeRequirement", () => {
 
   describe("markMissingAndScroll", () => {
     it("adds validation error with correct message and field", () => {
-      const { markMissingAndScroll, validationStore } =
-        useCitationTypeRequirement();
+      const { markMissingAndScroll, validationStore } = useCitationTypeRequirement();
 
       markMissingAndScroll();
 
@@ -97,8 +91,7 @@ describe("useCitationTypeRequirement", () => {
     });
 
     it("replaces existing validation error when called multiple times", () => {
-      const { markMissingAndScroll, validationStore } =
-        useCitationTypeRequirement();
+      const { markMissingAndScroll, validationStore } = useCitationTypeRequirement();
 
       markMissingAndScroll();
       markMissingAndScroll();
@@ -111,8 +104,7 @@ describe("useCitationTypeRequirement", () => {
 
   describe("clear", () => {
     it("removes validation error for citationType field", () => {
-      const { markMissingAndScroll, clear, validationStore } =
-        useCitationTypeRequirement();
+      const { markMissingAndScroll, clear, validationStore } = useCitationTypeRequirement();
 
       markMissingAndScroll();
       expect(validationStore.getByField("citationType")).toBeDefined();
@@ -128,8 +120,7 @@ describe("useCitationTypeRequirement", () => {
     });
 
     it("only removes citationType error, not other errors", () => {
-      const { markMissingAndScroll, clear, validationStore } =
-        useCitationTypeRequirement();
+      const { markMissingAndScroll, clear, validationStore } = useCitationTypeRequirement();
 
       // Add citationType error
       markMissingAndScroll();
@@ -164,9 +155,7 @@ describe("useCitationTypeRequirement", () => {
       instance1.setCurrentCitationType("Vergleiche");
 
       expect(instance2.currentCitationType.value).toBe("Vergleiche");
-      expect(instance1.currentCitationType.value).toBe(
-        instance2.currentCitationType.value,
-      );
+      expect(instance1.currentCitationType.value).toBe(instance2.currentCitationType.value);
     });
 
     it("clearing validation error in one instance affects all instances", () => {

@@ -97,7 +97,7 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value)
 const hasValidationErrors = computed(() => {
   const citationTypeError = validationStore.getByField("citationType");
   const dateError = dateValidationStore.getByField("inkrafttretedatum");
-  
+
   return !!citationTypeError || !!dateError;
 });
 
@@ -112,7 +112,7 @@ function onClickSave() {
     citationTypeField?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
-  
+
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
     aktivzitierungAdmRef.value = createInitial();
