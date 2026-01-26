@@ -53,7 +53,8 @@ public class PassiveReferenceService {
   }
 
   /**
-   * Returns the referenced-by document references for the given document number and category.
+   * Returns the referenced-by document references (the documents which are citing actively the given document)
+   * for the given document number and category.
    *
    * @param documentNumber The document number of the target
    * @param documentCategory The document category of the target
