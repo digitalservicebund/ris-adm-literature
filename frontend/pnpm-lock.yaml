@@ -12,8 +12,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1
       '@digitalservicebund/ris-ui':
-        specifier: ^3.21.2
-        version: 3.21.2(primevue@4.5.4(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))
+        specifier: ^3.21.0
+        version: 3.21.0(primevue@4.5.4(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))
       '@guardian/prosemirror-invisibles':
         specifier: ^3.1.1
         version: 3.1.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)
@@ -373,8 +373,8 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@digitalservicebund/ris-ui@3.21.2':
-    resolution: {integrity: sha512-k3lA0TBZKz9muR9DlzxZ5T7EykL9UnlyMvJtEHnOLge1t3cNl5jaslCzv2WbJ33a1dhoIpmylWcFX1mWTcmfcw==}
+  '@digitalservicebund/ris-ui@3.21.0':
+    resolution: {integrity: sha512-vmHR9r601jL4wOSiHL5vejjvi9LzVbBTrfaJdNDPKEuGqdfYu4yO832UfSu5YjXCxO9HVhnlZvqrvc0ncEDv4A==}
     peerDependencies:
       primevue: ^4.0.0
       tailwindcss: ^4.0.0
@@ -3156,7 +3156,7 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@digitalservicebund/ris-ui@3.21.2(primevue@4.5.4(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))':
+  '@digitalservicebund/ris-ui@3.21.0(primevue@4.5.4(vue@3.5.26(typescript@5.9.3)))(tailwindcss@4.1.18)(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       primevue: 4.5.4(vue@3.5.26(typescript@5.9.3))
       tailwindcss: 4.1.18
