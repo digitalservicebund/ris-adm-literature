@@ -546,7 +546,8 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                 }
                 case LITERATUR,
                   LITERATUR_UNSELBSTAENDIG,
-                  VERWALTUNGSVORSCHRIFTEN -> throw new IllegalStateException("Not supported");
+                  VERWALTUNGSVORSCHRIFTEN,
+                  RECHTSPRECHUNG -> throw new IllegalStateException("Not supported");
               }
               ImplicitReference implicitReference = new ImplicitReference();
               implicitReference.setReferenz(risReferenz);
