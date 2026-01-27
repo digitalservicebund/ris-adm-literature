@@ -18,7 +18,8 @@ public enum DocumentCategory {
   LITERATUR(null, null, SchemaType.LITERATURE),
   LITERATUR_SELBSTAENDIG("LS", "publicLiteraturePublisher", SchemaType.LITERATURE),
   LITERATUR_UNSELBSTAENDIG("LU", "publicLiteraturePublisher", SchemaType.LITERATURE),
-  VERWALTUNGSVORSCHRIFTEN("NR", "publicBsgPublisher", SchemaType.ADM);
+  VERWALTUNGSVORSCHRIFTEN("NR", "publicBsgPublisher", SchemaType.ADM),
+  RECHTSPRECHUNG(null, null, SchemaType.CASELAW);
 
   private final String prefix;
   private final String publisherName;

@@ -7,4 +7,5 @@ public enum SchemaType {
   ADM,
   LITERATURE,
   REFERENCES,
+  CASELAW,
 }
