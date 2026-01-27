@@ -265,7 +265,6 @@ watch(error, (err) => {
 
     <Button
       v-else-if="!isEditing"
-      class="mt-16"
       aria-label="Weitere Angabe"
       severity="secondary"
       label="Weitere Angabe"

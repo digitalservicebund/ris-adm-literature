@@ -98,14 +98,19 @@ useScrollToHash();
     <section
       id="inhaltlicheErschliessung"
       aria-labelledby="aktivzitierung-title"
-      class="flex flex-col gap-24 bg-white p-24"
+      class="bg-white p-24"
     >
-      <TitleElement aria-label="Inhaltliche Erschließung" id="inhaltlicheErschliessung-title"
+      <TitleElement
+        class="mb-24"
+        aria-label="Inhaltliche Erschließung"
+        id="inhaltlicheErschliessung-title"
         >Inhaltliche Erschließung</TitleElement
       >
-      <AktivzitierungenRechtsprechung v-model="aktivzitierungRechtsprechung" />
-      <AktivzitierungenSli v-model="aktivzitierungSli" />
-      <AktivzitierungenAdm v-model="aktivzitierungAdm" />
+      <div class="flex flex-col gap-32">
+        <AktivzitierungenRechtsprechung v-model="aktivzitierungRechtsprechung" />
+        <AktivzitierungenSli v-model="aktivzitierungSli" />
+        <AktivzitierungenAdm v-model="aktivzitierungAdm" />
+      </div>
     </section>
   </div>
 </template>
