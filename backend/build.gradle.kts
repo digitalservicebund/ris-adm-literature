@@ -136,7 +136,7 @@ sonar {
   // build/reports/jacoco/test/jacocoTestReport.xml
   properties {
     // we don't use "sonar-project.properties", but define the properties here
-    property("sonar.projectKey", "ris-adm-vwv-backend")
+    property("sonar.projectKey", "ris-adm-literature-backend")
     property("sonar.organization", "digitalservicebund")
     property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.token", System.getenv("SONAR_TOKEN"))
