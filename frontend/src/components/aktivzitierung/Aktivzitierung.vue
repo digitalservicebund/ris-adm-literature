@@ -229,11 +229,7 @@ watch(error, (err) => {
       </li>
     </ol>
 
-    <div
-      :key="creationPanelKey"
-      v-if="isCreationPanelOpened || !aktivzitierungList.length"
-      class="mt-16"
-    >
+    <div :key="creationPanelKey" v-if="isCreationPanelOpened || !aktivzitierungList.length">
       <slot
         name="input"
         :show-cancel-button="false"
