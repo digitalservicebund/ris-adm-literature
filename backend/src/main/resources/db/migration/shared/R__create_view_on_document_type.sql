@@ -11,5 +11,6 @@ SELECT id,
            when (category = 'N') then 'VERWALTUNGSVORSCHRIFTEN'
            when (category = 'U') then 'LITERATUR_UNSELBSTAENDIG'
            when (category = 'S') then 'LITERATUR_SELBSTAENDIG'
+           when (category = 'R') then 'RECHTSPRECHUNG'
            end as document_category
 FROM lookup_tables.document_type;

@@ -12,17 +12,27 @@ CREATE TABLE
     CONSTRAINT document_type_abbreviation_category_uc UNIQUE(abbreviation, category)
 );
 
-INSERT INTO lookup_tables.document_type VALUES ('b678b77b-ffc4-4756-825d-a4376b985b0d', 'VE', 'Verwaltungsvereinbarung', 'N');
-INSERT INTO lookup_tables.document_type VALUES ('8de5e4a0-6b67-4d65-98db-efe877a260c4', 'VR', 'Verwaltungsregelung', 'N');
-INSERT INTO lookup_tables.document_type VALUES ('77da35f0-aa4c-4ed3-9048-59b8e10f7478', 'VV', 'Verwaltungsvorschrift', 'N');
+INSERT INTO lookup_tables.document_type (id, abbreviation, label, category)
+VALUES
+  -- Category N
+  ('b678b77b-ffc4-4756-825d-a4376b985b0d', 'VE', 'Verwaltungsvereinbarung', 'N'),
+  ('8de5e4a0-6b67-4d65-98db-efe877a260c4', 'VR', 'Verwaltungsregelung', 'N'),
+  ('77da35f0-aa4c-4ed3-9048-59b8e10f7478', 'VV', 'Verwaltungsvorschrift', 'N'),
 
-INSERT INTO lookup_tables.document_type VALUES ('244d68ee-eb3a-430b-81ec-3d8b4ed624d4', 'Auf', 'Aufsatz', 'U');
-INSERT INTO lookup_tables.document_type VALUES ('07d9b107-d875-4eb0-a52b-b2abd8bff899', 'Ebs', 'Entscheidungsbesprechung', 'U');
-INSERT INTO lookup_tables.document_type VALUES ('244db3dd-e2f3-4a84-a058-589572be9a71', 'Kon', 'Kongressvortrag', 'U');
+  -- Category U
+  ('244d68ee-eb3a-430b-81ec-3d8b4ed624d4', 'Auf', 'Aufsatz', 'U'),
+  ('07d9b107-d875-4eb0-a52b-b2abd8bff899', 'Ebs', 'Entscheidungsbesprechung', 'U'),
+  ('244db3dd-e2f3-4a84-a058-589572be9a71', 'Kon', 'Kongressvortrag', 'U'),
 
-INSERT INTO lookup_tables.document_type VALUES ('4c5a7a2f-88ee-4ec0-9c05-aa2b7f0b8a2e', 'Bib', 'Bibliographie', 'S');
-INSERT INTO lookup_tables.document_type VALUES ('9f27d6df-4b6b-4bf5-8d49-6798ef5c0d3c', 'Ebs', 'Entscheidungsbesprechung', 'S');
-INSERT INTO lookup_tables.document_type VALUES ('c2b4fd17-90bb-4c5d-87e2-1d2b018b4f0a', 'Dis', 'Dissertation', 'S');
+  -- Category S
+  ('4c5a7a2f-88ee-4ec0-9c05-aa2b7f0b8a2e', 'Bib', 'Bibliographie', 'S'),
+  ('9f27d6df-4b6b-4bf5-8d49-6798ef5c0d3c', 'Ebs', 'Entscheidungsbesprechung', 'S'),
+  ('c2b4fd17-90bb-4c5d-87e2-1d2b018b4f0a', 'Dis', 'Dissertation', 'S'),
+
+  -- Category R
+  ('7d2b8a41-3e5c-4f1a-b29d-6c7e8f0a1b2c', 'Urt', 'Urteil', 'R'),
+  ('a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d', 'Vgl', 'Vergleich', 'R'),
+  ('f9e8d7c6-b5a4-4321-9876-5d4c3b2a1f0e', 'Bes', 'Beschluss', 'R');
 
 
 CREATE TABLE
