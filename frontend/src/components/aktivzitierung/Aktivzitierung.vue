@@ -17,7 +17,9 @@ import { usePagination } from "@/composables/usePagination";
 import SearchResults from "../SearchResults.vue";
 import { RisPaginator } from "@digitalservicebund/ris-ui/components";
 import errorMessages from "@/i18n/errors.json";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
+const { currentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
 
 /** ------------------------------------------------------------------
@@ -29,6 +31,7 @@ const props = defineProps<{
     itemsPerPage: number,
     searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>;
+  requireCitationType?: boolean;
 }>();
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] });
@@ -87,8 +90,24 @@ const creationPanelKey = ref(0);
 /** ------------------------------------------------------------------
  * Computed
  * ------------------------------------------------------------------ */
-const addedDocumentNumbers = computed(() => {
-  return new Set(aktivzitierungList.value.map((entry) => entry.documentNumber).filter(Boolean));
+const addedEntries = computed(() => {
+  return new Set(
+    aktivzitierungList.value
+      .map((entry) => {
+        const docNum = entry.documentNumber;
+        if (!docNum) return null;
+
+        if (props.requireCitationType) {
+          const citationType = (entry as Record<string, unknown>).citationType as
+            | string
+            | undefined;
+          return citationType?.trim() ? `${docNum}|${citationType.trim()}` : docNum; // Fallback to documentNumber if citationType missing
+        }
+
+        return docNum;
+      })
+      .filter(Boolean),
+  );
 });
 
 const isEditing = computed(() => editingItemId.value !== null);
@@ -150,15 +169,37 @@ function onSearch(params: SP) {
 }
 
 function addSearchResult(result: R) {
-  if (addedDocumentNumbers.value.has(result.documentNumber)) return;
-
   const baseEntry: T = result as unknown as T;
 
   const citationTypeValue =
-    citationTypeFromSearch.value ||
+    currentCitationType.value ??
+    citationTypeFromSearch.value ??
     ((searchParams.value as Record<string, unknown> | undefined)?.citationType as
       | string
       | undefined);
+
+  if (props.requireCitationType && !citationTypeValue?.trim()) {
+    markMissingAndScroll();
+    return;
+  }
+
+  // Check if this exact combination already exists
+  // If requireCitationType is true: use documentNumber|citationType (allows same doc with different types)
+  // Otherwise: use just documentNumber (blocks all duplicates)
+  let entryKey: string | null = null;
+  if (result.documentNumber) {
+    if (props.requireCitationType && citationTypeValue?.trim()) {
+      // ADM section: allow same document with different citation types
+      entryKey = `${result.documentNumber}|${citationTypeValue.trim()}`;
+    } else {
+      // SLI section or no citation type: block all duplicates
+      entryKey = result.documentNumber;
+    }
+  }
+
+  if (entryKey && addedEntries.value.has(entryKey)) {
+    return;
+  }
 
   const baseEntryObj = baseEntry as Record<string, unknown>;
 
@@ -182,6 +223,24 @@ function resetCreationPanel() {
   searchParams.value = undefined;
   citationTypeFromSearch.value = undefined;
   creationPanelKey.value++;
+}
+
+function isSearchResultAdded(searchResult: R): boolean {
+  if (!searchResult.documentNumber) return false;
+
+  // If requireCitationType is true, check with citation type
+  if (props.requireCitationType) {
+    if (currentCitationType.value?.trim()) {
+      const key = `${searchResult.documentNumber}|${currentCitationType.value.trim()}`;
+      return addedEntries.value.has(key);
+    }
+    // If requireCitationType is true but no citation type selected yet,
+    // check by documentNumber only (will be blocked when trying to add)
+    return addedEntries.value.has(searchResult.documentNumber);
+  }
+
+  // Otherwise, check by documentNumber only (blocks all duplicates)
+  return addedEntries.value.has(searchResult.documentNumber);
 }
 
 /** ------------------------------------------------------------------
@@ -245,7 +304,7 @@ watch(error, (err) => {
             <slot
               name="searchResult"
               :searchResult="searchResult"
-              :isAdded="addedDocumentNumbers.has(searchResult.documentNumber)"
+              :isAdded="isSearchResultAdded(searchResult)"
               :onAdd="addSearchResult"
             />
           </template>
