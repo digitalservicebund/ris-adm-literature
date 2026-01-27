@@ -64,7 +64,8 @@ public class TestLiteratureUnitContent {
           "doktyp",
           "normgeber"
         )
-      )
+      ),
+      List.of()
     );
   }
 }

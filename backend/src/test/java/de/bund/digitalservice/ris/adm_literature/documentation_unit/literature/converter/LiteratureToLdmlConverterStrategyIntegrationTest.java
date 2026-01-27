@@ -197,6 +197,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       null,
       "Dies ist eine Gesamtfussnote",
       null,
+      null,
       null
     );
 
@@ -289,7 +290,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
       ),
-      null
+      null,
+      Collections.emptyList()
     );
 
     // when
@@ -365,7 +367,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "VwV",
           "BMI"
         )
-      )
+      ),
+      Collections.emptyList()
     );
 
     // when

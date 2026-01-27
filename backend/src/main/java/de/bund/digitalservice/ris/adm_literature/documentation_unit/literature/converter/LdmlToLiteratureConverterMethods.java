@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
@@ -147,6 +148,47 @@ class LdmlToLiteratureConverterMethods {
       );
     }
     return aktivzitierungenAdm;
+  }
+
+  List<AktivzitierungRechtsprechung> mapAktivzitierungRechtsprechung(
+    LdmlDocument ldmlDocument,
+    XPath xPath
+  ) throws XPathExpressionException {
+    // XPathNodes verwaltungsvorschriftReferenceNodes = xPath.evaluateExpression(
+    //   "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/verwaltungsvorschriftReference",
+    //   ldmlDocument.getDocument(),
+    //   XPathNodes.class
+    // );
+    List<AktivzitierungRechtsprechung> aktivzitierungenRechtsprechung = new ArrayList<>();
+    // for (Node verwaltungsvorschriftReferenceNode : verwaltungsvorschriftReferenceNodes) {
+    //   Map<String, String> attributes = NodeToList.toAttributeMap(
+    //     verwaltungsvorschriftReferenceNode.getAttributes()
+    //   );
+    //   String periodikum = xPath.evaluateExpression(
+    //     "fundstelle/@periodikum",
+    //     verwaltungsvorschriftReferenceNode,
+    //     String.class
+    //   );
+    //   String zitatstelle = xPath.evaluateExpression(
+    //     "fundstelle/@zitatstelle",
+    //     verwaltungsvorschriftReferenceNode,
+    //     String.class
+    //   );
+    //   aktivzitierungenAdm.add(
+    //     new AktivzitierungAdm(
+    //       UUID.randomUUID(),
+    //       attributes.get("documentNumber"),
+    //       attributes.get("abbreviation"),
+    //       StringUtils.trimToNull(periodikum),
+    //       StringUtils.trimToNull(zitatstelle),
+    //       attributes.get("inkrafttretedatum"),
+    //       attributes.get("aktenzeichen"),
+    //       attributes.get("dokumenttyp"),
+    //       attributes.get("normgeber")
+    //     )
+    //   );
+    // }
+    return aktivzitierungenRechtsprechung;
   }
 
   private String concatenateNodeTextContent(XPathNodes xPathNodes) {
