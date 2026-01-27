@@ -1,1 +1,1 @@
-rootProject.name = "ris-adm-literature-backend"
+rootProject.name = "ris-adm-vwv-backend"
