@@ -4,15 +4,15 @@ import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 /**
- * Represents an administrative record of an Aktivzitierung Rechtsprechung,
+ * Represents a record of an Aktivzitierung Rechtsprechung,
  * containing detailed metadata about the citation or document reference.
  *
- * @param id Id of the reference
- * @param documentNumber    The unique identifier of the referenced document.
- * @param citationType      The type of citation or referencing activity.
+ * @param id                 Id of the reference
+ * @param documentNumber     The unique identifier of the referenced document.
+ * @param citationType       The type of citation or referencing activity.
  * @param entscheidungsdatum The decision date of the referenced document.
- * @param aktenzeichen      The docket or case number associated with the document or process.
- * @param dokumenttyp       The document type categorizing the citation or document.
+ * @param aktenzeichen       The docket or case number associated with the document or process.
+ * @param dokumenttyp        The document type categorizing the citation or document.
  * @param gerichttyp         The court responsible for the cited content.
  * @param gerichtort         The location of the court responsible for the cited content.
  */

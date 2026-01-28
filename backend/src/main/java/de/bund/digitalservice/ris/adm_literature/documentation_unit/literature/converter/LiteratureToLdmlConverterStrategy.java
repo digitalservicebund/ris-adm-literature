@@ -43,6 +43,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
   private static final String SHOW_AS = "showAs";
   private static final String OTHER_REFERENCES = "akn:otherReferences";
   private static final String IMPLICIT_REFERENCE = "akn:implicitReference";
+  private static final String DOCUMENT_NUMBER = "documentNumber";
 
   @Override
   public boolean supports(DocumentationUnitContent content) {
@@ -271,7 +272,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .appendElementAndGet(IMPLICIT_REFERENCE)
           .addAttribute(SHOW_AS, showAsValue)
           .appendElementAndGet("ris:selbstaendigeLiteraturReference")
-          .addAttribute("documentNumber", documentNumber)
+          .addAttribute(DOCUMENT_NUMBER, documentNumber)
           .addAttribute("veroeffentlichungsJahr", veroeffentlichungsJahr)
           .addAttribute("buchtitel", titel)
           .addAttribute("isbn", isbn)
@@ -310,7 +311,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .appendElementAndGet("ris:verwaltungsvorschriftReference")
           .addAttribute("abbreviation", abbreviation) // citationType
           .addAttribute("reference", reference) // aktenzeichen
-          .addAttribute("documentNumber", documentNumber)
+          .addAttribute(DOCUMENT_NUMBER, documentNumber)
           .addAttribute("dokumenttyp", dokumenttyp)
           .addAttribute("normgeber", normgeber)
           .addAttribute("inkrafttretedatum", inkrafttretedatum);
@@ -363,7 +364,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("court", gerichttyp)
           .addAttribute("courtLocation", gerichtort)
           .addAttribute("date", entscheidungsdatum)
-          .addAttribute("documentNumber", documentNumber)
+          .addAttribute(DOCUMENT_NUMBER, documentNumber)
           .addAttribute("dokumenttyp", dokumenttyp)
           .addAttribute("referenceNumber", aktenzeichen);
       }

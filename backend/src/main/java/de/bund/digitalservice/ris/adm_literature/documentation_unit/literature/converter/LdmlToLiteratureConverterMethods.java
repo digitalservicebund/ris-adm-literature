@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 class LdmlToLiteratureConverterMethods {
 
   private final DocumentTypeService documentTypeService;
+  private static final String DOCUMENT_NUMBER = "documentNumber";
 
   @NonNull
   String mapVeroeffentlichungsJahr(LdmlDocument ldmlDocument, XPath xPath)
@@ -99,7 +100,7 @@ class LdmlToLiteratureConverterMethods {
       aktivzitierungenSli.add(
         new AktivzitierungSli(
           UUID.randomUUID(),
-          attributes.get("documentNumber"),
+          attributes.get(DOCUMENT_NUMBER),
           attributes.get("veroeffentlichungsJahr"),
           attributes.get("buchtitel"),
           null,
@@ -136,7 +137,7 @@ class LdmlToLiteratureConverterMethods {
       aktivzitierungenAdm.add(
         new AktivzitierungAdm(
           UUID.randomUUID(),
-          attributes.get("documentNumber"),
+          attributes.get(DOCUMENT_NUMBER),
           attributes.get("abbreviation"),
           StringUtils.trimToNull(periodikum),
           StringUtils.trimToNull(zitatstelle),
@@ -167,7 +168,7 @@ class LdmlToLiteratureConverterMethods {
       aktivzitierungenRechtsprechung.add(
         new AktivzitierungRechtsprechung(
           UUID.randomUUID(),
-          attributes.get("documentNumber"),
+          attributes.get(DOCUMENT_NUMBER),
           attributes.get("abbreviation"),
           attributes.get("date"),
           attributes.get("referenceNumber"),
