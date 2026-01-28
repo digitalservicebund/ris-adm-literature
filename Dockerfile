@@ -1,4 +1,4 @@
-FROM node:25.5.0
+FROM node:25-alpine
 
 # make the 'app' folder the current working directory
 WORKDIR /frontend

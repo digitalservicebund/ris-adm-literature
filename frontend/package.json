@@ -93,7 +93,7 @@
     }
   },
   "engines": {
-    "node": "25.4.0"
+    "node": ">=25"
   },
   "packageManager": "pnpm@10.24.0"
 }
