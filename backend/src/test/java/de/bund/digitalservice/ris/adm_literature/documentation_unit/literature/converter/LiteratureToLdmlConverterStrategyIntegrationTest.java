@@ -393,4 +393,54 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
     );
     assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
   }
+
+  @Test
+  @DisplayName("Maps to aktivzitierungRechtsprechung")
+  void process_aktivzitierungRechtsprechung() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      null,
+      Collections.emptyList(),
+      Collections.emptyList(),
+      List.of(
+        new de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung(
+          UUID.randomUUID(),
+          "KARE339410237",
+          "Vergleiche",
+          "1988-11-09",
+          "5 Sa 292/88",
+          "Vgl",
+          "LArbG",
+          "München"
+        )
+      )
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="Vergleiche, LArbG, München, 1988-11-09, 5 Sa 292/88">
+            <ris:caselawReference abbreviation="Vergleiche" court="LArbG" courtLocation="München" date="1988-11-09" documentNumber="KARE339410237" dokumenttyp="Vgl" referenceNumber="5 Sa 292/88"/>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
 }

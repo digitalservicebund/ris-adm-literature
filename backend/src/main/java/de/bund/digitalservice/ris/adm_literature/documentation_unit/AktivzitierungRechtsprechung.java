@@ -13,7 +13,8 @@ import java.util.UUID;
  * @param entscheidungsdatum The decision date of the referenced document.
  * @param aktenzeichen      The docket or case number associated with the document or process.
  * @param dokumenttyp       The document type categorizing the citation or document.
- * @param gericht         The court responsible for the cited content.
+ * @param gerichttyp         The court responsible for the cited content.
+ * @param gerichtort         The location of the court responsible for the cited content.
  */
 public record AktivzitierungRechtsprechung(
   @Nonnull UUID id,
@@ -22,5 +23,6 @@ public record AktivzitierungRechtsprechung(
   String entscheidungsdatum,
   String aktenzeichen,
   String dokumenttyp,
-  String gericht
+  String gerichttyp,
+  String gerichtort
 ) {}

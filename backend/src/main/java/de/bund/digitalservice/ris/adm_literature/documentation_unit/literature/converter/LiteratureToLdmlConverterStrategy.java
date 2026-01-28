@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
@@ -107,6 +108,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
     if (data instanceof SliDocumentationUnitContent sliData) {
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
       mapAktivzitierungVerwaltungsvorschrift(ldmlDocument, sliData.aktivzitierungenAdm());
+      mapAktivzitierungRechtsprechung(ldmlDocument, sliData.aktivzitierungenRechtsprechung());
     }
   }
 
@@ -319,6 +321,51 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
             .addAttribute("periodikum", periodikum)
             .addAttribute("zitatstelle", zitatstelle);
         }
+      }
+    }
+  }
+
+  private void mapAktivzitierungRechtsprechung(
+    LdmlDocument ldmlDocument,
+    List<AktivzitierungRechtsprechung> activeRechtsprechungReferences
+  ) {
+    if (activeRechtsprechungReferences != null && !activeRechtsprechungReferences.isEmpty()) {
+      LdmlElement otherReferences = ldmlDocument
+        .addAnalysis()
+        .prepareElement(OTHER_REFERENCES)
+        .addAttribute(SOURCE, ACTIVE)
+        .appendOnce();
+
+      for (AktivzitierungRechtsprechung caselawRefNode : activeRechtsprechungReferences) {
+        String documentNumber = caselawRefNode.documentNumber();
+        String citationType = caselawRefNode.citationType();
+        String entscheidungsdatum = caselawRefNode.entscheidungsdatum();
+        String aktenzeichen = caselawRefNode.aktenzeichen();
+        String dokumenttyp = caselawRefNode.dokumenttyp();
+        String gerichttyp = caselawRefNode.gerichttyp();
+        String gerichtort = caselawRefNode.gerichtort();
+
+        String showAs = Stream.of(
+          citationType,
+          gerichttyp,
+          gerichtort,
+          entscheidungsdatum,
+          aktenzeichen
+        )
+          .filter(s -> s != null && !s.isBlank())
+          .collect(Collectors.joining(", "));
+
+        otherReferences
+          .appendElementAndGet(IMPLICIT_REFERENCE)
+          .addAttribute(SHOW_AS, showAs)
+          .appendElementAndGet("ris:caselawReference")
+          .addAttribute("abbreviation", citationType)
+          .addAttribute("court", gerichttyp)
+          .addAttribute("courtLocation", gerichtort)
+          .addAttribute("date", entscheidungsdatum)
+          .addAttribute("documentNumber", documentNumber)
+          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute("referenceNumber", aktenzeichen);
       }
     }
   }

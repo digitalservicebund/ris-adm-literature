@@ -154,40 +154,29 @@ class LdmlToLiteratureConverterMethods {
     LdmlDocument ldmlDocument,
     XPath xPath
   ) throws XPathExpressionException {
-    // XPathNodes verwaltungsvorschriftReferenceNodes = xPath.evaluateExpression(
-    //   "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/verwaltungsvorschriftReference",
-    //   ldmlDocument.getDocument(),
-    //   XPathNodes.class
-    // );
+    XPathNodes caselawReferenceNodes = xPath.evaluateExpression(
+      "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/caselawReference",
+      ldmlDocument.getDocument(),
+      XPathNodes.class
+    );
     List<AktivzitierungRechtsprechung> aktivzitierungenRechtsprechung = new ArrayList<>();
-    // for (Node verwaltungsvorschriftReferenceNode : verwaltungsvorschriftReferenceNodes) {
-    //   Map<String, String> attributes = NodeToList.toAttributeMap(
-    //     verwaltungsvorschriftReferenceNode.getAttributes()
-    //   );
-    //   String periodikum = xPath.evaluateExpression(
-    //     "fundstelle/@periodikum",
-    //     verwaltungsvorschriftReferenceNode,
-    //     String.class
-    //   );
-    //   String zitatstelle = xPath.evaluateExpression(
-    //     "fundstelle/@zitatstelle",
-    //     verwaltungsvorschriftReferenceNode,
-    //     String.class
-    //   );
-    //   aktivzitierungenAdm.add(
-    //     new AktivzitierungAdm(
-    //       UUID.randomUUID(),
-    //       attributes.get("documentNumber"),
-    //       attributes.get("abbreviation"),
-    //       StringUtils.trimToNull(periodikum),
-    //       StringUtils.trimToNull(zitatstelle),
-    //       attributes.get("inkrafttretedatum"),
-    //       attributes.get("aktenzeichen"),
-    //       attributes.get("dokumenttyp"),
-    //       attributes.get("normgeber")
-    //     )
-    //   );
-    // }
+    for (Node caselawReferenceNode : caselawReferenceNodes) {
+      Map<String, String> attributes = NodeToList.toAttributeMap(
+        caselawReferenceNode.getAttributes()
+      );
+      aktivzitierungenRechtsprechung.add(
+        new AktivzitierungRechtsprechung(
+          UUID.randomUUID(),
+          attributes.get("documentNumber"),
+          attributes.get("abbreviation"),
+          attributes.get("date"),
+          attributes.get("referenceNumber"),
+          attributes.get("dokumenttyp"),
+          attributes.get("court"),
+          attributes.get("courtLocation")
+        )
+      );
+    }
     return aktivzitierungenRechtsprechung;
   }
 
