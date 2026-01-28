@@ -11,7 +11,8 @@ const props = defineProps<{
 
 function buildMainParts(a: AktivzitierungRechtsprechung): string {
   const mainParts = [
-    a.gericht,
+    a.gerichttyp,
+    a.gerichtort,
     a.entscheidungsdatum && parseIsoDateToLocal(a.entscheidungsdatum),
     a.aktenzeichen,
   ]
