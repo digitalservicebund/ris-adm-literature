@@ -108,7 +108,7 @@ function onClickSearch() {
             v-model="citationType"
             :invalid="false"
             :source-document-category="DocumentCategory.LITERATUR"
-            :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+            :target-document-category="DocumentCategory.RECHTSPRECHUNG"
           />
         </InputField>
       </div>
