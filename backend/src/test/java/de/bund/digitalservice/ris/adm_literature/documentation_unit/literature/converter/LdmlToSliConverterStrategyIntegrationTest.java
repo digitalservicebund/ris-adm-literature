@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -205,6 +206,46 @@ class LdmlToSliConverterStrategyIntegrationTest {
           "KSNR202500000009"
         ),
         Tuple.tuple("Übernahme", null, null, "2025-12-01", "VV", null, "Zweites Organ", null)
+      );
+  }
+
+  @Test
+  void convertToBusinessModel_aktivzitierungRechtsprechung() {
+    // given
+    String xml = TestFile.readFileToString("literature/sli/ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSLS20250000022", xml);
+
+    // when
+    SliDocumentationUnitContent sliDocumentationUnitContent =
+      ldmlToSliConverterStrategy.convertToBusinessModel(documentationUnit);
+
+    // then
+    assertThat(sliDocumentationUnitContent)
+      .isNotNull()
+      .extracting(
+        SliDocumentationUnitContent::aktivzitierungenRechtsprechung,
+        InstanceOfAssertFactories.list(AktivzitierungRechtsprechung.class)
+      )
+      .hasSize(1)
+      .extracting(
+        AktivzitierungRechtsprechung::citationType,
+        AktivzitierungRechtsprechung::entscheidungsdatum,
+        AktivzitierungRechtsprechung::dokumenttyp,
+        AktivzitierungRechtsprechung::aktenzeichen,
+        AktivzitierungRechtsprechung::gerichttyp,
+        AktivzitierungRechtsprechung::gerichtort,
+        AktivzitierungRechtsprechung::documentNumber
+      )
+      .containsExactly(
+        Tuple.tuple(
+          "Vergleiche",
+          "1988-11-09",
+          "Vgl",
+          "5 Sa 292/88",
+          "LArbG",
+          "München",
+          "KARE339410237"
+        )
       );
   }
 

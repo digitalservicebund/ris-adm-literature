@@ -53,15 +53,17 @@ const citationType = computed({
 
 const gericht = computed({
   get: () => {
-    return aktivzitierungRsRef.value.gericht
-      ? ({
-          id: aktivzitierungRsRef.value.gericht,
-          type: aktivzitierungRsRef.value.gericht,
-        } as Court)
+    return aktivzitierungRsRef.value.gerichttyp
+      ? {
+          id: aktivzitierungRsRef.value.gerichttyp,
+          type: aktivzitierungRsRef.value.gerichttyp,
+          location: aktivzitierungRsRef.value.gerichtort,
+        }
       : undefined;
   },
   set: (val: Court | undefined) => {
-    aktivzitierungRsRef.value.gericht = val?.type;
+    aktivzitierungRsRef.value.gerichttyp = val?.type;
+    aktivzitierungRsRef.value.gerichtort = val?.location;
   },
 });
 

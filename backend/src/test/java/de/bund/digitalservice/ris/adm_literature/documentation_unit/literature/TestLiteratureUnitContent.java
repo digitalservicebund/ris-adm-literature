@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
@@ -63,6 +64,18 @@ public class TestLiteratureUnitContent {
           "akt",
           "doktyp",
           "normgeber"
+        )
+      ),
+      List.of(
+        new AktivzitierungRechtsprechung(
+          UUID.randomUUID(),
+          "KARE339410237",
+          "Vergleiche",
+          "1988-11-09",
+          "5 Sa 292/88",
+          "Vgl",
+          "LarbG",
+          "München"
         )
       )
     );

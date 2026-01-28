@@ -12,8 +12,9 @@
     <xs:attribute name="court" type="xs:string" use="required"/>
     <xs:attribute name="courtLocation" type="xs:string"/>
     <xs:attribute name="date" type="xs:date" use="required"/>
-    <xs:attribute name="referenceNumber" type="xs:string" use="required"/>
     <xs:attribute name="documentNumber" type="xs:string"/>
+    <xs:attribute name="dokumenttyp" type="xs:string"/>
+    <xs:attribute name="referenceNumber" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="vvReferenceAttributeType" abstract="true">
     <xs:attribute name="abbreviation" type="xs:string"/>
