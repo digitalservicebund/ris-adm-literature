@@ -18,7 +18,7 @@ const emit = defineEmits<{
 defineSlots<{
   // 1. Slot for rendering the READ-ONLY list item
   item(props: { aktivzitierung: T }): VNodeChild;
-  // 2. Slot for rendering the EDITABLE INPUT form (uses v-model structure)
+  // 2. Slot for rendering the EDITABLE INPUT form
   input(props: {
     aktivzitierung: T;
     showCancelButton: boolean;
@@ -54,19 +54,18 @@ const isFromSearch = computed(
 </script>
 
 <template>
-  <div v-if="isEditing" class="mt-16">
-    <slot
-      name="input"
-      :aktivzitierung="aktivzitierung"
-      :show-cancel-button="true"
-      :show-delete-button="!isFromSearch"
-      :show-search-button="false"
-      :on-save="onSave"
-      :on-delete="onDelete"
-      :on-cancel="onClickCancel"
-      :on-search="() => {}"
-    />
-  </div>
+  <slot
+    v-if="isEditing"
+    name="input"
+    :aktivzitierung="aktivzitierung"
+    :show-cancel-button="true"
+    :show-delete-button="!isFromSearch"
+    :show-search-button="false"
+    :on-save="onSave"
+    :on-delete="onDelete"
+    :on-cancel="onClickCancel"
+    :on-search="() => {}"
+  />
   <div v-else class="flex w-full items-center gap-10">
     <div class="flex flex-col gap-2">
       <slot name="item" :aktivzitierung="aktivzitierung"></slot>
