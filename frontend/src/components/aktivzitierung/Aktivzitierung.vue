@@ -19,7 +19,7 @@ import { RisPaginator } from "@digitalservicebund/ris-ui/components";
 import errorMessages from "@/i18n/errors.json";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
-const { currentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
+const { currentCitationType, setCurrentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
 
 /** ------------------------------------------------------------------
@@ -84,7 +84,6 @@ const { onRemoveItem, onAddItem, onUpdateItem, isCreationPanelOpened } =
 const editingItemId = ref<string | null>(null);
 const showSearchResults = ref(false);
 const searchParams = ref<SP>();
-const citationTypeFromSearch = ref<string | undefined>();
 const creationPanelKey = ref(0);
 
 /** ------------------------------------------------------------------
@@ -155,15 +154,16 @@ async function onPageUpdate(pageState: PageState) {
 }
 
 function onSearch(params: SP) {
-  // Safe check: does the current param type support citationType?
-  if (params && "citationType" in params && typeof params.citationType === "string") {
-    const trimmed = params.citationType.trim();
-    citationTypeFromSearch.value = trimmed || undefined;
-  } else {
-    citationTypeFromSearch.value = undefined;
+  searchParams.value = params;
+
+  const trimmed =
+    params && "citationType" in params && typeof params.citationType === "string"
+      ? params.citationType.trim()
+      : "";
+  if (!trimmed) {
+    setCurrentCitationType(undefined);
   }
 
-  searchParams.value = params;
   showSearchResults.value = true;
   fetchData(0);
 }
@@ -173,7 +173,6 @@ function addSearchResult(result: R) {
 
   const citationTypeValue =
     currentCitationType.value ??
-    citationTypeFromSearch.value ??
     ((searchParams.value as Record<string, unknown> | undefined)?.citationType as
       | string
       | undefined);
@@ -221,7 +220,6 @@ function resetCreationPanel() {
   isCreationPanelOpened.value = false;
   showSearchResults.value = false;
   searchParams.value = undefined;
-  citationTypeFromSearch.value = undefined;
   creationPanelKey.value++;
 }
 
