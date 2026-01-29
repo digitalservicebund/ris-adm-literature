@@ -138,7 +138,7 @@ function onClickSearch() {
       <div class="flex flex-row gap-24">
         <InputField
           id="rs-activeCitationPredicate"
-          label="Art der Zitierung"
+          label="Art der Zitierung *"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"
         >

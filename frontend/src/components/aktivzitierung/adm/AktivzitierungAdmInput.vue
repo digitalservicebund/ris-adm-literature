@@ -153,7 +153,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
       <div class="flex flex-row gap-24">
         <InputField
           id="adm-activeCitationPredicate"
-          label="Art der Zitierung"
+          label="Art der Zitierung *"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"
         >
