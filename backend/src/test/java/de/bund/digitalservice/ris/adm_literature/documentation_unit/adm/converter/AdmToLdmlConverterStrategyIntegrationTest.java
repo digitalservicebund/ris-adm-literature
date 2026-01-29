@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
@@ -1176,5 +1177,26 @@ class AdmToLdmlConverterStrategyIntegrationTest {
       </akn:implicitReference>
       """.indent(20)
     );
+  }
+
+  @Test
+  @DisplayName(
+    "Conversion of document with unsupported passive reference results into throwing an exception"
+  )
+  void convertToLdml_passiveReferenceNotSupported() {
+    // given
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung Caselaw");
+    List<DocumentReference> referencedByList = List.of(
+      new DocumentReference("KORE999999999", DocumentCategory.RECHTSPRECHUNG)
+    );
+
+    // when
+    Exception exception = catchException(() ->
+      admLdmlConverterStrategy.convertToLdml(admDocumentationUnitContent, null, referencedByList)
+    );
+
+    // then
+    assertThat(exception).isInstanceOf(IllegalStateException.class);
   }
 }
