@@ -197,6 +197,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       null,
       "Dies ist eine Gesamtfussnote",
       null,
+      null,
       null
     );
 
@@ -289,7 +290,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           List.of(new DocumentType("VR", "Verwaltungsregelung"))
         )
       ),
-      null
+      null,
+      Collections.emptyList()
     );
 
     // when
@@ -365,7 +367,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "VwV",
           "BMI"
         )
-      )
+      ),
+      Collections.emptyList()
     );
 
     // when
@@ -384,6 +387,56 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
             <ris:verwaltungsvorschriftReference abbreviation="VwV" documentNumber="doc123" dokumenttyp="VwV" inkrafttretedatum="2023-01-01" normgeber="BMI" reference="AZ 123/45">
               <ris:fundstelle periodikum="BGBl I" zitatstelle="S. 100"/>
             </ris:verwaltungsvorschriftReference>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("Maps to aktivzitierungRechtsprechung")
+  void process_aktivzitierungRechtsprechung() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      null,
+      Collections.emptyList(),
+      Collections.emptyList(),
+      List.of(
+        new de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung(
+          UUID.randomUUID(),
+          "KARE339410237",
+          "Vergleiche",
+          "1988-11-09",
+          "5 Sa 292/88",
+          "Vgl",
+          "LArbG",
+          "München"
+        )
+      )
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="Vergleiche, LArbG, München, 1988-11-09, 5 Sa 292/88">
+            <ris:caselawReference abbreviation="Vergleiche" court="LArbG" courtLocation="München" date="1988-11-09" documentNumber="KARE339410237" dokumenttyp="Vgl" referenceNumber="5 Sa 292/88"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)

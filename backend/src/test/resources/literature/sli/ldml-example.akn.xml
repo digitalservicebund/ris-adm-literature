@@ -60,6 +60,9 @@
             </ris:verwaltungsvorschriftReference>
             <ris:verwaltungsvorschriftReference abbreviation="Übernahme" reference="VV Ausschuss für den Paragraphen §2 Abs 5 GB 2025-01-01 X-IX-123" dokumenttyp="VV" inkrafttretedatum="2025-12-01" normgeber="Zweites Organ"/>
           </akn:implicitReference>
+          <akn:implicitReference showAs="Vergleiche, LArbG, München, 1988-11-09, 5 Sa 292/88">
+            <ris:caselawReference abbreviation="Vergleiche" court="LArbG" courtLocation="München" date="1988-11-09" documentNumber="KARE339410237" dokumenttyp="Vgl" referenceNumber="5 Sa 292/88" />
+          </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>
       <akn:references source="attributsemantik-noch-undefiniert">

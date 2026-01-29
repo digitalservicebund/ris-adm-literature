@@ -71,7 +71,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
   it.each([
     { label: "Art der Zitierung", inputValue: "Abgr", expectedKey: "citationType" },
-    { label: "Gericht", inputValue: "AG Aachen", expectedKey: "gericht" },
+    { label: "Gericht", inputValue: "AG", expectedKey: "gerichttyp" },
     { label: "Entscheidungsdatum", inputValue: "01.01.2025", expectedKey: "entscheidungsdatum" },
     { label: "Aktenzeichen", inputValue: "§3", expectedKey: "aktenzeichen" },
     { label: "Dokumenttyp", inputValue: "VWV", expectedKey: "dokumenttyp" },

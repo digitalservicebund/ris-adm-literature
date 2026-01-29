@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
@@ -24,6 +25,7 @@ import org.w3c.dom.Node;
 class LdmlToLiteratureConverterMethods {
 
   private final DocumentTypeService documentTypeService;
+  private static final String DOCUMENT_NUMBER = "documentNumber";
 
   @NonNull
   String mapVeroeffentlichungsJahr(LdmlDocument ldmlDocument, XPath xPath)
@@ -98,7 +100,7 @@ class LdmlToLiteratureConverterMethods {
       aktivzitierungenSli.add(
         new AktivzitierungSli(
           UUID.randomUUID(),
-          attributes.get("documentNumber"),
+          attributes.get(DOCUMENT_NUMBER),
           attributes.get("veroeffentlichungsJahr"),
           attributes.get("buchtitel"),
           null,
@@ -135,7 +137,7 @@ class LdmlToLiteratureConverterMethods {
       aktivzitierungenAdm.add(
         new AktivzitierungAdm(
           UUID.randomUUID(),
-          attributes.get("documentNumber"),
+          attributes.get(DOCUMENT_NUMBER),
           attributes.get("abbreviation"),
           StringUtils.trimToNull(periodikum),
           StringUtils.trimToNull(zitatstelle),
@@ -147,6 +149,36 @@ class LdmlToLiteratureConverterMethods {
       );
     }
     return aktivzitierungenAdm;
+  }
+
+  List<AktivzitierungRechtsprechung> mapAktivzitierungRechtsprechung(
+    LdmlDocument ldmlDocument,
+    XPath xPath
+  ) throws XPathExpressionException {
+    XPathNodes caselawReferenceNodes = xPath.evaluateExpression(
+      "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/caselawReference",
+      ldmlDocument.getDocument(),
+      XPathNodes.class
+    );
+    List<AktivzitierungRechtsprechung> aktivzitierungenRechtsprechung = new ArrayList<>();
+    for (Node caselawReferenceNode : caselawReferenceNodes) {
+      Map<String, String> attributes = NodeToList.toAttributeMap(
+        caselawReferenceNode.getAttributes()
+      );
+      aktivzitierungenRechtsprechung.add(
+        new AktivzitierungRechtsprechung(
+          UUID.randomUUID(),
+          attributes.get(DOCUMENT_NUMBER),
+          attributes.get("abbreviation"),
+          attributes.get("date"),
+          attributes.get("referenceNumber"),
+          attributes.get("dokumenttyp"),
+          attributes.get("court"),
+          attributes.get("courtLocation")
+        )
+      );
+    }
+    return aktivzitierungenRechtsprechung;
   }
 
   private String concatenateNodeTextContent(XPathNodes xPathNodes) {
