@@ -134,6 +134,15 @@ function onClickSearch() {
 const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement();
 const dateValidationStore = useValidationStore<"inkrafttretedatum">();
 
+watch(
+  () => validationStore.getByField("citationType"),
+  (error) => {
+    if (!error) return;
+    const field = document.getElementById("adm-activeCitationPredicate");
+    field?.scrollIntoView({ behavior: "smooth", block: "center" });
+  },
+);
+
 function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
   clear();
   setCurrentCitationType(selectedCitationType?.abbreviation);
@@ -145,7 +154,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
         <InputField
-          id="activeCitationPredicate"
+          id="adm-activeCitationPredicate"
           label="Art der Zitierung"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"

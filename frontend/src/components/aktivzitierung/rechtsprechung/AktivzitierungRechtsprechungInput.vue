@@ -104,7 +104,7 @@ function onClickSearch() {
   <div>
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
-        <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
+        <InputField id="rs-activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
           <ZitierArtDropDown
             :input-id="slotProps.id"
             v-model="citationType"

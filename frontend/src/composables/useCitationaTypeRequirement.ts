@@ -12,9 +12,6 @@ function setCurrentCitationType(value: string | undefined) {
 
 function markMissingAndScroll() {
   validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-
-  const citationTypeInputField = document.getElementById("activeCitationPredicate");
-  citationTypeInputField?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function clear() {
