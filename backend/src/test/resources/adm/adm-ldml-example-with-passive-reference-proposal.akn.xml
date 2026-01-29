@@ -34,15 +34,14 @@
                                   documentNumber="WBRE000001234"/>
           </akn:implicitReference>
         </akn:otherReferences>
-
-          <!--  
+          <!--
             Here's how a passive reference may look like:
-                
+
             "NeuRIS Modeling"
               * We have a single, generic reference element (+ schema) that is standardized across streams in order to reduce the number of variants that we and our users need to understand
-            
+
             "Portal requirements"
-              * We provide all data that the portal needs for building a link to NeuRIS documents (type, document ID) 
+              * We provide all data that the portal needs for building a link to NeuRIS documents (type, document ID)
               * We support arbitrary URIs (for non-NeuRIS references)
               * We support plain text references (e.g. for non-NeuRIS references, also not yet in NeuRIS)
                 * ❓ how is this different to incomplete references?
@@ -67,44 +66,29 @@
               * We don't add (parent node) context information to the node name, but error on the side of simple node names.
                 * <reference></dokumentnummer></reference> is good enough information for not taking </dokumentnummer> for the current document's number
           -->
-
-          
           <akn:otherReferences source="#">
-
             <akn:implicitReference>
-
-              <ris:referenz ris:domainTerm="Referenz"> 
-
-                  <!-- 
+              <ris:referenz ris:domainTerm="Referenz">
+                  <!--
                     active/passive and identifiers of the referenced (here: source) document (from NeuRIS internal links to external links to a free-text fallback)
                   -->
                   <ris:richtung risDomainTerm="Richtung der Referenzierung">passiv</ris:richtung>
-                  
-
                   <ris:referenzArt risDomainTerm="Art der Referenz">uli</ris:referenzArt> <!-- necessary in order to get a NeuRIS link--> <!-- no further type/kind required for identification in caselaw/valid -->
                   <ris:dokumentnummer ris:domainTerm="Dokumentnummer">KSLU105121222</ris:dokumentnummer> <!-- necessary in order to get a NeuRIS link--> <!-- not meant for anchors like "KSLUxxxxx#anchor" -->
-
                   <ris:uri ris:domainTerm="Dokument-URI">.../.../something.something</ris:uri> <!-- necessary for Non-NeuRIS links -->
                   <ris:notiz>Announcement by body X from Feb 2026</ris:notiz><!-- this does not make a link --> <!-- it's not to be interpreted by a machine, but meant as a fallback field for any arbitrary text that helps the documentalist identify the document -->
-
-                  <!-- 
+                  <!--
                     API user: where to get the document?
                   -->
-                  <ris:relativerPfad ris:domainTerm="Pfad zur Referenz">/selbstaendige-literatur/KSLU105121222.xml</ris:relativerPfad> <!-- this should match the URI in the <akn:identification> work/expression FRBR-URIs eventually-->
-  
-                  <!-- 
+                  <ris:relativerPfad ris:domainTerm="Pfad zur Referenz">/literature/KSLU105121222.xml</ris:relativerPfad> <!-- this should match the URI in the <akn:identification> work/expression FRBR-URIs eventually-->
+                  <!--
                     metadata of the source document
-                  -->  
-                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung> 
-                  <ris:dokumenttyp domainTerm="Dokumenttyp" >Aufsatz</ris:dokumenttyp>
-                  Dokumenttyp      
-                  
+                  -->
+                  <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Auf</ris:dokumenttypAbkuerzung>
+                  <ris:dokumenttyp domainTerm="Dokumenttyp">Aufsatz</ris:dokumenttyp>
                   <ris:titel domainTerm="Titel">Gesundheitsgefährdung durch Taubenkot</ris:titel>
-                  
-                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string--> 
-                  
+                  <ris:autor domainTerm="Autor(en)">Ursula Schies, Andreas Albrecht</ris:autor> <!--multiple authors are joined into one string-->
                   <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2003</ris:veroeffentlichungsjahr>
-                  
                   <!-- VALID: fundstelle is specific to ULI, absent in SLI -->
                   <!-- caselaw: "fundstelle" has more fields -->
                   <ris:fundstelle domainTerm="Fundstelle">
@@ -114,17 +98,11 @@
                     </ris:periodikum>
                     <ris:zitatstelle domainTerm="Zitatstelle">ErgoMed, 2003, 166-177</ris:zitatstelle>
                   </ris:fundstelle>
-
                   <!-- 🚧 not agreed on -->
                   <ris:standardzusammenfassung>Ursula Schies, Andreas Albrecht, Gesundheitsgefährdung durch Taubenkot, Aufsatz, Ergonomics and Medicine (that's a guess), 2003, 166-277</ris:standardzusammenfassung><!-- suggestion for a sensible default of what the client could show (just a suggestion!) -->
-
               </ris:referenz>
-              
           </akn:implicitReference>
-   
         </akn:otherReferences>
-
-        
       </akn:analysis>
       <akn:proprietary source="attributsemantik-noch-undefiniert">
         <ris:meta>

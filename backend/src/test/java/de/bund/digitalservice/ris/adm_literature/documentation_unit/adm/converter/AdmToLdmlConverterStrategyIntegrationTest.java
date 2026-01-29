@@ -1082,7 +1082,7 @@ class AdmToLdmlConverterStrategyIntegrationTest {
   }
 
   @Test
-  @DisplayName("Conversion of document with document number results into xml with FRBRalias")
+  @DisplayName("Conversion of document with passive reference SLI results into ris:referenz")
   void convertToLdml_sliPassiveReferences() {
     // given
     AdmDocumentationUnitContent admDocumentationUnitContent =
@@ -1116,13 +1116,62 @@ class AdmToLdmlConverterStrategyIntegrationTest {
               <ris:richtung domainTerm="Richtung der Referenzierung">passiv</ris:richtung>
               <ris:referenzArt domainTerm="Art der Referenz">sli</ris:referenzArt>
               <ris:dokumentnummer domainTerm="Dokumentnummer">KALS999999999</ris:dokumentnummer>
-              <ris:relativerPfad domainTerm="Pfad zur Referenz">KALS999999999</ris:relativerPfad>
+              <ris:relativerPfad domainTerm="Pfad zur Referenz">/literature/KALS999999999.xml</ris:relativerPfad>
               <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Bib, Dis</ris:dokumenttypAbkuerzung>
               <ris:dokumenttyp domainTerm="Dokumenttyp">Bibliographie, Dissertation</ris:dokumenttyp>
               <ris:titel domainTerm="Titel">Titel</ris:titel>
               <ris:autor domainTerm="Autor(en)">Verfasser 1, Verfasser 2</ris:autor>
               <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2026</ris:veroeffentlichungsjahr>
-              <ris:standardzusammenfassung>Verfasser 1, Verfasser 2, Titel, Bib, Dis, 2026</ris:standardzusammenfassung>
+              <ris:standardzusammenfassung>Verfasser 1, Verfasser 2, Titel, Bibliographie, Dissertation, 2026</ris:standardzusammenfassung>
+          </ris:referenz>
+      </akn:implicitReference>
+      """.indent(20)
+    );
+  }
+
+  @Test
+  @DisplayName(
+    "Conversion of document with passive reference SLI without verfasser results into ris:referenz"
+  )
+  void convertToLdml_sliPassiveReferencesNoVerfasser() {
+    // given
+    AdmDocumentationUnitContent admDocumentationUnitContent =
+      TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung SLI");
+    List<DocumentReference> referencedByList = List.of(
+      new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
+    );
+    LiteratureReferenceEntity literatureReferenceEntity = new LiteratureReferenceEntity();
+    LiteratureIndex literatureIndex = new LiteratureIndex();
+    literatureIndex.setTitel("Titel");
+    literatureIndex.setVeroeffentlichungsjahr("2026");
+    literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
+    literatureReferenceEntity.setLiteratureIndex(literatureIndex);
+    given(literatureReferenceRepository.findById("KALS999999999")).willReturn(
+      Optional.of(literatureReferenceEntity)
+    );
+
+    // when
+    String xml = admLdmlConverterStrategy.convertToLdml(
+      admDocumentationUnitContent,
+      null,
+      referencedByList
+    );
+
+    // then
+    assertThat(xml).contains(
+      """
+      <akn:implicitReference>
+          <ris:referenz domainTerm="Referenz">
+              <ris:richtung domainTerm="Richtung der Referenzierung">passiv</ris:richtung>
+              <ris:referenzArt domainTerm="Art der Referenz">sli</ris:referenzArt>
+              <ris:dokumentnummer domainTerm="Dokumentnummer">KALS999999999</ris:dokumentnummer>
+              <ris:relativerPfad domainTerm="Pfad zur Referenz">/literature/KALS999999999.xml</ris:relativerPfad>
+              <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Bib, Dis</ris:dokumenttypAbkuerzung>
+              <ris:dokumenttyp domainTerm="Dokumenttyp">Bibliographie, Dissertation</ris:dokumenttyp>
+              <ris:titel domainTerm="Titel">Titel</ris:titel>
+              <ris:autor domainTerm="Autor(en)"/>
+              <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2026</ris:veroeffentlichungsjahr>
+              <ris:standardzusammenfassung>Titel, Bibliographie, Dissertation, 2026</ris:standardzusammenfassung>
           </ris:referenz>
       </akn:implicitReference>
       """.indent(20)

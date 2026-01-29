@@ -105,13 +105,13 @@ class UpdatePassivzitierungJobIntegrationTest {
                 <ris:richtung domainTerm="Richtung der Referenzierung">passiv</ris:richtung>
                 <ris:referenzArt domainTerm="Art der Referenz">sli</ris:referenzArt>
                 <ris:dokumentnummer domainTerm="Dokumentnummer">KVLS2025000009</ris:dokumentnummer>
-                <ris:relativerPfad domainTerm="Pfad zur Referenz">KVLS2025000009</ris:relativerPfad>
+                <ris:relativerPfad domainTerm="Pfad zur Referenz">/literature/KVLS2025000009.xml</ris:relativerPfad>
                 <ris:dokumenttypAbkuerzung domainTerm="Dokumenttyp, abgekürzt">Bib, Dis</ris:dokumenttypAbkuerzung>
                 <ris:dokumenttyp domainTerm="Dokumenttyp">Bibliographie, Dissertation</ris:dokumenttyp>
                 <ris:titel domainTerm="Titel">Hauptsache Titel</ris:titel>
                 <ris:autor domainTerm="Autor(en)">Name, Vorname</ris:autor>
                 <ris:veroeffentlichungsjahr domainTerm="Veröffentlichungsjahr">2025</ris:veroeffentlichungsjahr>
-                <ris:standardzusammenfassung>Name, Vorname, Hauptsache Titel, Bib, Dis, 2025</ris:standardzusammenfassung>
+                <ris:standardzusammenfassung>Name, Vorname, Hauptsache Titel, Bibliographie, Dissertation, 2025</ris:standardzusammenfassung>
             </ris:referenz>
         </akn:implicitReference>""".indent(20)
       );

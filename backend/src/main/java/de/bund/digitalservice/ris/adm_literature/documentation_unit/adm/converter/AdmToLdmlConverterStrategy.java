@@ -499,7 +499,10 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                 new RisDomainTerm("Dokumentnummer", referencedBy.documentNumber())
               );
               risReferenz.setRelativerPfad(
-                new RisDomainTerm("Pfad zur Referenz", referencedBy.documentNumber())
+                new RisDomainTerm(
+                  "Pfad zur Referenz",
+                  String.format("/literature/%s.xml", referencedBy.documentNumber())
+                )
               );
               switch (referencedBy.documentCategory()) {
                 case LITERATUR_SELBSTAENDIG -> {
@@ -534,15 +537,16 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
                       literatureIndex.getVeroeffentlichungsjahr()
                     )
                   );
-                  risReferenz.setStandardzusammenfassung(
-                    String.join(
-                      ", ",
-                      verfasser,
-                      titel,
-                      dokumenttypAbkuerzungen,
-                      literatureIndex.getVeroeffentlichungsjahr()
-                    )
-                  );
+
+                  String standardZusammenfassung = Stream.of(
+                    verfasser,
+                    titel,
+                    dokumenttyp,
+                    literatureIndex.getVeroeffentlichungsjahr()
+                  )
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(", "));
+                  risReferenz.setStandardzusammenfassung(standardZusammenfassung);
                 }
                 case LITERATUR,
                   LITERATUR_UNSELBSTAENDIG,
