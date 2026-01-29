@@ -6,7 +6,7 @@ const getSliAktivzitierungSection = (page: Page) =>
 const getAdmAktivzitierungSection = (page: Page) =>
   page.getByRole("region", { name: "Aktivzitierung (Verwaltungsvorschrift)" });
 
-test.describe.skip("SLI Rubriken – Aktivzitierung Literatur", () => {
+test.describe("SLI Rubriken – Aktivzitierung Literatur", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/literatur-selbstaendig");
     await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
@@ -296,7 +296,7 @@ async function createDocument(
   }
 }
 
-test.describe.skip(
+test.describe(
   "Add aktivzitierung via searching through the SLI documents",
   { tag: ["@RISDEV-10276"] },
   () => {
