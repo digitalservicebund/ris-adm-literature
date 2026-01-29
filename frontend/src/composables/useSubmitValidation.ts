@@ -1,10 +1,10 @@
 import { computed, type Ref } from "vue";
 
-export function useSubmitValidation(
-  errorGetters: Array<() => string | undefined>
-): { hasValidationErrors: Ref<boolean> } {
+export function useSubmitValidation(getValidationErrorMessages: Array<() => string | undefined>): {
+  hasValidationErrors: Ref<boolean>;
+} {
   const hasValidationErrors = computed(() =>
-    errorGetters.some((getter) => !!getter())
+    getValidationErrorMessages.some((getErrorMessage) => !!getErrorMessage()),
   );
   return { hasValidationErrors };
 }

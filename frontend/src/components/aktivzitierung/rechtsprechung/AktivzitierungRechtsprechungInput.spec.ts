@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { InputText } from "primevue";
 import AktivzitierungRechtsprechungInput from "./AktivzitierungRechtsprechungInput.vue";
 import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 function renderComponent(props: {
   aktivzitierung?: AktivzitierungRechtsprechung;
@@ -47,6 +48,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
     const initialValue: AktivzitierungRechtsprechung = {
       id: "123",
       aktenzeichen: "Akte X",
+      citationType: "Abgr",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -65,8 +67,44 @@ describe("AktivzitierungRechtsprechungInput", () => {
       expect.objectContaining({
         id: "123",
         aktenzeichen: "Akte Y",
+        citationType: "Abgr",
       }),
     ]);
+  });
+
+  it("does not emit save when citation type is empty", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungRechtsprechung = {
+      id: "123",
+      aktenzeichen: "Some AZ",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
+  });
+
+  it("does not emit save when citation type validation error is present", async () => {
+    const user = userEvent.setup();
+    const { validationStore } = useCitationTypeRequirement("rechtsprechung");
+
+    const initialValue: AktivzitierungRechtsprechung = {
+      id: "123",
+      citationType: "Abgr",
+      aktenzeichen: "AZ",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
   });
 
   it.each([
@@ -79,7 +117,10 @@ describe("AktivzitierungRechtsprechungInput", () => {
     "updates $expectedKey locally and emits on save",
     async ({ label, inputValue, expectedKey }) => {
       const user = userEvent.setup();
-      const { emitted } = renderComponent({ aktivzitierung: { id: "123" } });
+      const { emitted } = renderComponent({
+        aktivzitierung:
+          expectedKey === "citationType" ? { id: "123" } : { id: "123", citationType: "Abgr" },
+      });
 
       const input = screen.getByRole("textbox", { name: label });
       await user.type(input, inputValue);
@@ -98,6 +139,9 @@ describe("AktivzitierungRechtsprechungInput", () => {
     vi.stubGlobal("crypto", { randomUUID: () => "new-uuid" });
 
     const { emitted } = renderComponent({ aktivzitierung: undefined });
+
+    const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+    await user.type(citationTypeInput, "Abgr");
 
     const input = screen.getByRole("textbox", { name: "Aktenzeichen" });
     await user.type(input, "TEST-AZ");
@@ -177,5 +221,15 @@ describe("AktivzitierungRechtsprechungInput", () => {
     await rerender({ aktivzitierung: newValue });
 
     expect(input).toHaveValue("Updated via Prop");
+  });
+
+  it("shows validation error when citation type is empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({ aktivzitierung: { id: "123", aktenzeichen: "Some AZ" } });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
   });
 });

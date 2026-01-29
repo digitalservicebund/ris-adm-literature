@@ -9,7 +9,7 @@ const globalStubs = {
       <slot name="input" :modelValue="{ id: '1' }" :onUpdateModelValue="() => {}" />
       <slot name="searchResult" :searchResult="{ documentNumber: '123' }" :isAdded="false" :onAdd="() => {}" />
     </div>`,
-    props: ["modelValue", "fetchResultsFn", "transformResultFn"],
+    props: ["modelValue", "fetchResultsFn", "requireCitationType", "citationTypeScope"],
     emits: ["update:modelValue"],
   },
   AktivzitierungAdmInput: { template: `<div data-testid="adm-input"/>` },

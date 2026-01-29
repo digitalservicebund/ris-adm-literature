@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 import { InputText } from "primevue";
 import AktivzitierungAdmInput from "./AktivzitierungAdmInput.vue";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 function renderComponent(props: {
   aktivzitierung?: AktivzitierungAdm;
@@ -76,6 +77,41 @@ describe("AktivzitierungInput", () => {
         documentNumber: "NEWVALUE",
       }),
     ]);
+  });
+
+  it("does not emit save when citation type is empty", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungAdm = {
+      id: "123",
+      documentNumber: "Some Doc",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
+  });
+
+  it("does not emit save when citation type validation error is present", async () => {
+    const user = userEvent.setup();
+    const { validationStore } = useCitationTypeRequirement("adm");
+
+    const initialValue: AktivzitierungAdm = {
+      id: "123",
+      citationType: "Vergleiche",
+      documentNumber: "Doc",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
   });
 
   it.each([
@@ -198,5 +234,15 @@ describe("AktivzitierungInput", () => {
     await rerender({ aktivzitierung: newValue });
 
     expect(input).toHaveValue("Updated via Prop");
+  });
+
+  it("shows validation error when citation type is empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({ aktivzitierung: { id: "123", documentNumber: "Some Doc" } });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
   });
 });

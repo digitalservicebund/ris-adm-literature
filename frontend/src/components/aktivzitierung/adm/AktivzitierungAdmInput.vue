@@ -106,7 +106,6 @@ function onClickSave() {
   }
   if (hasValidationErrors.value) return;
 
-
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
     aktivzitierungAdmRef.value = createInitial();
@@ -129,10 +128,9 @@ const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequir
 const dateValidationStore = useValidationStore<"inkrafttretedatum">();
 
 const { hasValidationErrors } = useSubmitValidation([
-  () => validationStore.getByField("citationType")?.message, 
+  () => validationStore.getByField("citationType")?.message,
   () => dateValidationStore.getByField("inkrafttretedatum")?.message,
 ]);
-
 
 watch(
   () => validationStore.getByField("citationType"),

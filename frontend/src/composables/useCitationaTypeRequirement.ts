@@ -20,7 +20,7 @@ function setCurrentCitationType(value: string | undefined) {
   currentCitationType.value = value?.trim() || undefined;
 }
 
-function markMissingAndScroll(scope: CitationTypeScope) {
+function setCitationTypeValidationError(scope: CitationTypeScope) {
   store.add("Pflichtfeld nicht befüllt", SCOPE_KEYS[scope]);
 }
 
@@ -39,14 +39,16 @@ function createScopedStore(scope: CitationTypeScope) {
 }
 
 export function useCitationTypeRequirement(scope?: CitationTypeScope) {
-  const validationStore = scope ? createScopedStore(scope) : (null as unknown as ReturnType<typeof createScopedStore>);
+  const validationStore = scope
+    ? createScopedStore(scope)
+    : (null as unknown as ReturnType<typeof createScopedStore>);
   const clear = scope ? () => store.remove(SCOPE_KEYS[scope]) : () => {};
 
   return {
     validationStore: validationStore ?? (store as unknown as ReturnType<typeof createScopedStore>),
     currentCitationType,
     setCurrentCitationType,
-    markMissingAndScroll,
+    setCitationTypeValidationError,
     clear,
   };
 }

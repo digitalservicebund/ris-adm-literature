@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import Aktivzitierung from "./Aktivzitierung.vue";
 import { ref, type Ref } from "vue";
 import type { UseFetchReturn } from "@vueuse/core";
+import { type CitationTypeScope } from "@/composables/useCitationaTypeRequirement";
 
 const addToastMock = vi.fn();
 vi.mock("primevue", () => {
@@ -25,7 +26,7 @@ vi.mock("primevue", () => {
 });
 
 // Dummy Aktivzitierung
-type DummyT = { id: string; documentNumber?: string; title?: string };
+type DummyT = { id: string; documentNumber?: string; title?: string; citationType?: string };
 
 // Dummy Search Result
 type DummySearchResult = {
@@ -53,11 +54,30 @@ vi.mock("@/composables/usePagination", () => ({
   usePagination: vi.fn(() => mockPagination),
 }));
 
-function renderComponent(props: { modelValue: DummyT[]; fetchResultsFn: FetchResultsFunction }) {
+const mockSetCitationTypeValidationError = vi.fn();
+const mockSetCurrentCitationType = vi.fn();
+const mockCurrentCitationType = ref<string | undefined>(undefined);
+
+vi.mock("@/composables/useCitationaTypeRequirement", () => ({
+  useCitationTypeRequirement: vi.fn(() => ({
+    currentCitationType: mockCurrentCitationType,
+    setCurrentCitationType: mockSetCurrentCitationType,
+    setCitationTypeValidationError: mockSetCitationTypeValidationError,
+  })),
+}));
+
+function renderComponent(props: {
+  modelValue: DummyT[];
+  fetchResultsFn: FetchResultsFunction;
+  requireCitationType?: boolean;
+  citationTypeScope?: CitationTypeScope;
+}) {
   return render(Aktivzitierung, {
     props: {
       modelValue: props.modelValue,
       fetchResultsFn: props.fetchResultsFn,
+      requireCitationType: props.requireCitationType ?? false,
+      citationTypeScope: props.citationTypeScope ?? undefined,
     },
     slots: {
       item: `
@@ -111,6 +131,9 @@ describe("Aktivzitierung", () => {
     mockPagination.totalRows.value = 0;
     mockPagination.firstRowIndex.value = 0;
     mockPagination.isFetching.value = false;
+    mockCurrentCitationType.value = undefined;
+    mockSetCitationTypeValidationError.mockClear();
+    mockSetCurrentCitationType.mockClear();
   });
 
   it("renders creation panel if list is empty", () => {
@@ -442,5 +465,134 @@ describe("Aktivzitierung", () => {
 
     expect(newItem).not.toHaveProperty("documentNumber");
     expect(newItem!.title).toBe("New Title");
+  });
+
+  describe("requireCitationType and citationTypeScope", () => {
+    it("does not add search result when requireCitationType is true and citation type is empty", async () => {
+      mockPagination.fetchPaginatedData.mockImplementation(async () => {
+        mockPagination.items.value = [
+          { id: "uuid-1", documentNumber: "DOC-123", title: "Found Item" },
+        ];
+        mockPagination.totalRows.value = 1;
+      });
+
+      const user = userEvent.setup();
+      const fetchResultsFn = vi.fn();
+      mockCurrentCitationType.value = undefined;
+
+      const { emitted } = renderComponent({
+        modelValue: [],
+        fetchResultsFn,
+        requireCitationType: true,
+        citationTypeScope: "adm",
+      });
+
+      const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
+      await user.click(searchButton);
+
+      await screen.findByText("Found Item");
+
+      const addButton = screen.getByRole("button", { name: "Add" });
+      await user.click(addButton);
+
+      expect(mockSetCitationTypeValidationError).toHaveBeenCalledWith("adm");
+      expect(emitted()["update:modelValue"]).toBeUndefined();
+    });
+
+    it("allows same documentNumber with different citation types when requireCitationType is true", async () => {
+      const user = userEvent.setup();
+      const existing = [
+        { id: "1", documentNumber: "DOC-123", citationType: "Vergleiche", title: "Existing" },
+      ];
+      mockPagination.items.value = [
+        { id: "res-1", documentNumber: "DOC-123", title: "Search Result" },
+      ];
+      mockCurrentCitationType.value = "Abgr";
+
+      const { emitted } = renderComponent({
+        modelValue: existing,
+        fetchResultsFn: vi.fn(),
+        requireCitationType: true,
+      });
+
+      await user.click(screen.getByRole("button", { name: "Weitere Angabe" }));
+      await user.click(screen.getByRole("button", { name: "Dokumente Suchen" }));
+
+      const addButton = screen.getByRole("button", { name: "Add" });
+      expect(addButton).not.toBeDisabled();
+
+      await user.click(addButton);
+
+      const events = emitted()["update:modelValue"] as Array<[DummyT[]]>;
+      const finalPayload = events[events.length - 1]![0];
+      expect(finalPayload.length).toBe(2);
+      expect(finalPayload.some((item) => item.citationType === "Vergleiche")).toBe(true);
+      expect(finalPayload.some((item) => item.citationType === "Abgr")).toBe(true);
+    });
+
+    it("blocks same documentNumber with same citation type when requireCitationType is true", async () => {
+      const user = userEvent.setup();
+      const existing = [
+        { id: "1", documentNumber: "DOC-123", citationType: "Vergleiche", title: "Existing" },
+      ];
+      mockPagination.items.value = [
+        { id: "res-1", documentNumber: "DOC-123", title: "Search Result" },
+      ];
+      mockCurrentCitationType.value = "Vergleiche";
+
+      renderComponent({
+        modelValue: existing,
+        fetchResultsFn: vi.fn(),
+        requireCitationType: true,
+      });
+
+      await user.click(screen.getByRole("button", { name: "Weitere Angabe" }));
+      await user.click(screen.getByRole("button", { name: "Dokumente Suchen" }));
+
+      const addButton = screen.getByRole("button", { name: "Add" });
+      expect(addButton).toBeDisabled();
+    });
+
+    it("blocks duplicate documentNumber regardless of citation type when requireCitationType is false", async () => {
+      const user = userEvent.setup();
+      const existing = [
+        { id: "1", documentNumber: "DOC-123", citationType: "Vergleiche", title: "Existing" },
+      ];
+      mockPagination.items.value = [
+        { id: "res-1", documentNumber: "DOC-123", title: "Search Result" },
+      ];
+      mockCurrentCitationType.value = "Abgr";
+
+      renderComponent({
+        modelValue: existing,
+        fetchResultsFn: vi.fn(),
+        requireCitationType: false,
+      });
+
+      await user.click(screen.getByRole("button", { name: "Weitere Angabe" }));
+      await user.click(screen.getByRole("button", { name: "Dokumente Suchen" }));
+
+      const addButton = screen.getByRole("button", { name: "Add" });
+      expect(addButton).toBeDisabled();
+    });
+
+    it("clears citation type when search params have empty citation type", async () => {
+      const user = userEvent.setup();
+      mockCurrentCitationType.value = "Vergleiche";
+
+      renderComponent({
+        modelValue: [],
+        fetchResultsFn: vi.fn(),
+        requireCitationType: true,
+      });
+
+      const input = screen.getByTestId("input-citationType");
+      await user.clear(input);
+
+      const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
+      await user.click(searchButton);
+
+      expect(mockSetCurrentCitationType).toHaveBeenCalledWith(undefined);
+    });
   });
 });

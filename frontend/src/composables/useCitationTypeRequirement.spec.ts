@@ -1,23 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 describe("useCitationTypeRequirement", () => {
-  let mockElement: HTMLElement;
-  let mockScrollIntoView: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
-    // Reset module state by clearing validation errors and currentCitationType
-    const instance1 = useCitationTypeRequirement();
-    instance1.clear();
-    instance1.setCurrentCitationType(undefined);
-
-    // Mock DOM element and scrollIntoView
-    mockScrollIntoView = vi.fn();
-    mockElement = {
-      scrollIntoView: mockScrollIntoView,
-    } as unknown as HTMLElement;
-
-    vi.spyOn(document, "getElementById").mockReturnValue(mockElement);
+    useCitationTypeRequirement("adm").clear();
+    useCitationTypeRequirement("rechtsprechung").clear();
+    useCitationTypeRequirement("adm").setCurrentCitationType(undefined);
   });
 
   describe("setCurrentCitationType", () => {
@@ -57,56 +45,42 @@ describe("useCitationTypeRequirement", () => {
     });
   });
 
-  describe("markMissingAndScroll", () => {
+  describe("setCitationTypeValidationError", () => {
     it("adds validation error with correct message and field", () => {
-      const { markMissingAndScroll, validationStore } = useCitationTypeRequirement();
+      const { setCitationTypeValidationError, validationStore } = useCitationTypeRequirement("adm");
 
-      markMissingAndScroll();
+      setCitationTypeValidationError("adm");
 
       const error = validationStore.getByField("citationType");
       expect(error).toBeDefined();
       expect(error?.message).toBe("Pflichtfeld nicht befüllt");
-      expect(error?.instance).toBe("citationType");
+      expect(error?.instance).toBe("citationTypeAdm");
     });
 
-    it("scrolls to citation type field when element exists", () => {
-      const { markMissingAndScroll } = useCitationTypeRequirement();
+    it("does not throw when called", () => {
+      const { setCitationTypeValidationError } = useCitationTypeRequirement("adm");
 
-      markMissingAndScroll();
-
-      expect(document.getElementById).toHaveBeenCalledWith("activeCitationPredicate");
-      expect(mockScrollIntoView).toHaveBeenCalledWith({
-        behavior: "smooth",
-        block: "center",
-      });
-    });
-
-    it("does not throw when citation type field element does not exist", () => {
-      vi.spyOn(document, "getElementById").mockReturnValue(null);
-
-      const { markMissingAndScroll } = useCitationTypeRequirement();
-
-      expect(() => markMissingAndScroll()).not.toThrow();
-      expect(mockScrollIntoView).not.toHaveBeenCalled();
+      expect(() => setCitationTypeValidationError("adm")).not.toThrow();
     });
 
     it("replaces existing validation error when called multiple times", () => {
-      const { markMissingAndScroll, validationStore } = useCitationTypeRequirement();
+      const { setCitationTypeValidationError, validationStore } = useCitationTypeRequirement("adm");
 
-      markMissingAndScroll();
-      markMissingAndScroll();
+      setCitationTypeValidationError("adm");
+      setCitationTypeValidationError("adm");
 
-      const errors = validationStore.getAll();
-      expect(errors).toHaveLength(1);
-      expect(errors[0]?.message).toBe("Pflichtfeld nicht befüllt");
+      const error = validationStore.getByField("citationType");
+      expect(error).toBeDefined();
+      expect(error?.message).toBe("Pflichtfeld nicht befüllt");
     });
   });
 
   describe("clear", () => {
     it("removes validation error for citationType field", () => {
-      const { markMissingAndScroll, clear, validationStore } = useCitationTypeRequirement();
+      const { setCitationTypeValidationError, clear, validationStore } =
+        useCitationTypeRequirement("adm");
 
-      markMissingAndScroll();
+      setCitationTypeValidationError("adm");
       expect(validationStore.getByField("citationType")).toBeDefined();
 
       clear();
@@ -114,33 +88,31 @@ describe("useCitationTypeRequirement", () => {
     });
 
     it("does not throw when no validation error exists", () => {
-      const { clear } = useCitationTypeRequirement();
+      const { clear } = useCitationTypeRequirement("adm");
 
       expect(() => clear()).not.toThrow();
     });
 
-    it("only removes citationType error, not other errors", () => {
-      const { markMissingAndScroll, clear, validationStore } = useCitationTypeRequirement();
+    it("only removes error for own scope, not other scopes", () => {
+      const adm = useCitationTypeRequirement("adm");
+      const rechtsprechung = useCitationTypeRequirement("rechtsprechung");
 
-      // Add citationType error
-      markMissingAndScroll();
+      adm.setCitationTypeValidationError("adm");
+      rechtsprechung.setCitationTypeValidationError("rechtsprechung");
 
-      // Manually add another error (simulating a different field)
-      validationStore.add("Some other error", "otherField" as "citationType");
+      adm.clear();
 
-      clear();
-
-      expect(validationStore.getByField("citationType")).toBeUndefined();
-      expect(validationStore.getByField("otherField" as "citationType")).toBeDefined();
+      expect(adm.validationStore.getByField("citationType")).toBeUndefined();
+      expect(rechtsprechung.validationStore.getByField("citationType")).toBeDefined();
     });
   });
 
   describe("shared state across instances", () => {
-    it("validationStore is shared across instances", () => {
-      const instance1 = useCitationTypeRequirement();
-      const instance2 = useCitationTypeRequirement();
+    it("validationStore is shared across instances with same scope", () => {
+      const instance1 = useCitationTypeRequirement("adm");
+      const instance2 = useCitationTypeRequirement("adm");
 
-      instance1.markMissingAndScroll();
+      instance1.setCitationTypeValidationError("adm");
 
       expect(instance2.validationStore.getByField("citationType")).toBeDefined();
       expect(instance1.validationStore.getByField("citationType")).toEqual(
@@ -149,8 +121,8 @@ describe("useCitationTypeRequirement", () => {
     });
 
     it("currentCitationType is shared across instances", () => {
-      const instance1 = useCitationTypeRequirement();
-      const instance2 = useCitationTypeRequirement();
+      const instance1 = useCitationTypeRequirement("adm");
+      const instance2 = useCitationTypeRequirement("adm");
 
       instance1.setCurrentCitationType("Vergleiche");
 
@@ -158,11 +130,11 @@ describe("useCitationTypeRequirement", () => {
       expect(instance1.currentCitationType.value).toBe(instance2.currentCitationType.value);
     });
 
-    it("clearing validation error in one instance affects all instances", () => {
-      const instance1 = useCitationTypeRequirement();
-      const instance2 = useCitationTypeRequirement();
+    it("clearing validation error in one instance affects same-scope instances", () => {
+      const instance1 = useCitationTypeRequirement("adm");
+      const instance2 = useCitationTypeRequirement("adm");
 
-      instance1.markMissingAndScroll();
+      instance1.setCitationTypeValidationError("adm");
       instance2.clear();
 
       expect(instance1.validationStore.getByField("citationType")).toBeUndefined();
@@ -170,8 +142,8 @@ describe("useCitationTypeRequirement", () => {
     });
 
     it("updating currentCitationType in one instance affects all instances", () => {
-      const instance1 = useCitationTypeRequirement();
-      const instance2 = useCitationTypeRequirement();
+      const instance1 = useCitationTypeRequirement("adm");
+      const instance2 = useCitationTypeRequirement("adm");
 
       instance1.setCurrentCitationType("Ablehnung");
       instance2.setCurrentCitationType("Vergleiche");

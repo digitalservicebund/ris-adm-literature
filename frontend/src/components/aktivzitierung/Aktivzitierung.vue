@@ -20,8 +20,8 @@ import errorMessages from "@/i18n/errors.json";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 import type { CitationTypeScope } from "@/composables/useCitationaTypeRequirement";
 
-
-const { currentCitationType, setCurrentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
+const { currentCitationType, setCurrentCitationType, setCitationTypeValidationError } =
+  useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
 
 /** ------------------------------------------------------------------
@@ -180,10 +180,10 @@ function addSearchResult(result: R) {
       | string
       | undefined);
 
-      if (props.requireCitationType && !citationTypeValue?.trim()) {
-  if (props.citationTypeScope) markMissingAndScroll(props.citationTypeScope);
-  return;
-}
+  if (props.requireCitationType && !citationTypeValue?.trim()) {
+    if (props.citationTypeScope) setCitationTypeValidationError(props.citationTypeScope);
+    return;
+  }
 
   // Check if this exact combination already exists
   // If requireCitationType is true: use documentNumber|citationType (allows same doc with different types)

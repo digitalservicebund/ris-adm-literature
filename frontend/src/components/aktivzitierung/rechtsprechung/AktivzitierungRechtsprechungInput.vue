@@ -82,7 +82,8 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungRsRef.value))
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
-const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement("rechtsprechung");
+const { validationStore, clear, setCurrentCitationType } =
+  useCitationTypeRequirement("rechtsprechung");
 const { hasValidationErrors } = useSubmitValidation([
   () => validationStore.getByField("citationType")?.message,
 ]);
@@ -91,7 +92,9 @@ watch(
   () => validationStore.getByField("citationType"),
   (error) => {
     if (!error) return;
-    document.getElementById("rs-activeCitationPredicate")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    document
+      .getElementById("rs-activeCitationPredicate")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
   },
 );
 
@@ -103,7 +106,9 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
 function onClickSave() {
   if (!aktivzitierungRsRef.value.citationType?.trim()) {
     validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-    document.getElementById("rs-activeCitationPredicate")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    document
+      .getElementById("rs-activeCitationPredicate")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
   if (hasValidationErrors.value) return;
@@ -131,7 +136,12 @@ function onClickSearch() {
   <div>
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
-        <InputField id="rs-activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps" :validation-error="validationStore.getByField('citationType')">
+        <InputField
+          id="rs-activeCitationPredicate"
+          label="Art der Zitierung"
+          v-slot="slotProps"
+          :validation-error="validationStore.getByField('citationType')"
+        >
           <ZitierArtDropDown
             :input-id="slotProps.id"
             v-model="citationType"
