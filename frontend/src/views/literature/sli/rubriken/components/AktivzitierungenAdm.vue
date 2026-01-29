@@ -23,6 +23,7 @@ const props = defineProps<{
           v-model="aktivzitierungAdm"
           :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
           :require-citation-type="requireCitationType"
+          :citation-type-scope="'adm'"
         >
           <template #item="{ aktivzitierung }">
             <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />

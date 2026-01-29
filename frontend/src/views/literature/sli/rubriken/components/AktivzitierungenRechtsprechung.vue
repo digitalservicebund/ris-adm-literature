@@ -18,6 +18,7 @@ const aktivzitierung = defineModel<AktivzitierungRechtsprechung[]>();
         <Aktivzitierung
           v-model="aktivzitierung"
           :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
+          :citation-type-scope="'rechtsprechung'"
         >
           <template #item="{ aktivzitierung }">
             <AktivzitierungRechtsprechungItem :aktivzitierung="aktivzitierung" />

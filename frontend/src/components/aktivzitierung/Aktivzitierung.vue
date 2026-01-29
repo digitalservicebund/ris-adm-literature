@@ -18,6 +18,8 @@ import SearchResults from "../SearchResults.vue";
 import { RisPaginator } from "@digitalservicebund/ris-ui/components";
 import errorMessages from "@/i18n/errors.json";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
+import type { CitationTypeScope } from "@/composables/useCitationaTypeRequirement";
+
 
 const { currentCitationType, setCurrentCitationType, markMissingAndScroll } = useCitationTypeRequirement();
 const ITEMS_PER_PAGE = 15;
@@ -32,6 +34,7 @@ const props = defineProps<{
     searchParams: Ref<SP | undefined>,
   ) => UseFetchReturn<R>;
   requireCitationType?: boolean;
+  citationTypeScope?: CitationTypeScope;
 }>();
 
 const aktivzitierungList = defineModel<T[]>({ default: () => [] });
@@ -177,10 +180,10 @@ function addSearchResult(result: R) {
       | string
       | undefined);
 
-  if (props.requireCitationType && !citationTypeValue?.trim()) {
-    markMissingAndScroll();
-    return;
-  }
+      if (props.requireCitationType && !citationTypeValue?.trim()) {
+  if (props.citationTypeScope) markMissingAndScroll(props.citationTypeScope);
+  return;
+}
 
   // Check if this exact combination already exists
   // If requireCitationType is true: use documentNumber|citationType (allows same doc with different types)

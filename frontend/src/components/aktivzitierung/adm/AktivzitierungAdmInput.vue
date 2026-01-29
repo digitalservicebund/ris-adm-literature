@@ -16,6 +16,7 @@ import { Button } from "primevue";
 import { isAktivzitierungEmpty } from "@/utils/validators";
 import { useValidationStore } from "@/composables/useValidationStore";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
+import { useSubmitValidation } from "@/composables/useSubmitValidation";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
@@ -94,24 +95,17 @@ watch(
 
 const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value));
 
-const hasValidationErrors = computed(() => {
-  const citationTypeError = validationStore.getByField("citationType");
-  const dateError = dateValidationStore.getByField("inkrafttretedatum");
-
-  return !!citationTypeError || !!dateError;
-});
-
-const isInvalid = computed(() => isEmpty.value || hasValidationErrors.value);
-
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
   if (!aktivzitierungAdmRef.value.citationType?.trim()) {
     validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-    const citationTypeField = document.getElementById("activeCitationPredicate");
+    const citationTypeField = document.getElementById("adm-activeCitationPredicate");
     citationTypeField?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
+  if (hasValidationErrors.value) return;
+
 
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
@@ -131,8 +125,14 @@ function onClickSearch() {
   emit("search", aktivzitierungAdmRef.value);
 }
 
-const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement();
+const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement("adm");
 const dateValidationStore = useValidationStore<"inkrafttretedatum">();
+
+const { hasValidationErrors } = useSubmitValidation([
+  () => validationStore.getByField("citationType")?.message, 
+  () => dateValidationStore.getByField("inkrafttretedatum")?.message,
+]);
+
 
 watch(
   () => validationStore.getByField("citationType"),
@@ -254,7 +254,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
         label="Übernehmen"
         severity="secondary"
         size="small"
-        :disabled="isInvalid"
+        :disabled="isEmpty"
         @click.stop="onClickSave"
       />
       <Button
