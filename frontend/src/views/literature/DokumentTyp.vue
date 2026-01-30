@@ -51,8 +51,8 @@ onMounted(async () => {
 
 function openOverlay() {
   onComplete({ query: undefined });
-  if (autoCompleteMultipleRef?.value?.autoCompleteRef) {
-    autoCompleteMultipleRef.value.autoCompleteRef.show();
+  if (autoCompleteMultipleRef?.value) {
+    autoCompleteMultipleRef.value.show();
   }
 }
 
