@@ -12,6 +12,8 @@ import { isAktivzitierungEmpty } from "@/utils/validators";
 import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
 import type { Court } from "@/domain/court";
 import CourtDropDown from "@/components/dropdown/CourtDropDown.vue";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
+import { useSubmitValidation } from "@/composables/useSubmitValidation";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungRechtsprechung;
@@ -80,7 +82,37 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungRsRef.value))
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
+const { validationStore, clear, setCurrentCitationType } =
+  useCitationTypeRequirement("rechtsprechung");
+const { hasValidationErrors } = useSubmitValidation([
+  () => validationStore.getByField("citationType")?.message,
+]);
+
+watch(
+  () => validationStore.getByField("citationType"),
+  (error) => {
+    if (!error) return;
+    document
+      .getElementById("rs-activeCitationPredicate")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  },
+);
+
+function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
+  clear();
+  setCurrentCitationType(selectedCitationType?.abbreviation);
+}
+
 function onClickSave() {
+  if (!aktivzitierungRsRef.value.citationType?.trim()) {
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+    document
+      .getElementById("rs-activeCitationPredicate")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (hasValidationErrors.value) return;
+
   emit("save", aktivzitierungRsRef.value);
   if (!isExistingEntry.value) {
     aktivzitierungRsRef.value = createInitial();
@@ -104,13 +136,19 @@ function onClickSearch() {
   <div>
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
-        <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
+        <InputField
+          id="rs-activeCitationPredicate"
+          label="Art der Zitierung *"
+          v-slot="slotProps"
+          :validation-error="validationStore.getByField('citationType')"
+        >
           <ZitierArtDropDown
             :input-id="slotProps.id"
             v-model="citationType"
-            :invalid="false"
+            :invalid="slotProps.hasError"
             :source-document-category="DocumentCategory.LITERATUR"
             :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+            @update:modelValue="onCitationTypeUpdate($event as ZitierArt | undefined)"
           />
         </InputField>
       </div>

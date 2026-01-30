@@ -107,9 +107,12 @@ useScrollToHash();
         >Inhaltliche Erschließung</TitleElement
       >
       <div class="flex flex-col gap-32">
-        <AktivzitierungenRechtsprechung v-model="aktivzitierungRechtsprechung" />
+        <AktivzitierungenRechtsprechung
+          v-model="aktivzitierungRechtsprechung"
+          require-citation-type
+        />
         <AktivzitierungenSli v-model="aktivzitierungSli" />
-        <AktivzitierungenAdm v-model="aktivzitierungAdm" />
+        <AktivzitierungenAdm v-model="aktivzitierungAdm" require-citation-type />
       </div>
     </section>
   </div>

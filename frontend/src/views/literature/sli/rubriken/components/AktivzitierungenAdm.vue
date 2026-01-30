@@ -7,6 +7,9 @@ import { useGetAdmPaginatedDocUnitsForSli } from "@/services/literature/literatu
 import AktivzitierungAdmSearchResult from "@/components/aktivzitierung/adm/AktivzitierungAdmSearchResult.vue";
 
 const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
+const props = defineProps<{
+  requireCitationType?: boolean;
+}>();
 </script>
 
 <template>
@@ -19,6 +22,8 @@ const aktivzitierungAdm = defineModel<AktivzitierungAdm[]>();
         <Aktivzitierung
           v-model="aktivzitierungAdm"
           :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
+          :require-citation-type="requireCitationType"
+          :citation-type-scope="'adm'"
         >
           <template #item="{ aktivzitierung }">
             <AktivzitierungAdmItem :aktivzitierung="aktivzitierung" />

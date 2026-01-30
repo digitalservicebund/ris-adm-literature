@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 import { InputText } from "primevue";
 import AktivzitierungAdmInput from "./AktivzitierungAdmInput.vue";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 
 function renderComponent(props: {
   aktivzitierung?: AktivzitierungAdm;
@@ -56,6 +57,10 @@ describe("AktivzitierungInput", () => {
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
 
+    // Set citation type first (required for save)
+    const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+    await user.type(citationTypeInput, "Vergleiche");
+
     const input = screen.getByRole("textbox", { name: "Dokumentnummer" });
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
 
@@ -74,6 +79,41 @@ describe("AktivzitierungInput", () => {
     ]);
   });
 
+  it("does not emit save when citation type is empty", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungAdm = {
+      id: "123",
+      documentNumber: "Some Doc",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
+  });
+
+  it("does not emit save when citation type validation error is present", async () => {
+    const user = userEvent.setup();
+    const { validationStore } = useCitationTypeRequirement("adm");
+
+    const initialValue: AktivzitierungAdm = {
+      id: "123",
+      citationType: "Vergleiche",
+      documentNumber: "Doc",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue });
+
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(emitted().save).toBeUndefined();
+  });
+
   it.each([
     { label: "Art der Zitierung", inputValue: "Abgr", expectedKey: "citationType" },
     { label: "Normgeber", inputValue: "Bundestag", expectedKey: "normgeber" },
@@ -87,6 +127,12 @@ describe("AktivzitierungInput", () => {
     async ({ label, inputValue, expectedKey }) => {
       const user = userEvent.setup();
       const { emitted } = renderComponent({ aktivzitierung: { id: "123" } });
+
+      // Set citation type first if it's not the field being tested (required for save)
+      if (expectedKey !== "citationType") {
+        const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+        await user.type(citationTypeInput, "Vergleiche");
+      }
 
       const input = screen.getByRole("textbox", { name: label });
       await user.type(input, inputValue);
@@ -105,6 +151,10 @@ describe("AktivzitierungInput", () => {
     vi.stubGlobal("crypto", { randomUUID: () => "new-uuid" });
 
     const { emitted } = renderComponent({ aktivzitierung: undefined });
+
+    // Set citation type first (required for save)
+    const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
+    await user.type(citationTypeInput, "Vergleiche");
 
     const input = screen.getByRole("textbox", { name: "Aktenzeichen" });
     await user.type(input, "TEST-AZ");
@@ -184,5 +234,15 @@ describe("AktivzitierungInput", () => {
     await rerender({ aktivzitierung: newValue });
 
     expect(input).toHaveValue("Updated via Prop");
+  });
+
+  it("shows validation error when citation type is empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({ aktivzitierung: { id: "123", documentNumber: "Some Doc" } });
+
+    const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
+    await user.click(saveButton);
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
   });
 });

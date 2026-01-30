@@ -14,6 +14,9 @@ import DokumentTypDropDown from "@/components/dropdown/DokumentTypDropDown.vue";
 import { DocumentCategory } from "@/domain/documentType";
 import { Button } from "primevue";
 import { isAktivzitierungEmpty } from "@/utils/validators";
+import { useValidationStore } from "@/composables/useValidationStore";
+import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
+import { useSubmitValidation } from "@/composables/useSubmitValidation";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
@@ -95,6 +98,14 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value)
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
 function onClickSave() {
+  if (!aktivzitierungAdmRef.value.citationType?.trim()) {
+    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
+    const citationTypeField = document.getElementById("adm-activeCitationPredicate");
+    citationTypeField?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (hasValidationErrors.value) return;
+
   emit("save", aktivzitierungAdmRef.value);
   if (!isExistingEntry.value) {
     aktivzitierungAdmRef.value = createInitial();
@@ -112,19 +123,47 @@ function onClickDelete() {
 function onClickSearch() {
   emit("search", aktivzitierungAdmRef.value);
 }
+
+const { validationStore, clear, setCurrentCitationType } = useCitationTypeRequirement("adm");
+const dateValidationStore = useValidationStore<"inkrafttretedatum">();
+
+const { hasValidationErrors } = useSubmitValidation([
+  () => validationStore.getByField("citationType")?.message,
+  () => dateValidationStore.getByField("inkrafttretedatum")?.message,
+]);
+
+watch(
+  () => validationStore.getByField("citationType"),
+  (error) => {
+    if (!error) return;
+    const field = document.getElementById("adm-activeCitationPredicate");
+    field?.scrollIntoView({ behavior: "smooth", block: "center" });
+  },
+);
+
+function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
+  clear();
+  setCurrentCitationType(selectedCitationType?.abbreviation);
+}
 </script>
 
 <template>
   <div>
     <div class="flex flex-col gap-24">
       <div class="flex flex-row gap-24">
-        <InputField id="activeCitationPredicate" label="Art der Zitierung" v-slot="slotProps">
+        <InputField
+          id="adm-activeCitationPredicate"
+          label="Art der Zitierung *"
+          v-slot="slotProps"
+          :validation-error="validationStore.getByField('citationType')"
+        >
           <ZitierArtDropDown
             :input-id="slotProps.id"
             v-model="citationType"
-            :invalid="false"
+            :invalid="slotProps.hasError"
             :source-document-category="DocumentCategory.LITERATUR"
             :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+            @update:modelValue="onCitationTypeUpdate($event as ZitierArt | undefined)"
           />
         </InputField>
         <InputField id="normgeber" label="Normgeber" v-slot="slotProps">
@@ -132,15 +171,28 @@ function onClickSearch() {
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <InputField id="inkrafttretedatum" label="Datum des Inkrafttretens" v-slot="slotProps">
+        <InputField
+          id="inkrafttretedatum"
+          label="Datum des Inkrafttretens"
+          v-slot="slotProps"
+          :validation-error="dateValidationStore.getByField('inkrafttretedatum')"
+          @update:validation-error="
+            (validationError) =>
+              validationError
+                ? dateValidationStore.add(validationError.message, 'inkrafttretedatum')
+                : dateValidationStore.remove('inkrafttretedatum')
+          "
+        >
           <DateInput
             :id="slotProps.id"
             v-model="aktivzitierungAdmRef.inkrafttretedatum"
             ariaLabel="Inkrafttretedatum"
             class="ds-input-medium"
             is-future-date
-            :has-error="false"
-          ></DateInput>
+            :has-error="slotProps.hasError"
+            @focus="dateValidationStore.remove('inkrafttretedatum')"
+            @update:validation-error="slotProps.updateValidationError"
+          />
         </InputField>
         <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
           <InputText
