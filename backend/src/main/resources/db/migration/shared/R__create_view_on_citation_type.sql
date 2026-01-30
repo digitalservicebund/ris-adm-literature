@@ -13,6 +13,7 @@ SELECT ct.id,
        case
            when (target.label = 'V') then 'VERWALTUNGSVORSCHRIFTEN'
            when (target.label in ('U', 'S', 'L')) then 'LITERATUR'
+           when (target.label = 'R') then 'RECHTSPRECHUNG'
        end as target_document_category
 FROM lookup_tables.citation_type ct
          JOIN lookup_tables.document_category source ON ct.documentation_unit_document_category_id = source.id
