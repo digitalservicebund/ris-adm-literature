@@ -14,6 +14,7 @@ import type { Court } from "@/domain/court";
 import CourtDropDown from "@/components/dropdown/CourtDropDown.vue";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 import { useSubmitValidation } from "@/composables/useSubmitValidation";
+import { useScrollToElement } from "@/composables/useScroll";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungRechtsprechung;
@@ -81,6 +82,7 @@ watch(
 const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungRsRef.value));
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
+const citationTypeFieldRef = ref<HTMLElement | null>(null);
 
 const { validationStore, clear, setCurrentCitationType } =
   useCitationTypeRequirement("rechtsprechung");
@@ -92,9 +94,7 @@ watch(
   () => validationStore.getByField("citationType"),
   (error) => {
     if (!error) return;
-    document
-      .getElementById("rs-activeCitationPredicate")
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    useScrollToElement(citationTypeFieldRef);
   },
 );
 
@@ -106,9 +106,8 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
 function onClickSave() {
   if (!aktivzitierungRsRef.value.citationType?.trim()) {
     validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-    document
-      .getElementById("rs-activeCitationPredicate")
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    useScrollToElement(citationTypeFieldRef);
     return;
   }
   if (hasValidationErrors.value) return;
@@ -138,6 +137,7 @@ function onClickSearch() {
       <div class="flex flex-row gap-24">
         <InputField
           id="rs-activeCitationPredicate"
+          ref="citationTypeFieldRef"
           label="Art der Zitierung *"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"

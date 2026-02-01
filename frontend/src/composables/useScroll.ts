@@ -1,4 +1,4 @@
-import { onMounted, watch, nextTick, type Ref } from "vue";
+import { type ComponentPublicInstance, onMounted, watch, nextTick, type Ref } from "vue";
 import { useRoute } from "vue-router";
 
 /**
@@ -28,16 +28,24 @@ export function useScrollToHash(offset = 120) {
 /**
  * Performs the smooth page scroll to the element referenced by the Ref,
  * applying an offset for the fixed header.
- * * @param elementRef The Vue Ref pointing to the HTML element to scroll to.
+ * Accepts either a ref to an HTMLElement or to a Vue component instance (uses $el).
+ *
+ * @param elementRef The Vue Ref pointing to the HTML element to scroll to.
  */
-export function useScrollToElement(elementRef: Ref<HTMLElement | null>, offset = 150) {
+export function useScrollToElement(
+  elementRef: Ref<HTMLElement | ComponentPublicInstance | null>,
+  offset = 150,
+) {
   // Wait for Vue's DOM update
   nextTick(() => {
     // Wait for the browser to finalize layout calculation
     requestAnimationFrame(() => {
-      const element = elementRef.value;
+      const raw = elementRef.value;
 
-      if (element) {
+      const element: HTMLElement | null =
+        raw && typeof raw === "object" && "$el" in raw ? raw.$el : raw;
+
+      if (element?.getBoundingClientRect) {
         const viewportTop = element.getBoundingClientRect().top;
 
         // Calculate the absolute position in the document

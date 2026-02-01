@@ -17,6 +17,7 @@ import { isAktivzitierungEmpty } from "@/utils/validators";
 import { useValidationStore } from "@/composables/useValidationStore";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 import { useSubmitValidation } from "@/composables/useSubmitValidation";
+import { useScrollToElement } from "@/composables/useScroll";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungAdm;
@@ -97,11 +98,13 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungAdmRef.value)
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 
+const citationTypeFieldRef = ref<HTMLElement | null>(null);
+
 function onClickSave() {
   if (!aktivzitierungAdmRef.value.citationType?.trim()) {
     validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-    const citationTypeField = document.getElementById("adm-activeCitationPredicate");
-    citationTypeField?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    useScrollToElement(citationTypeFieldRef);
     return;
   }
   if (hasValidationErrors.value) return;
@@ -136,8 +139,7 @@ watch(
   () => validationStore.getByField("citationType"),
   (error) => {
     if (!error) return;
-    const field = document.getElementById("adm-activeCitationPredicate");
-    field?.scrollIntoView({ behavior: "smooth", block: "center" });
+    useScrollToElement(citationTypeFieldRef);
   },
 );
 
@@ -153,6 +155,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
       <div class="flex flex-row gap-24">
         <InputField
           id="adm-activeCitationPredicate"
+          ref="citationTypeFieldRef"
           label="Art der Zitierung *"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"
