@@ -27,8 +27,8 @@ public class CourtService {
   /**
    * Finds a paginated list of courts based on type or location.
    *
-   * @param query The query containing search terms and pagination info.
-   * @return A page of {@link Court} DTOs.
+   * @param query The query containing search term and pagination info.
+   * @return A page of {@link Court}.
    */
   @Transactional(readOnly = true)
   public Page<Court> findCourts(@Nonnull CourtQuery query) {

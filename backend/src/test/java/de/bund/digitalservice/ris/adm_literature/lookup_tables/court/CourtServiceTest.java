@@ -30,19 +30,18 @@ class CourtServiceTest {
   @Test
   void findCourts_all_whenSearchTermIsBlank() {
     // given
-    var entity1 = new CourtEntity();
-    entity1.setId(UUID.randomUUID());
-    entity1.setType("AG");
-    entity1.setLocation("Aachen");
+    var court1 = new CourtEntity();
+    court1.setId(UUID.randomUUID());
+    court1.setType("AG");
+    court1.setLocation("Aachen");
 
-    var entity2 = new CourtEntity();
-    entity2.setId(UUID.randomUUID());
-    entity2.setType("Berufsgericht für Architekten");
-    entity2.setLocation("Bremen");
+    var court2 = new CourtEntity();
+    court2.setId(UUID.randomUUID());
+    court2.setType("Berufsgericht für Architekten");
+    court2.setLocation("Bremen");
 
-    // Stubbing the repository to return a Page of entities
     when(courtRepository.findAll(any(Pageable.class))).thenReturn(
-      new PageImpl<>(List.of(entity1, entity2))
+      new PageImpl<>(List.of(court1, court2))
     );
 
     var query = new CourtQuery(null, new QueryOptions(0, 10, "type", Sort.Direction.ASC, true));
@@ -63,9 +62,9 @@ class CourtServiceTest {
   void findCourts_withSearchTerm() {
     // given
     String search = "München";
-    var entity = new CourtEntity();
-    entity.setType("LG");
-    entity.setLocation("München");
+    var court = new CourtEntity();
+    court.setType("LG");
+    court.setLocation("München");
 
     when(
       courtRepository.findByTypeContainingIgnoreCaseOrLocationContainingIgnoreCase(
@@ -73,7 +72,7 @@ class CourtServiceTest {
         eq(search),
         any(Pageable.class)
       )
-    ).thenReturn(new PageImpl<>(List.of(entity)));
+    ).thenReturn(new PageImpl<>(List.of(court)));
 
     var query = new CourtQuery(search, new QueryOptions(0, 10, "type", Sort.Direction.ASC, true));
 
