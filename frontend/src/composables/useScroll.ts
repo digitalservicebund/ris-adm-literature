@@ -31,6 +31,7 @@ export function useScrollToHash(offset = 120) {
  * Accepts either a ref to an HTMLElement or to a Vue component instance (uses $el).
  *
  * @param elementRef The Vue Ref pointing to the HTML element to scroll to.
+ * @param offset subtract from the scroll position (e.g. for fixed header). Default 150.
  */
 export function useScrollToElement(
   elementRef: Ref<HTMLElement | ComponentPublicInstance | null>,
