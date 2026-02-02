@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import { parseIsoDateToLocal } from "@/utils/dateHelpers";
-import IconReceiptLongFilled from "~icons/ic/baseline-receipt-long";
-import IconReceiptLongOutline from "~icons/ic/outline-receipt-long";
+import IconBaselineDescription from "~icons/ic/baseline-description";
+import IconOutlineDescription from "~icons/ic/outline-description";
 import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
 
 const props = defineProps<{
@@ -49,8 +49,8 @@ const metaSummary = computed(() => {
 
 <template>
   <div class="flex w-full items-center gap-10">
-    <IconReceiptLongFilled v-if="!!aktivzitierung.documentNumber" class="text-neutral-800" />
-    <IconReceiptLongOutline v-else class="text-neutral-800" />
+    <IconBaselineDescription v-if="!!aktivzitierung.documentNumber" class="text-neutral-800" />
+    <IconOutlineDescription v-else class="text-neutral-800" />
     <div class="flex flex-col">
       <div class="ris-body1-regular">
         {{ metaSummary }}

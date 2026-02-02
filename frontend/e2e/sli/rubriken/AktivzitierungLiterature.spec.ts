@@ -1143,6 +1143,9 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
     await aktenzeichenInput.fill("AZ-123");
 
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
+
     // When: click Übernehmen
     await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
@@ -1182,6 +1185,9 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
     await aktenzeichenInput.fill("AZ-123");
 
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
+
     // When: click Übernehmen
     await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
@@ -1218,6 +1224,9 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await aktiv.getByRole("combobox", { name: "Gericht" }).click();
     await page.getByRole("option", { name: "AG Aachen" }).click();
 
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
+
     // When: click Übernehmen
     await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
@@ -1245,16 +1254,12 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
   }) => {
     const aktiv = getRsAktivzitierungSection(page);
 
-    // Given: user fills only optional fields (no citation type, no Gericht, no Aktenzeichen)
-    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
-    await dateInput.fill("01.01.2026");
-
     // When: click Übernehmen
     await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
     // Then: validation error(s) visible, no entry added
     const errors = aktiv.getByText("Pflichtfeld nicht befüllt");
-    await expect(errors).toHaveCount(3);
+    await expect(errors).toHaveCount(4);
 
     const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
     await expect(aktivList.getByRole("listitem")).toHaveCount(0);
@@ -1270,6 +1275,9 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
 
     const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
     await aktenzeichenInput.fill("AZ-123");
+
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
 
     // Then: error clears
     await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
@@ -1408,5 +1416,44 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
     await expect(aktivList.getByRole("listitem")).toHaveCount(0);
     await expect(dateError).toBeVisible();
+  });
+
+  test("shows validation error when Entscheidungsdatum is missing, clears after fill, then allows add", async ({
+    page,
+  }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: citation type + Gericht + Aktenzeichen set, Entscheidungsdatum missing
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await expect(citationOptions).toBeVisible();
+    await citationOptions.getByRole("option").first().click();
+
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+    await aktenzeichenInput.fill("AZ-123");
+
+    // When: click Übernehmen
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: validation error visible, no entry added
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+    // When: user fills Entscheidungsdatum
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
+
+    // Then: error clears
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+    // When: click Übernehmen again
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: entry added
+    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
 });
