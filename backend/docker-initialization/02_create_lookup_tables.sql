@@ -398,5 +398,20 @@ INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_ra
 INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Neuregelung', '31', 'neuregelung-31', 2);
 INSERT INTO verweistyp (id, name, typ_nummer, public_id, juris_id) VALUES(gen_random_uuid(),'Rechtsgrundlage', '82', 'rechtsgrundlage-82', 3);
 
+CREATE TABLE
+    IF NOT EXISTS
+    lookup_tables.court
+(
+    id UUID NOT NULL
+        CONSTRAINT court_pkey PRIMARY KEY,
+    type VARCHAR(255),
+    location VARCHAR(255),
+    juris_id VARCHAR(255) NOT NULL
+        CONSTRAINT court_juris_id_key UNIQUE
+);
+
+INSERT INTO court (id, type, location, juris_id) VALUES
+(gen_random_uuid(), 'AG', 'Aachen', '4114'),
+(gen_random_uuid(), 'Berufsgericht für Architekten', 'Bremen', '1368');
 
 set role postgres;
