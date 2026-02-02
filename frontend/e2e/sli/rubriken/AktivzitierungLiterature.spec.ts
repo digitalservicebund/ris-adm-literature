@@ -6,7 +6,10 @@ const getSliAktivzitierungSection = (page: Page) =>
 const getAdmAktivzitierungSection = (page: Page) =>
   page.getByRole("region", { name: "Aktivzitierung (Verwaltungsvorschrift)" });
 
-test.describe("SLI Rubriken – Aktivzitierung Literatur", () => {
+const getRsAktivzitierungSection = (page: Page) =>
+  page.getByRole("region", { name: "Aktivzitierung (Rechtsprechung)" });
+
+test.describe("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV-10276"] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/literatur-selbstaendig");
     await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
@@ -555,379 +558,117 @@ test.describe(
   },
 );
 
-test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/literatur-selbstaendig");
-    await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
-    await page.waitForURL(/dokumentationseinheit/);
-  });
+test.describe(
+  "SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)",
+  { tag: ["@RISDEV-10323"] },
+  () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto("/literatur-selbstaendig");
+      await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
+      await page.waitForURL(/dokumentationseinheit/);
+    });
 
-  test(
-    "manual ADM aktivzitierung entry can be created and persists after save + reload",
-    { tag: ["@RISDEV-10323"] },
-    async ({ page }) => {
-      const aktiv = getAdmAktivzitierungSection(page);
-
-      // Given: ADM fields are visible
-      await expect(aktiv.getByText("Art der Zitierung")).toBeVisible();
-      await expect(aktiv.getByText("Normgeber")).toBeVisible();
-      await expect(aktiv.getByText("Datum des Inkrafttretens")).toBeVisible();
-      await expect(aktiv.getByText("Aktenzeichen")).toBeVisible();
-      await expect(aktiv.getByText("Periodikum")).toBeVisible();
-      await expect(aktiv.getByText("Zitatstelle")).toBeVisible();
-      await expect(aktiv.getByText("Dokumenttyp")).toBeVisible();
-      await expect(aktiv.getByText("Dokumentnummer")).toBeVisible();
-
-      // When: user fills all fields (Dokumentnummer should be ignored)
-      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
-      const options = page.getByRole("listbox", { name: "Optionsliste" });
-      await expect(options).toBeVisible();
-      await page.getByRole("option", { name: "Vergleiche" }).click();
-      await aktiv.getByRole("combobox", { name: "Normgeber" }).click();
-      await page.getByRole("option", { name: "Erstes Organ" }).click();
-      const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
-      await dateInput.fill("01.01.2024");
-      const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
-      await aktenzeichenInput.fill("Az 123");
-      await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-      await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
-      const zitatstelleInput = aktiv.getByRole("textbox", { name: "Zitatstelle" });
-      await zitatstelleInput.fill("S. 10");
-      const dokumenttypInput = aktiv.getByRole("combobox", { name: "Dokumenttyp" });
-      await dokumenttypInput.click();
-      await page.getByRole("option", { name: "VV" }).click();
-      const documentNumberInput = aktiv.getByRole("textbox", { name: "Dokumentnummer" });
-      await documentNumberInput.fill("DOC-123-MANUAL");
-
-      // And: user clicks Übernehmen
-      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
-
-      // Then: creation panel is closed and summary shows data without manual document number
-      await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
-      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-      await expect(
-        aktivList.getByText("Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)", { exact: false }),
-      ).toBeVisible();
-      await expect(aktivList.getByText("DOC-123-MANUAL")).toHaveCount(0);
-
-      // When: user saves the document
-      await page.getByRole("button", { name: "Speichern" }).click();
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
-
-      // When: user reloads the page
-      await page.reload();
-
-      const aktivAfterReload = getAdmAktivzitierungSection(page);
-      // Then: Aktivzitierung entry is still present
-      const aktivListAfterReload = aktivAfterReload.getByRole("list", {
-        name: "Aktivzitierung Liste",
-      });
-      await expect(
-        aktivListAfterReload.getByText("Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)", {
-          exact: false,
-        }),
-      ).toBeVisible();
-    },
-  );
-
-  test(
-    "manual ADM aktivzitierung entry can be edited, cancelled, deleted and changes persist",
-    { tag: ["@RISDEV-10323"] },
-    async ({ page }) => {
-      const aktiv = getAdmAktivzitierungSection(page);
-
-      // Given: ADM fields are visible
-      const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-      await citationTypeInput.fill("Ve");
-      const options = page.getByRole("listbox", { name: "Optionsliste" });
-      await expect(options).toBeVisible();
-      const vergleicheOption = options.getByRole("option", { name: "Vergleiche" });
-      await expect(vergleicheOption).toBeVisible();
-      await vergleicheOption.click();
-      const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
-      await aktenzeichenInput.fill("Az 123");
-      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
-      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-      await expect(aktivList.getByText("Az 123", { exact: false })).toBeVisible();
-
-      // When: user edits Aktenzeichen and saves
-      await aktiv.getByRole("button", { name: "Eintrag bearbeiten" }).click();
-      const editAktenzeichen = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
-      await editAktenzeichen.fill("Az 999");
-      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
-
-      // Then: summary updates to new value
-
-      await expect(aktivList.getByText("Az 999", { exact: false })).toBeVisible();
-      await expect(aktivList.getByText("Az 123", { exact: false })).toHaveCount(0);
-
-      // And: after save + reload, edit persists
-
-      await page.getByRole("button", { name: "Speichern" }).click();
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
-      await page.reload();
-
-      const aktivAfterReload = getAdmAktivzitierungSection(page);
-      const aktivListAfterReload = aktivAfterReload.getByRole("list", {
-        name: "Aktivzitierung Liste",
-      });
-      await expect(aktivListAfterReload.getByText("Az 999", { exact: false })).toBeVisible();
-
-      // And: user deletes the entry; after save + reload it’s gone
-
-      await aktivAfterReload.getByRole("button", { name: "Eintrag bearbeiten" }).click();
-      await aktivAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
-      await expect(aktivAfterReload.getByText("Az 999", { exact: false })).toHaveCount(0);
-
-      await page.getByRole("button", { name: "Speichern" }).click();
-      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
-      await page.reload();
-
-      const aktivAfterSecondReload = getAdmAktivzitierungSection(page);
-      await expect(aktivAfterSecondReload.getByText("Az 999", { exact: false })).toHaveCount(0);
-    },
-  );
-
-  test("ADM manual entry shows validation error when 'Übernehmen' clicked without citation type", async ({
-    page,
-  }) => {
-    const aktiv = getAdmAktivzitierungSection(page);
-
-    // Given: user fills some fields but NOT citation type
-    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
-    await aktenzeichenInput.fill("AZ-123");
-
-    // When: click Übernehmen
-    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
-
-    // Then: validation error appears, no entry added
-    const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-    await expect(citationTypeField).toBeInViewport();
-    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
-    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
-
-    // When: user selects citation type
-    await citationTypeField.click();
-    await page.getByRole("option", { name: "Vergleiche" }).click();
-
-    // Then: error clears, Übernehmen enabled
-    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
-    const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
-    await expect(saveButton).toBeEnabled();
-
-    // When: click Übernehmen again
-    await saveButton.click();
-
-    // Then: entry is added
-    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
-  });
-
-  test("ADM date validation error blocks submit when invalid date, error stays visible", async ({
-    page,
-  }) => {
-    const aktiv = getAdmAktivzitierungSection(page);
-
-    // Given: user selects citation type and fills invalid date
-    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
-    await page.getByRole("option", { name: "Vergleiche" }).click();
-
-    const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
-    await dateInput.fill("00.00.00");
-    await dateInput.blur(); // trigger validation
-
-    // Then: date error is visible, Übernehmen is enabled (only disabled when form empty)
-    await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
-    const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
-    await expect(saveButton).toBeEnabled();
-
-    // When: user clicks Übernehmen
-    await saveButton.click();
-
-    // Then: no entry added, date error still visible
-    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
-    await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
-  });
-
-  test.describe(
-    "SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift) – Suche",
-    {
-      tag: ["@RISDEV-10325"],
-    },
-    () => {
-      test("ADM search by document number finds seeded document", async ({ page }) => {
+    test(
+      "manual ADM aktivzitierung entry can be created and persists after save + reload",
+      { tag: ["@RISDEV-10323"] },
+      async ({ page }) => {
         const aktiv = getAdmAktivzitierungSection(page);
 
-        // When: search for seeded ADM document
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
+        // Given: ADM fields are visible
+        await expect(aktiv.getByText("Art der Zitierung")).toBeVisible();
+        await expect(aktiv.getByText("Normgeber")).toBeVisible();
+        await expect(aktiv.getByText("Datum des Inkrafttretens")).toBeVisible();
+        await expect(aktiv.getByText("Aktenzeichen")).toBeVisible();
+        await expect(aktiv.getByText("Periodikum")).toBeVisible();
+        await expect(aktiv.getByText("Zitatstelle")).toBeVisible();
+        await expect(aktiv.getByText("Dokumenttyp")).toBeVisible();
+        await expect(aktiv.getByText("Dokumentnummer")).toBeVisible();
 
-        // Then: result appears with title
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results).toBeVisible();
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-        await expect(results.getByText("Alpha Global Setup Document")).toBeVisible();
-      });
-
-      test("ADM search by partial document number finds seeded document (left and right truncated)", async ({
-        page,
-      }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // When: search with partial document number (left-truncated - missing right chars)
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR00000000");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result appears
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-
-        // When: search with partial document number (right-truncated - missing left chars)
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result appears
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-
-        // When: search with partial document number (middle match - missing both ends)
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("SNR00000000");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result appears
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-      });
-
-      test("ADM search should narrow the results when adding more search criterias (AND-relationship)", async ({
-        page,
-      }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // When: search for a specific seeded Inkrafttretedatum
-        await aktiv.getByRole("textbox", { name: "Inkrafttretedatum" }).fill("01.12.2025");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: 2 results should be visible
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results).toBeVisible();
-        const items = results.getByRole("listitem");
-        await expect(items).toHaveCount(2);
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-
-        // When: narrowing the search with a periodikum
-        await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-        await page.getByRole("option", { name: "BKK" }).click();
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: 1 result should be visible
-        await expect(items).toHaveCount(1);
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-
-        // When: narrowing the search with normgeber
-        const normgeber = aktiv.getByRole("combobox", { name: "Normgeber" });
-        await normgeber.click();
-        await expect(page.getByRole("listbox", { name: "Optionsliste" })).toBeVisible();
-        await page.getByRole("option", { name: "Erstes Organ" }).click();
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result should still be visible
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-
-        // When: narrowing the search with aktenzeichen
-        await aktiv.getByRole("textbox", { name: "Aktenzeichen" }).fill("Akt 1");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result should still be visible
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-
-        // When: narrowing the search with dokumenttyp
-        const dokumenttyp = aktiv.getByRole("combobox", { name: "Dokumenttyp" });
-        await dokumenttyp.click();
-        await expect(page.getByRole("listbox", { name: "Optionsliste" })).toBeVisible();
-        await page.getByRole("option", { name: "VR" }).click();
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result should still be visible
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-
-        // When: narrowing the search with Zitatstelle
-        await aktiv.getByRole("textbox", { name: "Zitatstelle" }).fill("789");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: result should still be visible
-        await expect(results.getByText("KSNR000000004")).toBeVisible();
-      });
-
-      test("ADM search shows no-results message when nothing matches", async ({ page }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // Given
-        await aktiv
-          .getByRole("textbox", { name: "Dokumentnummer" })
-          .fill("NO-MATCH-" + crypto.randomUUID());
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then
-        await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
-      });
-
-      test("ADM search paginates 15 results per page", async ({ page }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // When
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then: page 1 has 15 items
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        const items = results.getByRole("listitem");
-        await expect(items).toHaveCount(15);
-      });
-
-      test("ADM search only retrieves published documents", async ({ page }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // Given
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000003");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-
-        // Then
-        await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
-      });
-
-      test("ADM search result can be added with citation type, clears search, cannot be edited, can be deleted, persists", async ({
-        page,
-      }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // Given: user selects a citation type
-        const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-        await citationTypeInput.click();
-        await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
+        // When: user fills all fields (Dokumentnummer should be ignored)
+        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+        const options = page.getByRole("listbox", { name: "Optionsliste" });
+        await expect(options).toBeVisible();
         await page.getByRole("option", { name: "Vergleiche" }).click();
+        await aktiv.getByRole("combobox", { name: "Normgeber" }).click();
+        await page.getByRole("option", { name: "Erstes Organ" }).click();
+        const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
+        await dateInput.fill("01.01.2024");
+        const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+        await aktenzeichenInput.fill("Az 123");
+        await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
+        await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+        const zitatstelleInput = aktiv.getByRole("textbox", { name: "Zitatstelle" });
+        await zitatstelleInput.fill("S. 10");
+        const dokumenttypInput = aktiv.getByRole("combobox", { name: "Dokumenttyp" });
+        await dokumenttypInput.click();
+        await page.getByRole("option", { name: "VV" }).click();
+        const documentNumberInput = aktiv.getByRole("textbox", { name: "Dokumentnummer" });
+        await documentNumberInput.fill("DOC-123-MANUAL");
 
-        // Then: user searches for a document
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
+        // And: user clicks Übernehmen
+        await aktiv.getByRole("button", { name: "Übernehmen" }).click();
 
-        // When
-        await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
-
-        // Then: entry in list, creation panel closed, not editable, deletable
-        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-        await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+        // Then: creation panel is closed and summary shows data without manual document number
         await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
+        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
         await expect(
-          aktivList.getByRole("button", { name: "Eintrag bearbeiten" }),
-        ).not.toBeAttached();
-        await expect(aktivList.getByRole("button", { name: "Eintrag löschen" })).toBeVisible();
-        // Verify summary shows document number and title
-        await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
-        await expect(aktivList.getByText("KSNR000000001")).toBeVisible();
+          aktivList.getByText("Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)", { exact: false }),
+        ).toBeVisible();
+        await expect(aktivList.getByText("DOC-123-MANUAL")).toHaveCount(0);
 
-        // When: save + reload
+        // When: user saves the document
+        await page.getByRole("button", { name: "Speichern" }).click();
+        await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+
+        // When: user reloads the page
+        await page.reload();
+
+        const aktivAfterReload = getAdmAktivzitierungSection(page);
+        // Then: Aktivzitierung entry is still present
+        const aktivListAfterReload = aktivAfterReload.getByRole("list", {
+          name: "Aktivzitierung Liste",
+        });
+        await expect(
+          aktivListAfterReload.getByText("Erstes Organ, 01.01.2024, Az 123, ABc S. 10 (VV)", {
+            exact: false,
+          }),
+        ).toBeVisible();
+      },
+    );
+
+    test(
+      "manual ADM aktivzitierung entry can be edited, cancelled, deleted and changes persist",
+      { tag: ["@RISDEV-10323"] },
+      async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page);
+
+        // Given: ADM fields are visible
+        const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+        await citationTypeInput.fill("Ve");
+        const options = page.getByRole("listbox", { name: "Optionsliste" });
+        await expect(options).toBeVisible();
+        const vergleicheOption = options.getByRole("option", { name: "Vergleiche" });
+        await expect(vergleicheOption).toBeVisible();
+        await vergleicheOption.click();
+        const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+        await aktenzeichenInput.fill("Az 123");
+        await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+        await expect(aktivList.getByText("Az 123", { exact: false })).toBeVisible();
+
+        // When: user edits Aktenzeichen and saves
+        await aktiv.getByRole("button", { name: "Eintrag bearbeiten" }).click();
+        const editAktenzeichen = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+        await editAktenzeichen.fill("Az 999");
+        await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+        // Then: summary updates to new value
+
+        await expect(aktivList.getByText("Az 999", { exact: false })).toBeVisible();
+        await expect(aktivList.getByText("Az 123", { exact: false })).toHaveCount(0);
+
+        // And: after save + reload, edit persists
+
         await page.getByRole("button", { name: "Speichern" }).click();
         await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
         await page.reload();
@@ -936,138 +677,736 @@ test.describe("SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)", () 
         const aktivListAfterReload = aktivAfterReload.getByRole("list", {
           name: "Aktivzitierung Liste",
         });
-        await expect(aktivListAfterReload.getByRole("listitem")).toHaveCount(1);
-        await expect(aktivListAfterReload.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
-        await expect(aktivListAfterReload.getByText("KSNR000000001")).toBeVisible();
+        await expect(aktivListAfterReload.getByText("Az 999", { exact: false })).toBeVisible();
 
-        // When: delete + save + reload
-        await aktivListAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
+        // And: user deletes the entry; after save + reload it’s gone
+
+        await aktivAfterReload.getByRole("button", { name: "Eintrag bearbeiten" }).click();
+        await aktivAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
+        await expect(aktivAfterReload.getByText("Az 999", { exact: false })).toHaveCount(0);
+
         await page.getByRole("button", { name: "Speichern" }).click();
         await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
         await page.reload();
 
-        // Then: deleted entry does not reappear after reload
-        const aktivAfterDelete = getAdmAktivzitierungSection(page);
-        const aktivListAfterDelete = aktivAfterDelete.getByRole("list", {
-          name: "Aktivzitierung Liste",
+        const aktivAfterSecondReload = getAdmAktivzitierungSection(page);
+        await expect(aktivAfterSecondReload.getByText("Az 999", { exact: false })).toHaveCount(0);
+      },
+    );
+
+    test("ADM manual entry shows validation error when 'Übernehmen' clicked without citation type", async ({
+      page,
+    }) => {
+      const aktiv = getAdmAktivzitierungSection(page);
+
+      // Given: user fills some fields but NOT citation type
+      const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+      await aktenzeichenInput.fill("AZ-123");
+
+      // When: click Übernehmen
+      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+      // Then: validation error appears, no entry added
+      const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+      await expect(citationTypeField).toBeInViewport();
+      await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+      await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+      // When: user selects citation type
+      await citationTypeField.click();
+      await page.getByRole("option", { name: "Vergleiche" }).click();
+
+      // Then: error clears, Übernehmen enabled
+      await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+      const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
+      await expect(saveButton).toBeEnabled();
+
+      // When: click Übernehmen again
+      await saveButton.click();
+
+      // Then: entry is added
+      await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+    });
+
+    test("ADM date validation error blocks submit when invalid date, error stays visible", async ({
+      page,
+    }) => {
+      const aktiv = getAdmAktivzitierungSection(page);
+
+      // Given: user selects citation type and fills invalid date
+      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+      await page.getByRole("option", { name: "Vergleiche" }).click();
+
+      const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
+      await dateInput.fill("00.00.00");
+      await dateInput.blur(); // trigger validation
+
+      // Then: date error is visible, Übernehmen is enabled (only disabled when form empty)
+      await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
+      const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
+      await expect(saveButton).toBeEnabled();
+
+      // When: user clicks Übernehmen
+      await saveButton.click();
+
+      // Then: no entry added, date error still visible
+      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+      await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+      await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
+    });
+
+    test.describe(
+      "SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift) – Suche",
+      {
+        tag: ["@RISDEV-10325"],
+      },
+      () => {
+        test("ADM search by document number finds seeded document", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // When: search for seeded ADM document
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: result appears with title
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results).toBeVisible();
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
+          await expect(results.getByText("Alpha Global Setup Document")).toBeVisible();
         });
-        await expect(aktivListAfterDelete.getByRole("listitem")).toHaveCount(0);
-        await expect(aktivListAfterDelete.getByText(/Vergleiche.*KSNR000000001/)).toHaveCount(0);
-        await expect(aktivListAfterDelete.getByText("KSNR000000001")).toHaveCount(0);
-      });
 
-      test("ADM search result cannot be added without citation type, shows validation error", async ({
-        page,
-      }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
+        test("ADM search by partial document number finds seeded document (left and right truncated)", async ({
+          page,
+        }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
 
-        // Given: search without selecting citation type
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
+          // When: search with partial document number (left-truncated - missing right chars)
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR00000000");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
 
-        // When: try to add without citation type
-        await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+          // Then: result appears
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
 
-        // Then: validation error appears, no entry added
-        const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-        await expect(citationTypeField).toBeInViewport();
-        await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
-        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-        await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+          // When: search with partial document number (right-truncated - missing left chars)
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
 
-        // When: user selects citation type
-        await citationTypeField.click();
-        await page.getByRole("option", { name: "Vergleiche" }).click();
+          // Then: result appears
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
 
-        // Then: error clears
-        await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+          // When: search with partial document number (middle match - missing both ends)
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("SNR00000000");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
 
-        // When: click add again
-        await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
-
-        // Then: entry is added
-        await expect(aktivList.getByRole("listitem")).toHaveCount(1);
-      });
-
-      test("ADM allows adding same document with different citation types", async ({ page }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // Given: add document with citation type "Ablehnung"
-        const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-        await citationTypeInput.fill("Ab");
-        await expect(page.getByRole("option", { name: "Ablehnung" })).toBeVisible();
-        await page.getByRole("option", { name: "Ablehnung" }).click();
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
-
-        // Then: first entry added
-        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-        await expect(aktivList.getByRole("listitem")).toHaveCount(1);
-
-        // When: re-open creation panel, search again, change citation type to "Vergleiche", add again
-        await aktiv.getByRole("button", { name: "Weitere Angabe" }).click();
-        const citationTypeInputSecond = aktiv.getByRole("combobox", {
-          name: "Art der Zitierung",
+          // Then: result appears
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
         });
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        await citationTypeInputSecond.clear();
-        await citationTypeInputSecond.fill("Ve");
-        await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
-        await page.getByRole("option", { name: "Vergleiche" }).click();
-        await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
 
-        // Then: second entry added (different citation type)
-        await expect(aktivList.getByRole("listitem")).toHaveCount(2);
+        test("ADM search should narrow the results when adding more search criterias (AND-relationship)", async ({
+          page,
+        }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
 
-        // When: re-open creation panel, select "Vergleiche" again, search, then add button must be disabled
-        await aktiv.getByRole("button", { name: "Weitere Angabe" }).click();
-        const citationTypeInputThird = aktiv.getByRole("combobox", {
-          name: "Art der Zitierung",
+          // When: search for a specific seeded Inkrafttretedatum
+          await aktiv.getByRole("textbox", { name: "Inkrafttretedatum" }).fill("01.12.2025");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: 2 results should be visible
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results).toBeVisible();
+          const items = results.getByRole("listitem");
+          await expect(items).toHaveCount(2);
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
+
+          // When: narrowing the search with a periodikum
+          await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
+          await page.getByRole("option", { name: "BKK" }).click();
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: 1 result should be visible
+          await expect(items).toHaveCount(1);
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
+
+          // When: narrowing the search with normgeber
+          const normgeber = aktiv.getByRole("combobox", { name: "Normgeber" });
+          await normgeber.click();
+          await expect(page.getByRole("listbox", { name: "Optionsliste" })).toBeVisible();
+          await page.getByRole("option", { name: "Erstes Organ" }).click();
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: result should still be visible
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
+
+          // When: narrowing the search with aktenzeichen
+          await aktiv.getByRole("textbox", { name: "Aktenzeichen" }).fill("Akt 1");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: result should still be visible
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
+
+          // When: narrowing the search with dokumenttyp
+          const dokumenttyp = aktiv.getByRole("combobox", { name: "Dokumenttyp" });
+          await dokumenttyp.click();
+          await expect(page.getByRole("listbox", { name: "Optionsliste" })).toBeVisible();
+          await page.getByRole("option", { name: "VR" }).click();
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: result should still be visible
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
+
+          // When: narrowing the search with Zitatstelle
+          await aktiv.getByRole("textbox", { name: "Zitatstelle" }).fill("789");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: result should still be visible
+          await expect(results.getByText("KSNR000000004")).toBeVisible();
         });
-        await citationTypeInputThird.click();
-        await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
-        await page.getByRole("option", { name: "Vergleiche" }).click();
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(
-          results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first(),
-        ).toBeDisabled();
-        await expect(results.getByText("Bereits hinzugefügt")).toBeVisible();
+
+        test("ADM search shows no-results message when nothing matches", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given
+          await aktiv
+            .getByRole("textbox", { name: "Dokumentnummer" })
+            .fill("NO-MATCH-" + crypto.randomUUID());
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then
+          await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
+        });
+
+        test("ADM search paginates 15 results per page", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // When
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then: page 1 has 15 items
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          const items = results.getByRole("listitem");
+          await expect(items).toHaveCount(15);
+        });
+
+        test("ADM search only retrieves published documents", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000003");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+          // Then
+          await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
+        });
+
+        test("ADM search result can be added with citation type, clears search, cannot be edited, can be deleted, persists", async ({
+          page,
+        }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given: user selects a citation type
+          const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+          await citationTypeInput.click();
+          await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
+          await page.getByRole("option", { name: "Vergleiche" }).click();
+
+          // Then: user searches for a document
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
+
+          // When
+          await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: entry in list, creation panel closed, not editable, deletable
+          const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+          await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+          await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
+          await expect(
+            aktivList.getByRole("button", { name: "Eintrag bearbeiten" }),
+          ).not.toBeAttached();
+          await expect(aktivList.getByRole("button", { name: "Eintrag löschen" })).toBeVisible();
+          // Verify summary shows document number and title
+          await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
+          await expect(aktivList.getByText("KSNR000000001")).toBeVisible();
+
+          // When: save + reload
+          await page.getByRole("button", { name: "Speichern" }).click();
+          await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+          await page.reload();
+
+          const aktivAfterReload = getAdmAktivzitierungSection(page);
+          const aktivListAfterReload = aktivAfterReload.getByRole("list", {
+            name: "Aktivzitierung Liste",
+          });
+          await expect(aktivListAfterReload.getByRole("listitem")).toHaveCount(1);
+          await expect(aktivListAfterReload.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
+          await expect(aktivListAfterReload.getByText("KSNR000000001")).toBeVisible();
+
+          // When: delete + save + reload
+          await aktivListAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
+          await page.getByRole("button", { name: "Speichern" }).click();
+          await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+          await page.reload();
+
+          // Then: deleted entry does not reappear after reload
+          const aktivAfterDelete = getAdmAktivzitierungSection(page);
+          const aktivListAfterDelete = aktivAfterDelete.getByRole("list", {
+            name: "Aktivzitierung Liste",
+          });
+          await expect(aktivListAfterDelete.getByRole("listitem")).toHaveCount(0);
+          await expect(aktivListAfterDelete.getByText(/Vergleiche.*KSNR000000001/)).toHaveCount(0);
+          await expect(aktivListAfterDelete.getByText("KSNR000000001")).toHaveCount(0);
+        });
+
+        test("ADM search result cannot be added without citation type, shows validation error", async ({
+          page,
+        }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given: search without selecting citation type
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
+
+          // When: try to add without citation type
+          await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: validation error appears, no entry added
+          const citationTypeField = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+          await expect(citationTypeField).toBeInViewport();
+          await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+          const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+          await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+          // When: user selects citation type
+          await citationTypeField.click();
+          await page.getByRole("option", { name: "Vergleiche" }).click();
+
+          // Then: error clears
+          await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+          // When: click add again
+          await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: entry is added
+          await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+        });
+
+        test("ADM allows adding same document with different citation types", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given: add document with citation type "Ablehnung"
+          const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+          await citationTypeInput.fill("Ab");
+          await expect(page.getByRole("option", { name: "Ablehnung" })).toBeVisible();
+          await page.getByRole("option", { name: "Ablehnung" }).click();
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: first entry added
+          const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+          await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+
+          // When: re-open creation panel, search again, change citation type to "Vergleiche", add again
+          await aktiv.getByRole("button", { name: "Weitere Angabe" }).click();
+          const citationTypeInputSecond = aktiv.getByRole("combobox", {
+            name: "Art der Zitierung",
+          });
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          await citationTypeInputSecond.clear();
+          await citationTypeInputSecond.fill("Ve");
+          await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
+          await page.getByRole("option", { name: "Vergleiche" }).click();
+          await aktiv.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: second entry added (different citation type)
+          await expect(aktivList.getByRole("listitem")).toHaveCount(2);
+
+          // When: re-open creation panel, select "Vergleiche" again, search, then add button must be disabled
+          await aktiv.getByRole("button", { name: "Weitere Angabe" }).click();
+          const citationTypeInputThird = aktiv.getByRole("combobox", {
+            name: "Art der Zitierung",
+          });
+          await citationTypeInputThird.click();
+          await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
+          await page.getByRole("option", { name: "Vergleiche" }).click();
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(
+            results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first(),
+          ).toBeDisabled();
+          await expect(results.getByText("Bereits hinzugefügt")).toBeVisible();
+        });
+
+        test("ADM uses latest citation type when changed after search", async ({ page }) => {
+          const aktiv = getAdmAktivzitierungSection(page);
+
+          // Given: select "Ablehnung", search
+          const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+          await citationTypeInput.click();
+          await expect(page.getByRole("option", { name: "Ablehnung" })).toBeVisible();
+          await page.getByRole("option", { name: "Ablehnung" }).click();
+          await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
+          await aktiv.getByRole("button", { name: "Suchen" }).click();
+          const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+          await expect(results.getByText("KSNR000000001")).toBeVisible();
+
+          // When: open combobox again, clear citation type, then select "Vergleiche" (without re-searching)
+          await citationTypeInput.click();
+          await citationTypeInput.clear();
+          await citationTypeInput.fill("Ve");
+          await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
+          await page.getByRole("option", { name: "Vergleiche" }).click();
+
+          // Then: click add
+          await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+          // Then: entry has "Vergleiche" (not "Ablehnung")
+          const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+          await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
+          await expect(aktivList.getByText(/Ablehnung.*KSNR000000001/)).toHaveCount(0);
+        });
+      },
+    );
+  },
+);
+
+test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV-10741"] }, () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/literatur-selbstaendig");
+    await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
+    await page.waitForURL(/dokumentationseinheit/);
+  });
+
+  test(
+    "manual Rechtsprechung aktivzitierung entry can be created and persists after save + reload",
+    { tag: ["@RISDEV-10741"] },
+    async ({ page }) => {
+      const aktiv = getRsAktivzitierungSection(page);
+
+      // When: user fills mandatory + some optional fields
+      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+      const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+      await expect(citationOptions).toBeVisible();
+      await citationOptions.getByRole("option").first().click();
+
+      await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+      await page.getByRole("option", { name: "AG Aachen" }).click();
+
+      const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+      await dateInput.fill("01.01.2026");
+
+      const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+      await aktenzeichenInput.fill("AZ-123-!?#");
+
+      // And: user clicks Übernehmen
+      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+      // Then: entry appears in list
+      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+      await expect(aktivList.getByText("AG, Aachen", { exact: false })).toBeVisible();
+      await expect(aktivList.getByText("AZ-123-!?#", { exact: false })).toBeVisible();
+
+      // When: save + reload
+      await page.getByRole("button", { name: "Speichern" }).click();
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+      await page.reload();
+
+      const aktivAfterReload = getRsAktivzitierungSection(page);
+      const aktivListAfterReload = aktivAfterReload.getByRole("list", {
+        name: "Aktivzitierung Liste",
       });
 
-      test("ADM uses latest citation type when changed after search", async ({ page }) => {
-        const aktiv = getAdmAktivzitierungSection(page);
-
-        // Given: select "Ablehnung", search
-        const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
-        await citationTypeInput.click();
-        await expect(page.getByRole("option", { name: "Ablehnung" })).toBeVisible();
-        await page.getByRole("option", { name: "Ablehnung" }).click();
-        await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KSNR000000001");
-        await aktiv.getByRole("button", { name: "Suchen" }).click();
-        const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
-        await expect(results.getByText("KSNR000000001")).toBeVisible();
-
-        // When: open combobox again, clear citation type, then select "Vergleiche" (without re-searching)
-        await citationTypeInput.click();
-        await citationTypeInput.clear();
-        await citationTypeInput.fill("Ve");
-        await expect(page.getByRole("option", { name: "Vergleiche" })).toBeVisible();
-        await page.getByRole("option", { name: "Vergleiche" }).click();
-
-        // Then: click add
-        await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
-
-        // Then: entry has "Vergleiche" (not "Ablehnung")
-        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-        await expect(aktivList.getByText(/Vergleiche.*KSNR000000001/)).toBeVisible();
-        await expect(aktivList.getByText(/Ablehnung.*KSNR000000001/)).toHaveCount(0);
-      });
+      // Then: entry still present
+      await expect(aktivListAfterReload.getByText("AG, Aachen", { exact: false })).toBeVisible();
+      await expect(aktivListAfterReload.getByText("AZ-123-!?#", { exact: false })).toBeVisible();
     },
   );
+
+  test("shows validation error when citation type is missing, clears after fill, then allows add", async ({
+    page,
+  }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: Gericht + Aktenzeichen set, citation type missing
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+    await aktenzeichenInput.fill("AZ-123");
+
+    // When: click Übernehmen
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: validation error visible, no entry added
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+    // When: user selects citation type (first available option, e.g. "XX")
+    const citationTypeInput = aktiv.getByRole("combobox", { name: "Art der Zitierung" });
+    await citationTypeInput.click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await expect(citationOptions).toBeVisible();
+    await citationOptions.getByRole("option").first().click();
+
+    // Then: error clears
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+    // When: click Übernehmen again
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: entry added
+    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+  });
+
+  test("shows validation error when Gericht is missing, clears after fill, then allows add", async ({
+    page,
+  }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: citation type + Aktenzeichen set, Gericht missing
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await expect(citationOptions).toBeVisible();
+    await citationOptions.getByRole("option").first().click();
+
+    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+    await aktenzeichenInput.fill("AZ-123");
+
+    // When: click Übernehmen
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: validation error visible, no entry added
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+    // When: user selects Gericht
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    // Then: error clears
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+    // When: click Übernehmen again
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: entry added
+    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+  });
+
+  test("shows validation error when Aktenzeichen is missing, clears after fill, then allows add", async ({
+    page,
+  }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: citation type + Gericht set, Aktenzeichen missing
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await expect(citationOptions).toBeVisible();
+    await citationOptions.getByRole("option").first().click();
+
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    // When: click Übernehmen
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: validation error visible, no entry added
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).toBeVisible();
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+    // When: user fills Aktenzeichen
+    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+    await aktenzeichenInput.fill("AZ-123");
+
+    // Then: error clears
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+    // When: click Übernehmen again
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: entry added
+    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+  });
+
+  test("shows validation errors when all mandatory fields are missing, clears after filling all, then allows add", async ({
+    page,
+  }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: user fills only optional fields (no citation type, no Gericht, no Aktenzeichen)
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("01.01.2026");
+
+    // When: click Übernehmen
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: validation error(s) visible, no entry added
+    const errors = aktiv.getByText("Pflichtfeld nicht befüllt");
+    await expect(errors).toHaveCount(3);
+
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+
+    // When: fill all mandatory fields
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await expect(citationOptions).toBeVisible();
+    await citationOptions.getByRole("option").first().click();
+
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+    await aktenzeichenInput.fill("AZ-123");
+
+    // Then: error clears
+    await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
+
+    // When: click Übernehmen again
+    await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+    // Then: entry added
+    await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+  });
+
+  test(
+    "Rechtsprechung manual entry can be edited, cancelled, deleted and changes persist",
+    { tag: ["@RISDEV-10741"] },
+    async ({ page }) => {
+      const aktiv = getRsAktivzitierungSection(page);
+
+      // Given: create initial entry
+      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+      const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+      await citationOptions.getByRole("option").first().click();
+
+      await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+      await page.getByRole("option", { name: "AG Aachen" }).click();
+
+      const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+      await dateInput.fill("01.01.2026");
+
+      const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+      await aktenzeichenInput.fill("AZ 123");
+
+      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+      await expect(aktivList.getByText("AZ 123", { exact: false })).toBeVisible();
+
+      // When: edit Aktenzeichen and save via Übernehmen
+      await aktiv.getByRole("button", { name: "Eintrag bearbeiten" }).click();
+      const editAktenzeichen = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
+      await editAktenzeichen.fill("AZ 999");
+      await aktiv.getByRole("button", { name: "Übernehmen" }).click();
+
+      // Then: summary updated
+      await expect(aktivList.getByText("AZ 999", { exact: false })).toBeVisible();
+      await expect(aktivList.getByText("AZ 123", { exact: false })).toHaveCount(0);
+
+      // And: after save + reload, edit persists
+      await page.getByRole("button", { name: "Speichern" }).click();
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+      await page.reload();
+
+      const aktivAfterReload = getRsAktivzitierungSection(page);
+      const aktivListAfterReload = aktivAfterReload.getByRole("list", {
+        name: "Aktivzitierung Liste",
+      });
+      await expect(aktivListAfterReload.getByText("AZ 999", { exact: false })).toBeVisible();
+
+      // When: edit again but click Abbrechen
+      await aktivAfterReload.getByRole("button", { name: "Eintrag bearbeiten" }).click();
+      const editAktenzeichen2 = aktivAfterReload.getByRole("textbox", { name: "Aktenzeichen" });
+      await editAktenzeichen2.fill("AZ CANCELLED");
+      await aktivAfterReload.getByRole("button", { name: "Abbrechen" }).click();
+
+      // Then: summary still shows previous value, not cancelled one
+      await expect(aktivListAfterReload.getByText("AZ 999", { exact: false })).toBeVisible();
+      await expect(aktivAfterReload.getByText("AZ CANCELLED")).toHaveCount(0);
+
+      // When: edit again and delete
+      await aktivAfterReload.getByRole("button", { name: "Eintrag bearbeiten" }).click();
+      await aktivAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
+      await expect(aktivAfterReload.getByText("AZ 999", { exact: false })).toHaveCount(0);
+
+      // And: after save + reload, entry is gone
+      await page.getByRole("button", { name: "Speichern" }).click();
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+      await page.reload();
+
+      const aktivAfterSecondReload = getRsAktivzitierungSection(page);
+      await expect(aktivAfterSecondReload.getByText("AZ 999", { exact: false })).toHaveCount(0);
+    },
+  );
+
+  test("Rechtsprechung date validation shows error for 11.11.201", async ({ page }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: user selects citation type and Gericht
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await citationOptions.getByRole("option").first().click();
+
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    // When: user enters invalid date
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("11.11.201");
+    await dateInput.blur(); // trigger validation
+
+    // Then: date error is visible, Übernehmen does not create entry
+    const dateError = aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/);
+    await expect(dateError).toBeVisible();
+
+    const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
+    await expect(saveButton).toBeEnabled();
+    await saveButton.click();
+
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+    await expect(dateError).toBeVisible();
+  });
+
+  test("Rechtsprechung date validation shows error for 21.21.2121", async ({ page }) => {
+    const aktiv = getRsAktivzitierungSection(page);
+
+    // Given: user selects citation type and Gericht
+    await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+    const citationOptions = page.getByRole("listbox", { name: "Optionsliste" });
+    await citationOptions.getByRole("option").first().click();
+
+    await aktiv.getByRole("combobox", { name: "Gericht" }).click();
+    await page.getByRole("option", { name: "AG Aachen" }).click();
+
+    // When: user enters invalid date
+    const dateInput = aktiv.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await dateInput.fill("21.21.2121");
+    await dateInput.blur(); // trigger validation
+
+    // Then: date error is visible, Übernehmen does not create entry
+    const dateError = aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/);
+    await expect(dateError).toBeVisible();
+
+    const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
+    await expect(saveButton).toBeEnabled();
+    await saveButton.click();
+
+    const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+    await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+    await expect(dateError).toBeVisible();
+  });
 });
