@@ -88,6 +88,7 @@ const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungRsRef.value))
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
 const citationTypeFieldRef = ref<HTMLElement | null>(null);
 const gerichtFieldRef = ref<HTMLElement | null>(null);
+const entscheidungsdatumFieldRef = ref<HTMLElement | null>(null);
 const aktenzeichenFieldRef = ref<HTMLElement | null>(null);
 
 const { validationStore, clear, setCurrentCitationType } =
@@ -107,13 +108,17 @@ function validate(): boolean {
   const missingGericht = !aktivzitierungRsRef.value.gerichttyp?.trim();
   const missingAktenzeichen = !aktivzitierungRsRef.value.aktenzeichen?.trim();
 
+  const missingEntscheidungsdatum = !aktivzitierungRsRef.value.entscheidungsdatum?.trim();
+
   if (missingCitationType) validationStore.add(MANDATORY_MESSAGE, "citationType");
   if (missingGericht) rsValidationStore.add(MANDATORY_MESSAGE, "gericht");
+  if (missingEntscheidungsdatum) rsValidationStore.add(MANDATORY_MESSAGE, "entscheidungsdatum");
   if (missingAktenzeichen) rsValidationStore.add(MANDATORY_MESSAGE, "aktenzeichen");
 
-  if (missingCitationType || missingGericht || missingAktenzeichen) {
+  if (missingCitationType || missingGericht || missingEntscheidungsdatum || missingAktenzeichen) {
     if (missingCitationType) useScrollToElement(citationTypeFieldRef);
     else if (missingGericht) useScrollToElement(gerichtFieldRef);
+    else if (missingEntscheidungsdatum) useScrollToElement(entscheidungsdatumFieldRef);
     else useScrollToElement(aktenzeichenFieldRef);
     return false;
   }
@@ -135,6 +140,12 @@ watch(
   },
 );
 
+watch(
+  () => aktivzitierungRsRef.value.entscheidungsdatum,
+  (entscheidungsdatum) => {
+    if (entscheidungsdatum?.trim()) rsValidationStore.remove("entscheidungsdatum");
+  },
+);
 watch(
   () => aktivzitierungRsRef.value.aktenzeichen,
   (aktenzeichen) => {
@@ -203,7 +214,8 @@ function onClickSearch() {
         </InputField>
         <InputField
           id="entscheidungsdatum"
-          label="Entscheidungsdatum"
+          ref="entscheidungsdatumFieldRef"
+          label="Entscheidungsdatum *"
           v-slot="slotProps"
           :validation-error="rsValidationStore.getByField('entscheidungsdatum')"
           @update:validation-error="

@@ -55,6 +55,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
       aktenzeichen: "Akte X",
       citationType: "Abgr",
       gerichttyp: "AG",
+      entscheidungsdatum: "01.01.2025",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -74,6 +75,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
         id: "123",
         aktenzeichen: "Akte Y",
         citationType: "Abgr",
+        entscheidungsdatum: "01.01.2025",
       }),
     ]);
   });
@@ -84,6 +86,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
       id: "123",
       aktenzeichen: "Some AZ",
       gerichttyp: "AG",
+      entscheidungsdatum: "01.01.2025",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -102,6 +105,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
       id: "123",
       citationType: "Abgr",
       aktenzeichen: "AZ",
+      entscheidungsdatum: "01.01.2025",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -128,6 +132,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
         citationType: "Abgr",
         gerichttyp: "AG",
         aktenzeichen: "AZ",
+        entscheidungsdatum: "01.01.2025",
       } as AktivzitierungRechtsprechung;
 
       const user = userEvent.setup();
@@ -159,6 +164,9 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
     const gerichtInput = screen.getByRole("textbox", { name: "Gericht" });
     await user.type(gerichtInput, "AG");
+
+    const entscheidungsdatumInput = screen.getByRole("textbox", { name: "Entscheidungsdatum" });
+    await user.type(entscheidungsdatumInput, "01.01.2025");
 
     const input = screen.getByRole("textbox", { name: "Aktenzeichen" });
     await user.type(input, "TEST-AZ");
@@ -194,6 +202,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
     const initialValue: AktivzitierungRechtsprechung = {
       id: "123",
       aktenzeichen: "Search Query",
+      entscheidungsdatum: "01.01.2025",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue, showSearchButton: true });
@@ -242,7 +251,14 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
   it("shows validation error when citation type is empty and Übernehmen is clicked", async () => {
     const user = userEvent.setup();
-    renderComponent({ aktivzitierung: { id: "123", gerichttyp: "AG", aktenzeichen: "Some AZ" } });
+    renderComponent({
+      aktivzitierung: {
+        id: "123",
+        gerichttyp: "AG",
+        aktenzeichen: "Some AZ",
+        entscheidungsdatum: "01.01.2025",
+      },
+    });
 
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
     await user.click(saveButton);
@@ -253,7 +269,12 @@ describe("AktivzitierungRechtsprechungInput", () => {
   it("shows validation errors for Gericht when empty and Übernehmen is clicked", async () => {
     const user = userEvent.setup();
     renderComponent({
-      aktivzitierung: { id: "123", citationType: "Abgr", aktenzeichen: "Some AZ" },
+      aktivzitierung: {
+        id: "123",
+        citationType: "Abgr",
+        aktenzeichen: "Some AZ",
+        entscheidungsdatum: "01.01.2025",
+      },
     });
 
     await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
@@ -263,7 +284,29 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
   it("shows validation errors for Aktenzeichen when empty and Übernehmen is clicked", async () => {
     const user = userEvent.setup();
-    renderComponent({ aktivzitierung: { id: "123", citationType: "Abgr", gerichttyp: "AG" } });
+    renderComponent({
+      aktivzitierung: {
+        id: "123",
+        citationType: "Abgr",
+        gerichttyp: "AG",
+        entscheidungsdatum: "01.01.2025",
+      },
+    });
+
+    await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
+  });
+  it("shows validation errors for Entscheidungsdatum when empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({
+      aktivzitierung: {
+        id: "123",
+        citationType: "Abgr",
+        gerichttyp: "AG",
+        aktenzeichen: "Some AZ",
+      },
+    });
 
     await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
 
