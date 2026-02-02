@@ -26,6 +26,4 @@ public class CourtEntity {
   private String type;
 
   private String location;
-
-  private String jurisId;
 }

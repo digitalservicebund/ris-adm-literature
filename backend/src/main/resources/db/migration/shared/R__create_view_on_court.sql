@@ -2,5 +2,5 @@
 -- This migration is executed every time this script is changed.
 
 CREATE OR REPLACE VIEW court_view AS
-SELECT id, type, location, juris_id
+SELECT id, type, location
 FROM lookup_tables.court;

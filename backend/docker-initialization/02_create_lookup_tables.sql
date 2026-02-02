@@ -405,13 +405,11 @@ CREATE TABLE
     id UUID NOT NULL
         CONSTRAINT court_pkey PRIMARY KEY,
     type VARCHAR(255),
-    location VARCHAR(255),
-    juris_id VARCHAR(255) NOT NULL
-        CONSTRAINT court_juris_id_key UNIQUE
+    location VARCHAR(255)
 );
 
-INSERT INTO court (id, type, location, juris_id) VALUES
-(gen_random_uuid(), 'AG', 'Aachen', '4114'),
-(gen_random_uuid(), 'Berufsgericht für Architekten', 'Bremen', '1368');
+INSERT INTO court (id, type, location) VALUES
+(gen_random_uuid(), 'AG', 'Aachen'),
+(gen_random_uuid(), 'Berufsgericht für Architekten', 'Bremen');
 
 set role postgres;
