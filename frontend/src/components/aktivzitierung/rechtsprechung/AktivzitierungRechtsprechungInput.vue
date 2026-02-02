@@ -14,6 +14,8 @@ import type { Court } from "@/domain/court";
 import CourtDropDown from "@/components/dropdown/CourtDropDown.vue";
 import { useCitationTypeRequirement } from "@/composables/useCitationaTypeRequirement";
 import { useSubmitValidation } from "@/composables/useSubmitValidation";
+import { useScrollToElement } from "@/composables/useScroll";
+import { useValidationStore } from "@/composables/useValidationStore";
 
 const props = defineProps<{
   aktivzitierung?: AktivzitierungRechtsprechung;
@@ -32,6 +34,9 @@ const emit = defineEmits<{
 function createInitial(): AktivzitierungRechtsprechung {
   return { id: crypto.randomUUID() };
 }
+
+type RsField = "gericht" | "entscheidungsdatum" | "aktenzeichen";
+const rsValidationStore = useValidationStore<RsField>();
 
 const aktivzitierungRsRef = ref<AktivzitierungRechtsprechung>(
   props.aktivzitierung
@@ -81,20 +86,59 @@ watch(
 const isEmpty = computed(() => isAktivzitierungEmpty(aktivzitierungRsRef.value));
 
 const isExistingEntry = computed(() => !!props.aktivzitierung?.id);
+const citationTypeFieldRef = ref<HTMLElement | null>(null);
+const gerichtFieldRef = ref<HTMLElement | null>(null);
+const aktenzeichenFieldRef = ref<HTMLElement | null>(null);
 
 const { validationStore, clear, setCurrentCitationType } =
   useCitationTypeRequirement("rechtsprechung");
+
 const { hasValidationErrors } = useSubmitValidation([
   () => validationStore.getByField("citationType")?.message,
+  () => rsValidationStore.getByField("gericht")?.message,
+  () => rsValidationStore.getByField("entscheidungsdatum")?.message,
+  () => rsValidationStore.getByField("aktenzeichen")?.message,
 ]);
+
+const MANDATORY_MESSAGE = "Pflichtfeld nicht befüllt";
+
+function validate(): boolean {
+  const missingCitationType = !aktivzitierungRsRef.value.citationType?.trim();
+  const missingGericht = !aktivzitierungRsRef.value.gerichttyp?.trim();
+  const missingAktenzeichen = !aktivzitierungRsRef.value.aktenzeichen?.trim();
+
+  if (missingCitationType) validationStore.add(MANDATORY_MESSAGE, "citationType");
+  if (missingGericht) rsValidationStore.add(MANDATORY_MESSAGE, "gericht");
+  if (missingAktenzeichen) rsValidationStore.add(MANDATORY_MESSAGE, "aktenzeichen");
+
+  if (missingCitationType || missingGericht || missingAktenzeichen) {
+    if (missingCitationType) useScrollToElement(citationTypeFieldRef);
+    else if (missingGericht) useScrollToElement(gerichtFieldRef);
+    else useScrollToElement(aktenzeichenFieldRef);
+    return false;
+  }
+  return true;
+}
 
 watch(
   () => validationStore.getByField("citationType"),
   (error) => {
     if (!error) return;
-    document
-      .getElementById("rs-activeCitationPredicate")
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    useScrollToElement(citationTypeFieldRef);
+  },
+);
+
+watch(
+  () => aktivzitierungRsRef.value.gerichttyp,
+  (gerichttyp) => {
+    if (gerichttyp?.trim()) rsValidationStore.remove("gericht");
+  },
+);
+
+watch(
+  () => aktivzitierungRsRef.value.aktenzeichen,
+  (aktenzeichen) => {
+    if (aktenzeichen?.trim()) rsValidationStore.remove("aktenzeichen");
   },
 );
 
@@ -104,13 +148,7 @@ function onCitationTypeUpdate(selectedCitationType: ZitierArt | undefined) {
 }
 
 function onClickSave() {
-  if (!aktivzitierungRsRef.value.citationType?.trim()) {
-    validationStore.add("Pflichtfeld nicht befüllt", "citationType");
-    document
-      .getElementById("rs-activeCitationPredicate")
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-  }
+  if (!validate()) return;
   if (hasValidationErrors.value) return;
 
   emit("save", aktivzitierungRsRef.value);
@@ -138,6 +176,7 @@ function onClickSearch() {
       <div class="flex flex-row gap-24">
         <InputField
           id="rs-activeCitationPredicate"
+          ref="citationTypeFieldRef"
           label="Art der Zitierung *"
           v-slot="slotProps"
           :validation-error="validationStore.getByField('citationType')"
@@ -153,22 +192,47 @@ function onClickSearch() {
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <InputField id="gericht" label="Gericht" v-slot="slotProps">
-          <CourtDropDown :input-id="slotProps.id" v-model="gericht" :invalid="false" />
+        <InputField
+          id="gericht"
+          ref="gerichtFieldRef"
+          label="Gericht *"
+          v-slot="slotProps"
+          :validation-error="rsValidationStore.getByField('gericht')"
+        >
+          <CourtDropDown :input-id="slotProps.id" v-model="gericht" :invalid="slotProps.hasError" />
         </InputField>
-        <InputField id="entscheidungsdatum" label="Entscheidungsdatum" v-slot="slotProps">
+        <InputField
+          id="entscheidungsdatum"
+          label="Entscheidungsdatum"
+          v-slot="slotProps"
+          :validation-error="rsValidationStore.getByField('entscheidungsdatum')"
+          @update:validation-error="
+            (validationError) =>
+              validationError
+                ? rsValidationStore.add(validationError.message, 'entscheidungsdatum')
+                : rsValidationStore.remove('entscheidungsdatum')
+          "
+        >
           <DateInput
             :id="slotProps.id"
             v-model="aktivzitierungRsRef.entscheidungsdatum"
             ariaLabel="Entscheidungsdatum"
             class="ds-input-medium"
             is-future-date
-            :has-error="false"
+            :has-error="slotProps.hasError"
+            @focus="rsValidationStore.remove('entscheidungsdatum')"
+            @update:validation-error="slotProps.updateValidationError"
           ></DateInput>
         </InputField>
       </div>
       <div class="flex flex-row gap-24">
-        <InputField id="aktenzeichen" v-slot="slotProps" label="Aktenzeichen">
+        <InputField
+          id="aktenzeichen"
+          ref="aktenzeichenFieldRef"
+          v-slot="slotProps"
+          label="Aktenzeichen *"
+          :validation-error="rsValidationStore.getByField('aktenzeichen')"
+        >
           <InputText
             :id="slotProps.id"
             v-model="aktivzitierungRsRef.aktenzeichen"
