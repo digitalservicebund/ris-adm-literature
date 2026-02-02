@@ -9,14 +9,14 @@ const getAdmAktivzitierungSection = (page: Page) =>
 const getRsAktivzitierungSection = (page: Page) =>
   page.getByRole("region", { name: "Aktivzitierung (Rechtsprechung)" });
 
-test.describe.skip("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV-10276"] }, () => {
+test.describe("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV-10276"] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/literatur-selbstaendig");
     await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
     await page.waitForURL(/dokumentationseinheit/);
   });
 
-  test.skip(
+  test(
     "manual Aktivzitierung entry can be created and persists after save + reload",
     { tag: ["@RISDEV-7455"] },
     async ({ page }) => {
@@ -81,7 +81,7 @@ test.describe.skip("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV
     },
   );
 
-  test.skip(
+  test(
     "deleted Aktivzitierung entry is removed and does not reappear after save + reload",
     { tag: ["@RISDEV-7455"] },
     async ({ page }) => {
@@ -137,7 +137,7 @@ test.describe.skip("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV
     },
   );
 
-  test.skip(
+  test(
     "editing an Aktivzitierung entry and saving updates the summary and persists",
     { tag: ["@RISDEV-7455"] },
     async ({ page }) => {
@@ -205,7 +205,7 @@ test.describe.skip("SLI Rubriken – Aktivzitierung Literatur", { tag: ["@RISDEV
       await expect(aktivListAfterReload.getByText("Neumann")).toBeVisible();
     },
   );
-  test.skip(
+  test(
     "cancelling edits on an Aktivzitierung entry keeps the original summary and persists",
     { tag: ["@RISDEV-7455"] },
     async ({ page }) => {
@@ -299,7 +299,7 @@ async function createDocument(
   }
 }
 
-test.describe.skip(
+test.describe(
   "Add aktivzitierung via searching through the SLI documents",
   { tag: ["@RISDEV-10276"] },
   () => {
@@ -558,7 +558,7 @@ test.describe.skip(
   },
 );
 
-test.describe.skip(
+test.describe(
   "SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift)",
   { tag: ["@RISDEV-10323"] },
   () => {
@@ -1086,7 +1086,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await page.waitForURL(/dokumentationseinheit/);
   });
 
-  test.skip(
+  test(
     "manual Rechtsprechung aktivzitierung entry can be created and persists after save + reload",
     { tag: ["@RISDEV-10741"] },
     async ({ page }) => {
@@ -1131,7 +1131,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     },
   );
 
-  test.skip("shows validation error when citation type is missing, clears after fill, then allows add", async ({
+  test("shows validation error when citation type is missing, clears after fill, then allows add", async ({
     page,
   }) => {
     const aktiv = getRsAktivzitierungSection(page);
@@ -1171,7 +1171,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
 
-  test.skip("shows validation error when Gericht is missing, clears after fill, then allows add", async ({
+  test("shows validation error when Gericht is missing, clears after fill, then allows add", async ({
     page,
   }) => {
     const aktiv = getRsAktivzitierungSection(page);
@@ -1210,7 +1210,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
 
-  test.skip("shows validation error when Aktenzeichen is missing, clears after fill, then allows add", async ({
+  test("shows validation error when Aktenzeichen is missing, clears after fill, then allows add", async ({
     page,
   }) => {
     const aktiv = getRsAktivzitierungSection(page);
@@ -1249,7 +1249,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
 
-  test.skip("shows validation errors when all mandatory fields are missing, clears after filling all, then allows add", async ({
+  test("shows validation errors when all mandatory fields are missing, clears after filling all, then allows add", async ({
     page,
   }) => {
     const aktiv = getRsAktivzitierungSection(page);
@@ -1289,7 +1289,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
     await expect(aktivList.getByRole("listitem")).toHaveCount(1);
   });
 
-  test.skip(
+  test(
     "Rechtsprechung manual entry can be edited, cancelled, deleted and changes persist",
     { tag: ["@RISDEV-10741"] },
     async ({ page }) => {
