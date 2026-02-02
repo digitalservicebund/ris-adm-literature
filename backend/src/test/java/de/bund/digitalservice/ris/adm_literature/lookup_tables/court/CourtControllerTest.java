@@ -32,17 +32,18 @@ class CourtControllerTest {
   private CourtService courtService;
 
   @Test
-  @DisplayName("GET returns HTTP 200 and a JSON with two courts with type, and location")
+  @DisplayName("GET returns HTTP 200 and a JSON with two courts and pagination metadata")
   void getCourts() throws Exception {
     // given
     var court1 = new Court(UUID.randomUUID(), "AG", "Aachen");
     var court2 = new Court(UUID.randomUUID(), "Berufsgericht für Architekten", "Bremen");
     String searchTerm = "a";
-    given(
-      courtService.findCourts(
-        new CourtQuery(searchTerm, new QueryOptions(0, 2, "type", Sort.Direction.ASC, true))
-      )
-    ).willReturn(TestPage.create(List.of(court1, court2)));
+
+    var expectedQueryOptions = new QueryOptions(0, 2, "type", Sort.Direction.ASC, true);
+
+    given(courtService.findCourts(new CourtQuery(searchTerm, expectedQueryOptions))).willReturn(
+      TestPage.create(List.of(court1, court2))
+    );
 
     // when
     mockMvc
@@ -50,11 +51,14 @@ class CourtControllerTest {
         get("/api/lookup-tables/courts").param("searchTerm", searchTerm).param("pageSize", "2")
       )
       // then
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.courts[0].type").value(court1.type()))
-      .andExpect(jsonPath("$.courts[0].location").value(court1.location()))
-      .andExpect(jsonPath("$.courts[1].type").value(court2.type()))
-      .andExpect(jsonPath("$.courts[1].location").value(court2.location()));
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(jsonPath("$.courts").isArray())
+      .andExpect(jsonPath("$.courts[0].type").value("AG"))
+      .andExpect(jsonPath("$.courts[0].location").value("Aachen"))
+      .andExpect(jsonPath("$.courts[1].type").value("Berufsgericht für Architekten"))
+      .andExpect(jsonPath("$.courts[1].location").value("Bremen"))
+      .andExpect(jsonPath("$.page.size").value(2))
+      .andExpect(jsonPath("$.page.totalElements").value(2));
   }
 }

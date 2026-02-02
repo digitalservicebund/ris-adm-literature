@@ -1,11 +1,16 @@
 package de.bund.digitalservice.ris.adm_literature.lookup_tables.court;
 
 import de.bund.digitalservice.ris.adm_literature.page.Page;
+import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
+import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
-import java.util.List;
-import java.util.UUID;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,31 +22,35 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CourtService {
 
+  private final CourtRepository courtRepository;
+
   /**
-   * Finds a paginated list of courts (currently mocked).
+   * Finds a paginated list of courts based on type or location.
    *
-   * @param query The query, which is currently ignored.
-   * @return A page of mocked {@link Court}.
+   * @param query The query containing search term and pagination info.
+   * @return A page of {@link Court}.
    */
   @Transactional(readOnly = true)
   public Page<Court> findCourts(@Nonnull CourtQuery query) {
-    log.info("Ignoring given query as mocked courts result is always returned: {}.", query);
-    return new Page<>(
-      List.of(
-        new Court(UUID.fromString("0e1b035-a7f4-4d88-b5c0-a7d0466b8752"), "AG", "Aachen"),
-        new Court(
-          UUID.fromString("8163531c-2c51-410a-9591-b45b004771da"),
-          "Berufsgericht für Architekten",
-          "Bremen"
-        )
-      ),
-      2,
-      0,
-      2,
-      2,
-      true,
-      true,
-      false
-    );
+    QueryOptions queryOptions = query.queryOptions();
+    String searchTerm = query.searchTerm();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    var courts = StringUtils.isBlank(searchTerm)
+      ? courtRepository.findAll(pageable)
+      : courtRepository.findByTypeContainingIgnoreCaseOrLocationContainingIgnoreCase(
+        searchTerm,
+        searchTerm,
+        pageable
+      );
+
+    return PageTransformer.transform(courts, mapCourtEntity());
+  }
+
+  private Function<CourtEntity, Court> mapCourtEntity() {
+    return courtEntity ->
+      new Court(courtEntity.getId(), courtEntity.getType(), courtEntity.getLocation());
   }
 }
