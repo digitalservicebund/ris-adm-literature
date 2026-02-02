@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/vue";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { InputText } from "primevue";
 import AktivzitierungRechtsprechungInput from "./AktivzitierungRechtsprechungInput.vue";
@@ -43,12 +43,18 @@ function renderComponent(props: {
 }
 
 describe("AktivzitierungRechtsprechungInput", () => {
+  beforeEach(() => {
+    const { clear } = useCitationTypeRequirement("rechtsprechung");
+    clear();
+  });
+
   it("emits 'save' with full object only when 'Übernehmen' is clicked", async () => {
     const user = userEvent.setup();
     const initialValue: AktivzitierungRechtsprechung = {
       id: "123",
       aktenzeichen: "Akte X",
       citationType: "Abgr",
+      gerichttyp: "AG",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -77,6 +83,7 @@ describe("AktivzitierungRechtsprechungInput", () => {
     const initialValue: AktivzitierungRechtsprechung = {
       id: "123",
       aktenzeichen: "Some AZ",
+      gerichttyp: "AG",
     };
 
     const { emitted } = renderComponent({ aktivzitierung: initialValue });
@@ -116,13 +123,20 @@ describe("AktivzitierungRechtsprechungInput", () => {
   ])(
     "updates $expectedKey locally and emits on save",
     async ({ label, inputValue, expectedKey }) => {
+      const baseMandatory = {
+        id: "123",
+        citationType: "Abgr",
+        gerichttyp: "AG",
+        aktenzeichen: "AZ",
+      } as AktivzitierungRechtsprechung;
+
       const user = userEvent.setup();
       const { emitted } = renderComponent({
-        aktivzitierung:
-          expectedKey === "citationType" ? { id: "123" } : { id: "123", citationType: "Abgr" },
+        aktivzitierung: { ...baseMandatory },
       });
 
       const input = screen.getByRole("textbox", { name: label });
+      await user.clear(input);
       await user.type(input, inputValue);
 
       await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
@@ -142,6 +156,9 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
     const citationTypeInput = screen.getByRole("textbox", { name: "Art der Zitierung" });
     await user.type(citationTypeInput, "Abgr");
+
+    const gerichtInput = screen.getByRole("textbox", { name: "Gericht" });
+    await user.type(gerichtInput, "AG");
 
     const input = screen.getByRole("textbox", { name: "Aktenzeichen" });
     await user.type(input, "TEST-AZ");
@@ -225,10 +242,30 @@ describe("AktivzitierungRechtsprechungInput", () => {
 
   it("shows validation error when citation type is empty and Übernehmen is clicked", async () => {
     const user = userEvent.setup();
-    renderComponent({ aktivzitierung: { id: "123", aktenzeichen: "Some AZ" } });
+    renderComponent({ aktivzitierung: { id: "123", gerichttyp: "AG", aktenzeichen: "Some AZ" } });
 
     const saveButton = screen.getByRole("button", { name: "Aktivzitierung übernehmen" });
     await user.click(saveButton);
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
+  });
+
+  it("shows validation errors for Gericht when empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({
+      aktivzitierung: { id: "123", citationType: "Abgr", aktenzeichen: "Some AZ" },
+    });
+
+    await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
+
+    expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
+  });
+
+  it("shows validation errors for Aktenzeichen when empty and Übernehmen is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent({ aktivzitierung: { id: "123", citationType: "Abgr", gerichttyp: "AG" } });
+
+    await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
 
     expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
   });
