@@ -147,7 +147,7 @@ function onClickSearch() {
             v-model="citationType"
             :invalid="slotProps.hasError"
             :source-document-category="DocumentCategory.LITERATUR"
-            :target-document-category="DocumentCategory.VERWALTUNGSVORSCHRIFTEN"
+            :target-document-category="DocumentCategory.RECHTSPRECHUNG"
             @update:modelValue="onCitationTypeUpdate($event as ZitierArt | undefined)"
           />
         </InputField>
