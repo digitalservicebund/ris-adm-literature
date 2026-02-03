@@ -54,7 +54,6 @@ const initialLabel = computed(() => {
     append-to="self"
     typeahead
     dropdown
-    :virtualScrollerOptions="{ itemSize: 48 }"
     complete-on-focus
     force-selection
     @update:model-value="onModelValueChange"

@@ -142,6 +142,7 @@ export function useCourtSearch(courts: Ref<Court[]>) {
           c.location?.toLowerCase().includes(query.trim().toLowerCase()) ||
           `${c.type} ${c.location}`.toLowerCase().includes(query.trim().toLowerCase()),
       )
+      .slice(0, 50)
       .map((c) => ({
         id: c.id,
         label: `${c.type} ${c.location}`,

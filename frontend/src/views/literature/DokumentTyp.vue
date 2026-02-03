@@ -36,7 +36,6 @@ const selectedItems = computed<AutoCompleteSuggestion[]>({
   },
 });
 
-const autoCompleteMultipleRef = ref<typeof RisAutoCompleteMultiple | null>(null);
 const documentTypeOptions = ref<DocumentType[]>([]);
 const autoOptionFocus = ref(false);
 
@@ -51,9 +50,6 @@ onMounted(async () => {
 
 function openOverlay() {
   onComplete({ query: undefined });
-  if (autoCompleteMultipleRef?.value) {
-    autoCompleteMultipleRef.value.show();
-  }
 }
 
 function handleComplete(event: AutoCompleteDropdownClickEvent) {
@@ -80,8 +76,8 @@ function unsetAutoOptionFocus() {
     dropdown
     fluid
     force-selection
+    complete-on-focus
     disable-dropdown-tab-navigation
-    :auto-option-focus="autoOptionFocus"
     @complete="handleComplete"
     @focus="openOverlay"
     @hide="unsetAutoOptionFocus"

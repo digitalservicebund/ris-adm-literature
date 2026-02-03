@@ -1138,7 +1138,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
 
     // Given: Gericht + Aktenzeichen set, citation type missing
     await aktiv.getByRole("combobox", { name: "Gericht" }).click();
-    await page.getByRole("option", { name: "AG Aachen" }).click();
+    await aktiv.getByRole("option", { name: "AG Aachen" }).click();
 
     const aktenzeichenInput = aktiv.getByRole("textbox", { name: "Aktenzeichen" });
     await aktenzeichenInput.fill("AZ-123");
