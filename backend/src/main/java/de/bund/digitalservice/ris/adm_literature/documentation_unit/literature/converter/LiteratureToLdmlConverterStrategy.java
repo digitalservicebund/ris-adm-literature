@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlWriter;
@@ -110,6 +111,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
       mapAktivzitierungVerwaltungsvorschrift(ldmlDocument, sliData.aktivzitierungenAdm());
       mapAktivzitierungRechtsprechung(ldmlDocument, sliData.aktivzitierungenRechtsprechung());
+      mapAktivzitierungUli(ldmlDocument, sliData.aktivzitierungenUli());
     }
   }
 
@@ -367,6 +369,44 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
           .addAttribute("dokumenttyp", dokumenttyp)
           .addAttribute("referenceNumber", aktenzeichen);
+      }
+    }
+  }
+
+  private void mapAktivzitierungUli(
+    LdmlDocument ldmlDocument,
+    List<AktivzitierungUli> activeUliReferences
+  ) {
+    if (activeUliReferences != null && !activeUliReferences.isEmpty()) {
+      LdmlElement otherReferences = ldmlDocument
+        .addAnalysis()
+        .prepareElement(OTHER_REFERENCES)
+        .addAttribute(SOURCE, ACTIVE)
+        .appendOnce();
+
+      for (AktivzitierungUli uliRefNode : activeUliReferences) {
+        String documentNumber = uliRefNode.documentNumber();
+        String periodikum = uliRefNode.periodikum();
+        String zitatstelle = uliRefNode.zitatstelle();
+        String dokumenttyp = uliRefNode.dokumenttyp();
+
+        String verfasser = uliRefNode.verfasser() != null
+          ? String.join(", ", uliRefNode.verfasser())
+          : "";
+
+        String showAs = Stream.of(periodikum, zitatstelle, verfasser)
+          .filter(s -> s != null && !s.isBlank())
+          .collect(Collectors.joining(", "));
+
+        otherReferences
+          .appendElementAndGet(IMPLICIT_REFERENCE)
+          .addAttribute(SHOW_AS, showAs)
+          .appendElementAndGet("ris:unselbstaendigeLiteraturReference")
+          .addAttribute(DOCUMENT_NUMBER, documentNumber)
+          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute("periodikum", periodikum)
+          .addAttribute("verfasser", verfasser)
+          .addAttribute("zitatstelle", zitatstelle);
       }
     }
   }

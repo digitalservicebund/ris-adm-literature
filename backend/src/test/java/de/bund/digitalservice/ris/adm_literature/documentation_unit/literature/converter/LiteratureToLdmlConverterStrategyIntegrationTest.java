@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
@@ -441,6 +442,55 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
         <akn:otherReferences source="active">
           <akn:implicitReference showAs="Vergleiche, LArbG, München, 1988-11-09, 5 Sa 292/88">
             <ris:caselawReference abbreviation="Vergleiche" court="LArbG" courtLocation="München" date="1988-11-09" documentNumber="KARE339410237" dokumenttyp="Vgl" referenceNumber="5 Sa 292/88"/>
+          </akn:implicitReference>
+        </akn:otherReferences>
+      </akn:analysis>""".transform(NORMALIZE_FUNCTION)
+    );
+    assertThatCode(() -> sliLiteratureValidator.validate(xml)).doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("Maps to aktivzitierungUli")
+  void process_aktivzitierungUli() {
+    // given
+    SliDocumentationUnitContent sliDocumentationUnitContent = new SliDocumentationUnitContent(
+      null,
+      "KSLS00000022",
+      "2024",
+      Collections.emptyList(),
+      "SliHauptTitel",
+      null,
+      null,
+      null,
+      Collections.emptyList(),
+      Collections.emptyList(),
+      Collections.emptyList(),
+      List.of(
+        new AktivzitierungUli(
+          UUID.randomUUID(),
+          "KALU022020426",
+          "BB",
+          "1974, 1167",
+          List.of("Gola"),
+          "Auf"
+        )
+      )
+    );
+
+    // when
+    String xml = literatureLdmlConverterStrategy.convertToLdml(
+      sliDocumentationUnitContent,
+      null,
+      List.of()
+    );
+
+    // then
+    assertThat(xml.transform(NORMALIZE_FUNCTION)).contains(
+      """
+      <akn:analysis source="attributsemantik-noch-undefiniert">
+        <akn:otherReferences source="active">
+          <akn:implicitReference showAs="BB, 1974, 1167, Gola">
+            <ris:unselbstaendigeLiteraturReference documentNumber="KALU022020426" dokumenttyp="Auf" periodikum="BB" verfasser="Gola" zitatstelle="1974, 1167"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)

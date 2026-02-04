@@ -30,8 +30,8 @@
     <xs:attribute name="zitatstelle" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="unselbstaendigeLiteraturReferenceType">
-    <xs:attribute name="dokumentTyp" type="xs:string"/>
     <xs:attribute name="documentNumber" type="xs:string"/>
+    <xs:attribute name="dokumenttyp" type="xs:string"/>
     <xs:attribute name="periodikum" type="xs:string" use="required"/>
     <xs:attribute name="verfasser" type="xs:string" use="required"/>
     <xs:attribute name="zitatstelle" type="xs:string" use="required"/>
