@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
@@ -247,6 +248,34 @@ class LdmlToSliConverterStrategyIntegrationTest {
           "KARE339410237"
         )
       );
+  }
+
+  @Test
+  void convertToBusinessModel_aktivzitierungUli() {
+    // given
+    String xml = TestFile.readFileToString("literature/sli/ldml-example.akn.xml");
+    DocumentationUnit documentationUnit = createDocumentationUnit("KSLS20250000022", xml);
+
+    // when
+    SliDocumentationUnitContent sliDocumentationUnitContent =
+      ldmlToSliConverterStrategy.convertToBusinessModel(documentationUnit);
+
+    // then
+    assertThat(sliDocumentationUnitContent)
+      .isNotNull()
+      .extracting(
+        SliDocumentationUnitContent::aktivzitierungenUli,
+        InstanceOfAssertFactories.list(AktivzitierungUli.class)
+      )
+      .hasSize(1)
+      .extracting(
+        AktivzitierungUli::documentNumber,
+        AktivzitierungUli::dokumenttyp,
+        AktivzitierungUli::periodikum,
+        AktivzitierungUli::verfasser,
+        AktivzitierungUli::zitatstelle
+      )
+      .containsExactly(Tuple.tuple("KALU022020426", "Auf", "BB", List.of("Gola"), "1974, 1167"));
   }
 
   private static DocumentationUnit createDocumentationUnit(String documentNumber, String xml) {

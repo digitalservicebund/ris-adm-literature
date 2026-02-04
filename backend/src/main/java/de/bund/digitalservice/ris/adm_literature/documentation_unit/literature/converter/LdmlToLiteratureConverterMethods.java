@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
@@ -179,6 +180,30 @@ class LdmlToLiteratureConverterMethods {
       );
     }
     return aktivzitierungenRechtsprechung;
+  }
+
+  List<AktivzitierungUli> mapAktivzitierungUli(LdmlDocument ldmlDocument, XPath xPath)
+    throws XPathExpressionException {
+    XPathNodes uliReferenceNodes = xPath.evaluateExpression(
+      "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/unselbstaendigeLiteraturReference",
+      ldmlDocument.getDocument(),
+      XPathNodes.class
+    );
+    List<AktivzitierungUli> aktivzitierungenUli = new ArrayList<AktivzitierungUli>();
+    for (Node uliReferenceNode : uliReferenceNodes) {
+      Map<String, String> attributes = NodeToList.toAttributeMap(uliReferenceNode.getAttributes());
+      aktivzitierungenUli.add(
+        new AktivzitierungUli(
+          UUID.randomUUID(),
+          attributes.get(DOCUMENT_NUMBER),
+          attributes.get("periodikum"),
+          attributes.get("zitatstelle"),
+          attributes.get("verfasser") != null ? List.of(attributes.get("verfasser")) : List.of(),
+          attributes.get("dokumenttyp")
+        )
+      );
+    }
+    return aktivzitierungenUli;
   }
 
   private String concatenateNodeTextContent(XPathNodes xPathNodes) {

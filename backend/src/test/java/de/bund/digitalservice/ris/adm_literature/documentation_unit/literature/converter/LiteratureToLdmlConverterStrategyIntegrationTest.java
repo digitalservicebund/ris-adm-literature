@@ -198,7 +198,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
       "Dies ist eine Gesamtfussnote",
       null,
       null,
-      null
+      null,
+      Collections.emptyList()
     );
 
     // when
@@ -291,6 +292,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
         )
       ),
       null,
+      Collections.emptyList(),
       Collections.emptyList()
     );
 
@@ -368,6 +370,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "BMI"
         )
       ),
+      Collections.emptyList(),
       Collections.emptyList()
     );
 
@@ -420,7 +423,8 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "LArbG",
           "München"
         )
-      )
+      ),
+      Collections.emptyList()
     );
 
     // when

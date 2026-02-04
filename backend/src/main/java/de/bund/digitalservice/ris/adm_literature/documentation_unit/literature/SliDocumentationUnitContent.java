@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import java.util.UUID;
  * @param aktivzitierungenSli The list of active SLI references.
  * @param aktivzitierungenAdm The list of active ADM references.
  * @param aktivzitierungenRechtsprechung The list of active Rechtsprechung references.
+ * @param aktivzitierungenUli The list of active ULI references.
  */
 public record SliDocumentationUnitContent(
   UUID id,
@@ -34,7 +36,8 @@ public record SliDocumentationUnitContent(
   String note,
   List<AktivzitierungSli> aktivzitierungenSli,
   List<AktivzitierungAdm> aktivzitierungenAdm,
-  List<AktivzitierungRechtsprechung> aktivzitierungenRechtsprechung
+  List<AktivzitierungRechtsprechung> aktivzitierungenRechtsprechung,
+  List<AktivzitierungUli> aktivzitierungenUli
 )
   implements LiteratureDocumentationUnitContent {
   @Override
