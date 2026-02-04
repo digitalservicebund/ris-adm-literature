@@ -270,12 +270,20 @@ class LdmlToSliConverterStrategyIntegrationTest {
       .hasSize(1)
       .extracting(
         AktivzitierungUli::documentNumber,
-        AktivzitierungUli::dokumenttyp,
+        AktivzitierungUli::dokumenttypen,
         AktivzitierungUli::periodikum,
         AktivzitierungUli::verfasser,
         AktivzitierungUli::zitatstelle
       )
-      .containsExactly(Tuple.tuple("KALU022020426", "Auf", "BB", List.of("Gola"), "1974, 1167"));
+      .containsExactly(
+        Tuple.tuple(
+          "KALU022020426",
+          List.of(new DocumentType("Auf", "Aufsatz")),
+          "BB",
+          List.of("Gola"),
+          "1974, 1167"
+        )
+      );
   }
 
   private static DocumentationUnit createDocumentationUnit(String documentNumber, String xml) {

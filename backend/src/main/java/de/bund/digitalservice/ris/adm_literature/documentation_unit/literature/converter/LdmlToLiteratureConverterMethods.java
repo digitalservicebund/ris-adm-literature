@@ -192,6 +192,26 @@ class LdmlToLiteratureConverterMethods {
     List<AktivzitierungUli> aktivzitierungenUli = new ArrayList<AktivzitierungUli>();
     for (Node uliReferenceNode : uliReferenceNodes) {
       Map<String, String> attributes = NodeToList.toAttributeMap(uliReferenceNode.getAttributes());
+
+      String rawDocTypes = attributes.get("dokumenttyp");
+      List<DocumentType> documentTypes = new ArrayList<>();
+
+      if (rawDocTypes != null && !rawDocTypes.isBlank()) {
+        String[] abbreviations = rawDocTypes.split(",");
+
+        for (String abbr : abbreviations) {
+          String trimmedAbbr = abbr.trim();
+          if (!trimmedAbbr.isEmpty()) {
+            documentTypeService
+              .findDocumentTypeByAbbreviation(
+                trimmedAbbr,
+                DocumentCategory.LITERATUR_UNSELBSTAENDIG
+              )
+              .ifPresent(documentTypes::add);
+          }
+        }
+      }
+
       aktivzitierungenUli.add(
         new AktivzitierungUli(
           UUID.randomUUID(),
@@ -199,7 +219,7 @@ class LdmlToLiteratureConverterMethods {
           attributes.get("periodikum"),
           attributes.get("zitatstelle"),
           attributes.get("verfasser") != null ? List.of(attributes.get("verfasser")) : List.of(),
-          attributes.get("dokumenttyp")
+          documentTypes
         )
       );
     }

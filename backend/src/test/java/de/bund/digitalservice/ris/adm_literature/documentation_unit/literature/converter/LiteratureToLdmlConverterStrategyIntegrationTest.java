@@ -472,7 +472,7 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "BB",
           "1974, 1167",
           List.of("Gola"),
-          "Auf"
+          List.of(new DocumentType("Auf", "Aufsatz"))
         )
       )
     );

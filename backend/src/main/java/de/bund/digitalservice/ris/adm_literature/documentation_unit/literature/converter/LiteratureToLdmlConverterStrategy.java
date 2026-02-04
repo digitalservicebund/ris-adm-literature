@@ -388,10 +388,17 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
         String documentNumber = uliRefNode.documentNumber();
         String periodikum = uliRefNode.periodikum();
         String zitatstelle = uliRefNode.zitatstelle();
-        String dokumenttyp = uliRefNode.dokumenttyp();
 
         String verfasser = uliRefNode.verfasser() != null
           ? String.join(", ", uliRefNode.verfasser())
+          : "";
+
+        String dokumentTypen = uliRefNode.dokumenttypen() != null
+          ? uliRefNode
+            .dokumenttypen()
+            .stream()
+            .map(DocumentType::abbreviation)
+            .collect(Collectors.joining(", "))
           : "";
 
         String showAs = Stream.of(periodikum, zitatstelle, verfasser)
@@ -403,7 +410,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute(SHOW_AS, showAs)
           .appendElementAndGet("ris:unselbstaendigeLiteraturReference")
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute("dokumenttyp", dokumentTypen)
           .addAttribute("periodikum", periodikum)
           .addAttribute("verfasser", verfasser)
           .addAttribute("zitatstelle", zitatstelle);
