@@ -18,7 +18,7 @@ function calculateFundstelle(periodikum?: string, zitatstelle?: string): string 
 const documentTypeAbbreviations = computed(
   () =>
     props.aktivzitierung?.dokumenttypen
-      ?.map((dt) => (typeof dt === "string" ? dt : dt?.abbreviation))
+      ?.map((dt) => dt?.abbreviation)
       .filter(Boolean)
       .join(", ") || "",
 );
