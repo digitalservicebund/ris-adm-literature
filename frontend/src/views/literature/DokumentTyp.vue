@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RisAutoCompleteMultiple } from "@digitalservicebund/ris-ui/components";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   useAutoComplete,
   useDokumentTypSearch,
@@ -36,7 +36,6 @@ const selectedItems = computed<AutoCompleteSuggestion[]>({
   },
 });
 
-const autoCompleteMultipleRef = ref<typeof RisAutoCompleteMultiple | null>(null);
 const documentTypeOptions = ref<DocumentType[]>([]);
 const autoOptionFocus = ref(false);
 
@@ -44,23 +43,13 @@ const searchFn = useDokumentTypSearch(documentTypeOptions);
 
 const { suggestions, onComplete } = useAutoComplete(searchFn);
 
-const { data } = useFetchDocumentTypes(props.documentCategory);
-
-watch(
-  () => data.value?.documentTypes,
-  (docTypes) => {
-    documentTypeOptions.value = docTypes ?? [];
-  },
-  { immediate: true },
-);
+onMounted(async () => {
+  const { data } = await useFetchDocumentTypes(props.documentCategory);
+  documentTypeOptions.value = data.value?.documentTypes || [];
+});
 
 function openOverlay() {
   onComplete({ query: undefined });
-
-  const instance = autoCompleteMultipleRef.value;
-  if (instance?.autoCompleteRef?.show) {
-    instance.autoCompleteRef.show();
-  }
 }
 
 function handleComplete(event: AutoCompleteDropdownClickEvent) {
@@ -87,8 +76,8 @@ function unsetAutoOptionFocus() {
     dropdown
     fluid
     force-selection
+    complete-on-focus
     disable-dropdown-tab-navigation
-    :auto-option-focus="autoOptionFocus"
     @complete="handleComplete"
     @focus="openOverlay"
     @hide="unsetAutoOptionFocus"
