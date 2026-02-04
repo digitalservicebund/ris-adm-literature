@@ -729,32 +729,34 @@ test.describe(
       await expect(aktivList.getByRole("listitem")).toHaveCount(1);
     });
 
-    test("ADM date validation error blocks submit when invalid date, error stays visible", async ({
-      page,
-    }) => {
-      const aktiv = getAdmAktivzitierungSection(page);
+    test(
+      "ADM date validation error blocks submit when invalid date, error stays visible",
+      { tag: ["@RISDEV-10665"] },
+      async ({ page }) => {
+        const aktiv = getAdmAktivzitierungSection(page);
 
-      // Given: user selects citation type and fills invalid date
-      await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
-      await page.getByRole("option", { name: "Vergleiche" }).click();
+        // Given: user selects citation type and fills invalid date
+        await aktiv.getByRole("combobox", { name: "Art der Zitierung" }).click();
+        await page.getByRole("option", { name: "Vergleiche" }).click();
 
-      const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
-      await dateInput.fill("00.00.00");
-      await dateInput.blur(); // trigger validation
+        const dateInput = aktiv.getByRole("textbox", { name: "Inkrafttretedatum" });
+        await dateInput.fill("00.00.00");
+        await dateInput.blur(); // trigger validation
 
-      // Then: date error is visible, Übernehmen is enabled (only disabled when form empty)
-      await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
-      const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
-      await expect(saveButton).toBeEnabled();
+        // Then: date error is visible, Übernehmen is enabled (only disabled when form empty)
+        await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
+        const saveButton = aktiv.getByRole("button", { name: "Übernehmen" });
+        await expect(saveButton).toBeEnabled();
 
-      // When: user clicks Übernehmen
-      await saveButton.click();
+        // When: user clicks Übernehmen
+        await saveButton.click();
 
-      // Then: no entry added, date error still visible
-      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-      await expect(aktivList.getByRole("listitem")).toHaveCount(0);
-      await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
-    });
+        // Then: no entry added, date error still visible
+        const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+        await expect(aktivList.getByRole("listitem")).toHaveCount(0);
+        await expect(aktiv.getByText(/Kein valides Datum|Unvollständiges Datum/)).toBeVisible();
+      },
+    );
 
     test.describe(
       "SLI Rubriken – Aktivzitierung ADM (Verwaltungsvorschrift) – Suche",
