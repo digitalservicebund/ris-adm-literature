@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RisAutoCompleteMultiple } from "@digitalservicebund/ris-ui/components";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   useAutoComplete,
   useDokumentTypSearch,
@@ -44,10 +44,15 @@ const searchFn = useDokumentTypSearch(documentTypeOptions);
 
 const { suggestions, onComplete } = useAutoComplete(searchFn);
 
-onMounted(async () => {
-  const { data } = await useFetchDocumentTypes(props.documentCategory);
-  documentTypeOptions.value = data.value?.documentTypes || [];
-});
+const { data } = useFetchDocumentTypes(props.documentCategory);
+
+watch(
+  () => data.value?.documentTypes,
+  (docTypes) => {
+    documentTypeOptions.value = docTypes ?? [];
+  },
+  { immediate: true },
+);
 
 function openOverlay() {
   onComplete({ query: undefined });

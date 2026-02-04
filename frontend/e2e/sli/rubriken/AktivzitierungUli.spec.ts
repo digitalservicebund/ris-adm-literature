@@ -16,7 +16,11 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     const aktiv = getUliAktivzitierungSection(page);
 
     await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-    await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+    await page
+      .getByRole("listbox", { name: "Optionsliste" })
+      .filter({ has: page.getByRole("option", { name: "ABc | Die Beispi" }) })
+      .getByRole("option", { name: "ABc | Die Beispi" })
+      .click();
 
     const zitatstelleInput = aktiv.getByRole("textbox", { name: "Zitatstelle" });
     await zitatstelleInput.fill("2026, 123");
@@ -53,7 +57,11 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     const aktiv = getUliAktivzitierungSection(page);
 
     await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-    await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+    await page
+      .getByRole("listbox", { name: "Optionsliste" })
+      .filter({ has: page.getByRole("option", { name: "ABc | Die Beispi" }) })
+      .getByRole("option", { name: "ABc | Die Beispi" })
+      .click();
 
     const zitatstelleInput = aktiv.getByRole("textbox", { name: "Zitatstelle" });
     await zitatstelleInput.fill("2026, 123");
@@ -98,7 +106,11 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     await expect(aktivList.getByRole("listitem")).toHaveCount(0);
 
     await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-    await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+    await page
+      .getByRole("listbox", { name: "Optionsliste" })
+      .filter({ has: page.getByRole("option", { name: "ABc | Die Beispi" }) })
+      .getByRole("option", { name: "ABc | Die Beispi" })
+      .click();
 
     await expect(aktiv.getByText("Pflichtfeld nicht befüllt")).not.toBeVisible();
 
@@ -113,7 +125,11 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     const aktiv = getUliAktivzitierungSection(page);
 
     await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-    await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+    await page
+      .getByRole("listbox", { name: "Optionsliste" })
+      .filter({ has: page.getByRole("option", { name: "ABc | Die Beispi" }) })
+      .getByRole("option", { name: "ABc | Die Beispi" })
+      .click();
 
     const verfasserGroup = aktiv.getByLabel("Verfasser/in");
     const verfasserInput = verfasserGroup.getByRole("textbox");
@@ -143,7 +159,11 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     const aktiv = getUliAktivzitierungSection(page);
 
     await aktiv.getByRole("combobox", { name: "Periodikum" }).click();
-    await page.getByRole("option", { name: "ABc | Die Beispi" }).click();
+    await page
+      .getByRole("listbox", { name: "Optionsliste" })
+      .filter({ has: page.getByRole("option", { name: "ABc | Die Beispi" }) })
+      .getByRole("option", { name: "ABc | Die Beispi" })
+      .click();
 
     const zitatstelleInput = aktiv.getByRole("textbox", { name: "Zitatstelle" });
     await zitatstelleInput.fill("2026, 123");
