@@ -1114,7 +1114,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
 
       // Then: entry appears in list
       const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
-      await expect(aktivList.getByText("AG, Aachen", { exact: false })).toBeVisible();
+      await expect(aktivList.getByText("AG Aachen", { exact: false })).toBeVisible();
       await expect(aktivList.getByText("AZ-123-!?#", { exact: false })).toBeVisible();
 
       // When: save + reload
@@ -1128,7 +1128,7 @@ test.describe("SLI Rubriken – Aktivzitierung Rechtsprechung", { tag: ["@RISDEV
       });
 
       // Then: entry still present
-      await expect(aktivListAfterReload.getByText("AG, Aachen", { exact: false })).toBeVisible();
+      await expect(aktivListAfterReload.getByText("AG Aachen", { exact: false })).toBeVisible();
       await expect(aktivListAfterReload.getByText("AZ-123-!?#", { exact: false })).toBeVisible();
     },
   );
