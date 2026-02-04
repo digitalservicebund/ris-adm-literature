@@ -10,20 +10,17 @@ const props = defineProps<{
 }>();
 
 function buildMainParts(a: AktivzitierungRechtsprechung): string {
+  const court = [a.gerichttyp, a.gerichtort].filter(Boolean).join(" ");
+
   const mainParts = [
-    a.gerichttyp,
-    a.gerichtort,
+    court || undefined,
     a.entscheidungsdatum && parseIsoDateToLocal(a.entscheidungsdatum),
     a.aktenzeichen,
   ]
     .filter(Boolean)
     .join(", ");
 
-  if (a.dokumenttyp) {
-    return `${mainParts} (${a.dokumenttyp})`;
-  }
-
-  return mainParts;
+  return a.dokumenttyp ? `${mainParts} (${a.dokumenttyp})` : mainParts;
 }
 
 const metaSummary = computed(() => {

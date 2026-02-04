@@ -18,7 +18,7 @@ const testCases = [
       dokumenttyp: "Urteil",
       documentNumber: "123-A",
     },
-    expected: "Ablehnung | BGH, Karlsruhe, 01.01.2024, 3 StR 245/04 (Urteil) | 123-A",
+    expected: "Ablehnung | BGH Karlsruhe, 01.01.2024, 3 StR 245/04 (Urteil) | 123-A",
   },
   {
     name: "should render only citationType and documentNumber (ignoring citationType if docNum missing)",
