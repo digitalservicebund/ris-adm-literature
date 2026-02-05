@@ -12,10 +12,12 @@ import { useLiteratureRubriken } from "@/views/literature/useLiteratureRubriken"
 import { computed } from "vue";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
 import AktivzitierungenAdm from "./components/AktivzitierungenAdm.vue";
 import AktivzitierungenSli from "./components/AktivzitierungenSli.vue";
 import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
 import AktivzitierungenRechtsprechung from "./components/AktivzitierungenRechtsprechung.vue";
+import AktivzitierungenUli from "./components/AktivzitierungenUli.vue";
 
 const store = useStoreForRoute<ReturnType<typeof useSliDocumentUnitStore>>();
 const {
@@ -37,6 +39,13 @@ const aktivzitierungSli = computed({
   get: () => store.documentUnit!.aktivzitierungenSli ?? [],
   set: (newValue: AktivzitierungSli[]) => {
     store.documentUnit!.aktivzitierungenSli = newValue;
+  },
+});
+
+const aktivzitierungUli = computed({
+  get: () => store.documentUnit!.aktivzitierungenUli ?? [],
+  set: (newValue: AktivzitierungUli[]) => {
+    store.documentUnit!.aktivzitierungenUli = newValue;
   },
 });
 
@@ -113,6 +122,7 @@ useScrollToHash();
         />
         <AktivzitierungenSli v-model="aktivzitierungSli" />
         <AktivzitierungenAdm v-model="aktivzitierungAdm" require-citation-type />
+        <AktivzitierungenUli v-model="aktivzitierungUli" />
       </div>
     </section>
   </div>

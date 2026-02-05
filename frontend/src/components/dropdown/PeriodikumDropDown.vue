@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RisAutoComplete } from "@digitalservicebund/ris-ui/components";
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 import { useAutoComplete, usePeriodikumSearch } from "@/composables/useAutoComplete";
 import { useFetchLegalPeriodicals } from "@/services/legalPeriodicalService";
 import type { Periodikum } from "@/domain/fundstelle";
@@ -36,10 +36,15 @@ function getInitialLabel(): string {
   return [item.abbreviation, item.title].filter(Boolean).join(" | ");
 }
 
-onMounted(async () => {
-  const { data } = await useFetchLegalPeriodicals();
-  periodika.value = data.value?.legalPeriodicals || [];
-});
+const { data } = useFetchLegalPeriodicals();
+
+watch(
+  () => data.value?.legalPeriodicals,
+  (legalPeriodicals) => {
+    periodika.value = legalPeriodicals ?? [];
+  },
+  { immediate: true },
+);
 </script>
 
 <template>

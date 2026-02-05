@@ -103,8 +103,8 @@ describe("DokumentTyp", () => {
 
     await vi.waitFor(() => expect(fetchSpy).toHaveBeenCalledTimes(1));
     await user.click(screen.getByRole("combobox"));
-    await expect(screen.getByRole("option", { name: "Anordnung" })).toBeVisible();
-    await user.click(screen.getByRole("option", { name: "Anordnung" }));
+    const option = await screen.findByRole("option", { name: "Anordnung" });
+    await user.click(option);
     const listEl = screen.getAllByRole("option", { name: "Anordnung" });
     expect(listEl[0]).toBeVisible();
     expect(listEl[0]).toHaveTextContent("Anordnung");
