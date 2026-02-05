@@ -267,7 +267,7 @@ class LdmlToSliConverterStrategyIntegrationTest {
         SliDocumentationUnitContent::aktivzitierungenUli,
         InstanceOfAssertFactories.list(AktivzitierungUli.class)
       )
-      .hasSize(1)
+      .hasSize(2)
       .extracting(
         AktivzitierungUli::documentNumber,
         AktivzitierungUli::dokumenttypen,
@@ -282,7 +282,8 @@ class LdmlToSliConverterStrategyIntegrationTest {
           "BB",
           List.of("Gola"),
           "1974, 1167"
-        )
+        ),
+        Tuple.tuple("KALU000210004", List.of(), "DB", List.of(), "1979, 1746-1749")
       );
   }
 

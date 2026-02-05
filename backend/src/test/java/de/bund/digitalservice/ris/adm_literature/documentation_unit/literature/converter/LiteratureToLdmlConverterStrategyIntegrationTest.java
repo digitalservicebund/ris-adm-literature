@@ -473,6 +473,14 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
           "1974, 1167",
           List.of("Gola"),
           List.of(new DocumentType("Auf", "Aufsatz"))
+        ),
+        new AktivzitierungUli(
+          UUID.randomUUID(),
+          "KALU000210004",
+          "DB",
+          "1979, 1746-1749",
+          List.of("Müller, Hans-Peter"),
+          List.of()
         )
       )
     );
@@ -491,6 +499,9 @@ class LiteratureToLdmlConverterStrategyIntegrationTest {
         <akn:otherReferences source="active">
           <akn:implicitReference showAs="BB, 1974, 1167, Gola">
             <ris:unselbstaendigeLiteraturReference documentNumber="KALU022020426" dokumenttyp="Auf" periodikum="BB" verfasser="Gola" zitatstelle="1974, 1167"/>
+          </akn:implicitReference>
+          <akn:implicitReference showAs="DB, 1979, 1746-1749, Müller, Hans-Peter">
+            <ris:unselbstaendigeLiteraturReference documentNumber="KALU000210004" periodikum="DB" verfasser="Müller, Hans-Peter" zitatstelle="1979, 1746-1749"/>
           </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>""".transform(NORMALIZE_FUNCTION)

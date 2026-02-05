@@ -45,6 +45,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
   private static final String OTHER_REFERENCES = "akn:otherReferences";
   private static final String IMPLICIT_REFERENCE = "akn:implicitReference";
   private static final String DOCUMENT_NUMBER = "documentNumber";
+  private static final String DOKUMENT_TYP = "dokumenttyp";
 
   @Override
   public boolean supports(DocumentationUnitContent content) {
@@ -314,7 +315,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("abbreviation", abbreviation) // citationType
           .addAttribute("reference", reference) // aktenzeichen
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute(DOKUMENT_TYP, dokumenttyp)
           .addAttribute("normgeber", normgeber)
           .addAttribute("inkrafttretedatum", inkrafttretedatum);
 
@@ -367,7 +368,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("courtLocation", gerichtort)
           .addAttribute("date", entscheidungsdatum)
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute(DOKUMENT_TYP, dokumenttyp)
           .addAttribute("referenceNumber", aktenzeichen);
       }
     }
@@ -410,7 +411,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute(SHOW_AS, showAs)
           .appendElementAndGet("ris:unselbstaendigeLiteraturReference")
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumentTypen)
+          .addAttribute(DOKUMENT_TYP, dokumentTypen)
           .addAttribute("periodikum", periodikum)
           .addAttribute("verfasser", verfasser)
           .addAttribute("zitatstelle", zitatstelle);

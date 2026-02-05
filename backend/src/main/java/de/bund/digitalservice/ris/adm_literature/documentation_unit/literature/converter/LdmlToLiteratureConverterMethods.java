@@ -27,6 +27,7 @@ class LdmlToLiteratureConverterMethods {
 
   private final DocumentTypeService documentTypeService;
   private static final String DOCUMENT_NUMBER = "documentNumber";
+  private static final String DOKUMENT_TYP = "dokumenttyp";
 
   @NonNull
   String mapVeroeffentlichungsJahr(LdmlDocument ldmlDocument, XPath xPath)
@@ -144,7 +145,7 @@ class LdmlToLiteratureConverterMethods {
           StringUtils.trimToNull(zitatstelle),
           attributes.get("inkrafttretedatum"),
           attributes.get("aktenzeichen"),
-          attributes.get("dokumenttyp"),
+          attributes.get(DOKUMENT_TYP),
           attributes.get("normgeber")
         )
       );
@@ -173,7 +174,7 @@ class LdmlToLiteratureConverterMethods {
           attributes.get("abbreviation"),
           attributes.get("date"),
           attributes.get("referenceNumber"),
-          attributes.get("dokumenttyp"),
+          attributes.get(DOKUMENT_TYP),
           attributes.get("court"),
           attributes.get("courtLocation")
         )
@@ -189,11 +190,11 @@ class LdmlToLiteratureConverterMethods {
       ldmlDocument.getDocument(),
       XPathNodes.class
     );
-    List<AktivzitierungUli> aktivzitierungenUli = new ArrayList<AktivzitierungUli>();
+    List<AktivzitierungUli> aktivzitierungenUli = new ArrayList<>();
     for (Node uliReferenceNode : uliReferenceNodes) {
       Map<String, String> attributes = NodeToList.toAttributeMap(uliReferenceNode.getAttributes());
 
-      String rawDocTypes = attributes.get("dokumenttyp");
+      String rawDocTypes = attributes.get(DOKUMENT_TYP);
       List<DocumentType> documentTypes = new ArrayList<>();
 
       if (rawDocTypes != null && !rawDocTypes.isBlank()) {
