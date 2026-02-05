@@ -20,7 +20,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN\
     SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
     pnpm run build
 
-FROM cgr.dev/chainguard/nginx:latest@sha256:eff3eea4005ea8a03cfc135213827cd2a797f36dfad7c739520d4266cb1210f1
+FROM cgr.dev/chainguard/nginx:latest@sha256:17f2bec74555f5602eb6c562a8587800d1e31c379082e6123adac08fe41c037a
 EXPOSE 8081
 COPY --from=builder /frontend/dist /var/lib/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/ris-adm-vwv.conf
