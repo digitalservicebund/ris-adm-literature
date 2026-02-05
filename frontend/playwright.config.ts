@@ -66,8 +66,8 @@ export default defineConfig({
     needs to be in sync with "webserver" config below*/
     baseURL: "http://localhost:5173",
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    /* Collect trace for failed tests. See https://playwright.dev/docs/trace-viewer */
+    trace: "retain-on-failure",
 
     screenshot: process.env.CI ? "off" : "only-on-failure",
   },
