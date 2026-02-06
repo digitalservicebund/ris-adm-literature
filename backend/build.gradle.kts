@@ -70,7 +70,7 @@ dependencies {
   }
   implementation("org.jsoup:jsoup:$jsoupVersion")
 
-  implementation("io.netty:netty-codec-http:4.2.9.Final")
+  implementation("io.netty:netty-codec-http:4.2.10.Final")
 
   compileOnly("org.projectlombok:lombok")
   testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
