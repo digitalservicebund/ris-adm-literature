@@ -201,7 +201,7 @@ class LdmlToLiteratureConverterMethods {
         String[] abbreviations = rawDocTypes.split(",");
 
         for (String abbr : abbreviations) {
-          String trimmedAbbr = abbr.trim();
+          String trimmedAbbr = abbr.strip();
           if (!trimmedAbbr.isEmpty()) {
             documentTypeService
               .findDocumentTypeByAbbreviation(
