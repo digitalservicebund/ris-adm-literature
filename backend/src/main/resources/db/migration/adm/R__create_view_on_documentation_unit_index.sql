@@ -1,7 +1,8 @@
 DROP VIEW IF EXISTS adm_reference_view;
 
 CREATE OR REPLACE VIEW adm_reference_view AS
-SELECT du.document_number,
+SELECT du.id,
+       du.document_number,
        du.documentation_office,
        dui.dokumenttyp,
        dui.langueberschrift,

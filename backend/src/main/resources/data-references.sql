@@ -1,7 +1,102 @@
-ALTER TABLE document_reference
-    DROP CONSTRAINT IF EXISTS fk_document_reference_adm,
-    DROP CONSTRAINT IF EXISTS fk_document_reference_literature;
+CREATE OR REPLACE VIEW ref_view_adm AS
+SELECT du.id,
+       du.document_number,
+       du.documentation_office,
+       dui.dokumenttyp,
+       dui.langueberschrift,
+       dui.inkrafttretedatum,
+       dui.zitierdaten,
+       dui.zitierdaten_combined,
+       dui.fundstellen,
+       dui.fundstellen_combined,
+       dui.normgeber_list,
+       dui.normgeber_list_combined,
+       dui.aktenzeichen_list,
+       dui.aktenzeichen_list_combined
+FROM adm.documentation_unit_index dui
+         join adm.documentation_unit du on dui.documentation_unit_id = du.id
+WHERE du.xml is not null;
 
-ALTER TABLE document_reference
-    ADD CONSTRAINT fk_document_reference_adm FOREIGN KEY (adm_document_number) REFERENCES adm.documentation_unit (document_number),
-    ADD CONSTRAINT fk_document_reference_literature FOREIGN KEY (literature_document_number) REFERENCES literature.documentation_unit (document_number);
+CREATE OR REPLACE VIEW ref_view_active_reference_adm_sli AS
+SELECT adm_ars.id,
+       adm_ars.source_documentation_unit_id,
+       adm_ars.target_documentation_unit_id,
+       adm_ars.zitierart,
+       adm_ars.titel,
+       adm_ars.veroeffentlichungsjahr,
+       adm_ars.dokumenttypen,
+       adm_ars.verfasser,
+       adm_ars.updated_at,
+       adm_ars.published_at
+FROM adm.active_reference_sli adm_ars;
+
+CREATE OR REPLACE VIEW ref_view_active_reference_adm_uli AS
+SELECT adm_aru.id,
+       adm_aru.source_documentation_unit_id,
+       adm_aru.target_documentation_unit_id,
+       adm_aru.zitierart,
+       adm_aru.fundstelle,
+       adm_aru.verfasser,
+       adm_aru.dokumenttypen,
+       adm_aru.updated_at,
+       adm_aru.published_at
+FROM adm.active_reference_uli adm_aru;
+
+CREATE OR REPLACE VIEW ref_view_active_reference_adm_caselaw AS
+SELECT adm_arc.id,
+       adm_arc.source_documentation_unit_id,
+       adm_arc.target_documentation_unit_id,
+       adm_arc.zitierart,
+       adm_arc.court_type,
+       adm_arc.court_location,
+       adm_arc.decision_date,
+       adm_arc.aktenzeichen,
+       adm_arc.document_type,
+       adm_arc.updated_at,
+       adm_arc.published_at
+FROM adm.active_reference_caselaw adm_arc;
+
+CREATE OR REPLACE VIEW ref_view_literature AS
+SELECT du.id,
+       du.document_number,
+       du.documentation_office,
+       du.documentation_unit_type as document_category,
+       dui.titel,
+       dui.veroeffentlichungsjahr,
+       dui.dokumenttypen,
+       dui.dokumenttypen_combined,
+       dui.verfasser_list,
+       dui.verfasser_list_combined
+FROM literature.documentation_unit_index dui
+         join literature.documentation_unit du on dui.documentation_unit_id = du.id
+WHERE du.xml is not null;
+
+CREATE OR REPLACE VIEW ref_view_active_reference_sli_adm AS
+SELECT literature_ar_adm.id,
+       literature_ar_adm.source_documentation_unit_id,
+       literature_ar_adm.target_documentation_unit_id,
+       literature_ar_adm.zitierart,
+       literature_ar_adm.normgeber,
+       literature_ar_adm.inkrafttretedatum,
+       literature_ar_adm.aktenzeichen,
+       literature_ar_adm.fundstelle,
+       literature_ar_adm.updated_at,
+       literature_ar_adm.published_at
+FROM literature.active_reference_adm literature_ar_adm
+         join literature.documentation_unit du on literature_ar_adm.source_documentation_unit_id = du.id
+WHERE du.documentation_unit_type = 'LITERATUR_SELBSTAENDIG';
+
+CREATE OR REPLACE VIEW ref_view_active_reference_uli_adm AS
+SELECT literature_ar_adm.id,
+       literature_ar_adm.source_documentation_unit_id,
+       literature_ar_adm.target_documentation_unit_id,
+       literature_ar_adm.zitierart,
+       literature_ar_adm.normgeber,
+       literature_ar_adm.inkrafttretedatum,
+       literature_ar_adm.aktenzeichen,
+       literature_ar_adm.fundstelle,
+       literature_ar_adm.updated_at,
+       literature_ar_adm.published_at
+FROM literature.active_reference_adm literature_ar_adm
+         join literature.documentation_unit du on literature_ar_adm.source_documentation_unit_id = du.id
+WHERE du.documentation_unit_type = 'LITERATUR_UNSELBSTAENDIG';
