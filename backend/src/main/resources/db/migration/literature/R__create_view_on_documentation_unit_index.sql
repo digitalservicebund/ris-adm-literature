@@ -1,8 +1,10 @@
 DROP VIEW IF EXISTS literature_reference_view;
 
 CREATE OR REPLACE VIEW literature_reference_view AS
-SELECT du.document_number,
+SELECT du.id,
+       du.document_number,
        du.documentation_office,
+       du.documentation_unit_type as document_category,
        dui.titel,
        dui.veroeffentlichungsjahr,
        dui.dokumenttypen,
