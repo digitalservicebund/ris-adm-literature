@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
@@ -26,6 +27,7 @@ class LdmlToLiteratureConverterMethods {
 
   private final DocumentTypeService documentTypeService;
   private static final String DOCUMENT_NUMBER = "documentNumber";
+  private static final String DOKUMENT_TYP = "dokumenttyp";
 
   @NonNull
   String mapVeroeffentlichungsJahr(LdmlDocument ldmlDocument, XPath xPath)
@@ -143,7 +145,7 @@ class LdmlToLiteratureConverterMethods {
           StringUtils.trimToNull(zitatstelle),
           attributes.get("inkrafttretedatum"),
           attributes.get("aktenzeichen"),
-          attributes.get("dokumenttyp"),
+          attributes.get(DOKUMENT_TYP),
           attributes.get("normgeber")
         )
       );
@@ -172,13 +174,57 @@ class LdmlToLiteratureConverterMethods {
           attributes.get("abbreviation"),
           attributes.get("date"),
           attributes.get("referenceNumber"),
-          attributes.get("dokumenttyp"),
+          attributes.get(DOKUMENT_TYP),
           attributes.get("court"),
           attributes.get("courtLocation")
         )
       );
     }
     return aktivzitierungenRechtsprechung;
+  }
+
+  List<AktivzitierungUli> mapAktivzitierungUli(LdmlDocument ldmlDocument, XPath xPath)
+    throws XPathExpressionException {
+    XPathNodes uliReferenceNodes = xPath.evaluateExpression(
+      "/akomaNtoso/doc/meta/analysis/otherReferences[@source='active']/implicitReference/unselbstaendigeLiteraturReference",
+      ldmlDocument.getDocument(),
+      XPathNodes.class
+    );
+    List<AktivzitierungUli> aktivzitierungenUli = new ArrayList<>();
+    for (Node uliReferenceNode : uliReferenceNodes) {
+      Map<String, String> attributes = NodeToList.toAttributeMap(uliReferenceNode.getAttributes());
+
+      String rawDocTypes = attributes.get(DOKUMENT_TYP);
+      List<DocumentType> documentTypes = new ArrayList<>();
+
+      if (rawDocTypes != null && !rawDocTypes.isBlank()) {
+        String[] abbreviations = rawDocTypes.split(",");
+
+        for (String abbr : abbreviations) {
+          String trimmedAbbr = abbr.strip();
+          if (!trimmedAbbr.isEmpty()) {
+            documentTypeService
+              .findDocumentTypeByAbbreviation(
+                trimmedAbbr,
+                DocumentCategory.LITERATUR_UNSELBSTAENDIG
+              )
+              .ifPresent(documentTypes::add);
+          }
+        }
+      }
+
+      aktivzitierungenUli.add(
+        new AktivzitierungUli(
+          UUID.randomUUID(),
+          attributes.get(DOCUMENT_NUMBER),
+          attributes.get("periodikum"),
+          attributes.get("zitatstelle"),
+          attributes.get("verfasser") != null ? List.of(attributes.get("verfasser")) : List.of(),
+          documentTypes
+        )
+      );
+    }
+    return aktivzitierungenUli;
   }
 
   private String concatenateNodeTextContent(XPathNodes xPathNodes) {

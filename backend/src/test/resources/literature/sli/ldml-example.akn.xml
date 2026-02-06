@@ -63,6 +63,12 @@
           <akn:implicitReference showAs="Vergleiche, LArbG, München, 1988-11-09, 5 Sa 292/88">
             <ris:caselawReference abbreviation="Vergleiche" court="LArbG" courtLocation="München" date="1988-11-09" documentNumber="KARE339410237" dokumenttyp="Vgl" referenceNumber="5 Sa 292/88" />
           </akn:implicitReference>
+          <akn:implicitReference showAs="BB, 1974, 1167, Gola">
+            <ris:unselbstaendigeLiteraturReference documentNumber="KALU022020426" dokumenttyp="Auf" periodikum="BB" verfasser="Gola" zitatstelle="1974, 1167"/>
+          </akn:implicitReference>
+          <akn:implicitReference showAs="DB, 1979, 1746-1749">
+            <ris:unselbstaendigeLiteraturReference documentNumber="KALU000210004" periodikum="DB" zitatstelle="1979, 1746-1749"/>
+          </akn:implicitReference>
         </akn:otherReferences>
       </akn:analysis>
       <akn:references source="attributsemantik-noch-undefiniert">

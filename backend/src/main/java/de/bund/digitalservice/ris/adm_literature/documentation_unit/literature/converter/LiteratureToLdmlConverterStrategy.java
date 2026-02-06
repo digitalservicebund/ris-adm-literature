@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungAdm;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungRechtsprechung;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungSli;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.AktivzitierungUli;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlWriter;
@@ -44,6 +45,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
   private static final String OTHER_REFERENCES = "akn:otherReferences";
   private static final String IMPLICIT_REFERENCE = "akn:implicitReference";
   private static final String DOCUMENT_NUMBER = "documentNumber";
+  private static final String DOKUMENT_TYP = "dokumenttyp";
 
   @Override
   public boolean supports(DocumentationUnitContent content) {
@@ -110,6 +112,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
       mapAktivzitierungSelbstaendigeLiteratur(ldmlDocument, sliData.aktivzitierungenSli());
       mapAktivzitierungVerwaltungsvorschrift(ldmlDocument, sliData.aktivzitierungenAdm());
       mapAktivzitierungRechtsprechung(ldmlDocument, sliData.aktivzitierungenRechtsprechung());
+      mapAktivzitierungUli(ldmlDocument, sliData.aktivzitierungenUli());
     }
   }
 
@@ -312,7 +315,7 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("abbreviation", abbreviation) // citationType
           .addAttribute("reference", reference) // aktenzeichen
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute(DOKUMENT_TYP, dokumenttyp)
           .addAttribute("normgeber", normgeber)
           .addAttribute("inkrafttretedatum", inkrafttretedatum);
 
@@ -365,8 +368,53 @@ public class LiteratureToLdmlConverterStrategy implements ObjectToLdmlConverterS
           .addAttribute("courtLocation", gerichtort)
           .addAttribute("date", entscheidungsdatum)
           .addAttribute(DOCUMENT_NUMBER, documentNumber)
-          .addAttribute("dokumenttyp", dokumenttyp)
+          .addAttribute(DOKUMENT_TYP, dokumenttyp)
           .addAttribute("referenceNumber", aktenzeichen);
+      }
+    }
+  }
+
+  private void mapAktivzitierungUli(
+    LdmlDocument ldmlDocument,
+    List<AktivzitierungUli> activeUliReferences
+  ) {
+    if (activeUliReferences != null && !activeUliReferences.isEmpty()) {
+      LdmlElement otherReferences = ldmlDocument
+        .addAnalysis()
+        .prepareElement(OTHER_REFERENCES)
+        .addAttribute(SOURCE, ACTIVE)
+        .appendOnce();
+
+      for (AktivzitierungUli uliRefNode : activeUliReferences) {
+        String documentNumber = uliRefNode.documentNumber();
+        String periodikum = uliRefNode.periodikum();
+        String zitatstelle = uliRefNode.zitatstelle();
+
+        String verfasser = uliRefNode.verfasser() != null
+          ? String.join(", ", uliRefNode.verfasser())
+          : "";
+
+        String dokumentTypen = uliRefNode.dokumenttypen() != null
+          ? uliRefNode
+            .dokumenttypen()
+            .stream()
+            .map(DocumentType::abbreviation)
+            .collect(Collectors.joining(", "))
+          : "";
+
+        String showAs = Stream.of(periodikum, zitatstelle, verfasser)
+          .filter(s -> s != null && !s.isBlank())
+          .collect(Collectors.joining(", "));
+
+        otherReferences
+          .appendElementAndGet(IMPLICIT_REFERENCE)
+          .addAttribute(SHOW_AS, showAs)
+          .appendElementAndGet("ris:unselbstaendigeLiteraturReference")
+          .addAttribute(DOCUMENT_NUMBER, documentNumber)
+          .addAttribute(DOKUMENT_TYP, dokumentTypen)
+          .addAttribute("periodikum", periodikum)
+          .addAttribute("verfasser", verfasser)
+          .addAttribute("zitatstelle", zitatstelle);
       }
     }
   }

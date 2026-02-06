@@ -48,7 +48,8 @@ public class LdmlToSliConverterStrategy implements LdmlToObjectConverterStrategy
         null,
         converterMethods.mapAktivzitierungSli(ldmlDocument, xPath),
         converterMethods.mapAktivzitierungAdm(ldmlDocument, xPath),
-        converterMethods.mapAktivzitierungRechtsprechung(ldmlDocument, xPath)
+        converterMethods.mapAktivzitierungRechtsprechung(ldmlDocument, xPath),
+        converterMethods.mapAktivzitierungUli(ldmlDocument, xPath)
       );
     } catch (
       IOException | SAXException | XPathExpressionException | ParserConfigurationException e
