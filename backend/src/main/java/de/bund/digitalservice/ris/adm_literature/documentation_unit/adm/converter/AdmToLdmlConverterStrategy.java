@@ -79,7 +79,7 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
       risMeta.setHistoricAdministrativeData(previousRisMeta.getHistoricAdministrativeData());
       risMeta.setHistoricAbbreviation(previousRisMeta.getHistoricAbbreviation());
       risMeta.setZuordnungen(previousRisMeta.getZuordnungen());
-      risMeta.setRegionen(previousRisMeta.getRegionen());
+      risMeta.setRegionen(convertRegionen(previousRisMeta.getRegionen()));
       normalizeHistoricAdministrativeData(meta);
       akomaNtoso.getDoc().setMeta(meta);
       akomaNtoso.getDoc().setPreface(new Preface());
@@ -600,5 +600,16 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
         meta.getOrCreateProprietary().getMeta().getZuordnungen()
       );
     meta.setIdentification(identification);
+  }
+
+  private RisRegionen convertRegionen(RisRegionen regionen) {
+    if (regionen == null || CollectionUtils.isEmpty(regionen.getRegionen())) {
+      return null;
+    }
+
+    regionen.setDomainTerm("Regionen");
+    regionen.getRegionen().forEach(region -> region.setDomainTerm("Region"));
+
+    return regionen;
   }
 }

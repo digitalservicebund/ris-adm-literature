@@ -824,8 +824,8 @@ class AdmToLdmlConverterStrategyIntegrationTest {
           </dokstelle>
       </ris:historicAdministrativeData>""".indent(20),
       """
-      <ris:regionen>
-          <ris:region>DEU</ris:region>
+      <ris:regionen domainTerm="Regionen">
+          <ris:region domainTerm="Region">DEU</ris:region>
       </ris:regionen>
       <ris:historicAbbreviation>VR Bundesausschuss 2025-01-01 12345</ris:historicAbbreviation>""".indent(
           20

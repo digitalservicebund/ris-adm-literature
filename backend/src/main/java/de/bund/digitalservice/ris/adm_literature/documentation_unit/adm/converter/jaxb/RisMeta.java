@@ -66,9 +66,8 @@ public class RisMeta {
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private JaxbHtml historicAdministrativeData;
 
-  @XmlElementWrapper(name = "regionen", namespace = XmlNamespace.RIS_NS)
-  @XmlElement(name = "region", namespace = XmlNamespace.RIS_NS)
-  private List<String> regionen;
+  @XmlElement(name = "regionen", namespace = XmlNamespace.RIS_NS)
+  private RisRegionen regionen;
 
   @XmlElement(namespace = XmlNamespace.RIS_NS)
   private String historicAbbreviation;
