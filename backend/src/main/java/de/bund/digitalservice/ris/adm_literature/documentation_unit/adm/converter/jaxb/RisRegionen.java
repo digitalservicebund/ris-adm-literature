@@ -18,5 +18,5 @@ public class RisRegionen {
   private String domainTerm = "Regionen";
 
   @XmlElement(name = "region", namespace = XmlNamespace.RIS_NS)
-  private List<RisRegion> regionen;
+  private List<RisDomainTerm> regionen;
 }
