@@ -11,7 +11,7 @@ const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
 <template>
   <section id="aktivzitierungUli" aria-labelledby="aktivzitierungUli-title">
     <h2 id="aktivzitierungUli-title" class="ris-body1-bold mb-16">
-      Aktivzitierung Literatur (unselbst.)
+      Aktivzitierung (unselbst. Literatur)
     </h2>
     <div class="flex flex-row gap-24 w-full">
       <div class="flex flex-col w-full">

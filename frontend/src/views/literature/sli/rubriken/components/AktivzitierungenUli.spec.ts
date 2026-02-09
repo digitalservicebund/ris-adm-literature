@@ -24,7 +24,7 @@ describe("AktivzitierungenUli", () => {
     });
 
     expect(
-      screen.getByRole("heading", { name: "Aktivzitierung Literatur (unselbst.)" }),
+      screen.getByRole("heading", { name: "Aktivzitierung (unselbst. Literatur)" }),
     ).toBeInTheDocument();
 
     expect(screen.getByTestId("aktivzitierung")).toBeInTheDocument();
