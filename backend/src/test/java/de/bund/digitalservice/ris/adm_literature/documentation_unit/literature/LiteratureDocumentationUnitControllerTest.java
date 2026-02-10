@@ -44,12 +44,10 @@ class LiteratureDocumentationUnitControllerTest {
     @DisplayName("GET returns HTTP 200 and sliReferenceSearchOverview in JSON")
     void getDocsFormatted() throws Exception {
       // given
-      given(
-        documentationUnitService.findLiteratureDocumentationUnitOverviewElements(any())
-      ).willReturn(
+      given(documentationUnitService.findSliDocumentationUnitOverviewElements(any())).willReturn(
         TestPage.create(
           List.of(
-            new LiteratureDocumentationUnitOverviewElement(
+            new SliDocumentationUnitOverviewElement(
               UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
               "VALID123456789",
               "1999-2022",
@@ -57,7 +55,7 @@ class LiteratureDocumentationUnitControllerTest {
               List.of("DA"),
               List.of("Name 1", "Name 2")
             ),
-            new LiteratureDocumentationUnitOverviewElement(
+            new SliDocumentationUnitOverviewElement(
               UUID.fromString("33385f64-5717-4562-b3fc-2c963f66afa6"),
               "VALID987654321",
               "2025",

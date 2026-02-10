@@ -9,9 +9,12 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.Adm
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitSpecification;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
@@ -228,16 +231,14 @@ public class DocumentationUnitPersistenceService {
   }
 
   /**
-   * Returns paginated documentation units overview elements.
+   * Returns paginated SLI documentation units overview elements.
    *
    * @param query The query
    * @return Page object with documentation unit overview elements and pagination data
    */
   @Transactional(readOnly = true)
-  public Page<
-    LiteratureDocumentationUnitOverviewElement
-  > findLiteratureDocumentationUnitOverviewElements(
-    @Nonnull LiteratureDocumentationUnitQuery query
+  public Page<SliDocumentationUnitOverviewElement> findSliDocumentationUnitOverviewElements(
+    @Nonnull SliDocumentationUnitQuery query
   ) {
     QueryOptions queryOptions = query.queryOptions();
     Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
@@ -260,7 +261,7 @@ public class DocumentationUnitPersistenceService {
       DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
 
       if (index == null) {
-        return new LiteratureDocumentationUnitOverviewElement(
+        return new SliDocumentationUnitOverviewElement(
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
           null,
@@ -271,11 +272,62 @@ public class DocumentationUnitPersistenceService {
       }
 
       LiteratureIndex literatureIndex = index.getLiteratureIndex();
-      return new LiteratureDocumentationUnitOverviewElement(
+      return new SliDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
         literatureIndex.getVeroeffentlichungsjahr(),
         literatureIndex.getTitel(),
+        literatureIndex.getDokumenttypen(),
+        literatureIndex.getVerfasserList()
+      );
+    });
+  }
+
+  /**
+   * Returns paginated ULI documentation units overview elements.
+   *
+   * @param query The query
+   * @return Page object with documentation unit overview elements and pagination data
+   */
+  @Transactional(readOnly = true)
+  public Page<UliDocumentationUnitOverviewElement> findUliDocumentationUnitOverviewElements(
+    @Nonnull UliDocumentationUnitQuery query
+  ) {
+    QueryOptions queryOptions = query.queryOptions();
+    Sort sort = Sort.by(queryOptions.sortDirection(), queryOptions.sortByProperty());
+    Pageable pageable = queryOptions.usePagination()
+      ? PageRequest.of(queryOptions.pageNumber(), queryOptions.pageSize(), sort)
+      : Pageable.unpaged(sort);
+    UliDocumentationUnitSpecification documentUnitSpecification =
+      new UliDocumentationUnitSpecification(
+        query.documentNumber(),
+        query.periodikum(),
+        query.zitatstelle(),
+        query.dokumenttypen(),
+        query.verfasser()
+      );
+    var documentationUnitsPage = documentationUnitRepository.findAll(
+      documentUnitSpecification,
+      pageable
+    );
+    return PageTransformer.transform(documentationUnitsPage, documentationUnit -> {
+      DocumentationUnitIndexEntity index = documentationUnit.getDocumentationUnitIndex();
+
+      if (index == null) {
+        return new UliDocumentationUnitOverviewElement(
+          documentationUnit.getId(),
+          documentationUnit.getDocumentNumber(),
+          null,
+          Collections.emptyList(),
+          Collections.emptyList()
+        );
+      }
+
+      LiteratureIndex literatureIndex = index.getLiteratureIndex();
+      return new UliDocumentationUnitOverviewElement(
+        documentationUnit.getId(),
+        documentationUnit.getDocumentNumber(),
+        literatureIndex.getFundstellen(),
         literatureIndex.getDokumenttypen(),
         literatureIndex.getVerfasserList()
       );

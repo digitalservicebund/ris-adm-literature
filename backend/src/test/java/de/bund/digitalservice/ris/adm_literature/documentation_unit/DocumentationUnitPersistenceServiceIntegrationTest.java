@@ -8,7 +8,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteEntity;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -544,7 +544,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     entityManager.persistAndFlush(index);
 
     // when
-    var query = new LiteratureDocumentationUnitQuery(
+    var query = new SliDocumentationUnitQuery(
       "KVLS2025000999",
       null,
       null,
@@ -553,8 +553,9 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       new QueryOptions(0, 10, "id", Sort.Direction.ASC, true)
     );
 
-    var resultPage =
-      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(query);
+    var resultPage = documentationUnitPersistenceService.findSliDocumentationUnitOverviewElements(
+      query
+    );
 
     // then
     assertThat(resultPage.content())

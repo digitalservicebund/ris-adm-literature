@@ -11,8 +11,8 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
@@ -195,36 +195,35 @@ class DocumentationUnitPersistenceServiceTest {
     ).willReturn(pageOfEntities);
 
     // when
-    var result =
-      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
-        new LiteratureDocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
-        )
-      );
+    var result = documentationUnitPersistenceService.findSliDocumentationUnitOverviewElements(
+      new SliDocumentationUnitQuery(
+        null,
+        null,
+        null,
+        null,
+        null,
+        new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
+      )
+    );
 
     // then
     assertThat(result.content())
       .hasSize(2)
       .extracting(
-        LiteratureDocumentationUnitOverviewElement::documentNumber,
-        LiteratureDocumentationUnitOverviewElement::titel,
-        LiteratureDocumentationUnitOverviewElement::veroeffentlichungsjahr
+        SliDocumentationUnitOverviewElement::documentNumber,
+        SliDocumentationUnitOverviewElement::titel,
+        SliDocumentationUnitOverviewElement::veroeffentlichungsjahr
       )
       .containsExactly(
         Tuple.tuple("LIT-001", "Literature Title", "2024"),
         Tuple.tuple("LIT-002", null, null)
       );
 
-    LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    SliDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
     assertThat(elementWithIndex.dokumenttypen()).containsExactly("Ebs", "Dis");
     assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
 
-    LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    SliDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
     assertThat(elementWithoutIndex.verfasser()).isEmpty();
   }

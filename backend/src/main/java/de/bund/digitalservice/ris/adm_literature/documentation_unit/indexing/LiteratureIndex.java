@@ -34,4 +34,7 @@ public class LiteratureIndex {
   @Basic
   @Column(insertable = false, updatable = false)
   private String fundstellenCombined;
+
+  @Column(columnDefinition = "text[]", insertable = false, updatable = false)
+  private List<String> fundstellen;
 }

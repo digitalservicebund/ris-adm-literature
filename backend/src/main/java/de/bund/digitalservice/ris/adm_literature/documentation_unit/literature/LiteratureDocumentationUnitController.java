@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnit;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitsOverviewResponse;
+import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.page.PageResponse;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -70,7 +71,7 @@ public class LiteratureDocumentationUnitController {
    */
   @GetMapping("api/literature/sli/documentation-units")
   public ResponseEntity<
-    DocumentationUnitsOverviewResponse<LiteratureDocumentationUnitOverviewElement>
+    DocumentationUnitsOverviewResponse<SliDocumentationUnitOverviewElement>
   > find(
     @RequestParam(required = false) String documentNumber,
     @RequestParam(required = false) String veroeffentlichungsjahr,
@@ -96,8 +97,8 @@ public class LiteratureDocumentationUnitController {
     );
 
     var paginatedDocumentationUnits =
-      documentationUnitService.findLiteratureDocumentationUnitOverviewElements(
-        new LiteratureDocumentationUnitQuery(
+      documentationUnitService.findSliDocumentationUnitOverviewElements(
+        new SliDocumentationUnitQuery(
           StringUtils.trimToNull(documentNumber),
           StringUtils.trimToNull(veroeffentlichungsjahr),
           dokumenttypen,
@@ -275,5 +276,67 @@ public class LiteratureDocumentationUnitController {
     return optionalDocumentationUnit
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
+  }
+
+  /**
+   * Returns paginated ULI document units
+   * @param documentNumber     The document number of the document unit to be returned.
+   * @param periodikum         A string representing the periodical to filter by.
+   * @param zitatstelle        A string representing the citation from the periodikum to filter by.
+   * @param dokumenttypen      A list of {@link DocumentType} objects representing the document types to filter by.
+   * @param verfasser          A list of strings representing the authors to filter by.
+   * @param pageNumber         The page number of the result set.
+   * @param pageSize           The page size of the result set.
+   * @param sortByProperty     The property to sort by.
+   * @param sortDirection      The sort direction.
+   * @param usePagination      Whether to use pagination or not.
+   *
+   *
+   * @return ULI document units
+   */
+  @GetMapping("api/literature/uli/documentation-units")
+  public ResponseEntity<
+    DocumentationUnitsOverviewResponse<UliDocumentationUnitOverviewElement>
+  > find(
+    @RequestParam(required = false) String documentNumber,
+    @RequestParam(required = false) String periodikum,
+    @RequestParam(required = false) String zitatstelle,
+    @RequestParam(required = false) List<String> dokumenttypen,
+    @RequestParam(required = false) List<String> verfasser,
+    @RequestParam(defaultValue = "0") int pageNumber,
+    @RequestParam(defaultValue = "15") int pageSize,
+    @RequestParam(defaultValue = "documentNumber") String sortByProperty,
+    @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection,
+    @RequestParam(defaultValue = "true") boolean usePagination
+  ) {
+    String resolvedSortByProperty = INDEX_ALIASES.contains(sortByProperty)
+      ? "documentationUnitIndex." + sortByProperty
+      : sortByProperty;
+
+    QueryOptions queryOptions = new QueryOptions(
+      pageNumber,
+      pageSize,
+      resolvedSortByProperty,
+      sortDirection,
+      usePagination
+    );
+
+    var paginatedDocumentationUnits =
+      documentationUnitService.findUliDocumentationUnitOverviewElements(
+        new UliDocumentationUnitQuery(
+          StringUtils.trimToNull(documentNumber),
+          StringUtils.trimToNull(periodikum),
+          StringUtils.trimToNull(zitatstelle),
+          dokumenttypen,
+          verfasser,
+          queryOptions
+        )
+      );
+    return ResponseEntity.ok(
+      new DocumentationUnitsOverviewResponse<>(
+        paginatedDocumentationUnits.content(),
+        new PageResponse(paginatedDocumentationUnits)
+      )
+    );
   }
 }

@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
  *
  * @param documentNumber     A string representing the document number to filter by.
  * @param periodikum         A string representing the periodical to filter by.
- * @param zitatstelle        A string representing the citation from the periodikum to filter by.
+ * @param zitatstelle        A string representing the citation from the periodical to filter by.
  * @param dokumenttypen      A list of {@link DocumentType} objects representing the document types to filter by.
  * @param verfasser          A list of strings representing the authors to filter by.
  */

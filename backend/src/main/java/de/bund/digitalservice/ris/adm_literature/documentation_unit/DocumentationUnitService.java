@@ -8,9 +8,11 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
@@ -240,17 +242,29 @@ public class DocumentationUnitService {
   }
 
   /**
-   * Retrieves a paginated list of LiteratureDocumentationUnitOverviewElements based on the specified query options.
+   * Retrieves a paginated list of SliDocumentationUnitOverviewElements based on the specified query options.
    *
    * @param queryOptions The query parameters to filter and paginate the results. Must not be null.
-   * @return A paginated {@link Page} containing the matching LiteratureDocumentationUnitOverviewElements.
+   * @return A paginated {@link Page} containing the matching SliDocumentationUnitOverviewElements.
    */
-  public Page<
-    LiteratureDocumentationUnitOverviewElement
-  > findLiteratureDocumentationUnitOverviewElements(
-    @Nonnull LiteratureDocumentationUnitQuery queryOptions
+  public Page<SliDocumentationUnitOverviewElement> findSliDocumentationUnitOverviewElements(
+    @Nonnull SliDocumentationUnitQuery queryOptions
   ) {
-    return documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
+    return documentationUnitPersistenceService.findSliDocumentationUnitOverviewElements(
+      queryOptions
+    );
+  }
+
+  /**
+   * Retrieves a paginated list of UliDocumentationUnitOverviewElements based on the specified query options.
+   *
+   * @param queryOptions The query parameters to filter and paginate the results. Must not be null.
+   * @return A paginated {@link Page} containing the matching UliDocumentationUnitOverviewElements.
+   */
+  public Page<UliDocumentationUnitOverviewElement> findUliDocumentationUnitOverviewElements(
+    @Nonnull UliDocumentationUnitQuery queryOptions
+  ) {
+    return documentationUnitPersistenceService.findUliDocumentationUnitOverviewElements(
       queryOptions
     );
   }
