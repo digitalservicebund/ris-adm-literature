@@ -12,13 +12,16 @@ spring:
         jwt:
           issuer-uri: http://localhost:8443/realms/ris
   jpa:
+    # Run Hibernate DDL BEFORE data.sql
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
   sql:
     init:
-      mode: never
+      mode: always
 
 cronjob.DocumentationUnitIndexJob: "-"
+cronjob.UpdatePassivzitierungJob: "-"
 
 frontend:
   auth:

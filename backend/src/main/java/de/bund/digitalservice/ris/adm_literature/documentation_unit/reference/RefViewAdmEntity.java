@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.aktivzitierung;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.reference;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
@@ -8,15 +8,15 @@ import java.util.UUID;
 import lombok.Data;
 
 /**
- * Adm reference entity points to a view in the adm database schema (adm 'RefView').
+ * Ref view adm entity points to a view in the adm database schema.
  * <p>
- *   This entity is only for reading. The ownership for the table has schema 'adm'.
+ *   This entity is only for reading. The ownership for the table has schema 'references_schema'.
  * </p>
  */
 @Entity
-@Table(name = "adm_reference_view", schema = "adm")
+@Table(name = "ref_view_adm", schema = "references_schema")
 @Data
-public class AdmReferenceEntity {
+public class RefViewAdmEntity {
 
   private UUID id;
 

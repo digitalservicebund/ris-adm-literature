@@ -98,14 +98,20 @@ WITH created as (
         ON CONFLICT DO NOTHING
         returning id as created_documentation_unit_id)
 INSERT
-INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten)
+INTO adm.documentation_unit_index (id, documentation_unit_id, langueberschrift, dokumenttyp, fundstellen_combined, fundstellen, zitierdaten_combined, zitierdaten, inkrafttretedatum, normgeber_list, normgeber_list_combined, aktenzeichen_list, aktenzeichen_list_combined)
 SELECT gen_random_uuid(),
        created.created_documentation_unit_id,
        '1. Bekanntmachung zum XML-Testen in NeuRIS VwV',
+       'VR',
        'Das Periodikum 2021, Seite 15',
     array ['Das Periodikum 2021, Seite 15'],
        '2025-05-05 2025-06-01',
-    array ['2025-05-05','2025-06-01']
+    array ['2025-05-05','2025-06-01'],
+    '2025-01-01',
+    array ['Erste Jurpn', 'Erstes Organ'],
+    'Erste Jurpn Erstes Organ',
+    array ['AX-Y12345', 'XX'],
+    'AX-Y12345 XX'
 FROM created
 ON CONFLICT DO NOTHING;
 
