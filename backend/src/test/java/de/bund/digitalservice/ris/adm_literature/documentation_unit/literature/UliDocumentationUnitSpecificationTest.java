@@ -58,8 +58,7 @@ class UliDocumentationUnitSpecificationTest {
 
     String sql = getGeneratedSql(spec);
 
-    assertThat(sql).contains("documentation_unit_type=?");
-    assertThat(sql).contains("xml is not null");
+    assertThat(sql).contains("documentation_unit_type=?").contains("xml is not null");
   }
 
   @ParameterizedTest(name = "Field {0} should add SQL fragment: {2}")
@@ -138,14 +137,14 @@ class UliDocumentationUnitSpecificationTest {
     String sql = getGeneratedSql(spec);
 
     // then
-    assertThat(sql).containsIgnoringCase("left join documentation_unit_index");
-    assertThat(sql).contains("documentation_unit_type=?");
-    assertThat(sql).contains("xml is not null");
-
-    assertThat(sql).contains("lower(due1_0.document_number) like ?");
-    assertThat(sql).contains("lower(dui1_0.fundstellen_combined) like ?");
-    assertThat(sql).contains("lower(dui1_0.dokumenttypen_combined) like ?");
-    assertThat(sql).contains("lower(dui1_0.verfasser_list_combined) like ?");
+    assertThat(sql)
+      .containsIgnoringCase("left join documentation_unit_index")
+      .contains("documentation_unit_type=?")
+      .contains("xml is not null")
+      .contains("lower(due1_0.document_number) like ?")
+      .contains("lower(dui1_0.fundstellen_combined) like ?")
+      .contains("lower(dui1_0.dokumenttypen_combined) like ?")
+      .contains("lower(dui1_0.verfasser_list_combined) like ?");
   }
 
   private String getGeneratedSql(UliDocumentationUnitSpecification spec) {
