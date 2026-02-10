@@ -30,4 +30,8 @@ public class LiteratureIndex {
 
   @Basic
   private String verfasserListCombined;
+
+  @Basic
+  @Column(insertable = false, updatable = false)
+  private String fundstellenCombined;
 }
