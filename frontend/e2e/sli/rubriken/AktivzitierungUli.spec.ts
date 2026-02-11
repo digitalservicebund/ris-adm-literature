@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 export const getUliAktivzitierungSection = (page: Page) =>
-  page.getByRole("region", { name: "Aktivzitierung Literatur (unselbst.)" });
+  page.getByRole("region", { name: "Aktivzitierung (unselbst. Literatur)" });
 
 test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] }, () => {
   test.beforeEach(async ({ page }) => {

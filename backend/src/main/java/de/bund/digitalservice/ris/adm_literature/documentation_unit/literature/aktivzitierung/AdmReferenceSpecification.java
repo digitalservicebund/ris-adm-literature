@@ -43,8 +43,8 @@ public record AdmReferenceSpecification(
     List<Predicate> predicates = new ArrayList<>();
     addPredicate(predicates, from.get("documentNumber"), documentNumber, criteriaBuilder);
     var admIndex = from.get("admIndex");
-    addPredicate(predicates, admIndex.get("fundstellenCombined"), periodikum, criteriaBuilder);
-    addPredicate(predicates, admIndex.get("fundstellenCombined"), zitatstelle, criteriaBuilder);
+    addPredicate(predicates, from.get("fundstellenCombined"), periodikum, criteriaBuilder);
+    addPredicate(predicates, from.get("fundstellenCombined"), zitatstelle, criteriaBuilder);
     addPredicate(predicates, admIndex.get("inkrafttretedatum"), inkrafttretedatum, criteriaBuilder);
     addPredicate(
       predicates,

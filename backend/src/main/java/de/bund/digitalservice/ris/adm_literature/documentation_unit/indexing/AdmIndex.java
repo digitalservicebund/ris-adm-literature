@@ -17,12 +17,6 @@ public class AdmIndex {
   private String langueberschrift;
 
   @Basic
-  private String fundstellenCombined;
-
-  @Column(columnDefinition = "text[]")
-  private List<String> fundstellen;
-
-  @Basic
   private String inkrafttretedatum;
 
   @Basic

@@ -5,7 +5,7 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Literature documentation unit query.
+ * SLI documentation unit query.
  *
  * @param documentNumber DocumentNumber to search for
  * @param veroeffentlichungsjahr Publication year to search for
@@ -14,7 +14,7 @@ import java.util.List;
  * @param verfasser List of authors to search for
  * @param queryOptions Page query options
  */
-public record LiteratureDocumentationUnitQuery(
+public record SliDocumentationUnitQuery(
   String documentNumber,
   String veroeffentlichungsjahr,
   List<String> dokumenttypen,

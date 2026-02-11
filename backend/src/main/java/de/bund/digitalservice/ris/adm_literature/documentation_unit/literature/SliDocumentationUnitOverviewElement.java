@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents an overview element for a literature documentation unit.
+ * Represents an overview element for a SLI documentation unit.
  * This record encapsulates essential details related to a documentation unit,
  * including its unique identifier, document number, publication year, title,
  * document types, and authors.
@@ -17,7 +17,7 @@ import java.util.UUID;
  * @param dokumenttypen      A list of document types that categorize the unit.
  * @param verfasser          A list of authors associated with the documentation unit.
  */
-public record LiteratureDocumentationUnitOverviewElement(
+public record SliDocumentationUnitOverviewElement(
   @Nonnull UUID id,
   @Nonnull String documentNumber,
   String veroeffentlichungsjahr,

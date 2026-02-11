@@ -121,8 +121,8 @@ useScrollToHash();
           require-citation-type
         />
         <AktivzitierungenSli v-model="aktivzitierungSli" />
-        <AktivzitierungenAdm v-model="aktivzitierungAdm" require-citation-type />
         <AktivzitierungenUli v-model="aktivzitierungUli" />
+        <AktivzitierungenAdm v-model="aktivzitierungAdm" require-citation-type />
       </div>
     </section>
   </div>

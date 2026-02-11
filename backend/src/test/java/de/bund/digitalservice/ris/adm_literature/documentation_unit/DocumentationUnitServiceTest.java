@@ -14,17 +14,24 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmD
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.TestLiteratureUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.PassiveReferenceService;
+import de.bund.digitalservice.ris.adm_literature.page.Page;
+import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import de.bund.digitalservice.ris.adm_literature.test.WithMockAdmUser;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -421,5 +428,61 @@ class DocumentationUnitServiceTest {
     assertThat(publicationDetailsCaptor.getValue().category().getPublisherName()).isEqualTo(
       "publicLiteraturePublisher"
     );
+  }
+
+  @Test
+  @DisplayName("findSliDocumentationUnitOverviewElements should delegate to persistence service")
+  void findSliDocumentationUnitOverviewElements_shouldDelegateToPersistence() {
+    // given
+    SliDocumentationUnitQuery query = new SliDocumentationUnitQuery(
+      "docNum",
+      "2024",
+      List.of("Bib"),
+      "Titel",
+      List.of("Schmidt"),
+      new QueryOptions(0, 10, "test", null, false)
+    );
+
+    Page<SliDocumentationUnitOverviewElement> expectedPage = mock(Page.class);
+
+    given(
+      documentationUnitPersistenceService.findSliDocumentationUnitOverviewElements(query)
+    ).willReturn(expectedPage);
+
+    // when
+    Page<SliDocumentationUnitOverviewElement> result =
+      documentationUnitService.findSliDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result).isSameAs(expectedPage);
+    verify(documentationUnitPersistenceService).findSliDocumentationUnitOverviewElements(query);
+  }
+
+  @Test
+  @DisplayName("findUliDocumentationUnitOverviewElements should delegate to persistence service")
+  void findUliDocumentationUnitOverviewElements_shouldDelegateToPersistence() {
+    // given
+    UliDocumentationUnitQuery query = new UliDocumentationUnitQuery(
+      "docNum",
+      "NJW",
+      "S. 123",
+      List.of("Aufsatz"),
+      List.of("Author"),
+      new QueryOptions(0, 10, "test", null, false)
+    );
+
+    Page<UliDocumentationUnitOverviewElement> expectedPage = mock(Page.class);
+
+    given(
+      documentationUnitPersistenceService.findUliDocumentationUnitOverviewElements(query)
+    ).willReturn(expectedPage);
+
+    // when
+    Page<UliDocumentationUnitOverviewElement> result =
+      documentationUnitService.findUliDocumentationUnitOverviewElements(query);
+
+    // then
+    assertThat(result).isSameAs(expectedPage);
+    verify(documentationUnitPersistenceService).findUliDocumentationUnitOverviewElements(query);
   }
 }

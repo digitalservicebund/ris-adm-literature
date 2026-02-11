@@ -4,6 +4,7 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.Documentatio
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import org.springframework.data.annotation.Immutable;
@@ -27,6 +28,12 @@ public class RefViewAdmEntity {
 
   @Enumerated(EnumType.STRING)
   private DocumentationOffice documentationOffice;
+
+  @Basic
+  private String fundstellenCombined;
+
+  @Column(columnDefinition = "text[]")
+  private List<String> fundstellen;
 
   @Embedded
   private AdmIndex admIndex;
