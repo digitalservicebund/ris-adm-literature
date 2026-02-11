@@ -42,7 +42,7 @@ class LiteratureDocumentationUnitControllerTest {
 
     @Test
     @DisplayName("GET returns HTTP 200 and sliReferenceSearchOverview in JSON")
-    void getDocsFormatted() throws Exception {
+    void getSliDocsFormatted() throws Exception {
       // given
       given(documentationUnitService.findSliDocumentationUnitOverviewElements(any())).willReturn(
         TestPage.create(
@@ -102,6 +102,84 @@ class LiteratureDocumentationUnitControllerTest {
                     "verfasser": [
                       "Name 3",
                       "Name 4"
+                    ]
+                  }
+                ],
+                "page": {
+                  "size": 2,
+                  "number": 0,
+                  "numberOfElements": 2,
+                  "totalElements": 2,
+                  "first": true,
+                  "last": true,
+                  "empty": false
+                }
+              }
+              """
+            )
+        );
+    }
+
+    @Test
+    @DisplayName("GET returns HTTP 200 and uliReferenceSearchOverview in JSON")
+    void getUliDocsFormatted() throws Exception {
+      // given
+      given(documentationUnitService.findUliDocumentationUnitOverviewElements(any())).willReturn(
+        TestPage.create(
+          List.of(
+            new UliDocumentationUnitOverviewElement(
+              UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+              "VALID123456789",
+              List.of("Banz"),
+              List.of("Bib"),
+              List.of("Müller")
+            ),
+            new UliDocumentationUnitOverviewElement(
+              UUID.fromString("33385f64-5717-4562-b3fc-2c963f66afa6"),
+              "VALID987654321",
+              List.of("AG"),
+              List.of("Dis"),
+              List.of("Schmidt")
+            )
+          )
+        )
+      );
+
+      // when & then
+      mockMvc
+        .perform(get("/api/literature/uli/documentation-units"))
+        .andExpect(status().isOk())
+        .andExpect(
+          content()
+            .json(
+              """
+
+                {
+                "documentationUnitsOverview": [
+                  {
+                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "documentNumber": "VALID123456789",
+                    "fundstellen": [
+                      "Banz"
+                    ],
+                    "dokumenttypen": [
+                      "Bib"
+                    ],
+                    "verfasser": [
+                      "Müller"
+                    ]
+                  },
+                  {
+                    "id": "33385f64-5717-4562-b3fc-2c963f66afa6",
+                    "documentNumber": "VALID987654321",
+                    "fundstellen": [
+                      "AG"
+                    ],
+                    "dokumenttypen": [
+                      "Dis"
+                    ],
+                    "verfasser": [
+                      "Schmidt"
                     ]
                   }
                 ],
