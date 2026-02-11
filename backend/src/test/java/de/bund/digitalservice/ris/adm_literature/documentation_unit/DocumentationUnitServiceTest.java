@@ -395,6 +395,12 @@ class DocumentationUnitServiceTest {
       Optional.of(existingUnit)
     );
     given(
+      activeReferenceService.publishAktivzitierungAdm(
+        existingUnit,
+        contentToPublish.aktivzitierungenAdm()
+      )
+    ).willReturn(contentToPublish.aktivzitierungenAdm());
+    given(
       objectToLdmlConverterService.convertToLdml(contentToPublish, TEST_OLD_XML, List.of())
     ).willReturn(TEST_NEW_XML);
 
