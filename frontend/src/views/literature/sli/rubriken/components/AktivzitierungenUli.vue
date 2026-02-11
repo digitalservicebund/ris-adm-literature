@@ -3,7 +3,7 @@ import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
 import AktivzitierungUliInput from "@/components/aktivzitierung/uli/AktivzitierungUliInput.vue";
 import AktivzitierungUliItem from "@/components/aktivzitierung/uli/AktivzitierungUliItem.vue";
 import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
-import { useGetAdmPaginatedDocUnitsForSli } from "@/services/literature/literatureDocumentUnitService";
+import { useGetUliPaginatedDocUnits } from "@/services/literature/literatureDocumentUnitService";
 
 const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
 </script>
@@ -17,7 +17,7 @@ const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
       <div class="flex flex-col w-full">
         <Aktivzitierung
           v-model="aktivzitierungUli"
-          :fetch-results-fn="useGetAdmPaginatedDocUnitsForSli"
+          :fetch-results-fn="useGetUliPaginatedDocUnits"
         >
           <template #item="{ aktivzitierung }">
             <AktivzitierungUliItem :aktivzitierung="aktivzitierung" />
@@ -28,18 +28,22 @@ const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
               aktivzitierung,
               showCancelButton,
               showDeleteButton,
+              showSearchButton,
               onSave,
               onDelete,
               onCancel,
+              onSearch,
             }"
           >
             <AktivzitierungUliInput
               :aktivzitierung="aktivzitierung"
               :show-cancel-button="showCancelButton"
               :show-delete-button="showDeleteButton"
+              :show-search-button="showSearchButton"
               @save="onSave"
               @delete="onDelete"
               @cancel="onCancel"
+              @search="onSearch"
             />
           </template>
         </Aktivzitierung>

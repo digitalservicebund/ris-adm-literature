@@ -19,12 +19,14 @@ const props = defineProps<{
   aktivzitierung?: AktivzitierungUli;
   showCancelButton: boolean;
   showDeleteButton: boolean;
+  showSearchButton: boolean;
 }>();
 
 const emit = defineEmits<{
   save: [aktivzitierung: AktivzitierungUli];
   delete: [id: string];
   cancel: [void];
+  search: [params: Record<string, unknown>];
 }>();
 
 function createInitial(): AktivzitierungUli {
@@ -159,6 +161,10 @@ function onClickCancel() {
 function onClickDelete() {
   emit("delete", aktivzitierungUliRef.value.id);
 }
+
+function onClickSearch() {
+  emit("search", aktivzitierungUliRef.value);
+}
 </script>
 
 <template>
@@ -235,6 +241,13 @@ function onClickDelete() {
     </div>
 
     <div class="flex w-full gap-16 mt-16">
+      <Button
+        v-if="showSearchButton"
+        aria-label="Dokumente Suchen"
+        label="Suchen"
+        size="small"
+        @click.stop="onClickSearch"
+      />
       <Button
         aria-label="Aktivzitierung übernehmen"
         label="Übernehmen"

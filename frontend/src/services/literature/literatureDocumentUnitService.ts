@@ -1,6 +1,10 @@
 import { useApiFetch } from "../apiService";
 import { type UseFetchReturn } from "@vueuse/core";
-import type { UliDocumentationUnit, UliDocumentUnitResponse } from "@/domain/uli/uliDocumentUnit";
+import type {
+  UliDocumentationUnit,
+  UliDocumentUnitResponse,
+  UliDocUnitSearchParams,
+} from "@/domain/uli/uliDocumentUnit";
 import type {
   SliDocumentationUnit,
   SliDocumentUnitResponse,
@@ -128,6 +132,27 @@ export function useGetSliPaginatedDocUnits(
       pageSize: pageSize.toString(),
       titel: search?.value?.titel?.toString(),
       veroeffentlichungsjahr: search?.value?.veroeffentlichungsJahr?.toString(),
+      dokumenttypen: search?.value?.dokumenttypen?.map((d) => d.abbreviation).join(),
+      verfasser: search?.value?.verfasser?.join(),
+      sortByProperty: "documentNumber",
+      sortDirection: "DESC",
+    }),
+  );
+
+  return useApiFetch(urlWithParams, { immediate: false }).json();
+}
+
+export function useGetUliPaginatedDocUnits(
+  pageNumber: Ref<number>,
+  pageSize: number,
+  search: Ref<UliDocUnitSearchParams | undefined>,
+) {
+  const urlWithParams = computed(() =>
+    buildUrlWithParams(`${ULI_LITERATURE_DOCUMENTATION_UNITS_URL}`, {
+      pageNumber: pageNumber.value.toString(),
+      pageSize: pageSize.toString(),
+      periodikum: search?.value?.periodikum?.toString(),
+      zitatstelle: search?.value?.zitatstelle?.toString(),
       dokumenttypen: search?.value?.dokumenttypen?.map((d) => d.abbreviation).join(),
       verfasser: search?.value?.verfasser?.join(),
       sortByProperty: "documentNumber",
