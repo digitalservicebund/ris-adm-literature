@@ -34,21 +34,19 @@ public class AdmDocumentionUnitSpecification implements Specification<Documentat
         )
       );
     }
-    if (
-      StringUtils.hasText(fundstellen) ||
-      StringUtils.hasText(langueberschrift) ||
-      StringUtils.hasText(zitierdaten)
-    ) {
+    if (StringUtils.hasText(fundstellen)) {
+      var index = root.join("documentationUnitIndex", JoinType.LEFT);
+
+      predicates.add(
+        criteriaBuilder.like(
+          criteriaBuilder.lower(index.get("fundstellenCombined")),
+          sqlContains(fundstellen)
+        )
+      );
+    }
+    if (StringUtils.hasText(langueberschrift) || StringUtils.hasText(zitierdaten)) {
       var admIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("admIndex");
 
-      if (StringUtils.hasText(fundstellen)) {
-        predicates.add(
-          criteriaBuilder.like(
-            criteriaBuilder.lower(admIndex.get("fundstellenCombined")),
-            sqlContains(fundstellen)
-          )
-        );
-      }
       if (StringUtils.hasText(langueberschrift)) {
         predicates.add(
           criteriaBuilder.like(

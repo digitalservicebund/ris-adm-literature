@@ -282,8 +282,6 @@ public class DocumentationUnitIndexService {
 
     void update(@Nonnull AdmIndex admIndex) {
       admIndex.setLangueberschrift(langueberschrift);
-      admIndex.setFundstellen(fundstellen);
-      admIndex.setFundstellenCombined(StringUtils.join(fundstellen, SEPARATOR));
       admIndex.setZitierdaten(zitierdaten);
       admIndex.setZitierdatenCombined(StringUtils.join(zitierdaten, SEPARATOR));
       admIndex.setInkrafttretedatum(inkrafttretedatum);

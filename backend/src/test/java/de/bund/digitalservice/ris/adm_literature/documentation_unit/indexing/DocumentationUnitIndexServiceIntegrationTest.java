@@ -1,6 +1,7 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
@@ -47,16 +48,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-        "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        tuple(
+          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+          "Das Periodikum 2021, Seite 15",
+          "2025-05-05 2025-06-01"
+        )
       );
   }
 
@@ -78,16 +80,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-        "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        tuple(
+          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+          "Das Periodikum 2021, Seite 15",
+          "2025-05-05 2025-06-01"
+        )
       );
   }
 
@@ -116,11 +119,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(null, null, null);
   }
@@ -145,16 +147,17 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-        "Das Periodikum 2021, Seite 15",
-        "2025-05-05 2025-06-01"
+        tuple(
+          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+          "Das Periodikum 2021, Seite 15",
+          "2025-05-05 2025-06-01"
+        )
       );
   }
 
@@ -174,11 +177,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(null, null, null);
   }

@@ -94,12 +94,12 @@ class UliDocumentationUnitSpecificationTest {
       Arguments.of(
         "dokumenttypen",
         new UliDocumentationUnitSpecification(null, null, null, List.of("Aufsatz"), null),
-        "lower(dui1_0.dokumenttypen_combined) like ?"
+        "lower(dui2_0.dokumenttypen_combined) like ?"
       ),
       Arguments.of(
         "verfasser",
         new UliDocumentationUnitSpecification(null, null, null, null, List.of("Bib")),
-        "lower(dui1_0.verfasser_list_combined) like ?"
+        "lower(dui2_0.verfasser_list_combined) like ?"
       )
     );
   }
@@ -143,8 +143,8 @@ class UliDocumentationUnitSpecificationTest {
       .contains("xml is not null")
       .contains("lower(due1_0.document_number) like ?")
       .contains("lower(dui1_0.fundstellen_combined) like ?")
-      .contains("lower(dui1_0.dokumenttypen_combined) like ?")
-      .contains("lower(dui1_0.verfasser_list_combined) like ?");
+      .contains("lower(dui2_0.dokumenttypen_combined) like ?")
+      .contains("lower(dui2_0.verfasser_list_combined) like ?");
   }
 
   private String getGeneratedSql(UliDocumentationUnitSpecification spec) {

@@ -59,8 +59,8 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     unit.setDocumentationUnitIndex(index);
     AdmIndex admIndex = index.getAdmIndex();
     admIndex.setLangueberschrift(langueberschrift);
-    admIndex.setFundstellenCombined(fundstellen);
-    admIndex.setFundstellen(List.of(fundstellen));
+    index.setFundstellenCombined(fundstellen);
+    index.setFundstellen(List.of(fundstellen));
     admIndex.setZitierdatenCombined(zitierdaten);
     admIndex.setZitierdaten(List.of(zitierdaten));
     entityManager.persistAndFlush(index);
@@ -167,7 +167,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitIndexEntity.setDocumentationUnit(documentationUnitEntity);
     AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
     admIndex.setLangueberschrift("Lang");
-    admIndex.setFundstellenCombined("Fund");
+    documentationUnitIndexEntity.setFundstellenCombined("Fund");
     admIndex.setZitierdatenCombined("2012-12-12");
     documentationUnitIndexEntity = entityManager.persistFlushFind(documentationUnitIndexEntity);
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
@@ -183,7 +183,7 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
       .singleElement()
       .extracting(
         duie -> duie.getAdmIndex().getLangueberschrift(),
-        duie -> duie.getAdmIndex().getFundstellenCombined(),
+        duie -> duie.getFundstellenCombined(),
         duie -> duie.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
@@ -326,8 +326,12 @@ class DocumentationUnitPersistenceServiceIntegrationTest {
     documentationUnitEntity.setDocumentationUnitIndex(documentationUnitIndexEntity);
     AdmIndex admIndex = documentationUnitIndexEntity.getAdmIndex();
     admIndex.setLangueberschrift("Sample Document Title 1");
-    admIndex.setFundstellenCombined("p.abbrev.1 zitatstelle 1 p.abbrev.2 zitatstelle 2");
-    admIndex.setFundstellen(List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2"));
+    documentationUnitIndexEntity.setFundstellenCombined(
+      "p.abbrev.1 zitatstelle 1 p.abbrev.2 zitatstelle 2"
+    );
+    documentationUnitIndexEntity.setFundstellen(
+      List.of("p.abbrev.1 zitatstelle 1", "p.abbrev.2 zitatstelle 2")
+    );
     admIndex.setZitierdatenCombined("2011-11-11");
     admIndex.setZitierdaten(List.of("2011-11-11"));
     entityManager.persistAndFlush(documentationUnitIndexEntity);

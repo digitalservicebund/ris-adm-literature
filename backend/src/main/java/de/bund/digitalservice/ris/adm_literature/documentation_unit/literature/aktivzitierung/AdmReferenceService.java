@@ -55,7 +55,7 @@ public class AdmReferenceService {
         admIndex.getLangueberschrift(),
         admIndex.getDokumenttyp(),
         admIndex.getNormgeberList(),
-        admIndex.getFundstellen(),
+        admReferenceEntity.getFundstellen(),
         admIndex.getAktenzeichenList(),
         admIndex.getZitierdaten()
       );

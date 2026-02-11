@@ -191,8 +191,8 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
       .contains("left join documentation_unit_index")
       .contains("lower(due1_0.document_number) like ?")
       .contains("and lower(dui1_0.fundstellen_combined) like ?")
-      .contains("and lower(dui1_0.langueberschrift) like ?")
-      .contains("and lower(dui1_0.zitierdaten_combined) like ?");
+      .contains("and lower(dui2_0.langueberschrift) like ?")
+      .contains("and lower(dui2_0.zitierdaten_combined) like ?");
   }
 
   @Test
@@ -221,8 +221,8 @@ class AdmDocumentationUnitSpecificationIntegrationTest {
     assertThat(sql)
       .contains("left join documentation_unit_index")
       .contains("where lower(dui1_0.fundstellen_combined) like ?")
-      .contains("and lower(dui1_0.langueberschrift) like ?")
-      .contains("and lower(dui1_0.zitierdaten_combined) like ?")
+      .contains("and lower(dui2_0.langueberschrift) like ?")
+      .contains("and lower(dui2_0.zitierdaten_combined) like ?")
       .doesNotContain("d1_0.document_number");
   }
 }

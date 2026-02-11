@@ -51,12 +51,13 @@ public record UliDocumentationUnitSpecification(
     // documentNumber
     addLikePredicate(predicates, criteriaBuilder, root.get("documentNumber"), documentNumber);
 
+    var index = root.join("documentationUnitIndex", JoinType.LEFT);
     var litIndex = root.join("documentationUnitIndex", JoinType.LEFT).get("literatureIndex");
 
     // periodikum
-    addLikePredicate(predicates, criteriaBuilder, litIndex.get("fundstellenCombined"), periodikum);
+    addLikePredicate(predicates, criteriaBuilder, index.get("fundstellenCombined"), periodikum);
     // zitatstelle
-    addLikePredicate(predicates, criteriaBuilder, litIndex.get("fundstellenCombined"), zitatstelle);
+    addLikePredicate(predicates, criteriaBuilder, index.get("fundstellenCombined"), zitatstelle);
 
     // dokumenttypen
     if (!CollectionUtils.isEmpty(dokumenttypen)) {

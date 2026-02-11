@@ -225,7 +225,7 @@ public class DocumentationUnitPersistenceService {
         documentationUnit.getDocumentNumber(),
         admIndex.getZitierdaten(),
         admIndex.getLangueberschrift(),
-        admIndex.getFundstellen()
+        index.getFundstellen()
       );
     });
   }
@@ -327,7 +327,7 @@ public class DocumentationUnitPersistenceService {
       return new UliDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
-        literatureIndex.getFundstellen(),
+        index.getFundstellen(),
         literatureIndex.getDokumenttypen(),
         literatureIndex.getVerfasserList()
       );
