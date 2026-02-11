@@ -7,6 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+/**
+ * Jpa repository for {@link RefViewAdmEntity}.
+ */
 public interface RefViewAdmRepository
   extends JpaRepository<RefViewAdmEntity, String>, JpaSpecificationExecutor<RefViewAdmEntity> {
   default Page<RefViewAdmEntity> findAll(
