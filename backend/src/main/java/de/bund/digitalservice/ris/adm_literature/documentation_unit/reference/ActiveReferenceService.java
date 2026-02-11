@@ -111,7 +111,7 @@ public class ActiveReferenceService {
                 activeReferenceAdmEntity.setNormgeber(admIndex.getNormgeberList().getFirst());
                 activeReferenceAdmEntity.setInkrafttretedatum(admIndex.getInkrafttretedatum());
                 activeReferenceAdmEntity.setAktenzeichen(admIndex.getAktenzeichenList().getFirst());
-                activeReferenceAdmEntity.setFundstelle(admIndex.getFundstellen().getFirst());
+                activeReferenceAdmEntity.setFundstelle(rvae.getFundstellen().getFirst());
                 activeReferenceAdmEntity.setDokumenttyp(admIndex.getDokumenttyp());
               },
               () -> {
