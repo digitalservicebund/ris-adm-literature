@@ -185,12 +185,14 @@ public class DocumentationUnitIndexService {
         AdmIndexData admIndexData = documentationUnitIndex.getAdmIndexData();
         admIndexData.setLangueberschrift(admDocumentationUnitContent.langueberschrift());
         if (admDocumentationUnitContent.fundstellen() != null) {
-          admIndexData.setFundstellen(
-            admDocumentationUnitContent
-              .fundstellen()
-              .stream()
-              .map(Fundstelle::toFormattedString)
-              .toList()
+          var fundstellenList = admDocumentationUnitContent
+            .fundstellen()
+            .stream()
+            .map(Fundstelle::toFormattedString)
+            .toList();
+          documentationUnitIndex.setFundstellen(fundstellenList);
+          documentationUnitIndex.setFundstellenCombined(
+            StringUtils.join(fundstellenList, SEPARATOR)
           );
         }
         admIndexData.setZitierdaten(admDocumentationUnitContent.zitierdaten());
@@ -246,6 +248,10 @@ public class DocumentationUnitIndexService {
     documentationUnitIndex
       .getLiteratureIndexData()
       .update(documentationUnitIndexEntity.getLiteratureIndex());
+    documentationUnitIndexEntity.setFundstellen(documentationUnitIndex.getFundstellen());
+    documentationUnitIndexEntity.setFundstellenCombined(
+      documentationUnitIndex.getFundstellenCombined()
+    );
     return documentationUnitIndexEntity;
   }
 
@@ -267,6 +273,8 @@ public class DocumentationUnitIndexService {
     private final DocumentationUnitEntity documentationUnitEntity;
     private final AdmIndexData admIndexData = new AdmIndexData();
     private final LiteratureIndexData literatureIndexData = new LiteratureIndexData();
+    private String fundstellenCombined;
+    private List<String> fundstellen;
   }
 
   @Data

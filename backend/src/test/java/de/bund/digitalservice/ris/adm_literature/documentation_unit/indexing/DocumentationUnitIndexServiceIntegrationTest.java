@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
@@ -54,11 +53,9 @@ class DocumentationUnitIndexServiceIntegrationTest {
         entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        tuple(
-          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-          "Das Periodikum 2021, Seite 15",
-          "2025-05-05 2025-06-01"
-        )
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -86,11 +83,9 @@ class DocumentationUnitIndexServiceIntegrationTest {
         entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        tuple(
-          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-          "Das Periodikum 2021, Seite 15",
-          "2025-05-05 2025-06-01"
-        )
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
       );
   }
 
@@ -153,11 +148,9 @@ class DocumentationUnitIndexServiceIntegrationTest {
         entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
-        tuple(
-          "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
-          "Das Periodikum 2021, Seite 15",
-          "2025-05-05 2025-06-01"
-        )
+        "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
+        "Das Periodikum 2021, Seite 15",
+        "2025-05-05 2025-06-01"
       );
   }
 

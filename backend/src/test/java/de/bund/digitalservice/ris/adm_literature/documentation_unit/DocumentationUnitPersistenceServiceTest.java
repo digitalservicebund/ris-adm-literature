@@ -239,6 +239,7 @@ class DocumentationUnitPersistenceServiceTest {
     entityWithIndex.setDocumentNumber("ULI-001");
 
     DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setFundstellen(List.of("NJW 2024, 123"));
     index.setFundstellenCombined("NJW 2024, 123");
 
     LiteratureIndex literatureIndex = index.getLiteratureIndex();
@@ -283,7 +284,10 @@ class DocumentationUnitPersistenceServiceTest {
         UliDocumentationUnitOverviewElement::documentNumber,
         UliDocumentationUnitOverviewElement::fundstellen
       )
-      .containsExactly(Tuple.tuple("ULI-001", "NJW 2024, 123"), Tuple.tuple("ULI-002", null));
+      .containsExactly(
+        Tuple.tuple("ULI-001", List.of("NJW 2024, 123")),
+        Tuple.tuple("ULI-002", null)
+      );
 
     UliDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
     assertThat(elementWithIndex.dokumenttypen()).containsExactly("Aufsatz");
