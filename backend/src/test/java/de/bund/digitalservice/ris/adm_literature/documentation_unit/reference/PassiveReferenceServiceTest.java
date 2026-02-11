@@ -56,7 +56,9 @@ class PassiveReferenceServiceTest {
   @ParameterizedTest
   @EnumSource(
     value = DocumentCategory.class,
-    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
+    names = {
+      "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR", "VERWALTUNGSVORSCHRIFTEN",
+    }
   )
   void findAll_unsupported(DocumentCategory documentCategory) {
     // given

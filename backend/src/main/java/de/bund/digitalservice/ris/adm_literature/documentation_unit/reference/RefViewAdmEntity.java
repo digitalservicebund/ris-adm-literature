@@ -6,6 +6,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
+import org.springframework.data.annotation.Immutable;
 
 /**
  * Ref view adm entity points to a view in the adm database schema.
@@ -16,6 +17,7 @@ import lombok.Data;
 @Entity
 @Table(name = "ref_view_adm", schema = "references_schema")
 @Data
+@Immutable
 public class RefViewAdmEntity {
 
   private UUID id;

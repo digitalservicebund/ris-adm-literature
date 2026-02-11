@@ -53,7 +53,8 @@ class ActiveReferenceServiceIntegrationTest {
       kals999999999,
       List.of(
         new AktivzitierungAdm(UUID.randomUUID(), "KSNR999999999", "", "", "", "", "", "", ""),
-        new AktivzitierungAdm(UUID.randomUUID(), "KSNR999999998", "", "", "", "", "", "", "")
+        new AktivzitierungAdm(UUID.randomUUID(), "KSNR999999998", "", "", "", "", "", "", ""),
+        new AktivzitierungAdm(UUID.randomUUID(), null, "", "", "", "", "", "", "Zweite Jurpn")
       )
     );
 
@@ -70,7 +71,8 @@ class ActiveReferenceServiceIntegrationTest {
       )
       .contains(
         Tuple.tuple("KALS999999999", "KSNR999999999", "Erste Jurpn"),
-        Tuple.tuple("KALS999999999", "KSNR999999998", "Erste Jurpn")
+        Tuple.tuple("KALS999999999", "KSNR999999998", "Erste Jurpn"),
+        Tuple.tuple("KALS999999999", null, "Zweite Jurpn")
       );
   }
 

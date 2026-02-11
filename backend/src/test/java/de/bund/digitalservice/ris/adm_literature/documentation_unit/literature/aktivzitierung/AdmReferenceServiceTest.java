@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewAdmEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewAdmRepository;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import java.util.List;
 import org.assertj.core.groups.Tuple;
@@ -25,16 +27,16 @@ class AdmReferenceServiceTest {
   private AdmReferenceService admReferenceService;
 
   @Mock
-  private AdmReferenceRepository admReferenceRepository;
+  private RefViewAdmRepository refViewAdmRepository;
 
   @Test
   void findAktivzitierungen() {
     // given
-    AdmReferenceEntity entityWithIndex = createDocumentationUnitEntity();
-    AdmReferenceEntity entityWithoutIndex = new AdmReferenceEntity();
+    RefViewAdmEntity entityWithIndex = createDocumentationUnitEntity();
+    RefViewAdmEntity entityWithoutIndex = new RefViewAdmEntity();
     entityWithoutIndex.setDocumentNumber("ADM-002");
     given(
-      admReferenceRepository.findAll(any(AdmReferenceSpecification.class), any(Pageable.class))
+      refViewAdmRepository.findAll(any(AdmReferenceSpecification.class), any(Pageable.class))
     ).willReturn(new PageImpl<>(List.of(entityWithIndex, entityWithoutIndex)));
     AdmAktivzitierungQuery query = new AdmAktivzitierungQuery(
       "ADM",
@@ -79,9 +81,9 @@ class AdmReferenceServiceTest {
       );
   }
 
-  private static @NonNull AdmReferenceEntity createDocumentationUnitEntity() {
-    AdmReferenceEntity admReferenceEntity = new AdmReferenceEntity();
-    admReferenceEntity.setDocumentNumber("ADM-001");
+  private static @NonNull RefViewAdmEntity createDocumentationUnitEntity() {
+    RefViewAdmEntity refViewAdmEntity = new RefViewAdmEntity();
+    refViewAdmEntity.setDocumentNumber("ADM-001");
     var admIndex = new AdmIndex();
     admIndex.setInkrafttretedatum("2025-01-01");
     admIndex.setLangueberschrift("Administrative Title");
@@ -91,7 +93,7 @@ class AdmReferenceServiceTest {
     admIndex.setZitierdaten(List.of("§ 5"));
     admIndex.setAktenzeichenList(List.of("AZ-123"));
     admIndex.setZitierdaten(List.of("2025-01-01"));
-    admReferenceEntity.setAdmIndex(admIndex);
-    return admReferenceEntity;
+    refViewAdmEntity.setAdmIndex(admIndex);
+    return refViewAdmEntity;
   }
 }

@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewAdmEntity;
 import io.hypersistence.utils.hibernate.query.SQLExtractor;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -40,8 +41,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -69,8 +70,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -79,7 +80,7 @@ class AdmReferenceSpecificationTest {
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
-    assertThat(sql).contains("where").contains("lower(are1_0.document_number) like ?");
+    assertThat(sql).contains("where").contains("lower(rvae1_0.document_number) like ?");
   }
 
   @Test
@@ -97,8 +98,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -107,7 +108,7 @@ class AdmReferenceSpecificationTest {
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
-    assertThat(sql).contains("lower(are1_0.fundstellen_combined) like ?");
+    assertThat(sql).contains("lower(rvae1_0.fundstellen_combined) like ?");
   }
 
   @Test
@@ -125,8 +126,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -135,7 +136,7 @@ class AdmReferenceSpecificationTest {
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
-    assertThat(sql).contains("lower(are1_0.fundstellen_combined) like ?");
+    assertThat(sql).contains("lower(rvae1_0.fundstellen_combined) like ?");
   }
 
   @Test
@@ -153,8 +154,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -163,7 +164,7 @@ class AdmReferenceSpecificationTest {
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
-    assertThat(sql).contains("lower(are1_0.aktenzeichen_list_combined) like ?");
+    assertThat(sql).contains("lower(rvae1_0.aktenzeichen_list_combined) like ?");
   }
 
   @Test
@@ -181,8 +182,8 @@ class AdmReferenceSpecificationTest {
       null
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -191,7 +192,7 @@ class AdmReferenceSpecificationTest {
     String sql = SQLExtractor.from(
       entityManager.getEntityManager().createQuery(query.where(predicate))
     );
-    assertThat(sql).contains("lower(are1_0.normgeber_list_combined) like ?");
+    assertThat(sql).contains("lower(rvae1_0.normgeber_list_combined) like ?");
   }
 
   @Test
@@ -209,8 +210,8 @@ class AdmReferenceSpecificationTest {
       "2025-01-01"
     );
     CriteriaBuilder cb = entityManager.getEntityManager().getCriteriaBuilder();
-    CriteriaQuery<AdmReferenceEntity> query = cb.createQuery(AdmReferenceEntity.class);
-    Root<AdmReferenceEntity> root = query.from(AdmReferenceEntity.class);
+    CriteriaQuery<RefViewAdmEntity> query = cb.createQuery(RefViewAdmEntity.class);
+    Root<RefViewAdmEntity> root = query.from(RefViewAdmEntity.class);
 
     // when
     Predicate predicate = spec.toPredicate(root, cb);
@@ -221,12 +222,12 @@ class AdmReferenceSpecificationTest {
     );
 
     assertThat(sql)
-      .contains("lower(are1_0.document_number) like ?")
-      .contains("and lower(are1_0.fundstellen_combined) like ?")
-      .contains("and lower(are1_0.inkrafttretedatum) like ?")
-      .contains("and lower(are1_0.aktenzeichen_list_combined) like ?")
-      .contains("and lower(are1_0.dokumenttyp) like ?")
-      .contains("and lower(are1_0.normgeber_list_combined) like ?")
-      .contains("and lower(are1_0.zitierdaten_combined) like ?");
+      .contains("lower(rvae1_0.document_number) like ?")
+      .contains("and lower(rvae1_0.fundstellen_combined) like ?")
+      .contains("and lower(rvae1_0.inkrafttretedatum) like ?")
+      .contains("and lower(rvae1_0.aktenzeichen_list_combined) like ?")
+      .contains("and lower(rvae1_0.dokumenttyp) like ?")
+      .contains("and lower(rvae1_0.normgeber_list_combined) like ?")
+      .contains("and lower(rvae1_0.zitierdaten_combined) like ?");
   }
 }

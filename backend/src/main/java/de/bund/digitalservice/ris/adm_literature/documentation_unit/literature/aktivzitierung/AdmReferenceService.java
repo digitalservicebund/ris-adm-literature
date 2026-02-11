@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.aktivzitierung;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewAdmRepository;
 import de.bund.digitalservice.ris.adm_literature.page.Page;
 import de.bund.digitalservice.ris.adm_literature.page.PageTransformer;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdmReferenceService {
 
-  private final AdmReferenceRepository admReferenceRepository;
+  private final RefViewAdmRepository refViewAdmRepository;
 
   /**
    * Searches for active citations (Aktivzitierungen) across adm documentation units.
@@ -45,7 +46,7 @@ public class AdmReferenceService {
       query.normgeber(),
       query.zitierdatum()
     );
-    var documentationUnitsPage = admReferenceRepository.findAll(spec, pageable);
+    var documentationUnitsPage = refViewAdmRepository.findAll(spec, pageable);
     return PageTransformer.transform(documentationUnitsPage, admReferenceEntity -> {
       var admIndex = admReferenceEntity.getAdmIndex();
       return new AdmAktivzitierungResult(
