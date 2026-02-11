@@ -30,19 +30,10 @@ public class PassiveReferenceService {
   public List<PassiveReference> findAll(@NonNull DocumentCategory documentCategory) {
     List<PassiveReference> passiveReferences;
     switch (documentCategory) {
-      case VERWALTUNGSVORSCHRIFTEN -> passiveReferences = admPassiveReferenceRepository
-        .findAll()
-        .stream()
-        .map(apr ->
-          new PassiveReference(
-            new DocumentReference(
-              apr.getTargetDocumentNumber(),
-              DocumentCategory.VERWALTUNGSVORSCHRIFTEN
-            ),
-            new DocumentReference(apr.getSourceDocumentNumber(), apr.getSourceDocumentCategory())
-          )
-        )
-        .toList();
+      case VERWALTUNGSVORSCHRIFTEN -> {
+        passiveReferences = new ArrayList<>();
+        log.info("Passive references for adm is not supported.");
+      }
       case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
         passiveReferences = new ArrayList<>();
         log.info("Passive references for literature is not supported.");
@@ -67,13 +58,10 @@ public class PassiveReferenceService {
   ) {
     List<DocumentReference> referencedBy;
     switch (documentCategory) {
-      case VERWALTUNGSVORSCHRIFTEN -> referencedBy = admPassiveReferenceRepository
-        .findByTargetDocumentNumber(documentNumber)
-        .stream()
-        .map(apr ->
-          new DocumentReference(apr.getSourceDocumentNumber(), apr.getSourceDocumentCategory())
-        )
-        .toList();
+      case VERWALTUNGSVORSCHRIFTEN -> {
+        referencedBy = new ArrayList<>();
+        log.info("Passive references for adm is not supported.");
+      }
       case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
         referencedBy = new ArrayList<>();
         log.info("Passive references for literature is not supported.");

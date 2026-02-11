@@ -7,6 +7,7 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import java.util.List;
 import java.util.UUID;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,6 +28,7 @@ class PassiveReferenceServiceTest {
   private AdmPassiveReferenceRepository admPassiveReferenceRepository;
 
   @Test
+  @Disabled("Until implementing RISDEV-10990")
   void findAll_adm() {
     // given
     given(admPassiveReferenceRepository.findAll()).willReturn(
@@ -67,6 +69,7 @@ class PassiveReferenceServiceTest {
   }
 
   @Test
+  @Disabled("Until implementing RISDEV-10990")
   void findByDocumentNumber() {
     // given
     given(admPassiveReferenceRepository.findByTargetDocumentNumber("KSNR20260000333")).willReturn(
