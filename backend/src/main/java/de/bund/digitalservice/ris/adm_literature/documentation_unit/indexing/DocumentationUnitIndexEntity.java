@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,12 @@ public class DocumentationUnitIndexEntity {
 
   @OneToOne(optional = false)
   private DocumentationUnitEntity documentationUnit;
+
+  @Basic
+  private String fundstellenCombined;
+
+  @Column(columnDefinition = "text[]")
+  private List<String> fundstellen;
 
   @Embedded
   private AdmIndex admIndex;

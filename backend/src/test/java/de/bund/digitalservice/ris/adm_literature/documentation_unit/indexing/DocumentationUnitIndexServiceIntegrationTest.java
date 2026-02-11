@@ -47,11 +47,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
@@ -78,11 +77,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
@@ -116,11 +114,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(null, null, null);
   }
@@ -145,11 +142,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(
         "1. Bekanntmachung zum XML-Testen in NeuRIS VwV",
@@ -174,11 +170,10 @@ class DocumentationUnitIndexServiceIntegrationTest {
     TypedQuery<DocumentationUnitIndexEntity> query = createTypedQuery(documentationUnitEntity);
     assertThat(query.getResultList())
       .singleElement()
-      .extracting(DocumentationUnitIndexEntity::getAdmIndex)
       .extracting(
-        AdmIndex::getLangueberschrift,
-        AdmIndex::getFundstellenCombined,
-        AdmIndex::getZitierdatenCombined
+        entity -> entity.getAdmIndex().getLangueberschrift(),
+        DocumentationUnitIndexEntity::getFundstellenCombined,
+        entity -> entity.getAdmIndex().getZitierdatenCombined()
       )
       .containsExactly(null, null, null);
   }

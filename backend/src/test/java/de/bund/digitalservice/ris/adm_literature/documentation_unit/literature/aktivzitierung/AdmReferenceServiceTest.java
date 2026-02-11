@@ -87,7 +87,7 @@ class AdmReferenceServiceTest {
     admIndex.setLangueberschrift("Administrative Title");
     admIndex.setDokumenttyp("VV");
     admIndex.setNormgeberList(List.of("BMJ"));
-    admIndex.setFundstellen(List.of("BGBI I S. 1"));
+    admReferenceEntity.setFundstellen(List.of("BGBI I S. 1"));
     admIndex.setZitierdaten(List.of("§ 5"));
     admIndex.setAktenzeichenList(List.of("AZ-123"));
     admIndex.setZitierdaten(List.of("2025-01-01"));

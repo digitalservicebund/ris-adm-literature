@@ -11,9 +11,12 @@ import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocum
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.AdmIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.DocumentationUnitIndexEntity;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.LiteratureDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitSpecification;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitOverviewElement;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitSpecification;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.notes.NoteService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
@@ -93,12 +96,12 @@ class DocumentationUnitPersistenceServiceTest {
     entityWithIndex.setId(UUID.randomUUID());
     entityWithIndex.setDocumentNumber("DOC-001");
     DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setFundstellenCombined("Citation 1");
+    index.setFundstellen(List.of("Citation 1"));
     AdmIndex admIndex = index.getAdmIndex();
     admIndex.setLangueberschrift("Title 1");
     admIndex.setZitierdatenCombined("2023-01-01");
     admIndex.setZitierdaten(List.of("2023-01-01"));
-    admIndex.setFundstellenCombined("Citation 1");
-    admIndex.setFundstellen(List.of("Citation 1"));
     entityWithIndex.setDocumentationUnitIndex(index);
 
     DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
@@ -195,36 +198,102 @@ class DocumentationUnitPersistenceServiceTest {
     ).willReturn(pageOfEntities);
 
     // when
-    var result =
-      documentationUnitPersistenceService.findLiteratureDocumentationUnitOverviewElements(
-        new LiteratureDocumentationUnitQuery(
-          null,
-          null,
-          null,
-          null,
-          null,
-          new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
-        )
-      );
+    var result = documentationUnitPersistenceService.findSliDocumentationUnitOverviewElements(
+      new SliDocumentationUnitQuery(
+        null,
+        null,
+        null,
+        null,
+        null,
+        new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
+      )
+    );
 
     // then
     assertThat(result.content())
       .hasSize(2)
       .extracting(
-        LiteratureDocumentationUnitOverviewElement::documentNumber,
-        LiteratureDocumentationUnitOverviewElement::titel,
-        LiteratureDocumentationUnitOverviewElement::veroeffentlichungsjahr
+        SliDocumentationUnitOverviewElement::documentNumber,
+        SliDocumentationUnitOverviewElement::titel,
+        SliDocumentationUnitOverviewElement::veroeffentlichungsjahr
       )
       .containsExactly(
         Tuple.tuple("LIT-001", "Literature Title", "2024"),
         Tuple.tuple("LIT-002", null, null)
       );
 
-    LiteratureDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    SliDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
     assertThat(elementWithIndex.dokumenttypen()).containsExactly("Ebs", "Dis");
     assertThat(elementWithIndex.verfasser()).containsExactly("Doe, John", "Smith, Jane");
 
-    LiteratureDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    SliDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
+    assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
+    assertThat(elementWithoutIndex.verfasser()).isEmpty();
+  }
+
+  @Test
+  void findUliDocumentationUnitOverviewElements() {
+    // given
+    DocumentationUnitEntity entityWithIndex = new DocumentationUnitEntity();
+    entityWithIndex.setId(UUID.randomUUID());
+    entityWithIndex.setDocumentNumber("ULI-001");
+
+    DocumentationUnitIndexEntity index = new DocumentationUnitIndexEntity();
+    index.setFundstellen(List.of("NJW 2024, 123"));
+    index.setFundstellenCombined("NJW 2024, 123");
+
+    LiteratureIndex literatureIndex = index.getLiteratureIndex();
+    literatureIndex.setDokumenttypen(List.of("Aufsatz"));
+    literatureIndex.setDokumenttypenCombined("Aufsatz");
+    literatureIndex.setVerfasserList(List.of("Müller, Martin"));
+    literatureIndex.setVerfasserListCombined("Müller, Martin");
+    entityWithIndex.setDocumentationUnitIndex(index);
+
+    DocumentationUnitEntity entityWithoutIndex = new DocumentationUnitEntity();
+    entityWithoutIndex.setId(UUID.randomUUID());
+    entityWithoutIndex.setDocumentNumber("ULI-002");
+    entityWithoutIndex.setDocumentationUnitIndex(null);
+
+    Page<DocumentationUnitEntity> pageOfEntities = new PageImpl<>(
+      List.of(entityWithIndex, entityWithoutIndex)
+    );
+
+    given(
+      documentationUnitRepository.findAll(
+        any(UliDocumentationUnitSpecification.class),
+        any(Pageable.class)
+      )
+    ).willReturn(pageOfEntities);
+
+    // when
+    var result = documentationUnitPersistenceService.findUliDocumentationUnitOverviewElements(
+      new UliDocumentationUnitQuery(
+        null,
+        null,
+        null,
+        null,
+        null,
+        new QueryOptions(0, 10, "documentNumber", Sort.Direction.ASC, true)
+      )
+    );
+
+    // then
+    assertThat(result.content())
+      .hasSize(2)
+      .extracting(
+        UliDocumentationUnitOverviewElement::documentNumber,
+        UliDocumentationUnitOverviewElement::fundstellen
+      )
+      .containsExactly(
+        Tuple.tuple("ULI-001", List.of("NJW 2024, 123")),
+        Tuple.tuple("ULI-002", null)
+      );
+
+    UliDocumentationUnitOverviewElement elementWithIndex = result.content().getFirst();
+    assertThat(elementWithIndex.dokumenttypen()).containsExactly("Aufsatz");
+    assertThat(elementWithIndex.verfasser()).containsExactly("Müller, Martin");
+
+    UliDocumentationUnitOverviewElement elementWithoutIndex = result.content().get(1);
     assertThat(elementWithoutIndex.dokumenttypen()).isEmpty();
     assertThat(elementWithoutIndex.verfasser()).isEmpty();
   }
