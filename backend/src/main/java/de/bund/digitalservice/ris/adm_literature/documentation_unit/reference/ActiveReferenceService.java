@@ -42,6 +42,8 @@ public class ActiveReferenceService {
    *
    * @param sourceDocumentationUnit The source documentation unit
    * @param targets                 The list of 'Aktivzitierung Adm'
+   * @return List of updated targets. If a target links an existing document, then the metadata are taken from the
+   *         target documentation unit view.
    */
   public List<AktivzitierungAdm> publishAktivzitierungAdm(
     @NonNull DocumentationUnit sourceDocumentationUnit,

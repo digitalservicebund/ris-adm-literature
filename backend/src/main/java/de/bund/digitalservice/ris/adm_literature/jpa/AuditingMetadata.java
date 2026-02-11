@@ -6,6 +6,9 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+/**
+ * Embeddable JPA class for auditing metadata.
+ */
 @Embeddable
 @Data
 public class AuditingMetadata {
