@@ -318,6 +318,7 @@ public class DocumentationUnitPersistenceService {
           documentationUnit.getId(),
           documentationUnit.getDocumentNumber(),
           null,
+          null,
           Collections.emptyList(),
           Collections.emptyList()
         );
@@ -327,6 +328,7 @@ public class DocumentationUnitPersistenceService {
       return new UliDocumentationUnitOverviewElement(
         documentationUnit.getId(),
         documentationUnit.getDocumentNumber(),
+        literatureIndex.getTitel(),
         index.getFundstellen(),
         literatureIndex.getDokumenttypen(),
         literatureIndex.getVerfasserList()
