@@ -52,24 +52,26 @@ jobs:
         with:
           repository: ${{ env.reports-repo }}
           ssh-key: ${{ secrets.RIS_REPORTS_DEPLOY_PRIVATE_KEY }}
+          path: ris-reports
 
 
       - name: Download artifact frontend e2e test report
         uses: actions/download-artifact@v7
         with:
           name: frontend-e2e-test-report-html
-          path: tmp/frontend-e2e-test-report-html
+          path: ris-reports/tmp/frontend-e2e-test-report-html
       - name: Add frontend e2e test report for push
         uses: digitalservicebund/add-ris-report@c6c8735d23295c36a271c75e7dedc9b6b9a9ef5e
         with:
-          filePath: tmp/frontend-e2e-test-report-html
-          destinationDir: test-reports/ris-adm-literature/frontend/e2e-tests
+          filePath: ris-reports/tmp/frontend-e2e-test-report-html
+          destinationDir: ris-reports/test-reports/ris-adm-literature/frontend/e2e-tests
           reportIsDirectory: true
 
       ##############################################
       # Finally: pushing the reports to ris-reports
       ##############################################
       - name: Setup git config
+        working-directory: ris-reports
         run: |
           git config user.name "${{ github.repository }}"
           # This email identifies the commit as GitHub Actions - see https://github.com/orgs/community/discussions/26560
@@ -77,10 +79,11 @@ jobs:
       - name:
           Push reports
           # we use `toJSON(...)` below to escape double quotation marks
+        working-directory: ris-reports
         run: |
           git diff-index --cached --quiet HEAD ||
             git commit \
               -m ${{ toJSON(github.event.head_commit.message) }} \
               -m "From commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" &&
             git push origin main &&
-            echo "Pushed reports to ${{ github.server_url }}/${{ env.REPORTS_REPOSITORY }}" >> $GITHUB_STEP_SUMMARY
+            echo "Pushed reports to ${{ github.server_url }}/${{ env.reports-repo }}" >> $GITHUB_STEP_SUMMARY
