@@ -5,6 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaContextHolder;
+import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.TestLiteratureUnitContent;
@@ -89,7 +91,7 @@ class DocumentationUnitServiceIntegrationTest {
   @Test
   void update_notFound() {
     // given
-    String documentNumber = "KSNR000000001";
+    String documentNumber = "KSNR000000001a";
 
     // when
     Optional<DocumentationUnit> updated = documentationUnitService.update(documentNumber, "{}");
@@ -172,6 +174,7 @@ class DocumentationUnitServiceIntegrationTest {
   @WithMockLitUser
   void publish_sli() {
     // given
+    SchemaContextHolder.setSchema(SchemaType.LITERATURE);
     DocumentationUnit documentationUnit = documentationUnitService.create(
       DocumentCategory.LITERATUR_SELBSTAENDIG
     );
@@ -190,5 +193,6 @@ class DocumentationUnitServiceIntegrationTest {
           "\"documentNumber\":\"" + documentationUnit.documentNumber() + "\""
         )
       );
+    SchemaContextHolder.clear();
   }
 }

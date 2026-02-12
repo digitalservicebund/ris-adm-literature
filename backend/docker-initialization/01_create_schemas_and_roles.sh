@@ -123,15 +123,15 @@ echo "Create references_schema role and set full access to references_schema sch
 create_role_if_not_exists "references_schema" "references_schema"
 setup_schema_and_permissions "ris_adm_literature" "references_schema" "references_schema"
 
-echo "Read access to references user for fks"
+echo "Read access to references schema"
 grant_read_access "ris_adm_literature" "adm" "references_schema" "adm"
 grant_read_access "ris_adm_literature" "literature" "references_schema" "literature"
-grant_references_access "ris_adm_literature" "adm" "references_schema" "adm"
-grant_references_access "ris_adm_literature" "literature" "references_schema" "literature"
+#grant_references_access "ris_adm_literature" "adm" "references_schema" "adm"
+#grant_references_access "ris_adm_literature" "literature" "references_schema" "literature"
 
-echo "Full access to service users for writing own entries and looking up all entries"
-grant_full_access "ris_adm_literature" "references_schema" "literature" "references_schema"
-grant_full_access "ris_adm_literature" "references_schema" "adm" "references_schema"
+echo "Full access to service users for looking up all entries"
+grant_read_access "ris_adm_literature" "references_schema" "literature" "references_schema"
+grant_read_access "ris_adm_literature" "references_schema" "adm" "references_schema"
 
 echo "Grant read access for lookup_tables schema"
 grant_read_access "ris_adm_literature" "lookup_tables" "adm" "lookup_tables"

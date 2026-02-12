@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.aktivzitierung;
 
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewAdmEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.From;
 import jakarta.persistence.criteria.Path;
@@ -33,10 +34,10 @@ public record AdmReferenceSpecification(
   String normgeber,
   String zitierdatum
 )
-  implements PredicateSpecification<@NonNull AdmReferenceEntity> {
+  implements PredicateSpecification<@NonNull RefViewAdmEntity> {
   @Override
   public @Nullable Predicate toPredicate(
-    From<?, AdmReferenceEntity> from,
+    From<?, RefViewAdmEntity> from,
     @NonNull CriteriaBuilder criteriaBuilder
   ) {
     List<Predicate> predicates = new ArrayList<>();

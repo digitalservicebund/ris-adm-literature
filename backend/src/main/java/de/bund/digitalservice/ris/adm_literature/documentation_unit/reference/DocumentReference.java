@@ -13,17 +13,4 @@ import org.jspecify.annotations.NonNull;
 public record DocumentReference(
   @NonNull String documentNumber,
   @NonNull DocumentCategory documentCategory
-) {
-  DocumentReference(@NonNull DocumentReferenceEntity documentReferenceEntity) {
-    String documentNumber =
-      switch (documentReferenceEntity.getDocumentCategory()) {
-        case VERWALTUNGSVORSCHRIFTEN -> documentReferenceEntity.getAdmDocumentNumber();
-        case LITERATUR_SELBSTAENDIG,
-          LITERATUR_UNSELBSTAENDIG -> documentReferenceEntity.getLiteratureDocumentNumber();
-        default -> throw new IllegalArgumentException(
-          "Unsupported document category: " + documentReferenceEntity.getDocumentCategory()
-        );
-      };
-    this(documentNumber, documentReferenceEntity.getDocumentCategory());
-  }
-}
+) {}

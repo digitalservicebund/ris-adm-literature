@@ -11,11 +11,11 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 /**
  * Test data initializer configuration which feeds test data for e2e test with the
- * right datasource. This bean is only active with profile "default" which is
+ * right datasource. This bean is only active with profiles "default" and "test" which are
  * used on local starting and for e2e tests in the build pipeline.
  */
 @Configuration
-@Profile({ "default" })
+@Profile({ "default", "test" })
 public class TestDataInitializerConfiguration {
 
   /**

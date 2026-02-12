@@ -21,7 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = CourtController.class)
-@Import(SecurityConfiguration.class)
+@Import({ SecurityConfiguration.class })
 @WithMockUser(roles = "adm_user")
 class CourtControllerTest {
 

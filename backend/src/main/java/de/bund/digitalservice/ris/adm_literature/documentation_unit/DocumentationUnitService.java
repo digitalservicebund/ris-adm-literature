@@ -152,6 +152,17 @@ public class DocumentationUnitService {
     }
 
     DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
+    if (
+      documentationUnitContent instanceof SliDocumentationUnitContent sli &&
+      sli.aktivzitierungenAdm() != null
+    ) {
+      List<AktivzitierungAdm> aktivzitierungAdms = referenceService.publishAktivzitierungAdm(
+        documentationUnit,
+        sli.aktivzitierungenAdm()
+      );
+      // Update Aktivzitierung data
+      documentationUnitContent = new SliDocumentationUnitContent(sli, aktivzitierungAdms);
+    }
     String xml = objectToLdmlConverterService.convertToLdml(
       documentationUnitContent,
       documentationUnit.xml(),
@@ -166,26 +177,6 @@ public class DocumentationUnitService {
     DocumentCategory documentCategory = documentationUnitContent.documentCategory();
     var publishOptions = new Publisher.PublicationDetails(documentNumber, xml, documentCategory);
     publisher.publish(publishOptions);
-    if (
-      documentationUnitContent instanceof SliDocumentationUnitContent sli &&
-      sli.aktivzitierungenAdm() != null
-    ) {
-      List<DocumentReference> targets = sli
-        .aktivzitierungenAdm()
-        .stream()
-        // Only document references from search are published, manual document references are skipped
-        .filter(aa -> aa.documentNumber() != null)
-        .map(aa ->
-          new DocumentReference(aa.documentNumber(), DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
-        )
-        .toList();
-      schemaExecutor.executeInSchema(SchemaType.REFERENCES, () ->
-        referenceService.publish(
-          new DocumentReference(sli.documentNumber(), sli.documentCategory()),
-          targets
-        )
-      );
-    }
     return convertLdml(publishedDocumentationUnit);
   }
 
