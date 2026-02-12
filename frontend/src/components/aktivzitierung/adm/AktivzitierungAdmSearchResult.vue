@@ -4,8 +4,8 @@ import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
 import { parseIsoDateToLocal } from "@/utils/dateHelpers";
 import type { AdmAktivzitierungListItem } from "@/domain/adm/admDocumentUnit";
-import { mapAdmSearchResultToAktivzitierung } from "@/services/literature/literatureDocumentUnitService";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
+import { mapAdmSearchResultToAktivzitierung } from "@/services/adm/admDocumentUnitService";
 
 const props = defineProps<{
   searchResult: AdmAktivzitierungListItem;

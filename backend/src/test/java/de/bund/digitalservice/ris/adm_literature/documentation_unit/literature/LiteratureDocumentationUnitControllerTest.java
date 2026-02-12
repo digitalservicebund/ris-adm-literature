@@ -130,6 +130,7 @@ class LiteratureDocumentationUnitControllerTest {
             new UliDocumentationUnitOverviewElement(
               UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
               "VALID123456789",
+              "TheTitle",
               List.of("Banz"),
               List.of("Bib"),
               List.of("Müller")
@@ -137,6 +138,7 @@ class LiteratureDocumentationUnitControllerTest {
             new UliDocumentationUnitOverviewElement(
               UUID.fromString("33385f64-5717-4562-b3fc-2c963f66afa6"),
               "VALID987654321",
+              "TheTitle",
               List.of("AG"),
               List.of("Dis"),
               List.of("Schmidt")

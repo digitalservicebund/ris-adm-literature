@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
-import { useGetAdmPaginatedDocUnitsForSli } from "@/services/literature/literatureDocumentUnitService";
+import { useGetAdmPaginatedDocUnitsForSli } from "@/services/sli/sliDocumentUnitService";
 import type { AktivzitierungRechtsprechung } from "@/domain/AktivzitierungRechtsprechung";
 import AktivzitierungRechtsprechungInput from "@/components/aktivzitierung/rechtsprechung/AktivzitierungRechtsprechungInput.vue";
 import AktivzitierungRechtsprechungItem from "@/components/aktivzitierung/rechtsprechung/AktivzitierungRechtsprechungItem.vue";

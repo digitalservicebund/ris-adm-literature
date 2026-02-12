@@ -1,207 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  useGetUliDocUnit,
   useGetSliDocUnit,
-  usePostUliDocUnit,
   usePostSliDocUnit,
-  usePutPublishUliDocUnit,
   usePutPublishSliDocUnit,
-  usePutUliDocUnit,
   usePutSliDocUnit,
   useGetSliPaginatedDocUnits,
   useGetAdmPaginatedDocUnitsForSli,
-  mapAdmSearchResultToAktivzitierung,
   mapSliSearchResultToAktivzitierung,
-} from "@/services/literature/literatureDocumentUnitService";
+} from "@/services/sli/sliDocumentUnitService";
 import { until } from "@vueuse/core";
 import { ref } from "vue";
 import {
   docTypeAnordnungFixture,
   docTypeBekanntmachungFixture,
 } from "@/testing/fixtures/documentType.fixture";
-import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 
-describe("literatureDocumentUnitService", () => {
+describe("sliDocumentUnitService", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.resetModules();
-  });
-
-  it("fetches a ULI doc unit", async () => {
-    const docUnit = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSNR054920707",
-      note: "",
-    };
-
-    const docUnitResp = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSNR054920707",
-      json: docUnit,
-      administrativeData: { note: "" },
-    };
-
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(docUnitResp), { status: 200 }),
-    );
-
-    const { data, error, isFetching, execute } = useGetUliDocUnit("KSLU054920707");
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeFalsy();
-    expect(data.value).toEqual(docUnit);
-  });
-
-  it("data is null when ULI fetch returns a null body", async () => {
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(null), { status: 200 }),
-    );
-
-    const { data, execute } = useGetUliDocUnit("KSLU054920707");
-    await execute();
-
-    expect(data.value).toEqual(null);
-  });
-
-  it("returns an error on failed ULI fetch ", async () => {
-    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
-
-    const { data, error, isFetching, execute } = useGetUliDocUnit("KSLU054920708");
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeTruthy();
-    expect(data.value).toBeNull();
-  });
-
-  it("updates a ULI doc unit", async () => {
-    const docUnit = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    };
-
-    const updatedResp = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      json: {
-        id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-        documentNumber: "KSLU054920707",
-      },
-      administrativeData: { note: "" },
-    };
-
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(updatedResp), { status: 200 }),
-    );
-
-    const { data, error, isFetching, execute } = usePutUliDocUnit(docUnit);
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeFalsy();
-    expect(data.value?.id).toBe(docUnit.id);
-  });
-
-  it("returns an error on failed ULI update", async () => {
-    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
-
-    const { data, error, isFetching, execute } = usePutUliDocUnit({
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    });
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeTruthy();
-    expect(data.value).toBeNull();
-  });
-
-  it("data is null when ULI update call returns a null body", async () => {
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(null), { status: 200 }),
-    );
-
-    const { data, execute } = usePutUliDocUnit({
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    });
-    await execute();
-
-    expect(data.value).toEqual(null);
-  });
-
-  it("publishes a uli doc unit", async () => {
-    const docUnit = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    };
-
-    const publishedResp = {
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      json: {
-        id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-        documentNumber: "KSLU054920707",
-      },
-      administrativeData: { note: "" },
-    };
-
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(publishedResp), { status: 200 }),
-    );
-
-    const { data, error, isFetching, execute } = usePutPublishUliDocUnit(docUnit);
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeFalsy();
-    expect(data.value?.id).toBe(docUnit.id);
-  });
-
-  it("returns an error on failed uli publication", async () => {
-    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
-
-    const { data, error, isFetching, execute } = usePutPublishUliDocUnit({
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    });
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeTruthy();
-    expect(data.value).toBeNull();
-  });
-
-  it("data is null when publish a uli doc returns a null body", async () => {
-    vi.spyOn(window, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(null), { status: 200 }),
-    );
-
-    const { data, execute } = usePutPublishUliDocUnit({
-      id: "8de5e4a0-6b67-4d65-98db-efe877a260c4",
-      documentNumber: "KSLU054920707",
-      note: "",
-    });
-    await execute();
-
-    expect(data.value).toEqual(null);
-  });
-
-  it("returns an error on failed ULI creation", async () => {
-    vi.spyOn(window, "fetch").mockRejectedValue(new Error("fetch failed"));
-
-    const { data, error, isFetching, execute } = usePostUliDocUnit();
-    await execute();
-
-    expect(isFetching.value).toBe(false);
-    expect(error.value).toBeTruthy();
-    expect(data.value).toBeNull();
   });
 
   it("fetches a SLI doc unit", async () => {
@@ -446,7 +263,7 @@ describe("literatureDocumentUnitService", () => {
     expect(error.value).toBeFalsy();
   });
 
-  it("gets an unfiltered paginated list of adm doc units", async () => {
+  it("gets an unfiltered paginated list of adm doc units for SLI", async () => {
     const fetchSpy = vi
       .spyOn(window, "fetch")
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
@@ -467,7 +284,7 @@ describe("literatureDocumentUnitService", () => {
     expect(error.value).toBeFalsy();
   });
 
-  it("gets an filtered paginated list of adm doc units", async () => {
+  it("gets an filtered paginated list of adm doc units for SLI", async () => {
     const fetchSpy = vi
       .spyOn(window, "fetch")
       .mockResolvedValue(new Response(JSON.stringify({}), { status: 200 }));
@@ -536,79 +353,6 @@ describe("literatureDocumentUnitService", () => {
     await execute();
 
     expect(data.value).toBeNull();
-  });
-});
-
-describe("mapAdmSearchResultToAktivzitierung", () => {
-  vi.stubGlobal("crypto", {
-    randomUUID: () => "mocked-uuid",
-  });
-
-  it("maps a normal input with fundstellen correctly", () => {
-    const input = {
-      id: "be-id",
-      documentNumber: "DOC-1",
-      inkrafttretedatum: "2024-01-01",
-      dokumenttyp: "VV",
-      normgeberList: ["BMJ"],
-      aktenzeichenList: ["AZ-123"],
-      fundstellen: ["BAnz AT 01.01.2024, S. 1"],
-    };
-
-    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
-
-    expect(result).toEqual({
-      id: "mocked-uuid",
-      documentNumber: "DOC-1",
-      inkrafttretedatum: "2024-01-01",
-      dokumenttyp: "VV",
-      normgeber: "BMJ",
-      aktenzeichen: "AZ-123",
-      periodikum: "BAnz AT 01.01.2024",
-      zitatstelle: "S. 1",
-    });
-  });
-
-  it("handles missing fundstellen gracefully", () => {
-    const input = {
-      id: "be-id",
-      documentNumber: "DOC-2",
-      inkrafttretedatum: "2024-01-02",
-      dokumenttyp: "VV",
-      normgeberList: [],
-      aktenzeichenList: [],
-      fundstellen: undefined,
-    };
-
-    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
-
-    expect(result).toEqual({
-      id: "mocked-uuid",
-      documentNumber: "DOC-2",
-      inkrafttretedatum: "2024-01-02",
-      dokumenttyp: "VV",
-      normgeber: undefined,
-      aktenzeichen: undefined,
-      periodikum: undefined,
-      zitatstelle: undefined,
-    });
-  });
-
-  it("handles empty fundstellen array", () => {
-    const input = {
-      id: "be-id",
-      documentNumber: "DOC-3",
-      inkrafttretedatum: "2024-01-03",
-      dokumenttyp: "VV",
-      normgeberList: [],
-      aktenzeichenList: [],
-      fundstellen: [],
-    };
-
-    const result = mapAdmSearchResultToAktivzitierung(input);
-
-    expect(result.periodikum).toBeUndefined();
-    expect(result.zitatstelle).toBeUndefined();
   });
 });
 

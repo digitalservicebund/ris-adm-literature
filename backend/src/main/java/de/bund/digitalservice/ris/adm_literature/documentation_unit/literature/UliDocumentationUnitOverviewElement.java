@@ -13,6 +13,7 @@ import java.util.UUID;
  *
  * @param id                 The unique identifier of the documentation unit.
  * @param documentNumber     The public document number associated with the unit.
+ * @param titel              The title of the documentation unit.
  * @param fundstellen        The list of Fundstellen
  * @param dokumenttypen      A list of {@link DocumentType} objects representing the document types.
  * @param verfasser          A list of strings representing the authors.
@@ -20,6 +21,7 @@ import java.util.UUID;
 public record UliDocumentationUnitOverviewElement(
   @Nonnull UUID id,
   @Nonnull String documentNumber,
+  String titel,
   List<String> fundstellen,
   List<String> dokumenttypen,
   List<String> verfasser

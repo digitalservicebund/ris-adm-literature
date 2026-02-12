@@ -1,4 +1,5 @@
 import type {
+  AdmAktivzitierungListItem,
   AdmDocumentationUnit,
   AdmDocumentUnitResponse,
   AdmDocUnitSearchParams,
@@ -11,6 +12,8 @@ import { useApiFetch } from "../apiService";
 import { type UseFetchReturn } from "@vueuse/core";
 import { buildUrlWithParams } from "@/utils/urlHelpers";
 import { computed, type Ref } from "vue";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
+import { splitTrimFirstComma } from "@/utils/stringsUtil";
 
 const ADM_DOCUMENTATION_UNITS_URL = "/adm/documentation-units";
 
@@ -78,6 +81,25 @@ export function usePutAdmDocUnit(
   })
     .json()
     .put(documentUnit);
+}
+
+export function mapAdmSearchResultToAktivzitierung(
+  result: AdmAktivzitierungListItem,
+): AktivzitierungAdm {
+  const [periodikum, zitatstelle] = result.fundstellen?.[0]
+    ? splitTrimFirstComma(result.fundstellen[0])
+    : [];
+
+  return {
+    id: crypto.randomUUID(),
+    documentNumber: result.documentNumber,
+    inkrafttretedatum: result.inkrafttretedatum,
+    dokumenttyp: result.dokumenttyp,
+    normgeber: result.normgeberList?.[0],
+    aktenzeichen: result.aktenzeichenList?.[0],
+    periodikum,
+    zitatstelle,
+  };
 }
 
 function mapResponseToAdmDocUnit(data: AdmDocumentUnitResponse): AdmDocumentationUnit {

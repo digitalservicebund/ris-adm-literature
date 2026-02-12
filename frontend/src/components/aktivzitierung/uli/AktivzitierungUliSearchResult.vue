@@ -1,29 +1,28 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { SliDocUnitListItem } from "@/domain/sli/sliDocumentUnit";
 import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
-import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
-import { mapSliSearchResultToAktivzitierung } from "@/services/sli/sliDocumentUnitService";
+import type { UliDocUnitListItem } from "@/domain/uli/uliDocumentUnit";
+import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
+import { mapUliSearchResultToAktivzitierung } from "@/services/uli/uliDocumentUnitService";
 
 const props = defineProps<{
-  searchResult: SliDocUnitListItem;
+  searchResult: UliDocUnitListItem;
   isAdded: boolean;
   documentTypeNameToAbbreviation?: Map<string, string>;
 }>();
 
 const emit = defineEmits<{
-  add: [searchResult: AktivzitierungSli];
+  add: [searchResult: AktivzitierungUli];
 }>();
 
 function handleAdd() {
   if (!props.isAdded) {
-    emit("add", mapSliSearchResultToAktivzitierung(props.searchResult));
+    emit("add", mapUliSearchResultToAktivzitierung(props.searchResult));
   }
 }
 
-const { veroeffentlichungsjahr, verfasser, documentNumber, titel, dokumenttypen } =
-  props.searchResult;
+const { fundstellen, verfasser, documentNumber, titel, dokumenttypen } = props.searchResult;
 
 const documentTypeAbbreviations = computed(() => {
   if (!dokumenttypen || dokumenttypen.length === 0 || !props.documentTypeNameToAbbreviation) {
@@ -37,12 +36,12 @@ const documentTypeAbbreviations = computed(() => {
 function formatHeading(): string {
   const parts = [];
 
-  if (veroeffentlichungsjahr) {
-    parts.push(veroeffentlichungsjahr);
-  }
-
   if (verfasser && verfasser.length > 0) {
     parts.push(verfasser.join(", "));
+  }
+
+  if (fundstellen && fundstellen.length > 0) {
+    parts.push(fundstellen.join(", "));
   }
 
   const citationPart = parts.join(", ");

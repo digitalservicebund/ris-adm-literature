@@ -7,10 +7,8 @@ import errorMessages from "@/i18n/errors.json";
 import { ROUTE_PATHS } from "@/constants/routes";
 import { usePostAdmDocUnit } from "@/services/adm/admDocumentUnitService";
 import { DocumentCategory } from "@/domain/documentType";
-import {
-  usePostSliDocUnit,
-  usePostUliDocUnit,
-} from "@/services/literature/literatureDocumentUnitService";
+import { usePostUliDocUnit } from "@/services/uli/uliDocumentUnitService";
+import { usePostSliDocUnit } from "@/services/sli/sliDocumentUnitService";
 
 const toast = useToast();
 const router = useRouter();

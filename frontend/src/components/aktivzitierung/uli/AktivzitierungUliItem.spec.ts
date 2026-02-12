@@ -53,6 +53,7 @@ const metaTestCases = [
     name: "renders document types in parentheses after main parts",
     data: {
       ...baseItem,
+      documentNumber: "VALID1234567",
       verfasser: ["Müller"],
       periodikum: "BAnz",
       zitatstelle: "AT 27.08.2024",
@@ -61,7 +62,7 @@ const metaTestCases = [
         { abbreviation: "Dis", name: "Dissertation" },
       ],
     },
-    expected: "Müller, BAnz AT 27.08.2024 (Bib, Dis)",
+    expected: "Müller, BAnz AT 27.08.2024 (Bib, Dis) | VALID1234567",
   },
   {
     name: "renders only document types when no authors or fundstelle exist",
@@ -100,5 +101,13 @@ describe("AktivzitierungUliItem", () => {
       expect(summaryEl).toBeInTheDocument();
       expect(summaryEl).toHaveTextContent("");
     }
+  });
+
+  it("renders title", () => {
+    render(AktivzitierungUliItem, {
+      props: { aktivzitierung: { id: "theId", titel: "TheTitle" } },
+    });
+
+    expect(screen.getByText("TheTitle")).toBeVisible();
   });
 });
