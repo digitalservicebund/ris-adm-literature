@@ -17,6 +17,10 @@ on:
 jobs:
   frontend-push-image-to-registry:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
     steps:
       - uses: actions/cache@v5
         with:
@@ -40,6 +44,8 @@ jobs:
         # Third-party action, pin to commit SHA!
         # See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
         uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad
+        with:
+          cosign-release: "v2.6.0" # We need to use v2.X.X because of major version GHA v4.X.X and broken image verification of Kyverno
       - name: Sign the published Docker image
         run: cosign sign --yes ${{ inputs.image-ref }}
       - name: Download cosign vulnerability scan record
