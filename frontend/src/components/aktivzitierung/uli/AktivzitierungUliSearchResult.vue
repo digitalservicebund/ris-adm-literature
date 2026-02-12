@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
-import { mapUliSearchResultToAktivzitierung } from "@/services/literature/literatureDocumentUnitService";
 import type { UliDocUnitListItem } from "@/domain/uli/uliDocumentUnit";
 import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
+import { mapUliSearchResultToAktivzitierung } from "@/services/uli/uliDocumentUnitService";
 
 const props = defineProps<{
   searchResult: UliDocUnitListItem;

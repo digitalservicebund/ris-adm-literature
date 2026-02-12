@@ -4,7 +4,7 @@ import type { SliDocUnitListItem } from "@/domain/sli/sliDocumentUnit";
 import Button from "primevue/button";
 import IconAdd from "~icons/material-symbols/add";
 import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
-import { mapSliSearchResultToAktivzitierung } from "@/services/literature/literatureDocumentUnitService";
+import { mapSliSearchResultToAktivzitierung } from "@/services/sli/sliDocumentUnitService";
 
 const props = defineProps<{
   searchResult: SliDocUnitListItem;

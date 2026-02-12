@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  mapAdmSearchResultToAktivzitierung,
   useGetAdmDocUnit,
   useGetAdmPaginatedDocUnits,
   usePostAdmDocUnit,
@@ -13,6 +14,7 @@ import { ref } from "vue";
 import { until } from "@vueuse/core";
 import ActiveCitation from "@/domain/activeCitation";
 import { activeCitationFixture } from "@/testing/fixtures/activeCitation.fixture";
+import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 
 describe("admDocumentUnitService", () => {
   beforeEach(() => {
@@ -255,5 +257,78 @@ describe("admDocumentUnitService", () => {
       expect.anything(),
     );
     expect(error.value).toBeFalsy();
+  });
+});
+
+describe("mapAdmSearchResultToAktivzitierung", () => {
+  vi.stubGlobal("crypto", {
+    randomUUID: () => "mocked-uuid",
+  });
+
+  it("maps a normal input with fundstellen correctly", () => {
+    const input = {
+      id: "be-id",
+      documentNumber: "DOC-1",
+      inkrafttretedatum: "2024-01-01",
+      dokumenttyp: "VV",
+      normgeberList: ["BMJ"],
+      aktenzeichenList: ["AZ-123"],
+      fundstellen: ["BAnz AT 01.01.2024, S. 1"],
+    };
+
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
+
+    expect(result).toEqual({
+      id: "mocked-uuid",
+      documentNumber: "DOC-1",
+      inkrafttretedatum: "2024-01-01",
+      dokumenttyp: "VV",
+      normgeber: "BMJ",
+      aktenzeichen: "AZ-123",
+      periodikum: "BAnz AT 01.01.2024",
+      zitatstelle: "S. 1",
+    });
+  });
+
+  it("handles missing fundstellen gracefully", () => {
+    const input = {
+      id: "be-id",
+      documentNumber: "DOC-2",
+      inkrafttretedatum: "2024-01-02",
+      dokumenttyp: "VV",
+      normgeberList: [],
+      aktenzeichenList: [],
+      fundstellen: undefined,
+    };
+
+    const result: AktivzitierungAdm = mapAdmSearchResultToAktivzitierung(input);
+
+    expect(result).toEqual({
+      id: "mocked-uuid",
+      documentNumber: "DOC-2",
+      inkrafttretedatum: "2024-01-02",
+      dokumenttyp: "VV",
+      normgeber: undefined,
+      aktenzeichen: undefined,
+      periodikum: undefined,
+      zitatstelle: undefined,
+    });
+  });
+
+  it("handles empty fundstellen array", () => {
+    const input = {
+      id: "be-id",
+      documentNumber: "DOC-3",
+      inkrafttretedatum: "2024-01-03",
+      dokumenttyp: "VV",
+      normgeberList: [],
+      aktenzeichenList: [],
+      fundstellen: [],
+    };
+
+    const result = mapAdmSearchResultToAktivzitierung(input);
+
+    expect(result.periodikum).toBeUndefined();
+    expect(result.zitatstelle).toBeUndefined();
   });
 });

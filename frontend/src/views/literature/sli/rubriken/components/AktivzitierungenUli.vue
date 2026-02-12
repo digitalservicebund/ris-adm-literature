@@ -4,7 +4,7 @@ import AktivzitierungUliInput from "@/components/aktivzitierung/uli/Aktivzitieru
 import AktivzitierungUliItem from "@/components/aktivzitierung/uli/AktivzitierungUliItem.vue";
 import AktivzitierungUliSearchResult from "@/components/aktivzitierung/uli/AktivzitierungUliSearchResult.vue";
 import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
-import { useGetUliPaginatedDocUnits } from "@/services/literature/literatureDocumentUnitService";
+import { useGetUliPaginatedDocUnits } from "@/services/uli/uliDocumentUnitService";
 
 const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
 </script>
