@@ -13,6 +13,7 @@ import {
   mapAdmSearchResultToAktivzitierung,
   mapSliSearchResultToAktivzitierung,
   useGetUliPaginatedDocUnits,
+  mapUliSearchResultToAktivzitierung,
 } from "@/services/literature/literatureDocumentUnitService";
 import { until } from "@vueuse/core";
 import { ref } from "vue";
@@ -744,5 +745,88 @@ describe("mapSliSearchResultToAktivzitierung", () => {
     const result = mapSliSearchResultToAktivzitierung(input);
 
     expect(result.titel).toBeUndefined();
+  });
+});
+
+describe("mapUliSearchResultToAktivzitierung", () => {
+  vi.stubGlobal("crypto", {
+    randomUUID: () => "mocked-uuid",
+  });
+
+  it("maps a ULI result with fundstellen correctly", () => {
+    const input = {
+      id: "uli-id",
+      documentNumber: "ULI-1",
+      titel: "Legal Research Paper",
+      verfasser: ["Müller", "Schmidt"],
+      dokumenttypen: ["Aufsatz"],
+      fundstellen: ["NJW 2024, 123"],
+    };
+
+    const result = mapUliSearchResultToAktivzitierung(input);
+
+    expect(result).toEqual({
+      id: "mocked-uuid",
+      titel: "Legal Research Paper",
+      documentNumber: "ULI-1",
+      verfasser: ["Müller", "Schmidt"],
+      dokumenttypen: [{ abbreviation: "Aufsatz", name: "Aufsatz" }],
+      periodikum: "NJW 2024",
+      zitatstelle: "123",
+    });
+  });
+
+  it("handles empty fundstellen by setting periodikum and zitatstelle to undefined", () => {
+    const input = {
+      id: "uli-id",
+      documentNumber: "ULI-2",
+      fundstellen: [],
+    };
+
+    const result = mapUliSearchResultToAktivzitierung(input);
+
+    expect(result.periodikum).toBeUndefined();
+    expect(result.zitatstelle).toBeUndefined();
+  });
+
+  it("handles malformed fundstellen without commas gracefully", () => {
+    const input = {
+      id: "uli-id",
+      documentNumber: "ULI-3",
+      fundstellen: ["JustAStatementNoComma"],
+    };
+
+    const result = mapUliSearchResultToAktivzitierung(input);
+
+    // Depending on your splitTrimFirstComma implementation:
+    expect(result.periodikum).toBe("JustAStatementNoComma");
+    expect(result.zitatstelle).toBeUndefined();
+  });
+
+  it("maps empty arrays for verfasser and dokumenttypen", () => {
+    const input = {
+      id: "uli-id",
+      documentNumber: "ULI-4",
+      verfasser: undefined,
+      dokumenttypen: undefined,
+    };
+
+    const result = mapUliSearchResultToAktivzitierung(input);
+
+    expect(result.verfasser).toEqual([]);
+    expect(result.dokumenttypen).toEqual([]);
+  });
+
+  it("takes only the first element from fundstellen array", () => {
+    const input = {
+      id: "uli-id",
+      documentNumber: "ULI-5",
+      fundstellen: ["First, 1", "Second, 2"],
+    };
+
+    const result = mapUliSearchResultToAktivzitierung(input);
+
+    expect(result.periodikum).toBe("First");
+    expect(result.zitatstelle).toBe("1");
   });
 });

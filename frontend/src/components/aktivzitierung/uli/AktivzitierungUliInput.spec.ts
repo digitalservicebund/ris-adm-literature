@@ -8,12 +8,14 @@ function renderComponent(props: {
   aktivzitierung?: AktivzitierungUli;
   showCancelButton?: boolean;
   showDeleteButton?: boolean;
+  showSearchButton?: boolean;
 }) {
   return render(AktivzitierungUliInput, {
     props: {
       aktivzitierung: props.aktivzitierung,
       showCancelButton: props.showCancelButton ?? false,
       showDeleteButton: props.showDeleteButton ?? false,
+      showSearchButton: props.showSearchButton ?? false,
     },
     global: {
       stubs: {
@@ -318,5 +320,26 @@ describe("AktivzitierungUliInput", () => {
     await user.click(screen.getByRole("button", { name: "Aktivzitierung übernehmen" }));
 
     expect(screen.getByText("Pflichtfeld nicht befüllt")).toBeInTheDocument();
+  });
+
+  it("emits 'search' with current state when search button is clicked", async () => {
+    const user = userEvent.setup();
+    const initialValue: AktivzitierungUli = {
+      id: "123",
+      documentNumber: "DOC-123",
+    };
+
+    const { emitted } = renderComponent({ aktivzitierung: initialValue, showSearchButton: true });
+
+    const searchButton = screen.getByRole("button", { name: "Dokumente Suchen" });
+    await user.click(searchButton);
+
+    expect(emitted().search).toBeTruthy();
+    expect(emitted().search![0]).toEqual([
+      expect.objectContaining({
+        id: "123",
+        documentNumber: "DOC-123",
+      }),
+    ]);
   });
 });

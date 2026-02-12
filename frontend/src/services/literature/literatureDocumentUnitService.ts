@@ -235,23 +235,21 @@ export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): 
 }
 
 export function mapUliSearchResultToAktivzitierung(result: UliDocUnitListItem): AktivzitierungUli {
-  const [periodikum, zitatstelle] = result.fundstellen?.[0]
-    ? splitTrimFirstComma(result.fundstellen[0])
-    : [];
-
-  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
-    abbreviation: abbr,
-    name: abbr,
-  }));
+  const firstFundstelle = result.fundstellen?.[0] || "";
+  const [periodikum, zitatstelle] = splitTrimFirstComma(firstFundstelle);
 
   return {
     id: crypto.randomUUID(),
     titel: result.titel,
     documentNumber: result.documentNumber,
-    verfasser: result.verfasser || [],
-    dokumenttypen: dokumenttypen || [],
-    periodikum,
-    zitatstelle,
+    verfasser: result.verfasser ?? [],
+    dokumenttypen:
+      result.dokumenttypen?.map((abbr) => ({
+        abbreviation: abbr,
+        name: abbr,
+      })) ?? [],
+    periodikum: periodikum || undefined,
+    zitatstelle: zitatstelle || undefined,
   };
 }
 
