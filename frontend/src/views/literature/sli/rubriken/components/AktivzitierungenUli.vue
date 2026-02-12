@@ -15,10 +15,7 @@ const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
     </h2>
     <div class="flex flex-row gap-24 w-full">
       <div class="flex flex-col w-full">
-        <Aktivzitierung
-          v-model="aktivzitierungUli"
-          :fetch-results-fn="useGetUliPaginatedDocUnits"
-        >
+        <Aktivzitierung v-model="aktivzitierungUli" :fetch-results-fn="useGetUliPaginatedDocUnits">
           <template #item="{ aktivzitierung }">
             <AktivzitierungUliItem :aktivzitierung="aktivzitierung" />
           </template>
