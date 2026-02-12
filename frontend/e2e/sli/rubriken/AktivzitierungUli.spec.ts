@@ -3,6 +3,35 @@ import { test, expect, type Page } from "@playwright/test";
 export const getUliAktivzitierungSection = (page: Page) =>
   page.getByRole("region", { name: "Aktivzitierung (unselbst. Literatur)" });
 
+export async function createUliDocument(
+  page: Page,
+  data: { title: string; year: string; docType: string[] },
+  publish: boolean,
+) {
+  await page.goto("/literatur-unselbstaendig");
+  await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
+  await page.waitForURL(/dokumentationseinheit/);
+
+  const formaldaten = page.getByRole("region", { name: "Formaldaten" });
+
+  const input = formaldaten.getByRole("combobox", { name: "Dokumenttyp" });
+  const overlay = page.getByRole("listbox", { name: "Optionsliste" });
+
+  for (const type of data.docType) {
+    await input.fill(type);
+    await overlay.getByRole("option", { name: type }).click();
+  }
+
+  await formaldaten.getByRole("textbox", { name: "Dokumentarischer Titel" }).fill(data.title);
+  await formaldaten.getByRole("textbox", { name: "Veröffentlichungsjahr" }).fill(data.year);
+
+  await page.getByRole("button", { name: "Speichern" }).click();
+  if (publish) {
+    await page.getByText("Abgabe").click();
+    await page.getByRole("button", { name: "Zur Veröffentlichung freigeben" }).click();
+  }
+}
+
 test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/literatur-selbstaendig");
@@ -199,3 +228,64 @@ test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] },
     await expect(aktivAfterSecondReload.getByText("2027, 456", { exact: false })).toHaveCount(0);
   });
 });
+
+test.describe(
+  "Add aktivzitierung via searching through the ULI documents",
+  { tag: ["@RISDEV-10664"] },
+  () => {
+    test.describe.configure({ mode: "serial" });
+
+    let page: Page;
+
+    const titleSharedId = crypto.randomUUID();
+    const titleDoc1 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`;
+    const titleDoc2 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`;
+    const yearSharedId = crypto.randomUUID();
+    const veroeffentlichungsjahrDoc1 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`;
+    const veroeffentlichungsjahrDoc2 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`;
+
+    test.beforeAll(async ({ browser }) => {
+      page = await browser.newPage();
+
+      await createUliDocument(
+        page,
+        {
+          title: titleDoc1,
+          year: veroeffentlichungsjahrDoc1,
+          docType: ["Auf"],
+        },
+        true,
+      );
+
+      await createUliDocument(
+        page,
+        {
+          title: titleDoc2,
+          year: veroeffentlichungsjahrDoc2,
+          docType: ["Ebs"],
+        },
+        true,
+      );
+    });
+
+    test.afterAll(async () => {
+      await page.close();
+    });
+
+    test.beforeEach(async () => {
+      await page.goto("/literatur-selbstaendig");
+      await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
+      await page.waitForURL(/dokumentationseinheit/);
+    });
+
+    test("shows no results message when searching for non-existent title", async () => {
+      const aktiv = getUliAktivzitierungSection(page);
+
+      const nonExistingDocNumber = crypto.randomUUID();
+      await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill(nonExistingDocNumber);
+      await aktiv.getByRole("button", { name: "Dokumente Suchen" }).click();
+
+      await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
+    });
+  },
+);

@@ -72,6 +72,7 @@ export function useGetUliPaginatedDocUnits(
     buildUrlWithParams(`${ULI_LITERATURE_DOCUMENTATION_UNITS_URL}`, {
       pageNumber: pageNumber.value.toString(),
       pageSize: pageSize.toString(),
+      documentNumber: search?.value?.documentNumber?.toString(),
       periodikum: search?.value?.periodikum?.toString(),
       zitatstelle: search?.value?.zitatstelle?.toString(),
       dokumenttypen: search?.value?.dokumenttypen?.map((d) => d.abbreviation).join(),
