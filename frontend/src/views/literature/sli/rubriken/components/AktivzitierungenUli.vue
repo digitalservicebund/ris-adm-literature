@@ -2,6 +2,7 @@
 import Aktivzitierung from "@/components/aktivzitierung/Aktivzitierung.vue";
 import AktivzitierungUliInput from "@/components/aktivzitierung/uli/AktivzitierungUliInput.vue";
 import AktivzitierungUliItem from "@/components/aktivzitierung/uli/AktivzitierungUliItem.vue";
+import AktivzitierungUliSearchResult from "@/components/aktivzitierung/uli/AktivzitierungUliSearchResult.vue";
 import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
 import { useGetUliPaginatedDocUnits } from "@/services/literature/literatureDocumentUnitService";
 
@@ -41,6 +42,14 @@ const aktivzitierungUli = defineModel<AktivzitierungUli[]>();
               @delete="onDelete"
               @cancel="onCancel"
               @search="onSearch"
+            />
+          </template>
+
+          <template #searchResult="{ searchResult, isAdded, onAdd }">
+            <AktivzitierungUliSearchResult
+              :searchResult="searchResult"
+              :is-added="isAdded"
+              @add="onAdd"
             />
           </template>
         </Aktivzitierung>

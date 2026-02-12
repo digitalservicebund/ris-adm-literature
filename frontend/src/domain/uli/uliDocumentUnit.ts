@@ -22,8 +22,8 @@ export interface UliDocumentUnitResponse {
 export interface UliDocUnitListItem {
   readonly id: string;
   readonly documentNumber: string;
-  periodikum?: string;
-  zitatstelle?: string;
+  titel?: string;
+  fundstellen?: string[];
   dokumenttypen?: string[];
   verfasser?: string[];
 }

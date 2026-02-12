@@ -43,8 +43,16 @@ const metaSummary = computed(() => {
       : `(${documentTypeAbbreviations.value})`;
   }
 
+  if (props.aktivzitierung.documentNumber) {
+    main = main
+      ? `${main} | ${props.aktivzitierung.documentNumber}`
+      : `${props.aktivzitierung.documentNumber}`;
+  }
+
   return main;
 });
+
+const titleSummary = computed(() => props.aktivzitierung.titel ?? "");
 </script>
 
 <template>
@@ -58,6 +66,9 @@ const metaSummary = computed(() => {
     <div class="flex flex-col">
       <div class="ris-body1-regular">
         {{ metaSummary }}
+      </div>
+      <div class="ris-body2-regular text-gray-900">
+        {{ titleSummary }}
       </div>
     </div>
   </div>

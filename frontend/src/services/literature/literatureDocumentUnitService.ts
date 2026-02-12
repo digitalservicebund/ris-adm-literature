@@ -3,6 +3,7 @@ import { type UseFetchReturn } from "@vueuse/core";
 import type {
   UliDocumentationUnit,
   UliDocumentUnitResponse,
+  UliDocUnitListItem,
   UliDocUnitSearchParams,
 } from "@/domain/uli/uliDocumentUnit";
 import type {
@@ -20,6 +21,7 @@ import type {
 import { splitTrimFirstComma } from "@/utils/stringsUtil";
 import type { AktivzitierungAdm } from "@/domain/AktivzitierungAdm";
 import type { AktivzitierungSli } from "@/domain/AktivzitierungSli";
+import type { AktivzitierungUli } from "@/domain/AktivzitierungUli";
 
 const LITERATURE_DOCUMENTATION_UNITS_URL = "/literature/documentation-units";
 const ULI_LITERATURE_DOCUMENTATION_UNITS_URL = "/literature/uli/documentation-units";
@@ -229,6 +231,27 @@ export function mapSliSearchResultToAktivzitierung(result: SliDocUnitListItem): 
     veroeffentlichungsJahr: result.veroeffentlichungsjahr,
     verfasser: result.verfasser || [],
     dokumenttypen: dokumenttypen || [],
+  };
+}
+
+export function mapUliSearchResultToAktivzitierung(result: UliDocUnitListItem): AktivzitierungUli {
+  const [periodikum, zitatstelle] = result.fundstellen?.[0]
+    ? splitTrimFirstComma(result.fundstellen[0])
+    : [];
+
+  const dokumenttypen = result.dokumenttypen?.map((abbr) => ({
+    abbreviation: abbr,
+    name: abbr,
+  }));
+
+  return {
+    id: crypto.randomUUID(),
+    titel: result.titel,
+    documentNumber: result.documentNumber,
+    verfasser: result.verfasser || [],
+    dokumenttypen: dokumenttypen || [],
+    periodikum,
+    zitatstelle,
   };
 }
 

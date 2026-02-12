@@ -14,6 +14,7 @@ const globalStubs = {
   },
   AktivzitierungUliInput: { template: `<div data-testid="input"/>` },
   AktivzitierungUliItem: { template: `<div data-testid="item"/>` },
+  AktivzitierungUliSearchResult: { template: `<div data-testid="search-result"/>` },
 };
 
 describe("AktivzitierungenUli", () => {
@@ -30,5 +31,6 @@ describe("AktivzitierungenUli", () => {
     expect(screen.getByTestId("aktivzitierung")).toBeInTheDocument();
     expect(screen.getByTestId("item")).toBeInTheDocument();
     expect(screen.getByTestId("input")).toBeInTheDocument();
+    expect(screen.getByTestId("search-result")).toBeInTheDocument();
   });
 });
