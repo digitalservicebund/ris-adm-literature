@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ValidatorConfig {
 
+  private static final String XML_SCHEMA_LOCATION = "/schemas/akomaNtoso/xml.xsd";
   private static final String AKOMA_NTOSO_SCHEMA_LOCATION = "/schemas/akomaNtoso/akomantoso30.xsd";
 
   /**
@@ -20,7 +21,11 @@ public class ValidatorConfig {
   @Bean("bsgVwvValidator")
   public XmlValidator bsgVwvValidator() {
     return new XmlValidator(
-      List.of(AKOMA_NTOSO_SCHEMA_LOCATION, "/schemas/proprietary/bsg-vwv/ldml-ris-meta.xsd")
+      List.of(
+        XML_SCHEMA_LOCATION,
+        AKOMA_NTOSO_SCHEMA_LOCATION,
+        "/schemas/proprietary/bsg-vwv/ldml-ris-meta.xsd"
+      )
     );
   }
 
@@ -32,6 +37,7 @@ public class ValidatorConfig {
   public XmlValidator uliLiteratureValidator() {
     return new XmlValidator(
       List.of(
+        XML_SCHEMA_LOCATION,
         AKOMA_NTOSO_SCHEMA_LOCATION,
         "/schemas/proprietary/literature/ldml-ris-literature.xsd",
         "/schemas/proprietary/literature/ldml-ris-literature-unselbstaendig-meta.xsd"
@@ -47,6 +53,7 @@ public class ValidatorConfig {
   public XmlValidator sliLiteratureValidator() {
     return new XmlValidator(
       List.of(
+        XML_SCHEMA_LOCATION,
         AKOMA_NTOSO_SCHEMA_LOCATION,
         "/schemas/proprietary/literature/ldml-ris-literature.xsd",
         "/schemas/proprietary/literature/ldml-ris-literature-selbstaendig-meta.xsd"
