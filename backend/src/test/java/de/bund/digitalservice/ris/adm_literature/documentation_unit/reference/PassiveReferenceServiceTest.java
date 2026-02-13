@@ -7,7 +7,6 @@ import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCateg
 import java.util.List;
 import java.util.UUID;
 import org.assertj.core.groups.Tuple;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,13 +24,12 @@ class PassiveReferenceServiceTest {
   private PassiveReferenceService passiveReferenceService;
 
   @Mock
-  private AdmPassiveReferenceRepository admPassiveReferenceRepository;
+  private RefViewActiveReferenceSliAdmRepository refViewActiveReferenceSliAdmRepository;
 
   @Test
-  @Disabled("Until implementing RISDEV-10990")
   void findAll_adm() {
     // given
-    given(admPassiveReferenceRepository.findAll()).willReturn(
+    given(refViewActiveReferenceSliAdmRepository.findAll()).willReturn(
       List.of(
         createAdmPassiveReference("KSNR20260000001", "KSLS20260000001"),
         createAdmPassiveReference("KSNR20260000001", "KSLS20260000002")
@@ -56,9 +54,7 @@ class PassiveReferenceServiceTest {
   @ParameterizedTest
   @EnumSource(
     value = DocumentCategory.class,
-    names = {
-      "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR", "VERWALTUNGSVORSCHRIFTEN",
-    }
+    names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
   )
   void findAll_unsupported(DocumentCategory documentCategory) {
     // given
@@ -71,10 +67,11 @@ class PassiveReferenceServiceTest {
   }
 
   @Test
-  @Disabled("Until implementing RISDEV-10990")
   void findByDocumentNumber() {
     // given
-    given(admPassiveReferenceRepository.findByTargetDocumentNumber("KSNR20260000333")).willReturn(
+    given(
+      refViewActiveReferenceSliAdmRepository.findByTargetDocumentNumber("KSNR20260000333")
+    ).willReturn(
       List.of(
         createAdmPassiveReference("KSNR20260000333", "KSLS20260000001"),
         createAdmPassiveReference("KSNR20260000333", "KSLS20260000002"),
@@ -113,12 +110,15 @@ class PassiveReferenceServiceTest {
     assertThat(referencedBy).isEmpty();
   }
 
-  private AdmPassiveReferenceEntity createAdmPassiveReference(String target, String source) {
-    AdmPassiveReferenceEntity admPassiveReferenceEntity = new AdmPassiveReferenceEntity();
-    admPassiveReferenceEntity.setActiveReferenceId(UUID.randomUUID());
-    admPassiveReferenceEntity.setSourceDocumentNumber(source);
-    admPassiveReferenceEntity.setSourceDocumentCategory(DocumentCategory.LITERATUR_SELBSTAENDIG);
-    admPassiveReferenceEntity.setTargetDocumentNumber(target);
-    return admPassiveReferenceEntity;
+  private RefViewActiveReferenceSliAdmEntity createAdmPassiveReference(
+    String target,
+    String source
+  ) {
+    RefViewActiveReferenceSliAdmEntity refViewActiveReferenceSliAdmEntity =
+      new RefViewActiveReferenceSliAdmEntity();
+    refViewActiveReferenceSliAdmEntity.setId(UUID.randomUUID());
+    refViewActiveReferenceSliAdmEntity.setSourceDocumentNumber(source);
+    refViewActiveReferenceSliAdmEntity.setTargetDocumentNumber(target);
+    return refViewActiveReferenceSliAdmEntity;
   }
 }

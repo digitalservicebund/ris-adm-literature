@@ -1,7 +1,6 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
 import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaType;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -114,13 +113,9 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
-    List<DocumentReference> referencedByList = schemaExecutor.executeInSchema(
-      SchemaType.REFERENCES,
-      () ->
-        passiveReferenceService.findByDocumentNumber(
-          documentNumber,
-          documentationUnitContent.documentCategory()
-        )
+    List<DocumentReference> referencedByList = passiveReferenceService.findByDocumentNumber(
+      documentNumber,
+      documentationUnitContent.documentCategory()
     );
     return publish(documentNumber, documentationUnitContent, referencedByList);
   }

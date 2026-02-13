@@ -74,21 +74,25 @@ WHERE du.xml is not null;
 CREATE OR REPLACE VIEW ref_view_active_reference_sli_adm AS
 SELECT literature_ar_adm.id,
        literature_ar_adm.source_documentation_unit_id,
+       source_du.document_number as source_document_number,
        literature_ar_adm.target_documentation_unit_id,
+       literature_ar_adm.target_document_number,
        literature_ar_adm.zitierart,
        literature_ar_adm.normgeber,
        literature_ar_adm.inkrafttretedatum,
        literature_ar_adm.aktenzeichen,
        literature_ar_adm.fundstelle,
+       literature_ar_adm.dokumenttyp,
        literature_ar_adm.updated_at,
        literature_ar_adm.published_at
 FROM literature.active_reference_adm literature_ar_adm
-         join literature.documentation_unit du on literature_ar_adm.source_documentation_unit_id = du.id
-WHERE du.documentation_unit_type = 'LITERATUR_SELBSTAENDIG';
+         join literature.documentation_unit source_du on literature_ar_adm.source_documentation_unit_id = source_du.id
+WHERE source_du.documentation_unit_type = 'LITERATUR_SELBSTAENDIG';
 
 CREATE OR REPLACE VIEW ref_view_active_reference_uli_adm AS
 SELECT literature_ar_adm.id,
        literature_ar_adm.source_documentation_unit_id,
+       source_du.document_number as source_document_number,
        literature_ar_adm.target_documentation_unit_id,
        literature_ar_adm.zitierart,
        literature_ar_adm.normgeber,
@@ -98,5 +102,5 @@ SELECT literature_ar_adm.id,
        literature_ar_adm.updated_at,
        literature_ar_adm.published_at
 FROM literature.active_reference_adm literature_ar_adm
-         join literature.documentation_unit du on literature_ar_adm.source_documentation_unit_id = du.id
-WHERE du.documentation_unit_type = 'LITERATUR_UNSELBSTAENDIG';
+         join literature.documentation_unit source_du on literature_ar_adm.source_documentation_unit_id = source_du.id
+WHERE source_du.documentation_unit_type = 'LITERATUR_UNSELBSTAENDIG';
