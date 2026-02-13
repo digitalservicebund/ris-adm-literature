@@ -146,11 +146,12 @@ sonar {
 }
 
 tasks.bootBuildImage {
+  //  This task is not used anymore! See prod.Dockerfile instead.
   val containerImageRef = System.getenv("IMAGE_REF") ?: "ghcr.io/digitalservicebund/${rootProject.name}:latest"
   val containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"
 
   imageName.set(containerImageRef)
-  builder.set("paketobuildpacks/builder-noble-java-tiny:latest")
+  builder.set("paketobuildpacks/builder-jammy-base:latest")
   publish.set(false)
 
   docker {

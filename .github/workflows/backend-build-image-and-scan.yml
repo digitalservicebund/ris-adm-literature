@@ -25,27 +25,17 @@ jobs:
         with:
           submodules: true
 
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: "25.0"
-          distribution: "temurin"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
         with:
-          version: "v28.5"
+          version: version=28.5.2
 
       - name: Build backend image
         working-directory: ./backend
         env:
           CONTAINER_REGISTRY: ${{ inputs.container-registry }}
           IMAGE_REF: ${{ inputs.image-ref }}
-        run: ./gradlew bootBuildImage
+        run: docker build --tag ${{ inputs.image-ref }} --file prod.Dockerfile .
 
       - name: Run Trivy vulnerability image scanner
         # Note: Results are shown in the GitHub Security tab
