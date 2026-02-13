@@ -227,6 +227,7 @@ test.describe("RubrikenPage - Aktivzitierung", () => {
       await page.getByRole("link", { name: "Rubriken" }).click();
       await page.getByRole("combobox", { name: "Art der Zitierung" }).fill("Abgr");
       await page.getByText("Abgrenzung").click();
+      await page.keyboard.press("Escape");
       await expect(page.getByText("Gericht *")).toBeVisible();
       await page.getByRole("combobox", { name: "Gericht" }).click();
       await page.getByText("AG Aachen").click();
