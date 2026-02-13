@@ -38,7 +38,7 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
         with:
-          version: "v28.5"
+          version: version=28.5.2
 
       - name: Build backend image
         working-directory: ./backend
