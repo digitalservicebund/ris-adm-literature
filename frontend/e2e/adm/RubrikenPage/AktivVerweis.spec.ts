@@ -253,6 +253,7 @@ test.describe("RubrikenPage - Verweise (on Norm) with mocked routes", () => {
         .click();
       await expect(page.getByText("SGB 5")).toBeVisible();
       await page.getByText("SGB 5").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("button", { name: "Verweis speichern" }).click();
       await page
         .getByTestId("activeReferences")
@@ -260,6 +261,7 @@ test.describe("RubrikenPage - Verweise (on Norm) with mocked routes", () => {
         .click();
       await expect(page.getByRole("option", { name: "SGB 5" })).toBeVisible();
       await page.getByRole("option", { name: "SGB 5" }).click();
+      await page.keyboard.press("Escape");
 
       // then
       await expect(page.getByText("RIS-Abkürzung bereits eingegeben")).toBeVisible();

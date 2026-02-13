@@ -45,6 +45,7 @@ test.describe("FundstellenPage", () => {
       // Action
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("ABc | Die Beispieler").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("textbox", { name: "Zitatstelle" }).fill("2024, Seite 24");
       await page.getByText("Übernehmen").click();
 
@@ -63,6 +64,7 @@ test.describe("FundstellenPage", () => {
       // Action
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("ABc | Die Beispieler").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("textbox", { name: "Zitatstelle" }).fill("1991, Seite 92");
       await page.getByText("Übernehmen").click();
       await page.getByRole("button", { name: "Fundstelle Editieren" }).click();
@@ -83,6 +85,7 @@ test.describe("FundstellenPage", () => {
       // Action
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("BKK | Die Betriebskrankenkasse").click();
+      await page.keyboard.press("Escape");
 
       // Assert
       await expect(page.getByText("Zitierbeispiel: 1969, 138-140")).toHaveCount(1);
@@ -99,12 +102,14 @@ test.describe("FundstellenPage", () => {
       // Action
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("ABc | Die Beispieler").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("textbox", { name: "Zitatstelle" }).fill("1991, Seite 92");
       await page.getByText("Übernehmen").click();
       await page.getByRole("button", { name: "Fundstelle hinzufügen" }).click();
 
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("BKK | Die Betriebskrankenkasse").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("textbox", { name: "Zitatstelle" }).fill("2001, Seite 21");
       await page.getByText("Übernehmen").click();
 
@@ -131,6 +136,7 @@ test.describe("FundstellenPage", () => {
       // When
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("ABc | Die Beispieler").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("button", { name: "Fundstelle übernehmen" }).click();
 
       // Then
@@ -196,6 +202,7 @@ test.describe("FundstellenPageSaveAndLoad", () => {
       await page.getByText("Neue Dokumentationseinheit").click();
       await page.getByRole("combobox", { name: "Periodikum" }).fill("Die");
       await page.getByText("ABc | Die Beispieler").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("textbox", { name: "Zitatstelle" }).fill("1991, Seite 92");
       await page.getByText("Übernehmen").click();
       // Mock the PUT and GET requests again

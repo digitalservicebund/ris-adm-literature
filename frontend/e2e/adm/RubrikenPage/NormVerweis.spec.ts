@@ -190,12 +190,14 @@ test.describe("RubrikenPage - Verweise: Norm", () => {
           .click();
         await expect(page.getByText("SGB 5")).toBeVisible();
         await page.getByText("SGB 5").click();
+        await page.keyboard.press("Escape");
         await page.getByRole("button", { name: "Norm speichern" }).click();
         await page
           .getByTestId("normReferences")
           .getByRole("combobox", { name: "RIS-Abkürzung" })
           .click();
         await page.getByRole("option", { name: "SGB 5" }).click();
+        await page.keyboard.press("Escape");
         // then
         await expect(page.getByText("RIS-Abkürzung bereits eingegeben")).toBeVisible();
       },
