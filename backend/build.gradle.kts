@@ -154,6 +154,7 @@ tasks.bootBuildImage {
   publish.set(false)
 
   docker {
+    cleanCache.set(true)
     publishRegistry {
       username.set(System.getenv("CONTAINER_REGISTRY_USER") ?: "")
       password.set(System.getenv("CONTAINER_REGISTRY_PASSWORD") ?: "")
