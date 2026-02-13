@@ -45,7 +45,8 @@ jobs:
         env:
           CONTAINER_REGISTRY: ${{ inputs.container-registry }}
           IMAGE_REF: ${{ inputs.image-ref }}
-        run: ./gradlew bootBuildImage
+#        run: ./gradlew bootBuildImage
+        run: docker build --tag ${{ inputs.image-ref }} --file prod.Dockerfile .
 
       - name: Run Trivy vulnerability image scanner
         # Note: Results are shown in the GitHub Security tab
