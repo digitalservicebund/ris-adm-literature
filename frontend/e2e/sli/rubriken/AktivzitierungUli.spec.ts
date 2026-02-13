@@ -3,35 +3,6 @@ import { test, expect, type Page } from "@playwright/test";
 export const getUliAktivzitierungSection = (page: Page) =>
   page.getByRole("region", { name: "Aktivzitierung (unselbst. Literatur)" });
 
-export async function createUliDocument(
-  page: Page,
-  data: { title: string; year: string; docType: string[] },
-  publish: boolean,
-) {
-  await page.goto("/literatur-unselbstaendig");
-  await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
-  await page.waitForURL(/dokumentationseinheit/);
-
-  const formaldaten = page.getByRole("region", { name: "Formaldaten" });
-
-  const input = formaldaten.getByRole("combobox", { name: "Dokumenttyp" });
-  const overlay = page.getByRole("listbox", { name: "Optionsliste" });
-
-  for (const type of data.docType) {
-    await input.fill(type);
-    await overlay.getByRole("option", { name: type }).click();
-  }
-
-  await formaldaten.getByRole("textbox", { name: "Dokumentarischer Titel" }).fill(data.title);
-  await formaldaten.getByRole("textbox", { name: "Veröffentlichungsjahr" }).fill(data.year);
-
-  await page.getByRole("button", { name: "Speichern" }).click();
-  if (publish) {
-    await page.getByText("Abgabe").click();
-    await page.getByRole("button", { name: "Zur Veröffentlichung freigeben" }).click();
-  }
-}
-
 test.describe("SLI Rubriken – Aktivzitierung ULI", { tag: ["@RISDEV-10324"] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/literatur-selbstaendig");
@@ -233,52 +204,51 @@ test.describe(
   "Add aktivzitierung via searching through the ULI documents",
   { tag: ["@RISDEV-10664"] },
   () => {
-    test.describe.configure({ mode: "serial" });
-
-    let page: Page;
-
-    const titleSharedId = crypto.randomUUID();
-    const titleDoc1 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`;
-    const titleDoc2 = `Titel: ${titleSharedId} ${crypto.randomUUID()}`;
-    const yearSharedId = crypto.randomUUID();
-    const veroeffentlichungsjahrDoc1 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`;
-    const veroeffentlichungsjahrDoc2 = `Veröffentlichungsjahr: ${yearSharedId} ${crypto.randomUUID()}`;
-
-    test.beforeAll(async ({ browser }) => {
-      page = await browser.newPage();
-
-      await createUliDocument(
-        page,
-        {
-          title: titleDoc1,
-          year: veroeffentlichungsjahrDoc1,
-          docType: ["Auf"],
-        },
-        true,
-      );
-
-      await createUliDocument(
-        page,
-        {
-          title: titleDoc2,
-          year: veroeffentlichungsjahrDoc2,
-          docType: ["Ebs"],
-        },
-        true,
-      );
-    });
-
-    test.afterAll(async () => {
-      await page.close();
-    });
-
-    test.beforeEach(async () => {
+    test.beforeEach(async ({ page }) => {
       await page.goto("/literatur-selbstaendig");
       await page.getByRole("button", { name: "Neue Dokumentationseinheit" }).click();
       await page.waitForURL(/dokumentationseinheit/);
     });
 
-    test("shows no results message when searching for non-existent title", async () => {
+    test("ULI search by document number finds seeded document", async ({ page }) => {
+      const aktiv = getUliAktivzitierungSection(page);
+
+      await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KALU999999999");
+      await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+      const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+      await expect(results).toBeVisible();
+      await expect(results.getByText("KALU999999999")).toBeVisible();
+      await expect(results.getByText("Lexikon Soziologie und Sozialtheorie")).toBeVisible();
+    });
+
+    test("ULI search should narrow the results when adding more search criterias (AND-relationship)", async ({
+      page,
+    }) => {
+      const aktiv = getUliAktivzitierungSection(page);
+
+      const dokumenttyp = aktiv.getByRole("combobox", { name: "Dokumenttyp" });
+      await dokumenttyp.click();
+      await expect(page.getByRole("listbox", { name: "Optionsliste" })).toBeVisible();
+      await expect(page.getByRole("option", { name: "Auf" })).toBeVisible();
+      await page.getByRole("option", { name: "Auf" }).click();
+      await dokumenttyp.fill("E");
+      await page.getByRole("option", { name: "Ebs" }).click();
+      await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+      const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+      await expect(results).toBeVisible();
+      const items = results.getByRole("listitem");
+      await expect(items).toHaveCount(15);
+
+      await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KALU999999999");
+      await aktiv.getByRole("button", { name: "Suchen" }).click();
+
+      await expect(items).toHaveCount(1);
+      await expect(results.getByText("KALU999999999")).toBeVisible();
+    });
+
+    test("shows no results message when searching for non-existent title", async ({ page }) => {
       const aktiv = getUliAktivzitierungSection(page);
 
       const nonExistingDocNumber = crypto.randomUUID();
@@ -286,6 +256,75 @@ test.describe(
       await aktiv.getByRole("button", { name: "Dokumente Suchen" }).click();
 
       await expect(aktiv.getByText("Keine Suchergebnisse gefunden")).toBeVisible();
+    });
+
+    test("shows a paginated list of 15 search results per page, clicking on previous and next triggers shows more results", async ({
+      page,
+    }) => {
+      const aktiv = getUliAktivzitierungSection(page);
+
+      await aktiv.getByRole("button", { name: "Dokumente Suchen" }).click();
+
+      const searchResultsList = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+      await expect(searchResultsList).toBeVisible();
+      const listItems = searchResultsList.getByRole("listitem");
+      await expect(listItems).toHaveCount(15);
+      await expect(page.getByText("Seite 1")).toBeVisible();
+
+      await aktiv.getByRole("button", { name: "Weiter" }).click();
+
+      await expect(aktiv.getByText("Seite 2")).toBeVisible();
+      await expect(aktiv.getByRole("button", { name: "Zurück" })).toBeVisible();
+
+      await aktiv.getByRole("button", { name: "Zurück" }).click();
+
+      await expect(aktiv.getByText("Seite 1")).toBeVisible();
+      await expect(aktiv.getByRole("button", { name: "Zurück" })).toBeHidden();
+    });
+
+    test("ULI search result can be added, clears search, cannot be edited, can be deleted, persists", async ({
+      page,
+    }) => {
+      const aktiv = getUliAktivzitierungSection(page);
+
+      await aktiv.getByRole("textbox", { name: "Dokumentnummer" }).fill("KALU999999999");
+      await aktiv.getByRole("button", { name: "Suchen" }).click();
+      const results = aktiv.getByRole("list", { name: "Passende Suchergebnisse" });
+      await expect(results.getByText("KALU999999999")).toBeVisible();
+
+      await results.getByRole("button", { name: "Aktivzitierung hinzufügen" }).first().click();
+
+      const aktivList = aktiv.getByRole("list", { name: "Aktivzitierung Liste" });
+      await expect(aktivList.getByRole("listitem")).toHaveCount(1);
+      await expect(aktiv.getByRole("button", { name: "Weitere Angabe" })).toBeVisible();
+      await expect(
+        aktivList.getByRole("button", { name: "Eintrag bearbeiten" }),
+      ).not.toBeAttached();
+      await expect(aktivList.getByRole("button", { name: "Eintrag löschen" })).toBeVisible();
+      await expect(aktivList.getByText("KALU999999999")).toBeVisible();
+
+      await page.getByRole("button", { name: "Speichern" }).click();
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+      await page.reload();
+
+      const aktivAfterReload = getUliAktivzitierungSection(page);
+      const aktivListAfterReload = aktivAfterReload.getByRole("list", {
+        name: "Aktivzitierung Liste",
+      });
+      await expect(aktivListAfterReload.getByRole("listitem")).toHaveCount(1);
+      await expect(aktivListAfterReload.getByText("KALU999999999")).toBeVisible();
+
+      await aktivListAfterReload.getByRole("button", { name: "Eintrag löschen" }).click();
+      await page.getByRole("button", { name: "Speichern" }).click();
+      await expect(page.getByText(/Gespeichert: .* Uhr/)).toBeVisible();
+      await page.reload();
+
+      const aktivAfterDelete = getUliAktivzitierungSection(page);
+      const aktivListAfterDelete = aktivAfterDelete.getByRole("list", {
+        name: "Aktivzitierung Liste",
+      });
+      await expect(aktivListAfterDelete.getByRole("listitem")).toHaveCount(0);
+      await expect(aktivListAfterDelete.getByText("KALU999999999")).toHaveCount(0);
     });
   },
 );
