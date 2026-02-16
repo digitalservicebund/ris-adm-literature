@@ -42,7 +42,10 @@ public class UpdatePassivzitierungService {
         groupingBy(PassiveReference::target, mapping(PassiveReference::referencedBy, toList()))
       )
       .forEach((target, referencedByList) ->
-        documentationUnitService.publishPassiveReferences(target.documentNumber(), referencedByList)
+        documentationUnitService.publishPassiveReferences(
+          target.documentationUnitId(),
+          referencedByList
+        )
       );
   }
 }

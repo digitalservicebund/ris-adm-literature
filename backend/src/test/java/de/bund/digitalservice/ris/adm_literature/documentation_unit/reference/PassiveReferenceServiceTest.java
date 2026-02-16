@@ -29,10 +29,12 @@ class PassiveReferenceServiceTest {
   @Test
   void findAll_adm() {
     // given
+    UUID[] sources = new UUID[] { UUID.randomUUID(), UUID.randomUUID() };
+    UUID target = UUID.randomUUID();
     given(refViewActiveReferenceSliAdmRepository.findAll()).willReturn(
       List.of(
-        createAdmPassiveReference("KSNR20260000001", "KSLS20260000001"),
-        createAdmPassiveReference("KSNR20260000001", "KSLS20260000002")
+        createActiveReferenceSliAdm(sources[0], target),
+        createActiveReferenceSliAdm(sources[1], target)
       )
     );
 
@@ -44,11 +46,11 @@ class PassiveReferenceServiceTest {
     // then
     assertThat(passiveReferences)
       .hasSize(2)
-      .extracting(pr -> pr.target().documentNumber(), pr -> pr.referencedBy().documentNumber())
-      .containsExactly(
-        Tuple.tuple("KSNR20260000001", "KSLS20260000001"),
-        Tuple.tuple("KSNR20260000001", "KSLS20260000002")
-      );
+      .extracting(
+        pr -> pr.target().documentationUnitId(),
+        pr -> pr.referencedBy().documentationUnitId()
+      )
+      .containsExactly(Tuple.tuple(target, sources[0]), Tuple.tuple(target, sources[1]));
   }
 
   @ParameterizedTest
@@ -67,29 +69,31 @@ class PassiveReferenceServiceTest {
   }
 
   @Test
-  void findByDocumentNumber() {
+  void findByTarget() {
     // given
+    UUID[] sources = new UUID[] { UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID() };
+    UUID target = UUID.randomUUID();
     given(
-      refViewActiveReferenceSliAdmRepository.findByTargetDocumentNumber("KSNR20260000333")
+      refViewActiveReferenceSliAdmRepository.findByTargetDocumentationUnitId(target)
     ).willReturn(
       List.of(
-        createAdmPassiveReference("KSNR20260000333", "KSLS20260000001"),
-        createAdmPassiveReference("KSNR20260000333", "KSLS20260000002"),
-        createAdmPassiveReference("KSNR20260000333", "KSLS20260000003")
+        createActiveReferenceSliAdm(sources[0], target),
+        createActiveReferenceSliAdm(sources[1], target),
+        createActiveReferenceSliAdm(sources[2], target)
       )
     );
 
     // when
-    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
-      "KSNR20260000333",
+    List<DocumentReference> referencedBy = passiveReferenceService.findByTarget(
+      target,
       DocumentCategory.VERWALTUNGSVORSCHRIFTEN
     );
 
     // then
     assertThat(referencedBy)
       .hasSize(3)
-      .extracting(DocumentReference::documentNumber)
-      .containsExactly("KSLS20260000001", "KSLS20260000002", "KSLS20260000003");
+      .extracting(DocumentReference::documentationUnitId)
+      .containsExactly(sources);
   }
 
   @ParameterizedTest
@@ -97,12 +101,12 @@ class PassiveReferenceServiceTest {
     value = DocumentCategory.class,
     names = { "LITERATUR_SELBSTAENDIG", "LITERATUR_UNSELBSTAENDIG", "LITERATUR" }
   )
-  void findByDocumentNumber_unsupported(DocumentCategory documentCategory) {
+  void findByTarget_unsupported(DocumentCategory documentCategory) {
     // given
 
     // when
-    List<DocumentReference> referencedBy = passiveReferenceService.findByDocumentNumber(
-      "documentNumber",
+    List<DocumentReference> referencedBy = passiveReferenceService.findByTarget(
+      UUID.randomUUID(),
       documentCategory
     );
 
@@ -110,15 +114,12 @@ class PassiveReferenceServiceTest {
     assertThat(referencedBy).isEmpty();
   }
 
-  private RefViewActiveReferenceSliAdmEntity createAdmPassiveReference(
-    String target,
-    String source
-  ) {
+  private RefViewActiveReferenceSliAdmEntity createActiveReferenceSliAdm(UUID source, UUID target) {
     RefViewActiveReferenceSliAdmEntity refViewActiveReferenceSliAdmEntity =
       new RefViewActiveReferenceSliAdmEntity();
     refViewActiveReferenceSliAdmEntity.setId(UUID.randomUUID());
-    refViewActiveReferenceSliAdmEntity.setSourceDocumentNumber(source);
-    refViewActiveReferenceSliAdmEntity.setTargetDocumentNumber(target);
+    refViewActiveReferenceSliAdmEntity.setSourceDocumentationUnitId(source);
+    refViewActiveReferenceSliAdmEntity.setTargetDocumentationUnitId(target);
     return refViewActiveReferenceSliAdmEntity;
   }
 }

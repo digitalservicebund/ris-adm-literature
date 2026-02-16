@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit;
 
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
 import de.bund.digitalservice.ris.adm_literature.config.security.UserDocumentDetails;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitOverviewElement;
@@ -20,6 +19,7 @@ import de.bund.digitalservice.ris.adm_literature.page.Page;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,6 @@ public class DocumentationUnitService {
   private final Publisher publisher;
   private final ActiveReferenceService referenceService;
   private final PassiveReferenceService passiveReferenceService;
-  private final SchemaExecutor schemaExecutor;
 
   /**
    * Finds a DocumentationUnit by its document number.
@@ -113,11 +112,18 @@ public class DocumentationUnitService {
     @Nonnull String documentNumber,
     @Nonnull DocumentationUnitContent documentationUnitContent
   ) {
-    List<DocumentReference> referencedByList = passiveReferenceService.findByDocumentNumber(
-      documentNumber,
+    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
+      documentNumber
+    );
+    if (optionalDocumentationUnit.isEmpty()) {
+      return Optional.empty();
+    }
+    DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
+    List<DocumentReference> referencedByList = passiveReferenceService.findByTarget(
+      documentationUnit.id(),
       documentationUnitContent.documentCategory()
     );
-    return publish(documentNumber, documentationUnitContent, referencedByList);
+    return publish(documentationUnit, documentationUnitContent, referencedByList);
   }
 
   /**
@@ -128,25 +134,17 @@ public class DocumentationUnitService {
    * {@code UserDocumentDetails details = (UserDocumentDetails) authentication.getPrincipal()}
    * This entire operation is transactional and will be rolled back if any step fails.
    *
-   * @param documentNumber           The identifier of the documentation unit to publish.
+   * @param documentationUnit           The documentation unit to publish
    * @param documentationUnitContent The new content for the unit.
    * @param referencedByList List of documents which are referencing the given document (passive references)
    * @return An {@link Optional} with the updated unit, or empty if the document number was not found.
    */
   private Optional<DocumentationUnit> publish(
-    @Nonnull String documentNumber,
+    @Nonnull DocumentationUnit documentationUnit,
     @Nonnull DocumentationUnitContent documentationUnitContent,
     @Nonnull List<DocumentReference> referencedByList
   ) {
-    var optionalDocumentationUnit = documentationUnitPersistenceService.findByDocumentNumber(
-      documentNumber
-    );
-
-    if (optionalDocumentationUnit.isEmpty()) {
-      return Optional.empty();
-    }
-
-    DocumentationUnit documentationUnit = optionalDocumentationUnit.get();
+    String documentNumber = documentationUnit.documentNumber();
     if (
       documentationUnitContent instanceof SliDocumentationUnitContent sli &&
       sli.aktivzitierungenAdm() != null
@@ -178,21 +176,21 @@ public class DocumentationUnitService {
   /**
    * Publishes the given document with the given passive references.
    *
-   * @param documentNumber The identifier of the documentation unit to publish.
+   * @param documentationUnitId The identifier of the documentation unit to publish.
    * @param referencedByList The document which are referencing the document to publish
    */
   @Transactional
   public void publishPassiveReferences(
-    @Nonnull String documentNumber,
+    @Nonnull UUID documentationUnitId,
     @Nonnull List<DocumentReference> referencedByList
   ) {
     DocumentationUnit documentationUnit = documentationUnitPersistenceService
-      .findByDocumentNumber(documentNumber)
+      .findById(documentationUnitId)
       .orElseThrow();
     if (!documentationUnit.isPublished()) {
       log.info(
         "Skip re-publishing of documentation unit with document number {}, as this is not published yet.",
-        documentNumber
+        documentationUnit.documentNumber()
       );
       return;
     }
@@ -210,7 +208,7 @@ public class DocumentationUnitService {
     } else {
       documentationUnitContent = objectMapper.readValue(json, documentationUnitContentClass);
     }
-    publish(documentNumber, documentationUnitContent, referencedByList);
+    publish(documentationUnit, documentationUnitContent, referencedByList);
   }
 
   /**

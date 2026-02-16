@@ -7,19 +7,12 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import de.bund.digitalservice.ris.adm_literature.config.multischema.SchemaExecutor;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.AdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.TestAdmDocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.LdmlToObjectConverterService;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterService;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.SliDocumentationUnitQuery;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.TestLiteratureUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitContent;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitOverviewElement;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.UliDocumentationUnitQuery;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.literature.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.Publisher;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.publishing.PublishingFailedException;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.ActiveReferenceService;
@@ -57,9 +50,6 @@ class DocumentationUnitServiceTest {
 
   @Mock
   private ObjectToLdmlConverterService objectToLdmlConverterService;
-
-  @Spy
-  private SchemaExecutor schemaExecutor;
 
   @Mock
   private ActiveReferenceService activeReferenceService;
@@ -259,9 +249,9 @@ class DocumentationUnitServiceTest {
   void publish_shouldUseBsgPublisher_whenCategoryIsVerwaltungsvorschriften() {
     // given
     given(
-      passiveReferenceService.findByDocumentNumber(
-        "KSNR1234567890",
-        DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+      passiveReferenceService.findByTarget(
+        any(UUID.class),
+        eq(DocumentCategory.VERWALTUNGSVORSCHRIFTEN)
       )
     ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(
@@ -317,9 +307,9 @@ class DocumentationUnitServiceTest {
   void publish_shouldUseLiteraturePublisher_whenCategoryIsUli() {
     // given
     given(
-      passiveReferenceService.findByDocumentNumber(
-        "KALU123456789",
-        DocumentCategory.LITERATUR_UNSELBSTAENDIG
+      passiveReferenceService.findByTarget(
+        any(UUID.class),
+        eq(DocumentCategory.LITERATUR_UNSELBSTAENDIG)
       )
     ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(
@@ -375,9 +365,9 @@ class DocumentationUnitServiceTest {
   void publish_shouldUseLiteraturePublisher_whenCategoryIsSli() {
     // given
     given(
-      passiveReferenceService.findByDocumentNumber(
-        "KVLS123456789",
-        DocumentCategory.LITERATUR_SELBSTAENDIG
+      passiveReferenceService.findByTarget(
+        any(UUID.class),
+        eq(DocumentCategory.LITERATUR_SELBSTAENDIG)
       )
     ).willReturn(List.of());
     DocumentationUnit existingUnit = new DocumentationUnit(

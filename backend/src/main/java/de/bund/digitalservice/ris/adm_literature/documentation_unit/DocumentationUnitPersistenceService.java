@@ -22,9 +22,12 @@ import de.bund.digitalservice.ris.adm_literature.page.QueryOptions;
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,32 +56,46 @@ public class DocumentationUnitPersistenceService {
   private final ObjectMapper objectMapper;
 
   /**
+   * Finds a document by its id.
+   * @param id The UUID
+   * @return An {@link Optional} containing the found {@link DocumentationUnit}, or empty if not found.
+   */
+  public Optional<DocumentationUnit> findById(@Nonnull UUID id) {
+    return documentationUnitRepository.findById(id).map(mapDocumentationUnitEntity());
+  }
+
+  /**
    * Finds a document by its number.
    *
    * @param documentNumber The document number
-   * @return an {@link Optional} containing the found {@link DocumentationUnit}, or empty if not found.
+   * @return An {@link Optional} containing the found {@link DocumentationUnit}, or empty if not found.
    */
   @Transactional(readOnly = true)
   public Optional<DocumentationUnit> findByDocumentNumber(@Nonnull String documentNumber) {
     return documentationUnitRepository
       .findByDocumentNumber(documentNumber)
-      .map(documentationUnitEntity -> {
-        String json = documentationUnitEntity.getJson();
-        String note = noteService.find(documentationUnitEntity);
-        if (ObjectUtils.allNotNull(json, note)) {
-          // Notes are only added if we have JSON - reading them for already published documents is not implemented.
-          JsonNode jsonNode = objectMapper.readTree(json);
-          ((ObjectNode) jsonNode).put("note", note);
-          json = objectMapper.writeValueAsString(jsonNode);
-        }
-        return new DocumentationUnit(
-          documentNumber,
-          documentationUnitEntity.getId(),
-          json,
-          documentationUnitEntity.getXml(),
-          new AdministrativeData(documentationUnitEntity.getDocumentationUnitType(), note)
-        );
-      });
+      .map(mapDocumentationUnitEntity());
+  }
+
+  @NotNull
+  private Function<DocumentationUnitEntity, DocumentationUnit> mapDocumentationUnitEntity() {
+    return documentationUnitEntity -> {
+      String json = documentationUnitEntity.getJson();
+      String note = noteService.find(documentationUnitEntity);
+      if (ObjectUtils.allNotNull(json, note)) {
+        // Notes are only added if we have JSON - reading them for already published documents is not implemented.
+        JsonNode jsonNode = objectMapper.readTree(json);
+        ((ObjectNode) jsonNode).put("note", note);
+        json = objectMapper.writeValueAsString(jsonNode);
+      }
+      return new DocumentationUnit(
+        documentationUnitEntity.getDocumentNumber(),
+        documentationUnitEntity.getId(),
+        json,
+        documentationUnitEntity.getXml(),
+        new AdministrativeData(documentationUnitEntity.getDocumentationUnitType(), note)
+      );
+    };
   }
 
   /**
