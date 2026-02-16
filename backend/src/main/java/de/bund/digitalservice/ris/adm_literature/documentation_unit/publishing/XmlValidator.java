@@ -5,11 +5,16 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
 import javax.xml.XMLConstants;
+import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,6 +39,12 @@ public class XmlValidator {
       factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
       factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file");
       factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      Resource catalogResource = new ClassPathResource("schemas/catalog.xml");
+      CatalogResolver catalogResolver = CatalogManager.catalogResolver(
+        CatalogFeatures.defaults(),
+        catalogResource.getURI()
+      );
+      factory.setResourceResolver(catalogResolver);
 
       StreamSource[] schemaSources = schemaClasspathPaths
         .stream()
@@ -42,7 +53,7 @@ public class XmlValidator {
 
       this.schema = factory.newSchema(schemaSources);
       log.info("Successfully initialized XML schemas.");
-    } catch (SAXException e) {
+    } catch (SAXException | IOException e) {
       log.error("Failed to initialize XML schema.", e);
       throw new IllegalStateException("Could not compile the XSD schemas", e);
     }
