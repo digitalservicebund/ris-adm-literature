@@ -20,9 +20,10 @@ import org.springframework.data.annotation.Immutable;
 @Immutable
 public class RefViewLiteratureEntity {
 
+  @Id
   private UUID id;
 
-  @Id
+  @Basic
   private String documentNumber;
 
   @Enumerated(EnumType.STRING)

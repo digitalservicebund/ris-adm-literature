@@ -3,6 +3,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.reference;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -36,11 +37,11 @@ public class PassiveReferenceService {
         .map(rf ->
           new PassiveReference(
             new DocumentReference(
-              rf.getTargetDocumentNumber(),
+              rf.getTargetDocumentationUnitId(),
               DocumentCategory.VERWALTUNGSVORSCHRIFTEN
             ),
             new DocumentReference(
-              rf.getSourceDocumentNumber(),
+              rf.getSourceDocumentationUnitId(),
               DocumentCategory.LITERATUR_SELBSTAENDIG
             )
           )
@@ -59,23 +60,23 @@ public class PassiveReferenceService {
    * Returns the referenced-by document references (the documents which are citing actively the given document)
    * for the given document number and category.
    *
-   * @param documentNumber   The document number of the target
+   * @param documentationUnitId   The documentation unit id of the target
    * @param documentCategory The document category of the target
    * @return Referenced-by list
    */
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public List<DocumentReference> findByDocumentNumber(
-    @NonNull String documentNumber,
+  public List<DocumentReference> findByTarget(
+    @NonNull UUID documentationUnitId,
     @NonNull DocumentCategory documentCategory
   ) {
     List<DocumentReference> referencedBy;
     switch (documentCategory) {
       case VERWALTUNGSVORSCHRIFTEN -> referencedBy = refViewActiveReferenceSliAdmRepository
-        .findByTargetDocumentNumber(documentNumber)
+        .findByTargetDocumentationUnitId(documentationUnitId)
         .stream()
         .map(rf ->
           new DocumentReference(
-            rf.getSourceDocumentNumber(),
+            rf.getSourceDocumentationUnitId(),
             DocumentCategory.LITERATUR_SELBSTAENDIG
           )
         )

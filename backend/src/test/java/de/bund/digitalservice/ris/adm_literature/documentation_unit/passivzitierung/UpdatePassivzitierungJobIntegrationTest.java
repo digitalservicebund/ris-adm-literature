@@ -60,11 +60,11 @@ class UpdatePassivzitierungJobIntegrationTest {
       List.of(
         new PassiveReference(
           new DocumentReference(
-            admDocumentationUnitEntity.getDocumentNumber(),
+            admDocumentationUnitEntity.getId(),
             DocumentCategory.VERWALTUNGSVORSCHRIFTEN
           ),
           new DocumentReference(
-            sliDocumentationUnitEntity.getDocumentNumber(),
+            sliDocumentationUnitEntity.getId(),
             DocumentCategory.LITERATUR_SELBSTAENDIG
           )
         )
@@ -80,9 +80,9 @@ class UpdatePassivzitierungJobIntegrationTest {
     literatureIndex.setTitel("Hauptsache Titel");
     literatureIndex.setVeroeffentlichungsjahr("2025");
     literatureIndex.setVerfasserList(List.of("Name, Vorname"));
-    given(
-      refViewLiteratureRepository.findById(sliDocumentationUnitEntity.getDocumentNumber())
-    ).willReturn(Optional.of(refViewLiteratureEntity));
+    given(refViewLiteratureRepository.findById(sliDocumentationUnitEntity.getId())).willReturn(
+      Optional.of(refViewLiteratureEntity)
+    );
 
     // when
     updatePassivzitierungJob.execute();

@@ -494,22 +494,25 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
             .map(referencedBy -> {
               RisReferenz risReferenz = new RisReferenz();
               risReferenz.setRichtung(new RisDomainTerm("Richtung der Referenzierung", "passiv"));
-              risReferenz.setReferenzArt(new RisDomainTerm("Art der Referenz", "sli"));
-              risReferenz.setDokumentnummer(
-                new RisDomainTerm("Dokumentnummer", referencedBy.documentNumber())
-              );
-              risReferenz.setRelativerPfad(
-                new RisDomainTerm(
-                  "Pfad zur Referenz",
-                  String.format("/literature/%s.xml", referencedBy.documentNumber())
-                )
-              );
               switch (referencedBy.documentCategory()) {
                 case LITERATUR_SELBSTAENDIG -> {
-                  LiteratureIndex literatureIndex = refViewLiteratureRepository
-                    .findById(referencedBy.documentNumber())
-                    .map(RefViewLiteratureEntity::getLiteratureIndex)
+                  RefViewLiteratureEntity refViewLiteratureEntity = refViewLiteratureRepository
+                    .findById(referencedBy.documentationUnitId())
                     .orElseThrow();
+                  risReferenz.setReferenzArt(new RisDomainTerm("Art der Referenz", "sli"));
+                  risReferenz.setDokumentnummer(
+                    new RisDomainTerm("Dokumentnummer", refViewLiteratureEntity.getDocumentNumber())
+                  );
+                  risReferenz.setRelativerPfad(
+                    new RisDomainTerm(
+                      "Pfad zur Referenz",
+                      String.format(
+                        "/literature/%s.xml",
+                        refViewLiteratureEntity.getDocumentNumber()
+                      )
+                    )
+                  );
+                  LiteratureIndex literatureIndex = refViewLiteratureEntity.getLiteratureIndex();
                   String dokumenttypAbkuerzungen = String.join(
                     ", ",
                     literatureIndex.getDokumenttypen()

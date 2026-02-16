@@ -1088,17 +1088,19 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     // given
     AdmDocumentationUnitContent admDocumentationUnitContent =
       TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung SLI");
+    UUID referencedBy = UUID.randomUUID();
     List<DocumentReference> referencedByList = List.of(
-      new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
+      new DocumentReference(referencedBy, DocumentCategory.LITERATUR_SELBSTAENDIG)
     );
     RefViewLiteratureEntity refViewLiteratureEntity = new RefViewLiteratureEntity();
+    refViewLiteratureEntity.setDocumentNumber("KALS999999999");
     LiteratureIndex literatureIndex = new LiteratureIndex();
     literatureIndex.setTitel("Titel");
     literatureIndex.setVerfasserList(List.of("Verfasser 1", "Verfasser 2"));
     literatureIndex.setVeroeffentlichungsjahr("2026");
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
     refViewLiteratureEntity.setLiteratureIndex(literatureIndex);
-    given(refViewLiteratureRepository.findById("KALS999999999")).willReturn(
+    given(refViewLiteratureRepository.findById(referencedBy)).willReturn(
       Optional.of(refViewLiteratureEntity)
     );
 
@@ -1138,16 +1140,18 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     // given
     AdmDocumentationUnitContent admDocumentationUnitContent =
       TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung SLI");
+    UUID referencedBy = UUID.randomUUID();
     List<DocumentReference> referencedByList = List.of(
-      new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
+      new DocumentReference(referencedBy, DocumentCategory.LITERATUR_SELBSTAENDIG)
     );
     RefViewLiteratureEntity refViewLiteratureEntity = new RefViewLiteratureEntity();
+    refViewLiteratureEntity.setDocumentNumber("KALS999999999");
     LiteratureIndex literatureIndex = new LiteratureIndex();
     literatureIndex.setTitel("Titel");
     literatureIndex.setVeroeffentlichungsjahr("2026");
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
     refViewLiteratureEntity.setLiteratureIndex(literatureIndex);
-    given(refViewLiteratureRepository.findById("KALS999999999")).willReturn(
+    given(refViewLiteratureRepository.findById(referencedBy)).willReturn(
       Optional.of(refViewLiteratureEntity)
     );
 
@@ -1188,7 +1192,7 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     AdmDocumentationUnitContent admDocumentationUnitContent =
       TestAdmDocumentationUnitContent.create("KSNR00000101", "Passive Referenzierung Caselaw");
     List<DocumentReference> referencedByList = List.of(
-      new DocumentReference("KORE999999999", DocumentCategory.RECHTSPRECHUNG)
+      new DocumentReference(UUID.randomUUID(), DocumentCategory.RECHTSPRECHUNG)
     );
 
     // when

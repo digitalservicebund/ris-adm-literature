@@ -2,6 +2,7 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm;
 
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Test class for easily creating instances of {@link AdmDocumentationUnitContent}.
@@ -10,7 +11,7 @@ public class TestAdmDocumentationUnitContent {
 
   public static AdmDocumentationUnitContent create(String documentNumber, String langueberschrift) {
     return new AdmDocumentationUnitContent(
-      null,
+      UUID.randomUUID(),
       documentNumber,
       List.of(),
       List.of(),
