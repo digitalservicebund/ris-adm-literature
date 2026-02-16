@@ -1,9 +1,9 @@
 package de.bund.digitalservice.ris.adm_literature.documentation_unit.reference;
 
-import de.bund.digitalservice.ris.adm_literature.jpa.AuditingMetadata;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Immutable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,9 +13,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "ref_view_active_reference_sli_adm", schema = "references_schema")
 @Immutable
-public class RefViewActiveReferenceSliAdmEntity {
+public class RefViewActiveReferenceSliAdmEntity extends AbstractActiveReferenceSliAdm {
 
   @Id
   private UUID id;
@@ -25,31 +26,4 @@ public class RefViewActiveReferenceSliAdmEntity {
 
   @Basic
   private String sourceDocumentNumber;
-
-  @Basic
-  private UUID targetDocumentationUnitId;
-
-  @Basic
-  private String targetDocumentNumber;
-
-  @Basic(optional = false)
-  private String zitierart;
-
-  @Basic
-  private String normgeber;
-
-  @Basic
-  private String inkrafttretedatum;
-
-  @Basic
-  private String aktenzeichen;
-
-  @Basic(optional = false)
-  private String fundstelle;
-
-  @Basic
-  private String dokumenttyp;
-
-  @Embedded
-  private AuditingMetadata auditingMetadata = new AuditingMetadata();
 }
