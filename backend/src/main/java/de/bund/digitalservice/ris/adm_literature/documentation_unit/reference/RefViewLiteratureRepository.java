@@ -1,4 +1,4 @@
-package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung;
+package de.bund.digitalservice.ris.adm_literature.documentation_unit.reference;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,14 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
- * Literature reference JPA repository.
+ * Jpa repository for {@link RefViewLiteratureEntity}.
  */
-public interface LiteratureReferenceRepository
+public interface RefViewLiteratureRepository
   extends
-    JpaRepository<LiteratureReferenceEntity, String>,
-    JpaSpecificationExecutor<LiteratureReferenceEntity> {
-  default Page<LiteratureReferenceEntity> findAll(
-    PredicateSpecification<LiteratureReferenceEntity> spec,
+    JpaRepository<RefViewLiteratureEntity, String>,
+    JpaSpecificationExecutor<RefViewLiteratureEntity> {
+  default Page<RefViewLiteratureEntity> findAll(
+    PredicateSpecification<RefViewLiteratureEntity> spec,
     Pageable pageable
   ) {
     return findAll(Specification.where(spec), pageable);

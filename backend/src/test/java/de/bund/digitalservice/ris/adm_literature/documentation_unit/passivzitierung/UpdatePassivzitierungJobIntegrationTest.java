@@ -6,12 +6,8 @@ import static org.mockito.BDDMockito.given;
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationOffice;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.PassiveReference;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.PassiveReferenceService;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.*;
 import de.bund.digitalservice.ris.adm_literature.test.TestFile;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +37,7 @@ class UpdatePassivzitierungJobIntegrationTest {
   private PassiveReferenceService passiveReferenceService;
 
   @MockitoBean
-  private LiteratureReferenceRepository literatureReferenceRepository;
+  private RefViewLiteratureRepository refViewLiteratureRepository;
 
   @Test
   void execute() {
@@ -74,19 +70,19 @@ class UpdatePassivzitierungJobIntegrationTest {
         )
       )
     );
-    LiteratureReferenceEntity literatureReferenceEntity = new LiteratureReferenceEntity();
-    literatureReferenceEntity.setDocumentNumber(sliDocumentationUnitEntity.getDocumentNumber());
-    literatureReferenceEntity.setDocumentationOffice(
+    RefViewLiteratureEntity refViewLiteratureEntity = new RefViewLiteratureEntity();
+    refViewLiteratureEntity.setDocumentNumber(sliDocumentationUnitEntity.getDocumentNumber());
+    refViewLiteratureEntity.setDocumentationOffice(
       sliDocumentationUnitEntity.getDocumentationOffice()
     );
-    LiteratureIndex literatureIndex = literatureReferenceEntity.getLiteratureIndex();
+    LiteratureIndex literatureIndex = refViewLiteratureEntity.getLiteratureIndex();
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
     literatureIndex.setTitel("Hauptsache Titel");
     literatureIndex.setVeroeffentlichungsjahr("2025");
     literatureIndex.setVerfasserList(List.of("Name, Vorname"));
     given(
-      literatureReferenceRepository.findById(sliDocumentationUnitEntity.getDocumentNumber())
-    ).willReturn(Optional.of(literatureReferenceEntity));
+      refViewLiteratureRepository.findById(sliDocumentationUnitEntity.getDocumentNumber())
+    ).willReturn(Optional.of(refViewLiteratureEntity));
 
     // when
     updatePassivzitierungJob.execute();
