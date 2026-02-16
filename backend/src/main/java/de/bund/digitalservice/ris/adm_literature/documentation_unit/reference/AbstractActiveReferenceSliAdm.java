@@ -7,9 +7,12 @@ import jakarta.persistence.MappedSuperclass;
 import java.util.UUID;
 import lombok.Data;
 
+/**
+ * Abstract active reference superclass for SLI to ADM.
+ */
 @MappedSuperclass
 @Data
-public class AbstractActiveReferenceSliAdm {
+public abstract class AbstractActiveReferenceSliAdm {
 
   @Basic
   private UUID targetDocumentationUnitId;
