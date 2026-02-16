@@ -6,10 +6,10 @@ import static org.mockito.BDDMockito.given;
 
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewLiteratureEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewLiteratureRepository;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.court.Court;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
@@ -37,7 +37,7 @@ class AdmToLdmlConverterStrategyIntegrationTest {
   private AdmToLdmlConverterStrategy admLdmlConverterStrategy;
 
   @MockitoBean
-  private LiteratureReferenceRepository literatureReferenceRepository;
+  private RefViewLiteratureRepository refViewLiteratureRepository;
 
   @Test
   @DisplayName("Conversion of document with document number results into xml with FRBRalias")
@@ -1091,15 +1091,15 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     List<DocumentReference> referencedByList = List.of(
       new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
     );
-    LiteratureReferenceEntity literatureReferenceEntity = new LiteratureReferenceEntity();
+    RefViewLiteratureEntity refViewLiteratureEntity = new RefViewLiteratureEntity();
     LiteratureIndex literatureIndex = new LiteratureIndex();
     literatureIndex.setTitel("Titel");
     literatureIndex.setVerfasserList(List.of("Verfasser 1", "Verfasser 2"));
     literatureIndex.setVeroeffentlichungsjahr("2026");
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
-    literatureReferenceEntity.setLiteratureIndex(literatureIndex);
-    given(literatureReferenceRepository.findById("KALS999999999")).willReturn(
-      Optional.of(literatureReferenceEntity)
+    refViewLiteratureEntity.setLiteratureIndex(literatureIndex);
+    given(refViewLiteratureRepository.findById("KALS999999999")).willReturn(
+      Optional.of(refViewLiteratureEntity)
     );
 
     // when
@@ -1141,14 +1141,14 @@ class AdmToLdmlConverterStrategyIntegrationTest {
     List<DocumentReference> referencedByList = List.of(
       new DocumentReference("KALS999999999", DocumentCategory.LITERATUR_SELBSTAENDIG)
     );
-    LiteratureReferenceEntity literatureReferenceEntity = new LiteratureReferenceEntity();
+    RefViewLiteratureEntity refViewLiteratureEntity = new RefViewLiteratureEntity();
     LiteratureIndex literatureIndex = new LiteratureIndex();
     literatureIndex.setTitel("Titel");
     literatureIndex.setVeroeffentlichungsjahr("2026");
     literatureIndex.setDokumenttypen(List.of("Bib", "Dis"));
-    literatureReferenceEntity.setLiteratureIndex(literatureIndex);
-    given(literatureReferenceRepository.findById("KALS999999999")).willReturn(
-      Optional.of(literatureReferenceEntity)
+    refViewLiteratureEntity.setLiteratureIndex(literatureIndex);
+    given(refViewLiteratureRepository.findById("KALS999999999")).willReturn(
+      Optional.of(refViewLiteratureEntity)
     );
 
     // when

@@ -10,7 +10,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Immutable;
 
 /**
- * Ref view adm entity points to a view in the adm database schema.
+ * Ref view adm entity points to a view in the references database schema.
  * <p>
  *   This entity is only for reading. The ownership for the table has schema 'references_schema'.
  * </p>

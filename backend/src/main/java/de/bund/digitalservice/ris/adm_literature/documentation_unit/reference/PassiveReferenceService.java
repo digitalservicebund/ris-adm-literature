@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PassiveReferenceService {
 
-  private final AdmPassiveReferenceRepository admPassiveReferenceRepository;
+  private final RefViewActiveReferenceSliAdmRepository refViewActiveReferenceSliAdmRepository;
 
   /**
    * Returns all passive references for the given target document category.
@@ -30,10 +30,22 @@ public class PassiveReferenceService {
   public List<PassiveReference> findAll(@NonNull DocumentCategory documentCategory) {
     List<PassiveReference> passiveReferences;
     switch (documentCategory) {
-      case VERWALTUNGSVORSCHRIFTEN -> {
-        passiveReferences = new ArrayList<>();
-        log.info("Passive references for adm is not supported.");
-      }
+      case VERWALTUNGSVORSCHRIFTEN -> passiveReferences = refViewActiveReferenceSliAdmRepository
+        .findAll()
+        .stream()
+        .map(rf ->
+          new PassiveReference(
+            new DocumentReference(
+              rf.getTargetDocumentNumber(),
+              DocumentCategory.VERWALTUNGSVORSCHRIFTEN
+            ),
+            new DocumentReference(
+              rf.getSourceDocumentNumber(),
+              DocumentCategory.LITERATUR_SELBSTAENDIG
+            )
+          )
+        )
+        .toList();
       case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
         passiveReferences = new ArrayList<>();
         log.info("Passive references for literature is not supported.");
@@ -47,7 +59,7 @@ public class PassiveReferenceService {
    * Returns the referenced-by document references (the documents which are citing actively the given document)
    * for the given document number and category.
    *
-   * @param documentNumber The document number of the target
+   * @param documentNumber   The document number of the target
    * @param documentCategory The document category of the target
    * @return Referenced-by list
    */
@@ -58,10 +70,16 @@ public class PassiveReferenceService {
   ) {
     List<DocumentReference> referencedBy;
     switch (documentCategory) {
-      case VERWALTUNGSVORSCHRIFTEN -> {
-        referencedBy = new ArrayList<>();
-        log.info("Passive references for adm is not supported.");
-      }
+      case VERWALTUNGSVORSCHRIFTEN -> referencedBy = refViewActiveReferenceSliAdmRepository
+        .findByTargetDocumentNumber(documentNumber)
+        .stream()
+        .map(rf ->
+          new DocumentReference(
+            rf.getSourceDocumentNumber(),
+            DocumentCategory.LITERATUR_SELBSTAENDIG
+          )
+        )
+        .toList();
       case LITERATUR_SELBSTAENDIG, LITERATUR_UNSELBSTAENDIG -> {
         referencedBy = new ArrayList<>();
         log.info("Passive references for literature is not supported.");

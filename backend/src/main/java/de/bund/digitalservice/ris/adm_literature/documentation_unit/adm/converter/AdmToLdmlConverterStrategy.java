@@ -3,14 +3,14 @@ package de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.convert
 import de.bund.digitalservice.ris.adm_literature.document_category.DocumentCategory;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.DocumentationUnitContent;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.*;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceEntity;
-import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.aktivzitierung.LiteratureReferenceRepository;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.adm.converter.jaxb.*;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.ObjectToLdmlConverterStrategy;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.DomXmlReader;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.converter.xml.NodeToList;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.indexing.LiteratureIndex;
 import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.DocumentReference;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewLiteratureEntity;
+import de.bund.digitalservice.ris.adm_literature.documentation_unit.reference.RefViewLiteratureRepository;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentType;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.document_type.DocumentTypeService;
 import de.bund.digitalservice.ris.adm_literature.lookup_tables.field_of_law.FieldOfLaw;
@@ -44,7 +44,7 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
 
   private final JaxbXmlReader jaxbXmlReader;
   private final JaxbXmlWriter jaxbXmlWriter;
-  private final LiteratureReferenceRepository literatureReferenceRepository;
+  private final RefViewLiteratureRepository refViewLiteratureRepository;
   private final DocumentTypeService documentTypeService;
   private final DomXmlReader domXmlReader = new DomXmlReader();
 
@@ -506,9 +506,9 @@ public class AdmToLdmlConverterStrategy implements ObjectToLdmlConverterStrategy
               );
               switch (referencedBy.documentCategory()) {
                 case LITERATUR_SELBSTAENDIG -> {
-                  LiteratureIndex literatureIndex = literatureReferenceRepository
+                  LiteratureIndex literatureIndex = refViewLiteratureRepository
                     .findById(referencedBy.documentNumber())
-                    .map(LiteratureReferenceEntity::getLiteratureIndex)
+                    .map(RefViewLiteratureEntity::getLiteratureIndex)
                     .orElseThrow();
                   String dokumenttypAbkuerzungen = String.join(
                     ", ",
