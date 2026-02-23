@@ -50,7 +50,7 @@ jobs:
       # The first call to the action will invoke setup-trivy and install trivy
       # open source security scanner, cf. https://trivy.dev/
       - name: Run Trivy vulnerability scanner in fs (file-system) mode
-        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
+        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
@@ -81,7 +81,7 @@ jobs:
       - name: Fail build on High/Criticial Vulnerabilities (on branches)
         # ignore on main
         if: ${{ github.ref != 'refs/heads/main' }}
-        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
+        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db

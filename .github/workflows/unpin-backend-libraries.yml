@@ -57,7 +57,7 @@ jobs:
       - name: Run Trivy vulnerability image scanner
         if: env.PINNED_DEPS_FOUND == 'true'
         # Note: This scan is NOT what is shown in the GitHub Security tab
-        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
+        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
@@ -116,7 +116,7 @@ jobs:
       - name: Run Trivy vulnerability image scanner again
         if: env.PINNED_DEPS_FOUND == 'true' && env.CHANGES_MADE == 'true'
         # Note: This scan is NOT what is shown in the GitHub Security tab
-        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
+        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
