@@ -49,7 +49,7 @@ jobs:
       - name: Sign the published Docker image
         run: cosign sign --yes ${{ inputs.image-ref }}
       - name: Download cosign vulnerability scan record
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: "frontend-cosign-vuln.json"
       - name: Attest vulnerability scan
