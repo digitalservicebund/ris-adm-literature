@@ -30,6 +30,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       await regionElement.fill("AA");
       await expect(page.getByText("AA")).toHaveCount(1);
       await page.getByText("AA").click();
+      await page.keyboard.press("Escape");
 
       // then
       await expect(regionElement).toHaveValue("AA");
@@ -60,6 +61,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       await normgeberElement.fill("Dritte");
       await expect(page.getByText("Dritte Jurpn")).toHaveCount(1);
       await page.getByText("Dritte Jurpn").click();
+      await page.keyboard.press("Escape");
       // then
       await expect(normgeberElement).toHaveValue("Dritte Jurpn");
       await expect(page.getByRole("textbox", { name: "Region" })).toHaveValue("CC");
@@ -93,6 +95,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       await normgeberElement.fill("Erste Jurpn");
       await expect(page.getByText("Erste Jurpn")).toHaveCount(1);
       await page.getByText("Erste Jurpn").click();
+      await page.keyboard.press("Escape");
       // then
       await expect(normgeberElement).toHaveValue("Erste Jurpn");
       await expect(regionElement).toHaveValue("BB, AA");
@@ -120,6 +123,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       const regionElement = page.getByRole("textbox", { name: "Region" });
       await normgeberElement.fill("Zweite");
       await page.getByText("Zweite Jurpn").click();
+      await page.keyboard.press("Escape");
       // then
       await expect(normgeberElement).toHaveValue("Zweite Jurpn");
       await expect(regionElement).toHaveValue("Keine Region zugeordnet");
@@ -147,6 +151,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       const normgeberList = page.getByRole("list", { name: "Normgeber Liste", exact: true });
       await normgeberElement.fill("Erste Jurpn");
       await page.getByText("Erste Jurpn").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("button", { name: "Normgeber übernehmen", exact: true }).click();
       // then
       await expect(normgeberList).toHaveCount(1);
@@ -204,6 +209,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       const normgeberElement = page.getByRole("combobox", { name: "Normgeber" });
       await normgeberElement.fill("Zweite Jurpn");
       await page.getByText("Zweite Jurpn").click();
+      await page.keyboard.press("Escape");
       await page.getByRole("button", { name: "Normgeber übernehmen", exact: true }).click();
       await page.getByRole("button", { name: "Normgeber hinzufügen", exact: true }).click();
       await normgeberElement.click();
@@ -230,6 +236,7 @@ test.describe("RubrikenPage - Normgeber", () => {
       const normgeberElement = page.getByRole("combobox", { name: "Normgeber" });
       await normgeberElement.fill("Erstes Organ");
       await page.getByText("Erstes Organ").click();
+      await page.keyboard.press("Escape");
       // then
       await expect(
         page.getByRole("button", { name: "Normgeber übernehmen", exact: true }),
