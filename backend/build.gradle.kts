@@ -45,12 +45,17 @@ val localStackVersion = "1.21.4"
 val awsVersion = "2.33.0"
 val jsoupVersion = "1.21.2"
 val commonsLang3 = "3.20.0"
-var jacksonCoreV3Version = "3.1.0"
+val jacksonCoreV2Version = "2.21.1"
+val jacksonCoreV3Version = "3.1.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-  implementation("org.springframework.boot:spring-boot-starter-flyway")
+  implementation("org.springframework.boot:spring-boot-starter-flyway") {
+    // https://github.com/advisories/GHSA-72hv-8253-57qq
+    exclude("com.fasterxml.jackson.core", "jackson-core")
+  }
+  implementation("com.fasterxml.jackson.core:jackson-core$jacksonCoreV2Version")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
