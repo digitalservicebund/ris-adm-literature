@@ -55,7 +55,7 @@ dependencies {
     // https://github.com/advisories/GHSA-72hv-8253-57qq
     exclude("com.fasterxml.jackson.core", "jackson-core")
   }
-  implementation("com.fasterxml.jackson.core:jackson-core$jacksonCoreV2Version")
+  implementation("com.fasterxml.jackson.core:jackson-core:$jacksonCoreV2Version")
   implementation("org.flywaydb:flyway-database-postgresql")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
