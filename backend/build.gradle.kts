@@ -45,6 +45,7 @@ val localStackVersion = "1.21.4"
 val awsVersion = "2.33.0"
 val jsoupVersion = "1.21.2"
 val commonsLang3 = "3.20.0"
+var jacksonCoreV3Version = "3.1.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -54,7 +55,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-webmvc")
+  implementation("org.springframework.boot:spring-boot-starter-webmvc") {
+    // https://github.com/advisories/GHSA-72hv-8253-57qq
+    exclude("tools.jackson.core", "jackson-core")
+  }
+  // https://github.com/advisories/GHSA-72hv-8253-57qq
+  implementation("tools.jackson.core:jackson-core:$jacksonCoreV3Version")
   implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config")
   implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
   implementation("org.apache.commons:commons-lang3:$commonsLang3")
