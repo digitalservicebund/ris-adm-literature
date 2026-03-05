@@ -36,6 +36,10 @@ jobs:
     permissions:
       id-token: write # Enable OIDC for gitsign
     steps:
+      - name: Checkout repository # sentry releases need the current commit SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # fetch all history
       - uses: chainguard-dev/actions/setup-gitsign@71714a76c3df10b544595a2294c16649dc3472e5
       - name: Deploy new images
         uses: digitalservicebund/argocd-deploy@4e758f584953506c571951ffcba33d6a6246e856
