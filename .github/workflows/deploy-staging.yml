@@ -79,3 +79,4 @@ jobs:
           # SENTRY_URL: https://sentry.io/
         with:
           environment: staging
+          ignore_missing: true
