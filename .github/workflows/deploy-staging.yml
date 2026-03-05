@@ -71,7 +71,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Create Sentry release
         continue-on-error: true # until we fix a problem with sentry not finding the correct SHA of the release
-        uses: getsentry/action-release@f86218f1105cbe0847f30d0649d3c1789732ca97
+        uses: getsentry/action-release@f988b254a06c552925506508b1079b5ee98ed812
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
