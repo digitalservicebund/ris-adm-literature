@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0  # fetch all history
-      - uses: chainguard-dev/actions/setup-gitsign@e9290faa91aa6b1226df129cb450f2ff49235b92
+      - uses: chainguard-dev/actions/setup-gitsign@5e84f02889db0de213947c80a5d75b51bb899048
       - name: Deploy new images
         uses: digitalservicebund/argocd-deploy@4e758f584953506c571951ffcba33d6a6246e856
         with:
